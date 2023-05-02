@@ -5,6 +5,7 @@
 
   --background: #FBFBFB;
   --background-check: #F1F1F1;
+  --background-checked: #27AE60;
   --primary: #155E75;
 }
 
@@ -18,6 +19,9 @@ html {
 
 .check-background {
   background-color: var(--background-check);
+}
+.checked-background {
+  background-color: var(--background-checked);
 }
 
 .primary-bg {
