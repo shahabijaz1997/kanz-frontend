@@ -4,7 +4,7 @@ const EyeIcon = (props: SVGProps<SVGSVGElement>) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
     fill="none"
-    stroke="currentColor"
+    stroke={props.stroke}
     strokeWidth={1.5}
     className="w-6 h-6"
     viewBox="0 0 24 24"

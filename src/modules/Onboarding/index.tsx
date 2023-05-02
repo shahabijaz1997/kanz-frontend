@@ -1,4 +1,4 @@
-import { useLayoutEffect, useState } from "react";
+import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { saveToken } from "../../redux-toolkit/slicer/auth.slicer";
 import { RootState } from "../../redux-toolkit/store/store";
@@ -20,20 +20,6 @@ const Onboarding = (props: any) => {
     const [data, setData] = useState({ fullName: "", email: "", password: "", })
     const [viewPassword, setViewPassword] = useState(false);
 
-    useLayoutEffect(() => {
-        doi()
-    }, []);
-    const doi = () => {
-        console.log(588);
-
-        // dispatch(saveToken("Ahmad h"));
-
-        setTimeout(() => {
-            console.log("authToken", authToken);
-
-        }, 2000)
-    };
-
     const onSetData = (value: string, type: string) => {
         setData((prev) => {
             return { ...prev, [type]: value }
@@ -43,16 +29,21 @@ const Onboarding = (props: any) => {
     const renderViewPassword = () => {
         return (
             <div className="cursor-pointer absolute top-[38px] right-[15px]" onClick={() => setViewPassword(!viewPassword)}>
-                {!viewPassword ? <EyeIcon /> : <EyeSlash />}
+                {!viewPassword ? <EyeIcon stroke="rgb(64 64 64)" /> : <EyeSlash stroke="rgb(64 64 64)" />}
             </div>
         )
     };
 
-    const renderInformationIcon = () => {
+    const renderEmailValidation = () => {
         return (
-            <div className="absolute top-[38px] right-[15px]">
-                <InformationIcon stroke="rgb(239 68 68)" />
-            </div>
+            <React.Fragment>
+                <div className="absolute top-[38px] right-[15px]">
+                    <InformationIcon stroke="rgb(239 68 68)" />
+                </div>
+                <span className="font-normal tracking-wide text-red-500 text-[14px]">
+                    You are typing Invalid email address
+                </span>
+            </React.Fragment>
         )
     };
 
@@ -89,31 +80,26 @@ const Onboarding = (props: any) => {
                     <Dropdown style={"absolute top-[20px] right-[50px]"} dropdownItems={dropdownItems} />
 
                     <section className="max-w-md">
-                        <h2 className="text-[24px] font-bold text-left">Create an account with Kanz</h2>
+                        <h2 className="text-[24px] font-bold text-left text-neutral-900">Create an account with Kanz</h2>
                         <form className="pt-12 pb-8 mb-4">
                             <div className="mb-4">
                                 <label className="block text-neutral-700 text-[14px] font-semibold mb-2" htmlFor="full-name">Full name</label>
-                                <input className="h-[42px] shadow-sm appearance-none border border-neutral-300 rounded-md w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="full-name" type="text" />
+                                <input className="h-[42px] shadow-sm appearance-none border border-neutral-300 rounded-md w-full py-2 px-3 text-gray-500 leading-tight focus:outline-none focus:shadow-outline" id="full-name" type="text" />
                             </div>
                             <div className="mb-4 relative">
                                 <label className="block text-neutral-700 text-[14px] font-semibold mb-2" htmlFor="email">Email address</label>
                                 <input
-                                    className={`${data.email.length > 0 && !isValidEmail(data.email) && "mb-3"} h-[42px] shadow-sm appearance-none border border-neutral-300 rounded-md w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline`}
+                                    className={`${data.email.length > 0 && !isValidEmail(data.email) && "mb-3"} h-[42px] shadow-sm appearance-none border border-neutral-300 rounded-md w-full py-2 px-3 text-gray-500 leading-tight focus:outline-none focus:shadow-outline`}
                                     id="email" type="email"
                                     onChange={(e) => onSetData(e.target.value, "email")}
                                     value={data.email}
                                 />
-                                {data.email.length > 0 && !isValidEmail(data.email) && renderInformationIcon()}
-                                {data.email.length > 0 && !isValidEmail(data.email) &&
-                                    < span className="font-normal tracking-wide text-red-500 text-[14px]">
-                                        You are typing Invalid email address
-                                    </span>
-                                }
+                                {data.email.length > 0 && !isValidEmail(data.email) && renderEmailValidation()}
                             </div>
                             <div className="mb-1 relative">
                                 <label className="block text-neutral-700 text-[14px] font-semibold mb-2" htmlFor="password">Password</label>
                                 <input
-                                    className="h-[42px] shadow-sm appearance-none border border-neutral-300 rounded-md w-full py-2 pl-3 pr-12 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline"
+                                    className="h-[42px] shadow-sm appearance-none border border-neutral-300 rounded-md w-full py-2 pl-3 pr-12 text-gray-500 mb-3 leading-tight focus:outline-none focus:shadow-outline"
                                     onChange={(e) => onSetData(e.target.value, "password")}
                                     value={data.password}
                                     id="password"
