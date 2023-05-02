@@ -7,6 +7,7 @@
   --background-check: #F1F1F1;
   --background-checked: #27AE60;
   --primary: #155E75;
+  --text-blue: #2D9CDB;
 }
 
 html {
@@ -26,4 +27,7 @@ html {
 
 .primary-bg {
   background-color: var(--primary) !important;
+}
+.color-blue {
+  color: var(--text-blue);
 }
