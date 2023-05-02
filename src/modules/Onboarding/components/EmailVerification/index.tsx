@@ -1,6 +1,6 @@
 const EmailVerification = () => {
     return (
-        <section className="w-[428px] max-w-md screen500:max-w-[300px]">
+        <section className="w-[428px] max-w-md pt-[130px] screen500:max-w-[300px]">
             <h2 className="text-[24px] font-bold text-left text-neutral-900 mb-4">Verification Code</h2>
             <h3 className="text-[16px] font-normal text-left text-neutral-700 screen500:text-[12px]">Enter the 4 digit verification code sent to your email</h3>
             <form className="pt-8 pb-8 mb-4">

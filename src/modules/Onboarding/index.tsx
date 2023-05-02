@@ -19,7 +19,9 @@ const Onboarding = (props: any) => {
             <ClippedBanner />
             <section className="h-full w-[55%] inline-block align-top screen991:w-full">
                 <aside className="inline-flex flex-col items-center justify-center w-full h-full">
-                    <Dropdown style={"absolute top-[20px] right-[50px]"} dropdownItems={dropdownItems} />
+                    <section className="absolute top-[26px] right-[5%] w-full text-right">
+                        <Dropdown dropdownItems={dropdownItems} />
+                    </section>
                     {stepper === 0 && <Signup onSetStepper={() => setStepper(1)} />}
                     {stepper === 1 && <EmailVerification />}
                 </aside>

@@ -64,7 +64,7 @@ const Signup = (props: any) => {
         )
     };
     return (
-        <section className="w-[428px] max-w-md screen500:max-w-[300px]">
+        <section className="w-[428px] max-w-md pt-[130px] screen500:max-w-[300px]">
             <h2 className="text-[24px] font-bold text-left text-neutral-900 screen500:text-[20px]">Create an account with Kanz</h2>
             <form className="pt-12 pb-8 mb-4">
                 <div className="mb-4">
