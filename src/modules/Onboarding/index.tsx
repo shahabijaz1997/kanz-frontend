@@ -43,7 +43,7 @@ const Onboarding = (props: any) => {
     const renderViewPassword = () => {
         return (
             <div className="cursor-pointer absolute top-[38px] right-[15px]" onClick={() => setViewPassword(!viewPassword)}>
-                {viewPassword ? <EyeIcon /> : <EyeSlash />}
+                {!viewPassword ? <EyeIcon /> : <EyeSlash />}
             </div>
         )
     };
