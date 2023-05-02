@@ -2,9 +2,24 @@
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
+
+  --background: #FBFBFB;
+  --background-check: #F1F1F1;
+  --primary: #155E75;
 }
 
-body {
-  margin: 0;
-  padding: 0;
+html {
+  font-family: Roboto, 'Open Sans', 'Helvetica Neue', sans-serif;
+}
+
+.background-auth {
+  background-color: var(--background);
+}
+
+.check-background {
+  background-color: var(--background-check);
+}
+
+.primary-bg {
+  background-color: var(--primary) !important;
 }

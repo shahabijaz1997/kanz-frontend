@@ -5,7 +5,7 @@ import { RootState } from "../../redux-toolkit/store/store";
 
 // Modules
 const Home = lazy(() => import("../Home"));
-const Login = lazy(() => import("../Login"));
+const Login = lazy(() => import("../Onboarding"));
 
 const AuthenticateRoute = (props: PropsWithChildren) => {
     const { children } = props;
