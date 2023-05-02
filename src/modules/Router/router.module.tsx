@@ -11,10 +11,10 @@ const AuthenticateRoute = (props: PropsWithChildren) => {
     const { children } = props;
     const authToken: any = useSelector((state: RootState) => state.auth.value);
     let location = useLocation();
-    if (authToken) {
+    // if (authToken) {
         return <React.Fragment>{children}</React.Fragment>;
-    }
-    return <Navigate to="/login" state={{ from: location }} replace />;
+    // }
+    // return <Navigate to="/login" state={{ from: location }} replace />;
 };
 
 const RouterModule = () => {

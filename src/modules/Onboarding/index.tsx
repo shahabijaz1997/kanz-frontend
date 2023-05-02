@@ -6,11 +6,10 @@ import ClippedBanner from "./components/ClippedBanner";
 import Dropdown from "../../shared/components/Dropdown";
 import Signup from "./components/Signup";
 import EmailVerification from "./components/EmailVerification";
-import UKFlag from "../../assets/icons/gb.png";
+import { languageDropdownItems } from "../../utils/dropdownItems.utils";
 
 const Onboarding = (props: any) => {
     const dispatch = useDispatch();
-    const dropdownItems = [{ id: 1, title: "English", icon: UKFlag }]
     const authToken: any = useSelector((state: RootState) => state.auth.value);
     const [stepper, setStepper] = useState(0);
 
@@ -20,7 +19,7 @@ const Onboarding = (props: any) => {
             <section className="h-full w-[55%] inline-block align-top screen991:w-full">
                 <aside className="inline-flex flex-col items-center justify-center w-full h-full">
                     <section className="absolute top-[26px] right-[5%] w-full text-right">
-                        <Dropdown dropdownItems={dropdownItems} />
+                        <Dropdown dropdownItems={languageDropdownItems} />
                     </section>
                     {stepper === 0 && <Signup onSetStepper={() => setStepper(1)} />}
                     {stepper === 1 && <EmailVerification />}
