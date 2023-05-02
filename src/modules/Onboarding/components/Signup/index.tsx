@@ -41,7 +41,7 @@ const Signup = (props: any) => {
 
     const renderPasswordStrengthUI = () => {
         return (
-            <div className="inline-flex flex-row items-center justify-between w-full gap-4 mb-6">
+            <div className="inline-flex flex-row items-center justify-between w-full gap-4 mb-6 screen500:flex-col screen500:items-start">
                 <section className="inline-flex items-center">
                     <div className={`${hasUpperCase(data.password) ? "checked-background" : "check-background"} rounded-full w-4 h-4 inline-grid place-items-center mr-1`}>
                         <CheckIcon fill={`${hasUpperCase(data.password) ? "#fff" : "rgba(0, 0, 0, 0.3)"}`} />
@@ -64,8 +64,8 @@ const Signup = (props: any) => {
         )
     };
     return (
-        <section className="w-[428px] max-w-md">
-            <h2 className="text-[24px] font-bold text-left text-neutral-900">Create an account with Kanz</h2>
+        <section className="w-[428px] max-w-md screen500:max-w-[300px]">
+            <h2 className="text-[24px] font-bold text-left text-neutral-900 screen500:text-[20px]">Create an account with Kanz</h2>
             <form className="pt-12 pb-8 mb-4">
                 <div className="mb-4">
                     <label className="block text-neutral-700 text-[14px] font-semibold mb-2" htmlFor="full-name">Full name</label>
