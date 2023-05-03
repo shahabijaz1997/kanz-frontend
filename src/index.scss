@@ -5,9 +5,11 @@
 
   --background: #FBFBFB;
   --background-check: #F1F1F1;
+  --background-bell: #F5F5F5;
   --background-checked: #27AE60;
   --primary: #155E75;
   --text-blue: #2D9CDB;
+  --header-border: #E0E0E0;
 }
 
 html {
@@ -21,6 +23,11 @@ html {
 .check-background {
   background-color: var(--background-check);
 }
+
+.bell-background {
+  background-color: var(--background-bell);
+}
+
 .checked-background {
   background-color: var(--background-checked);
 }
@@ -28,6 +35,11 @@ html {
 .primary-bg {
   background-color: var(--primary) !important;
 }
+
 .color-blue {
   color: var(--text-blue);
+}
+
+.border-grey {
+  border-color: var(--header-border);
 }

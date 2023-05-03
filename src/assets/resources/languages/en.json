@@ -1,0 +1,34 @@
+{
+    "onboarding": {
+        "welcome": "Welcome to Kanz",
+        "loginBgAlt": "Login Background",
+        "quotes": "Quotes",
+        "createAccount": "Create an account with Kanz",
+        "orSignIn": "Or Sign in with",
+        "googleLogin": "Google Login",
+        "linkedinLogin": "LinkedIn Login",
+        "upperCase": "Upper case letter",
+        "lowerCase": "Lower case letter",
+        "min8": "Min 8 characters",
+        "verificationCode": "Verification Code",
+        "verificationText": "Enter the 4 digit verification code sent to your email",
+        "codeText": "Enter code",
+        "sentCode": "Code has been sent to your email",
+        "welcomeDashboard": "Welcome to Kanz Dashboard",
+        "starterMessage": "Start investing by adding few details to your profile"
+    },
+    "common": {
+        "fullName": "Full name",
+        "email": "Email address",
+        "password": "Password"
+    },
+    "buttons": {
+        "start": "Lets start",
+        "edit": "Edit",
+        "verify": "Verify",
+        "createAccount": "Create Account"
+    },
+    "promptMessages": {
+        "invalidEmail": "You are typing Invalid email address"
+    }
+}
