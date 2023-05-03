@@ -1,7 +1,4 @@
 import { useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { saveToken } from "../../redux-toolkit/slicer/auth.slicer";
-import { RootState } from "../../redux-toolkit/store/store";
 import ClippedBanner from "./components/ClippedBanner";
 import Dropdown from "../../shared/components/Dropdown";
 import Signup from "./components/Signup";
@@ -9,8 +6,6 @@ import EmailVerification from "./components/EmailVerification";
 import { languageDropdownItems } from "../../utils/dropdownItems.utils";
 
 const Onboarding = (props: any) => {
-    const dispatch = useDispatch();
-    const authToken: any = useSelector((state: RootState) => state.auth.value);
     const [stepper, setStepper] = useState(0);
 
     return (
