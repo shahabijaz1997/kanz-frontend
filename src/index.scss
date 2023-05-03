@@ -9,6 +9,7 @@
   --background-checked: #27AE60;
   --primary: #155E75;
   --text-blue: #2D9CDB;
+  --text-blue-2: #1976D2;
   --header-border: #E0E0E0;
 }
 
@@ -38,6 +39,10 @@ html {
 
 .color-blue {
   color: var(--text-blue);
+}
+
+.color-blue-2 {
+  color: var(--text-blue-2);
 }
 
 .border-grey {

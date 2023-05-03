@@ -17,16 +17,27 @@
         "welcomeDashboard": "Welcome to Kanz Dashboard",
         "starterMessage": "Start investing by adding few details to your profile"
     },
+    "investorFow":{
+        "type": "Select Investor Type",
+        "sub": "Norem ipsum dolor sit amet, consectetur adipiscing elit. consectetur adipiscing elit",
+        "individual": "Individual",
+        "firm": "Firm",
+        "subInd": "Rorem ipsum dolor sit amet, consectetur adipiscing elit.",
+        "subFirm": "Rorem ipsum dolor sit amet, consectetur adipiscing elit."
+    },
     "common": {
         "fullName": "Full name",
         "email": "Email address",
-        "password": "Password"
+        "password": "Password",
+        "learn": "Learn more"
     },
     "buttons": {
         "start": "Lets start",
         "edit": "Edit",
         "verify": "Verify",
-        "createAccount": "Create Account"
+        "createAccount": "Create Account",
+        "continue": "Continue",
+        "back": "Back"
     },
     "promptMessages": {
         "invalidEmail": "You are typing Invalid email address"
