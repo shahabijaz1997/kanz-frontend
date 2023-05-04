@@ -17,6 +17,9 @@ module.exports = {
             boxShadow: {
                 'cs-1': '0px 3px 8px rgba(0, 0, 0, 0.06), 0px 3px 7px rgba(0, 0, 0, 0.04)'
             },
+            colors: {
+                colorBlack1: '#0E2E35'
+            },
         },
     },
     variants: {

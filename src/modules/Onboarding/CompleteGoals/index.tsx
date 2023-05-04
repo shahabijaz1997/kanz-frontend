@@ -1,6 +1,6 @@
 import { useSelector } from "react-redux";
 import { RootState } from "../../../redux-toolkit/store/store";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import Header from "../../../shared/components/Header";
 import UserIcon from "../../../ts-icons/userIcon.svg";
 import EditIcon from "../../../ts-icons/editIcon.svg";
@@ -9,6 +9,7 @@ import GoalStepper from "./GoalStepper";
 
 const CompleteGoals = (props: any) => {
     const { state } = useLocation();
+    const navigate = useNavigate();
     const language: any = useSelector((state: RootState) => state.language.value);
 
     return (
@@ -50,7 +51,7 @@ const CompleteGoals = (props: any) => {
                         </section>
                     </aside>
 
-                    <GoalStepper language={language} />           
+                    <GoalStepper language={language} navigate={()=>navigate("/philosophy-goals")} />           
                 </section>
             </aside>
         </main>

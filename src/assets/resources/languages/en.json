@@ -36,6 +36,17 @@
         "philosophyGoals": "Investment Philosophy / Goals",
         "philosophysub": "Norem ipsum dolor sit amet, consectetur adipiscing elit. consectetur adipiscing elit."
     },
+    "philosophyGoals":{
+        "objective": "Investment Objective",
+        "objQuestion": "What are your investment objectives for this portfolio?",
+        "option1": "Income",
+        "option2": "Total Return",
+        "option3": "Growth",
+        "req": "Income Requirement",
+        "reqQes": "Do you require any income from this investment portfolio to take care of your expenses during the investment horizon indicated by you above?",
+        "reqOpt1": "Require regular income",
+        "reqOpt2": "Require some income"
+    },
     "firm": {
         "firm": "Firm Accreditation",
         "sub": "Norem ipsum dolor sit amet, consectetur adipiscing elit.consectetur adipiscing elit",
@@ -69,7 +80,8 @@
         "createAccount": "Create Account",
         "continue": "Continue",
         "back": "Back",
-        "addAttachment": "Add attachment"
+        "addAttachment": "Add attachment",
+        "gotoDashboard": "Go to Dashboard"
     },
     "promptMessages": {
         "invalidEmail": "You are typing Invalid email address"
