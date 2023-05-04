@@ -29,10 +29,7 @@ const Stepper = () => {
                         )}
                     </div>
                     {index !== steps.length - 1 && (
-                        <div
-                            className={`h-0.5 ${step.isComplete ? 'bg-green-500' : 'bg-gray-200'
-                                } w-8 absolute top-3.5 left-4.5`}
-                        />
+                        <div className={`h-0.5 ${step.isComplete ? 'bg-green-500' : 'bg-gray-200' } w-8 absolute top-3.5 left-4.5`} />
                     )}
                     <span className="text-sm ml-1">{step.label}</span>
                 </div>
