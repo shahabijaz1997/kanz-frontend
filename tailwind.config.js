@@ -13,7 +13,11 @@ module.exports = {
             'screen800': { 'max': '800px' },
             'screen500': { 'max': '500px' }
         },
-        extend: {},
+        extend: {
+            boxShadow: {
+                'cs-1': '0px 3px 8px rgba(0, 0, 0, 0.06), 0px 3px 7px rgba(0, 0, 0, 0.04)'
+            },
+        },
     },
     variants: {
         extend: {},

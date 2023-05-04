@@ -97,7 +97,7 @@ const Signup = (props: any) => {
 
                 </div>
                 {renderPasswordStrengthUI()}
-                <button className="text-white font-semibold rounded-md focus:outline-none focus:shadow-outline w-full primary-bg h-[38px]" type="submit">
+                <button className="text-white font-semibold rounded-md focus:outline-none focus:shadow-outline w-full primary-bg h-[38px]" type="submit" onClick={onSetStepper}>
                     {language?.buttons?.createAccount}
                 </button>
                 <div className="flex items-center justify-center my-[38px]">
