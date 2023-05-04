@@ -1,10 +1,11 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import CountrySelector from "../../../../shared/components/CountrySelector";
+import { InvestorType } from "../../../../enums/types.enum";
 
 const Individual = ({ language }: any) => {
     const navigate = useNavigate();
-    const [assertQuestions] = useState([{ id: 1, title: language?.individual?.option1 }, { id: 2, title: language?.individual?.option2 }, { id: 3, title: language?.individual?.option3 }, { id: 4, title: language?.individual?.option4 }])
+    const [assertQuestions] = useState([{ id: 1, title: language?.individual?.option1, amount: "18.36", currency: language.common.million }, { id: 2, title: language?.individual?.option2,amount: "8-18.36", currency: language.common.million }, { id: 3, title: language?.individual?.option3,amount: "3.67-8",currency: language.common.million }, { id: 4, title: language?.individual?.option4, amount: "735,000" }])
     const [selectedAssert, setSelectedAssert]: any = useState(null);
     const [national, setNational] = useState();
     const [residence, setResidence] = useState();
@@ -38,7 +39,7 @@ const Individual = ({ language }: any) => {
                 </ul>
             </section>
 
-            <section className="relative z-10 w-full inline-flex items-start gap-2 border-md border border-grey w-[420px] p-4 check-background cursor-pointer" onClick={() => setRiskChecked(!riskChecked)}>
+            <section className="relative z-10 w-full inline-flex items-start gap-2 rounded-md border border-grey w-[420px] p-4 check-background cursor-pointer" onClick={() => setRiskChecked(!riskChecked)}>
                 <input type="checkbox" className="accent-cyan-800 h-3 w-3" checked={riskChecked} />
                 <div>
                     <h3 className="text-neutral-700 font-medium text-[14px] leading-none">{language?.common?.risk}</h3>
@@ -47,10 +48,10 @@ const Individual = ({ language }: any) => {
             </section>
 
             <section className="w-full inline-flex items-center justify-between mt-16">
-                <button className="text-neutral-900 font-semibold rounded-md border border-grey font-semibold rounded-md focus:outline-none focus:shadow-outline h-[38px] w-[140px]" type="button" onClick={()=>navigate("/investor-type")}>
+                <button className="text-neutral-900 font-semibold rounded-md border border-grey font-semibold rounded-md focus:outline-none focus:shadow-outline h-[38px] w-[140px]" type="button" onClick={() => navigate("/investor-type")}>
                     {language?.buttons?.back}
                 </button>
-                <button disabled={!selectedAssert?.id ? true : false} className="text-white font-semibold rounded-md focus:outline-none focus:shadow-outline primary-bg h-[38px] w-[140px]" type="button" onClick={() => navigate(`/`)}>
+                <button disabled={!selectedAssert?.id ? true : false} className="text-white font-semibold rounded-md focus:outline-none focus:shadow-outline primary-bg h-[38px] w-[140px]" type="button" onClick={() => navigate("/complete-goals", { state: { type: InvestorType.INDIVIDUAL, selected: selectedAssert } })}>
                     {language?.buttons?.continue}
                 </button>
             </section>

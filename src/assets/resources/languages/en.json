@@ -32,7 +32,9 @@
         "option1": "I have at least AED 18.36 million in investments",
         "option2": "I have between AED 8 million and 18.36 million in assets",
         "option3": "I have between AED 3.67 million and 8 million in assets",
-        "option4": "I have over AED 735,000 income for the past 2 years"
+        "option4": "I have over AED 735,000 income for the past 2 years",
+        "philosophyGoals": "Investment Philosophy / Goals",
+        "philosophysub": "Norem ipsum dolor sit amet, consectetur adipiscing elit. consectetur adipiscing elit."
     },
     "firm": {
         "firm": "Firm Accreditation",
@@ -45,6 +47,7 @@
     },
     "common": {
         "risk": "Risk disclaimer:",
+        "accredited": "Accredited",
         "accerQuestion": "How are you accredited?",
         "fullName": "Full name",
         "legalName": "Legal name",
@@ -53,7 +56,10 @@
         "learn": "Learn more",
         "national": "Nationality",
         "location": "Location",
-        "residence": "Residence"
+        "residence": "Residence",
+        "attachmentPending": "Your attachment is pending. Add attachments for account approval",
+        "aed": "AED",
+        "million": "Million"
     },
     "buttons": {
         "start": "Lets start",
@@ -61,7 +67,8 @@
         "verify": "Verify",
         "createAccount": "Create Account",
         "continue": "Continue",
-        "back": "Back"
+        "back": "Back",
+        "addAttachment": "Add attachment"
     },
     "promptMessages": {
         "invalidEmail": "You are typing Invalid email address"

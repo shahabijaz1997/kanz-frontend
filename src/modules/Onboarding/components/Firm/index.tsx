@@ -4,7 +4,7 @@ import CountrySelector from "../../../../shared/components/CountrySelector";
 
 const Firm = ({ language }: any) => {
     const navigate = useNavigate();
-    const [assertQuestions] = useState([{ id: 1, title: language?.firm?.option1 }, { id: 2, title: language?.firm?.option2 }, { id: 3, title: language?.firm?.option3 }, { id: 4, title: language?.firm?.option4 }])
+    const [assertQuestions] = useState([{ id: 1, title: language?.firm?.option1, amount: "100", currency: language.common.million }, { id: 2, title: language?.firm?.option2, amount: "50-100", currency: language.common.million }, { id: 3, title: language?.firm?.option3, amount: "10-50", currency: language.common.million }, { id: 4, title: language?.firm?.option4, amount: "1-10", currency: language.common.million }])
     const [selectedAssert, setSelectedAssert]: any = useState(null);
     const [residence, setResidence] = useState();
     const [riskChecked, setRiskChecked] = useState(false);
@@ -37,7 +37,7 @@ const Firm = ({ language }: any) => {
                 </ul>
             </section>
 
-            <section className="relative z-10 w-full inline-flex items-start gap-2 border-md border border-grey w-[420px] p-4 check-background cursor-pointer" onClick={() => setRiskChecked(!riskChecked)}>
+            <section className="relative z-10 w-full inline-flex items-start gap-2 rounded-md border border-grey w-[420px] p-4 check-background cursor-pointer" onClick={() => setRiskChecked(!riskChecked)}>
                 <input type="checkbox" className="accent-cyan-800 h-3 w-3" checked={riskChecked} />
                 <div>
                     <h3 className="text-neutral-700 font-medium text-[14px] leading-none">{language?.common?.risk}</h3>
