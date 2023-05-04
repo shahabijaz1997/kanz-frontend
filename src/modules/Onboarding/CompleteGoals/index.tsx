@@ -5,6 +5,7 @@ import Header from "../../../shared/components/Header";
 import UserIcon from "../../../ts-icons/userIcon.svg";
 import EditIcon from "../../../ts-icons/editIcon.svg";
 import MoneyIcon from "../../../ts-icons/moneyIcon.svg";
+import GoalStepper from "./GoalStepper";
 
 const CompleteGoals = (props: any) => {
     const { state } = useLocation();
@@ -49,16 +50,7 @@ const CompleteGoals = (props: any) => {
                         </section>
                     </aside>
 
-                    <aside className="cursor-pointer rounded-xl p-6 mb-5 shadow-cs-1 w-full = inline-flex justify-center">
-                        <section className="w-full inline-flex items-center flex-col max-w-[370px]">
-                            <h3 className="text-neutral-900 text-2xl font-bold">{language.individual.philosophyGoals}</h3>
-                            <p className="text-neutral-700 text-base font-normal my-5 text-center">{language.individual.philosophysub}</p>
-
-                            <button className="bg-cyan-800 text-white w-[120px] h-9 inline-flex items-center justify-center rounded-md">
-                                <small>{language.buttons.start}</small>
-                            </button>
-                        </section>
-                    </aside>
+                    <GoalStepper language={language} />           
                 </section>
             </aside>
         </main>
