@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import Logo from "../../../assets/logo.png";
 import Dropdown from "../Dropdown";
-import { languageDropdownItems } from "../../../utils/dropdownItems.utils";
+import { languageDropdownItems } from "../../../utils/dropdown-items.utils";
 import BellIcon from "../../../ts-icons/BellIcon.svg";
 
 const Header = () => {
@@ -15,13 +15,13 @@ const Header = () => {
     return (
         <React.Fragment>
             <header className="bg-white border border-grey block screen991:hidden h-full">
-                <div className="container mx-auto px-4 py-6 flex items-center justify-between">
+                <div className="container mx-auto px-4 py-4 flex items-center justify-between">
                     <div className="flex items-center justify-between">
                         <img src={Logo} alt="App Logo" />
                     </div>
                     <nav className="">
                         <ul className="inline-flex items-center gap-6">
-                            <li className="">
+                            <li className="absolute top-[18px] right-[8%] w-full text-right">
                                 <Dropdown dropdownItems={languageDropdownItems} />
                             </li>
                             <li className="">

@@ -5,9 +5,11 @@ import Header from "../../../shared/components/Header";
 import ArrowIcon from "../../../ts-icons/arrowIcon.svg";
 import UserIcon from "../../../ts-icons/userIcon.svg";
 import GroupIcon from "../../../ts-icons/groupIcon.svg";
+import { useNavigate } from "react-router-dom";
 
 const InvestorFlow = (props: any) => {
     const { guard } = props;
+    const navigate = useNavigate();
     const language: any = useSelector((state: RootState) => state.language.value);
     const [selectedAccount, setSelectedAccount]: any = useState();
     const [accounts] = useState([
@@ -30,7 +32,7 @@ const InvestorFlow = (props: any) => {
                     {React.Children.toArray(
                         accounts.map(account => {
                             return (
-                                <section className={`h-24 rounded-xl border-2 border-grey px-4 py-3.5 relative mb-5 transition-all ${selectedAccount?.id === account.id && "border-cyan-800"}`} onClick={() => setSelectedAccount(account)}>
+                                <section className={`cursor-pointer h-24 rounded-xl border-2 border-grey px-4 py-3.5 relative mb-5 transition-all ${selectedAccount?.id === account.id && "border-cyan-800"}`} onClick={() => setSelectedAccount(account)}>
                                     {account.icon}
                                     <div className="center w-[80%]" style={{ margin: "0 auto" }}>
                                         <h3 className="text-neutral-900 text-base font-medium">{account.text}</h3>
@@ -48,7 +50,7 @@ const InvestorFlow = (props: any) => {
                         <button className="text-neutral-900 font-semibold rounded-md border border-grey font-semibold rounded-md focus:outline-none focus:shadow-outline h-[38px] w-[140px]" type="submit">
                             {language?.buttons?.back}
                         </button>
-                        <button className="text-white font-semibold rounded-md focus:outline-none focus:shadow-outline primary-bg h-[38px] w-[140px]" type="submit">
+                        <button disabled={!selectedAccount?.link ? true : false} className="text-white font-semibold rounded-md focus:outline-none focus:shadow-outline primary-bg h-[38px] w-[140px]" type="button" onClick={() => navigate(`/${selectedAccount?.link}`)}>
                             {language?.buttons?.continue}
                         </button>
                     </section>

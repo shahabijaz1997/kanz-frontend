@@ -3,7 +3,7 @@ import ClippedBanner from "./components/ClippedBanner";
 import Dropdown from "../../shared/components/Dropdown";
 import Signup from "./components/Signup";
 import EmailVerification from "./components/EmailVerification";
-import { languageDropdownItems } from "../../utils/dropdownItems.utils";
+import { languageDropdownItems } from "../../utils/dropdown-items.utils";
 
 const Onboarding = (props: any) => {
     const [stepper, setStepper] = useState(0);
