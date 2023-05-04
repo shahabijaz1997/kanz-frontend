@@ -1,11 +1,12 @@
 import React, { useState } from "react";
 import { useSelector } from "react-redux";
 import { RootState } from "../../../redux-toolkit/store/store";
+import { useNavigate } from "react-router-dom";
+import { InvestorType } from "../../../enums/types.enum";
 import Header from "../../../shared/components/Header";
 import ArrowIcon from "../../../ts-icons/arrowIcon.svg";
 import UserIcon from "../../../ts-icons/userIcon.svg";
 import GroupIcon from "../../../ts-icons/groupIcon.svg";
-import { useNavigate } from "react-router-dom";
 
 const InvestorFlow = (props: any) => {
     const { guard } = props;
@@ -13,8 +14,8 @@ const InvestorFlow = (props: any) => {
     const language: any = useSelector((state: RootState) => state.language.value);
     const [selectedAccount, setSelectedAccount]: any = useState();
     const [accounts] = useState([
-        { id: 1, icon: <UserIcon stroke="#171717" className="absolute h-6 top-4" />, text: language?.investorFow?.individual, subText: language?.investorFow?.subInd, link: "individual" },
-        { id: 2, icon: <GroupIcon stroke="#171717" className="absolute h-6 top-4" />, text: language?.investorFow?.firm, subText: language?.investorFow?.subFirm, link: "firm" },
+        { id: 1, icon: <UserIcon stroke="#171717" className="absolute h-6 top-4" />, text: language?.investorFow?.individual, subText: language?.investorFow?.subInd, link: InvestorType.INDIVIDUAL },
+        { id: 2, icon: <GroupIcon stroke="#171717" className="absolute h-6 top-4" />, text: language?.investorFow?.firm, subText: language?.investorFow?.subFirm, link: InvestorType.FIRM },
     ])
 
     return (
@@ -50,7 +51,7 @@ const InvestorFlow = (props: any) => {
                         <button className="text-neutral-900 font-semibold rounded-md border border-grey font-semibold rounded-md focus:outline-none focus:shadow-outline h-[38px] w-[140px]" type="submit">
                             {language?.buttons?.back}
                         </button>
-                        <button disabled={!selectedAccount?.link ? true : false} className="text-white font-semibold rounded-md focus:outline-none focus:shadow-outline primary-bg h-[38px] w-[140px]" type="button" onClick={() => navigate(`/${selectedAccount?.link}`)}>
+                        <button disabled={!selectedAccount?.link ? true : false} className="text-white font-semibold rounded-md focus:outline-none focus:shadow-outline primary-bg h-[38px] w-[140px]" type="button" onClick={() => navigate(`/complete-details`, { state: selectedAccount?.link })}>
                             {language?.buttons?.continue}
                         </button>
                     </section>
