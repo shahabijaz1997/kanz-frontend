@@ -1,7 +1,9 @@
 import { useSelector } from "react-redux";
 import { RootState } from "../../../../redux-toolkit/store/store";
+import { useNavigate } from "react-router-dom";
 
 const EmailVerification = () => {
+    const navigate = useNavigate();
     const language: any = useSelector((state: RootState) => state.language.value);
 
     return (
@@ -14,7 +16,7 @@ const EmailVerification = () => {
                     <input className="h-[42px] shadow-sm appearance-none border border-neutral-300 rounded-md w-full py-2 px-3 text-gray-500 leading-tight focus:outline-none focus:shadow-outline" id="code" type="text" />
                 </div>
                 <div className="text-right text-neutral-500 font-normal text-[14px] screen500:text-[12px]">{language?.onboarding?.sentCode} (you@example.com) <span className="color-blue">{language?.buttons?.sentCode} </span></div>
-                <button className="text-white font-semibold rounded-md focus:outline-none focus:shadow-outline w-full primary-bg h-[38px] mt-10" type="submit">
+                <button className="text-white font-semibold rounded-md focus:outline-none focus:shadow-outline w-full primary-bg h-[38px] mt-10" onClick={()=>navigate("/investor-type")}>
                     {language?.buttons?.verify}
                 </button>
             </form>

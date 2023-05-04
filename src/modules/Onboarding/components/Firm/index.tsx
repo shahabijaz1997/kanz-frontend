@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import CountrySelector from "../../../../shared/components/CountrySelector";
+import { InvestorType } from "../../../../enums/types.enum";
 
 const Firm = ({ language }: any) => {
     const navigate = useNavigate();
@@ -49,7 +50,7 @@ const Firm = ({ language }: any) => {
                 <button className="text-neutral-900 font-semibold rounded-md border border-grey font-semibold rounded-md focus:outline-none focus:shadow-outline h-[38px] w-[140px]" type="button" onClick={() => navigate("/investor-type")}>
                     {language?.buttons?.back}
                 </button>
-                <button disabled={!selectedAssert?.id ? true : false} className="text-white font-semibold rounded-md focus:outline-none focus:shadow-outline primary-bg h-[38px] w-[140px]" type="button" onClick={() => navigate(`/`)}>
+                <button disabled={!selectedAssert?.id ? true : false} className="text-white font-semibold rounded-md focus:outline-none focus:shadow-outline primary-bg h-[38px] w-[140px]" type="button" onClick={() => navigate("/complete-goals", { state: { type: InvestorType.FIRM, selected: selectedAssert } })}>
                     {language?.buttons?.continue}
                 </button>
             </section>

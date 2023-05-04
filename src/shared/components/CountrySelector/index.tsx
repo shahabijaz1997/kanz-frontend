@@ -1,13 +1,12 @@
 import React, { MutableRefObject, useEffect, useLayoutEffect, useRef, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
+import { useSelector } from "react-redux";
+import { RootState } from "../../../redux-toolkit/store/store";
 import { getCountries } from "../../../apis/countries.api";
 import Chevrond from "../../../ts-icons/chevrond.svg";
 
-export default function CountrySelector({
-    disabled = false,
-    onChange,
-    selectedValue
-}: any) {
+export default function CountrySelector({ disabled = false, onChange, selectedValue }: any) {
+    const language: any = useSelector((state: RootState) => state.language.value);
     const ref = useRef<HTMLDivElement>(null);
     const [countries, setCountries] = useState([]);
     const [open, setOpen] = useState(false);
@@ -26,20 +25,18 @@ export default function CountrySelector({
         }
     };
     useEffect(() => {
-        const mutableRef = ref as MutableRefObject<HTMLDivElement | null>;
-
         const handleClickOutside = (event: any) => {
-            if (mutableRef.current && !mutableRef.current.contains(event.target) && open) {
-                setOpen(!open);
+            if (ref.current && !ref.current.contains(event.target) && open) {
+                setOpen(false);
                 setQuery("");
             }
         };
 
-        document.addEventListener("mousedown", handleClickOutside);
+        window.addEventListener("mousedown", handleClickOutside);
         return () => {
-            document.removeEventListener("mousedown", handleClickOutside);
+            window.removeEventListener("mousedown", handleClickOutside);
         };
-    }, [ref]);
+    }, []);
 
     const [query, setQuery] = useState("");
 
@@ -84,7 +81,7 @@ export default function CountrySelector({
                                         country?.name.toLowerCase().startsWith(query.toLowerCase())
                                     ).length === 0 ? (
                                         <li className="text-gray-900 cursor-default select-none relative py-2 pl-3 pr-9">
-                                            No countries found
+                                            {language.common.noCountries}
                                         </li>
                                     ) : (
                                         React.Children.toArray(

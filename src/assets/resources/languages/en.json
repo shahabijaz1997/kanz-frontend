@@ -59,7 +59,8 @@
         "residence": "Residence",
         "attachmentPending": "Your attachment is pending. Add attachments for account approval",
         "aed": "AED",
-        "million": "Million"
+        "million": "Million",
+        "noCountries": "No countries found"
     },
     "buttons": {
         "start": "Lets start",
