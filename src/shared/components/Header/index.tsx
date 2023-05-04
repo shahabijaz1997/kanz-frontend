@@ -1,11 +1,10 @@
 import React, { useState } from "react";
 import Logo from "../../../assets/logo.png";
 import Dropdown from "../Dropdown";
-import { languageDropdownItems } from "../../../utils/dropdownItems.utils";
+import { languageDropdownItems } from "../../../utils/dropdown-items.utils";
 import BellIcon from "../../../ts-icons/BellIcon.svg";
 
 const Header = () => {
-
     const [isMenuOpen, setIsMenuOpen] = useState(false);
 
     const toggleMenu = () => {
@@ -15,22 +14,22 @@ const Header = () => {
     return (
         <React.Fragment>
             <header className="bg-white border border-grey block screen991:hidden h-full">
-                <div className="container mx-auto px-4 py-6 flex items-center justify-between">
+                <div className="container mx-auto px-4 py-4 flex items-center justify-between">
                     <div className="flex items-center justify-between">
                         <img src={Logo} alt="App Logo" />
                     </div>
                     <nav className="">
                         <ul className="inline-flex items-center gap-6">
-                            <li className="">
+                            <li className="absolute top-[18px] right-[8%] w-full text-right">
                                 <Dropdown dropdownItems={languageDropdownItems} />
                             </li>
                             <li className="">
-                              <div className="rounded-full w-8 h-8 inline-grid place-items-center bell-background ">
-                                <BellIcon stroke={"#4F4F4F"} />
-                              </div>
+                                <div className="rounded-full w-8 h-8 inline-grid place-items-center bell-background ">
+                                    <BellIcon stroke={"#4F4F4F"} />
+                                </div>
                             </li>
                             <li className="">
-                              <img className="rounded-full w-8 h-8 inline-grid place-items-center" src="https://randomuser.me/api/portraits/men/46.jpg" alt="User" />
+                                <img className="rounded-full w-8 h-8 inline-grid place-items-center" src="https://randomuser.me/api/portraits/men/46.jpg" alt="User" />
                             </li>
                         </ul>
                     </nav>
@@ -38,8 +37,8 @@ const Header = () => {
             </header>
 
             <header className="bg-white border border-grey hidden h-full screen991:block">
-                <div className="container mx-auto px-4 py-6 flex items-start flex-col">
-                    <div className="flex items-center justify-between container">
+                <div className="container mx-auto py-6 flex items-start flex-col">
+                    <div className="flex items-center justify-between container px-4">
                         <div className="text-xl font-bold text-gray-800">
                             <img src={Logo} alt="App Logo" />
                         </div>
@@ -56,11 +55,17 @@ const Header = () => {
                     </div>
 
                     <nav className={`${isMenuOpen ? "block" : "hidden"}`}>
-                        <ul className="md:flex items-center">
-                            <li className="md:ml-6 mt-3 md:mt-0">
-                                <a href="#" className="block font-medium text-gray-700 hover:text-gray-900 md:inline-block md:mt-0">
-                                    Link 1
-                                </a>
+                        <ul className="flex items-center flex-row-reverse pt-12 w-full justify-between px-4">
+                            <li>
+                                <Dropdown dropdownItems={languageDropdownItems} />
+                            </li>
+                            <li>
+                                <div className="rounded-full w-8 h-8 inline-grid place-items-center bell-background ">
+                                    <BellIcon stroke={"#4F4F4F"} />
+                                </div>
+                            </li>
+                            <li>
+                                <img className="rounded-full w-8 h-8 inline-grid place-items-center" src="https://randomuser.me/api/portraits/men/46.jpg" alt="User" />
                             </li>
                         </ul>
                     </nav>

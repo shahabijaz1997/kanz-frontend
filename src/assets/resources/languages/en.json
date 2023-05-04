@@ -17,16 +17,59 @@
         "welcomeDashboard": "Welcome to Kanz Dashboard",
         "starterMessage": "Start investing by adding few details to your profile"
     },
+    "investorFow":{
+        "type": "Select Investor Type",
+        "sub": "Norem ipsum dolor sit amet, consectetur adipiscing elit. consectetur adipiscing elit",
+        "individual": "Individual",
+        "firm": "Firm",
+        "subInd": "Rorem ipsum dolor sit amet, consectetur adipiscing elit.",
+        "subFirm": "Rorem ipsum dolor sit amet, consectetur adipiscing elit."
+    },
+    "individual": {
+        "individual": "Individual Accreditation",
+        "sub": "Norem ipsum dolor sit amet, consectetur adipiscing elit.consectetur adipiscing elit",
+        "understanding": "I understand the criteria of individual investors.",
+        "option1": "I have at least AED 18.36 million in investments",
+        "option2": "I have between AED 8 million and 18.36 million in assets",
+        "option3": "I have between AED 3.67 million and 8 million in assets",
+        "option4": "I have over AED 735,000 income for the past 2 years",
+        "philosophyGoals": "Investment Philosophy / Goals",
+        "philosophysub": "Norem ipsum dolor sit amet, consectetur adipiscing elit. consectetur adipiscing elit."
+    },
+    "firm": {
+        "firm": "Firm Accreditation",
+        "sub": "Norem ipsum dolor sit amet, consectetur adipiscing elit.consectetur adipiscing elit",
+        "understanding": "I understand the criteria of firm investors.",
+        "option1": "Firm has over AED 100 million in investments",
+        "option2": "Firm has between AED 50 million and 100 million in investment",
+        "option3": "Firm has between AED 10 million and 50 million in investment",
+        "option4": "Firm has between AED 1 million and 10 million in investment"
+    },
     "common": {
+        "risk": "Risk disclaimer:",
+        "accredited": "Accredited",
+        "accerQuestion": "How are you accredited?",
         "fullName": "Full name",
+        "legalName": "Legal name",
         "email": "Email address",
-        "password": "Password"
+        "password": "Password",
+        "learn": "Learn more",
+        "national": "Nationality",
+        "location": "Location",
+        "residence": "Residence",
+        "attachmentPending": "Your attachment is pending. Add attachments for account approval",
+        "aed": "AED",
+        "million": "Million",
+        "noCountries": "No countries found"
     },
     "buttons": {
         "start": "Lets start",
         "edit": "Edit",
         "verify": "Verify",
-        "createAccount": "Create Account"
+        "createAccount": "Create Account",
+        "continue": "Continue",
+        "back": "Back",
+        "addAttachment": "Add attachment"
     },
     "promptMessages": {
         "invalidEmail": "You are typing Invalid email address"
