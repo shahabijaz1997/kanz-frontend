@@ -6,12 +6,14 @@ import { useLayoutEffect, useState } from "react";
 import Objective from "./Objective";
 import Requirement from "./Requirement";
 import Drawer from "../../../shared/components/Drawer";
+import Modal from "../../../shared/components/Modal";
 
 const PhilosophyGoals = (props: any) => {
     const params = useParams();
     const language: any = useSelector((state: RootState) => state.language.value);
     const [selection, setSelection] = useState(Number(params?.id) || 1);
     const [isOpen, setOpen] = useState(false);
+    const [showModal, setShowModal] = useState(false);
 
     useLayoutEffect(() => {
         setSelection(Number(params?.id) || 1)
@@ -30,7 +32,22 @@ const PhilosophyGoals = (props: any) => {
                 </p>
             </Drawer>
             {selection === 1 && <Objective learnMore={() => setOpen(true)} />}
-            {selection === 2 && <Requirement learnMore={() => setOpen(true)} previousStep={() => setSelection(selection - 1)} />}
+            {selection === 2 && <Requirement learnMore={() => setOpen(true)} nextStep={() => setShowModal(true)} />}
+            <Modal show={showModal}>
+                <div className="p-12 rounded-md shadow-cs-1 flex flex-col items-center w-full bg-white outline-none focus:outline-none">
+                    <h3 className="text-xl font-bold">{language.modal.thankyou}</h3>
+
+                    <div className="w-[80%]">
+                        <p className="mt-8 text-sm font-normal text-neutral-500 text-center leading-relaxed">{language.modal.sub_1}</p>
+                        <p className="mt-4 text-sm font-normal text-neutral-500 text-center leading-relaxed">{language.modal.sub_2}</p>
+                        <p className="text-sm font-normal text-neutral-500 text-center leading-relaxed">{language.modal.sub_3} <span className="color-blue">012-345678</span></p>
+                    </div>
+
+                    <button className="mt-8 bg-cyan-800 text-white w-[120px] h-9 inline-flex items-center justify-center rounded-md" type="button" onClick={() => setShowModal(false)}>
+                        {language.buttons.continue}
+                    </button>
+                </div>
+            </Modal>
         </main>
     )
 };

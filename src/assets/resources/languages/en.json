@@ -17,7 +17,7 @@
         "welcomeDashboard": "Welcome to Kanz Dashboard",
         "starterMessage": "Start investing by adding few details to your profile"
     },
-    "investorFow":{
+    "investorFow": {
         "type": "Select Investor Type",
         "sub": "Norem ipsum dolor sit amet, consectetur adipiscing elit. consectetur adipiscing elit",
         "individual": "Individual",
@@ -27,6 +27,7 @@
     },
     "individual": {
         "individual": "Individual Accreditation",
+        "individualInvestor": "Individual Investor",
         "sub": "Norem ipsum dolor sit amet, consectetur adipiscing elit.consectetur adipiscing elit",
         "understanding": "I understand the criteria of individual investors.",
         "option1": "I have at least AED 18.36 million in investments",
@@ -36,7 +37,7 @@
         "philosophyGoals": "Investment Philosophy / Goals",
         "philosophysub": "Norem ipsum dolor sit amet, consectetur adipiscing elit. consectetur adipiscing elit."
     },
-    "philosophyGoals":{
+    "philosophyGoals": {
         "objective": "Investment Objective",
         "objQuestion": "What are your investment objectives for this portfolio?",
         "option1": "Income",
@@ -91,6 +92,12 @@
         "gotoDashboard": "Go to Dashboard",
         "yes": "Yes",
         "no": "No"
+    },
+    "modal": {
+        "thankyou": "\"Thank you for submitting your information!",
+        "sub_1": "We have received your responses and will be updating you on your email shortly.Please note that we will be using the information you provided to personalized your investment experience and provide you with relevant insights and recommendations.",
+        "sub_2": "If you need to make any changes to your information, please",
+        "sub_3": " contact us at"
     },
     "promptMessages": {
         "invalidEmail": "You are typing Invalid email address"

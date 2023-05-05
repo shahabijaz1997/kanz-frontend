@@ -4,7 +4,7 @@ import React, { useState } from "react";
 import { RootState } from "../../../../redux-toolkit/store/store";
 import Stepper from "../../../../shared/components/Stepper";
 
-const Requirement = ({ learnMore, nextStep, previousStep }: any) => {
+const Requirement = ({ learnMore, nextStep }: any) => {
     const navigate = useNavigate();
     const language: any = useSelector((state: RootState) => state.language.value);
     const [investQuestions] = useState([{ id: 1, title: language?.philosophyGoals?.incomeOpt1 }, { id: 2, title: language?.philosophyGoals?.incomeOpt2 }, { id: 3, title: language?.philosophyGoals?.incomeOpt3 }, { id: 4, title: language?.philosophyGoals?.incomeOpt4 }, { id: 5, title: language?.philosophyGoals?.incomeOpt5 }]);

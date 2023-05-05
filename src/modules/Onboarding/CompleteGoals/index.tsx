@@ -29,8 +29,8 @@ const CompleteGoals = (props: any) => {
                                 <UserIcon stroke="#171717" />
                             </div>
                             <div className="center w-[80%] ml-5">
-                                <h3 className="text-neutral-900 text-base font-medium">{language.individual.individual}</h3>
-                                <p className="text-neutral-700 text-sm font-normal mt-2">Emirati nationality, 4556 Brendan Ferry Los Angeles, CA 90210</p>
+                                <h3 className="text-neutral-900 text-lg font-semibold">{language.individual.individualInvestor}</h3>
+                                <p className="text-neutral-700 text-sm font-normal mt-1">Emirati nationality, 4556 Brendan Ferry Los Angeles, CA 90210</p>
                             </div>
                             <button className="bg-cyan-800 text-white w-[100px] h-9 inline-flex items-center justify-center rounded-md gap-1">
                                 <EditIcon stroke="#fff" />
