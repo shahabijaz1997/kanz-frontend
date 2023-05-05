@@ -33,39 +33,39 @@ const AddAttachments = (props: any) => {
                 <section className="flex items-start justify-center flex-col mt-8 w-[420px] screen500:max-w-[300px]">
                     <form className="pt-12 pb-8 mb-4 w-full">
                         <div className="mb-7 w-full">
-                            <label className="block text-neutral-700 text-base font-medium" htmlFor="id-proof">
+                            <div className="block text-neutral-700 text-base font-medium">
                                 <div>{language?.common?.idProof}</div>
                                 <small className="text-neutral-700 font-normal">{language?.common?.uploadPic}</small> <small className="font-normal color-blue">{language?.common?.example}</small>
 
-                                <FileUpload setModalOpen={(e: any) => {
+                                <FileUpload id={"id"} setModalOpen={(e: any) => {
                                     setModalOpen(e.open);
                                     setImgPreview(e.url);
                                 }} />
-                            </label>
+                            </div>
                         </div>
                        
                         <div className="mb-7 w-full">
-                            <label className="block text-neutral-700 text-base font-medium" htmlFor="id-proof">
+                            <div className="block text-neutral-700 text-base font-medium">
                                 <div>{language?.common?.selfProof}</div>
                                 <small className="text-neutral-700 font-normal">{language?.common?.uploadSelfie}</small> <small className="font-normal color-blue">{language?.common?.example}</small>
 
-                                <FileUpload setModalOpen={(e: any) => {
+                                <FileUpload id={"self"} setModalOpen={(e: any) => {
                                     setModalOpen(e.open);
                                     setImgPreview(e.url);
                                 }} />
-                            </label>
+                            </div>
                         </div>
                       
                         <div className="mb-4 w-full">
-                            <label className="block text-neutral-700 text-base font-medium" htmlFor="id-proof">
+                            <div className="block text-neutral-700 text-base font-medium">
                                 <div>{language?.common?.resProof}</div>
                                 <small className="text-neutral-700 font-normal">{language?.common?.uploadProperty}</small> <small className="font-normal color-blue">{language?.common?.example}</small>
 
-                                <FileUpload setModalOpen={(e: any) => {
+                                <FileUpload id={"res"} setModalOpen={(e: any) => {
                                     setModalOpen(e.open);
                                     setImgPreview(e.url);
                                 }} />
-                            </label>
+                            </div>
                         </div>
                     </form>
                 </section>

@@ -7,7 +7,7 @@ import PreviewIcon from "../../../ts-icons/previewIcon.svg";
 import AlertMessage from "../AlertMessage";
 import { PromptMessage } from "../../../enums/types.enum";
 
-const FileUpload = ({ setModalOpen }: any) => {
+const FileUpload = ({ id, setModalOpen }: any) => {
     const language: any = useSelector((state: RootState) => state.language.value);
     const [dragOver, setDragOver] = useState(false);
     const [selectedFile, setSelectedFile]: any = useState<File | null>();
@@ -50,7 +50,7 @@ const FileUpload = ({ setModalOpen }: any) => {
                 });
             };
         };
-        setSelectedFile({ file, url });
+        setSelectedFile({ file, url, id });
     };
 
     return (
@@ -59,8 +59,8 @@ const FileUpload = ({ setModalOpen }: any) => {
 
             <div className={`border-2 border-dashed rounded-md h-[140px] mt-4 ${dragOver ? "border-cyan-800" : "border-neutral-300"}`}
                 onDragOver={handleDragOver} onDragLeave={handleDragLeave} onDrop={handleDrop}>
-                <label htmlFor="file-input">
-                    {selectedFile ? (
+                <label htmlFor={id}>
+                    {selectedFile && selectedFile?.id === id ? (
                         <div className="flex items-center relative check-background h-full px-2">
                             <div className="h-8 w-8 p-2 absolute right-2 top-2 rounded-full cursor-pointer bg-white" onClick={(e) => {
                                 e.preventDefault();
@@ -92,7 +92,7 @@ const FileUpload = ({ setModalOpen }: any) => {
                                 <small className="text-sm text-neutral-500">{language.buttons.orDragDrop}</small>
                             </p>
                             <div className="text-neutral-500 text-sm font-normal">PNG, JPG, PDF up to 10MB</div>
-                            <input id="file-input" type="file" className="hidden" onChange={handleFileInput} />
+                            <input id={id} type="file" className="hidden" onChange={handleFileInput} />
                         </div>
                     )}
                 </label>
