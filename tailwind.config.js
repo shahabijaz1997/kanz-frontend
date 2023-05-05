@@ -15,7 +15,8 @@ module.exports = {
         },
         extend: {
             boxShadow: {
-                'cs-1': '0px 3px 8px rgba(0, 0, 0, 0.06), 0px 3px 7px rgba(0, 0, 0, 0.04)'
+                'cs-1': '0px 3px 8px rgba(0, 0, 0, 0.06), 0px 3px 7px rgba(0, 0, 0, 0.04)',
+                'cs-2': '0px 4px 12px rgba(0, 0, 0, 0.12)'
             },
             colors: {
                 colorBlack1: '#0E2E35'

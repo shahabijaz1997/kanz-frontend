@@ -44,14 +44,14 @@ const CompleteGoals = (props: any) => {
                             <div>
                                 <small className="text-neutral-500 text-sm font-medium">{language.common.accredited}</small>
                                 <div>
-                                    <small className="text-neutral-900 text-2xl font-semibold screen800:text-sm">{language.common.aed}&nbsp;{state.selected.amount}</small>&nbsp;
-                                    {state.selected.currency && <small className="text-green-600 text-sm font-semibold">{state.selected.currency}</small>}
+                                    <small className="text-neutral-900 text-2xl font-semibold screen800:text-sm">{language.common.aed}&nbsp;{state?.selected?.amount}</small>&nbsp;
+                                    {state?.selected?.currency && <small className="text-green-600 text-sm font-semibold">{state?.selected?.currency}</small>}
                                 </div>
                             </div>
                         </section>
                     </aside>
 
-                    <GoalStepper language={language} navigate={()=>navigate("/philosophy-goals")} />           
+                    <GoalStepper language={language} navigate={()=>navigate("/philosophy-goals/1")} />           
                 </section>
             </aside>
         </main>

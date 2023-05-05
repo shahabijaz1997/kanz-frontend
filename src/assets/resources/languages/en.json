@@ -43,9 +43,16 @@
         "option2": "Total Return",
         "option3": "Growth",
         "req": "Income Requirement",
+        "incomeSub": "Please indicate the percentage of your portfolio that needs to be liquid (i.e., Cash, Marketable securities)",
         "reqQes": "Do you require any income from this investment portfolio to take care of your expenses during the investment horizon indicated by you above?",
         "reqOpt1": "Require regular income",
-        "reqOpt2": "Require some income"
+        "reqOpt2": "Require some income",
+        "incomeOpt1": "0%",
+        "incomeOpt2": "Up to 33%",
+        "incomeOpt3": "34% to 66%",
+        "incomeOpt4": "66% to 90%",
+        "incomeOpt5": "100% (Full portfolio must be liquid)",
+        "establish": "Establishes your investment experience and knowledge"
     },
     "firm": {
         "firm": "Firm Accreditation",
@@ -81,7 +88,9 @@
         "continue": "Continue",
         "back": "Back",
         "addAttachment": "Add attachment",
-        "gotoDashboard": "Go to Dashboard"
+        "gotoDashboard": "Go to Dashboard",
+        "yes": "Yes",
+        "no": "No"
     },
     "promptMessages": {
         "invalidEmail": "You are typing Invalid email address"
