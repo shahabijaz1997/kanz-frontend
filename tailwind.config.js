@@ -22,6 +22,9 @@ module.exports = {
             colors: {
                 colorBlack1: '#0E2E35'
             },
+            backgroundColor:{
+                "cbc-1": "#FCFCFC"
+            }
         },
     },
     variants: {

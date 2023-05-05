@@ -54,7 +54,7 @@
         "incomeOpt4": "66% to 90%",
         "incomeOpt5": "100% (Full portfolio must be liquid)",
         "establish": "Establishes your investment experience and knowledge",
-        "uploadNecessary": "Upload the necessary documents to give proof opf your income.",
+        "uploadNecessary": "Upload the necessary documents to give proof of your income.",
         "whyToDo": "Why do I need to do this?"
     },
     "firm": {
@@ -91,7 +91,9 @@
         "uploadPic": "Upload a photo of your passport.",
         "uploadProperty": "Upload your property document copy.",
         "uploadSelfie": "Upload your Selfie with passport copy.",
-        "example": "See example"
+        "example": "See example",
+        "agree": "I agree to KANZ",
+        "termsConditions": "Terms and Conditions"
     },
     "buttons": {
         "start": "Lets start",
@@ -107,7 +109,8 @@
         "upload":"Upload",
         "uploadFile":"Upload a file",
         "orDragDrop":"or drag and drop",
-        "preview": "Preview"
+        "preview": "Preview",
+        "submit": "Submit"
     },
     "modal": {
         "thankyou": "\"Thank you for submitting your information!",

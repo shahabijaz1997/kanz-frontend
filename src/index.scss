@@ -5,6 +5,7 @@
 
   --background: #FBFBFB;
   --background-check: #F1F1F1;
+  --background-submit: #0E2E35;
   --background-bell: #F5F5F5;
   --background-checked: #27AE60;
   --primary: #155E75;
@@ -35,6 +36,10 @@ html {
 
 .primary-bg {
   background-color: var(--primary) !important;
+}
+
+.primary-bg {
+  background-color: var(--background-submit) !important;
 }
 
 .color-blue {
