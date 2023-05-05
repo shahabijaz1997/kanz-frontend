@@ -53,7 +53,9 @@
         "incomeOpt3": "34% to 66%",
         "incomeOpt4": "66% to 90%",
         "incomeOpt5": "100% (Full portfolio must be liquid)",
-        "establish": "Establishes your investment experience and knowledge"
+        "establish": "Establishes your investment experience and knowledge",
+        "uploadNecessary": "Upload the necessary documents to give proof opf your income.",
+        "whyToDo": "Why do I need to do this?"
     },
     "firm": {
         "firm": "Firm Accreditation",
@@ -63,6 +65,9 @@
         "option2": "Firm has between AED 50 million and 100 million in investment",
         "option3": "Firm has between AED 10 million and 50 million in investment",
         "option4": "Firm has between AED 1 million and 10 million in investment"
+    },
+    "header": {
+        "attachment": "Attachments"
     },
     "common": {
         "risk": "Risk disclaimer:",
@@ -79,7 +84,14 @@
         "attachmentPending": "Your attachment is pending. Add attachments for account approval",
         "aed": "AED",
         "million": "Million",
-        "noCountries": "No countries found"
+        "noCountries": "No countries found",
+        "idProof": "Proof of identity",
+        "selfProof": "Identify Verification",
+        "resProof": "Proof of residence",
+        "uploadPic": "Upload a photo of your passport.",
+        "uploadProperty": "Upload your property document copy.",
+        "uploadSelfie": "Upload your Selfie with passport copy.",
+        "example": "See example"
     },
     "buttons": {
         "start": "Lets start",
@@ -91,7 +103,11 @@
         "addAttachment": "Add attachment",
         "gotoDashboard": "Go to Dashboard",
         "yes": "Yes",
-        "no": "No"
+        "no": "No",
+        "upload":"Upload",
+        "uploadFile":"Upload a file",
+        "orDragDrop":"or drag and drop",
+        "preview": "Preview"
     },
     "modal": {
         "thankyou": "\"Thank you for submitting your information!",
@@ -100,6 +116,7 @@
         "sub_3": " contact us at"
     },
     "promptMessages": {
-        "invalidEmail": "You are typing Invalid email address"
+        "invalidEmail": "You are typing Invalid email address",
+        "fileUpload": "Successfully uploaded"
     }
 }

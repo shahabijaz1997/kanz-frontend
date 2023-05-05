@@ -12,6 +12,7 @@ const InvestorFlow = lazy(() => import("../Onboarding/InvestorFlow"));
 const CompleteDetails = lazy(() => import("../Onboarding/CompleteDetails"));
 const CompleteGoals = lazy(() => import("../Onboarding/CompleteGoals"));
 const PhilosophyGoals = lazy(() => import("../Onboarding/PhilosophyGoals"));
+const AddAttachments = lazy(() => import("../Onboarding/AddAttachments"));
 
 const AuthenticateRoute = (props: PropsWithChildren) => {
     const { children } = props;
@@ -38,6 +39,7 @@ const RouterModule = () => {
             <Route path="/complete-details" element={<Suspense fallback={<div></div>}><AuthenticateRoute><CompleteDetails guard={authToken} /></AuthenticateRoute></Suspense>} />
             <Route path="/complete-goals" element={<Suspense fallback={<div></div>}><AuthenticateRoute><CompleteGoals guard={authToken} /></AuthenticateRoute></Suspense>} />
             <Route path="/philosophy-goals/:id" element={<Suspense fallback={<div></div>}><AuthenticateRoute><PhilosophyGoals guard={authToken} /></AuthenticateRoute></Suspense>} />
+            <Route path="/add-attachments" element={<Suspense fallback={<div></div>}><AuthenticateRoute><AddAttachments guard={authToken} /></AuthenticateRoute></Suspense>} />
             <Route path="/login" element={<Suspense fallback={<div></div>}><Login guard={authToken} /></Suspense>} />
         </Routes>
     )

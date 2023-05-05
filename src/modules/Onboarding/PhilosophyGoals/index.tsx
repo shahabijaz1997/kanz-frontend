@@ -1,6 +1,6 @@
 import { useSelector } from "react-redux";
 import Header from "../../../shared/components/Header";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { RootState } from "../../../redux-toolkit/store/store";
 import { useLayoutEffect, useState } from "react";
 import Objective from "./Objective";
@@ -10,6 +10,7 @@ import Modal from "../../../shared/components/Modal";
 
 const PhilosophyGoals = (props: any) => {
     const params = useParams();
+    const navigate = useNavigate();
     const language: any = useSelector((state: RootState) => state.language.value);
     const [selection, setSelection] = useState(Number(params?.id) || 1);
     const [isOpen, setOpen] = useState(false);
@@ -22,7 +23,7 @@ const PhilosophyGoals = (props: any) => {
     return (
         <main className="h-full max-h-full background-auth">
             <section className="h-[67px]">
-                <Header custom={true} data={{ leftMenu: language.individual.philosophyGoals, button: language.buttons.gotoDashboard }} />
+                <Header custom={true} data={{ leftMenu: language.individual.philosophyGoals, button: <button className="text-neutral-900 font-bold text-sm w-[150px] h-9 border border-black shadow-sm">{language.buttons.gotoDashboard}</button> }} />
             </section>
             <Drawer isOpen={isOpen} setIsOpen={(val: boolean) => setOpen(val)}>
                 <header className="font-bold text-xl">{language.philosophyGoals.objective}</header>
@@ -43,7 +44,10 @@ const PhilosophyGoals = (props: any) => {
                         <p className="text-sm font-normal text-neutral-500 text-center leading-relaxed">{language.modal.sub_3} <span className="color-blue">012-345678</span></p>
                     </div>
 
-                    <button className="mt-8 bg-cyan-800 text-white w-[120px] h-9 inline-flex items-center justify-center rounded-md" type="button" onClick={() => setShowModal(false)}>
+                    <button className="mt-8 bg-cyan-800 text-white w-[120px] h-9 inline-flex items-center justify-center rounded-md" type="button" onClick={() => {
+                        setShowModal(false);
+                        navigate("/add-attachments")
+                    }}>
                         {language.buttons.continue}
                     </button>
                 </div>
