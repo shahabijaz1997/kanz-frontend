@@ -103,10 +103,10 @@ const AddAttachments = (props: any) => {
                         {fileType === FileType.IMAGE ? <img src={modalOpen} alt="Img" className="max-h-[100%]" /> : <embed src={modalOpen} type="application/pdf" className="w-[80%] h-[90%]" />}
                     </React.Fragment>
                 ) : (
-                    <div className="p-12 rounded-md shadow-cs-1 flex flex-col items-center w-full bg-white outline-none focus:outline-none">
+                    <div className="p-12 rounded-md shadow-cs-1 flex flex-col items-center w-full bg-white outline-none focus:outline-none screen800:px-3">
                         <h3 className="text-xl font-bold text-center">{language.modal.thankyou} {language.modal.sub_1}</h3>
 
-                        <div className="w-[80%]">
+                        <div className="w-[80%] screen800:w-full">
                             <p className="mt-8 text-sm font-normal text-neutral-500 text-center leading-relaxed">{language.modal.sub_2}</p>
                             <p className="mt-4 text-sm font-normal text-neutral-500 text-center leading-relaxed">{language.modal.sub_3}</p>
                             <p className="text-sm font-normal text-neutral-500 text-center leading-relaxed">{language.modal.sub_4} <span className="color-blue">012-345678</span></p>

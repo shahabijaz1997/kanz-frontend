@@ -19,7 +19,7 @@ const CompleteGoals = (props: any) => {
             </section>
             <div className="w-full bg-cyan-800 h-12 inline-flex items-center justify-center screen800:flex-col screen800:h-20 screen800:gap-2">
                 <small className="text-white text-base font-semibold mr-4 screen800:text-xs screen800:text-center">{language?.common?.attachmentPending}</small>
-                <button className="bg-white rounded-md py-2 px-3 text-neutral-900 font-medium text-xs">{language?.buttons?.addAttachment}</button>
+                <button className="bg-white rounded-md py-2 px-3 text-neutral-900 font-medium text-xs" onClick={()=>navigate("/add-attachments")}>{language?.buttons?.addAttachment}</button>
             </div>
             <aside className="w-full flex items-center justify-center flex-col pt-[75px]">
                 <section className="flex items-start justify-center flex-col w-[800px] screen991:w-[90%]">
