@@ -8,3 +8,8 @@ export enum PromptMessage {
     WARNING = "warning",
     ERROR = "error"
 }
+
+export enum FileType {
+    IMAGE = "image",
+    PDF = "pdf"
+}

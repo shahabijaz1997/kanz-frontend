@@ -10,6 +10,7 @@ import Drawer from "../../../shared/components/Drawer";
 import HoverModal from "../../../shared/components/HoverModal";
 import SampleImage from "../../../assets/example_id.png";
 import SampleImage_2 from "../../../assets/example_id_2.png";
+import { FileType } from "../../../enums/types.enum";
 
 const AddAttachments = (props: any) => {
     const navigate = useNavigate();
@@ -20,12 +21,13 @@ const AddAttachments = (props: any) => {
     const [selectedId, setSelectedId]: any = useState(null);
     const [modalOpen, setModalOpen]: any = useState(null);
     const [isOpen, setOpen] = useState(false);
+    const [fileType, setFileType]: any = useState(null);
     const [agreeToTerms, setAgreeToTerms] = useState(false);
 
     return (
         <main className="h-full max-h-full background-auth overflow-y-auto">
             <section>
-                <Header custom={true} data={{ leftMenu: language.header.attachment, button: <button className=""><CrossIcon stroke="#171717" /></button> }} />
+                <Header custom={true} data={{ leftMenu: language.header.attachment, button: <button className=""><CrossIcon stroke="#171717" className="w-6 h-6" /></button> }} />
             </section>
 
             <aside className="w-[420px] h-full screen500:max-w-[300px] mx-auto py-12">
@@ -59,6 +61,7 @@ const AddAttachments = (props: any) => {
                                             </small>
                                             <FileUpload id={item.id} setModalOpen={(e: any) => {
                                                 setModalOpen(e.open ? e.url : null);
+                                                e.type && setFileType(e.type);
                                             }} />
                                         </div>
                                     </div>
@@ -93,11 +96,11 @@ const AddAttachments = (props: any) => {
                 {(typeof modalOpen === "string") ? (
                     <React.Fragment>
                         <div className="rounded-md h-8 w-8 inline-grid place-items-center cursor-pointer absolute right-2 top-2" style={{ backgroundColor: "rgba(0, 0, 0, 0.078" }}>
-                            <CrossIcon stroke="#fff" onClick={() => {
+                            <CrossIcon stroke="#fff" className="w-6 h-6" onClick={() => {
                                 setModalOpen(null);
                             }} />
                         </div>
-                        <img src={modalOpen} alt="Img" />
+                        {fileType === FileType.IMAGE ? <img src={modalOpen} alt="Img" className="max-h-[100%]" /> : <embed src={modalOpen} type="application/pdf" className="w-[80%] h-[90%]" />}
                     </React.Fragment>
                 ) : (
                     <div className="p-12 rounded-md shadow-cs-1 flex flex-col items-center w-full bg-white outline-none focus:outline-none">

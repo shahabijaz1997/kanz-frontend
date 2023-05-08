@@ -6,7 +6,7 @@ const CrossIcon = (props: SVGProps<SVGSVGElement>) => (
         fill="none"
         stroke={props.stroke}
         strokeWidth={1.5}
-        className="w-6 h-6"
+        className="w-full h-full"
         viewBox="0 0 24 24"
         {...props}
     >

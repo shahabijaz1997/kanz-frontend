@@ -171,6 +171,9 @@
     },
     "promptMessages": {
         "invalidEmail": "You are typing Invalid email address",
-        "fileUpload": "Successfully uploaded"
+        "fileUpload": "Successfully uploaded",
+        "bigFile": "File is too big",
+        "maxSize": "max file size i",
+        "invalidFormat": "This file format is not allowed"
     }
 }
