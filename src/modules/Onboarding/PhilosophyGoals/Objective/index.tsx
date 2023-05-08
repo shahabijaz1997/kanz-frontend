@@ -61,10 +61,10 @@ const Objective = ({ learnMore, nextStep }: any) => {
                     </ul>
                 </section>
                 <section className="w-full inline-flex items-center justify-between mt-16">
-                    <button className="text-neutral-900 font-semibold rounded-md border border-grey font-semibold rounded-md focus:outline-none focus:shadow-outline h-[38px] w-[140px]" type="button" onClick={() => navigate("/complete-goals")}>
+                    <button className="text-neutral-900 tracking-[0.03em] bg-white font-bold rounded-md border border-grey rounded-md focus:outline-none focus:shadow-outline h-[38px] w-[140px]" type="button" onClick={() => navigate("/complete-goals")}>
                         {language?.buttons?.back}
                     </button>
-                    <button disabled={!selectedInvest?.id ? true : false} className="text-white font-semibold rounded-md focus:outline-none focus:shadow-outline primary-bg h-[38px] w-[140px]" type="button" onClick={()=>navigate("/philosophy-goals/2")}>
+                    <button disabled={!selectedInvest?.id ? true : false} className="text-white tracking-[0.03em] bg-cyan-800 font-bold rounded-md focus:outline-none focus:shadow-outline h-[38px] w-[140px]" type="button" onClick={()=>navigate("/philosophy-goals/2")}>
                         {language?.buttons?.continue}
                     </button>
                 </section>

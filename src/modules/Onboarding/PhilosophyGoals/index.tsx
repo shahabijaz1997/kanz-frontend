@@ -23,7 +23,7 @@ const PhilosophyGoals = (props: any) => {
     return (
         <main className="h-full max-h-full background-auth overflow-y-auto">
             <section className="h-[67px]">
-                <Header custom={true} data={{ leftMenu: language.individual.philosophyGoals, button: <button className="text-neutral-900 font-bold text-sm w-[150px] h-9 border border-black shadow-sm">{language.buttons.gotoDashboard}</button> }} />
+                <Header custom={true} data={{ leftMenu: language.individual.philosophyGoals, button: <button className="text-neutral-900 bg-white font-bold text-sm w-[150px] h-9 border border-black shadow-sm">{language.buttons.gotoDashboard}</button> }} />
             </section>
             <Drawer isOpen={isOpen} setIsOpen={(val: boolean) => setOpen(val)}>
                 <header className="font-bold text-xl">{language.philosophyGoals.objective}</header>

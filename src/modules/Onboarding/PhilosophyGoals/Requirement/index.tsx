@@ -15,8 +15,8 @@ const Requirement = ({ learnMore, nextStep }: any) => {
     return (
         <aside className="w-full flex items-center justify-center flex-col pt-12 pb-5">
             <Stepper currentStep={1} />
-            <section className="flex items-start justify-center flex-col mt-12 max-w-[420px] screen500:max-w-[300px]">
-                <h3 className="text-colorBlack1 font-bold text-2xl">{language.philosophyGoals.req}</h3>
+            <section className="flex items-start justify-center flex-col max-w-[420px] screen500:max-w-[300px]">
+                <h3 className="text-colorBlack1 font-bold text-2xl pb-6">{language.philosophyGoals.req}</h3>
                 <p className="text-neutral-700 font-medium text-base">
                     <span>{language.philosophyGoals.incomeSub}</span>&nbsp;
                     <span className="color-blue cursor-pointe" onClick={learnMore}>{language.common.learn}</span>
@@ -56,10 +56,10 @@ const Requirement = ({ learnMore, nextStep }: any) => {
                 </section>
 
                 <section className="w-full inline-flex items-center justify-between mt-16">
-                    <button className="text-neutral-900 font-semibold rounded-md border border-grey font-semibold rounded-md focus:outline-none focus:shadow-outline h-[38px] w-[140px]" type="button" onClick={() => navigate("/philosophy-goals/1")}>
+                    <button className="text-neutral-900 tracking-[0.03em] bg-white font-bold rounded-md border border-grey rounded-md focus:outline-none focus:shadow-outline h-[38px] w-[140px]" type="button" onClick={() => navigate("/philosophy-goals/1")}>
                         {language?.buttons?.back}
                     </button>
-                    <button disabled={!selectedInvest?.id ? true : false} className="text-white font-semibold rounded-md focus:outline-none focus:shadow-outline primary-bg h-[38px] w-[140px]" type="button" onClick={nextStep}>
+                    <button disabled={!selectedInvest?.id ? true : false} className="text-white font-bold rounded-md bg-cyan-800 focus:outline-none focus:shadow-outline h-[38px] w-[140px]" type="button" onClick={nextStep}>
                         {language?.buttons?.continue}
                     </button>
                 </section>

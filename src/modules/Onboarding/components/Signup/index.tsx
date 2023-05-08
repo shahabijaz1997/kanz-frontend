@@ -71,11 +71,11 @@ const Signup = (props: any) => {
             <h2 className="text-[24px] font-bold text-left text-neutral-900 screen500:text-[20px]">{language?.onboarding?.createAccount}</h2>
             <form className="pt-12 pb-8 mb-4">
                 <div className="mb-4">
-                    <label className="block text-neutral-700 text-[14px] font-semibold mb-2" htmlFor="full-name">{language?.common?.fullName}</label>
+                    <label className="block text-neutral-700 text-sm font-semibold mb-2" htmlFor="full-name">{language?.common?.fullName}</label>
                     <input className="h-[42px] shadow-sm appearance-none border border-neutral-300 rounded-md w-full py-2 px-3 text-gray-500 leading-tight focus:outline-none focus:shadow-outline" id="full-name" type="text" placeholder="Alex Parker" />
                 </div>
                 <div className="mb-4 relative">
-                    <label className="block text-neutral-700 text-[14px] font-semibold mb-2" htmlFor="email">{language?.common?.email}</label>
+                    <label className="block text-neutral-700 text-sm font-semibold mb-2" htmlFor="email">{language?.common?.email}</label>
                     <input
                         className={`${data.email.length > 0 && !isValidEmail(data.email) && "mb-3"} h-[42px] shadow-sm appearance-none border border-neutral-300 rounded-md w-full py-2 px-3 text-gray-500 leading-tight focus:outline-none focus:shadow-outline`}
                         id="email" type="email"
@@ -86,7 +86,7 @@ const Signup = (props: any) => {
                     {data.email.length > 0 && !isValidEmail(data.email) && renderEmailValidation()}
                 </div>
                 <div className="mb-1 relative">
-                    <label className="block text-neutral-700 text-[14px] font-semibold mb-2" htmlFor="password">{language?.common?.password}</label>
+                    <label className="block text-neutral-700 text-sm font-semibold mb-2" htmlFor="password">{language?.common?.password}</label>
                     <input
                         className="h-[42px] shadow-sm appearance-none border border-neutral-300 rounded-md w-full py-2 pl-3 pr-12 text-gray-500 mb-3 leading-tight focus:outline-none focus:shadow-outline"
                         onChange={(e) => onSetData(e.target.value, "password")}

@@ -12,18 +12,18 @@ const Individual = ({ language }: any) => {
     const [riskChecked, setRiskChecked] = useState(false);
 
     return (
-        <form className="pt-12 pb-8 mb-4 w-full">
+        <form className="pb-8 mb-4 w-full">
             <section className="mb-8 w-full">
-                <label className="block text-neutral-700 text-sm font-semibold" htmlFor="full-name">{language?.common?.national}</label>
+                <label className="block text-neutral-700 text-sm font-medium" htmlFor="full-name">{language?.common?.national}</label>
                 <CountrySelector onChange={(v: any) => setNational(v)} selectedValue={national} />
             </section>
             <section className="mb-8 w-full relative" style={{ zIndex: 90 }}>
-                <label className="block text-neutral-700 text-sm font-semibold" htmlFor="full-name">{language?.common?.residence}</label>
+                <label className="block text-neutral-700 text-sm font-medium" htmlFor="full-name">{language?.common?.residence}</label>
                 <CountrySelector onChange={(v: any) => setResidence(v)} selectedValue={residence} />
             </section>
 
             <section className="mb-8 w-full relative">
-                <label className="block text-neutral-700 text-sm font-semibold" htmlFor="full-name">{language?.common?.accerQuestion}</label>
+                <label className="block text-neutral-700 text-sm font-medium mb-2" htmlFor="full-name">{language?.common?.accerQuestion}</label>
                 <ul>
                     {React.Children.toArray(
                         assertQuestions.map(as => {
@@ -43,7 +43,7 @@ const Individual = ({ language }: any) => {
                 <input type="checkbox" className="accent-cyan-800 h-3 w-3" checked={riskChecked} />
                 <div>
                     <h3 className="text-neutral-700 font-medium text-[14px] leading-none">{language?.common?.risk}</h3>
-                    <p className="text-neutral-500 text-sm font-normal">{language?.individual?.understanding}&nbsp;<span className="color-blue font-medium">{language?.common?.learn}</span></p>
+                    <p className="text-neutral-500 text-sm font-normal mt-1">{language?.individual?.understanding}&nbsp;<span className="color-blue font-medium">{language?.common?.learn}</span></p>
                 </div>
             </section>
 

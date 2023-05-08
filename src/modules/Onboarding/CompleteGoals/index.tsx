@@ -14,15 +14,15 @@ const CompleteGoals = (props: any) => {
 
     return (
         <main className="h-full max-h-full background-auth overflow-y-auto">
-            <section className="h-[67px]">
+            <section>
                 <Header />
             </section>
-                <div className="w-full bg-cyan-800 h-12 inline-flex items-center justify-center screen800:flex-col screen800:h-20 screen800:gap-2">
-                    <small className="text-white text-base font-semibold mr-4 screen800:text-xs screen800:text-center">{language?.common?.attachmentPending}</small>
-                    <button className="bg-white rounded-md py-2 px-3 text-neutral-900 font-medium text-xs">{language?.buttons?.addAttachment}</button>
-                </div>
-            <aside className="w-full flex items-center justify-center flex-col pt-12">
-                <section className="flex items-start justify-center flex-col w-[800px]screen991:w-[90%]">
+            <div className="w-full bg-cyan-800 h-12 inline-flex items-center justify-center screen800:flex-col screen800:h-20 screen800:gap-2">
+                <small className="text-white text-base font-semibold mr-4 screen800:text-xs screen800:text-center">{language?.common?.attachmentPending}</small>
+                <button className="bg-white rounded-md py-2 px-3 text-neutral-900 font-medium text-xs">{language?.buttons?.addAttachment}</button>
+            </div>
+            <aside className="w-full flex items-center justify-center flex-col pt-[75px]">
+                <section className="flex items-start justify-center flex-col w-[800px] screen991:w-[90%]">
                     <aside className="cursor-pointer rounded-xl p-6 mb-12 shadow-cs-1 w-full">
                         <section className="w-full flex items-start">
                             <div className="rounded-full check-background w-9 h-9 inline-grid place-items-center p-2">
@@ -51,7 +51,7 @@ const CompleteGoals = (props: any) => {
                         </section>
                     </aside>
 
-                    <GoalStepper language={language} navigate={()=>navigate("/philosophy-goals/1")} />           
+                    <GoalStepper language={language} navigate={() => navigate("/philosophy-goals/1")} />
                 </section>
             </aside>
         </main>
