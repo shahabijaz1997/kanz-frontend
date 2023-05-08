@@ -8,9 +8,7 @@
   --background-submit: #0E2E35;
   --background-bell: #F5F5F5;
   --background-checked: #27AE60;
-  --primary: #155E75;
   --text-blue: #2D9CDB;
-  --text-blue-2: #1976D2;
   --header-border: #E0E0E0;
 }
 
@@ -34,20 +32,8 @@ html {
   background-color: var(--background-checked);
 }
 
-.primary-bg {
-  background-color: var(--primary) !important;
-}
-
-.primary-bg {
-  background-color: var(--background-submit) !important;
-}
-
 .color-blue {
   color: var(--text-blue);
-}
-
-.color-blue-2 {
-  color: var(--text-blue-2);
 }
 
 .border-grey {

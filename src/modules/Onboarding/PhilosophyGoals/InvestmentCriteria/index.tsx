@@ -54,7 +54,7 @@ const InvestmentCriteria = () => {
                 <button className="text-neutral-900 tracking-[0.03em] bg-white font-bold rounded-md border border-grey rounded-md focus:outline-none focus:shadow-outline h-[38px] w-[140px]" type="button" onClick={() => navigate("/philosophy-goals/2")}>
                     {language?.buttons?.back}
                 </button>
-                <button disabled={!selectedStartup?.id ? true : false} className="text-white font-bold rounded-md bg-cyan-800 focus:outline-none focus:shadow-outline h-[38px] w-[140px]" type="button" onClick={() => navigate("/philosophy-goals/4")}>
+                <button disabled={!selectedStartup?.id ? true : false} className={`${!selectedStartup?.id && "opacity-70"} text-white font-bold rounded-md bg-cyan-800 focus:outline-none focus:shadow-outline h-[38px] w-[140px]`} type="button" onClick={() => navigate("/philosophy-goals/4")}>
                     {language?.buttons?.continue}
                 </button>
             </section>

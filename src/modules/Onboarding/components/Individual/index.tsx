@@ -5,7 +5,7 @@ import { InvestorType } from "../../../../enums/types.enum";
 
 const Individual = ({ language }: any) => {
     const navigate = useNavigate();
-    const [assertQuestions] = useState([{ id: 1, title: language?.individual?.option1, amount: "18.36", currency: language.common.million }, { id: 2, title: language?.individual?.option2,amount: "8-18.36", currency: language.common.million }, { id: 3, title: language?.individual?.option3,amount: "3.67-8",currency: language.common.million }, { id: 4, title: language?.individual?.option4, amount: "735,000" }])
+    const [assertQuestions] = useState([{ id: 1, title: language?.individual?.option1, amount: "18.36", currency: language.common.million }, { id: 2, title: language?.individual?.option2, amount: "8-18.36", currency: language.common.million }, { id: 3, title: language?.individual?.option3, amount: "3.67-8", currency: language.common.million }, { id: 4, title: language?.individual?.option4, amount: "735,000" }])
     const [selectedAssert, setSelectedAssert]: any = useState(null);
     const [national, setNational] = useState();
     const [residence, setResidence] = useState();
@@ -48,10 +48,10 @@ const Individual = ({ language }: any) => {
             </section>
 
             <section className="w-full inline-flex items-center justify-between mt-16">
-                <button className="text-neutral-900 font-semibold rounded-md border border-grey font-semibold rounded-md focus:outline-none focus:shadow-outline h-[38px] w-[140px]" type="button" onClick={() => navigate("/investor-type")}>
+                <button className="text-neutral-900 bg-white font-bold tracking-[0.03em] rounded-md border border-grey font-bold rounded-md focus:outline-none focus:shadow-outline h-[38px] w-[140px]" type="button" onClick={() => navigate("/investor-type")}>
                     {language?.buttons?.back}
                 </button>
-                <button disabled={!selectedAssert?.id ? true : false} className="text-white font-semibold rounded-md focus:outline-none focus:shadow-outline primary-bg h-[38px] w-[140px]" type="button" onClick={() => navigate("/complete-goals", { state: { type: InvestorType.INDIVIDUAL, selected: selectedAssert } })}>
+                <button disabled={!selectedAssert?.id ? true : false} className={`${!selectedAssert?.id && "opacity-70"} text-white bg-cyan-800 tracking-[0.03em] font-bold rounded-md focus:outline-none focus:shadow-outline h-[38px] w-[140px]`} type="button" onClick={() => navigate("/complete-goals", { state: { type: InvestorType.INDIVIDUAL, selected: selectedAssert } })}>
                     {language?.buttons?.continue}
                 </button>
             </section>

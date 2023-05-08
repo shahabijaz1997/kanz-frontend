@@ -64,7 +64,7 @@ const Objective = ({ learnMore, nextStep }: any) => {
                     <button className="text-neutral-900 tracking-[0.03em] bg-white font-bold rounded-md border border-grey rounded-md focus:outline-none focus:shadow-outline h-[38px] w-[140px]" type="button" onClick={() => navigate("/complete-goals")}>
                         {language?.buttons?.back}
                     </button>
-                    <button disabled={!selectedInvest?.id ? true : false} className="text-white tracking-[0.03em] bg-cyan-800 font-bold rounded-md focus:outline-none focus:shadow-outline h-[38px] w-[140px]" type="button" onClick={() => navigate("/philosophy-goals/2")}>
+                    <button disabled={!selectedInvest?.id ? true : false} className={`${!selectedInvest?.id && "opacity-70"} text-white tracking-[0.03em] bg-cyan-800 font-bold rounded-md focus:outline-none focus:shadow-outline h-[38px] w-[140px]`} type="button" onClick={() => navigate("/philosophy-goals/2")}>
                         {language?.buttons?.continue}
                     </button>
                 </section>

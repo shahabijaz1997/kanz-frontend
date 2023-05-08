@@ -78,7 +78,7 @@ const Loss = ({ learnMore, nextStep }: any) => {
                 <button className="text-neutral-900 tracking-[0.03em] bg-white font-bold rounded-md border border-grey rounded-md focus:outline-none focus:shadow-outline h-[38px] w-[140px]" type="button" onClick={() => navigate("/philosophy-goals/3")}>
                     {language?.buttons?.back}
                 </button>
-                <button disabled={!selectedLoss?.id ? true : false} className="text-white font-bold rounded-md bg-cyan-800 focus:outline-none focus:shadow-outline h-[38px] w-[140px]" type="button" onClick={onToNextStep}>
+                <button disabled={!selectedLoss?.id ? true : false} className={`${!selectedLoss?.id && "opacity-70"} text-white font-bold rounded-md bg-cyan-800 focus:outline-none focus:shadow-outline h-[38px] w-[140px]`} type="button" onClick={onToNextStep}>
                     {language?.buttons?.continue}
                 </button>
             </section>

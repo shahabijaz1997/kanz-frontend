@@ -77,10 +77,10 @@ const AddAttachments = (props: any) => {
                 </section>
 
                 <section className="w-full inline-flex items-center justify-between py-16">
-                    <button className="text-neutral-900 font-semibold rounded-md border border-grey font-semibold rounded-md focus:outline-none focus:shadow-outline h-[38px] w-[140px]" type="button" onClick={() => navigate("/")}>
+                    <button className="text-neutral-900 font-bold bg-white tracking-[0.03em] rounded-md border border-grey rounded-md focus:outline-none focus:shadow-outline h-[38px] w-[140px]" type="button" onClick={() => navigate("/")}>
                         {language?.buttons?.back}
                     </button>
-                    <button className="text-white font-semibold rounded-md focus:outline-none focus:shadow-outline primary-bg h-[38px] w-[140px]" type="button" onClick={() => setModalOpen(true)}>
+                    <button className="text-white font-bold bg-cyan-800 tracking-[0.03em] rounded-md focus:outline-none focus:shadow-outline h-[38px] w-[140px]" type="button" onClick={() => setModalOpen(true)}>
                         {language?.buttons?.submit}
                     </button>
                 </section>

@@ -20,7 +20,7 @@ const CompleteDetails = (props: any) => {
                     <h2 className="text-[24px] font-bold text-left text-neutral-900 mb-4 screen500:text-[20px]">{state === InvestorType.INDIVIDUAL ? language?.individual?.individual : language?.firm?.firm}</h2>
                     <h3 className="text-[16px] text-left text-neutral-700 mb-12 screen500:text-[12px]">
                         <span className="font-normal">{state === InvestorType.INDIVIDUAL ? language?.individual?.sub : language?.firm?.sub}</span> &nbsp;
-                        <span className="color-blue-2 font-medium">{language?.common?.learn}</span>
+                        <span className="color-blue font-medium">{language?.common?.learn}</span>
                     </h3>
                     {state === InvestorType.INDIVIDUAL && <Individual language={language} />}
                     {state === InvestorType.FIRM && <Firm language={language} />}

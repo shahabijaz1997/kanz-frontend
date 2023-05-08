@@ -28,7 +28,7 @@ const InvestorFlow = (props: any) => {
                     <h2 className="text-2xl font-bold text-left text-neutral-900 mb-4 screen500:text-[20px]">{language?.investorFow?.type}</h2>
                     <h3 className="text-base text-left text-neutral-700 mb-12 screen500:text-[12px]">
                         <span className="font-normal">{language?.investorFow?.sub}</span> &nbsp;
-                        <span className="color-blue-2 font-medium">{language?.common?.learn}</span>
+                        <span className="color-blue font-medium">{language?.common?.learn}</span>
                     </h3>
                     {React.Children.toArray(
                         accounts.map(account => {
@@ -51,7 +51,7 @@ const InvestorFlow = (props: any) => {
                         <button className="text-neutral-900 tracking-[0.03em] bg-white text-sm font-bold rounded-md border border-grey font-semibold rounded-md focus:outline-none focus:shadow-outline h-[38px] w-[140px]" type="submit">
                             {language?.buttons?.back}
                         </button>
-                        <button disabled={!selectedAccount?.link ? true : false} className="text-white tracking-[0.03em] font-bold rounded-md bg-cyan-800 focus:outline-none focus:shadow-outline h-[38px] w-[140px]" type="button" onClick={() => navigate(`/complete-details`, { state: selectedAccount?.link })}>
+                        <button disabled={!selectedAccount?.link ? true : false} className={`${!selectedAccount?.link && "opacity-70"} text-white tracking-[0.03em] font-bold rounded-md bg-cyan-800 focus:outline-none focus:shadow-outline h-[38px] w-[140px]`} type="button" onClick={() => navigate(`/complete-details`, { state: selectedAccount?.link })}>
                             {language?.buttons?.continue}
                         </button>
                     </section>
