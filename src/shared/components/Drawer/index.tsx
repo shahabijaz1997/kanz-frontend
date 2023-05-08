@@ -3,7 +3,7 @@ import CrossIcon from "../../../ts-icons/crossIcon.svg";
 const Drawer = ({ children, isOpen, setIsOpen }: any) => {
 
     return (
-        <main className={"fixed overflow-hidden z-10 inset-0 transform ease-in-out " +
+        <aside className={"fixed overflow-hidden z-10 inset-0 transform ease-in-out " +
             (isOpen ? " transition-opacity opacity-100 duration-500 translate-x-0  " : " transition-all delay-500 opacity-0 translate-x-full  ")}>
             <section className={"w-[320px] right-5 top-1/2 translate-y-[-50%] absolute bg-white h-[80%] shadow-cs-2 delay-400 duration-500 ease-in-out transition-all transform  " +
                 (isOpen ? " translate-x-0 " : " translate-x-full ")}>
@@ -14,7 +14,7 @@ const Drawer = ({ children, isOpen, setIsOpen }: any) => {
                     {children}
                 </article>
             </section>
-        </main>
+        </aside>
     );
 };
 export default Drawer;

@@ -72,7 +72,7 @@ const Signup = (props: any) => {
             <form className="pt-12 pb-8 mb-4">
                 <div className="mb-4">
                     <label className="block text-neutral-700 text-[14px] font-semibold mb-2" htmlFor="full-name">{language?.common?.fullName}</label>
-                    <input className="h-[42px] shadow-sm appearance-none border border-neutral-300 rounded-md w-full py-2 px-3 text-gray-500 leading-tight focus:outline-none focus:shadow-outline" id="full-name" type="text" />
+                    <input className="h-[42px] shadow-sm appearance-none border border-neutral-300 rounded-md w-full py-2 px-3 text-gray-500 leading-tight focus:outline-none focus:shadow-outline" id="full-name" type="text" placeholder="Alex Parker" />
                 </div>
                 <div className="mb-4 relative">
                     <label className="block text-neutral-700 text-[14px] font-semibold mb-2" htmlFor="email">{language?.common?.email}</label>
@@ -81,6 +81,7 @@ const Signup = (props: any) => {
                         id="email" type="email"
                         onChange={(e) => onSetData(e.target.value, "email")}
                         value={data.email}
+                        placeholder="you@example.com"
                     />
                     {data.email.length > 0 && !isValidEmail(data.email) && renderEmailValidation()}
                 </div>
@@ -92,12 +93,13 @@ const Signup = (props: any) => {
                         value={data.password}
                         id="password"
                         type={viewPassword ? "text" : "password"}
+                        placeholder="**********"
                     />
                     {renderViewPassword()}
 
                 </div>
                 {renderPasswordStrengthUI()}
-                <button className="text-white font-semibold rounded-md focus:outline-none focus:shadow-outline w-full primary-bg h-[38px]" type="submit" onClick={onSetStepper}>
+                <button className="text-white text-sm font-semibold bg-cyan-800 tracking-[0.03em] rounded-md focus:outline-none focus:shadow-outline w-full h-[38px]" type="submit" onClick={onSetStepper}>
                     {language?.buttons?.createAccount}
                 </button>
                 <div className="flex items-center justify-center my-[38px]">

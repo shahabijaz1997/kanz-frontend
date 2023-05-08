@@ -14,14 +14,14 @@ const PhilosophyGoals = (props: any) => {
     const language: any = useSelector((state: RootState) => state.language.value);
     const [selection, setSelection] = useState(Number(params?.id) || 1);
     const [isOpen, setOpen] = useState(false);
-    const [showModal, setShowModal] = useState(false);
+    const [modalOpen, setModalOpen] = useState(false);
 
     useLayoutEffect(() => {
         setSelection(Number(params?.id) || 1)
     }, [params]);
 
     return (
-        <main className="h-full max-h-full background-auth">
+        <main className="h-full max-h-full background-auth overflow-y-auto">
             <section className="h-[67px]">
                 <Header custom={true} data={{ leftMenu: language.individual.philosophyGoals, button: <button className="text-neutral-900 font-bold text-sm w-[150px] h-9 border border-black shadow-sm">{language.buttons.gotoDashboard}</button> }} />
             </section>
@@ -33,19 +33,19 @@ const PhilosophyGoals = (props: any) => {
                 </p>
             </Drawer>
             {selection === 1 && <Objective learnMore={() => setOpen(true)} />}
-            {selection === 2 && <Requirement learnMore={() => setOpen(true)} nextStep={() => setShowModal(true)} />}
-            <Modal show={showModal}>
+            {selection === 2 && <Requirement learnMore={() => setOpen(true)} nextStep={() => setModalOpen(true)} />}
+            <Modal show={modalOpen}>
                 <div className="p-12 rounded-md shadow-cs-1 flex flex-col items-center w-full bg-white outline-none focus:outline-none">
                     <h3 className="text-xl font-bold">{language.modal.thankyou}</h3>
 
                     <div className="w-[80%]">
-                        <p className="mt-8 text-sm font-normal text-neutral-500 text-center leading-relaxed">{language.modal.sub_1}</p>
-                        <p className="mt-4 text-sm font-normal text-neutral-500 text-center leading-relaxed">{language.modal.sub_2}</p>
-                        <p className="text-sm font-normal text-neutral-500 text-center leading-relaxed">{language.modal.sub_3} <span className="color-blue">012-345678</span></p>
+                        <p className="mt-8 text-sm font-normal text-neutral-500 text-center leading-relaxed">{language.modal.sub_1} {language.modal.sub_2}</p>
+                        <p className="mt-4 text-sm font-normal text-neutral-500 text-center leading-relaxed">{language.modal.sub_3}</p>
+                        <p className="text-sm font-normal text-neutral-500 text-center leading-relaxed">{language.modal.sub_4} <span className="color-blue">012-345678</span></p>
                     </div>
 
                     <button className="mt-8 bg-cyan-800 text-white w-[120px] h-9 inline-flex items-center justify-center rounded-md" type="button" onClick={() => {
-                        setShowModal(false);
+                        setModalOpen(false);
                         navigate("/add-attachments")
                     }}>
                         {language.buttons.continue}

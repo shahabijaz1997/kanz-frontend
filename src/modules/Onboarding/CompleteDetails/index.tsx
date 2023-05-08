@@ -11,7 +11,7 @@ const CompleteDetails = (props: any) => {
     const language: any = useSelector((state: RootState) => state.language.value);
 
     return (
-        <main className="h-full max-h-full background-auth">
+        <main className="h-full max-h-full background-auth overflow-y-auto">
             <section className="h-[67px]">
                 <Header />
             </section>

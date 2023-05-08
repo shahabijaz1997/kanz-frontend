@@ -19,11 +19,11 @@ const InvestorFlow = (props: any) => {
     ])
 
     return (
-        <main className="h-full max-h-full background-auth">
-            <section className="h-[67px]">
+        <main className="h-full max-h-full background-auth overflow-y-auto">
+            <section>
                 <Header />
             </section>
-            <aside style={{ height: "calc(100% - 67px)" }} className="w-full flex items-center justify-center flex-col">
+            <aside className="w-full flex items-center justify-center flex-col">
                 <section className="flex items-start justify-center flex-col max-w-sm screen500:max-w-[300px]">
                     <h2 className="text-[24px] font-bold text-left text-neutral-900 mb-4 screen500:text-[20px]">{language?.investorFow?.type}</h2>
                     <h3 className="text-[16px] text-left text-neutral-700 mb-12 screen500:text-[12px]">

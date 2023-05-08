@@ -85,9 +85,9 @@
         "aed": "AED",
         "million": "Million",
         "noCountries": "No countries found",
-        "idProof": "Proof of identity",
+        "idProof": "Proof of identity.",
         "selfProof": "Identify Verification",
-        "resProof": "Proof of residence",
+        "resProof": "Proof of residence.",
         "uploadPic": "Upload a photo of your passport.",
         "uploadProperty": "Upload your property document copy.",
         "uploadSelfie": "Upload your Selfie with passport copy.",
@@ -114,9 +114,10 @@
     },
     "modal": {
         "thankyou": "\"Thank you for submitting your information!",
-        "sub_1": "We have received your responses and will be updating you on your email shortly.Please note that we will be using the information you provided to personalized your investment experience and provide you with relevant insights and recommendations.",
-        "sub_2": "If you need to make any changes to your information, please",
-        "sub_3": " contact us at"
+        "sub_1": "We have received your responses and will be updating you on your email shortly.",
+        "sub_2": "Please note that we will be using the information you provided to personalized your investment experience and provide you with relevant insights and recommendations.",
+        "sub_3": "If you need to make any changes to your information, please",
+        "sub_4": " contact us at"
     },
     "promptMessages": {
         "invalidEmail": "You are typing Invalid email address",

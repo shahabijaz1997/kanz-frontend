@@ -13,7 +13,7 @@ const CompleteGoals = (props: any) => {
     const language: any = useSelector((state: RootState) => state.language.value);
 
     return (
-        <main className="h-full max-h-full background-auth">
+        <main className="h-full max-h-full background-auth overflow-y-auto">
             <section className="h-[67px]">
                 <Header />
             </section>
@@ -22,7 +22,7 @@ const CompleteGoals = (props: any) => {
                     <button className="bg-white rounded-md py-2 px-3 text-neutral-900 font-medium text-xs">{language?.buttons?.addAttachment}</button>
                 </div>
             <aside className="w-full flex items-center justify-center flex-col pt-12">
-                <section className="flex items-start justify-center flex-col w-[800px] mt-12 screen991:w-[90%]">
+                <section className="flex items-start justify-center flex-col w-[800px]screen991:w-[90%]">
                     <aside className="cursor-pointer rounded-xl p-6 mb-12 shadow-cs-1 w-full">
                         <section className="w-full flex items-start">
                             <div className="rounded-full check-background w-9 h-9 inline-grid place-items-center p-2">
