@@ -15,7 +15,7 @@ import { FileType } from "../../../enums/types.enum";
 const AddAttachments = (props: any) => {
     const navigate = useNavigate();
     const language: any = useSelector((state: RootState) => state.language.value);
-    const [uploading, setUploading] = useState([
+    const [uploading] = useState([
         { title: language?.common?.idProof, sub: language?.common?.uploadPic, id: "id" }, { title: language?.common?.uploadSelfie, sub: language?.common?.uploadSelfie, id: "self" }, { title: language?.common?.resProof, sub: language?.common?.resProof, id: "res" }
     ]);
     const [selectedId, setSelectedId]: any = useState(null);

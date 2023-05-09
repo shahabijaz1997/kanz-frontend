@@ -16,8 +16,7 @@ const AddAttachments = lazy(() => import("../Onboarding/AddAttachments"));
 
 const AuthenticateRoute = (props: PropsWithChildren) => {
     const { children } = props;
-    const authToken: any = useSelector((state: RootState) => state.auth.value);
-    let location = useLocation();
+    // const authToken: any = useSelector((state: RootState) => state.auth.value);
     // if (authToken) {
     return <React.Fragment>{children}</React.Fragment>;
     // }
