@@ -11,7 +11,7 @@ const ClippedBanner = () => {
             <img src={LoginBg} alt={language?.onboarding?.loginBgAlt} className="w-full h-full absolute object-cover" />
             <aside className="bg-white rounded-[20px] w-[65%] h-[250px] absolute left-1/2 translate-x-[-50%] py-[20px] px-[22px] top-[20vh]">
                 <img src={QuotesSvg} alt={language?.onboarding?.quotes} />
-                <div className="relative top-[-28px] px-[20px]">
+                <div className="relative top-[-20px] px-[20px]">
                     <h2 className="m-0 p-0 text-[36px] font-bold leading-none screen1200:text-[30px]">{language?.onboarding?.welcome}</h2>
                     <p className="font-normal pt-[30px] text-[16px] leading-7 tracking-[3%] text-neutral-500 screen1200:text-[13px] screen1200:leading-2">Norem ipsum dolor sit amet, consectetur adipiscing elit. Etiam eu turpis molestie, <br />dictum est a, mattis tellus</p>
                 </div>

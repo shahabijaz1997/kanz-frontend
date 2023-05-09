@@ -15,8 +15,16 @@ module.exports = {
         },
         extend: {
             boxShadow: {
-                'cs-1': '0px 3px 8px rgba(0, 0, 0, 0.06), 0px 3px 7px rgba(0, 0, 0, 0.04)'
+                'cs-1': '0px 3px 8px rgba(0, 0, 0, 0.06), 0px 3px 7px rgba(0, 0, 0, 0.04)',
+                'cs-2': '0px 4px 12px rgba(0, 0, 0, 0.12)',
+                'cs-3': '0px 0.885714px 2.65714px rgba(0, 0, 0, 0.1), 0px 0.885714px 1.77143px rgba(0, 0, 0, 0.06)'
             },
+            colors: {
+                colorBlack1: '#0E2E35'
+            },
+            backgroundColor:{
+                "cbc-1": "#FCFCFC"
+            }
         },
     },
     variants: {
