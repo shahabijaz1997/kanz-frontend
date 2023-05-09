@@ -4,7 +4,7 @@ const Dropdown = (props: any) => {
     const { style, dropdownItems } = props;
     const [isOpen, setIsOpen] = useState(false);
     const dropdownRef: any = useRef(null);
-    const [selected, setSelected] = useState(dropdownItems[0]);
+    const [selected] = useState(dropdownItems[0]);
 
     useEffect(() => {
         const handleOutsideClick = (event: any) => {

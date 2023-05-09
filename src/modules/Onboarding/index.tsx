@@ -9,7 +9,7 @@ const Onboarding = (props: any) => {
     const [stepper, setStepper] = useState(0);
 
     return (
-        <main className="h-full max-h-full background-auth">
+        <main className="h-full max-h-full background-auth overflow-y-auto">
             <ClippedBanner />
             <section className="h-full w-[55%] inline-block align-top screen991:w-full">
                 <aside className="inline-flex flex-col items-center justify-center w-full h-full">
