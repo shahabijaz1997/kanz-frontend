@@ -8,10 +8,41 @@ import BellIcon from "../../../../ts-icons/BellIcon.svg";
 
 const GeneralHeader = ({ responsive = false, showMenu = false }: any) => {
     const language: any = useSelector((state: RootState) => state.language.value);
+    const userData: any = useSelector((state: RootState) => state.user.value);
     const navigationMenu = [{ id: 1, title: language.header.investment }, { id: 2, title: language.header.startup }, { id: 3, title: language.header.syndicate }, { id: 4, title: language.header.company }]
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const toggleMenu = () => {
         setIsMenuOpen(!isMenuOpen);
+    };
+
+    const authenticatedHeaderNav = () => {
+        console.log(userData);
+
+        if (userData.isLoggedin) {
+            return (
+                <React.Fragment>
+                    <li className="">
+                        <div className="rounded-full w-8 h-8 inline-grid place-items-center bell-background ">
+                            <BellIcon stroke={"#4F4F4F"} />
+                        </div>
+                    </li>
+                    <li className="">
+                        <img className="rounded-full w-8 h-8 inline-grid place-items-center" src="https://randomuser.me/api/portraits/men/46.jpg" alt="User" />
+                    </li>
+                </React.Fragment>
+            )
+        } else {
+            return (
+                <React.Fragment>
+                    <li className="">
+                        <button className="text-neutral-500 cursor-pointer text-sm tracking-[0.03em]">{language.buttons.signin}</button>
+                    </li>
+                    <li className="">
+                        <button className="text-white text-sm tracking-[0.03em] bg-cyan-800 rounded-md focus:outline-none focus:shadow-outline w-full h-[38px] px-3">{language.buttons.getStart}</button>
+                    </li>
+                </React.Fragment>
+            )
+        }
     };
 
     return (
@@ -37,14 +68,7 @@ const GeneralHeader = ({ responsive = false, showMenu = false }: any) => {
                             <li className="relative">
                                 <Dropdown dropdownItems={languageDropdownItems} />
                             </li>
-                            <li className="">
-                                <div className="rounded-full w-8 h-8 inline-grid place-items-center bell-background ">
-                                    <BellIcon stroke={"#4F4F4F"} />
-                                </div>
-                            </li>
-                            <li className="">
-                                <img className="rounded-full w-8 h-8 inline-grid place-items-center" src="https://randomuser.me/api/portraits/men/46.jpg" alt="User" />
-                            </li>
+                            {authenticatedHeaderNav()}
                         </ul>
                     </nav>
                 </div>

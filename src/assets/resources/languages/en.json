@@ -162,7 +162,9 @@
         "uploadFile": "Upload a file",
         "orDragDrop": "or drag and drop",
         "preview": "Preview",
-        "submit": "Submit"
+        "submit": "Submit",
+        "signin": "Sign in",
+        "getStart": "Get Started"
     },
     "modal": {
         "thankyou": "\"Thank you for submitting your information!",
