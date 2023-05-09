@@ -114,7 +114,11 @@
         "option4": "Firm has between AED 1 million and 10 million in investment"
     },
     "header": {
-        "attachment": "Attachments"
+        "attachment": "Attachments",
+        "investment": "Investment",
+        "startup": "Startup",
+        "syndicate": "Syndicate",
+        "company": "Company"
     },
     "common": {
         "risk": "Risk disclaimer:",

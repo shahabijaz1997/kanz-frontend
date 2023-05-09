@@ -1,12 +1,15 @@
 import React, { useState } from "react";
+import { useSelector } from "react-redux";
+import { RootState } from "../../../../redux-toolkit/store/store";
 import Logo from "../../../../assets/logo.png";
 import Dropdown from "../../Dropdown";
 import { languageDropdownItems } from "../../../../utils/dropdown-items.utils";
 import BellIcon from "../../../../ts-icons/BellIcon.svg";
 
-const GeneralHeader = ({ responsive = false}: any) => {
+const GeneralHeader = ({ responsive = false, showMenu = false }: any) => {
+    const language: any = useSelector((state: RootState) => state.language.value);
+    const navigationMenu = [{ id: 1, title: language.header.investment }, { id: 2, title: language.header.startup }, { id: 3, title: language.header.syndicate }, { id: 4, title: language.header.company }]
     const [isMenuOpen, setIsMenuOpen] = useState(false);
-
     const toggleMenu = () => {
         setIsMenuOpen(!isMenuOpen);
     };
@@ -14,13 +17,24 @@ const GeneralHeader = ({ responsive = false}: any) => {
     return (
         <React.Fragment>
             {!responsive ? (
-                <div className="container mx-auto px-4 py-4 flex items-center justify-between">
+                <div className="container relative mx-auto px-4 py-4 flex items-center justify-between">
                     <div className="flex items-center justify-between">
                         <img src={Logo} alt="App Logo" />
                     </div>
+
+                    {showMenu && (
+                        <nav className="absolute left-1/2 translate-x-[-50%]">
+                            <ul className="inline-flex gap-9">
+                                {React.Children.toArray(
+                                    navigationMenu.map(i => <li className="cursor-pointer transition-all text-neutral-500 text-base font-medium hover:text-neutral-900 hover:underline">{i.title}</li>)
+                                )}
+                            </ul>
+                        </nav>
+                    )}
+
                     <nav className="">
                         <ul className="inline-flex items-center gap-6">
-                            <li className="absolute top-[18px] right-[8%] w-full text-right">
+                            <li className="relative">
                                 <Dropdown dropdownItems={languageDropdownItems} />
                             </li>
                             <li className="">
