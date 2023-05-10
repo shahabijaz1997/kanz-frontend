@@ -26,6 +26,8 @@
         "linkedinLogin": "LinkedIn Login",
         "upperCase": "Upper case letter",
         "lowerCase": "Lower case letter",
+        "special": "Special letter",
+        "num": "Number",
         "min8": "Min 8 characters",
         "verificationCode": "Verification Code",
         "verificationText": "Enter the 4 digit verification code sent to your email",
@@ -198,6 +200,7 @@
         "fileUpload": "Successfully uploaded",
         "bigFile": "File is too big",
         "maxSize": "max file size i",
-        "invalidFormat": "This file format is not allowed"
+        "invalidFormat": "This file format is not allowed",
+        "errorGeneral": "An error occurred while performing this action"
     }
 }
