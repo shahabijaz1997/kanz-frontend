@@ -26,7 +26,7 @@ const Loss = ({ learnMore, nextStep }: any) => {
             <Stepper currentStep={stepperOpt} />
 
             <section className="flex items-start justify-center flex-col mt-12 max-w-[420px] screen500:max-w-[300px]">
-                <h3 className="text-colorBlack1 font-bold text-2xl pb-6">{language.loss.tolerance}</h3>
+                <h3 className="text-cc-black font-bold text-2xl pb-6">{language.loss.tolerance}</h3>
                 <p className="text-neutral-700 font-medium text-sm">
                     <span>{language.loss.maxLoss}</span>&nbsp;
                     <span className="color-blue cursor-pointer" onClick={() => setOpen(true)}>{language.common.clickDetails}</span>
@@ -50,7 +50,7 @@ const Loss = ({ learnMore, nextStep }: any) => {
             </section>
 
             <section className="flex items-start justify-center flex-col mt-12 max-w-[420px] screen500:max-w-[300px]">
-                <h3 className="text-colorBlack1 font-bold text-2xl pb-6">{language.loss.respLoss}</h3>
+                <h3 className="text-cc-black font-bold text-2xl pb-6">{language.loss.respLoss}</h3>
                 <p className="text-neutral-700 font-medium text-sm">
                     <span>{language.loss.respLossSub}</span>&nbsp;
                     <span className="color-blue cursor-pointer" onClick={() => setOpen(true)}>{language.common.clickDetails}</span>

@@ -32,7 +32,7 @@ const AddAttachments = (props: any) => {
 
             <aside className="w-[420px] h-full screen500:max-w-[300px] mx-auto py-12">
                 <section className="flex items-start justify-center flex-col">
-                    <h3 className="text-colorBlack1 font-bold text-2xl">{language.buttons.addAttachment}</h3>
+                    <h3 className="text-cc-black font-bold text-2xl">{language.buttons.addAttachment}</h3>
                     <p className="text-neutral-700 font-medium text-base">
                         <span>{language.philosophyGoals.uploadNecessary}</span>&nbsp;
                         <span className="color-blue cursor-pointer" onClick={() => setOpen(true)}>{language.philosophyGoals.whyToDo}</span>

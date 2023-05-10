@@ -8,15 +8,17 @@ import EyeSlash from "../../../../ts-icons/EyeSlashIcon.svg";
 import InformationIcon from "../../../../ts-icons/InformationIcon.svg";
 import GoogleIcon from "../../../../assets/icons/google_logo.png";
 import LinkedinIcon from "../../../../assets/icons/linedin_logo.png";
+import { signup } from "../../../../apis/auth.api";
 
 const Signup = (props: any) => {
     const { onSetStepper } = props;
     const language: any = useSelector((state: RootState) => state.language.value);
     const [viewPassword, setViewPassword] = useState(false);
-    const [data, setData] = useState({ fullName: "", email: "", password: "", })
+    const [payload, setPayload] = useState({ name: "", email: "", password: "", });
+    const [loading, setLoading] = useState(false);
 
-    const onSetData = (value: string, type: string) => {
-        setData((prev) => {
+    const onSetPayload = (value: string, type: string) => {
+        setPayload((prev) => {
             return { ...prev, [type]: value }
         })
     };
@@ -42,24 +44,41 @@ const Signup = (props: any) => {
         )
     };
 
+    const onSignup = async (e: any) => {
+        e.preventDefault();
+        try {
+            if (!payload.name || !payload.email || !payload.password) return;
+            setLoading(true);
+            
+            let { status, data }: any = await signup({ user: payload });
+            if (status === 200)
+                onSetStepper();
+
+        } catch (error) {
+
+        } finally {
+            setLoading(false);
+        }
+    };
+
     const renderPasswordStrengthUI = () => {
         return (
             <div className="inline-flex flex-row items-center justify-between w-full gap-4 mb-6 screen500:flex-col screen500:items-start">
                 <section className="inline-flex items-center">
-                    <div className={`${hasUpperCase(data.password) ? "checked-background" : "check-background"} rounded-full w-4 h-4 inline-grid place-items-center mr-1`}>
-                        <CheckIcon fill={`${hasUpperCase(data.password) ? "#fff" : "rgba(0, 0, 0, 0.3)"}`} />
+                    <div className={`${hasUpperCase(payload.password) ? "checked-background" : "check-background"} rounded-full w-4 h-4 inline-grid place-items-center mr-1`}>
+                        <CheckIcon fill={`${hasUpperCase(payload.password) ? "#fff" : "rgba(0, 0, 0, 0.3)"}`} />
                     </div>
                     <small className="text-neutral-500 text-[14px] font-normal">{language?.onboarding?.upperCase}</small>
                 </section>
                 <section className="inline-flex items-center">
-                    <div className={`${hasLowerCase(data.password) ? "checked-background" : "check-background"} check-background rounded-full w-4 h-4 inline-grid place-items-center mr-1`}>
-                        <CheckIcon fill={`${hasLowerCase(data.password) ? "#fff" : "rgba(0, 0, 0, 0.3)"}`} />
+                    <div className={`${hasLowerCase(payload.password) ? "checked-background" : "check-background"} check-background rounded-full w-4 h-4 inline-grid place-items-center mr-1`}>
+                        <CheckIcon fill={`${hasLowerCase(payload.password) ? "#fff" : "rgba(0, 0, 0, 0.3)"}`} />
                     </div>
                     <small className="text-neutral-500 text-[14px] font-normal">{language?.onboarding?.lowerCase}</small>
                 </section>
                 <section className="inline-flex items-center">
-                    <div className={`${data.password.length >= 8 ? "checked-background" : "check-background"} check-background rounded-full w-4 h-4 inline-grid place-items-center mr-1`}>
-                        <CheckIcon fill={`${data.password.length >= 8 ? "#fff" : "rgba(0, 0, 0, 0.3)"}`} />
+                    <div className={`${payload.password.length >= 8 ? "checked-background" : "check-background"} check-background rounded-full w-4 h-4 inline-grid place-items-center mr-1`}>
+                        <CheckIcon fill={`${payload.password.length >= 8 ? "#fff" : "rgba(0, 0, 0, 0.3)"}`} />
                     </div>
                     <small className="text-neutral-500 text-[14px] font-normal">{language?.onboarding?.min8}</small>
                 </section>
@@ -69,28 +88,30 @@ const Signup = (props: any) => {
     return (
         <section className="w-[428px] max-w-md pt-[130px] screen500:max-w-[300px]">
             <h2 className="text-[24px] font-bold text-left text-neutral-900 screen500:text-[20px]">{language?.onboarding?.createAccount}</h2>
-            <form className="pt-12 pb-8 mb-4">
+            <form className="pt-12 pb-8 mb-4" onSubmit={onSignup}>
                 <div className="mb-4">
                     <label className="block text-neutral-700 text-sm font-semibold mb-2" htmlFor="full-name">{language?.common?.fullName}</label>
-                    <input className="h-[42px] shadow-sm appearance-none border border-neutral-300 rounded-md w-full py-2 px-3 text-gray-500 leading-tight focus:outline-none focus:shadow-outline" id="full-name" type="text" placeholder="Alex Parker" />
+                    <input
+                        className="h-[42px] shadow-sm appearance-none border border-neutral-300 rounded-md w-full py-2 px-3 text-gray-500 leading-tight focus:outline-none focus:shadow-outline"
+                        id="full-name" type="text" placeholder="Alex Parker" value={payload.name} onChange={(e) => onSetPayload(e.target.value, "name")} />
                 </div>
                 <div className="mb-4 relative">
                     <label className="block text-neutral-700 text-sm font-semibold mb-2" htmlFor="email">{language?.common?.email}</label>
                     <input
-                        className={`${data.email.length > 0 && !isValidEmail(data.email) && "mb-3"} h-[42px] shadow-sm appearance-none border border-neutral-300 rounded-md w-full py-2 px-3 text-gray-500 leading-tight focus:outline-none focus:shadow-outline`}
+                        className={`${payload.email.length > 0 && !isValidEmail(payload.email) && "mb-3"} h-[42px] shadow-sm appearance-none border border-neutral-300 rounded-md w-full py-2 px-3 text-gray-500 leading-tight focus:outline-none focus:shadow-outline`}
                         id="email" type="email"
-                        onChange={(e) => onSetData(e.target.value, "email")}
-                        value={data.email}
+                        onChange={(e) => onSetPayload(e.target.value, "email")}
+                        value={payload.email}
                         placeholder="you@example.com"
                     />
-                    {data.email.length > 0 && !isValidEmail(data.email) && renderEmailValidation()}
+                    {payload.email.length > 0 && !isValidEmail(payload.email) && renderEmailValidation()}
                 </div>
                 <div className="mb-1 relative">
                     <label className="block text-neutral-700 text-sm font-semibold mb-2" htmlFor="password">{language?.common?.password}</label>
                     <input
                         className="h-[42px] shadow-sm appearance-none border border-neutral-300 rounded-md w-full py-2 pl-3 pr-12 text-gray-500 mb-3 leading-tight focus:outline-none focus:shadow-outline"
-                        onChange={(e) => onSetData(e.target.value, "password")}
-                        value={data.password}
+                        onChange={(e) => onSetPayload(e.target.value, "password")}
+                        value={payload.password}
                         id="password"
                         type={viewPassword ? "text" : "password"}
                         placeholder="**********"
@@ -99,7 +120,7 @@ const Signup = (props: any) => {
 
                 </div>
                 {renderPasswordStrengthUI()}
-                <button className="text-white text-sm font-semibold bg-cyan-800 tracking-[0.03em] rounded-md focus:outline-none focus:shadow-outline w-full h-[38px]" type="submit" onClick={onSetStepper}>
+                <button className="text-white text-sm font-semibold bg-cyan-800 tracking-[0.03em] rounded-md focus:outline-none focus:shadow-outline w-full h-[38px]" type="submit">
                     {language?.buttons?.createAccount}
                 </button>
                 <div className="flex items-center justify-center my-[38px]">

@@ -6,6 +6,7 @@ import { saveLanguage } from "../../redux-toolkit/slicer/language.slicer";
 import loadLanguage from "../../utils/load-language.utils";
 
 // Modules
+const Home = lazy(() => import("../Home"));
 const Login = lazy(() => import("../Onboarding"));
 const Welcome = lazy(() => import("../Onboarding/Welcome"));
 const InvestorFlow = lazy(() => import("../Onboarding/InvestorFlow"));
@@ -33,13 +34,14 @@ const RouterModule = () => {
 
     return (
         <Routes>
-            <Route path="/" element={<Suspense fallback={<div></div>}><AuthenticateRoute><Welcome guard={authToken} /></AuthenticateRoute></Suspense>} />
+            <Route path="/" element={<Suspense fallback={<div></div>}><Home guard={authToken} /></Suspense>} />
             <Route path="/investor-type" element={<Suspense fallback={<div></div>}><AuthenticateRoute><InvestorFlow guard={authToken} /></AuthenticateRoute></Suspense>} />
             <Route path="/complete-details" element={<Suspense fallback={<div></div>}><AuthenticateRoute><CompleteDetails guard={authToken} /></AuthenticateRoute></Suspense>} />
             <Route path="/complete-goals" element={<Suspense fallback={<div></div>}><AuthenticateRoute><CompleteGoals guard={authToken} /></AuthenticateRoute></Suspense>} />
             <Route path="/philosophy-goals/:id" element={<Suspense fallback={<div></div>}><AuthenticateRoute><PhilosophyGoals guard={authToken} /></AuthenticateRoute></Suspense>} />
             <Route path="/add-attachments" element={<Suspense fallback={<div></div>}><AuthenticateRoute><AddAttachments guard={authToken} /></AuthenticateRoute></Suspense>} />
-            <Route path="/login" element={<Suspense fallback={<div></div>}><Login guard={authToken} /></Suspense>} />
+            <Route path="/signup" element={<Suspense fallback={<div></div>}><Login guard={authToken} /></Suspense>} />
+            <Route path="/welcome" element={<Suspense fallback={<div></div>}><AuthenticateRoute><Welcome guard={authToken} /></AuthenticateRoute></Suspense>} />
         </Routes>
     )
 };

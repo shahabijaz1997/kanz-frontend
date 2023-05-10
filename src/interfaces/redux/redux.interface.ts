@@ -5,3 +5,7 @@ export interface Authtentication {
 export interface Language {
     value: any
 }
+
+export interface User {
+    value: any
+}
