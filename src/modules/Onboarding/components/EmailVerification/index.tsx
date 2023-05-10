@@ -19,7 +19,7 @@ const EmailVerification = () => {
                         <input className="h-[42px] shadow-sm appearance-none border border-neutral-300 rounded-md w-full py-2 px-3 text-gray-500 leading-tight focus:outline-none focus:shadow-outline" id="code" type="text" />
                     </div>
                     <div className="text-right text-neutral-500 font-normal text-[14px] screen500:text-[12px]">{language?.onboarding?.sentCode} (you@example.com) <span className="color-blue cursor-pointer" onClick={()=>setEdit(true)}>{language?.buttons?.edit} </span></div>
-                    <button className="text-white text-sm tracking-[0.03em] bg-cyan-800 rounded-md focus:outline-none focus:shadow-outline w-full h-[38px] mt-10" onClick={() => navigate("/")}>
+                    <button className="text-white text-sm tracking-[0.03em] bg-cyan-800 rounded-md focus:outline-none focus:shadow-outline w-full h-[38px] mt-10" onClick={() => navigate("/welcome")}>
                         {language?.buttons?.verify}
                     </button>
                 </form>

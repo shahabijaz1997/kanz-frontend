@@ -40,7 +40,7 @@ const RouterModule = () => {
             <Route path="/complete-goals" element={<Suspense fallback={<div></div>}><AuthenticateRoute><CompleteGoals guard={authToken} /></AuthenticateRoute></Suspense>} />
             <Route path="/philosophy-goals/:id" element={<Suspense fallback={<div></div>}><AuthenticateRoute><PhilosophyGoals guard={authToken} /></AuthenticateRoute></Suspense>} />
             <Route path="/add-attachments" element={<Suspense fallback={<div></div>}><AuthenticateRoute><AddAttachments guard={authToken} /></AuthenticateRoute></Suspense>} />
-            <Route path="/login" element={<Suspense fallback={<div></div>}><Login guard={authToken} /></Suspense>} />
+            <Route path="/signup" element={<Suspense fallback={<div></div>}><Login guard={authToken} /></Suspense>} />
             <Route path="/welcome" element={<Suspense fallback={<div></div>}><AuthenticateRoute><Welcome guard={authToken} /></AuthenticateRoute></Suspense>} />
         </Routes>
     )
