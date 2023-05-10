@@ -21,7 +21,7 @@ const Requirement = () => {
         <aside className="w-full flex items-center justify-center flex-col pt-12 pb-5">
             <Stepper currentStep={1} />
             <section className="flex items-start justify-center flex-col max-w-[420px] screen500:max-w-[300px]">
-                <h3 className="text-colorBlack1 font-bold text-2xl pb-6">{language.philosophyGoals.liqReq}</h3>
+                <h3 className="text-cc-black font-bold text-2xl pb-6">{language.philosophyGoals.liqReq}</h3>
                 <p className="text-neutral-700 font-medium text-sm">
                     <span>{language.philosophyGoals.incomeSub}</span>&nbsp;
                     <span className="color-blue cursor-pointer" onClick={() => setOpen(true)}>{language.common.clickDetails}</span>
@@ -44,7 +44,7 @@ const Requirement = () => {
             </section>
 
             <section className="flex items-start justify-center flex-col mt-12 max-w-[420px] screen500:max-w-[300px]">
-                <h3 className="text-colorBlack1 font-bold text-2xl pb-6">{language.philosophyGoals.investmentExperience}</h3>
+                <h3 className="text-cc-black font-bold text-2xl pb-6">{language.philosophyGoals.investmentExperience}</h3>
                 <p className="text-neutral-700 font-medium text-sm">{language.philosophyGoals.establish}</p>
 
                 <section className="w-full inline-flex items-center justify-between mt-4 gap-5">
@@ -65,7 +65,7 @@ const Requirement = () => {
 
             {selectedOption?.id === 1 && (
                 <section className="flex items-start justify-center flex-col mt-12 max-w-[420px] screen500:max-w-[300px]">
-                    <h3 className="text-colorBlack1 font-bold text-2xl pb-6">{language.investmentExperience.overallExp}</h3>
+                    <h3 className="text-cc-black font-bold text-2xl pb-6">{language.investmentExperience.overallExp}</h3>
                     <p className="text-neutral-700 font-medium text-sm">
                         <span>{language.investmentExperience.overallSub}</span>
                         <span className="color-blue cursor-pointer" onClick={() => setOpen(true)}>{language.common.clickDetails}</span>

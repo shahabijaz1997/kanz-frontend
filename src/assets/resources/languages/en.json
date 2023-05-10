@@ -1,4 +1,21 @@
 {
+    "landing": {
+        "unlock": "Unlock Opportunities",
+        "discoverStart": "Discover Startup, Investments and Syndicate Deals",
+        "discoverSub": "Anim aute id magna aliqua ad ad non deserunt sunt. Qui irure qui lorem cupidatat commodo. Elit sunt amet fugiat veniam occaecat fugiat aliqua.",
+        "kanzNetwork": "Kanz networked banking provides increased customer access to FDIC insurance and mitigates single-bank risk.",
+        "investSecSub": "Largest Distribution",
+        "investPara1": "Anim aute id magna aliqua ad ad non deserunt sunt. Qui irure qui lorem cupidatat commodo. Elit sunt amet fugiat veniam occaecat fugiat aliqua.",
+        "investPara2": "Anim aute id magna aliqua ad ad non deserunt sunt. Qui irure qui lorem cupidatat commodo. Elit sunt amet fugiat veniam occaecat fugiat aliqua. Anim aute id magna aliqua ad ad non deserunt sunt. Qui irure qui lorem cupidatat commodo.",
+        "switchedToKanz": "startups recently switched to Kanz",
+        "switchPara1": "Anim aute id magna aliqua ad ad non deserunt sunt. Qui irure qui lorem cupidatat commodo. Elit sunt amet fugiat veniam occaecat fugiat aliqua.",
+        "switchPara2": "Anim aute id magna aliqua ad ad non deserunt sunt. Qui irure qui lorem cupidatat commodo. Elit sunt amet fugiat veniam occaecat fugiat aliqua. Anim aute id magna aliqua ad ad non deserunt sunt. Qui irure qui lorem cupidatat commodo. Elit sunt amet fugiat veniam occaecat fugiat aliqua.",
+        "kanzNetworkBank": "Kanz networked banking provides increased customer access to FDIC insurance and mitigates single-bank risk.",
+        "invest":"Investor",
+        "startup": "Startups",
+        "syndicate": "Syndicate",
+        "realtors": "Realtors"
+    },
     "onboarding": {
         "welcome": "Welcome to Kanz",
         "loginBgAlt": "Login Background",
@@ -164,7 +181,8 @@
         "preview": "Preview",
         "submit": "Submit",
         "signin": "Sign in",
-        "getStart": "Get Started"
+        "getStart": "Get Started",
+        "readDocs": "Read Documentation"
     },
     "modal": {
         "thankyou": "\"Thank you for submitting your information!",
