@@ -3,8 +3,7 @@ import { SVGProps } from "react"
 const QuotesIcon = (props: SVGProps<SVGSVGElement>) => (
     <svg
         xmlns="http://www.w3.org/2000/svg"
-        width={141}
-        height={125}
+        className="w-full h-full"
         fill="none"
         {...props}
     >

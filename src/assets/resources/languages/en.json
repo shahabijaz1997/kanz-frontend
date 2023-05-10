@@ -14,7 +14,7 @@
         "invest":"Investor",
         "startup": "Startups",
         "syndicate": "Syndicate",
-        "realtors": "Realtors"
+        "realtor": "Realtors"
     },
     "onboarding": {
         "welcome": "Welcome to Kanz",
