@@ -1,18 +1,37 @@
 import React, { useState } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../../../redux-toolkit/store/store";
 import Logo from "../../../../assets/logo.png";
 import Dropdown from "../../Dropdown";
 import { languageDropdownItems } from "../../../../utils/dropdown-items.utils";
 import BellIcon from "../../../../ts-icons/BellIcon.svg";
+import { logout } from "../../../../apis/auth.api";
+import { useNavigate } from "react-router-dom";
+import { saveToken } from "../../../../redux-toolkit/slicer/auth.slicer";
 
 const GeneralHeader = ({ responsive = false, showMenu = false }: any) => {
+    const navigate = useNavigate();
+    const dispatch = useDispatch();
     const language: any = useSelector((state: RootState) => state.language.value);
+    const authToken: any = useSelector((state: RootState) => state.auth.value);
     const userData: any = useSelector((state: RootState) => state.user.value);
     const navigationMenu = [{ id: 1, title: language.header.investment }, { id: 2, title: language.header.startup }, { id: 3, title: language.header.syndicate }, { id: 4, title: language.header.company }]
     const [isMenuOpen, setIsMenuOpen] = useState(false);
+
     const toggleMenu = () => {
         setIsMenuOpen(!isMenuOpen);
+    };
+
+    const onLogout = async () => {
+        try {
+            let response: any = await logout(authToken);
+            if (response.status === 200) {
+                dispatch(saveToken(""));
+                navigate("/login")
+            }
+        } catch (error: any) {
+            console.info("Error while logging out :: ", error)
+        }
     };
 
     const authenticatedHeaderNav = () => {
@@ -32,9 +51,15 @@ const GeneralHeader = ({ responsive = false, showMenu = false }: any) => {
         } else {
             return (
                 <React.Fragment>
-                    <li className="">
-                        <button className="text-neutral-500 cursor-pointer text-sm tracking-[0.03em]">{language.buttons.signin}</button>
-                    </li>
+                    {authToken ? (
+                        <li onClick={onLogout}>
+                            <button className="text-neutral-500 cursor-pointer text-sm tracking-[0.03em]" >{language.buttons.logout}</button>
+                        </li>
+                    ) : (
+                        <li onClick={() => navigate("/login")}>
+                            <button className="text-neutral-500 cursor-pointer text-sm tracking-[0.03em]">{language.buttons.signin}</button>
+                        </li>
+                    )}
                     <li className="">
                         <button className="text-white text-sm tracking-[0.03em] bg-cyan-800 rounded-md focus:outline-none focus:shadow-outline w-full h-[38px] px-3">{language.buttons.getStart}</button>
                     </li>

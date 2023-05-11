@@ -43,7 +43,7 @@ const EmailVerification = ({ payload }: any) => {
             const { status, data } = await confirmToken({ confirmation_token: token });
             if(status === 200) {
                 toast.success(data?.message, toastUtil);
-                navigate("/welcome")
+                navigate("/login");
             }
 
         } catch (error: any) {
