@@ -8,5 +8,5 @@ export const signup = (payload: any) => {
 };
 
 export const confirmToken = (payload: any) => {
-    return axios.post(`${ENV.API_URL}/confirmation`, payload);
+    return axios.get(`${ENV.API_URL}/confirmation`, { params: payload});
 };

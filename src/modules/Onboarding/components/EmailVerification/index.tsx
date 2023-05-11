@@ -4,6 +4,8 @@ import { RootState } from "../../../../redux-toolkit/store/store";
 import { useNavigate } from "react-router-dom";
 import { confirmToken, signup } from "../../../../apis/auth.api";
 import Spinner from "../../../../shared/components/Spinner";
+import { toast } from "react-toastify";
+import { toastUtil } from "../../../../utils/toast.utils";
 
 const EmailVerification = ({ payload }: any) => {
     const navigate = useNavigate();
@@ -21,16 +23,16 @@ const EmailVerification = ({ payload }: any) => {
             const { status, data } = await signup({ user: { email, password: payload.password, name: payload.name } });
             console.log(data);
 
-            if (status === 200) {
-                setToken("");
+            if (status === 200)
                 setEdit(false);
-            }
-
+            
         } catch (error: any) {
             const message = error?.response?.data?.status?.message || language.promptMessages.errorGeneral;
             console.info("Error while signing up :: ", message);
+            toast.error(message, toastUtil);
         } finally {
             setLoading(false);
+            setToken("");
         }
     };
 
@@ -39,16 +41,19 @@ const EmailVerification = ({ payload }: any) => {
             e.preventDefault();
             if (!token) return;
             setLoading(true);
-            let fd = new FormData();
-            fd.append("confirmation_token", token);
-            const { status, data } = await confirmToken(fd);
-            console.log(data);
+            const { status, data } = await confirmToken({ confirmation_token: token });
+            if(status === 200) {
+                toast.success(data?.message, toastUtil);
+                navigate("/welcome")
+            }
 
         } catch (error: any) {
             const message = error?.response?.data?.status?.message || language.promptMessages.errorGeneral;
             console.info("Error in verification :: ", message);
+            toast.error(message, toastUtil);
         } finally {
             setLoading(false);
+            setToken("");
         }
     };
 
