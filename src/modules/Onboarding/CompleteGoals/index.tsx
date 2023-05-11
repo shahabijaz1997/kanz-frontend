@@ -30,8 +30,6 @@ const CompleteGoals = (props: any) => {
             let { status, data } = await getInvestor(authToken);
             if (status === 200)
                 setApiResp(data);
-console.log(data, state);
-
         } catch (error: any) {
             const message = error?.response?.data?.status?.message || error?.response?.data || language.promptMessages.errorGeneral;
             console.info("Error in getting details :: ", error);
@@ -62,7 +60,7 @@ console.log(data, state);
                                 <h3 className="text-neutral-900 text-lg font-semibold">{apiResp?.status?.data?.role}</h3>
                                 <p className="text-neutral-700 text-sm font-normal mt-1">Emirati nationality, 4556 Brendan Ferry Los Angeles, CA 90210</p>
                             </div>
-                            <button className="bg-cyan-800 text-white w-[100px] h-9 inline-flex items-center justify-center rounded-md gap-1">
+                            <button className="bg-cyan-800 text-white w-[100px] h-9 inline-flex items-center justify-center rounded-md gap-1" onClick={()=>navigate(-1)}>
                                 <EditIcon stroke="#fff" />
                                 <small className="font-normal text-base">{language.buttons.edit}</small>
                             </button>
