@@ -2,23 +2,66 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import CountrySelector from "../../../../shared/components/CountrySelector";
 import { InvestorType } from "../../../../enums/types.enum";
+import { investmentAccridiation } from "../../../../apis/auth.api";
+import { useSelector } from "react-redux";
+import { RootState } from "../../../../redux-toolkit/store/store";
+import { toast } from "react-toastify";
+import { toastUtil } from "../../../../utils/toast.utils";
+import Spinner from "../../../../shared/components/Spinner";
 
 const Firm = ({ language }: any) => {
     const navigate = useNavigate();
-    const [assertQuestions] = useState([{ id: 1, title: language?.firm?.option1, amount: "100", currency: language.common.million }, { id: 2, title: language?.firm?.option2, amount: "50-100", currency: language.common.million }, { id: 3, title: language?.firm?.option3, amount: "10-50", currency: language.common.million }, { id: 4, title: language?.firm?.option4, amount: "1-10", currency: language.common.million }])
+    const authToken: any = useSelector((state: RootState) => state.auth.value);
+    const [assertQuestions] = useState([{ id: 1, title: language?.firm?.option1, low_limit: "100", upper_limit: "100", is_range: false, currency: language.common.million }, { id: 2, title: language?.firm?.option2, low_limit: "50", upper_limit: "100", is_range: false, currency: language.common.million }, { id: 3, title: language?.firm?.option3, low_limit: "10", upper_limit: "50", is_range: false, currency: language.common.million }, { id: 4, title: language?.firm?.option4, low_limit: "1", upper_limit: "10", is_range: false, currency: language.common.million }])
     const [selectedAssert, setSelectedAssert]: any = useState(null);
-    const [residence, setResidence] = useState();
+    const [payload, setPayload]: any = useState({ legal: "", residence: "", accer: "", risk: false })
+    const [loading, setLoading] = useState(false);
     const [riskChecked, setRiskChecked] = useState(false);
 
+    const onSetPayload = (data: any, type: string) => {
+        setPayload((prev: any) => {
+            return { ...prev, [type]: data }
+        })
+    };
+
+    const addinvestmentAccridiation = async (e: any) => {
+        e.preventDefault();
+        if (!selectedAssert?.id || !payload.legal || !payload.residence) return;
+        try {
+            setLoading(true);
+            let fd = new FormData();
+            fd.append("investor[meta_info][legal_name]", payload?.legal?.name)
+            fd.append("investor[meta_info][location]", payload?.residence?.name)
+            fd.append("investor[meta_info][accredititation]", selectedAssert?.amount)
+            fd.append("investor[meta_info][is_range]", String(selectedAssert.is_range))
+            fd.append("investor[meta_info][lower_limit]", selectedAssert.low_limit)
+            fd.append("investor[meta_info][uper_limit]", selectedAssert.upper_limit)
+            fd.append("investor[meta_info][accept_investment_criteria]", String(selectedAssert.low_limit))
+
+            let { data, status } = await investmentAccridiation(payload, authToken);
+            if (status === 200) {
+                toast.success(data?.status?.message, toastUtil);
+                navigate("/complete-goals", { state: { type: InvestorType.FIRM, selected: selectedAssert } })
+            }
+        } catch (error: any) {
+            const message = error?.response?.data?.status?.message || error?.response?.data || language.promptMessages.errorGeneral;
+            console.info("Error in Accrediation :: ", error);
+            toast.error(message, toastUtil);
+        } finally {
+            setLoading(false);
+        }
+    };
+
     return (
-        <form className="pt-12 pb-8 mb-4 w-full">
+        <form className="pt-12 pb-8 mb-4 w-full" onSubmit={addinvestmentAccridiation}>
             <section className="mb-8 w-full">
                 <label className="block text-neutral-700 text-sm font-medium" htmlFor="full-name">{language?.common?.legalName}</label>
-                <input className="h-[42px] shadow-sm appearance-none border border-neutral-300 rounded-md w-full py-2 px-3 text-gray-500 leading-tight focus:outline-none focus:shadow-outline" id="full-name" type="text" />
+                <input className="h-[42px] shadow-sm appearance-none border border-neutral-300 rounded-md w-full py-2 px-3 text-gray-500 leading-tight focus:outline-none focus:shadow-outline"
+                    id="full-name" type="text" value={payload.legal} onChange={(e) => onSetPayload(e.target.value, "legal")} />
             </section>
             <section className="mb-8 w-full relative" style={{ zIndex: 90 }}>
                 <label className="block text-neutral-700 text-sm font-medium" htmlFor="full-name">{language?.common?.location}</label>
-                <CountrySelector onChange={(v: any) => setResidence(v)} selectedValue={residence} />
+                <CountrySelector onChange={(v: any) => onSetPayload(v, "residence")} selectedValue={payload.residence} />
             </section>
 
             <section className="mb-8 w-full relative">
@@ -52,9 +95,15 @@ const Firm = ({ language }: any) => {
                 <button className="text-neutral-900 bg-white tracking-[0.03em] font-bold rounded-md border border-grey rounded-md focus:outline-none focus:shadow-outline h-[38px] w-[140px]" type="button" onClick={() => navigate("/investor-type")}>
                     {language?.buttons?.back}
                 </button>
-                {<button disabled={!selectedAssert?.id ? true : false} className={`${!selectedAssert?.id && "opacity-70"} text-white font-bold bg-cyan-800 tracking-[0.03em] rounded-md focus:outline-none focus:shadow-outline h-[38px] w-[140px]`} type="button" onClick={() => navigate("/complete-goals", { state: { type: InvestorType.FIRM, selected: selectedAssert } })}>
-                    {language?.buttons?.continue}
-                </button>}
+                {loading ? (
+                    <button className={`${!selectedAssert?.id || !payload.legal || !payload.residence && "opacity-70"} text-white font-bold bg-cyan-800 tracking-[0.03em] rounded-md focus:outline-none focus:shadow-outline h-[38px] w-[140px]`}>
+                        <Spinner />
+                    </button>
+                ) : (
+                    <button className={`${!selectedAssert?.id || !payload.legal || !payload.residence && "opacity-70"} text-white font-bold bg-cyan-800 tracking-[0.03em] rounded-md focus:outline-none focus:shadow-outline h-[38px] w-[140px]`} type="submit">
+                        {language?.buttons?.continue}
+                    </button>
+                )}
             </section>
         </form>
     )

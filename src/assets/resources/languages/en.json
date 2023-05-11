@@ -21,6 +21,7 @@
         "loginBgAlt": "Login Background",
         "quotes": "Quotes",
         "createAccount": "Create an account with Kanz",
+        "loginKanz": "Login to your Kanz account",
         "orSignIn": "Or Sign in with",
         "googleLogin": "Google Login",
         "linkedinLogin": "LinkedIn Login",
@@ -183,6 +184,7 @@
         "preview": "Preview",
         "submit": "Submit",
         "signin": "Sign in",
+        "logout": "Logout",
         "getStart": "Get Started",
         "readDocs": "Read Documentation"
     },
