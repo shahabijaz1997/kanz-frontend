@@ -21,7 +21,6 @@ const EmailVerification = ({ payload }: any) => {
             if (!email) return;
             setLoading(true);
             const { status, data } = await signup({ user: { email, password: payload.password, name: payload.name } });
-            console.log(data);
 
             if (status === 200)
                 setEdit(false);

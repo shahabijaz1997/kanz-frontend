@@ -16,8 +16,6 @@ const GeneralHeader = ({ responsive = false, showMenu = false }: any) => {
     };
 
     const authenticatedHeaderNav = () => {
-        console.log(userData);
-
         if (userData.isLoggedin) {
             return (
                 <React.Fragment>

@@ -47,7 +47,6 @@ const FileUpload = ({ id, setModalOpen }: any) => {
         }
         const url = URL.createObjectURL(file);
         let type;
-        console.log("file.type", file.type);
         
         if (file.type.includes("image")) {
             type = FileType.IMAGE;
