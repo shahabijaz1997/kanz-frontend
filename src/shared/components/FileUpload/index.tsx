@@ -4,7 +4,7 @@ import { RootState } from "../../../redux-toolkit/store/store";
 import AddImage from "../../../ts-icons/addImageIcon.svg";
 import BinIcon from "../../../ts-icons/binIcon.svg";
 import PreviewIcon from "../../../ts-icons/previewIcon.svg";
-import AlertMessage from "../AlertMessage";
+import FIleUploadAlert from "../FIleUploadAlert";
 import { FileType, PromptMessage } from "../../../enums/types.enum";
 import { fileSize, formatFileSize, validTypes } from "../../../utils/size-check.utils";
 
@@ -47,7 +47,6 @@ const FileUpload = ({ id, setModalOpen }: any) => {
         }
         const url = URL.createObjectURL(file);
         let type;
-        console.log("file.type", file.type);
         
         if (file.type.includes("image")) {
             type = FileType.IMAGE;
@@ -80,7 +79,7 @@ const FileUpload = ({ id, setModalOpen }: any) => {
 
     return (
         <React.Fragment>
-            {alertTye.type && <AlertMessage type={alertTye.type} message={alertTye.message} removeMessage={() => setAlertType({})} />}
+            {alertTye.type && <FIleUploadAlert type={alertTye.type} message={alertTye.message} removeMessage={() => setAlertType({})} />}
 
             <div className={`border-2 border-dashed rounded-md h-[140px] mt-4 ${dragOver ? "border-cyan-800" : "border-neutral-300"}`}
                 onDragOver={handleDragOver} onDragLeave={handleDragLeave} onDrop={handleDrop}>

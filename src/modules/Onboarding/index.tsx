@@ -6,7 +6,7 @@ import EmailVerification from "./components/EmailVerification";
 import { languageDropdownItems } from "../../utils/dropdown-items.utils";
 
 const Onboarding = (props: any) => {
-    const [stepper, setStepper] = useState(0);
+    const [payload, setPayload] = useState(null);
 
     return (
         <main className="h-full max-h-full background-auth overflow-y-auto">
@@ -16,8 +16,7 @@ const Onboarding = (props: any) => {
                     <section className="absolute top-[26px] right-[5%] w-full text-right">
                         <Dropdown dropdownItems={languageDropdownItems} />
                     </section>
-                    {stepper === 0 && <Signup onSetStepper={() => setStepper(1)} />}
-                    {stepper === 1 && <EmailVerification />}
+                    {!payload ? <Signup onSetStepper={(data: any) => { setPayload(data) }} /> : <EmailVerification payload={payload} />}
                 </aside>
             </section>
         </main>

@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useSelector } from "react-redux";
 import { RootState } from "../../../../redux-toolkit/store/store";
-import { hasLowerCase, hasUpperCase, isValidEmail } from "../../../../utils/regex.utils";
+import { hasLowerCase, hasNumbers, hasSpecialCharacters, hasUpperCase, isValidEmail } from "../../../../utils/regex.utils";
 import CheckIcon from "../../../../ts-icons/CheckIcon.svg";
 import EyeIcon from "../../../../ts-icons/EyeIcon.svg";
 import EyeSlash from "../../../../ts-icons/EyeSlashIcon.svg";
@@ -9,6 +9,9 @@ import InformationIcon from "../../../../ts-icons/InformationIcon.svg";
 import GoogleIcon from "../../../../assets/icons/google_logo.png";
 import LinkedinIcon from "../../../../assets/icons/linedin_logo.png";
 import { signup } from "../../../../apis/auth.api";
+import Spinner from "../../../../shared/components/Spinner";
+import { toast } from "react-toastify";
+import { toastUtil } from "../../../../utils/toast.utils";
 
 const Signup = (props: any) => {
     const { onSetStepper } = props;
@@ -49,13 +52,17 @@ const Signup = (props: any) => {
         try {
             if (!payload.name || !payload.email || !payload.password) return;
             setLoading(true);
-            
-            let { status, data }: any = await signup({ user: payload });
+
+            const { status } = await signup({ user: payload });
             if (status === 200)
-                onSetStepper();
+                onSetStepper(payload);
+            else
+                toast.error(language.promptMessages.errorGeneral, toastUtil);
 
-        } catch (error) {
-
+        } catch (error: any) {
+            const message = error?.response?.data?.status?.message || language.promptMessages.errorGeneral;
+            console.info("Error while signing up :: ", message);
+            toast.error(message, toastUtil);
         } finally {
             setLoading(false);
         }
@@ -63,7 +70,7 @@ const Signup = (props: any) => {
 
     const renderPasswordStrengthUI = () => {
         return (
-            <div className="inline-flex flex-row items-center justify-between w-full gap-4 mb-6 screen500:flex-col screen500:items-start">
+            <div className="inline-flex flex-row items-center justify-center w-full gap-4 mb-6 screen500:flex-col screen500:items-start flex-wrap">
                 <section className="inline-flex items-center">
                     <div className={`${hasUpperCase(payload.password) ? "checked-background" : "check-background"} rounded-full w-4 h-4 inline-grid place-items-center mr-1`}>
                         <CheckIcon fill={`${hasUpperCase(payload.password) ? "#fff" : "rgba(0, 0, 0, 0.3)"}`} />
@@ -81,6 +88,18 @@ const Signup = (props: any) => {
                         <CheckIcon fill={`${payload.password.length >= 8 ? "#fff" : "rgba(0, 0, 0, 0.3)"}`} />
                     </div>
                     <small className="text-neutral-500 text-[14px] font-normal">{language?.onboarding?.min8}</small>
+                </section>
+                <section className="inline-flex items-center">
+                    <div className={`${hasNumbers(payload.password) ? "checked-background" : "check-background"} check-background rounded-full w-4 h-4 inline-grid place-items-center mr-1`}>
+                        <CheckIcon fill={`${hasNumbers(payload.password) ? "#fff" : "rgba(0, 0, 0, 0.3)"}`} />
+                    </div>
+                    <small className="text-neutral-500 text-[14px] font-normal">{language?.onboarding?.num}</small>
+                </section>
+                <section className="inline-flex items-center">
+                    <div className={`${hasSpecialCharacters(payload.password) ? "checked-background" : "check-background"} check-background rounded-full w-4 h-4 inline-grid place-items-center mr-1`}>
+                        <CheckIcon fill={`${hasSpecialCharacters(payload.password) ? "#fff" : "rgba(0, 0, 0, 0.3)"}`} />
+                    </div>
+                    <small className="text-neutral-500 text-[14px] font-normal">{language?.onboarding?.special}</small>
                 </section>
             </div>
         )
@@ -120,9 +139,15 @@ const Signup = (props: any) => {
 
                 </div>
                 {renderPasswordStrengthUI()}
-                <button className="text-white text-sm font-semibold bg-cyan-800 tracking-[0.03em] rounded-md focus:outline-none focus:shadow-outline w-full h-[38px]" type="submit">
-                    {language?.buttons?.createAccount}
-                </button>
+                {loading ? (
+                    <button className="text-white text-sm font-semibold bg-cyan-800 tracking-[0.03em] rounded-md focus:outline-none focus:shadow-outline w-full h-[38px]">
+                        <Spinner />
+                    </button>
+                ) : (
+                    <button className={`${(!payload.name || !payload.email || !payload.password) && "opacity-70"} text-white text-sm font-semibold bg-cyan-800 tracking-[0.03em] rounded-md focus:outline-none focus:shadow-outline w-full h-[38px]`} type="submit">
+                        {language?.buttons?.createAccount}
+                    </button>
+                )}
                 <div className="flex items-center justify-center my-[38px]">
                     <div className="border-t border-neutral-300 flex-grow"></div>
                     <div className="px-4 text-neutral-500 font-normal">{language?.onboarding?.orSignIn}</div>
