@@ -6,15 +6,15 @@ const initialState: Data = {
     value: {}
 }
 
-export const UserSlice = createSlice({
-    name: 'userData',
+export const PhilosophySlice = createSlice({
+    name: 'philosophyData',
     initialState,
     reducers: {
-        saveUserData: (state, action: PayloadAction<String>) => {
+        savePhilisophyData: (state, action: PayloadAction<String>) => {
             state.value = action.payload;
         }
     }
 });
 
-export const { saveUserData } = UserSlice.actions;
-export default UserSlice.reducer;
+export const { savePhilisophyData } = PhilosophySlice.actions;
+export default PhilosophySlice.reducer;
