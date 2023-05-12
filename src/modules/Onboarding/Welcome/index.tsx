@@ -17,8 +17,6 @@ const Welcome = (props: any) => {
     };
 
     const renderRoleWiseScreen = () => {
-        console.log("state", state);
-
         if (state?.role === Roles.INVESTOR) {
             return (
                 <React.Fragment>
