@@ -1,8 +1,9 @@
 import React from 'react';
 import CheckIcon from '../../../ts-icons/CheckIcon.svg';
 
-const Stepper = ({ currentStep = 1 }: any) => {
-    const steps = [1, 2, 3, 4, 5];
+const Stepper = ({ currentStep = 1, totalSteps = 5 }: any) => {
+    const steps: number[] = [];
+    for (let i = 1; i <= totalSteps; i++) steps.push(i);
 
     const renderCircle = (step: number) => {
         if (step <= currentStep) {
@@ -34,7 +35,7 @@ const Stepper = ({ currentStep = 1 }: any) => {
                 steps.map(step => (
                     <div className={`relative flex items-center ${currentStep === step ? 'text-green-500' : 'text-gray-400'} ${step > 1 && "ml-20 screen500:ml-7"}`} >
                         {renderCircle(step)}
-                        {step < 5 && <div className={`h-0.5 ${currentStep >= step ? 'bg-cyan-800' : 'bg-neutral-200'} w-20 absolute top-3.5 left-4.5 left-[100%] screen500:w-7`} />}
+                        {step < totalSteps && <div className={`h-0.5 ${currentStep >= step ? 'bg-cyan-800' : 'bg-neutral-200'} w-20 absolute top-3.5 left-4.5 left-[100%] screen500:w-7`} />}
                     </div>
                 ))
             )}

@@ -3,14 +3,16 @@ import { useNavigate } from "react-router-dom";
 import CountrySelector from "../../../../shared/components/CountrySelector";
 import { InvestorType } from "../../../../enums/types.enum";
 import { investmentAccridiation } from "../../../../apis/auth.api";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../../../redux-toolkit/store/store";
 import { toast } from "react-toastify";
 import { toastUtil } from "../../../../utils/toast.utils";
 import Spinner from "../../../../shared/components/Spinner";
+import { saveToken } from "../../../../redux-toolkit/slicer/auth.slicer";
 
 const Firm = ({ language }: any) => {
     const navigate = useNavigate();
+    const dispatch = useDispatch();
     const authToken: any = useSelector((state: RootState) => state.auth.value);
     const [assertQuestions] = useState([{ id: 1, title: language?.firm?.option1, low_limit: "100", upper_limit: "100", is_range: false, currency: language.common.million }, { id: 2, title: language?.firm?.option2, low_limit: "50", upper_limit: "100", is_range: false, currency: language.common.million }, { id: 3, title: language?.firm?.option3, low_limit: "10", upper_limit: "50", is_range: false, currency: language.common.million }, { id: 4, title: language?.firm?.option4, low_limit: "1", upper_limit: "10", is_range: false, currency: language.common.million }])
     const [selectedAssert, setSelectedAssert]: any = useState(null);
@@ -47,6 +49,10 @@ const Firm = ({ language }: any) => {
             const message = error?.response?.data?.status?.message || error?.response?.data || language.promptMessages.errorGeneral;
             console.info("Error in Accrediation :: ", error);
             toast.error(message, toastUtil);
+            if(error.response && error.response.status === 401) {
+                dispatch(saveToken(""));
+                navigate("/login");
+            }
         } finally {
             setLoading(false);
         }

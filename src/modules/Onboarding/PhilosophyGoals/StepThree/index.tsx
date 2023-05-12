@@ -5,7 +5,7 @@ import { RootState } from "../../../../redux-toolkit/store/store";
 import Stepper from "../../../../shared/components/Stepper";
 import Drawer from "../../../../shared/components/Drawer";
 
-const InvestmentCriteria = () => {
+const StepThree = () => {
     const navigate = useNavigate();
     const [isOpen, setOpen] = useState(false);
 
@@ -69,4 +69,4 @@ const InvestmentCriteria = () => {
         </aside>
     );
 };
-export default InvestmentCriteria;
+export default StepThree;

@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { toastUtil } from "../../../../utils/toast.utils";
@@ -8,9 +8,12 @@ import CountrySelector from "../../../../shared/components/CountrySelector";
 import { InvestorType } from "../../../../enums/types.enum";
 import { investmentAccridiation } from "../../../../apis/auth.api";
 import Spinner from "../../../../shared/components/Spinner";
+import { saveToken } from "../../../../redux-toolkit/slicer/auth.slicer";
 
 const Individual = ({ language }: any) => {
     const navigate = useNavigate();
+    const dispatch = useDispatch();
+
     const authToken: any = useSelector((state: RootState) => state.auth.value);
     const [assertQuestions] = useState([{ id: 1, title: language?.individual?.option1, low_limit: "18.36", upper_limit: "18.36", is_range: false, currency: language.common.million }, { id: 2, title: language?.individual?.option2, low_limit: "8", upper_limit: "18.36", is_range: true, currency: language.common.million }, { id: 3, title: language?.individual?.option3, low_limit: "3.67", upper_limit: "8", is_range: true, currency: language.common.million }, { id: 4, title: language?.individual?.option4, low_limit: "735,000", upper_limit: "735,000", is_range: false }])
     const [selectedAssert, setSelectedAssert]: any = useState(null);
@@ -48,6 +51,10 @@ const Individual = ({ language }: any) => {
             const message = error?.response?.data?.status?.message || error?.response?.data || language.promptMessages.errorGeneral;
             console.info("Error in Accrediation :: ", error);
             toast.error(message, toastUtil);
+            if(error.response && error.response.status === 401) {
+                dispatch(saveToken(""));
+                navigate("/login");
+            }
         } finally {
             setLoading(false);
         }

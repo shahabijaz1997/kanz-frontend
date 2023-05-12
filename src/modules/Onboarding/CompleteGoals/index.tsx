@@ -1,5 +1,5 @@
 import { useState, useLayoutEffect } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../../redux-toolkit/store/store";
 import { useLocation, useNavigate } from "react-router-dom";
 import Header from "../../../shared/components/Header";
@@ -11,10 +11,13 @@ import { getInvestor } from "../../../apis/auth.api";
 import { toast } from "react-toastify";
 import { toastUtil } from "../../../utils/toast.utils";
 import Spinner from "../../../shared/components/Spinner";
+import { saveToken } from "../../../redux-toolkit/slicer/auth.slicer";
 
 const CompleteGoals = (props: any) => {
     const { state } = useLocation();
     const navigate = useNavigate();
+    const dispatch = useDispatch();
+
     const language: any = useSelector((state: RootState) => state.language.value);
     const authToken: any = useSelector((state: RootState) => state.auth.value);
     const [loading, setLoading] = useState(false);
@@ -34,6 +37,10 @@ const CompleteGoals = (props: any) => {
             const message = error?.response?.data?.status?.message || error?.response?.data || language.promptMessages.errorGeneral;
             console.info("Error in getting details :: ", error);
             toast.error(message, toastUtil);
+            if(error.response && error.response.status === 401) {
+                dispatch(saveToken(""));
+                navigate("/login");
+            }
         } finally {
             setLoading(false);
         }
