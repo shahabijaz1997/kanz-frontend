@@ -18,6 +18,8 @@
     },
     "onboarding": {
         "welcome": "Welcome to Kanz",
+        "syndicateLead": "Add Syndicate Lead Info",
+        "syndicateLeadSub": "Norem ipsum dolor sit amet, consectetur adipiscing elit. consectetur adipiscing elit.",
         "loginBgAlt": "Login Background",
         "quotes": "Quotes",
         "createAccount": "Create an account with Kanz",
