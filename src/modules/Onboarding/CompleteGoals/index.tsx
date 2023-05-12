@@ -12,6 +12,7 @@ import { toast } from "react-toastify";
 import { toastUtil } from "../../../utils/toast.utils";
 import Spinner from "../../../shared/components/Spinner";
 import { saveToken } from "../../../redux-toolkit/slicer/auth.slicer";
+import AddAttachmentBanner from "../../../shared/components/AddAttachmentBanner";
 
 const CompleteGoals = (props: any) => {
     const { state } = useLocation();
@@ -52,10 +53,7 @@ const CompleteGoals = (props: any) => {
                 <Header />
             </section>
             {loading && <div className="absolute left-0 top-0 w-full h-full grid place-items-center" style={{backgroundColor: "rgba(0, 0, 0, 0.078)"}}><Spinner /></div>}
-            <div className="w-full bg-cyan-800 h-12 inline-flex items-center justify-center screen800:flex-col screen800:h-20 screen800:gap-2">
-                <small className="text-white text-base font-semibold mr-4 screen800:text-xs screen800:text-center">{language?.common?.attachmentPending}</small>
-                <button className="bg-white rounded-md py-2 px-3 text-neutral-900 font-medium text-xs" onClick={() => navigate("/add-attachments")}>{language?.buttons?.addAttachment}</button>
-            </div>
+           <AddAttachmentBanner language={language} navigate={navigate} />
             <aside className="w-full flex items-center justify-center flex-col pt-[75px]">
                 <section className="flex items-start justify-center flex-col w-[800px] screen991:w-[90%]">
                     <aside className="cursor-pointer rounded-xl p-6 mb-12 shadow-cs-1 w-full">

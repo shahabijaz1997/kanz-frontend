@@ -14,6 +14,7 @@ import EyeSlash from "../../ts-icons/EyeSlashIcon.svg";
 import Spinner from "../../shared/components/Spinner";
 import { saveToken } from "../../redux-toolkit/slicer/auth.slicer";
 import { signin } from "../../apis/auth.api";
+import { Roles } from "../../enums/roles.enum";
 
 const Login = ({ }: any) => {
     const dispatch = useDispatch();
@@ -66,7 +67,7 @@ const Login = ({ }: any) => {
                 const token = response.headers["authorization"].split(" ")[1]
                 dispatch(saveToken(token));
                 toast.success(response.status.message, toastUtil);
-                navigate("/welcome");
+                navigate("/welcome", { state: { role: Roles.INVESTOR } });
             }
             else toast.error(language.promptMessages.errorGeneral, toastUtil);
 
