@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../../redux-toolkit/store/store";
 import { useNavigate } from "react-router-dom";
 import { InvestorType } from "../../../enums/types.enum";
@@ -11,10 +11,12 @@ import { selectInvestorType } from "../../../apis/auth.api";
 import { toast } from "react-toastify";
 import { toastUtil } from "../../../utils/toast.utils";
 import Spinner from "../../../shared/components/Spinner";
+import { saveToken } from "../../../redux-toolkit/slicer/auth.slicer";
 
 const InvestorFlow = (props: any) => {
     const { guard } = props;
     const navigate = useNavigate();
+    const dispatch = useDispatch();
     const authToken: any = useSelector((state: RootState) => state.auth.value);
     const language: any = useSelector((state: RootState) => state.language.value);
     const [selectedAccount, setSelectedAccount]: any = useState();
@@ -38,6 +40,10 @@ const InvestorFlow = (props: any) => {
             const message = error?.response?.data?.status?.message || error?.response?.data || language.promptMessages.errorGeneral;
             console.info("Error in selecting account :: ", error);
             toast.error(message, toastUtil);
+            if(error.response && error.response.status === 401) {
+                dispatch(saveToken(""));
+                navigate("/login");
+            }
         } finally {
             setLoading(false);
         }

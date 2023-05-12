@@ -30,7 +30,11 @@ const GeneralHeader = ({ responsive = false, showMenu = false }: any) => {
                 navigate("/login")
             }
         } catch (error: any) {
-            console.info("Error while logging out :: ", error)
+            console.info("Error while logging out :: ", error);
+            if(error.response && error.response.status === 401) {
+                dispatch(saveToken(""));
+                navigate("/login");
+            }
         }
     };
 

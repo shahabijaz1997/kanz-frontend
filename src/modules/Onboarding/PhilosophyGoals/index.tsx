@@ -3,12 +3,12 @@ import { useSelector } from "react-redux";
 import Header from "../../../shared/components/Header";
 import { useNavigate, useParams } from "react-router-dom";
 import { RootState } from "../../../redux-toolkit/store/store";
-import Objective from "./Objective";
-import Requirement from "./Requirement";
+import Questionare from "./Questionare";
+import StepTwo from "./StepTwo";
 import Modal from "../../../shared/components/Modal";
-import InvestmentCriteria from "./InvestmentCriteria";
-import InvestmentHorizon from "./InvestmentHorizon";
-import Loss from "./Loss";
+import StepThree from "./StepThree";
+import StepFour from "./StepFour";
+import StepFive from "./StepFive";
 
 const PhilosophyGoals = (props: any) => {
     const params = useParams();
@@ -27,11 +27,11 @@ const PhilosophyGoals = (props: any) => {
                 <Header custom={true} data={{ leftMenu: language.individual.philosophyGoals, button: <button className="text-neutral-900 bg-white font-bold text-sm w-[150px] h-9 border border-black shadow-sm screen800:w-[120px]">{language.buttons.gotoDashboard}</button> }} />
             </section>
 
-            {selection === 1 && <Objective />}
-            {selection === 2 && <Requirement />}
-            {selection === 3 && <InvestmentCriteria />}
-            {selection === 4 && <InvestmentHorizon />}
-            {selection === 5 && <Loss nextStep={() => setModalOpen(true)} />}
+             <Questionare />
+            {selection === 2 && <StepTwo />}
+            {selection === 3 && <StepThree />}
+            {selection === 4 && <StepFour />}
+            {selection === 5 && <StepFive nextStep={() => setModalOpen(true)} />}
 
             <Modal show={modalOpen}>
                 <div className="p-12 rounded-md shadow-cs-1 flex flex-col items-center w-full bg-white outline-none focus:outline-none screen800:px-3">
