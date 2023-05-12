@@ -10,3 +10,11 @@ export const getInvestmentPhilisophyQuestions = (stepId: number, token: string) 
         },
     });
 };
+
+export const postInvestmentPhilisophyData = (payload: any, token: string) => {
+    return axios.post(`${ENV.API_URL}/philosophy`,payload, {
+        headers: {
+            Authorization: `Bearer ${token}`
+        },
+    });
+};
