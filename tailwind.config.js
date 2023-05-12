@@ -26,7 +26,8 @@ module.exports = {
             },
             backgroundColor:{
                 'cbc-1': '#FCFCFC',
-                'cbc-pattern': '#B5ECFF'
+                'cbc-pattern': '#B5ECFF',
+                'cbc-grey': '#E0E0E0'
             }
         },
     },

@@ -1,14 +1,19 @@
 import React, { useState, useLayoutEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../../../redux-toolkit/store/store";
 import Stepper from "../../../../shared/components/Stepper";
-import { getPhilosophyQuestions } from "../../../../apis/fakeData.api";
 import Spinner from "../../../../shared/components/Spinner";
+import { getInvestmentPhilisophyQuestions } from "../../../../apis/philosophy.api";
+import { toast } from "react-toastify";
+import { toastUtil } from "../../../../utils/toast.utils";
+import { saveToken } from "../../../../redux-toolkit/slicer/auth.slicer";
 
 const Questionare = ({ learnMore, nextStep }: any) => {
     const navigate = useNavigate();
+    const dispatch = useDispatch();
     const language: any = useSelector((state: RootState) => state.language.value);
+    const authToken: any = useSelector((state: RootState) => state.auth.value);
     const [questions, setQuestions]: any = useState([]);
     const [page, setPage] = useState(1);
     const [selected, setSelected]: any = useState(null);
@@ -21,14 +26,20 @@ const Questionare = ({ learnMore, nextStep }: any) => {
     const getQuestionares = async (p: number) => {
         setLoading(true);
         try {
-            const { status, data }: any = await getPhilosophyQuestions(p);
+            const { status, data }: any = await getInvestmentPhilisophyQuestions(p, authToken);
             setPage(p);
             if (status === 200) {
                 setQuestions(data);
                 setSelected(null);
             }
-        } catch (error) {
-
+        } catch (error: any) {
+            const message = error?.response?.data?.status?.message || error?.response?.data || language.promptMessages.errorGeneral;
+            console.info("Error in selecting account :: ", error);
+            toast.error(message, toastUtil);
+            if (error.response && error.response.status === 401) {
+                dispatch(saveToken(""));
+                navigate("/login");
+            }
         } finally {
             setLoading(false);
 

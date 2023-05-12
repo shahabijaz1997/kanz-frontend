@@ -16,6 +16,7 @@ const CompleteDetails = lazy(() => import("../Onboarding/CompleteDetails"));
 const CompleteGoals = lazy(() => import("../Onboarding/CompleteGoals"));
 const PhilosophyGoals = lazy(() => import("../Onboarding/PhilosophyGoals"));
 const AddAttachments = lazy(() => import("../Onboarding/AddAttachments"));
+const SyndicateLeadInfo = lazy(() => import("../Onboarding/SyndicateFlow"));
 
 const AuthenticateRoute = (props: PropsWithChildren) => {
     const { children } = props;
@@ -51,6 +52,7 @@ const RouterModule = () => {
             <Route path="/complete-goals" element={<Suspense fallback={<Spinner />}><AuthenticateRoute><CompleteGoals guard={authToken} /></AuthenticateRoute></Suspense>} />
             <Route path="/philosophy-goals/:id" element={<Suspense fallback={<Spinner />}><AuthenticateRoute><PhilosophyGoals guard={authToken} /></AuthenticateRoute></Suspense>} />
             <Route path="/add-attachments" element={<Suspense fallback={<Spinner />}><AuthenticateRoute><AddAttachments guard={authToken} /></AuthenticateRoute></Suspense>} />
+            <Route path="/syndicate-lead" element={<Suspense fallback={<Spinner />}><AuthenticateRoute><SyndicateLeadInfo guard={authToken} /></AuthenticateRoute></Suspense>} />
             <Route path="/signup" element={<Suspense fallback={<Spinner />}><Onboarding guard={authToken} /></Suspense>} />
             <Route path="/login" element={<Suspense fallback={<Spinner />}><AuthenticateAuthRoute><Login guard={authToken} /></AuthenticateAuthRoute></Suspense>} />
             <Route path="/welcome" element={<Suspense fallback={<Spinner />}><AuthenticateRoute><Welcome guard={authToken} /></AuthenticateRoute></Suspense>} />
