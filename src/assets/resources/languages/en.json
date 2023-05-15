@@ -202,7 +202,8 @@
         "signin": "Sign in",
         "logout": "Logout",
         "getStart": "Get Started",
-        "readDocs": "Read Documentation"
+        "readDocs": "Read Documentation",
+        "proceed": "Proceed"
     },
     "modal": {
         "thankyou": "\"Thank you for submitting your information!",

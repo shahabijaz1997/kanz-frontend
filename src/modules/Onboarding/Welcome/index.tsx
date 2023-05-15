@@ -54,7 +54,7 @@ const Welcome = (props: any) => {
             {state?.role !== Roles.INVESTOR && <AddAttachmentBanner language={language} navigate={navigate} />}
 
             <aside className="w-full flex items-center justify-center pt-[75px]">
-                <section className="bg-white inline-flex flex-col items-center py-14 w-1/2 screen991:w-3/4 screen991:w-[90%]" style={{ boxShadow: "0px 4px 12px rgba(0, 0, 0, 0.04)" }}>
+                <section className="px-5 bg-white inline-flex flex-col items-center py-14 w-1/2 screen991:w-3/4 screen991:w-[90%]" style={{ boxShadow: "0px 4px 12px rgba(0, 0, 0, 0.04)" }}>
                     {renderRoleWiseScreen()}
                 </section>
             </aside>

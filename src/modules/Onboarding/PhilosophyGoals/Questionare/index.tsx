@@ -8,6 +8,8 @@ import { getInvestmentPhilisophyQuestions, postInvestmentPhilisophyData } from "
 import { toast } from "react-toastify";
 import { toastUtil } from "../../../../utils/toast.utils";
 import { saveToken } from "../../../../redux-toolkit/slicer/auth.slicer";
+import Drawer from "../../../../shared/components/Drawer";
+import HorionGraph from "../../../../assets/investment_horizon_graph.png";
 
 const Questionare = ({ step }: any) => {
     const navigate = useNavigate();
@@ -15,7 +17,11 @@ const Questionare = ({ step }: any) => {
     const language: any = useSelector((state: RootState) => state.language.value);
     const authToken: any = useSelector((state: RootState) => state.auth.value);
 
+    const [mcqs, setMcqs]: any = useState([]);
+    const [isOpen, setOpen]: any = useState("");
+    const [textAnswer, setTextAnswer]: any = useState("");
     const [questions, setQuestions]: any = useState([]);
+    const [validations, setValidations]: any = useState([]);
     const [page, setPage] = useState(1);
     const [selected, setSelected]: any = useState({});
     const [loading, setLoading]: any = useState(false);
@@ -30,12 +36,16 @@ const Questionare = ({ step }: any) => {
         try {
             const { status, data }: any = await getInvestmentPhilisophyQuestions(pg, authToken);
             if (status === 200) {
-                let philisophyData:any = localStorage.getItem("philosophy");
-                
-                setSelected(JSON.parse(philisophyData) || {});
+                let philisophyData: any = localStorage.getItem("philosophy");
+                let parsed = JSON.parse(philisophyData) || {};
+                setValidations([]);
+                setSelected(parsed);
                 setQuestions(data?.status?.data);
                 setPage(pg);
-
+                if (JSON.parse(philisophyData))
+                    if (parsed[step]) setValidations(parsed[step]?.questions)
+                if (step === 3)
+                    if (parsed[3]?.questions[0]) setMcqs(parsed[3].questions[0]?.answer_meta);
             }
         } catch (error: any) {
             const message = error?.response?.data?.status?.message || error?.response?.data || language.promptMessages.errorGeneral;
@@ -50,31 +60,11 @@ const Questionare = ({ step }: any) => {
         }
     };
 
-    const submitData = async (philData: any) => {
+    const submitData = async (payload: any) => {
         try {
             setLoading(true);
-            console.log(philData);
-
-            // let payload = { investment_philosophy: {} }
-            // for (const key in philisophyData?.selected) {
-            //     console.log(key);
-            //     payload.investment_philosophy = {
-            //         step: 1,
-            //         questions: [{
-            //             question_id: philisophyData?.selectedQues[key],
-            //             answer: philisophyData?.selected[key]?.statement,
-            //             answer_meta: philisophyData?.selected[key]
-            //         }, {
-            //             question_id: philisophyData?.selectedQues['12'],
-            //             answer: philisophyData?.selected[key]?.statement,
-            //             answer_meta: philisophyData?.selected[key]
-            //         }]
-            //     }
-            // }
-            // console.log("payload", payload);
-
-            // let { status, data } = await postInvestmentPhilisophyData(payload, authToken);
-            // console.log(data);
+            let { status, data } = await postInvestmentPhilisophyData(payload, authToken);
+            console.log(data);
 
         } catch (error: any) {
             const message = error?.response?.data?.status?.message || error?.response?.data || language.promptMessages.errorGeneral;
@@ -91,6 +81,13 @@ const Questionare = ({ step }: any) => {
 
     const checkExist = (elem: any, as: any) => {
         let found: any = elem?.questions.some((q: any) => q?.answer_meta?.index === as.index && q?.answer_meta.statement === as.statement);
+        return found;
+    };
+
+    const checkBoxCheckExist = (as: any) => {
+        if (!mcqs.length) return false;
+        let found: any = mcqs?.some((q: any) => q?.statement === as.statement);
+        console.log(mcqs, "---------------", as);
         return found;
     };
 
@@ -114,13 +111,36 @@ const Questionare = ({ step }: any) => {
     };
 
     const renderMultipleChoiceQuestionaire = (ques: any) => {
-        if (selected && ques.step === 2 && ques.index === 2 && (!selected[`2`] || selected[`2`]?.questions.find((q:any)=> q.answer === "No"))) return <React.Fragment></React.Fragment>;
+        if (selected && ques.step === 2 && ques.index === 2 && (!selected[`2`] || selected[`2`]?.questions.find((q: any) => q.answer === "No"))) return <React.Fragment></React.Fragment>;
+        if (ques?.question_type === "text") {
+            return (
+                <section className="flex items-start justify-center flex-col mt-12 max-w-[420px] screen500:max-w-[300px]">
+                    <h3 className="text-neutral-700 font-medium text-base w-[420px]">{ques?.title}</h3>
+                    <p className="text-neutral-500 font-normal text-sm">
+                        <span>{ques?.statement}</span>&nbsp;
+                        <span className="color-blue font-medium cursor-pointer" onClick={() => setOpen(true)}>{language.common.learn}</span>
+                    </p>
+                    <section className="mb-8 w-full relative mt-3">
+                        <textarea value={selected[step]?.questions[0]?.answer} onChange={(e) => {
+                            setTextAnswer(e.target.value);
+                            let _selected = { ...selected };
+                            if (_selected[ques.step])
+                                _selected[ques.step].questions = [{ question_id: ques.id, answer: e.target.value, answer_meta: {} }]
+                            else
+                                _selected[ques.step] = { questions: [{ question_id: ques.id, answer: e.target.value, answer_meta: {} }] }
+
+                            setSelected(_selected);
+                        }} className="rounded-md shadow-sm appearance-none border border-neutral-300 rounded-md w-full py-2 px-3 text-gray-500 leading-tight focus:outline-none focus:shadow-outline h-[100px] resize-none"></textarea>
+                    </section>
+                </section >
+            )
+        }
         return (
             <section className="flex items-start justify-center flex-col mt-12 max-w-[420px] screen500:max-w-[300px]">
                 <h3 className="text-neutral-700 font-medium text-base w-[420px]">{ques?.title}</h3>
                 <p className="text-neutral-500 font-normal text-sm">
                     <span>{ques?.statement}</span>&nbsp;
-                    <span className="color-blue font-medium">{language.common.learn}</span>
+                    <span className="color-blue font-medium cursor-pointer" onClick={() => setOpen(true)}>{language.common.learn}</span>
                 </p>
                 <section className="mb-8 w-full relative mt-3">
                     <ul>
@@ -128,9 +148,57 @@ const Questionare = ({ step }: any) => {
                             React.Children.toArray(
                                 ques?.options?.schema.map((as: any) => {
                                     return (
-                                        <li className={`h-[50px] w-[420px] p-4 grey-neutral-200 text-sm font-medium cursor-pointer border border-grey inline-flex items-center justify-start first:rounded-t-md last:rounded-b-md screen500:w-full ${checkExist(selected[ques.step], as) ? "check-background" : "bg-white"}`} onClick={() => toggleAnswerSelection(ques, as)}>
+                                        <li className={`h-[50px] w-[420px] p-4 grey-neutral-200 text-sm font-medium cursor-pointer border border-grey inline-flex items-center justify-start first:rounded-t-md last:rounded-b-md screen500:w-full ${checkExist(selected[ques.step], as) ? "check-background" : "bg-white"}`} onClick={() => {
+                                            toggleAnswerSelection(ques, as);
+                                            let _validations = [...validations];
+                                            let f = _validations.find(v => v === as?.statement);
+                                            if (!f) _validations.push(as.statement);
+                                            setValidations(_validations);
+                                        }}>
                                             <input onChange={() => { }} className="accent-cyan-800 relative float-left mr-2 h-3 w-3 rounded-full border-2 border-solid border-cyan-300 before:pointer-events-none before:absolute before:h-4 before:w-4 before:scale-0 before:rounded-full before:bg-transparent before:opacity-0 before:content-[''] after:absolute after:z-[1] after:block after:h-4 after:w-4 after:rounded-full after:content-[''] checked:border-primary checked:before:opacity-[0.16] checked:after:absolute checked:after:left-1/2 checked:after:top-1/2 checked:after:h-[0.625rem] checked:after:w-[0.625rem] checked:after:rounded-full checked:after:border-primary checked:after:bg-primary checked:after:content-[''] checked:after:[transform:translate(-50%,-50%)] hover:cursor-pointer hover:before:opacity-[0.04]"
                                                 type="radio" checked={checkExist(selected[ques.step], as) ? true : false} />
+                                            <small>{as?.statement}</small>
+                                        </li>
+                                    )
+                                })
+                            )}
+                    </ul>
+                </section>
+            </section>
+        )
+    }
+
+    const renderCheckboxQuestionaire = (ques: any) => {
+        if (selected && ques.step === 2 && ques.index === 2 && (!selected[`2`] || selected[`2`]?.questions.find((q: any) => q.answer === "No"))) return <React.Fragment></React.Fragment>;
+        return (
+            <section className="flex items-start justify-center flex-col mt-12 max-w-[420px] screen500:max-w-[300px]">
+                <h3 className="text-neutral-700 font-medium text-base w-[420px]">{ques?.title}</h3>
+                <p className="text-neutral-500 font-normal text-sm">
+                    <span>{ques?.statement}</span>&nbsp;
+                    <span className="color-blue font-medium cursor-pointer" onClick={() => setOpen(true)}>{language.common.learn}</span>
+                </p>
+                <section className="mb-8 w-full relative mt-3">
+                    <ul>
+                        {ques?.options?.schema &&
+                            React.Children.toArray(
+                                ques?.options?.schema.map((as: any) => {
+                                    return (
+                                        <li className={`h-[50px] w-[420px] p-4 grey-neutral-200 text-sm font-medium cursor-pointer border border-grey inline-flex items-center justify-start first:rounded-t-md last:rounded-b-md screen500:w-full ${checkBoxCheckExist(as) ? "check-background" : "bg-white"}`} onClick={() => {
+                                            let _mcqs = [...mcqs];
+                                            if (_mcqs.find((m: any) => m.statement === as.statement)) {
+                                                let filtered = _mcqs.filter((m: any) => m.statement !== as.statement);
+                                                console.log("filtered", filtered);
+
+                                                setMcqs(filtered);
+                                            }
+                                            else setMcqs((prv: any) => { return [...prv, as] });
+                                            let _validations = [...validations];
+                                            let f = _validations.find(v => v === as?.statement);
+                                            if (!f) _validations.push(as.statement);
+                                            setValidations(_validations);
+                                        }}>
+                                            <input onChange={() => { }} className="accent-cyan-800 relative float-left mr-2 h-3 w-3 rounded-full border-2 border-solid border-cyan-300 before:pointer-events-none before:absolute before:h-4 before:w-4 before:scale-0 before:rounded-full before:bg-transparent before:opacity-0 before:content-[''] after:absolute after:z-[1] after:block after:h-4 after:w-4 after:rounded-full after:content-[''] checked:border-primary checked:before:opacity-[0.16] checked:after:absolute checked:after:left-1/2 checked:after:top-1/2 checked:after:h-[0.625rem] checked:after:w-[0.625rem] checked:after:rounded-full checked:after:border-primary checked:after:bg-primary checked:after:content-[''] checked:after:[transform:translate(-50%,-50%)] hover:cursor-pointer hover:before:opacity-[0.04]"
+                                                type="checkbox" checked={checkBoxCheckExist(as) ? true : false} />
                                             <small>{as?.statement}</small>
                                         </li>
                                     )
@@ -148,14 +216,20 @@ const Questionare = ({ step }: any) => {
                 <h3 className="text-neutral-700 font-medium text-base w-[420px]">{ques?.title}</h3>
                 <p className="text-neutral-500 font-normal text-sm">
                     <span>{ques?.statement}</span>&nbsp;
-                    <span className="color-blue font-medium">{language.common.learn}</span>
+                    <span className="color-blue font-medium cursor-pointer" onClick={() => setOpen(true)}>{language.common.learn}</span>
                 </p>
                 <section className="w-full inline-flex items-center justify-between mt-4 gap-5">
                     {ques?.options?.schema &&
                         React.Children.toArray(
                             ques?.options?.schema.map((as: any) => {
                                 return (
-                                    <li className={`rounded-md h-[50px] w-[420px] p-4 grey-neutral-200 text-sm font-medium cursor-pointer border border-grey inline-flex items-center justify-start screen500:w-full${checkExist(selected[ques.step], as) ? "check-background" : "bg-white"}`} onClick={() => toggleAnswerSelection(ques, as)}>
+                                    <li className={`rounded-md h-[50px] w-[420px] p-4 grey-neutral-200 text-sm font-medium cursor-pointer border border-grey inline-flex items-center justify-start screen500:w-full${checkExist(selected[ques.step], as) ? "check-background" : "bg-white"}`} onClick={() => {
+                                        toggleAnswerSelection(ques, as);
+                                        let _validations = [...validations];
+                                        let f = _validations.find(v => v === as?.statement);
+                                        if (!f) _validations.push(as.statement);
+                                        setValidations(_validations);
+                                    }}>
                                         <input onChange={() => { }} className="accent-cyan-800 relative float-left mr-2 h-3 w-3 rounded-full border-2 border-solid border-cyan-300 before:pointer-events-none before:absolute before:h-4 before:w-4 before:scale-0 before:rounded-full before:bg-transparent before:opacity-0 before:content-[''] after:absolute after:z-[1] after:block after:h-4 after:w-4 after:rounded-full after:content-[''] checked:border-primary checked:before:opacity-[0.16] checked:after:absolute checked:after:left-1/2 checked:after:top-1/2 checked:after:h-[0.625rem] checked:after:w-[0.625rem] checked:after:rounded-full checked:after:border-primary checked:after:bg-primary checked:after:content-[''] checked:after:[transform:translate(-50%,-50%)] hover:cursor-pointer hover:before:opacity-[0.04]"
                                             type="radio" checked={checkExist(selected[ques.step], as) ? true : false} />
                                         <small>{as?.statement}</small>
@@ -177,19 +251,43 @@ const Questionare = ({ step }: any) => {
         navigate(`/philosophy-goals/${page - 1}`);
     };
     const onSetNext = () => {
-        checkValidation();
+        if (!checkValidation()) return;
+        let payload: any = { investment_philosophy: {} }
         let philisophyData: any = localStorage.getItem("philosophy");
-        let philData: any = { ...JSON.parse(philisophyData), ...selected };
-        localStorage.setItem("philosophy", JSON.stringify(philData));
+        if (step !== 3) {
+            let philData: any = { ...JSON.parse(philisophyData), ...selected };
+            localStorage.setItem("philosophy", JSON.stringify(philData));
+            payload.investment_philosophy.step = selected[step]?.step;
+            payload.investment_philosophy.questions = selected[step]?.questions;
+        }
 
-        if (step === 5)
-            submitData(philData)
-        else
+        else {
+            let _mcqs = [...mcqs];
+            let answers = _mcqs.map(m => m.statement);
+            let philData: any = { ...JSON.parse(philisophyData), 3: { step: 3, questions: [{ question_id: 1, answer: answers.join(","), answer_meta: mcqs }] } };
+            localStorage.setItem("philosophy", JSON.stringify(philData));
+            payload.investment_philosophy.step = 3;
+            payload.investment_philosophy.questions = [{ question_id: 1, answer: answers.join(","), answer_meta: mcqs }];
+        }
+        submitData(payload);
+        if (step !== 5)
             navigate(`/philosophy-goals/${page + 1}`);
     };
+
     const checkValidation = () => {
-        let ques = questions?.questions?.every((q: any) => selected && selected[`${q?.step}${q?.index}`]);
-        return !ques;
+        if (step === 3) {
+            if (mcqs?.length > 0) return true;
+            return false;
+        }
+        else if (step === 4) {
+            if (textAnswer.length > 0) return true;
+            return false;
+        }
+        else {
+            if (!questions?.questions?.length) return false;
+            if ((step !== 2 && validations.length !== questions?.questions.length) || (step === 2 && validations.length === 0)) return false;
+            return true;
+        }
     };
 
     return (
@@ -201,8 +299,12 @@ const Questionare = ({ step }: any) => {
                 {questions?.questions && <h3 className="text-neutral-700 font-bold text-2xl w-[420px]">{questions?.questions[0]?.category}</h3>}
             </section>
 
-            {questions?.questions?.length && React.Children.toArray(
+            {questions?.questions?.length && step !== 3 && React.Children.toArray(
                 questions?.questions.map((ques: any) => ques.step === 2 && ques.index === 1 ? renderBooleanQuestionaire(ques) : renderMultipleChoiceQuestionaire(ques))
+            )}
+
+            {questions?.questions?.length && step === 3 && React.Children.toArray(
+                questions?.questions.map((ques: any) => renderCheckboxQuestionaire(ques))
             )}
 
             <section className="flex items-start justify-center w-full flex-col mt-6 max-w-[420px] screen500:max-w-[300px]">
@@ -211,13 +313,32 @@ const Questionare = ({ step }: any) => {
                         type="button" onClick={onSetPrev}>
                         {language?.buttons?.back}
                     </button>
-                    <button className={`${checkValidation() && "opacity-70"} text-white tracking-[0.03em] bg-cyan-800 font-bold rounded-md focus:outline-none focus:shadow-outline h-[38px] w-[140px]`}
+                    <button className={`${!checkValidation() && "opacity-70"} text-white tracking-[0.03em] bg-cyan-800 font-bold rounded-md focus:outline-none focus:shadow-outline h-[38px] w-[140px]`}
                         type="button" onClick={onSetNext}>
-                        {language?.buttons?.continue}
+                        {step < 5 ? language?.buttons?.continue : language?.buttons?.proceed}
                     </button>
                 </div>
             </section>
-        </aside >
+
+            <Drawer isOpen={isOpen} setIsOpen={(val: boolean) => setOpen(val)}>
+                {step === 3 ? (
+                    <React.Fragment>
+                        <p className="text-neutral-700 font-normal text-sm text-justify">{language.modal.horizon_para_1}</p>
+                        <p className="text-neutral-700 font-normal text-sm text-justify">{language.modal.horizon_para_2}</p>
+                        <img src={HorionGraph} alt={language.investmentHorizon.horizon} />
+                    </React.Fragment>
+                ) : (
+                    <React.Fragment>
+                        <header className="font-bold text-xl">{language.philosophyGoals.objective}</header>
+                        <p className="text-neutral-700 font-normal text-sm text-justify">
+                            Norem ipsum dolor sit amet, consectetur adipiscing elit. Etiam eu turpis molestie, dictum est a, mattis tellus. Sed dignissim, metus nec fringilla accumsan, risus sem sollicitudin lacus,
+                            ut interdum tellus elit sed risus. Maecenas eget condimentum velit, sit amet feugiat lectus. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Praesent auctor purus luctus enim egestas, ac scelerisque ante pulvinar. Donec ut rhoncus ex. Suspendisse ac rhoncus nisl.
+                        </p>
+                    </React.Fragment>
+                )
+                }
+            </Drawer>
+        </aside>
     )
 };
 export default Questionare;
