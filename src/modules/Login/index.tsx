@@ -124,11 +124,7 @@ const Login = ({ }: any) => {
                                     {language?.buttons?.signin}
                                 </button>
                             )}
-                            <div className="flex items-center justify-center my-[38px]">
-                                <div className="border-t border-neutral-300 flex-grow"></div>
-                                <div className="px-4 text-neutral-500 font-normal">{language?.onboarding?.orSignIn}</div>
-                                <div className="border-t border-neutral-300 flex-grow"></div>
-                            </div>
+                      
                         </form>
                     </section>
                 </aside>

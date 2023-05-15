@@ -53,7 +53,7 @@ const RouterModule = () => {
             <Route path="/philosophy-goals/:id" element={<Suspense fallback={<Spinner />}><AuthenticateRoute><PhilosophyGoals guard={authToken} /></AuthenticateRoute></Suspense>} />
             <Route path="/add-attachments" element={<Suspense fallback={<Spinner />}><AuthenticateRoute><AddAttachments guard={authToken} /></AuthenticateRoute></Suspense>} />
             <Route path="/syndicate-lead" element={<Suspense fallback={<Spinner />}><AuthenticateRoute><SyndicateLeadInfo guard={authToken} /></AuthenticateRoute></Suspense>} />
-            <Route path="/signup" element={<Suspense fallback={<Spinner />}><Onboarding guard={authToken} /></Suspense>} />
+            <Route path="/signup" element={<Suspense fallback={<Spinner />}><AuthenticateAuthRoute><Onboarding guard={authToken} /></AuthenticateAuthRoute></Suspense>} />
             <Route path="/login" element={<Suspense fallback={<Spinner />}><AuthenticateAuthRoute><Login guard={authToken} /></AuthenticateAuthRoute></Suspense>} />
             <Route path="/welcome" element={<Suspense fallback={<Spinner />}><AuthenticateRoute><Welcome guard={authToken} /></AuthenticateRoute></Suspense>} />
         </Routes>

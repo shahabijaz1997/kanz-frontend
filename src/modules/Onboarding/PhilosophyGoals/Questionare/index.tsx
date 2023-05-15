@@ -38,12 +38,16 @@ const Questionare = ({ step }: any) => {
             if (status === 200) {
                 let philisophyData: any = localStorage.getItem("philosophy");
                 let parsed = JSON.parse(philisophyData) || {};
-                setValidations([]);
                 setSelected(parsed);
                 setQuestions(data?.status?.data);
                 setPage(pg);
-                if (JSON.parse(philisophyData))
-                    if (parsed[step]) setValidations(parsed[step]?.questions)
+                if (JSON.parse(philisophyData)) {
+                    if (parsed[step]) {
+                        let d = parsed[step]?.questions.map((as: any) => as.question_id)
+                        setValidations(d);
+                    }
+                    else setValidations([]);
+                }
                 if (data?.status?.data?.questions && data?.status?.data?.questions[0]?.question_type === "checkbox")
                     if (parsed[3]?.questions[0]) setMcqs(parsed[3].questions[0]?.answer_meta);
             }
@@ -64,7 +68,7 @@ const Questionare = ({ step }: any) => {
             setLoading(true);
             let { status, data } = await postInvestmentPhilisophyData(payload, authToken);
             if (step === 5 && status === 200)
-                toast.success(data?.message, toastUtil)
+                toast.success(data?.status?.message, toastUtil)
         } catch (error: any) {
             const message = error?.response?.data?.status?.message || error?.response?.data || language.promptMessages.errorGeneral;
             toast.error(message, toastUtil);
@@ -148,9 +152,11 @@ const Questionare = ({ step }: any) => {
                                         <li className={`h-[50px] w-[420px] p-4 grey-neutral-200 text-sm font-medium cursor-pointer border border-grey inline-flex items-center justify-start first:rounded-t-md last:rounded-b-md screen500:w-full ${checkExist(selected[ques.step], as) ? "check-background" : "bg-white"}`} onClick={() => {
                                             toggleAnswerSelection(ques, as);
                                             let _validations = [...validations];
-                                            let f = _validations.find(v => v === as?.statement);
-                                            if (!f) _validations.push(as.statement);
-                                            setValidations(_validations);
+                                            let f = _validations.find(v => v === ques?.id);
+                                            if (!f) {
+                                                _validations.push(ques?.id);
+                                                setValidations(_validations);
+                                            }
                                         }}>
                                             <input onChange={() => { }} className="accent-cyan-800 relative float-left mr-2 h-3 w-3 rounded-full border-2 border-solid border-cyan-300 before:pointer-events-none before:absolute before:h-4 before:w-4 before:scale-0 before:rounded-full before:bg-transparent before:opacity-0 before:content-[''] after:absolute after:z-[1] after:block after:h-4 after:w-4 after:rounded-full after:content-[''] checked:border-primary checked:before:opacity-[0.16] checked:after:absolute checked:after:left-1/2 checked:after:top-1/2 checked:after:h-[0.625rem] checked:after:w-[0.625rem] checked:after:rounded-full checked:after:border-primary checked:after:bg-primary checked:after:content-[''] checked:after:[transform:translate(-50%,-50%)] hover:cursor-pointer hover:before:opacity-[0.04]"
                                                 type="radio" checked={checkExist(selected[ques.step], as) ? true : false} />
@@ -188,9 +194,11 @@ const Questionare = ({ step }: any) => {
                                             }
                                             else setMcqs((prv: any) => { return [...prv, as] });
                                             let _validations = [...validations];
-                                            let f = _validations.find(v => v === as?.statement);
-                                            if (!f) _validations.push(as.statement);
-                                            setValidations(_validations);
+                                            let f = _validations.find(v => v === ques?.id);
+                                            if (!f) {
+                                                _validations.push(ques?.id);
+                                                setValidations(_validations);
+                                            }
                                         }}>
                                             <input onChange={() => { }} className="accent-cyan-800 relative float-left mr-2 h-3 w-3 rounded-full border-2 border-solid border-cyan-300 before:pointer-events-none before:absolute before:h-4 before:w-4 before:scale-0 before:rounded-full before:bg-transparent before:opacity-0 before:content-[''] after:absolute after:z-[1] after:block after:h-4 after:w-4 after:rounded-full after:content-[''] checked:border-primary checked:before:opacity-[0.16] checked:after:absolute checked:after:left-1/2 checked:after:top-1/2 checked:after:h-[0.625rem] checked:after:w-[0.625rem] checked:after:rounded-full checked:after:border-primary checked:after:bg-primary checked:after:content-[''] checked:after:[transform:translate(-50%,-50%)] hover:cursor-pointer hover:before:opacity-[0.04]"
                                                 type="checkbox" checked={checkBoxCheckExist(as) ? true : false} />
@@ -221,9 +229,11 @@ const Questionare = ({ step }: any) => {
                                     <li className={`rounded-md h-[50px] w-[420px] p-4 grey-neutral-200 text-sm font-medium cursor-pointer border border-grey inline-flex items-center justify-start screen500:w-full${checkExist(selected[ques.step], as) ? "check-background" : "bg-white"}`} onClick={() => {
                                         toggleAnswerSelection(ques, as);
                                         let _validations = [...validations];
-                                        let f = _validations.find(v => v === as?.statement);
-                                        if (!f) _validations.push(as.statement);
-                                        setValidations(_validations);
+                                        let f = _validations.find(v => v === ques?.id);
+                                        if (!f) {
+                                            _validations.push(ques?.id);
+                                            setValidations(_validations);
+                                        }
                                     }}>
                                         <input onChange={() => { }} className="accent-cyan-800 relative float-left mr-2 h-3 w-3 rounded-full border-2 border-solid border-cyan-300 before:pointer-events-none before:absolute before:h-4 before:w-4 before:scale-0 before:rounded-full before:bg-transparent before:opacity-0 before:content-[''] after:absolute after:z-[1] after:block after:h-4 after:w-4 after:rounded-full after:content-[''] checked:border-primary checked:before:opacity-[0.16] checked:after:absolute checked:after:left-1/2 checked:after:top-1/2 checked:after:h-[0.625rem] checked:after:w-[0.625rem] checked:after:rounded-full checked:after:border-primary checked:after:bg-primary checked:after:content-[''] checked:after:[transform:translate(-50%,-50%)] hover:cursor-pointer hover:before:opacity-[0.04]"
                                             type="radio" checked={checkExist(selected[ques.step], as) ? true : false} />
@@ -283,8 +293,8 @@ const Questionare = ({ step }: any) => {
         }
         else {
             if (!questions?.questions?.length) return false;
-            if ((step !== 2 && validations.length !== questions?.questions.length) || (step === 2 && validations.length === 0)) return false;
-            return true;
+            else if ((step !== 2 && validations.length === questions?.questions.length) || (step === 2 && validations.length > 0)) return true;
+            return false;
         }
     };
 
