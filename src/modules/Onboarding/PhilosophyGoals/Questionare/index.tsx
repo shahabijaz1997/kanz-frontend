@@ -270,6 +270,9 @@ const Questionare = ({ step }: any) => {
         submitData(payload);
         if (step !== 5)
             navigate(`/philosophy-goals/${page + 1}`);
+        else
+            navigate(`/add-attachments`);
+
     };
 
     const checkValidation = () => {
