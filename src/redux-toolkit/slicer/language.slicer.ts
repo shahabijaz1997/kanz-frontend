@@ -1,8 +1,8 @@
 import { createSlice } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
-import { Language } from "../../interfaces/redux/redux.interface";
+import { Data } from "../../interfaces/redux/redux.interface";
 
-const initialState: Language = {
+const initialState: Data = {
     value: {}
 }
 

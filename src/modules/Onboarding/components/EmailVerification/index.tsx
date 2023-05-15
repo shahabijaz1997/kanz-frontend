@@ -27,7 +27,6 @@ const EmailVerification = ({ payload }: any) => {
             
         } catch (error: any) {
             const message = error?.response?.data?.status?.message || language.promptMessages.errorGeneral;
-            console.info("Error while signing up :: ", message);
             toast.error(message, toastUtil);
         } finally {
             setLoading(false);
@@ -48,7 +47,6 @@ const EmailVerification = ({ payload }: any) => {
 
         } catch (error: any) {
             const message = error?.response?.data?.status?.message || language.promptMessages.errorGeneral;
-            console.info("Error in verification :: ", message);
             toast.error(message, toastUtil);
         } finally {
             setLoading(false);

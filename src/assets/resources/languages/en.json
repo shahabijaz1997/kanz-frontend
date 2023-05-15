@@ -59,6 +59,19 @@
         "philosophyGoals": "Investment Philosophy / Goals",
         "philosophysub": "Norem ipsum dolor sit amet, consectetur adipiscing elit. consectetur adipiscing elit."
     },
+    "syndicate": {
+        "step": "Step",
+        "raisedBefore": "Have you raised before?",
+        "addDetail": "Add detail for raised ammount",
+        "subDetail": "Norem ipsum dolor sit amet ipsum dolor.",
+        "raisedQ": "How much you have raised?",
+        "timesQ": "How many time you have raised?",
+        "industry": "Industry market",
+        "industrySub": "Norem ipsum dolor sit amet ipsum dolor.",
+        "region": "Region",
+        "profile": "Profile Link",
+        "deadflow": "Expected Deadflow"
+    },
     "philosophyGoals": {
         "objective": "Investment Objective",
         "objQuestion": "What are your investment objectives for this portfolio?",
@@ -137,6 +150,7 @@
     },
     "header": {
         "attachment": "Attachments",
+        "syndicateLead": "Syndicate Lead Info",
         "investment": "Investment",
         "startup": "Startup",
         "syndicate": "Syndicate",
@@ -188,7 +202,8 @@
         "signin": "Sign in",
         "logout": "Logout",
         "getStart": "Get Started",
-        "readDocs": "Read Documentation"
+        "readDocs": "Read Documentation",
+        "proceed": "Proceed"
     },
     "modal": {
         "thankyou": "\"Thank you for submitting your information!",
