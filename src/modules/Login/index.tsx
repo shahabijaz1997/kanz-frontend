@@ -67,7 +67,8 @@ const Login = ({ }: any) => {
                 const token = response.headers["authorization"].split(" ")[1]
                 dispatch(saveToken(token));
                 toast.success(response.status.message, toastUtil);
-                navigate("/welcome", { state: { role: Roles.INVESTOR } });
+                localStorage.setItem("role", Roles.INVESTOR)
+                navigate("/welcome");
             }
             else toast.error(language.promptMessages.errorGeneral, toastUtil);
 

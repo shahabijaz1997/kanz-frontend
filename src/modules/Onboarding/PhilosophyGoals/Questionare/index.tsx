@@ -187,8 +187,6 @@ const Questionare = ({ step }: any) => {
                                             let _mcqs = [...mcqs];
                                             if (_mcqs.find((m: any) => m.statement === as.statement)) {
                                                 let filtered = _mcqs.filter((m: any) => m.statement !== as.statement);
-                                                console.log("filtered", filtered);
-
                                                 setMcqs(filtered);
                                             }
                                             else setMcqs((prv: any) => { return [...prv, as] });

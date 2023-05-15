@@ -1,5 +1,5 @@
 import { useSelector } from "react-redux";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { RootState } from "../../../redux-toolkit/store/store";
 import Header from "../../../shared/components/Header";
 import React from "react";
@@ -8,12 +8,12 @@ import AddAttachmentBanner from "../../../shared/components/AddAttachmentBanner"
 
 const Welcome = (props: any) => {
     const { guard } = props;
-    const { state } = useLocation();
     const navigate = useNavigate();
     const language: any = useSelector((state: RootState) => state.language.value);
+    let role = localStorage.getItem("role")
 
     const renderRoleWiseScreen = () => {
-        if (state?.role === Roles.INVESTOR) {
+        if (role === Roles.INVESTOR) {
             return (
                 <React.Fragment>
                     <h2 className="text-2xl font-bold text-neutral-900 mb-4 screen500:text-[20px]">{language?.onboarding?.welcomeDashboard}</h2>
@@ -23,7 +23,7 @@ const Welcome = (props: any) => {
                     </button>
                 </React.Fragment>
             )
-        } else if (state?.role === Roles.SYNDICATE) {
+        } else if (role === Roles.SYNDICATE) {
             return (
                 <React.Fragment>
                     <h2 className="text-2xl font-bold text-neutral-900 mb-4 screen500:text-[20px]">{language?.onboarding?.syndicateLead}</h2>
@@ -51,7 +51,7 @@ const Welcome = (props: any) => {
             <section>
                 <Header />
             </section>
-            {state?.role !== Roles.INVESTOR && <AddAttachmentBanner language={language} navigate={navigate} />}
+            {role !== Roles.INVESTOR && <AddAttachmentBanner language={language} navigate={navigate} />}
 
             <aside className="w-full flex items-center justify-center pt-[75px]">
                 <section className="px-5 bg-white inline-flex flex-col items-center py-14 w-1/2 screen991:w-3/4 screen991:w-[90%]" style={{ boxShadow: "0px 4px 12px rgba(0, 0, 0, 0.04)" }}>
