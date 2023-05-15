@@ -44,7 +44,7 @@ const Questionare = ({ step }: any) => {
                 setPage(pg);
                 if (JSON.parse(philisophyData))
                     if (parsed[step]) setValidations(parsed[step]?.questions)
-                if (step === 3)
+                if (data?.status?.data?.questions && data?.status?.data?.questions[0]?.question_type === "checkbox")
                     if (parsed[3]?.questions[0]) setMcqs(parsed[3].questions[0]?.answer_meta);
             }
         } catch (error: any) {
@@ -273,7 +273,7 @@ const Questionare = ({ step }: any) => {
     };
 
     const checkValidation = () => {
-        if (step === 3) {
+        if (questions?.questions && questions?.questions[0]?.question_type === "checkbox") {
             if (mcqs?.length > 0) return true;
             return false;
         }
@@ -301,7 +301,7 @@ const Questionare = ({ step }: any) => {
                 questions?.questions.map((ques: any) => ques.step === 2 && ques.index === 1 ? renderBooleanQuestionaire(ques) : renderMultipleChoiceQuestionaire(ques))
             )}
 
-            {questions?.questions?.length && step === 3 && React.Children.toArray(
+            {questions?.questions?.length && questions?.questions[0]?.question_type === "checkbox" && React.Children.toArray(
                 questions?.questions.map((ques: any) => renderCheckboxQuestionaire(ques))
             )}
 
@@ -319,7 +319,7 @@ const Questionare = ({ step }: any) => {
             </section>
 
             <Drawer isOpen={isOpen} setIsOpen={(val: boolean) => setOpen(val)}>
-                {step === 3 ? (
+                {questions?.questions && questions?.questions[0]?.question_type === "checkbox" ? (
                     <React.Fragment>
                         <p className="text-neutral-700 font-normal text-sm text-justify">{language.modal.horizon_para_1}</p>
                         <p className="text-neutral-700 font-normal text-sm text-justify">{language.modal.horizon_para_2}</p>
