@@ -47,7 +47,6 @@ const Firm = ({ language }: any) => {
             }
         } catch (error: any) {
             const message = error?.response?.data?.status?.message || error?.response?.data || language.promptMessages.errorGeneral;
-            console.info("Error in Accrediation :: ", error);
             toast.error(message, toastUtil);
             if(error.response && error.response.status === 401) {
                 dispatch(saveToken(""));

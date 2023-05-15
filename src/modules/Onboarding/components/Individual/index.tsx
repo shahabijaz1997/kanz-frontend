@@ -30,7 +30,6 @@ const Individual = ({ language }: any) => {
     const addinvestmentAccridiation = async (e: any) => {
         e.preventDefault();
         if (!payload.national || !payload.residence || !selectedAssert?.id) return;
-        // onClick={() => navigate("/complete-goals", { state: { type: InvestorType.INDIVIDUAL, selected: selectedAssert } })}
         try {
             setLoading(true);
             let fd = new FormData();
@@ -49,7 +48,6 @@ const Individual = ({ language }: any) => {
             }
         } catch (error: any) {
             const message = error?.response?.data?.status?.message || error?.response?.data || language.promptMessages.errorGeneral;
-            console.info("Error in Accrediation :: ", error);
             toast.error(message, toastUtil);
             if(error.response && error.response.status === 401) {
                 dispatch(saveToken(""));

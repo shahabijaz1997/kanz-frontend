@@ -74,7 +74,6 @@ const Login = ({ }: any) => {
 
         } catch (error: any) {
             const message = error?.response?.data || language.promptMessages.errorGeneral;
-            console.info("Error while signing up :: ", error);
             toast.error(message, toastUtil);
         } finally {
             setLoading(false);

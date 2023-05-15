@@ -49,7 +49,6 @@ const Questionare = ({ step }: any) => {
             }
         } catch (error: any) {
             const message = error?.response?.data?.status?.message || error?.response?.data || language.promptMessages.errorGeneral;
-            console.info("Error :: ", error);
             toast.error(message, toastUtil);
             if (error.response && error.response.status === 401) {
                 dispatch(saveToken(""));
@@ -64,11 +63,10 @@ const Questionare = ({ step }: any) => {
         try {
             setLoading(true);
             let { status, data } = await postInvestmentPhilisophyData(payload, authToken);
-            console.log(data);
-
+            if (step === 5 && status === 200)
+                toast.success(data?.message, toastUtil)
         } catch (error: any) {
             const message = error?.response?.data?.status?.message || error?.response?.data || language.promptMessages.errorGeneral;
-            console.info("Error :: ", error);
             toast.error(message, toastUtil);
             if (error.response && error.response.status === 401) {
                 dispatch(saveToken(""));
@@ -87,7 +85,6 @@ const Questionare = ({ step }: any) => {
     const checkBoxCheckExist = (as: any) => {
         if (!mcqs.length) return false;
         let found: any = mcqs?.some((q: any) => q?.statement === as.statement);
-        console.log(mcqs, "---------------", as);
         return found;
     };
 
