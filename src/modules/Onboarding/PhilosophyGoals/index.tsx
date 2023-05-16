@@ -40,6 +40,7 @@ const PhilosophyGoals = (props: any) => {
                     <button className="mt-8 bg-cyan-800 text-white w-[120px] h-9 inline-flex items-center justify-center rounded-md" type="button" onClick={() => {
                         setModalOpen(null);
                         toast.success(modalOpen?.status?.message, toastUtil);
+                        localStorage.removeItem("philosophy");
                         navigate(`/add-attachments`);
                     }}>
                         {language.buttons.continue}

@@ -8,7 +8,7 @@ import FIleUploadAlert from "../FIleUploadAlert";
 import { FileType, PromptMessage } from "../../../enums/types.enum";
 import { fileSize, formatFileSize, validTypes } from "../../../utils/size-check.utils";
 
-const FileUpload = ({ id, setModalOpen }: any) => {
+const FileUpload = ({ id, setModalOpen, setFile, removeFile }: any) => {
     const language: any = useSelector((state: RootState) => state.language.value);
     const [dragOver, setDragOver] = useState(false);
     const [selectedFile, setSelectedFile]: any = useState<File | null>();
@@ -73,6 +73,9 @@ const FileUpload = ({ id, setModalOpen }: any) => {
                 setFileInfo({size: formatFileSize(size)});
             };
         }
+console.log(file);
+
+        setFile(file, id)
         setSelectedFile({ file, url, type, id });
         setAlertType({ type: PromptMessage.SUCCESS, message: language.promptMessages.fileUpload });
     };
@@ -87,6 +90,7 @@ const FileUpload = ({ id, setModalOpen }: any) => {
                     {selectedFile && selectedFile?.id === id ? (
                         <div className="flex items-center relative check-background h-full px-2">
                             <div className="h-8 w-8 p-2 absolute right-2 top-2 rounded-full cursor-pointer bg-white" onClick={(e) => {
+                                removeFile(id);
                                 e.preventDefault();
                                 e.stopPropagation();
                                 setSelectedFile(null);
@@ -95,7 +99,7 @@ const FileUpload = ({ id, setModalOpen }: any) => {
                                 <BinIcon stroke="#171717" className="w-full h-full" />
                             </div>
                             <section className="h-[120px] w-[120px] bg-white inline-grid place-items-center shadow-cs-3 rounded-md overflow-hidden">
-                                {selectedFile.type === FileType.IMAGE ? <img src={selectedFile?.url} alt={selectedFile?.file?.name} className="w-[80%] h-[90%]" /> : <embed src={selectedFile?.url} type="application/pdf" className="w-[80%] h-[90%]" />}
+                                {selectedFile.type === FileType.IMAGE ? <img src={selectedFile?.url} alt={selectedFile?.file?.name} className="w-[80%] h-[90%]" /> : <embed src={selectedFile?.url} type="application/pdf" className="w-[100%] h-[90%]" />}
                             </section>
 
                             <section className="pl-3 h-[120px] inline-flex flex-col justify-between py-2">
@@ -110,7 +114,7 @@ const FileUpload = ({ id, setModalOpen }: any) => {
                             </section>
                         </div>
                     ) : (
-                        <div className="inline-flex items-center flex-col align-center justify-center w-full h-full">
+                        <div className="inline-flex items-center flex-col align-center justify-center w-full h-full cursor-pointer">
                             <AddImage stroke="#A3A3A3" />
                             <p className="font-medium my-1">
                                 <small className="text-sm color-blue">{language.buttons.uploadFile}</small>&nbsp;

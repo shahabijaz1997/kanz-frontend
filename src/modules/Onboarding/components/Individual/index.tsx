@@ -103,7 +103,7 @@ const Individual = ({ language }: any) => {
                         <Spinner />
                     </button>
                 ) : (
-                    <button className={`${!payload.national || !payload.residence || !selectedAssert?.id && "opacity-70"} text-white bg-cyan-800 tracking-[0.03em] font-bold rounded-md focus:outline-none focus:shadow-outline h-[38px] w-[140px]`} type="submit">
+                    <button className={`${!payload.national || !payload.residence || !selectedAssert?.id || !riskChecked && "opacity-70"} text-white bg-cyan-800 tracking-[0.03em] font-bold rounded-md focus:outline-none focus:shadow-outline h-[38px] w-[140px]`} type="submit">
                         {language?.buttons?.continue}
                     </button>
                 )}

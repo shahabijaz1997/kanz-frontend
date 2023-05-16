@@ -314,10 +314,12 @@ const Questionare = ({ step, setModalOpen }: any) => {
 
             <section className="flex items-start justify-center w-full flex-col mt-6 max-w-[420px] screen500:max-w-[300px]">
                 <div className="w-full inline-flex items-center justify-between mt-16">
-                    <button className="text-neutral-900 tracking-[0.03em] bg-white font-bold rounded-md border border-grey rounded-md focus:outline-none focus:shadow-outline h-[38px] w-[140px]"
-                        type="button" onClick={onSetPrev}>
-                        {language?.buttons?.back}
-                    </button>
+                    {step !== 1 ? (
+                        <button className="text-neutral-900 tracking-[0.03em] bg-white font-bold rounded-md border border-grey rounded-md focus:outline-none focus:shadow-outline h-[38px] w-[140px]"
+                            type="button" onClick={onSetPrev}>
+                            {language?.buttons?.back}
+                        </button>
+                    ) : (<div></div>)}
                     <button className={`${!checkValidation() && "opacity-70"} text-white tracking-[0.03em] bg-cyan-800 font-bold rounded-md focus:outline-none focus:shadow-outline h-[38px] w-[140px]`}
                         type="button" onClick={onSetNext}>
                         {step < 5 ? language?.buttons?.continue : language?.buttons?.proceed}

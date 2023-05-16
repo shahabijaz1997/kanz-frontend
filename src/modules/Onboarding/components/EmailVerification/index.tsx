@@ -1,15 +1,14 @@
 import { useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { RootState } from "../../../../redux-toolkit/store/store";
+import { useNavigate } from "react-router-dom";
 import { confirmToken, signup } from "../../../../apis/auth.api";
 import Spinner from "../../../../shared/components/Spinner";
 import { toast } from "react-toastify";
 import { toastUtil } from "../../../../utils/toast.utils";
-import { saveToken } from "../../../../redux-toolkit/slicer/auth.slicer";
-import { Roles } from "../../../../enums/roles.enum";
 
 const EmailVerification = ({ payload }: any) => {
-    const dispatch = useDispatch();
+    const navigate = useNavigate();
     const language: any = useSelector((state: RootState) => state.language.value);
     const [isEdit, setEdit] = useState(false);
     const [email, setEmail] = useState(payload?.email);
@@ -41,16 +40,10 @@ const EmailVerification = ({ payload }: any) => {
             e.preventDefault();
             if (!token) return;
             setLoading(true);
-            const response: any = await confirmToken({ confirmation_token: token });
-            console.log(response);
-            
-            if(response.status === 200) {
-                console.log("response.headers: ", response.headers);
-                toast.success(response?.data?.status?.message, toastUtil);
-                const token = response.headers["authorization"].split(" ")[1]
-                dispatch(saveToken(token));
-                localStorage.setItem("role", Roles.INVESTOR)
-                toast.success(response?.data?.message, toastUtil);
+            const { status, data } = await confirmToken({ confirmation_token: token });
+            if(status === 200) {
+                toast.success(data?.status?.message, toastUtil);
+                navigate("/login");
             }
 
         } catch (error: any) {
@@ -80,7 +73,7 @@ const EmailVerification = ({ payload }: any) => {
                             <Spinner />
                         </button>
                     ) : (
-                        <button className="text-white text-sm tracking-[0.03em] bg-cyan-800 rounded-md focus:outline-none focus:shadow-outline w-full h-[38px] mt-10" type="submit">
+                        <button className={`${!token && "opacity-70"} text-white text-sm tracking-[0.03em] bg-cyan-800 rounded-md focus:outline-none focus:shadow-outline w-full h-[38px] mt-10`} type="submit">
                             {language?.buttons?.verify}
                         </button>
                     )}

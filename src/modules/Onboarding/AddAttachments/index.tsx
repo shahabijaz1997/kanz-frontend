@@ -1,28 +1,74 @@
+import React, { useState, useLayoutEffect } from "react";
 import { useSelector } from "react-redux";
 import { RootState } from "../../../redux-toolkit/store/store";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
+import { toastUtil } from "../../../utils/toast.utils";
 import Header from "../../../shared/components/Header";
 import CrossIcon from "../../../ts-icons/crossIcon.svg";
 import FileUpload from "../../../shared/components/FileUpload";
-import React, { useState } from "react";
 import Modal from "../../../shared/components/Modal";
 import Drawer from "../../../shared/components/Drawer";
 import HoverModal from "../../../shared/components/HoverModal";
 import SampleImage from "../../../assets/example_id.png";
 import SampleImage_2 from "../../../assets/example_id_2.png";
 import { FileType } from "../../../enums/types.enum";
+import { uploadAttachments } from "../../../apis/attachment.api";
+import Spinner from "../../../shared/components/Spinner";
 
 const AddAttachments = (props: any) => {
     const navigate = useNavigate();
     const language: any = useSelector((state: RootState) => state.language.value);
+    const authToken: any = useSelector((state: RootState) => state.auth.value);
+
     const [uploading] = useState([
         { title: language?.common?.idProof, sub: language?.common?.uploadPic, id: "id" }, { title: language?.common?.uploadSelfie, sub: language?.common?.uploadSelfie, id: "self" }, { title: language?.common?.resProof, sub: language?.common?.resProof, id: "res" }
     ]);
+
     const [selectedId, setSelectedId]: any = useState(null);
     const [modalOpen, setModalOpen]: any = useState(null);
     const [isOpen, setOpen] = useState(false);
     const [fileType, setFileType]: any = useState(null);
     const [agreeToTerms, setAgreeToTerms] = useState(false);
+    const [files, setFiles]: any = useState([]);
+    const [loading, setLoading] = useState(false);
+
+    useLayoutEffect(() => {
+        console.log(files);
+    }, [files]);
+
+    const onUploadAttachments = async () => {
+        try {
+            if (files.length < 3 || !agreeToTerms) return;
+            setLoading(true);
+            let allFiles = files.map((f: any) => f.file);
+           
+            let fd = new FormData();
+            fd.append("name", language.header.attachment);
+            fd.append("attachment_kind", "files");
+            fd.append("files", allFiles);
+
+            const response: any = await uploadAttachments(fd, authToken);
+            console.log(response);
+
+        } catch (error: any) {
+            const message = error?.response?.data?.status?.message || language.promptMessages.errorGeneral;
+            toast.error(message, toastUtil)
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const setFile = (file: File, id: string) => {
+        setFiles((prev: any) => {
+            return [...prev, { file, id }]
+        })
+    }
+
+    const removeFile = (id: string) => {
+        let _files = files.slice().filter((file: any) => file.id !== id);
+        setFiles(_files);
+    }
 
     return (
         <main className="h-full max-h-full background-auth overflow-y-auto">
@@ -59,7 +105,7 @@ const AddAttachments = (props: any) => {
                                                     </HoverModal>
                                                 )}
                                             </small>
-                                            <FileUpload id={item.id} setModalOpen={(e: any) => {
+                                            <FileUpload id={item.id} setFile={setFile} removeFile={removeFile} setModalOpen={(e: any) => {
                                                 setModalOpen(e.open ? e.url : null);
                                                 e.type && setFileType(e.type);
                                             }} />
@@ -80,9 +126,17 @@ const AddAttachments = (props: any) => {
                     <button className="text-neutral-900 font-bold bg-white tracking-[0.03em] rounded-md border border-grey rounded-md focus:outline-none focus:shadow-outline h-[38px] w-[140px]" type="button" onClick={() => navigate(-1)}>
                         {language?.buttons?.back}
                     </button>
-                    <button className="text-white font-bold bg-cyan-800 tracking-[0.03em] rounded-md focus:outline-none focus:shadow-outline h-[38px] w-[140px]" type="button" onClick={() => setModalOpen(true)}>
-                        {language?.buttons?.submit}
-                    </button>
+                    {
+                        loading ? (
+                            <button className={`text-white font-bold bg-cyan-800 tracking-[0.03em] rounded-md focus:outline-none focus:shadow-outline h-[38px] w-[140px]`} type="button" onClick={onUploadAttachments}>
+                                <Spinner />
+                            </button>
+                        ) : (
+                            <button className={`${files.length === 3 && agreeToTerms ? "opacity-100" : "opacity-70"} text-white font-bold bg-cyan-800 tracking-[0.03em] rounded-md focus:outline-none focus:shadow-outline h-[38px] w-[140px]`} type="button" onClick={onUploadAttachments}>
+                                {language?.buttons?.submit}
+                            </button>
+                        )
+                    }
                 </section>
             </aside>
             <Drawer isOpen={isOpen} setIsOpen={(val: boolean) => setOpen(val)}>
@@ -100,7 +154,7 @@ const AddAttachments = (props: any) => {
                                 setModalOpen(null);
                             }} />
                         </div>
-                        {fileType === FileType.IMAGE ? <img src={modalOpen} alt="Img" className="max-h-[100%]" /> : <embed src={modalOpen} type="application/pdf" className="w-[80%] h-[90%]" />}
+                        {fileType === FileType.IMAGE ? <img src={modalOpen} alt="Img" className="max-h-[100%]" /> : <embed src={modalOpen} type="application/pdf" className="w-[100%] h-[90%]" />}
                     </React.Fragment>
                 ) : (
                     <div className="p-12 rounded-md shadow-cs-1 flex flex-col items-center w-full bg-white outline-none focus:outline-none screen800:px-3">
@@ -112,7 +166,7 @@ const AddAttachments = (props: any) => {
                             <p className="text-sm font-normal text-neutral-500 text-center leading-relaxed">{language.modal.sub_4} <span className="color-blue">012-345678</span></p>
                         </div>
 
-                        <button className="mt-8 bg-cyan-800 text-white w-[120px] h-9 inline-flex items-center justify-center rounded-md" type="button" onClick={() => {
+                        <button className={`mt-8 bg-cyan-800 text-white w-[120px] h-9 inline-flex items-center justify-center rounded-md`} type="button" onClick={() => {
                             setModalOpen(false);
                         }}>
                             {language.buttons.continue}

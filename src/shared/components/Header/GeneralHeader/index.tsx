@@ -24,16 +24,12 @@ const GeneralHeader = ({ responsive = false, showMenu = false }: any) => {
 
     const onLogout = async () => {
         try {
-            let response: any = await logout(authToken);
-            if (response.status === 200) {
-                dispatch(saveToken(""));
-                navigate("/login")
-            }
+            let { status } = await logout(authToken);
         } catch (error: any) {
-            if(error.response && error.response.status === 401) {
-                dispatch(saveToken(""));
-                navigate("/login");
-            }
+        } finally {
+            dispatch(saveToken(""));
+            navigate("/login");
+            localStorage.clear();
         }
     };
 

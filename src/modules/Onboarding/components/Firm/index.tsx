@@ -101,11 +101,11 @@ const Firm = ({ language }: any) => {
                     {language?.buttons?.back}
                 </button>
                 {loading ? (
-                    <button className={`${!selectedAssert?.id || !payload.legal || !payload.residence && "opacity-70"} text-white font-bold bg-cyan-800 tracking-[0.03em] rounded-md focus:outline-none focus:shadow-outline h-[38px] w-[140px]`}>
+                    <button className={`text-white font-bold bg-cyan-800 tracking-[0.03em] rounded-md focus:outline-none focus:shadow-outline h-[38px] w-[140px]`}>
                         <Spinner />
                     </button>
                 ) : (
-                    <button className={`${!selectedAssert?.id || !payload.legal || !payload.residence && "opacity-70"} text-white font-bold bg-cyan-800 tracking-[0.03em] rounded-md focus:outline-none focus:shadow-outline h-[38px] w-[140px]`} type="submit">
+                    <button className={`${!selectedAssert?.id || !payload.legal || !payload.residence || !riskChecked && "opacity-70"} text-white font-bold bg-cyan-800 tracking-[0.03em] rounded-md focus:outline-none focus:shadow-outline h-[38px] w-[140px]`} type="submit">
                         {language?.buttons?.continue}
                     </button>
                 )}
