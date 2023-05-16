@@ -11,7 +11,7 @@ import { saveToken } from "../../../../redux-toolkit/slicer/auth.slicer";
 import Drawer from "../../../../shared/components/Drawer";
 import HorionGraph from "../../../../assets/investment_horizon_graph.png";
 
-const Questionare = ({ step, setModalOpen }: any) => {
+const Questionare = ({ step, returnSuccessRedirection }: any) => {
     const navigate = useNavigate();
     const dispatch = useDispatch();
     const language: any = useSelector((state: RootState) => state.language.value);
@@ -68,7 +68,7 @@ const Questionare = ({ step, setModalOpen }: any) => {
             setLoading(true);
             let { status, data } = await postInvestmentPhilisophyData(payload, authToken);
             if (step === questions?.total_steps && status === 200)
-                setModalOpen(data);
+                returnSuccessRedirection(data);
         } catch (error: any) {
             const message = error?.response?.data?.status?.message || error?.response?.data || language.promptMessages.errorGeneral;
             toast.error(message, toastUtil);
@@ -112,7 +112,7 @@ const Questionare = ({ step, setModalOpen }: any) => {
     };
 
     const renderMultipleChoiceQuestionaire = (ques: any) => {
-        if (selected && ques.step === 2 && ques.index === 2 && (!selected[`2`] || selected[`2`]?.questions.find((q: any) => q.answer === "No"))) return <React.Fragment></React.Fragment>;
+        if (selected && ques.step === 2 && ques.index === 2 && (!selected[`2`] || selected[`2`]?.questions.find((q: any) => q.answer[0] === "No"))) return <React.Fragment></React.Fragment>;
         if (ques?.question_type === "text") {
             return (
                 <section className="flex items-start justify-center flex-col mt-12 max-w-[420px] screen500:max-w-[300px]">

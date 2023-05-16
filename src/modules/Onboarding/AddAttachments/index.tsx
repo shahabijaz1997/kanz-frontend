@@ -15,6 +15,7 @@ import SampleImage_2 from "../../../assets/example_id_2.png";
 import { FileType } from "../../../enums/types.enum";
 import { uploadAttachments } from "../../../apis/attachment.api";
 import Spinner from "../../../shared/components/Spinner";
+import { handleFileRead } from "../../../utils/files.util";
 
 const AddAttachments = (props: any) => {
     const navigate = useNavigate();
@@ -41,19 +42,34 @@ const AddAttachments = (props: any) => {
         try {
             if (files.length < 3 || !agreeToTerms) return;
             setLoading(true);
-            let allFiles = files.map((f: any) => f.file);
-           
+            const serializedFiles = [];
+            for (const file of files) {
+                try {
+                    const fileData = await handleFileRead(file.file);
+                    serializedFiles.push(fileData);
+                } catch (error) {
+                    console.error('Error reading file:', error);
+                }
+            }
             let fd = new FormData();
-            fd.append("name", language.header.attachment);
-            fd.append("attachment_kind", "files");
-            fd.append("files", allFiles);
+            fd.append("attachment[name]", files[0].file?.name);
+            fd.append("attachment[attachment_kind]", "files");
+            for (let i = 0; i < serializedFiles.length; i++) {
+                const fileData: any = serializedFiles[i];
+                fd.append(`attachment[file_${i}]`, files[i].file, fileData.name);
+            }
 
-            const response: any = await uploadAttachments(fd, authToken);
-            console.log(response);
-
+            const { status, data } = await uploadAttachments(fd, authToken);
+            if (status === 200) {
+                toast.success(data?.status?.message, toastUtil);
+                setFiles([]);
+                setAgreeToTerms(false);
+                navigate("/welcome");
+            }
         } catch (error: any) {
+            console.log(error);
             const message = error?.response?.data?.status?.message || language.promptMessages.errorGeneral;
-            toast.error(message, toastUtil)
+            toast.error(message, toastUtil);
         } finally {
             setLoading(false);
         }
