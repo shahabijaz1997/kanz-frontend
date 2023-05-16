@@ -42,12 +42,13 @@ const EmailVerification = ({ payload }: any) => {
             if (!token) return;
             setLoading(true);
             const response: any = await confirmToken({ confirmation_token: token });
+            console.log(response);
+            
             if(response.status === 200) {
                 console.log("response.headers: ", response.headers);
-                
+                toast.success(response?.data?.status?.message, toastUtil);
                 const token = response.headers["authorization"].split(" ")[1]
                 dispatch(saveToken(token));
-                toast.success(response.status.message, toastUtil);
                 localStorage.setItem("role", Roles.INVESTOR)
                 toast.success(response?.data?.message, toastUtil);
             }

@@ -203,7 +203,9 @@
         "logout": "Logout",
         "getStart": "Get Started",
         "readDocs": "Read Documentation",
-        "proceed": "Proceed"
+        "proceed": "Proceed",
+        "notRegistered": "Not already registered?",
+        "signup": "Sign up"
     },
     "modal": {
         "thankyou": "\"Thank you for submitting your information!",

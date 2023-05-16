@@ -11,7 +11,7 @@ import { saveToken } from "../../../../redux-toolkit/slicer/auth.slicer";
 import Drawer from "../../../../shared/components/Drawer";
 import HorionGraph from "../../../../assets/investment_horizon_graph.png";
 
-const Questionare = ({ step }: any) => {
+const Questionare = ({ step, setModalOpen }: any) => {
     const navigate = useNavigate();
     const dispatch = useDispatch();
     const language: any = useSelector((state: RootState) => state.language.value);
@@ -67,8 +67,8 @@ const Questionare = ({ step }: any) => {
         try {
             setLoading(true);
             let { status, data } = await postInvestmentPhilisophyData(payload, authToken);
-            if (step === 5 && status === 200)
-                toast.success(data?.status?.message, toastUtil)
+            if (step === questions?.total_steps && status === 200)
+                setModalOpen(data);
         } catch (error: any) {
             const message = error?.response?.data?.status?.message || error?.response?.data || language.promptMessages.errorGeneral;
             toast.error(message, toastUtil);
@@ -98,15 +98,15 @@ const Questionare = ({ step }: any) => {
 
         if (found) {
             let filtered = _selected[q.step]?.questions.filter((qa: any) => qa.question_id !== q.id);
-            filtered.push({ question_id: q.id, answer: a?.statement, answer_meta: a });
+            filtered.push({ question_id: q.id, answer: [a?.statement], answer_meta: a });
             _selected[q.step].questions = filtered;
             setSelected(_selected);
         }
         else {
             if (_selected[q.step]?.questions?.length)
-                _selected[q.step]?.questions.push({ question_id: q.id, answer: a?.statement, answer_meta: a })
+                _selected[q.step]?.questions.push({ question_id: q.id, answer: [a?.statement], answer_meta: a })
             else
-                _selected[q.step] = { step, questions: [{ question_id: q.id, answer: a?.statement, answer_meta: a }] };
+                _selected[q.step] = { step, questions: [{ question_id: q.id, answer: [a?.statement], answer_meta: a }] };
             setSelected(_selected);
         }
     };
@@ -126,9 +126,9 @@ const Questionare = ({ step }: any) => {
                             setTextAnswer(e.target.value);
                             let _selected = { ...selected };
                             if (_selected[ques.step])
-                                _selected[ques.step].questions = [{ question_id: ques.id, answer: e.target.value, answer_meta: {} }]
+                                _selected[ques.step].questions = [{ question_id: ques.id, answer: [e.target.value], answer_meta: {} }]
                             else
-                                _selected[ques.step] = { questions: [{ question_id: ques.id, answer: e.target.value, answer_meta: {} }] }
+                                _selected[ques.step] = { questions: [{ question_id: ques.id, answer: [e.target.value], answer_meta: {} }] }
 
                             setSelected(_selected);
                         }} className="rounded-md shadow-sm appearance-none border border-neutral-300 rounded-md w-full py-2 px-3 text-gray-500 leading-tight focus:outline-none focus:shadow-outline h-[100px] resize-none"></textarea>
@@ -226,7 +226,7 @@ const Questionare = ({ step }: any) => {
                         React.Children.toArray(
                             ques?.options?.schema.map((as: any) => {
                                 return (
-                                    <li className={`rounded-md h-[50px] w-[420px] p-4 grey-neutral-200 text-sm font-medium cursor-pointer border border-grey inline-flex items-center justify-start screen500:w-full${checkExist(selected[ques.step], as) ? "check-background" : "bg-white"}`} onClick={() => {
+                                    <li className={`rounded-md bg-white h-[50px] w-[420px] p-4 grey-neutral-200 text-sm font-medium cursor-pointer border border-grey inline-flex items-center justify-start screen500:w-full${checkExist(selected[ques.step], as) ? "check-background" : "bg-white"}`} onClick={() => {
                                         toggleAnswerSelection(ques, as);
                                         let _validations = [...validations];
                                         let f = _validations.find(v => v === ques?.id);
@@ -269,17 +269,14 @@ const Questionare = ({ step }: any) => {
         else {
             let _mcqs = [...mcqs];
             let answers = _mcqs.map(m => m.statement);
-            let philData: any = { ...JSON.parse(philisophyData), 3: { step: 3, questions: [{ question_id: 1, answer: answers.join(","), answer_meta: mcqs }] } };
+            let philData: any = { ...JSON.parse(philisophyData), 3: { step: 3, questions: [{ question_id: 1, answer: answers, answer_meta: mcqs }] } };
             localStorage.setItem("philosophy", JSON.stringify(philData));
             payload.investment_philosophy.step = 3;
-            payload.investment_philosophy.questions = [{ question_id: 1, answer: answers.join(","), answer_meta: mcqs }];
+            payload.investment_philosophy.questions = [{ question_id: 1, answer: answers, answer_meta: { options: mcqs } }];
         }
         submitData(payload);
-        if (step !== 5)
+        if (step !== questions?.total_steps)
             navigate(`/philosophy-goals/${page + 1}`);
-        else
-            navigate(`/add-attachments`);
-
     };
 
     const checkValidation = () => {
