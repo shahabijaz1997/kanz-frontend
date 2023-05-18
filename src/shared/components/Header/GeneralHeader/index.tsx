@@ -8,6 +8,7 @@ import BellIcon from "../../../../ts-icons/BellIcon.svg";
 import { logout } from "../../../../apis/auth.api";
 import { useNavigate } from "react-router-dom";
 import { saveToken } from "../../../../redux-toolkit/slicer/auth.slicer";
+import { saveUserData } from "../../../../redux-toolkit/slicer/user.slicer";
 
 const GeneralHeader = ({ responsive = false, showMenu = false }: any) => {
     const navigate = useNavigate();
@@ -30,6 +31,7 @@ const GeneralHeader = ({ responsive = false, showMenu = false }: any) => {
             dispatch(saveToken(""));
             navigate("/login");
             localStorage.clear();
+            dispatch(saveUserData(""));
         }
     };
 
@@ -42,8 +44,8 @@ const GeneralHeader = ({ responsive = false, showMenu = false }: any) => {
                             <BellIcon stroke={"#4F4F4F"} />
                         </div>
                     </li>
-                    <li className="">
-                        <img className="rounded-full w-8 h-8 inline-grid place-items-center" src="https://randomuser.me/api/portraits/men/46.jpg" alt="User" />
+                    <li onClick={onLogout}>
+                        <button className="text-neutral-500 cursor-pointer text-sm tracking-[0.03em]">{language.buttons.logout}</button>
                     </li>
                 </React.Fragment>
             )
@@ -52,7 +54,7 @@ const GeneralHeader = ({ responsive = false, showMenu = false }: any) => {
                 <React.Fragment>
                     {authToken ? (
                         <li onClick={onLogout}>
-                            <button className="text-neutral-500 cursor-pointer text-sm tracking-[0.03em]" >{language.buttons.logout}</button>
+                            <button className="text-neutral-500 cursor-pointer text-sm tracking-[0.03em]">{language.buttons.logout}</button>
                         </li>
                     ) : (
                         <li onClick={() => navigate("/login")}>
@@ -122,8 +124,8 @@ const GeneralHeader = ({ responsive = false, showMenu = false }: any) => {
                                     <BellIcon stroke={"#4F4F4F"} />
                                 </div>
                             </li>
-                            <li>
-                                <img className="rounded-full w-8 h-8 inline-grid place-items-center" src="https://randomuser.me/api/portraits/men/46.jpg" alt="User" />
+                            <li onClick={onLogout}>
+                                <button className="text-neutral-500 cursor-pointer text-sm tracking-[0.03em]">{language.buttons.logout}</button>
                             </li>
                         </ul>
                     </nav>

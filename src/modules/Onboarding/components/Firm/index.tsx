@@ -40,7 +40,7 @@ const Firm = ({ language }: any) => {
             fd.append("investor[meta_info][uper_limit]", selectedAssert.upper_limit)
             fd.append("investor[meta_info][accept_investment_criteria]", String(selectedAssert.low_limit))
 
-            let { data, status } = await investmentAccridiation(payload, authToken);
+            let { data, status } = await investmentAccridiation(fd, authToken);
             if (status === 200) {
                 toast.success(data?.status?.message, toastUtil);
                 navigate("/complete-goals", { state: { type: InvestorType.FIRM, selected: selectedAssert } })

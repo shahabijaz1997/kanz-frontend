@@ -1,4 +1,4 @@
-import React, { useState, useLayoutEffect } from "react";
+import React, { useState } from "react";
 import { useSelector } from "react-redux";
 import { RootState } from "../../../redux-toolkit/store/store";
 import { useNavigate } from "react-router-dom";
@@ -13,7 +13,7 @@ import HoverModal from "../../../shared/components/HoverModal";
 import SampleImage from "../../../assets/example_id.png";
 import SampleImage_2 from "../../../assets/example_id_2.png";
 import { FileType } from "../../../enums/types.enum";
-import { uploadAttachments } from "../../../apis/attachment.api";
+import { removeAttachment, uploadAttachments } from "../../../apis/attachment.api";
 import Spinner from "../../../shared/components/Spinner";
 import { handleFileRead } from "../../../utils/files.util";
 
@@ -34,40 +34,27 @@ const AddAttachments = (props: any) => {
     const [files, setFiles]: any = useState([]);
     const [loading, setLoading] = useState(false);
 
-    useLayoutEffect(() => {
-        console.log(files);
-    }, [files]);
-
-    const onUploadAttachments = async () => {
+    const onUploadAttachments = async (file: File, id: string) => {
         try {
-            if (files.length < 3 || !agreeToTerms) return;
             setLoading(true);
-            const serializedFiles = [];
-            for (const file of files) {
-                try {
-                    const fileData = await handleFileRead(file.file);
-                    serializedFiles.push(fileData);
-                } catch (error) {
-                    console.error('Error reading file:', error);
-                }
-            }
+            const fileData: any = await handleFileRead(file);
             let fd = new FormData();
-            fd.append("attachment[name]", files[0].file?.name);
+            fd.append("attachment[name]", file?.name);
             fd.append("attachment[attachment_kind]", "files");
-            for (let i = 0; i < serializedFiles.length; i++) {
-                const fileData: any = serializedFiles[i];
-                fd.append(`attachment[file_${i}]`, files[i].file, fileData.name);
-            }
+            fd.append(`attachment[file]`, file, fileData.name);
 
+            console.log("data", file, fileData);
             const { status, data } = await uploadAttachments(fd, authToken);
             if (status === 200) {
-                toast.success(data?.status?.message, toastUtil);
-                setFiles([]);
-                setAgreeToTerms(false);
-                navigate("/welcome");
+
+                // toast.success(data?.status?.message, toastUtil);
+                // setFiles([]);
+                // setAgreeToTerms(false);
+                // navigate("/welcome");
             }
         } catch (error: any) {
             console.log(error);
+
             const message = error?.response?.data?.status?.message || language.promptMessages.errorGeneral;
             toast.error(message, toastUtil);
         } finally {
@@ -75,15 +62,26 @@ const AddAttachments = (props: any) => {
         }
     };
 
-    const setFile = (file: File, id: string) => {
+    const setFile = (file: File, id: string, attachment_id: string) => {
         setFiles((prev: any) => {
-            return [...prev, { file, id }]
+            return [...prev, { file, id, attachment_id }]
         })
     }
 
-    const removeFile = (id: string) => {
-        let _files = files.slice().filter((file: any) => file.id !== id);
-        setFiles(_files);
+    const removeFile = async (id: string) => {
+        try {
+            setLoading(true);
+            let { status } = await removeAttachment(id, authToken);
+            if (status === 200) {
+                let _files = files.slice().filter((file: any) => file.attachment_id !== id);
+                setFiles(_files);
+            }
+        } catch (error: any) {
+            const message = error?.response?.data?.status?.message || error?.response?.data || language.promptMessages.errorGeneral;
+            toast.error(message);
+        } finally {
+            setLoading(false);
+        }
     }
 
     return (
@@ -144,11 +142,11 @@ const AddAttachments = (props: any) => {
                     </button>
                     {
                         loading ? (
-                            <button className={`text-white font-bold bg-cyan-800 tracking-[0.03em] rounded-md focus:outline-none focus:shadow-outline h-[38px] w-[140px]`} type="button" onClick={onUploadAttachments}>
+                            <button className={`text-white font-bold bg-cyan-800 tracking-[0.03em] rounded-md focus:outline-none focus:shadow-outline h-[38px] w-[140px]`} type="button">
                                 <Spinner />
                             </button>
                         ) : (
-                            <button className={`${files.length === 3 && agreeToTerms ? "opacity-100" : "opacity-70"} text-white font-bold bg-cyan-800 tracking-[0.03em] rounded-md focus:outline-none focus:shadow-outline h-[38px] w-[140px]`} type="button" onClick={onUploadAttachments}>
+                            <button className={`${files.length === 3 && agreeToTerms ? "opacity-100" : "opacity-70"} text-white font-bold bg-cyan-800 tracking-[0.03em] rounded-md focus:outline-none focus:shadow-outline h-[38px] w-[140px]`} type="button" onClick={() => navigate("/welcome")}>
                                 {language?.buttons?.submit}
                             </button>
                         )

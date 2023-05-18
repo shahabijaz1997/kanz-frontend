@@ -18,3 +18,11 @@ export const uploadAttachments = (payload: any, token: string) => {
         },
     });
 };
+
+export const removeAttachment = (id: any, token: string) => {
+    return axios.delete(`${ENV.API_URL}/${ENV.API_VERSION}/attachments/${id}`, {
+        headers: {
+            Authorization: `Bearer ${token}`
+        },
+    });
+};

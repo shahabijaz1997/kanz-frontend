@@ -13,6 +13,7 @@ import { toastUtil } from "../../../utils/toast.utils";
 import Spinner from "../../../shared/components/Spinner";
 import { saveToken } from "../../../redux-toolkit/slicer/auth.slicer";
 import AddAttachmentBanner from "../../../shared/components/AddAttachmentBanner";
+import { saveUserData } from "../../../redux-toolkit/slicer/user.slicer";
 
 const CompleteGoals = (props: any) => {
     const { state } = useLocation();
@@ -32,8 +33,10 @@ const CompleteGoals = (props: any) => {
         try {
             setLoading(true);
             let { status, data } = await getInvestor(authToken);
-            if (status === 200)
+            if (status === 200){
+                dispatch(saveUserData(data?.status?.data));
                 setApiResp(data);
+            }
         } catch (error: any) {
             const message = error?.response?.data?.status?.message || error?.response?.data || language.promptMessages.errorGeneral;
             toast.error(message, toastUtil);
