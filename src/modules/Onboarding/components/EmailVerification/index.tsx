@@ -1,14 +1,17 @@
 import { useState } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../../../redux-toolkit/store/store";
 import { useNavigate } from "react-router-dom";
 import { confirmToken, signup } from "../../../../apis/auth.api";
 import Spinner from "../../../../shared/components/Spinner";
 import { toast } from "react-toastify";
 import { toastUtil } from "../../../../utils/toast.utils";
+import { saveToken } from "../../../../redux-toolkit/slicer/auth.slicer";
+import { Roles } from "../../../../enums/roles.enum";
 
 const EmailVerification = ({ payload }: any) => {
     const navigate = useNavigate();
+    const dispatch = useDispatch();
     const language: any = useSelector((state: RootState) => state.language.value);
     const [isEdit, setEdit] = useState(false);
     const [email, setEmail] = useState(payload?.email);
@@ -22,9 +25,10 @@ const EmailVerification = ({ payload }: any) => {
             setLoading(true);
             const { status, data } = await signup({ user: { email, password: payload.password, name: payload.name } });
 
-            if (status === 200)
+            if (status === 200) {
                 setEdit(false);
-            
+            }
+
         } catch (error: any) {
             const message = error?.response?.data?.status?.message || language.promptMessages.errorGeneral;
             toast.error(message, toastUtil);
@@ -39,12 +43,14 @@ const EmailVerification = ({ payload }: any) => {
             e.preventDefault();
             if (!token) return;
             setLoading(true);
-            const { status, data } = await confirmToken({ confirmation_token: token });
-            if(status === 200) {
-                toast.success(data?.message, toastUtil);
-                navigate("/login");
+            const response: any = await confirmToken({ confirmation_token: token });
+            if (response.status === 200 && response.headers["authorization"]) {
+                const token = response.headers["authorization"].split(" ")[1]
+                dispatch(saveToken(token));
+                toast.success(response.status.message, toastUtil);
+                localStorage.setItem("role", Roles.INVESTOR)
+                navigate("/welcome");
             }
-
         } catch (error: any) {
             const message = error?.response?.data?.status?.message || language.promptMessages.errorGeneral;
             toast.error(message, toastUtil);
@@ -72,7 +78,7 @@ const EmailVerification = ({ payload }: any) => {
                             <Spinner />
                         </button>
                     ) : (
-                        <button className="text-white text-sm tracking-[0.03em] bg-cyan-800 rounded-md focus:outline-none focus:shadow-outline w-full h-[38px] mt-10" type="submit">
+                        <button className={`${!token && "opacity-70"} text-white text-sm tracking-[0.03em] bg-cyan-800 rounded-md focus:outline-none focus:shadow-outline w-full h-[38px] mt-10`} type="submit">
                             {language?.buttons?.verify}
                         </button>
                     )}

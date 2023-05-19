@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useLayoutEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
@@ -24,8 +24,15 @@ const Individual = ({ language }: any) => {
     const onSetPayload = (data: any, type: string) => {
         setPayload((prev: any) => {
             return { ...prev, [type]: data }
-        })
+        });
     };
+
+    useLayoutEffect(() => {
+        let data = localStorage.getItem("account_info");
+        let assertData = localStorage.getItem("accert");
+        if (data) setPayload(JSON.parse(data));
+        if (assertData) setSelectedAssert(JSON.parse(assertData));
+    }, []);
 
     const addinvestmentAccridiation = async (e: any) => {
         e.preventDefault();
@@ -41,17 +48,19 @@ const Individual = ({ language }: any) => {
             fd.append("investor[meta_info][uper_limit]", selectedAssert.upper_limit)
             fd.append("investor[meta_info][accept_investment_criteria]", String(selectedAssert.low_limit))
 
-            let { data, status } = await investmentAccridiation(payload, authToken);
+            let { data, status } = await investmentAccridiation(fd, authToken);
             if (status === 200) {
                 toast.success(data?.status?.message, toastUtil);
-                navigate("/complete-goals", { state: { type: InvestorType.INDIVIDUAL, selected: selectedAssert } })
+                navigate("/complete-goals", { state: { type: InvestorType.INDIVIDUAL, selected: selectedAssert } });
+                localStorage.setItem("account_info", JSON.stringify(payload));
+                localStorage.setItem("accert", JSON.stringify(selectedAssert));
             }
         } catch (error: any) {
             const message = error?.response?.data?.status?.message || error?.response?.data || language.promptMessages.errorGeneral;
             toast.error(message, toastUtil);
-            if(error.response && error.response.status === 401) {
+            if (error.response && error.response.status === 401) {
                 dispatch(saveToken(""));
-                navigate("/login");
+                navigate("/login", { state: 'complete-details' });
             }
         } finally {
             setLoading(false);
@@ -103,7 +112,7 @@ const Individual = ({ language }: any) => {
                         <Spinner />
                     </button>
                 ) : (
-                    <button className={`${!payload.national || !payload.residence || !selectedAssert?.id && "opacity-70"} text-white bg-cyan-800 tracking-[0.03em] font-bold rounded-md focus:outline-none focus:shadow-outline h-[38px] w-[140px]`} type="submit">
+                    <button className={`${!payload.national || !payload.residence || !selectedAssert?.id || !riskChecked && "opacity-70"} text-white bg-cyan-800 tracking-[0.03em] font-bold rounded-md focus:outline-none focus:shadow-outline h-[38px] w-[140px]`} type="submit">
                         {language?.buttons?.continue}
                     </button>
                 )}

@@ -39,9 +39,9 @@ const InvestorFlow = (props: any) => {
         } catch (error: any) {
             const message = error?.response?.data?.status?.message || error?.response?.data || language.promptMessages.errorGeneral;
             toast.error(message, toastUtil);
-            if(error.response && error.response.status === 401) {
+            if (error.response && error.response.status === 401) {
                 dispatch(saveToken(""));
-                navigate("/login");
+                navigate("/login", { state: 'investor-type' });
             }
         } finally {
             setLoading(false);

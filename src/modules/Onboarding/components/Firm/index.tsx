@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useLayoutEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import CountrySelector from "../../../../shared/components/CountrySelector";
 import { InvestorType } from "../../../../enums/types.enum";
@@ -26,6 +26,13 @@ const Firm = ({ language }: any) => {
         })
     };
 
+    useLayoutEffect(() => {
+        let data = localStorage.getItem("account_info");
+        let assertData = localStorage.getItem("accert");
+        if (data) setPayload(JSON.parse(data));
+        if (assertData) setSelectedAssert(JSON.parse(assertData));
+    }, []);
+
     const addinvestmentAccridiation = async (e: any) => {
         e.preventDefault();
         if (!selectedAssert?.id || !payload.legal || !payload.residence) return;
@@ -40,17 +47,19 @@ const Firm = ({ language }: any) => {
             fd.append("investor[meta_info][uper_limit]", selectedAssert.upper_limit)
             fd.append("investor[meta_info][accept_investment_criteria]", String(selectedAssert.low_limit))
 
-            let { data, status } = await investmentAccridiation(payload, authToken);
+            let { data, status } = await investmentAccridiation(fd, authToken);
             if (status === 200) {
                 toast.success(data?.status?.message, toastUtil);
-                navigate("/complete-goals", { state: { type: InvestorType.FIRM, selected: selectedAssert } })
+                navigate("/complete-goals", { state: { type: InvestorType.FIRM, selected: selectedAssert } });
+                localStorage.setItem("account_info", JSON.stringify(payload));
+                localStorage.setItem("accert", JSON.stringify(selectedAssert));
             }
         } catch (error: any) {
             const message = error?.response?.data?.status?.message || error?.response?.data || language.promptMessages.errorGeneral;
             toast.error(message, toastUtil);
-            if(error.response && error.response.status === 401) {
+            if (error.response && error.response.status === 401) {
                 dispatch(saveToken(""));
-                navigate("/login");
+                navigate("/login", { state: `complete-details` });
             }
         } finally {
             setLoading(false);
@@ -101,11 +110,11 @@ const Firm = ({ language }: any) => {
                     {language?.buttons?.back}
                 </button>
                 {loading ? (
-                    <button className={`${!selectedAssert?.id || !payload.legal || !payload.residence && "opacity-70"} text-white font-bold bg-cyan-800 tracking-[0.03em] rounded-md focus:outline-none focus:shadow-outline h-[38px] w-[140px]`}>
+                    <button className={`text-white font-bold bg-cyan-800 tracking-[0.03em] rounded-md focus:outline-none focus:shadow-outline h-[38px] w-[140px]`}>
                         <Spinner />
                     </button>
                 ) : (
-                    <button className={`${!selectedAssert?.id || !payload.legal || !payload.residence && "opacity-70"} text-white font-bold bg-cyan-800 tracking-[0.03em] rounded-md focus:outline-none focus:shadow-outline h-[38px] w-[140px]`} type="submit">
+                    <button className={`${!selectedAssert?.id || !payload.legal || !payload.residence || !riskChecked && "opacity-70"} text-white font-bold bg-cyan-800 tracking-[0.03em] rounded-md focus:outline-none focus:shadow-outline h-[38px] w-[140px]`} type="submit">
                         {language?.buttons?.continue}
                     </button>
                 )}

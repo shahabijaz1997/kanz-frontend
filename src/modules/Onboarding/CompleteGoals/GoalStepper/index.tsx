@@ -11,7 +11,7 @@ const GoalStepper = ({ language, navigate }: any) => {
                 <h3 className="text-neutral-900 text-2xl font-bold">{language.individual.philosophyGoals}</h3>
                 <p className="text-neutral-700 text-base font-normal my-5 text-center">{language.individual.philosophysub}</p>
 
-                {step === 1 && <Stepper currentStep={2} />}
+                {step === 1 && <Stepper currentStep={0} />}
                 {step === 0 ? (
                     <button className="bg-cyan-800 text-white w-[120px] h-9 inline-flex items-center justify-center rounded-md" onClick={() => setStep(1)}>
                         <small>{language.buttons.start}</small>

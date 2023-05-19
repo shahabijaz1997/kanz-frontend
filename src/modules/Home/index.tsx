@@ -1,3 +1,5 @@
+import React from "react";
+import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { RootState } from "../../redux-toolkit/store/store";
 import Header from "../../shared/components/Header";
@@ -7,9 +9,10 @@ import LeftQuote from "../../assets/left_quote.png";
 import PortalSS from "../../assets/portal_ss.png";
 import Investors from "../../assets/investors.png";
 import QuotesIcon from "../../ts-icons/quotesIcon.svg";
-import React from "react";
+import { KanzRoles } from "../../enums/roles.enum";
 
 const Home = ({ }: any) => {
+    const navigate = useNavigate();
     const language: any = useSelector((state: RootState) => state.language.value);
 
     const longSecContent = () => {
@@ -20,7 +23,7 @@ const Home = ({ }: any) => {
                     <h1 className="text-neutral-900 text-2xl tracking-[0.03em] font-bold my-2">3017 {language.landing.switchedToKanz}</h1>
                     <p className="text-neutral-500 tracking-[0.03em] text-base font-normal pt-1 max-w-[70%] screen991:max-w-full">{language.landing.investPara1}</p>
                     <p className="text-neutral-500 tracking-[0.03em] text-base font-normal pt-6 max-w-[70%] screen991:max-w-full">{language.landing.investPara2}</p>
-                    <button className="bg-cyan-800 font-medium text-lg text-white px-[41px] py-[14px] rounded-md mt-6">{language.buttons.getStart}</button>
+                    <button className="bg-cyan-800 font-medium text-lg text-white px-[41px] py-[14px] rounded-md mt-6" onClick={() => navigate(`/signup`, { state: KanzRoles.STARTUP })}>{language.buttons.getStart}</button>
 
                     <div className="mt-[5rem]">
                         <img src={LeftQuote} alt="Kanz" className="mb-2" />
@@ -33,7 +36,7 @@ const Home = ({ }: any) => {
                     <h1 className="text-neutral-900 text-2xl tracking-[0.03em] font-bold my-2">3017 {language.landing.switchedToKanz}</h1>
                     <p className="text-neutral-500 tracking-[0.03em] text-base font-normal pt-1 max-w-[70%] screen991:max-w-full">{language.landing.investPara1}</p>
                     <p className="text-neutral-500 tracking-[0.03em] text-base font-normal pt-6 max-w-[70%] screen991:max-w-full">{language.landing.investPara2}</p>
-                    <button className="bg-cyan-800 font-medium text-lg text-white px-[41px] py-[14px] rounded-md mt-6">{language.buttons.getStart}</button>
+                    <button className="bg-cyan-800 font-medium text-lg text-white px-[41px] py-[14px] rounded-md mt-6" onClick={() => navigate(`/signup`, { state: KanzRoles.SYNDICATE })}>{language.buttons.getStart}</button>
 
                     <div className="mt-[5rem]">
                         <img src={LeftQuote} alt="Kanz" className="mb-2" />
@@ -46,7 +49,7 @@ const Home = ({ }: any) => {
                     <h1 className="text-neutral-900 text-2xl tracking-[0.03em] font-bold my-2">3017 {language.landing.switchedToKanz}</h1>
                     <p className="text-neutral-500 tracking-[0.03em] text-base font-normal pt-1 max-w-[70%] screen991:max-w-full">{language.landing.investPara1}</p>
                     <p className="text-neutral-500 tracking-[0.03em] text-base font-normal pt-6 max-w-[70%] screen991:max-w-full">{language.landing.investPara2}</p>
-                    <button className="bg-cyan-800 font-medium text-lg text-white px-[41px] py-[14px] rounded-md mt-6">{language.buttons.getStart}</button>
+                    <button className="bg-cyan-800 font-medium text-lg text-white px-[41px] py-[14px] rounded-md mt-6" onClick={() => navigate(`/signup`, { state: KanzRoles.REALTOR })}>{language.buttons.getStart}</button>
 
                     <div className="mt-[5rem]">
                         <img src={LeftQuote} alt="Kanz" className="mb-2" />
@@ -86,7 +89,7 @@ const Home = ({ }: any) => {
                 </section>
 
                 <section className="mt-[6%] relative h-[750px] screen1024:h-[500px] overflow-hidden">
-                    <div style={{backgroundImage: "linear-gradient(to left, #ccdcf4, #d4e2f6, #dce8f7, #e4edf8, #edf3fa)"}} className="absolute h-full w-full"></div>
+                    <div style={{ backgroundImage: "linear-gradient(to left, #ccdcf4, #d4e2f6, #dce8f7, #e4edf8, #edf3fa)" }} className="absolute h-full w-full"></div>
                     <img src={PatternSvg} alt="SVG" className="absolute right-0" />
 
                     <aside className="flex flex-row screen991:flex-col justify-between items-center h-full px-[120px] screen1024:px-[50px] relative">
@@ -95,7 +98,7 @@ const Home = ({ }: any) => {
                             <h1 className="text-neutral-900 text-2xl tracking-[0.03em] font-bold my-2">{language.landing.investSecSub}</h1>
                             <p className="text-neutral-500 tracking-[0.03em] text-base font-normal pt-1">{language.landing.investPara1}</p>
                             <p className="text-neutral-500 tracking-[0.03em] text-base font-normal pt-6">{language.landing.investPara2}</p>
-                            <button className="bg-cyan-800 font-medium text-lg text-white px-[41px] py-[14px] rounded-md mt-6">{language.buttons.getStart}</button>
+                            <button className="bg-cyan-800 font-medium text-lg text-white px-[41px] py-[14px] rounded-md mt-6" onClick={() => navigate(`/signup`, { state: KanzRoles.INVESTOR })}>{language.buttons.getStart}</button>
                         </div>
                         <div className="bg-white rounded-[20px] shadow-cs-5 p-6 h-[390px] w-1/2 screen991:hidden">
                             <img src={Investors} alt="Kanz" />

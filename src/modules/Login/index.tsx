@@ -1,7 +1,7 @@
 import React, { useState, useLayoutEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../redux-toolkit/store/store";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { toastUtil } from "../../utils/toast.utils";
 import Dropdown from "../../shared/components/Dropdown";
@@ -17,6 +17,8 @@ import { signin } from "../../apis/auth.api";
 import { Roles } from "../../enums/roles.enum";
 
 const Login = ({ }: any) => {
+    const { state } = useLocation();
+    
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const authToken: any = useSelector((state: RootState) => state.auth.value);
@@ -24,7 +26,7 @@ const Login = ({ }: any) => {
     const [payload, setPayload] = useState({ email: "", password: "" });
     const [viewPassword, setViewPassword] = useState(false);
     const [loading, setLoading] = useState(false);
-
+    
     useLayoutEffect(() => {
         if (authToken) navigate("/welcome");
     }, [])
@@ -68,7 +70,8 @@ const Login = ({ }: any) => {
                 dispatch(saveToken(token));
                 toast.success(response.status.message, toastUtil);
                 localStorage.setItem("role", Roles.INVESTOR)
-                navigate("/welcome");
+                if (state) navigate(`/${state}`);
+                else navigate("/welcome");
             }
             else toast.error(language.promptMessages.errorGeneral, toastUtil);
 
@@ -124,11 +127,10 @@ const Login = ({ }: any) => {
                                     {language?.buttons?.signin}
                                 </button>
                             )}
-                            <div className="flex items-center justify-center my-[38px]">
-                                <div className="border-t border-neutral-300 flex-grow"></div>
-                                <div className="px-4 text-neutral-500 font-normal">{language?.onboarding?.orSignIn}</div>
-                                <div className="border-t border-neutral-300 flex-grow"></div>
-                            </div>
+                            {/* <div className="flex justify-end my-[15px]">
+                                <p className="text-neutral-500 text-left">{language.buttons.notRegistered} </p>&nbsp;
+                                <button className="text-cyan-800 font-bold cursor-pointer" onClick={() => navigate("/signup")}>{language.buttons.signup}</button>
+                            </div> */}
                         </form>
                     </section>
                 </aside>

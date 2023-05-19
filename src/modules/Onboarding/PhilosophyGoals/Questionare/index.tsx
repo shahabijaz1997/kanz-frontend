@@ -11,7 +11,7 @@ import { saveToken } from "../../../../redux-toolkit/slicer/auth.slicer";
 import Drawer from "../../../../shared/components/Drawer";
 import HorionGraph from "../../../../assets/investment_horizon_graph.png";
 
-const Questionare = ({ step }: any) => {
+const Questionare = ({ step, returnSuccessRedirection }: any) => {
     const navigate = useNavigate();
     const dispatch = useDispatch();
     const language: any = useSelector((state: RootState) => state.language.value);
@@ -38,12 +38,16 @@ const Questionare = ({ step }: any) => {
             if (status === 200) {
                 let philisophyData: any = localStorage.getItem("philosophy");
                 let parsed = JSON.parse(philisophyData) || {};
-                setValidations([]);
                 setSelected(parsed);
                 setQuestions(data?.status?.data);
                 setPage(pg);
-                if (JSON.parse(philisophyData))
-                    if (parsed[step]) setValidations(parsed[step]?.questions)
+                if (JSON.parse(philisophyData)) {
+                    if (parsed[step]) {
+                        let d = parsed[step]?.questions.map((as: any) => as.question_id)
+                        setValidations(d);
+                    }
+                    else setValidations([]);
+                }
                 if (data?.status?.data?.questions && data?.status?.data?.questions[0]?.question_type === "checkbox")
                     if (parsed[3]?.questions[0]) setMcqs(parsed[3].questions[0]?.answer_meta);
             }
@@ -52,7 +56,7 @@ const Questionare = ({ step }: any) => {
             toast.error(message, toastUtil);
             if (error.response && error.response.status === 401) {
                 dispatch(saveToken(""));
-                navigate("/login");
+                navigate("/login", { state: `philosophy-goals/${step}` });
             }
         } finally {
             setLoading(false);
@@ -63,14 +67,14 @@ const Questionare = ({ step }: any) => {
         try {
             setLoading(true);
             let { status, data } = await postInvestmentPhilisophyData(payload, authToken);
-            if (step === 5 && status === 200)
-                toast.success(data?.message, toastUtil)
+            if (step === questions?.total_steps && status === 200)
+                returnSuccessRedirection(data);
         } catch (error: any) {
             const message = error?.response?.data?.status?.message || error?.response?.data || language.promptMessages.errorGeneral;
             toast.error(message, toastUtil);
             if (error.response && error.response.status === 401) {
                 dispatch(saveToken(""));
-                navigate("/login");
+                navigate("/login", { state: `philosophy-goals/${step}` });
             }
         } finally {
             setLoading(false);
@@ -94,21 +98,21 @@ const Questionare = ({ step }: any) => {
 
         if (found) {
             let filtered = _selected[q.step]?.questions.filter((qa: any) => qa.question_id !== q.id);
-            filtered.push({ question_id: q.id, answer: a?.statement, answer_meta: a });
+            filtered.push({ question_id: q.id, answer: [a?.statement], answer_meta: a });
             _selected[q.step].questions = filtered;
             setSelected(_selected);
         }
         else {
             if (_selected[q.step]?.questions?.length)
-                _selected[q.step]?.questions.push({ question_id: q.id, answer: a?.statement, answer_meta: a })
+                _selected[q.step]?.questions.push({ question_id: q.id, answer: [a?.statement], answer_meta: a })
             else
-                _selected[q.step] = { step, questions: [{ question_id: q.id, answer: a?.statement, answer_meta: a }] };
+                _selected[q.step] = { step, questions: [{ question_id: q.id, answer: [a?.statement], answer_meta: a }] };
             setSelected(_selected);
         }
     };
 
     const renderMultipleChoiceQuestionaire = (ques: any) => {
-        if (selected && ques.step === 2 && ques.index === 2 && (!selected[`2`] || selected[`2`]?.questions.find((q: any) => q.answer === "No"))) return <React.Fragment></React.Fragment>;
+        if (selected && ques.step === 2 && ques.index === 2 && (!selected[`2`] || selected[`2`]?.questions.find((q: any) => q.answer[0] === "No"))) return <React.Fragment></React.Fragment>;
         if (ques?.question_type === "text") {
             return (
                 <section className="flex items-start justify-center flex-col mt-12 max-w-[420px] screen500:max-w-[300px]">
@@ -122,9 +126,9 @@ const Questionare = ({ step }: any) => {
                             setTextAnswer(e.target.value);
                             let _selected = { ...selected };
                             if (_selected[ques.step])
-                                _selected[ques.step].questions = [{ question_id: ques.id, answer: e.target.value, answer_meta: {} }]
+                                _selected[ques.step].questions = [{ question_id: ques.id, answer: [e.target.value], answer_meta: {} }]
                             else
-                                _selected[ques.step] = { questions: [{ question_id: ques.id, answer: e.target.value, answer_meta: {} }] }
+                                _selected[ques.step] = { questions: [{ question_id: ques.id, answer: [e.target.value], answer_meta: {} }] }
 
                             setSelected(_selected);
                         }} className="rounded-md shadow-sm appearance-none border border-neutral-300 rounded-md w-full py-2 px-3 text-gray-500 leading-tight focus:outline-none focus:shadow-outline h-[100px] resize-none"></textarea>
@@ -148,9 +152,11 @@ const Questionare = ({ step }: any) => {
                                         <li className={`h-[50px] w-[420px] p-4 grey-neutral-200 text-sm font-medium cursor-pointer border border-grey inline-flex items-center justify-start first:rounded-t-md last:rounded-b-md screen500:w-full ${checkExist(selected[ques.step], as) ? "check-background" : "bg-white"}`} onClick={() => {
                                             toggleAnswerSelection(ques, as);
                                             let _validations = [...validations];
-                                            let f = _validations.find(v => v === as?.statement);
-                                            if (!f) _validations.push(as.statement);
-                                            setValidations(_validations);
+                                            let f = _validations.find(v => v === ques?.id);
+                                            if (!f) {
+                                                _validations.push(ques?.id);
+                                                setValidations(_validations);
+                                            }
                                         }}>
                                             <input onChange={() => { }} className="accent-cyan-800 relative float-left mr-2 h-3 w-3 rounded-full border-2 border-solid border-cyan-300 before:pointer-events-none before:absolute before:h-4 before:w-4 before:scale-0 before:rounded-full before:bg-transparent before:opacity-0 before:content-[''] after:absolute after:z-[1] after:block after:h-4 after:w-4 after:rounded-full after:content-[''] checked:border-primary checked:before:opacity-[0.16] checked:after:absolute checked:after:left-1/2 checked:after:top-1/2 checked:after:h-[0.625rem] checked:after:w-[0.625rem] checked:after:rounded-full checked:after:border-primary checked:after:bg-primary checked:after:content-[''] checked:after:[transform:translate(-50%,-50%)] hover:cursor-pointer hover:before:opacity-[0.04]"
                                                 type="radio" checked={checkExist(selected[ques.step], as) ? true : false} />
@@ -188,9 +194,11 @@ const Questionare = ({ step }: any) => {
                                             }
                                             else setMcqs((prv: any) => { return [...prv, as] });
                                             let _validations = [...validations];
-                                            let f = _validations.find(v => v === as?.statement);
-                                            if (!f) _validations.push(as.statement);
-                                            setValidations(_validations);
+                                            let f = _validations.find(v => v === ques?.id);
+                                            if (!f) {
+                                                _validations.push(ques?.id);
+                                                setValidations(_validations);
+                                            }
                                         }}>
                                             <input onChange={() => { }} className="accent-cyan-800 relative float-left mr-2 h-3 w-3 rounded-full border-2 border-solid border-cyan-300 before:pointer-events-none before:absolute before:h-4 before:w-4 before:scale-0 before:rounded-full before:bg-transparent before:opacity-0 before:content-[''] after:absolute after:z-[1] after:block after:h-4 after:w-4 after:rounded-full after:content-[''] checked:border-primary checked:before:opacity-[0.16] checked:after:absolute checked:after:left-1/2 checked:after:top-1/2 checked:after:h-[0.625rem] checked:after:w-[0.625rem] checked:after:rounded-full checked:after:border-primary checked:after:bg-primary checked:after:content-[''] checked:after:[transform:translate(-50%,-50%)] hover:cursor-pointer hover:before:opacity-[0.04]"
                                                 type="checkbox" checked={checkBoxCheckExist(as) ? true : false} />
@@ -218,12 +226,14 @@ const Questionare = ({ step }: any) => {
                         React.Children.toArray(
                             ques?.options?.schema.map((as: any) => {
                                 return (
-                                    <li className={`rounded-md h-[50px] w-[420px] p-4 grey-neutral-200 text-sm font-medium cursor-pointer border border-grey inline-flex items-center justify-start screen500:w-full${checkExist(selected[ques.step], as) ? "check-background" : "bg-white"}`} onClick={() => {
+                                    <li className={`rounded-md bg-white h-[50px] w-[420px] p-4 grey-neutral-200 text-sm font-medium cursor-pointer border border-grey inline-flex items-center justify-start screen500:w-full${checkExist(selected[ques.step], as) ? "check-background" : "bg-white"}`} onClick={() => {
                                         toggleAnswerSelection(ques, as);
                                         let _validations = [...validations];
-                                        let f = _validations.find(v => v === as?.statement);
-                                        if (!f) _validations.push(as.statement);
-                                        setValidations(_validations);
+                                        let f = _validations.find(v => v === ques?.id);
+                                        if (!f) {
+                                            _validations.push(ques?.id);
+                                            setValidations(_validations);
+                                        }
                                     }}>
                                         <input onChange={() => { }} className="accent-cyan-800 relative float-left mr-2 h-3 w-3 rounded-full border-2 border-solid border-cyan-300 before:pointer-events-none before:absolute before:h-4 before:w-4 before:scale-0 before:rounded-full before:bg-transparent before:opacity-0 before:content-[''] after:absolute after:z-[1] after:block after:h-4 after:w-4 after:rounded-full after:content-[''] checked:border-primary checked:before:opacity-[0.16] checked:after:absolute checked:after:left-1/2 checked:after:top-1/2 checked:after:h-[0.625rem] checked:after:w-[0.625rem] checked:after:rounded-full checked:after:border-primary checked:after:bg-primary checked:after:content-[''] checked:after:[transform:translate(-50%,-50%)] hover:cursor-pointer hover:before:opacity-[0.04]"
                                             type="radio" checked={checkExist(selected[ques.step], as) ? true : false} />
@@ -259,17 +269,14 @@ const Questionare = ({ step }: any) => {
         else {
             let _mcqs = [...mcqs];
             let answers = _mcqs.map(m => m.statement);
-            let philData: any = { ...JSON.parse(philisophyData), 3: { step: 3, questions: [{ question_id: 1, answer: answers.join(","), answer_meta: mcqs }] } };
+            let philData: any = { ...JSON.parse(philisophyData), 3: { step: 3, questions: [{ question_id: 1, answer: answers, answer_meta: mcqs }] } };
             localStorage.setItem("philosophy", JSON.stringify(philData));
             payload.investment_philosophy.step = 3;
-            payload.investment_philosophy.questions = [{ question_id: 1, answer: answers.join(","), answer_meta: mcqs }];
+            payload.investment_philosophy.questions = [{ question_id: 1, answer: answers, answer_meta: { options: mcqs } }];
         }
         submitData(payload);
-        if (step !== 5)
+        if (step !== questions?.total_steps)
             navigate(`/philosophy-goals/${page + 1}`);
-        else
-            navigate(`/add-attachments`);
-
     };
 
     const checkValidation = () => {
@@ -283,8 +290,8 @@ const Questionare = ({ step }: any) => {
         }
         else {
             if (!questions?.questions?.length) return false;
-            if ((step !== 2 && validations.length !== questions?.questions.length) || (step === 2 && validations.length === 0)) return false;
-            return true;
+            else if ((step !== 2 && validations.length === questions?.questions.length) || (step === 2 && validations.length > 0)) return true;
+            return false;
         }
     };
 
@@ -307,10 +314,12 @@ const Questionare = ({ step }: any) => {
 
             <section className="flex items-start justify-center w-full flex-col mt-6 max-w-[420px] screen500:max-w-[300px]">
                 <div className="w-full inline-flex items-center justify-between mt-16">
-                    <button className="text-neutral-900 tracking-[0.03em] bg-white font-bold rounded-md border border-grey rounded-md focus:outline-none focus:shadow-outline h-[38px] w-[140px]"
-                        type="button" onClick={onSetPrev}>
-                        {language?.buttons?.back}
-                    </button>
+                    {step !== 1 ? (
+                        <button className="text-neutral-900 tracking-[0.03em] bg-white font-bold rounded-md border border-grey rounded-md focus:outline-none focus:shadow-outline h-[38px] w-[140px]"
+                            type="button" onClick={onSetPrev}>
+                            {language?.buttons?.back}
+                        </button>
+                    ) : (<div></div>)}
                     <button className={`${!checkValidation() && "opacity-70"} text-white tracking-[0.03em] bg-cyan-800 font-bold rounded-md focus:outline-none focus:shadow-outline h-[38px] w-[140px]`}
                         type="button" onClick={onSetNext}>
                         {step < 5 ? language?.buttons?.continue : language?.buttons?.proceed}
