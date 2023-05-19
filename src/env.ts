@@ -1,5 +1,3 @@
-console.log(process.env.REACT_APP_ENV);
-
 export const APP_ENV = process.env.REACT_APP_ENV || "STAGING";
 
 export const getEnv = () => {
