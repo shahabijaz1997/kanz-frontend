@@ -127,10 +127,10 @@ const Login = ({ }: any) => {
                                     {language?.buttons?.signin}
                                 </button>
                             )}
-                            <div className="flex justify-end my-[15px]">
+                            {/* <div className="flex justify-end my-[15px]">
                                 <p className="text-neutral-500 text-left">{language.buttons.notRegistered} </p>&nbsp;
                                 <button className="text-cyan-800 font-bold cursor-pointer" onClick={() => navigate("/signup")}>{language.buttons.signup}</button>
-                            </div>
+                            </div> */}
                         </form>
                     </section>
                 </aside>

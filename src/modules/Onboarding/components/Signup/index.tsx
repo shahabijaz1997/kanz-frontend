@@ -1,5 +1,8 @@
 import React, { useState } from "react";
 import { useSelector } from "react-redux";
+import { toast } from "react-toastify";
+import { toastUtil } from "../../../../utils/toast.utils";
+import { useLocation } from "react-router-dom";
 import { RootState } from "../../../../redux-toolkit/store/store";
 import { hasLowerCase, hasNumbers, hasSpecialCharacters, hasUpperCase, isValidEmail } from "../../../../utils/regex.utils";
 import CheckIcon from "../../../../ts-icons/CheckIcon.svg";
@@ -10,14 +13,13 @@ import GoogleIcon from "../../../../assets/icons/google_logo.png";
 import LinkedinIcon from "../../../../assets/icons/linedin_logo.png";
 import { signup } from "../../../../apis/auth.api";
 import Spinner from "../../../../shared/components/Spinner";
-import { toast } from "react-toastify";
-import { toastUtil } from "../../../../utils/toast.utils";
 
 const Signup = (props: any) => {
     const { onSetStepper } = props;
+    const { state } = useLocation();
     const language: any = useSelector((state: RootState) => state.language.value);
     const [viewPassword, setViewPassword] = useState(false);
-    const [payload, setPayload] = useState({ name: "", email: "", password: "", });
+    const [payload, setPayload] = useState({ name: "", email: "", password: "", type: state});
     const [loading, setLoading] = useState(false);
 
     const onSetPayload = (value: string, type: string) => {
