@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useLayoutEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import CountrySelector from "../../../../shared/components/CountrySelector";
 import { InvestorType } from "../../../../enums/types.enum";
@@ -26,6 +26,13 @@ const Firm = ({ language }: any) => {
         })
     };
 
+    useLayoutEffect(() => {
+        let data = localStorage.getItem("account_info");
+        let assertData = localStorage.getItem("accert");
+        if (data) setPayload(JSON.parse(data));
+        if (assertData) setSelectedAssert(JSON.parse(assertData));
+    }, []);
+
     const addinvestmentAccridiation = async (e: any) => {
         e.preventDefault();
         if (!selectedAssert?.id || !payload.legal || !payload.residence) return;
@@ -43,14 +50,16 @@ const Firm = ({ language }: any) => {
             let { data, status } = await investmentAccridiation(fd, authToken);
             if (status === 200) {
                 toast.success(data?.status?.message, toastUtil);
-                navigate("/complete-goals", { state: { type: InvestorType.FIRM, selected: selectedAssert } })
+                navigate("/complete-goals", { state: { type: InvestorType.FIRM, selected: selectedAssert } });
+                localStorage.setItem("account_info", JSON.stringify(payload));
+                localStorage.setItem("accert", JSON.stringify(selectedAssert));
             }
         } catch (error: any) {
             const message = error?.response?.data?.status?.message || error?.response?.data || language.promptMessages.errorGeneral;
             toast.error(message, toastUtil);
-            if(error.response && error.response.status === 401) {
+            if (error.response && error.response.status === 401) {
                 dispatch(saveToken(""));
-                navigate("/login");
+                navigate("/login", { state: `complete-details` });
             }
         } finally {
             setLoading(false);

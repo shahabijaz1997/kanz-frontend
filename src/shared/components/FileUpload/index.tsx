@@ -90,11 +90,9 @@ const FileUpload = ({ id, setModalOpen, setFile, removeFile }: any) => {
 
             const { status, data } = await uploadAttachments(fd, authToken);
             if (status === 200) {
-                console.log("data", data);
                 setAlertType({ type: PromptMessage.SUCCESS, message: language.promptMessages.fileUpload });
                 setFile(file, id, data?.status?.data?.attachment_id);
                 setSelectedFile({ file, url, type, id, attachment_id: data?.status?.data?.attachment_id });
-                // navigate("/welcome");
             }
         } catch (error: any) {
             const message = error?.response?.data?.status?.message || language.promptMessages.errorFileUpload;

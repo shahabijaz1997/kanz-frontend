@@ -56,7 +56,7 @@ const Questionare = ({ step, returnSuccessRedirection }: any) => {
             toast.error(message, toastUtil);
             if (error.response && error.response.status === 401) {
                 dispatch(saveToken(""));
-                navigate("/login");
+                navigate("/login", { state: `philosophy-goals/${step}` });
             }
         } finally {
             setLoading(false);
@@ -74,7 +74,7 @@ const Questionare = ({ step, returnSuccessRedirection }: any) => {
             toast.error(message, toastUtil);
             if (error.response && error.response.status === 401) {
                 dispatch(saveToken(""));
-                navigate("/login");
+                navigate("/login", { state: `philosophy-goals/${step}` });
             }
         } finally {
             setLoading(false);

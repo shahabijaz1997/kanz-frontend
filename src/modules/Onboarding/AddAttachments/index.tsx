@@ -34,34 +34,6 @@ const AddAttachments = (props: any) => {
     const [files, setFiles]: any = useState([]);
     const [loading, setLoading] = useState(false);
 
-    const onUploadAttachments = async (file: File, id: string) => {
-        try {
-            setLoading(true);
-            const fileData: any = await handleFileRead(file);
-            let fd = new FormData();
-            fd.append("attachment[name]", file?.name);
-            fd.append("attachment[attachment_kind]", "files");
-            fd.append(`attachment[file]`, file, fileData.name);
-
-            console.log("data", file, fileData);
-            const { status, data } = await uploadAttachments(fd, authToken);
-            if (status === 200) {
-
-                // toast.success(data?.status?.message, toastUtil);
-                // setFiles([]);
-                // setAgreeToTerms(false);
-                // navigate("/welcome");
-            }
-        } catch (error: any) {
-            console.log(error);
-
-            const message = error?.response?.data?.status?.message || language.promptMessages.errorGeneral;
-            toast.error(message, toastUtil);
-        } finally {
-            setLoading(false);
-        }
-    };
-
     const setFile = (file: File, id: string, attachment_id: string) => {
         setFiles((prev: any) => {
             return [...prev, { file, id, attachment_id }]
@@ -146,7 +118,7 @@ const AddAttachments = (props: any) => {
                                 <Spinner />
                             </button>
                         ) : (
-                            <button className={`${files.length === 3 && agreeToTerms ? "opacity-100" : "opacity-70"} text-white font-bold bg-cyan-800 tracking-[0.03em] rounded-md focus:outline-none focus:shadow-outline h-[38px] w-[140px]`} type="button" onClick={() => navigate("/welcome")}>
+                            <button className={`${files.length === 3 && agreeToTerms ? "opacity-100" : "opacity-70"} text-white font-bold bg-cyan-800 tracking-[0.03em] rounded-md focus:outline-none focus:shadow-outline h-[38px] w-[140px]`} type="button" onClick={() => navigate("/complte-goals")}>
                                 {language?.buttons?.submit}
                             </button>
                         )
