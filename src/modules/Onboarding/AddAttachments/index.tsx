@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../../redux-toolkit/store/store";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
@@ -16,9 +16,12 @@ import { FileType } from "../../../enums/types.enum";
 import { removeAttachment, uploadAttachments } from "../../../apis/attachment.api";
 import Spinner from "../../../shared/components/Spinner";
 import { handleFileRead } from "../../../utils/files.util";
+import { saveToken } from "../../../redux-toolkit/slicer/auth.slicer";
 
 const AddAttachments = (props: any) => {
     const navigate = useNavigate();
+    const dispatch = useDispatch();
+
     const language: any = useSelector((state: RootState) => state.language.value);
     const authToken: any = useSelector((state: RootState) => state.auth.value);
 
@@ -49,6 +52,10 @@ const AddAttachments = (props: any) => {
                 setFiles(_files);
             }
         } catch (error: any) {
+            if (error.response && error.response.status === 401) {
+                dispatch(saveToken(""));
+                navigate("/login", { state: 'add-attachments' });
+            }
             const message = error?.response?.data?.status?.message || error?.response?.data || language.promptMessages.errorGeneral;
             toast.error(message);
         } finally {

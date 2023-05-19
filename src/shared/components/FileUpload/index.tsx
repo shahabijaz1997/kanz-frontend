@@ -1,6 +1,8 @@
 import React, { useState } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../../redux-toolkit/store/store";
+import { saveToken } from "../../../redux-toolkit/slicer/auth.slicer";
+import { useNavigate } from "react-router";
 import AddImage from "../../../ts-icons/addImageIcon.svg";
 import BinIcon from "../../../ts-icons/binIcon.svg";
 import PreviewIcon from "../../../ts-icons/previewIcon.svg";
@@ -14,6 +16,8 @@ import Spinner from "../Spinner";
 const FileUpload = ({ id, setModalOpen, setFile, removeFile }: any) => {
     const language: any = useSelector((state: RootState) => state.language.value);
     const authToken: any = useSelector((state: RootState) => state.auth.value);
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
 
     const [dragOver, setDragOver] = useState(false);
     const [selectedFile, setSelectedFile]: any = useState<File | null>();
@@ -95,6 +99,10 @@ const FileUpload = ({ id, setModalOpen, setFile, removeFile }: any) => {
                 setSelectedFile({ file, url, type, id, attachment_id: data?.status?.data?.attachment_id });
             }
         } catch (error: any) {
+            if (error.response && error.response.status === 401) {
+                dispatch(saveToken(""));
+                navigate("/login", { state: 'add-attachments' });
+            }
             const message = error?.response?.data?.status?.message || language.promptMessages.errorFileUpload;
             return setAlertType({ type: PromptMessage.ERROR, message });
         } finally {
