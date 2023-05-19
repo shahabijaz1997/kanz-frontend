@@ -9,6 +9,7 @@ import { logout } from "../../../../apis/auth.api";
 import { useNavigate } from "react-router-dom";
 import { saveToken } from "../../../../redux-toolkit/slicer/auth.slicer";
 import { saveUserData } from "../../../../redux-toolkit/slicer/user.slicer";
+import { KanzRoles } from "../../../../enums/roles.enum";
 
 const GeneralHeader = ({ responsive = false, showMenu = false }: any) => {
     const navigate = useNavigate();
@@ -57,13 +58,16 @@ const GeneralHeader = ({ responsive = false, showMenu = false }: any) => {
                             <button className="text-neutral-500 cursor-pointer text-sm tracking-[0.03em]">{language.buttons.logout}</button>
                         </li>
                     ) : (
-                        <li onClick={() => navigate("/login")}>
-                            <button className="text-neutral-500 cursor-pointer text-sm tracking-[0.03em]">{language.buttons.signin}</button>
-                        </li>
+                        <React.Fragment>
+                            <li onClick={() => navigate("/login")}>
+                                <button className="text-neutral-500 cursor-pointer text-sm tracking-[0.03em]">{language.buttons.signin}</button>
+                            </li>
+                            <li onClick={() => navigate("/signup", { state: KanzRoles.INVESTOR })}>
+                                <button className="text-white text-sm tracking-[0.03em] bg-cyan-800 rounded-md focus:outline-none focus:shadow-outline w-full h-[38px] px-3">{language.buttons.getStart}</button>
+                            </li>
+                        </React.Fragment>
                     )}
-                    <li className="">
-                        <button className="text-white text-sm tracking-[0.03em] bg-cyan-800 rounded-md focus:outline-none focus:shadow-outline w-full h-[38px] px-3">{language.buttons.getStart}</button>
-                    </li>
+
                 </React.Fragment>
             )
         }
