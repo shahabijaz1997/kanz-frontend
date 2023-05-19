@@ -13,13 +13,14 @@ import GoogleIcon from "../../../../assets/icons/google_logo.png";
 import LinkedinIcon from "../../../../assets/icons/linedin_logo.png";
 import { signup } from "../../../../apis/auth.api";
 import Spinner from "../../../../shared/components/Spinner";
+import { KanzRoles } from "../../../../enums/roles.enum";
 
 const Signup = (props: any) => {
     const { onSetStepper } = props;
     const { state } = useLocation();
     const language: any = useSelector((state: RootState) => state.language.value);
     const [viewPassword, setViewPassword] = useState(false);
-    const [payload, setPayload] = useState({ name: "", email: "", password: "", type: state});
+    const [payload, setPayload] = useState({ name: "", email: "", password: "", type: state || KanzRoles.INVESTOR});
     const [loading, setLoading] = useState(false);
 
     const onSetPayload = (value: string, type: string) => {
