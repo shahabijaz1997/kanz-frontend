@@ -25,11 +25,17 @@ const CompleteGoals = ({ }: any) => {
     const authToken: any = useSelector((state: RootState) => state.auth.value);
     const [loading, setLoading] = useState(false);
     const [apiResp, setApiResp]: any = useState();
+    const [currentStepper, setCurrentStepper] = useState(0);
+
+    useLayoutEffect(() => {
+        let item = localStorage.getItem("step");
+        if (item) setCurrentStepper(Number(item));
+    }, []);
 
     useLayoutEffect(() => {
         getInvestorDetails();
         let accert: any = localStorage.getItem("accert");
-        if (accert) setPayload({selected: JSON.parse(accert)});
+        if (accert) setPayload({ selected: JSON.parse(accert) });
     }, []);
 
     const getInvestorDetails = async () => {
@@ -45,7 +51,7 @@ const CompleteGoals = ({ }: any) => {
             toast.error(message, toastUtil);
             if (error.response && error.response.status === 401) {
                 dispatch(saveToken(""));
-                navigate("/login", {state: 'complete-goals'});
+                navigate("/login", { state: 'complete-goals' });
             }
         } finally {
             setLoading(false);
@@ -58,7 +64,9 @@ const CompleteGoals = ({ }: any) => {
                 <Header />
             </section>
             {loading && <div className="absolute left-0 top-0 w-full h-full grid place-items-center" style={{ backgroundColor: "rgba(0, 0, 0, 0.078)" }}><Spinner /></div>}
-            <AddAttachmentBanner language={language} navigate={navigate} />
+
+            <AddAttachmentBanner language={language} navigate={navigate} currentStepper={currentStepper} />
+
             <aside className="w-full flex items-center justify-center flex-col pt-[75px]">
                 <section className="flex items-start justify-center flex-col w-[800px] screen991:w-[90%]">
                     <aside className="cursor-pointer rounded-xl p-6 mb-12 shadow-cs-1 w-full">
@@ -68,7 +76,7 @@ const CompleteGoals = ({ }: any) => {
                             </div>
                             <div className="center w-[80%] ml-5">
                                 <h3 className="text-neutral-900 text-lg font-semibold">{apiResp?.status?.data?.role}</h3>
-                                <p className="text-neutral-700 text-sm font-normal mt-1">Emirati nationality, 4556 Brendan Ferry Los Angeles, CA 90210</p>
+                                <p className="text-neutral-700 text-sm font-normal mt-1">{apiResp?.status?.data?.meta_info?.residence}</p>
                             </div>
                             <button className="bg-cyan-800 text-white w-[100px] h-9 inline-flex items-center justify-center rounded-md gap-1" onClick={() => navigate(-1)}>
                                 <EditIcon stroke="#fff" />
@@ -89,7 +97,7 @@ const CompleteGoals = ({ }: any) => {
                         </section>
                     </aside>
 
-                    <GoalStepper language={language} navigate={() => navigate("/philosophy-goals/1")} />
+                    <GoalStepper language={language} currentStepper={currentStepper} navigate={() => navigate(`/philosophy-goals/${currentStepper + 1}`)} />
                 </section>
             </aside>
         </main>

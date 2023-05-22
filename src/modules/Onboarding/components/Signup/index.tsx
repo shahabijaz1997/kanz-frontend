@@ -157,8 +157,8 @@ const Signup = (props: any) => {
                 </div>
 
                 <aside className="inline-flex items-center justify-between w-full gap-4">
-                    <button className="border border-neutral-300 rounded-md py-2.5 px-4 w-2/4 h-[38px] inline-grid place-items-center"><img src={GoogleIcon} alt={language?.onboarding?.googleLogin} /></button>
-                    <button className="border border-neutral-300 rounded-md py-2.5 px-4 w-2/4 h-[38px] inline-grid place-items-center"><img src={LinkedinIcon} alt={language?.onboarding?.linkedinLogin} /></button>
+                    <button className="border border-neutral-300 rounded-md py-2.5 px-4 w-2/4 h-[38px] inline-grid place-items-center bg-white"><img src={GoogleIcon} alt={language?.onboarding?.googleLogin} /></button>
+                    <button className="border border-neutral-300 rounded-md py-2.5 px-4 w-2/4 h-[38px] inline-grid place-items-center bg-white"><img src={LinkedinIcon} alt={language?.onboarding?.linkedinLogin} /></button>
                 </aside>
             </form>
         </section>

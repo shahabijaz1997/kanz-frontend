@@ -12,6 +12,7 @@ import { toast } from "react-toastify";
 import { toastUtil } from "../../../utils/toast.utils";
 import Spinner from "../../../shared/components/Spinner";
 import { saveToken } from "../../../redux-toolkit/slicer/auth.slicer";
+import Drawer from "../../../shared/components/Drawer";
 
 const InvestorFlow = (props: any) => {
     const { guard } = props;
@@ -21,6 +22,7 @@ const InvestorFlow = (props: any) => {
     const language: any = useSelector((state: RootState) => state.language.value);
     const [selectedAccount, setSelectedAccount]: any = useState();
     const [loading, setLoading] = useState(false);
+    const [isOpen, setOpen] = useState(false);
     const [accounts] = useState([
         { id: 1, payload: "Individual Investor", icon: <UserIcon stroke="#171717" className="absolute h-6 top-4" />, text: language?.investorFow?.individual, subText: language?.investorFow?.subInd, link: InvestorType.INDIVIDUAL },
         { id: 2, payload: "Investment Firm", icon: <GroupIcon stroke="#171717" className="absolute h-6 top-4" />, text: language?.investorFow?.firm, subText: language?.investorFow?.subFirm, link: InvestorType.FIRM },
@@ -28,7 +30,7 @@ const InvestorFlow = (props: any) => {
 
     const onSelectInvestorType = async () => {
         try {
-            if (!selectedAccount?.link) return;
+            if (!selectedAccount?.link) return toast.warning(language.promptMessages.pleaseSelectInvest, toastUtil);
             setLoading(true);
             let fd = new FormData();
             fd.append("investor[type]", selectedAccount.payload)
@@ -55,10 +57,10 @@ const InvestorFlow = (props: any) => {
             </section>
             <aside className="w-full flex items-center justify-center flex-col pt-[100px]">
                 <section className="flex items-start justify-center flex-col max-w-md screen500:max-w-[300px]">
-                    <h2 className="text-2xl font-bold text-left text-neutral-900 mb-4 screen500:text-[20px]">{language?.investorFow?.type}</h2>
+                    <h2 className="text-2xl font-bold text-left text-neutral-900 mb-4 screen500:text-[20px]">{language.investorFow.type}</h2>
                     <h3 className="text-base text-left text-neutral-700 mb-12 screen500:text-[12px]">
-                        <span className="font-normal">{language?.investorFow?.sub}</span> &nbsp;
-                        <span className="color-blue font-medium">{language?.common?.learn}</span>
+                        <span className="font-normal">{language.investorFow.sub}</span> &nbsp;
+                        <span className="color-blue font-medium cursor-pointer" onClick={()=>setOpen(true)}>{language.common.learn}</span>
                     </h3>
                     {React.Children.toArray(
                         accounts.map(account => {
@@ -78,7 +80,7 @@ const InvestorFlow = (props: any) => {
                     )}
 
                     <section className="w-full inline-flex items-center justify-between mt-16">
-                        <button className="text-neutral-900 tracking-[0.03em] bg-white text-sm font-bold rounded-md border border-grey font-semibold rounded-md focus:outline-none focus:shadow-outline h-[38px] w-[140px]" type="submit">
+                        <button className="text-neutral-900 tracking-[0.03em] bg-white text-sm font-bold rounded-md border border-grey font-semibold rounded-md focus:outline-none focus:shadow-outline h-[38px] w-[140px]" onClick={()=>navigate(-1)}>
                             {language?.buttons?.back}
                         </button>
                         {
@@ -95,7 +97,14 @@ const InvestorFlow = (props: any) => {
                     </section>
                 </section>
             </aside>
-        </main >
+            <Drawer isOpen={isOpen} setIsOpen={(val: boolean) => setOpen(val)}>
+                <header className="font-bold text-xl">{language.philosophyGoals.whyToDo}</header>
+                <p className="text-neutral-700 font-normal text-sm text-justify">
+                    Norem ipsum dolor sit amet, consectetur adipiscing elit. Etiam eu turpis molestie, dictum est a, mattis tellus. Sed dignissim, metus nec fringilla accumsan, risus sem sollicitudin lacus,
+                    ut interdum tellus elit sed risus. Maecenas eget condimentum velit, sit amet feugiat lectus. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Praesent auctor purus luctus enim egestas, ac scelerisque ante pulvinar. Donec ut rhoncus ex. Suspendisse ac rhoncus nisl.
+                </p>
+            </Drawer>
+        </main>
     )
 };
 export default InvestorFlow;
