@@ -18,6 +18,8 @@
     },
     "onboarding": {
         "welcome": "Welcome to Kanz",
+        "submitted": "Your application is submitted for review",
+        "appStatus": "Application status",
         "syndicateLead": "Add Syndicate Lead Info",
         "syndicateLeadSub": "Norem ipsum dolor sit amet, consectetur adipiscing elit. consectetur adipiscing elit.",
         "loginBgAlt": "Login Background",
@@ -186,6 +188,7 @@
     "buttons": {
         "start": "Lets start",
         "edit": "Edit",
+        "resendVerification": "Resend code",
         "verify": "Verify",
         "createAccount": "Create Account",
         "continue": "Continue",
@@ -223,6 +226,10 @@
         "maxSize": "max file size is",
         "invalidFormat": "This file format is not allowed",
         "errorGeneral": "An error occurred while performing this action",
-        "errorFileUpload": "An error occurred while uploading the file"
+        "errorFileUpload": "An error occurred while uploading the file",
+        "pleaseSelectInvest": "Please select an investor type",
+        "pleaseSelectAllData": "Please fill all required data",
+        "pleaseUploadAttachments": "Please upload all files",
+        "pleaseAcceptPP": "You have to accept Kanz terms & conditions before submitting"
     }
 }

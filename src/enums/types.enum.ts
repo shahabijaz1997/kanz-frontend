@@ -13,3 +13,7 @@ export enum FileType {
     IMAGE = "image",
     PDF = "pdf"
 }
+
+export enum ApplicationStatus {
+    IN_REVIEW = "In Review"
+}

@@ -9,6 +9,7 @@ import { toast } from "react-toastify";
 import { toastUtil } from "../../../../utils/toast.utils";
 import Spinner from "../../../../shared/components/Spinner";
 import { saveToken } from "../../../../redux-toolkit/slicer/auth.slicer";
+import Drawer from "../../../../shared/components/Drawer";
 
 const Firm = ({ language }: any) => {
     const navigate = useNavigate();
@@ -19,6 +20,7 @@ const Firm = ({ language }: any) => {
     const [payload, setPayload]: any = useState({ legal: "", residence: "", accer: "", risk: false })
     const [loading, setLoading] = useState(false);
     const [riskChecked, setRiskChecked] = useState(false);
+    const [isOpen, setOpen] = useState(false);
 
     const onSetPayload = (data: any, type: string) => {
         setPayload((prev: any) => {
@@ -35,7 +37,7 @@ const Firm = ({ language }: any) => {
 
     const addinvestmentAccridiation = async (e: any) => {
         e.preventDefault();
-        if (!selectedAssert?.id || !payload.legal || !payload.residence) return;
+        if (!selectedAssert?.id || !payload.legal || !payload.residence || !riskChecked) return toast.warning(language.promptMessages.pleaseSelectAllData, toastUtil);
         try {
             setLoading(true);
             let fd = new FormData();
@@ -97,16 +99,16 @@ const Firm = ({ language }: any) => {
                 </ul>
             </section>
 
-            <section className="relative z-10 w-full inline-flex items-start gap-2 rounded-md border border-grey w-[420px] p-4 check-background cursor-pointer" onClick={() => setRiskChecked(!riskChecked)}>
-                <input type="checkbox" className="accent-cyan-800 h-3 w-3" checked={riskChecked} />
+            <section className="relative z-10 w-full inline-flex items-start gap-2 rounded-md border border-grey w-[420px] p-4 check-background cursor-pointer">
+                <input type="checkbox" className="accent-cyan-800 h-3 w-3 cursor-pointer" checked={riskChecked} onChange={() => setRiskChecked(!riskChecked)} />
                 <div>
                     <h3 className="text-neutral-700 font-medium text-[14px] leading-none">{language?.common?.risk}</h3>
-                    <p className="text-neutral-500 text-sm font-normal mt-1">{language?.individual?.understanding}&nbsp;<span className="color-blue font-medium">{language?.common?.learn}</span></p>
+                    <p className="text-neutral-500 text-sm font-normal mt-1">{language?.individual?.understanding}&nbsp;<span className="color-blue font-medium cursor-pointer" onClick={() => setOpen(true)}>{language?.common?.learn}</span></p>
                 </div>
             </section>
 
             <section className="w-full inline-flex items-center justify-between mt-16">
-                <button className="text-neutral-900 bg-white tracking-[0.03em] font-bold rounded-md border border-grey rounded-md focus:outline-none focus:shadow-outline h-[38px] w-[140px]" type="button" onClick={() => navigate("/investor-type")}>
+                <button className="text-neutral-900 bg-white tracking-[0.03em] font-bold rounded-md border border-grey rounded-md focus:outline-none focus:shadow-outline h-[38px] w-[140px]" type="button" onClick={() => navigate(-1)}>
                     {language?.buttons?.back}
                 </button>
                 {loading ? (
@@ -114,11 +116,19 @@ const Firm = ({ language }: any) => {
                         <Spinner />
                     </button>
                 ) : (
-                    <button className={`${!selectedAssert?.id || !payload.legal || !payload.residence || !riskChecked && "opacity-70"} text-white font-bold bg-cyan-800 tracking-[0.03em] rounded-md focus:outline-none focus:shadow-outline h-[38px] w-[140px]`} type="submit">
+                    <button className={`${(!payload.legal || !payload.residence || !selectedAssert?.id || !riskChecked) && "opacity-70"} text-white font-bold bg-cyan-800 tracking-[0.03em] rounded-md focus:outline-none focus:shadow-outline h-[38px] w-[140px]`} type="submit">
                         {language?.buttons?.continue}
                     </button>
                 )}
             </section>
+
+            <Drawer isOpen={isOpen} setIsOpen={(val: boolean) => setOpen(val)}>
+                <header className="font-bold text-xl">{language.philosophyGoals.whyToDo}</header>
+                <p className="text-neutral-700 font-normal text-sm text-justify">
+                    Norem ipsum dolor sit amet, consectetur adipiscing elit. Etiam eu turpis molestie, dictum est a, mattis tellus. Sed dignissim, metus nec fringilla accumsan, risus sem sollicitudin lacus,
+                    ut interdum tellus elit sed risus. Maecenas eget condimentum velit, sit amet feugiat lectus. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Praesent auctor purus luctus enim egestas, ac scelerisque ante pulvinar. Donec ut rhoncus ex. Suspendisse ac rhoncus nisl.
+                </p>
+            </Drawer>
         </form>
     )
 };

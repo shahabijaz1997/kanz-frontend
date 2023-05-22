@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../../../redux-toolkit/store/store";
 import { useNavigate } from "react-router-dom";
-import { confirmToken, signup } from "../../../../apis/auth.api";
+import { confirmToken, resendConfirmToken, signup } from "../../../../apis/auth.api";
 import Spinner from "../../../../shared/components/Spinner";
 import { toast } from "react-toastify";
 import { toastUtil } from "../../../../utils/toast.utils";
@@ -13,6 +13,7 @@ const EmailVerification = ({ payload }: any) => {
     const navigate = useNavigate();
     const dispatch = useDispatch();
     const language: any = useSelector((state: RootState) => state.language.value);
+    const authToken: any = useSelector((state: RootState) => state.auth.value);
     const [isEdit, setEdit] = useState(false);
     const [email, setEmail] = useState(payload?.email);
     const [token, setToken] = useState("");
@@ -60,6 +61,23 @@ const EmailVerification = ({ payload }: any) => {
         }
     };
 
+    const onResendConfirmToken = async (e: any) => {
+        try {
+
+            e.preventDefault();
+            setLoading(true);
+            const { status, data } = await resendConfirmToken({ user: { email } }, authToken);
+            if (status === 200)
+                toast.success(data.status.message, toastUtil);
+        } catch (error: any) {
+            const message = error?.response?.data?.status?.message || language.promptMessages.errorGeneral;
+            toast.error(message, toastUtil);
+        } finally {
+            setLoading(false);
+            setToken("");
+        }
+    };
+
     return (
         <section className="w-[428px] max-w-md pt-[130px] screen500:max-w-[300px]">
             <h2 className="text-2xl font-bold text-left text-neutral-900 mb-4">{language?.onboarding?.verificationCode}</h2>
@@ -70,8 +88,9 @@ const EmailVerification = ({ payload }: any) => {
                         <label className="block text-neutral-700 text-sm font-semibold mb-2 screen500:text-[12px]" htmlFor="code">{language?.onboarding?.codeText}</label>
                         <input className="h-[42px] shadow-sm appearance-none border border-neutral-300 rounded-md w-full py-2 px-3 text-gray-500 leading-tight focus:outline-none focus:shadow-outline" id="code" type="text" value={token} onChange={(e) => setToken(e.target.value)} />
                     </div>
-                    <div className="text-right text-neutral-500 font-normal text-[14px] screen500:text-[12px]">{language?.onboarding?.sentCode} ({email}) <span className="color-blue cursor-pointer"
-                        onClick={() => setEdit(true)}>{language?.buttons?.edit} </span></div>
+                    <div className="text-right text-neutral-500 font-normal text-[14px] screen500:text-[12px]">{language?.onboarding?.sentCode} ({email})
+                        <div className="color-blue cursor-pointer" onClick={onResendConfirmToken}>{language?.buttons?.resendVerification} </div>
+                    </div>
 
                     {loading ? (
                         <button className="text-white text-sm tracking-[0.03em] bg-cyan-800 rounded-md focus:outline-none focus:shadow-outline w-full h-[38px] mt-10" type="submit">

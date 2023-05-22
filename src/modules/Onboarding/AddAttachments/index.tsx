@@ -3,7 +3,6 @@ import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../../redux-toolkit/store/store";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import { toastUtil } from "../../../utils/toast.utils";
 import Header from "../../../shared/components/Header";
 import CrossIcon from "../../../ts-icons/crossIcon.svg";
 import FileUpload from "../../../shared/components/FileUpload";
@@ -13,10 +12,10 @@ import HoverModal from "../../../shared/components/HoverModal";
 import SampleImage from "../../../assets/example_id.png";
 import SampleImage_2 from "../../../assets/example_id_2.png";
 import { FileType } from "../../../enums/types.enum";
-import { removeAttachment, uploadAttachments } from "../../../apis/attachment.api";
+import { removeAttachment } from "../../../apis/attachment.api";
 import Spinner from "../../../shared/components/Spinner";
-import { handleFileRead } from "../../../utils/files.util";
 import { saveToken } from "../../../redux-toolkit/slicer/auth.slicer";
+import { toastUtil } from "../../../utils/toast.utils";
 
 const AddAttachments = (props: any) => {
     const navigate = useNavigate();
@@ -66,7 +65,7 @@ const AddAttachments = (props: any) => {
     return (
         <main className="h-full max-h-full background-auth overflow-y-auto">
             <section>
-                <Header custom={true} data={{ leftMenu: language.header.attachment, button: <button className=""><CrossIcon stroke="#171717" className="w-6 h-6" /></button> }} />
+                <Header custom={true} data={{ leftMenu: language.header.attachment, button: <button onClick={() => navigate(-1)}><CrossIcon stroke="#171717" className="w-6 h-6" /></button> }} />
             </section>
 
             <aside className="w-[420px] h-full screen500:max-w-[300px] mx-auto py-12">
@@ -110,9 +109,9 @@ const AddAttachments = (props: any) => {
                     </form>
                 </section>
 
-                <section className="w-full inline-flex items-center gap-2 rounded-md border border-grey w-[420px] p-4 check-background cursor-pointer" onClick={() => setAgreeToTerms(!agreeToTerms)}>
-                    <input type="checkbox" className="accent-cyan-800 h-3 w-3" checked={agreeToTerms} />
-                    <p className="text-neutral-500 text-sm font-normal">{language?.common?.agree}&nbsp;<span className="color-blue font-medium">{language?.common?.termsConditions}</span></p>
+                <section className="w-full inline-flex items-center gap-2 rounded-md border border-grey w-[420px] p-4 check-background">
+                    <input type="checkbox" className="accent-cyan-800 h-3 w-3 cursor-pointer" checked={agreeToTerms} onChange={() => setAgreeToTerms(!agreeToTerms)} />
+                    <p className="text-neutral-500 text-sm font-normal">{language?.common?.agree}&nbsp;<span className="color-blue font-medium cursor-pointer">{language?.common?.termsConditions}</span></p>
                 </section>
 
                 <section className="w-full inline-flex items-center justify-between py-16">
@@ -125,7 +124,14 @@ const AddAttachments = (props: any) => {
                                 <Spinner />
                             </button>
                         ) : (
-                            <button className={`${files.length === 3 && agreeToTerms ? "opacity-100" : "opacity-70"} text-white font-bold bg-cyan-800 tracking-[0.03em] rounded-md focus:outline-none focus:shadow-outline h-[38px] w-[140px]`} type="button" onClick={() => navigate("/complte-goals")}>
+                            <button className={`${files.length === 3 && agreeToTerms ? "opacity-100" : "opacity-70"} text-white font-bold bg-cyan-800 tracking-[0.03em] rounded-md focus:outline-none focus:shadow-outline h-[38px] w-[140px]`} type="button" onClick={() => {
+                                let errors: string[] = [];
+                                if (files.length !== 3) errors.push(language.promptMessages.pleaseUploadAttachments);
+                                if (!agreeToTerms) errors.push(language.promptMessages.pleaseAcceptPP);
+                                if (errors.length === 0) return setModalOpen(true);
+                                errors.forEach(e => toast.warning(e, toastUtil));
+                                errors = [];
+                            }}>
                                 {language?.buttons?.submit}
                             </button>
                         )
@@ -161,6 +167,7 @@ const AddAttachments = (props: any) => {
 
                         <button className={`mt-8 bg-cyan-800 text-white w-[120px] h-9 inline-flex items-center justify-center rounded-md`} type="button" onClick={() => {
                             setModalOpen(false);
+                            navigate("/complete-goals");
                         }}>
                             {language.buttons.continue}
                         </button>
