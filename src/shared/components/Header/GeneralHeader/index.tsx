@@ -46,7 +46,7 @@ const GeneralHeader = ({ responsive = false, showMenu = false }: any) => {
                         </div>
                     </li>
                     <li onClick={onLogout}>
-                        <button className="text-neutral-500 cursor-pointer text-sm tracking-[0.03em]">{language.buttons.logout}</button>
+                        <button className="text-neutral-500 font-medium cursor-pointer text-sm tracking-[0.03em]">{language.buttons.logout}</button>
                     </li>
                 </React.Fragment>
             )
@@ -55,7 +55,7 @@ const GeneralHeader = ({ responsive = false, showMenu = false }: any) => {
                 <React.Fragment>
                     {authToken ? (
                         <li onClick={onLogout}>
-                            <button className="text-neutral-500 cursor-pointer text-sm tracking-[0.03em]">{language.buttons.logout}</button>
+                            <button className="text-neutral-500 font-medium cursor-pointer text-sm tracking-[0.03em]">{language.buttons.logout}</button>
                         </li>
                     ) : (
                         <React.Fragment>
@@ -129,7 +129,7 @@ const GeneralHeader = ({ responsive = false, showMenu = false }: any) => {
                                 </div>
                             </li>
                             <li onClick={onLogout}>
-                                <button className="text-neutral-500 cursor-pointer text-sm tracking-[0.03em]">{language.buttons.logout}</button>
+                                <button className="text-neutral-500 font-medium cursor-pointer text-sm tracking-[0.03em]">{language.buttons.logout}</button>
                             </li>
                         </ul>
                     </nav>

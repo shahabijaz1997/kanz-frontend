@@ -1,11 +1,13 @@
 import React, { useState } from "react";
 import { useSelector } from "react-redux";
+import { useNavigate } from "react-router";
 import { RootState } from "../../../redux-toolkit/store/store";
 import Header from "../../../shared/components/Header";
 import CrossIcon from "../../../ts-icons/crossIcon.svg";
 import Chevrond from "../../../ts-icons/chevrond.svg";
 
 const SyndicateFlow = ({ }: any) => {
+    const navigate = useNavigate();
     const language: any = useSelector((state: RootState) => state.language.value);
     const [options] = useState([{ id: 1, title: language?.buttons?.yes }, { id: 2, title: language?.buttons?.no }]);
     const [selected, setSelected]: any = useState(null);
@@ -20,7 +22,7 @@ const SyndicateFlow = ({ }: any) => {
     return (
         <main className="h-full max-h-full background-auth overflow-y-auto">
             <section>
-                <Header custom={true} data={{ leftMenu: language.header.syndicateLead, button: <button><CrossIcon stroke="#171717" className="w-6 h-6" /></button> }} />
+                <Header custom={true} data={{ leftMenu: language.header.syndicateLead, button: <button onClick={()=>navigate(-1)}><CrossIcon stroke="#171717" className="w-6 h-6" /></button> }} />
             </section>
 
             <aside className="w-[420px] h-full screen500:max-w-[300px] mx-auto py-12">

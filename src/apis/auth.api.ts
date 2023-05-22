@@ -23,6 +23,14 @@ export const confirmToken = (payload: any) => {
     return axios.get(`${ENV.API_URL}/confirmation`, { params: payload });
 };
 
+export const resendConfirmToken = (payload: any, token: string) => {
+    return axios.post(`${ENV.API_URL}/confirmation`, payload, {
+        headers: {
+            Authorization: `Bearer ${token}`
+        },
+    });
+};
+
 export const selectInvestorType = (payload: any, token: string) => {
     return axios.post(`${ENV.API_URL}/${ENV.API_VERSION}/investor/type`, payload, {
         headers: {
@@ -40,8 +48,8 @@ export const investmentAccridiation = (payload: any, token: string) => {
 };
 
 
-export const getInvestor = ( token: string) => {
-    return axios.get(`${ENV.API_URL}/${ENV.API_VERSION}/investor`,{
+export const getInvestor = (token: string) => {
+    return axios.get(`${ENV.API_URL}/${ENV.API_VERSION}/investor`, {
         headers: {
             Authorization: `Bearer ${token}`
         },
