@@ -1,24 +1,49 @@
-import { useSelector } from "react-redux";
+import React, { useState, useLayoutEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { RootState } from "../../../redux-toolkit/store/store";
 import Header from "../../../shared/components/Header";
-import React from "react";
 import { KanzRoles } from "../../../enums/roles.enum";
 import AddAttachmentBanner from "../../../shared/components/AddAttachmentBanner";
 import { ApplicationStatus } from "../../../enums/types.enum";
+import { getInvestor } from "../../../apis/auth.api";
+import { saveToken } from "../../../redux-toolkit/slicer/auth.slicer";
+import { saveUserData } from "../../../redux-toolkit/slicer/user.slicer";
 
 const Welcome = (props: any) => {
     const { guard } = props;
+    const dispatch = useDispatch();
     const navigate = useNavigate();
+    const authToken: any = useSelector((state: RootState) => state.auth.value);
     const language: any = useSelector((state: RootState) => state.language.value);
     const user: any = useSelector((state: RootState) => state.user.value);
+    const [loading, setLoading] = useState(false)
+    useLayoutEffect(() => {
+        getInvestorDetails();
+
+    }, [])
+
+    const getInvestorDetails = async () => {
+        try {
+            setLoading(true);
+            let { status, data } = await getInvestor(authToken);
+            if (status === 200) {
+                dispatch(saveUserData(data.status.data));
+            }
+        } catch (error: any) {
+            if (error.response && error.response.status === 401) {
+                dispatch(saveToken(""));
+                navigate("/login", { state: 'complete-goals' });
+            }
+        } finally {
+            setLoading(false);
+        }
+    };
 
     const renderRoleWiseScreen = () => {
-        console.log(user);
-        
         if (user.type === KanzRoles.INVESTOR) {
-            return (
-                user.status !== "inprogress" ? (
+            if (user.status == "pending") {
+                return (
                     <React.Fragment>
                         <h2 className="text-2xl font-bold text-neutral-900 mb-4 screen500:text-[20px]">{language?.onboarding?.welcomeDashboard}</h2>
                         <h3 className="text-base font-normal text-neutral-700 screen500:text-[12px]">{language?.onboarding?.starterMessage}</h3>
@@ -26,13 +51,24 @@ const Welcome = (props: any) => {
                             {language?.buttons?.start}
                         </button>
                     </React.Fragment>
-                ) : (
+                )
+            }
+            else if (user.status == "inprogress") {
+                return (
                     <React.Fragment>
                         <h2 className="text-2xl font-bold text-neutral-900 mb-4 screen500:text-[20px]">{language?.onboarding?.submitted}</h2>
                         <h3 className="text-base font-normal text-neutral-700 screen500:text-[12px]">{language?.onboarding?.appStatus}: {ApplicationStatus.IN_REVIEW}</h3>
                     </React.Fragment>
                 )
-            )
+            }
+            else if (user.status == "submitted") {
+                return (
+                    <React.Fragment>
+                        <h2 className="text-2xl font-bold text-neutral-900 mb-4 screen500:text-[20px]">{language?.onboarding?.submitted}</h2>
+                        <h3 className="text-base font-normal text-neutral-700 screen500:text-[12px]">{language?.onboarding?.appStatus}: {ApplicationStatus.SUBMITTED}</h3>
+                    </React.Fragment>
+                )
+            }
         } else if (user.type === KanzRoles.SYNDICATE) {
             return (
                 <React.Fragment>

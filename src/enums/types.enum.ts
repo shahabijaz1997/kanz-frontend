@@ -15,5 +15,6 @@ export enum FileType {
 }
 
 export enum ApplicationStatus {
-    IN_REVIEW = "In Review"
+    IN_REVIEW = "In Review",
+    SUBMITTED = "Submitted"
 }
