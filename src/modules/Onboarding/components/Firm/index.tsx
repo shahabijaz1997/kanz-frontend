@@ -45,7 +45,7 @@ const Firm = ({ language }: any) => {
                 investor: {
                     meta_info: {
                         legal_name: payload?.legal,
-                        location: payload?.residence,
+                        location: payload?.residence?.country_name,
                         accreditation: selectedAssert,
                         lower_limit: selectedAssert.low_limit,
                         upper_limit: selectedAssert.upper_limit,

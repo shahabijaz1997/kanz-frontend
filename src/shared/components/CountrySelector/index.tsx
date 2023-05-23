@@ -50,7 +50,7 @@ export default function CountrySelector({ disabled = false, onChange, selectedVa
                         aria-haspopup="listbox" aria-expanded="true" aria-labelledby="listbox-label" onClick={() => setOpen(!open)} disabled={disabled} >
                         <span className="truncate flex items-center">
                             {/* <img alt={`${selectedValue?.name}`} src={selectedValue?.flag} className={"inline mr-2 h-4 rounded-sm"} /> */}
-                            {selectedValue}
+                            {selectedValue?.country_name}
                         </span>
                     </button>
                 ) : (
@@ -80,7 +80,7 @@ export default function CountrySelector({ disabled = false, onChange, selectedVa
                                 </div>
                                 <div className={"max-h-64 scrollbar scrollbar-track-gray-100 scrollbar-thumb-gray-300 hover:scrollbar-thumb-gray-600 scrollbar-thumb-rounded scrollbar-thin overflow-y-scroll"}>
                                     {countries.filter((country: any) =>
-                                        country?.toLowerCase().startsWith(query.toLowerCase())
+                                        country?.country_name?.toLowerCase().startsWith(query.toLowerCase())
                                     ).length === 0 ? (
                                         <li className="text-gray-900 cursor-default select-none relative py-2 pl-3 pr-9">
                                             {language.common.noCountries}
@@ -88,7 +88,7 @@ export default function CountrySelector({ disabled = false, onChange, selectedVa
                                     ) : (
                                         React.Children.toArray(
                                             countries.filter((country: any) =>
-                                                country.toLowerCase().startsWith(query.toLowerCase())
+                                                country?.country_name?.toLowerCase().startsWith(query.toLowerCase())
                                             ).map((value: any, index) => {
                                                 return (
                                                     <li className="text-gray-900 cursor-default select-none relative py-2 pl-3 pr-9 flex items-center hover:bg-gray-50 transition"
@@ -102,9 +102,9 @@ export default function CountrySelector({ disabled = false, onChange, selectedVa
                                                         {/* <img alt={`${value?.name}`} src={value?.flag} className={"inline mr-2 h-4 rounded-sm"} /> */}
 
                                                         <span className="font-normal truncate">
-                                                            {value}
+                                                            {value?.country_name}
                                                         </span>
-                                                        {value === selectedValue ? (
+                                                        {value?.country_name === selectedValue?.country_name ? (
                                                             <span className="text-blue-600 absolute inset-y-0 right-0 flex items-center pr-8">
                                                                 <svg className="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true" >
                                                                     <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"

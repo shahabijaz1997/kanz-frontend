@@ -44,8 +44,8 @@ const Individual = ({ language }: any) => {
             let pData: any = {
                 investor: {
                     meta_info: {
-                        nationality: payload?.national,
-                        residence: payload?.residence,
+                        nationality: payload?.national?.country_name,
+                        residence: payload?.residence?.country_name,
                         accreditation: selectedAssert,
                         lower_limit: selectedAssert.low_limit,
                         upper_limit: selectedAssert.upper_limit,
