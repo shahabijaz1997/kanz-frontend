@@ -22,6 +22,7 @@ const SyndicateLeadInfo = lazy(() => import("../Onboarding/SyndicateFlow"));
 const AuthenticateRoute = (props: PropsWithChildren) => {
     const { children } = props;
     const authToken: any = useSelector((state: RootState) => state.auth.value);
+
     if (authToken) {
         return <React.Fragment>{children}</React.Fragment>;
     }
@@ -39,8 +40,9 @@ const AuthenticateAuthRoute = (props: PropsWithChildren) => {
 
 const AuthenticateRole = (props: PropsWithChildren | any) => {
     const { children } = props;
-    let role = localStorage.getItem("role");
-    if (role && role === props.role) {
+    const user: any = useSelector((state: RootState) => state.user.value);
+    
+    if (user && user.type === props.role) {
         return <React.Fragment>{children}</React.Fragment>;
     }
     return <Navigate to="/welcome" replace />;

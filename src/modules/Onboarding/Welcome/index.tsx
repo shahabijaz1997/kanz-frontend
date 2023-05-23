@@ -11,11 +11,11 @@ const Welcome = (props: any) => {
     const { guard } = props;
     const navigate = useNavigate();
     const language: any = useSelector((state: RootState) => state.language.value);
-    let role = localStorage.getItem("role");
+    const user: any = useSelector((state: RootState) => state.user.value);
     let currentStep: any = localStorage.getItem("step");
 
     const renderRoleWiseScreen = () => {
-        if (role === KanzRoles.INVESTOR) {
+        if (user.type === KanzRoles.INVESTOR) {
             return (
                 Number(currentStep) < 5 ? (
                     <React.Fragment>
@@ -32,7 +32,7 @@ const Welcome = (props: any) => {
                     </React.Fragment>
                 )
             )
-        } else if (role === KanzRoles.SYNDICATE) {
+        } else if (user.type === KanzRoles.SYNDICATE) {
             return (
                 <React.Fragment>
                     <h2 className="text-2xl font-bold text-neutral-900 mb-4 screen500:text-[20px]">{language?.onboarding?.syndicateLead}</h2>
@@ -50,7 +50,7 @@ const Welcome = (props: any) => {
             <section>
                 <Header />
             </section>
-            {role !== KanzRoles.INVESTOR && <AddAttachmentBanner language={language} navigate={navigate} />}
+            {user.type !== KanzRoles.INVESTOR && <AddAttachmentBanner language={language} navigate={navigate} />}
 
             <aside className="w-full flex items-center justify-center pt-[75px]">
                 <section className="px-5 bg-white inline-flex flex-col items-center py-14 w-1/2 screen991:w-3/4 screen991:w-[90%]" style={{ boxShadow: "0px 4px 12px rgba(0, 0, 0, 0.04)" }}>

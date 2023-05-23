@@ -14,15 +14,16 @@ import Spinner from "../../../shared/components/Spinner";
 import { saveToken } from "../../../redux-toolkit/slicer/auth.slicer";
 import AddAttachmentBanner from "../../../shared/components/AddAttachmentBanner";
 import { saveUserData } from "../../../redux-toolkit/slicer/user.slicer";
+import { Roles } from "../../../enums/roles.enum";
 
 const CompleteGoals = ({ }: any) => {
     const { state } = useLocation();
     const navigate = useNavigate();
     const dispatch = useDispatch();
-
-    const [payload, setPayload] = useState(state);
     const language: any = useSelector((state: RootState) => state.language.value);
     const authToken: any = useSelector((state: RootState) => state.auth.value);
+
+    const [payload, setPayload] = useState(state);
     const [loading, setLoading] = useState(false);
     const [apiResp, setApiResp]: any = useState();
     const [currentStepper, setCurrentStepper] = useState(0);
@@ -76,7 +77,7 @@ const CompleteGoals = ({ }: any) => {
                             </div>
                             <div className="center w-[80%] ml-5">
                                 <h3 className="text-neutral-900 text-lg font-semibold">{apiResp?.status?.data?.role}</h3>
-                                <p className="text-neutral-700 text-sm font-normal mt-1">{apiResp?.status?.data?.meta_info?.residence}</p>
+                                <p className="text-neutral-700 text-sm font-normal mt-1">{apiResp?.status?.data?.role === "Investment Firm" ? apiResp?.status?.data?.meta_info?.location : apiResp?.status?.data?.meta_info?.nationality }</p>
                             </div>
                             <button className="bg-cyan-800 text-white w-[100px] h-9 inline-flex items-center justify-center rounded-md gap-1" onClick={() => navigate(-1)}>
                                 <EditIcon stroke="#fff" />

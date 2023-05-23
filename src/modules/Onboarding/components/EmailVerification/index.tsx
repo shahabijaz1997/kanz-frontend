@@ -7,13 +7,14 @@ import Spinner from "../../../../shared/components/Spinner";
 import { toast } from "react-toastify";
 import { toastUtil } from "../../../../utils/toast.utils";
 import { saveToken } from "../../../../redux-toolkit/slicer/auth.slicer";
-import { KanzRoles, Roles } from "../../../../enums/roles.enum";
+import { KanzRoles } from "../../../../enums/roles.enum";
 
 const EmailVerification = ({ payload }: any) => {
     const navigate = useNavigate();
     const dispatch = useDispatch();
     const language: any = useSelector((state: RootState) => state.language.value);
     const authToken: any = useSelector((state: RootState) => state.auth.value);
+    
     const [isEdit, setEdit] = useState(false);
     const [email, setEmail] = useState(payload?.email);
     const [token, setToken] = useState("");
@@ -26,7 +27,6 @@ const EmailVerification = ({ payload }: any) => {
             setLoading(true);
             let role = localStorage.getItem("role");
             const { status, data } = await signup({ user: { email, password: payload.password, name: payload.name, type: role || KanzRoles.INVESTOR } });
-
             if (status === 200) {
                 setEdit(false);
             }
@@ -45,12 +45,12 @@ const EmailVerification = ({ payload }: any) => {
             e.preventDefault();
             if (!token) return;
             setLoading(true);
-            const response: any = await confirmToken({ confirmation_token: token });
-            if (response.status === 200 && response.headers["authorization"]) {
-                const token = response.headers["authorization"].split(" ")[1]
+            const {status, data, headers}: any = await confirmToken({ confirmation_token: token });
+            if (status === 200 && headers["authorization"]) {
+                const token = headers["authorization"].split(" ")[1]
                 dispatch(saveToken(token));
-                toast.success(response.status.message, toastUtil);
-                localStorage.setItem("role", Roles.INVESTOR)
+                toast.success(data.status.message, toastUtil);
+                localStorage.removeItem("role");
                 navigate("/welcome");
             }
         } catch (error: any) {

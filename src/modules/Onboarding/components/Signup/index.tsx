@@ -1,5 +1,5 @@
 import React, { useState, useLayoutEffect } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
 import { toastUtil } from "../../../../utils/toast.utils";
 import { useLocation } from "react-router-dom";
@@ -14,9 +14,11 @@ import LinkedinIcon from "../../../../assets/icons/linedin_logo.png";
 import { signup } from "../../../../apis/auth.api";
 import Spinner from "../../../../shared/components/Spinner";
 import { KanzRoles } from "../../../../enums/roles.enum";
+import { saveUserData } from "../../../../redux-toolkit/slicer/user.slicer";
 
 const Signup = (props: any) => {
     const { onSetStepper } = props;
+    const dispatch = useDispatch();
     const { state } = useLocation();
     const language: any = useSelector((state: RootState) => state.language.value);
     const [viewPassword, setViewPassword] = useState(false);
@@ -60,9 +62,12 @@ const Signup = (props: any) => {
             if (!payload.name || !payload.email || !payload.password) return;
             setLoading(true);
 
-            const { status } = await signup({ user: payload });
-            if (status === 200)
+            const { status, data } = await signup({ user: payload });
+            if (status === 200){
+                dispatch(saveUserData(data.status.data));
                 onSetStepper(payload);
+            }
+
             else
                 toast.error(language.promptMessages.errorGeneral, toastUtil);
 

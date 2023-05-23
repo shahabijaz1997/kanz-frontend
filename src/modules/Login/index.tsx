@@ -14,7 +14,8 @@ import EyeSlash from "../../ts-icons/EyeSlashIcon.svg";
 import Spinner from "../../shared/components/Spinner";
 import { saveToken } from "../../redux-toolkit/slicer/auth.slicer";
 import { signin } from "../../apis/auth.api";
-import { KanzRoles, Roles } from "../../enums/roles.enum";
+import { KanzRoles } from "../../enums/roles.enum";
+import { saveUserData } from "../../redux-toolkit/slicer/user.slicer";
 
 const Login = ({ }: any) => {
     const { state } = useLocation();
@@ -68,8 +69,9 @@ const Login = ({ }: any) => {
             if (status === 200 && headers["authorization"]) {
                 const token = headers["authorization"].split(" ")[1]
                 dispatch(saveToken(token));
+                dispatch(saveUserData(data.status.data));
                 toast.success(data.status.message, toastUtil);
-                localStorage.setItem("role", data.status.data.user_role || Roles.INVESTOR)
+                localStorage.removeItem("role");
                 if (state) navigate(`/${state}`);
                 else navigate("/welcome");
             }
