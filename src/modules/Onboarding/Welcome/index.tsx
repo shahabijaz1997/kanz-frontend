@@ -14,9 +14,11 @@ const Welcome = (props: any) => {
     const user: any = useSelector((state: RootState) => state.user.value);
 
     const renderRoleWiseScreen = () => {
+        console.log(user);
+        
         if (user.type === KanzRoles.INVESTOR) {
             return (
-                user.status === "pending" ? (
+                user.status !== "inprogress" ? (
                     <React.Fragment>
                         <h2 className="text-2xl font-bold text-neutral-900 mb-4 screen500:text-[20px]">{language?.onboarding?.welcomeDashboard}</h2>
                         <h3 className="text-base font-normal text-neutral-700 screen500:text-[12px]">{language?.onboarding?.starterMessage}</h3>
