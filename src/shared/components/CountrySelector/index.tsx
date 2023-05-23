@@ -7,6 +7,7 @@ import Chevrond from "../../../ts-icons/chevrond.svg";
 
 export default function CountrySelector({ disabled = false, onChange, selectedValue }: any) {
     const language: any = useSelector((state: RootState) => state.language.value);
+    const authToken: any = useSelector((state: RootState) => state.auth.value);
     const ref = useRef<HTMLDivElement>(null);
     const [countries, setCountries] = useState([]);
     const [open, setOpen] = useState(false);
@@ -17,9 +18,10 @@ export default function CountrySelector({ disabled = false, onChange, selectedVa
 
     const getAllCountries = async () => {
         try {
-            let { data } = await getCountries();
-            const filteredCountries = data.filter((country: any) => country.alpha2Code !== 'US' && country.alpha2Code !== 'UM');
-            setCountries(filteredCountries);
+            let { status, data } = await getCountries(authToken);
+            if(status === 200) {
+                setCountries(data.status.data.countries);
+            }
         } catch (error) {
             console.error("Error while getting countries: ", error);
         }
@@ -47,8 +49,8 @@ export default function CountrySelector({ disabled = false, onChange, selectedVa
                     <button type="button" className={`${disabled ? "bg-neutral-100" : "bg-white" } relative w-full border border-gray-300 rounded-md pl-3 pr-10 py-2 text-left cursor-default focus:outline-none sm:text-sm`}
                         aria-haspopup="listbox" aria-expanded="true" aria-labelledby="listbox-label" onClick={() => setOpen(!open)} disabled={disabled} >
                         <span className="truncate flex items-center">
-                            <img alt={`${selectedValue?.name}`} src={selectedValue?.flag} className={"inline mr-2 h-4 rounded-sm"} />
-                            {selectedValue?.name}
+                            {/* <img alt={`${selectedValue?.name}`} src={selectedValue?.flag} className={"inline mr-2 h-4 rounded-sm"} /> */}
+                            {selectedValue}
                         </span>
                     </button>
                 ) : (
@@ -78,7 +80,7 @@ export default function CountrySelector({ disabled = false, onChange, selectedVa
                                 </div>
                                 <div className={"max-h-64 scrollbar scrollbar-track-gray-100 scrollbar-thumb-gray-300 hover:scrollbar-thumb-gray-600 scrollbar-thumb-rounded scrollbar-thin overflow-y-scroll"}>
                                     {countries.filter((country: any) =>
-                                        country?.name.toLowerCase().startsWith(query.toLowerCase())
+                                        country?.toLowerCase().startsWith(query.toLowerCase())
                                     ).length === 0 ? (
                                         <li className="text-gray-900 cursor-default select-none relative py-2 pl-3 pr-9">
                                             {language.common.noCountries}
@@ -86,7 +88,7 @@ export default function CountrySelector({ disabled = false, onChange, selectedVa
                                     ) : (
                                         React.Children.toArray(
                                             countries.filter((country: any) =>
-                                                country.name.toLowerCase().startsWith(query.toLowerCase())
+                                                country.toLowerCase().startsWith(query.toLowerCase())
                                             ).map((value: any, index) => {
                                                 return (
                                                     <li className="text-gray-900 cursor-default select-none relative py-2 pl-3 pr-9 flex items-center hover:bg-gray-50 transition"
@@ -97,12 +99,12 @@ export default function CountrySelector({ disabled = false, onChange, selectedVa
                                                             setOpen(!open);
                                                         }}
                                                     >
-                                                        <img alt={`${value?.name}`} src={value?.flag} className={"inline mr-2 h-4 rounded-sm"} />
+                                                        {/* <img alt={`${value?.name}`} src={value?.flag} className={"inline mr-2 h-4 rounded-sm"} /> */}
 
                                                         <span className="font-normal truncate">
-                                                            {value?.name}
+                                                            {value}
                                                         </span>
-                                                        {value?.name === selectedValue?.name ? (
+                                                        {value === selectedValue ? (
                                                             <span className="text-blue-600 absolute inset-y-0 right-0 flex items-center pr-8">
                                                                 <svg className="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true" >
                                                                     <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"

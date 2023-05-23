@@ -1,5 +1,12 @@
 import axios from "axios";
+import { getEnv } from "../env";
 
-export const getCountries = () => {
-    return axios.get(`https://restcountries.com/v2/all`);
+const ENV = getEnv();
+
+export const getCountries = (token: string) => {
+    return axios.get(`${ENV.API_URL}/${ENV.API_VERSION}/countries`,{
+        headers: {
+            Authorization: `Bearer ${token}`
+        },
+    });
 };
