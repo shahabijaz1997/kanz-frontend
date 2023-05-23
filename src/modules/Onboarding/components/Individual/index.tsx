@@ -41,16 +41,19 @@ const Individual = ({ language }: any) => {
         if (!payload.national || !payload.residence || !selectedAssert?.id || !riskChecked) return toast.warning(language.promptMessages.pleaseSelectAllData, toastUtil);
         try {
             setLoading(true);
-            let fd = new FormData();
-            fd.append("investor[meta_info][nationality]", payload?.national?.name)
-            fd.append("investor[meta_info][residence]", payload?.residence?.name)
-            fd.append("investor[meta_info][accredititation]", selectedAssert?.amount)
-            fd.append("investor[meta_info][is_range]", String(selectedAssert.is_range))
-            fd.append("investor[meta_info][lower_limit]", selectedAssert.low_limit)
-            fd.append("investor[meta_info][uper_limit]", selectedAssert.upper_limit)
-            fd.append("investor[meta_info][accept_investment_criteria]", String(selectedAssert.low_limit))
-
-            let { data, status } = await investmentAccridiation(fd, authToken);
+            let pData: any = {
+                investor: {
+                    meta_info: {
+                        nationality: payload?.national,
+                        residence: payload?.residence,
+                        accreditation: selectedAssert,
+                        lower_limit: selectedAssert.low_limit,
+                        upper_limit: selectedAssert.upper_limit,
+                        accept_investment_criteria: String(selectedAssert.low_limit)
+                    }
+                }
+            };
+            let { data, status } = await investmentAccridiation(pData, authToken);
             if (status === 200) {
                 toast.success(data?.status?.message, toastUtil);
                 navigate("/complete-goals", { state: { type: InvestorType.INDIVIDUAL, selected: selectedAssert } });

@@ -72,7 +72,11 @@
         "industrySub": "Norem ipsum dolor sit amet ipsum dolor.",
         "region": "Region",
         "profile": "Profile Link",
-        "deadflow": "Expected Deadflow"
+        "deadflow": "Expected Deadflow",
+        "syndName": "Syndicate name",
+        "tagline": "Add tagline",
+        "logo": "Logo",
+        "uploadCompLogo": "Upload a company logo."
     },
     "philosophyGoals": {
         "objective": "Investment Objective",

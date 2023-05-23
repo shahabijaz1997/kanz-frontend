@@ -14,11 +14,12 @@ import EyeSlash from "../../ts-icons/EyeSlashIcon.svg";
 import Spinner from "../../shared/components/Spinner";
 import { saveToken } from "../../redux-toolkit/slicer/auth.slicer";
 import { signin } from "../../apis/auth.api";
-import { KanzRoles, Roles } from "../../enums/roles.enum";
+import { KanzRoles } from "../../enums/roles.enum";
+import { saveUserData } from "../../redux-toolkit/slicer/user.slicer";
 
 const Login = ({ }: any) => {
     const { state } = useLocation();
-    
+
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const authToken: any = useSelector((state: RootState) => state.auth.value);
@@ -26,7 +27,7 @@ const Login = ({ }: any) => {
     const [payload, setPayload] = useState({ email: "", password: "" });
     const [viewPassword, setViewPassword] = useState(false);
     const [loading, setLoading] = useState(false);
-    
+
     useLayoutEffect(() => {
         if (authToken) navigate("/welcome");
     }, [])
@@ -64,12 +65,13 @@ const Login = ({ }: any) => {
             if (!payload.email || !payload.password) return;
             setLoading(true);
 
-            const response: any = await signin({ user: payload });
-            if (response.status === 200 && response.headers["authorization"]) {
-                const token = response.headers["authorization"].split(" ")[1]
+            const { status, data, headers } = await signin({ user: payload });
+            if (status === 200 && headers["authorization"]) {
+                const token = headers["authorization"].split(" ")[1]
                 dispatch(saveToken(token));
-                toast.success(response.status.message, toastUtil);
-                localStorage.setItem("role", Roles.INVESTOR)
+                dispatch(saveUserData(data.status.data));
+                toast.success(data.status.message, toastUtil);
+                localStorage.removeItem("role");
                 if (state) navigate(`/${state}`);
                 else navigate("/welcome");
             }

@@ -33,8 +33,9 @@ const InvestorFlow = (props: any) => {
             if (!selectedAccount?.link) return toast.warning(language.promptMessages.pleaseSelectInvest, toastUtil);
             setLoading(true);
             let fd = new FormData();
+
             fd.append("investor[type]", selectedAccount.payload)
-            let { status, data } = await selectInvestorType(fd, authToken);
+            let { status, data } = await selectInvestorType({ investor: { role: selectedAccount.payload } }, authToken);
             if (status === 200) {
                 navigate(`/complete-details`, { state: selectedAccount?.link })
             }
@@ -60,7 +61,7 @@ const InvestorFlow = (props: any) => {
                     <h2 className="text-2xl font-bold text-left text-neutral-900 mb-4 screen500:text-[20px]">{language.investorFow.type}</h2>
                     <h3 className="text-base text-left text-neutral-700 mb-12 screen500:text-[12px]">
                         <span className="font-normal">{language.investorFow.sub}</span> &nbsp;
-                        <span className="color-blue font-medium cursor-pointer" onClick={()=>setOpen(true)}>{language.common.learn}</span>
+                        <span className="color-blue font-medium cursor-pointer" onClick={() => setOpen(true)}>{language.common.learn}</span>
                     </h3>
                     {React.Children.toArray(
                         accounts.map(account => {
@@ -80,7 +81,7 @@ const InvestorFlow = (props: any) => {
                     )}
 
                     <section className="w-full inline-flex items-center justify-between mt-16">
-                        <button className="text-neutral-900 tracking-[0.03em] bg-white text-sm font-bold rounded-md border border-grey font-semibold rounded-md focus:outline-none focus:shadow-outline h-[38px] w-[140px]" onClick={()=>navigate(-1)}>
+                        <button className="text-neutral-900 tracking-[0.03em] bg-white text-sm font-bold rounded-md border border-grey font-semibold rounded-md focus:outline-none focus:shadow-outline h-[38px] w-[140px]" onClick={() => navigate(-1)}>
                             {language?.buttons?.back}
                         </button>
                         {
