@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useLayoutEffect } from "react";
 import { useSelector } from "react-redux";
 import { toast } from "react-toastify";
 import { toastUtil } from "../../../../utils/toast.utils";
@@ -20,8 +20,12 @@ const Signup = (props: any) => {
     const { state } = useLocation();
     const language: any = useSelector((state: RootState) => state.language.value);
     const [viewPassword, setViewPassword] = useState(false);
-    const [payload, setPayload] = useState({ name: "", email: "", password: "", type: state || KanzRoles.INVESTOR});
+    const [payload, setPayload] = useState({ name: "", email: "", password: "", type: state || KanzRoles.INVESTOR });
     const [loading, setLoading] = useState(false);
+
+    useLayoutEffect(() => {
+        localStorage.setItem("role", state || KanzRoles.INVESTOR);
+    }, [])
 
     const onSetPayload = (value: string, type: string) => {
         setPayload((prev) => {

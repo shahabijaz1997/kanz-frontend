@@ -5,6 +5,7 @@ import { RootState } from "../../redux-toolkit/store/store";
 import { saveLanguage } from "../../redux-toolkit/slicer/language.slicer";
 import loadLanguage from "../../utils/load-language.utils";
 import Loader from "../../shared/views/Loader";
+import { KanzRoles } from "../../enums/roles.enum";
 
 // Modules
 const Home = lazy(() => import("../Home"));
@@ -36,6 +37,15 @@ const AuthenticateAuthRoute = (props: PropsWithChildren) => {
     return <Navigate to="/welcome" replace />;
 };
 
+const AuthenticateRole = (props: PropsWithChildren | any) => {
+    const { children } = props;
+    let role = localStorage.getItem("role");
+    if (role && role === props.role) {
+        return <React.Fragment>{children}</React.Fragment>;
+    }
+    return <Navigate to="/welcome" replace />;
+};
+
 const RouterModule = () => {
     const dispatch = useDispatch();
     const authToken: any = useSelector((state: RootState) => state.auth.value);
@@ -47,15 +57,29 @@ const RouterModule = () => {
     return (
         <Routes>
             <Route path="/" element={<Suspense fallback={<Loader />}><Home guard={authToken} /></Suspense>} />
-            <Route path="/investor-type" element={<Suspense fallback={<Loader />}><AuthenticateRoute><InvestorFlow guard={authToken} /></AuthenticateRoute></Suspense>} />
-            <Route path="/complete-details" element={<Suspense fallback={<Loader />}><AuthenticateRoute><CompleteDetails guard={authToken} /></AuthenticateRoute></Suspense>} />
-            <Route path="/complete-goals" element={<Suspense fallback={<Loader />}><AuthenticateRoute><CompleteGoals guard={authToken} /></AuthenticateRoute></Suspense>} />
-            <Route path="/philosophy-goals/:id" element={<Suspense fallback={<Loader />}><AuthenticateRoute><PhilosophyGoals guard={authToken} /></AuthenticateRoute></Suspense>} />
-            <Route path="/add-attachments" element={<Suspense fallback={<Loader />}><AuthenticateRoute><AddAttachments guard={authToken} /></AuthenticateRoute></Suspense>} />
-            <Route path="/syndicate-lead" element={<Suspense fallback={<Loader />}><AuthenticateRoute><SyndicateLeadInfo guard={authToken} /></AuthenticateRoute></Suspense>} />
-            <Route path="/signup" element={<Suspense fallback={<Loader />}><AuthenticateAuthRoute><Onboarding guard={authToken} /></AuthenticateAuthRoute></Suspense>} />
-            <Route path="/login" element={<Suspense fallback={<Loader />}><AuthenticateAuthRoute><Login guard={authToken} /></AuthenticateAuthRoute></Suspense>} />
-            <Route path="/welcome" element={<Suspense fallback={<Loader />}><AuthenticateRoute><Welcome guard={authToken} /></AuthenticateRoute></Suspense>} />
+            <Route path="/investor-type" element={<Suspense fallback={<Loader />}>
+                <AuthenticateRoute><AuthenticateRole role={KanzRoles.INVESTOR}><InvestorFlow guard={authToken} /></AuthenticateRole></AuthenticateRoute></Suspense>} />
+            <Route path="/complete-details" element={<Suspense fallback={<Loader />}><AuthenticateRoute><CompleteDetails guard={authToken} /></AuthenticateRoute>
+            </Suspense>} />
+            <Route path="/complete-goals" element={<Suspense fallback={<Loader />}>
+                <AuthenticateRoute><AuthenticateRole role={KanzRoles.INVESTOR}><CompleteGoals guard={authToken} /></AuthenticateRole></AuthenticateRoute></Suspense>} />
+            <Route path="/philosophy-goals/:id" element={<Suspense fallback={<Loader />}><AuthenticateRoute><PhilosophyGoals guard={authToken} /></AuthenticateRoute>
+            </Suspense>} />
+            <Route path="/add-attachments" element={<Suspense fallback={<Loader />}>
+                <AuthenticateRoute><AddAttachments guard={authToken} /></AuthenticateRoute>
+            </Suspense>} />
+            <Route path="/syndicate-lead/:id" element={<Suspense fallback={<Loader />}>
+                <AuthenticateRoute><SyndicateLeadInfo guard={authToken} /></AuthenticateRoute>
+            </Suspense>} />
+            <Route path="/signup" element={<Suspense fallback={<Loader />}>
+                <AuthenticateAuthRoute><Onboarding guard={authToken} /></AuthenticateAuthRoute>
+            </Suspense>} />
+            <Route path="/login" element={<Suspense fallback={<Loader />}>
+                <AuthenticateAuthRoute><Login guard={authToken} /></AuthenticateAuthRoute>
+            </Suspense>} />
+            <Route path="/welcome" element={<Suspense fallback={<Loader />}>
+                <AuthenticateRoute><Welcome guard={authToken} /></AuthenticateRoute>
+            </Suspense>} />
         </Routes>
     )
 };

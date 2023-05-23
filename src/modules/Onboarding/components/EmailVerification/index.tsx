@@ -7,7 +7,7 @@ import Spinner from "../../../../shared/components/Spinner";
 import { toast } from "react-toastify";
 import { toastUtil } from "../../../../utils/toast.utils";
 import { saveToken } from "../../../../redux-toolkit/slicer/auth.slicer";
-import { Roles } from "../../../../enums/roles.enum";
+import { KanzRoles, Roles } from "../../../../enums/roles.enum";
 
 const EmailVerification = ({ payload }: any) => {
     const navigate = useNavigate();
@@ -24,7 +24,8 @@ const EmailVerification = ({ payload }: any) => {
             e.preventDefault();
             if (!email) return;
             setLoading(true);
-            const { status, data } = await signup({ user: { email, password: payload.password, name: payload.name } });
+            let role = localStorage.getItem("role");
+            const { status, data } = await signup({ user: { email, password: payload.password, name: payload.name, type: role || KanzRoles.INVESTOR } });
 
             if (status === 200) {
                 setEdit(false);

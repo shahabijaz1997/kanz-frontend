@@ -3,19 +3,19 @@ import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../../redux-toolkit/store/store";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+import Spinner from "../../../shared/components/Spinner";
+import { saveToken } from "../../../redux-toolkit/slicer/auth.slicer";
+import { toastUtil } from "../../../utils/toast.utils";
 import Header from "../../../shared/components/Header";
 import CrossIcon from "../../../ts-icons/crossIcon.svg";
 import FileUpload from "../../../shared/components/FileUpload";
 import Modal from "../../../shared/components/Modal";
 import Drawer from "../../../shared/components/Drawer";
 import HoverModal from "../../../shared/components/HoverModal";
-import SampleImage from "../../../assets/example_id.png";
-import SampleImage_2 from "../../../assets/example_id_2.png";
 import { FileType } from "../../../enums/types.enum";
 import { removeAttachment } from "../../../apis/attachment.api";
-import Spinner from "../../../shared/components/Spinner";
-import { saveToken } from "../../../redux-toolkit/slicer/auth.slicer";
-import { toastUtil } from "../../../utils/toast.utils";
+import SampleImage from "../../../assets/example_id.png";
+import SampleImage_2 from "../../../assets/example_id_2.png";
 
 const AddAttachments = (props: any) => {
     const navigate = useNavigate();
@@ -56,7 +56,7 @@ const AddAttachments = (props: any) => {
                 navigate("/login", { state: 'add-attachments' });
             }
             const message = error?.response?.data?.status?.message || error?.response?.data || language.promptMessages.errorGeneral;
-            toast.error(message);
+            toast.error(message, toastUtil);
         } finally {
             setLoading(false);
         }
