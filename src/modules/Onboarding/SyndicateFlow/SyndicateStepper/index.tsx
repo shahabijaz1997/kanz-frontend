@@ -5,7 +5,6 @@ import FileUpload from "../../../../shared/components/FileUpload";
 import SampleImage from "../../../../assets/example_id.png";
 import SampleImage_2 from "../../../../assets/example_id_2.png";
 import { getAllIndustries, getAllRegions } from "../../../../apis/fakeData.api";
-import { useDebounce } from "../../../../custom-hooks/Debouncer";
 import SearchedItems from "../../../../shared/components/SearchedItems";
 
 const SyndicateStepper = ({ language, options, step, removeFile, setFile, setModalOpen, setFileType }: any) => {
@@ -14,9 +13,6 @@ const SyndicateStepper = ({ language, options, step, removeFile, setFile, setMod
     const [showHoverModal, setShowHoverModal] = useState(false);
     const [search, setSearch] = useState({ industry: "", region: "" });
     const [searchResults, setSearchResults]: any = useState({ industry: [], region: [] });
-    const debouncedIndustry = useDebounce(search.industry, 500);
-    const debouncedRegion = useDebounce(search.region, 500);
-
 
     useLayoutEffect(() => {
         bootstrapData();

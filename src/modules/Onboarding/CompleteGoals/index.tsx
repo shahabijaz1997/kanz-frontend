@@ -44,7 +44,6 @@ const CompleteGoals = ({ }: any) => {
             setLoading(true);
             let { status, data } = await getInvestor(authToken);
             if (status === 200) {
-                dispatch(saveUserData(data?.status?.data));
                 setApiResp(data);
             }
         } catch (error: any) {
