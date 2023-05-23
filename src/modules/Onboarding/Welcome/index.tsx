@@ -12,12 +12,11 @@ const Welcome = (props: any) => {
     const navigate = useNavigate();
     const language: any = useSelector((state: RootState) => state.language.value);
     const user: any = useSelector((state: RootState) => state.user.value);
-    let currentStep: any = localStorage.getItem("step");
 
     const renderRoleWiseScreen = () => {
         if (user.type === KanzRoles.INVESTOR) {
             return (
-                Number(currentStep) < 5 ? (
+                user.status === "pending" ? (
                     <React.Fragment>
                         <h2 className="text-2xl font-bold text-neutral-900 mb-4 screen500:text-[20px]">{language?.onboarding?.welcomeDashboard}</h2>
                         <h3 className="text-base font-normal text-neutral-700 screen500:text-[12px]">{language?.onboarding?.starterMessage}</h3>
