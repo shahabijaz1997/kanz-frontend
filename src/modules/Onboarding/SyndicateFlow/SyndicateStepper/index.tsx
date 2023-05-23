@@ -1,13 +1,53 @@
-import React, { useState } from "react";
+import React, { useState, useLayoutEffect } from "react";
 import Chevrond from "../../../../ts-icons/chevrond.svg";
 import HoverModal from "../../../../shared/components/HoverModal";
 import FileUpload from "../../../../shared/components/FileUpload";
 import SampleImage from "../../../../assets/example_id.png";
 import SampleImage_2 from "../../../../assets/example_id_2.png";
+import { getAllIndustries, getAllRegions } from "../../../../apis/fakeData.api";
+import { useDebounce } from "../../../../custom-hooks/Debouncer";
+import SearchedItems from "../../../../shared/components/SearchedItems";
 
 const SyndicateStepper = ({ language, options, step, removeFile, setFile, setModalOpen, setFileType }: any) => {
+    const [payload, setPayload]: any = useState({ raised: false, amountRaised: '', timesRaised: '', market: '', region: '', profileLink: '', deadflow: '', name: '', tagline: '', logo: null });
     const [selected, setSelected]: any = useState(null);
     const [showHoverModal, setShowHoverModal] = useState(false);
+    const [search, setSearch] = useState({ industry: "", region: "" });
+    const [searchResults, setSearchResults]: any = useState({ industry: [], region: [] });
+    const debouncedIndustry = useDebounce(search.industry, 500);
+    const debouncedRegion = useDebounce(search.region, 500);
+
+
+    useLayoutEffect(() => {
+        bootstrapData();
+    }, []);
+
+
+    const onSetPayload = (data: any, type: string) => {
+        setPayload((prev: any) => {
+            return { ...prev, [type]: data };
+        });
+    };
+
+    const onSetSearch = (data: any, type: string) => {
+        setSearch((prev: any) => {
+            return { ...prev, [type]: data };
+        });
+    };
+
+    const bootstrapData = async () => {
+        try {
+            let industryRes: any = await getAllIndustries();
+            if (industryRes.status === 200)
+                setSearchResults((p: any) => { return { ...p, industry: industryRes.data.business } });
+
+            let regionRes: any = await getAllRegions();
+            if (regionRes.status === 200)
+                setSearchResults((p: any) => { return { ...p, region: regionRes.data.regions } });
+        } catch (error) {
+            console.error("Error in industries: ", error);
+        }
+    };
 
     return (
         step === 1 ? (
@@ -15,7 +55,7 @@ const SyndicateStepper = ({ language, options, step, removeFile, setFile, setMod
                 <section className="flex items-start justify-center flex-col">
                     <form className="pt-12 mb-4 w-full">
                         <div className="mb-8 relative">
-                            <h3 className="text-neutral-700 text-sm font-medium">{language?.syndicate?.raisedBefore}</h3>
+                            <h3 className="text-neutral-700 text-sm font-medium">{language.syndicate.raisedBefore}</h3>
                             <section className="w-full inline-flex items-center justify-between mt-2 gap-5">
                                 {React.Children.toArray(
                                     options.map((opt: any) => {
@@ -32,43 +72,46 @@ const SyndicateStepper = ({ language, options, step, removeFile, setFile, setMod
                         </div>
 
                         <div className="mb-8 relative">
-                            <h3 className="block text-neutral-700 text-sm font-medium">{language?.syndicate?.addDetail}</h3>
-                            <small className="font-normal text-sm text-neutral-500">{language?.syndicate?.subDetail}</small>
+                            <h3 className="block text-neutral-700 text-sm font-medium">{language.syndicate.addDetail}</h3>
+                            <small className="font-normal text-sm text-neutral-500">{language.syndicate.subDetail}</small>
                             <section className="w-full mt-2 p-[18px] rounded-lg check-background border border-grey">
                                 <div className="mb-5">
-                                    <label htmlFor="raised" className="text-neutral-700 text-sm font-medium">{language?.syndicate?.raisedQ}</label>
+                                    <label htmlFor="raised" className="text-neutral-700 text-sm font-medium">{language.syndicate.raisedQ}</label>
                                     <input id="raised" placeholder="101-500" className=" h-[42px] shadow-sm appearance-none border border-neutral-300 rounded-md w-full py-2 px-3 text-gray-500 leading-tight focus:outline-none focus:shadow-outline" type="text" />
                                 </div>
                                 <div>
-                                    <label htmlFor="times" className="text-neutral-700 text-sm font-medium">{language?.syndicate?.timesQ}</label>
+                                    <label htmlFor="times" className="text-neutral-700 text-sm font-medium">{language.syndicate.timesQ}</label>
                                     <input id="times" placeholder="12" className=" h-[42px] shadow-sm appearance-none border border-neutral-300 rounded-md w-full py-2 px-3 text-gray-500 leading-tight focus:outline-none focus:shadow-outline" type="text" />
                                 </div>
                             </section>
                         </div>
 
                         <div className="mb-8">
-                            <label className="block text-neutral-700 text-sm font-medium" htmlFor="industry">{language?.syndicate?.industry}</label>
-                            <small className="font-normal text-sm text-neutral-500">{language?.syndicate?.industrySub}</small>
+                            <label className="block text-neutral-700 text-sm font-medium" htmlFor="industry">{language.syndicate.industry}</label>
+                            <small className="font-normal text-sm text-neutral-500">{language.syndicate.industrySub}</small>
                             <span className="relative">
-                                <input id="industry" className=" h-[42px] shadow-sm appearance-none border border-neutral-300 rounded-md w-full py-2 px-3 text-gray-500 leading-tight focus:outline-none focus:shadow-outline" type="text" />
+                                <input id="industry" value={search.industry} onChange={(e) => onSetSearch(e.target.value, "industry")} className=" h-[42px] shadow-sm appearance-none border border-neutral-300 rounded-md w-full py-2 px-3 text-gray-500 leading-tight focus:outline-none focus:shadow-outline" type="text" />
                                 <span className={`absolute top-[0px] right-0 flex items-center pr-2 pointer-events-none}`} style={{ zIndex: 99 }}>
                                     <Chevrond stroke="#737373" />
                                 </span>
                             </span>
+                            {search.industry && <SearchedItems items={searchResults.industry} searchString={search.industry} />}
                         </div>
 
                         <div className="mb-8 relative">
-                            <label className="block text-neutral-700 text-sm font-medium" htmlFor="region">{language?.syndicate?.region}</label>
+                            <label className="block text-neutral-700 text-sm font-medium" htmlFor="region">{language.syndicate.region}</label>
                             <span className="relative">
-                                <input id="region" className=" h-[42px] shadow-sm appearance-none border border-neutral-300 rounded-md w-full py-2 px-3 text-gray-500 leading-tight focus:outline-none focus:shadow-outline" type="text" />
+                                <input id="region" value={search.region} onChange={(e) => onSetSearch(e.target.value, "region")} className="h-[42px] shadow-sm appearance-none border border-neutral-300 rounded-md w-full py-2 px-3 text-gray-500 leading-tight focus:outline-none focus:shadow-outline" type="text" />
                                 <span className={`absolute top-[0px] right-0 flex items-center pr-2 pointer-events-none}`} style={{ zIndex: 99 }}>
                                     <Chevrond stroke="#737373" />
                                 </span>
                             </span>
+
+                            {search.region && <SearchedItems items={searchResults.region} searchString={search.region} />}
                         </div>
 
                         <div className="mb-8 relative">
-                            <label className="block text-neutral-700 text-sm font-medium" htmlFor="link">{language?.syndicate?.profile}</label>
+                            <label className="block text-neutral-700 text-sm font-medium" htmlFor="link">{language.syndicate.profile}</label>
                             <div className="relative inline-flex w-full">
                                 <input type="disabled" value={"https://"} className="text-neutral-500 text-base font-normal check-background border-l border-t border-b border-neutral-300 pl-2 rounded-bl-md rounded-tl-md h-[42px] w-[70px]" />
                                 <input id="link" placeholder="www.example.com" className=" h-[42px] shadow-sm appearance-none border border-neutral-300 rounded-br-md rounded-tr-md w-full py-2 px-3 text-gray-500 leading-tight focus:outline-none focus:shadow-outline" type="text" />
@@ -76,7 +119,7 @@ const SyndicateStepper = ({ language, options, step, removeFile, setFile, setMod
                         </div>
 
                         <div className="mb-4 relative">
-                            <label className="block text-neutral-700 text-sm font-medium" htmlFor="deadflow">{language?.syndicate?.deadflow}</label>
+                            <label className="block text-neutral-700 text-sm font-medium" htmlFor="deadflow">{language.syndicate.deadflow}</label>
                             <input id="deadflow" placeholder="Add text" className=" h-[42px] shadow-sm appearance-none border border-neutral-300 rounded-md w-full py-2 px-3 text-gray-500 leading-tight focus:outline-none focus:shadow-outline" type="text" />
                         </div>
                     </form>
@@ -87,11 +130,11 @@ const SyndicateStepper = ({ language, options, step, removeFile, setFile, setMod
                 <section className="flex items-start justify-center flex-col">
                     <form className="pt-12 mb-4 w-full">
                         <section className="mb-8">
-                            <label htmlFor="syndname" className="text-neutral-700 text-sm font-medium">{language?.syndicate?.syndName}</label>
+                            <label htmlFor="syndname" className="text-neutral-700 text-sm font-medium">{language.syndicate.syndName}</label>
                             <input id="syndname" placeholder="Alex Peter" className=" h-[42px] shadow-sm appearance-none border border-neutral-300 rounded-md w-full py-2 px-3 text-gray-500 leading-tight focus:outline-none focus:shadow-outline" type="text" />
                         </section>
                         <section className="mb-8">
-                            <label htmlFor="tagline" className="text-neutral-700 text-sm font-medium">{language?.syndicate?.tagline}</label>
+                            <label htmlFor="tagline" className="text-neutral-700 text-sm font-medium">{language.syndicate.tagline}</label>
                             <input id="tagline" placeholder="Tagline" className=" h-[42px] shadow-sm appearance-none border border-neutral-300 rounded-md w-full py-2 px-3 text-gray-500 leading-tight focus:outline-none focus:shadow-outline" type="text" />
                         </section>
 
@@ -99,7 +142,7 @@ const SyndicateStepper = ({ language, options, step, removeFile, setFile, setMod
                             <div className="text-neutral-700 text-sm font-medium">{language.syndicate.logo}</div>
                             <small className="text-neutral-500 font-normal">{language.syndicate.uploadCompLogo}</small>
                             <small className="relative font-normal color-blue cursor-pointer" onMouseEnter={() => setShowHoverModal(true)} onMouseLeave={() => setShowHoverModal(false)}>
-                                &nbsp;<span>{language?.common?.example}</span>
+                                &nbsp;<span>{language.common.example}</span>
                                 {showHoverModal && (
                                     <HoverModal>
                                         <section className="inline-flex flex-row items-center justify-evenly h-full">

@@ -26,7 +26,6 @@ const SyndicateFlow = ({ }: any) => {
     const [fileType, setFileType] = useState(null);
     const [file, setFile]: any = useState(null);
     const [loading, setLoading] = useState(false);
-    const [payload, setPayload]: any = useState({ region: "", industry: "", profile: "", deadflow: "" });
 
     useLayoutEffect(() => {
         setStep(Number(params?.id) || 1)
@@ -52,12 +51,6 @@ const SyndicateFlow = ({ }: any) => {
         } finally {
             setLoading(false);
         }
-    };
-
-    const onSetPayload = (data: any, type: string) => {
-        setPayload((prev: any) => {
-            return { ...prev, [type]: data };
-        });
     };
 
     const ontoNextStep = () => {
