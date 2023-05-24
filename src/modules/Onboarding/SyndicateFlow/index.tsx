@@ -80,6 +80,7 @@ const SyndicateFlow = ({ }: any) => {
 
     const onPostSyndicateData = async () => {
         try {
+            setLoading(true);
             let dataPayload: any = {
                 syndicate_profile: {
                     have_you_raised: payload.raised,
@@ -100,9 +101,15 @@ const SyndicateFlow = ({ }: any) => {
                 navigate('/add-attachments');
                 localStorage.setItem("syndicate", JSON.stringify(payload))
             }
-        } catch (error) {
-            console.error("error", error);
-
+        } catch (error: any) {
+            if (error.response && error.response.status === 401) {
+                dispatch(saveToken(""));
+                navigate("/login", { state: 'add-attachments' });
+            }
+            const message = error?.response?.data?.status?.message || error?.response?.data || language.promptMessages.errorGeneral;
+            toast.error(message, toastUtil);
+        } finally {
+            setLoading(false);
         }
     };
 
