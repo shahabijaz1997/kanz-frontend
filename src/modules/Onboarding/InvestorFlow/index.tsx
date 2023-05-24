@@ -7,7 +7,7 @@ import Header from "../../../shared/components/Header";
 import ArrowIcon from "../../../ts-icons/arrowIcon.svg";
 import UserIcon from "../../../ts-icons/userIcon.svg";
 import GroupIcon from "../../../ts-icons/groupIcon.svg";
-import { selectInvestorType } from "../../../apis/auth.api";
+import { selectInvestorType } from "../../../apis/investor.api";
 import { toast } from "react-toastify";
 import { toastUtil } from "../../../utils/toast.utils";
 import Spinner from "../../../shared/components/Spinner";

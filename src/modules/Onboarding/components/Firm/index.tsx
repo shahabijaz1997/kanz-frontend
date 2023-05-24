@@ -2,7 +2,7 @@ import React, { useLayoutEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import CountrySelector from "../../../../shared/components/CountrySelector";
 import { InvestorType } from "../../../../enums/types.enum";
-import { investmentAccridiation } from "../../../../apis/auth.api";
+import { investmentAccridiation } from "../../../../apis/investor.api";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../../../redux-toolkit/store/store";
 import { toast } from "react-toastify";

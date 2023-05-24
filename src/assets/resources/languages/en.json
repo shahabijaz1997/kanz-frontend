@@ -187,7 +187,9 @@
         "uploadSelfie": "Upload your Selfie with passport copy.",
         "example": "See example",
         "agree": "I agree to KANZ",
-        "termsConditions": "Terms and Conditions"
+        "termsConditions": "Terms and Conditions",
+        "inreview": "In Review",
+        "submitted": "Submitted"
     },
     "buttons": {
         "start": "Lets start",
