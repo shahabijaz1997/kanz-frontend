@@ -18,9 +18,9 @@ const SyndicateStepper = ({ language, payload, onSetPayload, options, step, remo
     useLayoutEffect(() => {
         bootstrapData();
     }, []);
-   
+
     useLayoutEffect(() => {
-        selected && onSetPayload(selected?.id === 1 ? true: false, "raised")
+        selected && onSetPayload(selected?.id === 1 ? true : false, "raised")
     }, [selected]);
 
     const onSetSearch = (data: any, type: string) => {
@@ -73,11 +73,19 @@ const SyndicateStepper = ({ language, payload, onSetPayload, options, step, remo
                         <section className="w-full mt-2 p-[18px] rounded-lg check-background border border-grey">
                             <div className="mb-5">
                                 <label htmlFor="raised" className="text-neutral-700 text-sm font-medium">{language.syndicate.raisedQ}</label>
-                                <input id="raised" value={payload?.amountRaised} onChange={(e) => onSetPayload(e.target.value, "amountRaised")} placeholder="101-500" className=" h-[42px] shadow-sm appearance-none border border-neutral-300 rounded-md w-full py-2 px-3 text-gray-500 leading-tight focus:outline-none focus:shadow-outline" type="text" />
+                                <input id="raised" value={payload?.amountRaised} onChange={(e) => {
+                                    const enteredValue = e.target.value;
+                                    const numericValue = enteredValue.replace(/[^0-9]/g, '');
+                                    onSetPayload(numericValue, "amountRaised");
+                                }} placeholder="101-500" className=" h-[42px] shadow-sm appearance-none border border-neutral-300 rounded-md w-full py-2 px-3 text-gray-500 leading-tight focus:outline-none focus:shadow-outline" type="text" />
                             </div>
                             <div>
                                 <label htmlFor="times" className="text-neutral-700 text-sm font-medium">{language.syndicate.timesQ}</label>
-                                <input id="times" value={payload?.timesRaised} onChange={(e) => onSetPayload(e.target.value, "timesRaised")} placeholder="12" className=" h-[42px] shadow-sm appearance-none border border-neutral-300 rounded-md w-full py-2 px-3 text-gray-500 leading-tight focus:outline-none focus:shadow-outline" type="text" />
+                                <input id="times" value={payload?.timesRaised} onChange={(e) => {
+                                    const enteredValue = e.target.value;
+                                    const numericValue = enteredValue.replace(/[^0-9]/g, '');
+                                    onSetPayload(numericValue, "timesRaised");
+                                }} placeholder="12" className=" h-[42px] shadow-sm appearance-none border border-neutral-300 rounded-md w-full py-2 px-3 text-gray-500 leading-tight focus:outline-none focus:shadow-outline" type="text" />
                             </div>
                         </section>
                     </div>
@@ -86,7 +94,7 @@ const SyndicateStepper = ({ language, payload, onSetPayload, options, step, remo
                         <label className="block text-neutral-700 text-sm font-medium" htmlFor="industry">{language.syndicate.industry}</label>
                         <small className="font-normal text-sm text-neutral-500">{language.syndicate.industrySub}</small>
                         <span className="relative">
-                            <input id="industry" value={search.industry} onChange={(e) => onSetSearch(e.target.value, "industry")} onClick={() => setShowData(p => { return { ...p, industry: !p.industry } })}
+                            <input id="industry" autoComplete="off" value={search.industry} onChange={(e) => onSetSearch(e.target.value, "industry")} onClick={() => setShowData(p => { return { ...p, industry: !p.industry } })}
                                 className="h-[42px] shadow-sm appearance-none border border-neutral-300 rounded-md w-full py-2 px-3 text-gray-500 leading-tight focus:outline-none focus:shadow-outline" type="text" />
                             <span className={`absolute top-[0px] right-0 flex items-center pr-2 pointer-events-none}`} style={{ zIndex: 99 }}>
                                 <Chevrond stroke="#737373" />
@@ -115,7 +123,7 @@ const SyndicateStepper = ({ language, payload, onSetPayload, options, step, remo
                     <div className="mb-8 relative">
                         <label className="block text-neutral-700 text-sm font-medium" htmlFor="region">{language.syndicate.region}</label>
                         <span className="relative">
-                            <input id="region" value={search.region} onChange={(e) => onSetSearch(e.target.value, "region")} onClick={() => setShowData(p => { return { ...p, region: !p.region } })}
+                            <input id="region" autoComplete="off" value={search.region} onChange={(e) => onSetSearch(e.target.value, "region")} onClick={() => setShowData(p => { return { ...p, region: !p.region } })}
                                 className="h-[42px] shadow-sm appearance-none border border-neutral-300 rounded-md w-full py-2 px-3 text-gray-500 leading-tight focus:outline-none focus:shadow-outline" type="text" />
                             <span className={`absolute top-[0px] right-0 flex items-center pr-2 pointer-events-none}`} style={{ zIndex: 99 }}>
                                 <Chevrond stroke="#737373" />
