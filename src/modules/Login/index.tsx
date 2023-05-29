@@ -99,7 +99,7 @@ const Login = ({}: any) => {
             validation={{
               required: requiredFieldError,
               pattern: {
-                value: /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/,
+                value: /^[_a-z0-9-]+(\.[_a-z0-9-]+)*(\+[a-z0-9-]+)?@[a-z0-9-]+(\.[a-z0-9-]+)*$/i,
                 message: "Invalid email address",
               },
             }}
