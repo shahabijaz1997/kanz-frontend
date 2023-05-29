@@ -61,11 +61,6 @@ export const AntdInput: React.FC<InputProps> = ({
 }) => {
   const hasError = !!error; // Check if there is an error
 
-  const handleChange = (e: any) => {
-    if (onChange) {
-      onChange(e);
-    }
-  };
   return (
     <div className={`relative ${required ? "required" : ""}`}>
       {required && (
@@ -94,7 +89,6 @@ export const AntdInput: React.FC<InputProps> = ({
           value={value}
           defaultValue={defaultValue}
           placeholder={placeholder}
-          onChange={ handleChange}
           disabled={disabled}
           type={type}
           onKeyDown={(event: React.KeyboardEvent<HTMLInputElement>) => {

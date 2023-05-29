@@ -15,21 +15,25 @@ import { toastUtil } from "../../../../utils/toast.utils";
 import { saveToken } from "../../../../redux-toolkit/slicer/auth.slicer";
 import { KanzRoles } from "../../../../enums/roles.enum";
 import { AntdInput } from "../../../../shared/components/Input";
+import Button from "../../../../shared/components/Button";
 
 type FormValues = {
   code: string;
+};
+
+type EmailFormValues = {
   email: string;
 };
 
 const EmailVerification = ({ payload }: any) => {
-  // Refactor form
   const {
     register,
     handleSubmit,
-    setError,
-    getValues,
     formState: { errors },
   } = useForm<FormValues>();
+
+  const emailForm = useForm<EmailFormValues>();
+
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const language: any = useSelector((state: RootState) => state.language.value);
@@ -41,34 +45,6 @@ const EmailVerification = ({ payload }: any) => {
   const [loading, setLoading] = useState(false);
 
   const requiredFieldError = language?.common?.required_field;
-
-  const onReVerify = async (e: any) => {
-    try {
-      e.preventDefault();
-      if (!email) return;
-      setLoading(true);
-      let role = localStorage.getItem("role");
-      const { status, data } = await signup({
-        user: {
-          email,
-          password: payload.password,
-          name: payload.name,
-          type: role || KanzRoles.INVESTOR,
-        },
-      });
-      if (status === 200) {
-        setEdit(false);
-      }
-    } catch (error: any) {
-      const message =
-        error?.response?.data?.status?.message ||
-        language.promptMessages.errorGeneral;
-      toast.error(message, toastUtil);
-    } finally {
-      setLoading(false);
-      setToken("");
-    }
-  };
 
   const onResendConfirmToken = async (e: any) => {
     try {
@@ -116,6 +92,34 @@ const EmailVerification = ({ payload }: any) => {
     }
   };
 
+  const onReVerify: SubmitHandler<EmailFormValues> = async (values) => {
+    try {
+      const { email } = values;
+      if (!email) return;
+      setLoading(true);
+      let role = localStorage.getItem("role");
+      const { status, data } = await signup({
+        user: {
+          email,
+          password: payload.password,
+          name: payload.name,
+          type: role || KanzRoles.INVESTOR,
+        },
+      });
+      if (status === 200) {
+        setEdit(false);
+      }
+    } catch (error: any) {
+      const message =
+        error?.response?.data?.status?.message ||
+        language.promptMessages.errorGeneral;
+      toast.error(message, toastUtil);
+    } finally {
+      setLoading(false);
+      setToken("");
+    }
+  };
+
   return (
     <section className="w-[428px] max-w-md pt-[130px] screen500:max-w-[300px]">
       <h2 className="text-2xl font-bold text-left text-neutral-900 mb-4">
@@ -144,7 +148,7 @@ const EmailVerification = ({ payload }: any) => {
               }}
             />
           </div>
-          <div className="text-right text-neutral-500 font-normal text-[14px] screen500:text-[12px]">
+          <div className="-mt-2 text-right text-neutral-500 font-normal text-[14px] screen500:text-[12px]">
             {language?.onboarding?.sentCode} ({email})
             <div
               className="color-blue cursor-pointer"
@@ -153,28 +157,21 @@ const EmailVerification = ({ payload }: any) => {
               {language?.buttons?.resendVerification}{" "}
             </div>
           </div>
-
-          {loading ? (
-            <button
-              className="text-white text-sm tracking-[0.03em] bg-cyan-800 rounded-md focus:outline-none focus:shadow-outline w-full h-[38px] mt-10"
-              type="submit"
-            >
-              <Spinner />
-            </button>
-          ) : (
-            <button
-              className={`${
-                !token && "opacity-70"
-              } text-white text-sm tracking-[0.03em] bg-cyan-800 rounded-md focus:outline-none focus:shadow-outline w-full h-[38px] mt-10`}
-              type="submit"
-            >
-              {language?.buttons?.verify}
-            </button>
-          )}
+          <Button
+            className="mt-10 w-full h-[38px]"
+            disabled={loading}
+            htmlType="submit"
+            loading={loading}
+          >
+            {language?.buttons?.verify}
+          </Button>
         </form>
       ) : (
-        //  note : why we use this code
-        <form className="pt-8 pb-8 mb-4" onSubmit={onReVerify}>
+        //  Note : why we use this code
+        <form
+          className="pt-8 pb-8 mb-4"
+          onSubmit={emailForm.handleSubmit(onReVerify)}
+        >
           <div className="mb-4">
             <label
               className="block text-neutral-700 text-sm font-semibold mb-2 screen500:text-[12px]"
@@ -182,32 +179,31 @@ const EmailVerification = ({ payload }: any) => {
             >
               {language?.common?.email}
             </label>
-            <input
-              className="h-[42px] shadow-sm appearance-none border border-neutral-300 rounded-md w-full py-2 px-3 text-gray-500 leading-tight focus:outline-none focus:shadow-outline"
-              id="email"
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
+            <AntdInput
+              register={emailForm.register}
+              name="email"
+              type="text"
+              required
+              error={emailForm.formState?.errors?.email?.message} // Pass the error message from form validation
+              validation={{
+                required: requiredFieldError,
+                pattern: {
+                  value:
+                    /^[_a-z0-9-]+(\.[_a-z0-9-]+)*(\+[a-z0-9-]+)?@[a-z0-9-]+(\.[a-z0-9-]+)*$/i,
+                  message: "Invalid email address",
+                },
+              }}
             />
           </div>
-          {loading ? (
-            <button
-              className={`${
-                !email && "opacity-70"
-              } text-white text-sm tracking-[0.03em] bg-cyan-800 rounded-md focus:outline-none focus:shadow-outline w-full h-[38px] mt-10`}
-            >
-              <Spinner />
-            </button>
-          ) : (
-            <button
-              className={`${
-                !email && "opacity-70"
-              } text-white text-sm tracking-[0.03em] bg-cyan-800 rounded-md focus:outline-none focus:shadow-outline w-full h-[38px] mt-10`}
-              type="submit"
-            >
-              {language?.buttons?.continue}
-            </button>
-          )}
+
+          <Button
+            className="mt-6 w-full h-[38px]"
+            disabled={loading}
+            htmlType="submit"
+            loading={loading}
+          >
+            {language?.buttons?.continue}
+          </Button>
         </form>
       )}
     </section>
