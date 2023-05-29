@@ -1,4 +1,4 @@
-import React, { useState, useLayoutEffect } from "react";
+import React, { useState, useLayoutEffect, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
 import { toastUtil } from "../../../../utils/toast.utils";
@@ -54,10 +54,9 @@ const Signup = (props: any) => {
     const {
       register,
       handleSubmit,
-      setError,
       watch,
-      formState: { errors },
-    } = useForm<FormValues>();
+      formState: { errors, isSubmitSuccessful },
+    } = useForm<FormValues>({ defaultValues: { email: "" } });
 
     const [password, setPassword] = useState("");
     // Updated PasswordStrengthUI
@@ -149,6 +148,7 @@ const Signup = (props: any) => {
         </div>
       );
     };
+
     // form submit handler
     const onSubmit: SubmitHandler<FormValues> = async (values: any) => {
       const signUpData = {
@@ -163,7 +163,7 @@ const Signup = (props: any) => {
         const { status, data } = await signup({ user: signUpData });
         if (status === 200) {
           dispatch(saveUserData(data.status.data));
-          onSetStepper(payload);
+          onSetStepper(signUpData);
         } else toast.error(language.promptMessages.errorGeneral, toastUtil);
       } catch (error: any) {
         const message =
@@ -186,8 +186,17 @@ const Signup = (props: any) => {
       setShowPassword((prevShowPassword) => !prevShowPassword);
     };
 
+    useEffect(() => {
+      const subscription = watch((value) => handleChange(value.password));
+      return () => subscription.unsubscribe();
+    }, [watch]);
+
     return (
-      <form className="pt-12 pb-8 mb-4" onSubmit={handleSubmit(onSubmit)}>
+      <form
+        className="pt-12 pb-8 mb-4"
+        onSubmit={handleSubmit(onSubmit)}
+        {...(isSubmitSuccessful && { noValidate: true })}
+      >
         <div className="mb-4">
           <AntdInput
             register={register}
@@ -233,7 +242,6 @@ const Signup = (props: any) => {
             validation={{
               required: requiredFieldError,
             }}
-            onChange={(e) => handleChange(e.target.value)}
             ShowPasswordIcon={
               <button
                 type="button"
