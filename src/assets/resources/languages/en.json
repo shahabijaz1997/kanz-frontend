@@ -189,7 +189,8 @@
         "agree": "I agree to KANZ",
         "termsConditions": "Terms and Conditions",
         "inreview": "In Review",
-        "submitted": "Submitted"
+        "submitted": "Submitted",
+        "required_field":"This field is required."
     },
     "buttons": {
         "start": "Lets start",
