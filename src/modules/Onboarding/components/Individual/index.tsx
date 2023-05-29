@@ -46,7 +46,13 @@ const Individual = ({ language }: any) => {
                     meta_info: {
                         nationality: payload?.national?.country_name,
                         residence: payload?.residence?.country_name,
-                        accreditation: selectedAssert,
+                        accreditation: {
+                            statement: selectedAssert?.title,
+                            lower_limit: selectedAssert?.low_limit,
+                            uper_limit: selectedAssert?.upper_limit,
+                            unit: selectedAssert?.currency || "",
+                            currency: "AED"
+                        },
                         lower_limit: selectedAssert.low_limit,
                         upper_limit: selectedAssert.upper_limit,
                         accept_investment_criteria: String(selectedAssert.low_limit)

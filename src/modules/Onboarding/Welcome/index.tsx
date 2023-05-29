@@ -10,6 +10,7 @@ import { getInvestor } from "../../../apis/investor.api";
 import { saveToken } from "../../../redux-toolkit/slicer/auth.slicer";
 import { saveUserData } from "../../../redux-toolkit/slicer/user.slicer";
 import Loader from "../../../shared/views/Loader";
+import { getSyndicateInformation } from "../../../apis/syndicate.api";
 
 const Welcome = ({ }: any) => {
     const dispatch = useDispatch();
@@ -22,6 +23,7 @@ const Welcome = ({ }: any) => {
 
     useLayoutEffect(() => {
         user.type === KanzRoles.INVESTOR && getInvestorDetails();
+        // user.type === KanzRoles.SYNDICATE && getSyndicateDetails();
     }, [])
 
     const getInvestorDetails = async () => {
@@ -30,6 +32,24 @@ const Welcome = ({ }: any) => {
             let { status, data } = await getInvestor(authToken);
             if (status === 200) {
                 dispatch(saveUserData(data.status.data));
+            }
+        } catch (error: any) {
+            if (error.response && error.response.status === 401) {
+                dispatch(saveToken(""));
+                navigate("/login", { state: 'complete-goals' });
+            }
+        } finally {
+            setLoading(false);
+        }
+    };
+    const getSyndicateDetails = async () => {
+        try {
+            setLoading(true);
+            let { status, data } = await getSyndicateInformation(1, authToken);
+            if (status === 200) {
+                dispatch(saveUserData(data?.status?.data?.attributes));
+                console.log(data?.status?.data?.attributes);
+                
             }
         } catch (error: any) {
             if (error.response && error.response.status === 401) {
