@@ -35,7 +35,7 @@
         "num": "Number",
         "min8": "Min 8 characters",
         "verificationCode": "Verification Code",
-        "verificationText": "Enter the 4 digit verification code sent to your email",
+        "verificationText": "Enter the 6 digit verification code sent to your email",
         "codeText": "Enter code",
         "sentCode": "Code has been sent to your email",
         "welcomeDashboard": "Welcome to Kanz Dashboard",
@@ -188,6 +188,7 @@
         "example": "See example",
         "agree": "I agree to KANZ",
         "termsConditions": "Terms and Conditions",
+        "inprogress": "In Progress",
         "inreview": "In Review",
         "submitted": "Submitted"
     },

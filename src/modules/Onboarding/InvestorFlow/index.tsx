@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useLayoutEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../../redux-toolkit/store/store";
 import { useNavigate } from "react-router-dom";
@@ -13,13 +13,15 @@ import { toastUtil } from "../../../utils/toast.utils";
 import Spinner from "../../../shared/components/Spinner";
 import { saveToken } from "../../../redux-toolkit/slicer/auth.slicer";
 import Drawer from "../../../shared/components/Drawer";
+import { KanzRoles } from "../../../enums/roles.enum";
 
-const InvestorFlow = (props: any) => {
-    const { guard } = props;
+const InvestorFlow = ({ }: any) => {
     const navigate = useNavigate();
     const dispatch = useDispatch();
     const authToken: any = useSelector((state: RootState) => state.auth.value);
     const language: any = useSelector((state: RootState) => state.language.value);
+    const user: any = useSelector((state: RootState) => state.user.value);
+
     const [selectedAccount, setSelectedAccount]: any = useState();
     const [loading, setLoading] = useState(false);
     const [isOpen, setOpen] = useState(false);
@@ -27,6 +29,13 @@ const InvestorFlow = (props: any) => {
         { id: 1, payload: "Individual Investor", icon: <UserIcon stroke="#171717" className="absolute h-6 top-4" />, text: language?.investorFow?.individual, subText: language?.investorFow?.subInd, link: InvestorType.INDIVIDUAL },
         { id: 2, payload: "Investment Firm", icon: <GroupIcon stroke="#171717" className="absolute h-6 top-4" />, text: language?.investorFow?.firm, subText: language?.investorFow?.subFirm, link: InvestorType.FIRM },
     ]);
+
+    useLayoutEffect(() => {
+        if (user && user?.meta_info?.accept_investment_criteria && user.type === KanzRoles.INVESTOR) {
+            let find = accounts.find(ac => ac.payload === user.role);
+            setSelectedAccount(find);
+        }
+    }, [])
 
     const onSelectInvestorType = async () => {
         try {
@@ -37,6 +46,7 @@ const InvestorFlow = (props: any) => {
             fd.append("investor[type]", selectedAccount.payload)
             let { status, data } = await selectInvestorType({ investor: { role: selectedAccount.payload } }, authToken);
             if (status === 200) {
+                localStorage.setItem("investor-type", selectedAccount?.link)
                 navigate(`/complete-details`, { state: selectedAccount?.link })
             }
         } catch (error: any) {

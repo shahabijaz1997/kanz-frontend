@@ -57,8 +57,12 @@ const Welcome = ({ }: any) => {
             else if (user.status == ApplicationStatus.IN_PROGRESS) {
                 return (
                     <React.Fragment>
-                        <h2 className="text-2xl font-bold text-neutral-900 mb-4 screen500:text-[20px]">{language?.onboarding?.submitted}</h2>
-                        <h3 className="text-base font-normal text-neutral-700 screen500:text-[12px]">{language?.onboarding?.appStatus}: {language.common.inreview}</h3>
+                        <h2 className="text-2xl font-bold text-neutral-900 mb-4 screen500:text-[20px]">{language?.onboarding?.welcomeDashboard}</h2>
+                        <h3 className="text-base font-normal text-neutral-700 screen500:text-[12px]">{language?.onboarding?.starterMessage}</h3>
+                        <h3 className="text-base font-normal text-neutral-700 screen500:text-[12px] mt-3">{language?.onboarding?.appStatus}: <strong>{language.common.inprogress}</strong></h3>
+                        <button className="text-white text-sm tracking-[0.03em] font-bold rounded-md bg-cyan-800 focus:outline-none focus:shadow-outline px-8 mt-14 h-[38px]" type="button" onClick={() => navigate("/investor-type")}>
+                            {language?.buttons?.continue}
+                        </button>
                     </React.Fragment>
                 )
             }
@@ -66,7 +70,7 @@ const Welcome = ({ }: any) => {
                 return (
                     <React.Fragment>
                         <h2 className="text-2xl font-bold text-neutral-900 mb-4 screen500:text-[20px]">{language?.onboarding?.submitted}</h2>
-                        <h3 className="text-base font-normal text-neutral-700 screen500:text-[12px]">{language?.onboarding?.appStatus}: {language.common.submitted}</h3>
+                        <h3 className="text-base font-normal text-neutral-700 screen500:text-[12px]">{language?.onboarding?.appStatus}: <strong>{language.common.submitted}</strong></h3>
                     </React.Fragment>
                 )
             } else {
