@@ -50,6 +50,8 @@ const Questionare = ({ step, returnSuccessRedirection }: any) => {
                 }
                 if (data?.status?.data?.questions && data?.status?.data?.questions[0]?.question_type === "checkbox")
                     if (parsed[3]?.questions[0]) setMcqs(parsed[3].questions[0]?.answer_meta.options);
+                if (data?.status?.data?.questions[0]?.question_type === "text") setTextAnswer(selected[4]?.questions[0]?.answers[0])
+
             }
         } catch (error: any) {
             const message = error?.response?.data?.status?.message || error?.response?.data || language.promptMessages.errorGeneral;
@@ -124,7 +126,7 @@ const Questionare = ({ step, returnSuccessRedirection }: any) => {
                         <span className="color-blue font-medium cursor-pointer" onClick={() => setOpen(true)}>{language.common.learn}</span>
                     </p>
                     <section className="mb-8 w-full relative mt-3">
-                        <textarea value={selected[step]?.questions[0]?.answers[0]} onChange={(e) => {
+                        <textarea value={selected[4]?.questions[0]?.answers[0]} onChange={(e) => {
                             setTextAnswer(e.target.value);
                             let _selected = { ...selected };
                             if (_selected[ques.step])
@@ -294,7 +296,7 @@ const Questionare = ({ step, returnSuccessRedirection }: any) => {
         }
         else {
             if (!questions?.questions?.length) return false;
-            else if ((step !== 2 && validations.length === questions?.questions.length) || (step === 2 && validations.length > 0)) return true;
+            else if ((step !== 2 && validations.length === questions?.questions.length) || ((step === 2 && validations.length > 0 && selected[`2`]?.questions.find((q: any) => q.answers[0] === "No")) || (step === 2 && validations.length === 2 && selected[`2`]?.questions.find((q: any) => q.answers[0] === "Yes")))) return true;
             return false;
         }
     };
@@ -302,7 +304,7 @@ const Questionare = ({ step, returnSuccessRedirection }: any) => {
     return (
         <aside className="w-full flex items-center justify-center flex-col pt-12 pb-5">
             <Stepper currentStep={step - 1} totalSteps={questions?.total_steps} />
-            {loading && <div className="absolute left-0 top-0 w-full h-full grid place-items-center" style={{ backgroundColor: "rgba(0, 0, 0, 0.078)", zIndex: 50 }}><Spinner /></div>}
+            {loading && <div className="absolute left-0 top-0 w-full h-full grid place-items-center" style={{ backgroundColor: "rgba(255, 255, 255, 1)", zIndex: 50 }}><Spinner /></div>}
 
             <section className="flex items-start flex-col mt-12 max-w-[420px] screen500:max-w-[300px]">
                 {questions?.questions && <h3 className="text-neutral-700 font-bold text-2xl w-[420px]">{questions?.questions[0]?.category}</h3>}

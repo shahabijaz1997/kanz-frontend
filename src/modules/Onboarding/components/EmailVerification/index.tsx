@@ -4,18 +4,14 @@ import { useForm, SubmitHandler } from "react-hook-form";
 
 import { RootState } from "../../../../redux-toolkit/store/store";
 import { useNavigate } from "react-router-dom";
-import {
-  confirmToken,
-  resendConfirmToken,
-  signup,
-} from "../../../../apis/auth.api";
-import Spinner from "../../../../shared/components/Spinner";
+import { confirmToken, resendConfirmToken, signup } from "../../../../apis/auth.api";
 import { toast } from "react-toastify";
 import { toastUtil } from "../../../../utils/toast.utils";
 import { saveToken } from "../../../../redux-toolkit/slicer/auth.slicer";
 import { KanzRoles } from "../../../../enums/roles.enum";
 import { AntdInput } from "../../../../shared/components/Input";
 import Button from "../../../../shared/components/Button";
+import { getEnv } from "../../../../env";
 
 type FormValues = {
   code: string;
@@ -24,25 +20,20 @@ type FormValues = {
 type EmailFormValues = {
   email: string;
 };
-
-const EmailVerification = ({ payload }: any) => {
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm<FormValues>();
-
+let ENV: any = getEnv();
+const EmailVerification = ({ payload, onReSignup }: any) => {
+  const { register, handleSubmit, formState: { errors }, } = useForm<FormValues>();
   const emailForm = useForm<EmailFormValues>();
-
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const language: any = useSelector((state: RootState) => state.language.value);
   const authToken: any = useSelector((state: RootState) => state.auth.value);
 
   const [isEdit, setEdit] = useState(false);
-  const [email, setEmail] = useState(payload?.email);
+  const [email] = useState(payload?.email);
   const [token, setToken] = useState("");
   const [loading, setLoading] = useState(false);
+  const [resendTries, setResendTries] = useState(1);
 
   const requiredFieldError = language?.common?.required_field;
 
@@ -50,10 +41,7 @@ const EmailVerification = ({ payload }: any) => {
     try {
       e.preventDefault();
       setLoading(true);
-      const { status, data } = await resendConfirmToken(
-        { user: { email } },
-        authToken
-      );
+      const { status, data } = await resendConfirmToken({ user: { email } }, authToken);
       if (status === 200) toast.success(data.status.message, toastUtil);
     } catch (error: any) {
       const message =
@@ -68,6 +56,11 @@ const EmailVerification = ({ payload }: any) => {
 
   const onSubmit: SubmitHandler<FormValues> = async (values) => {
     const { code: token } = values;
+    if (resendTries > ENV.resendTries) {
+      toast.warning(language.promptMessages.maxLimitInvalid, toastUtil);
+      return onReSignup()
+    }
+
     try {
       if (!token) return;
       setLoading(true);
@@ -82,10 +75,9 @@ const EmailVerification = ({ payload }: any) => {
         navigate("/welcome");
       }
     } catch (error: any) {
-      const message =
-        error?.response?.data?.status?.message ||
-        language.promptMessages.errorGeneral;
-      toast.error("Authentication code is invalid", toastUtil);
+      const message = error?.response?.data?.status?.message || language.promptMessages.errorGeneral;
+      toast.error(language.promptMessages.invalidCode, toastUtil);
+      setResendTries(resendTries + 1);
     } finally {
       setLoading(false);
       setToken("");
@@ -98,7 +90,7 @@ const EmailVerification = ({ payload }: any) => {
       if (!email) return;
       setLoading(true);
       let role = localStorage.getItem("role");
-      const { status, data } = await signup({
+      const { status } = await signup({
         user: {
           email,
           password: payload.password,
