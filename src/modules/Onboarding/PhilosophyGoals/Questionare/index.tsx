@@ -49,7 +49,7 @@ const Questionare = ({ step, returnSuccessRedirection }: any) => {
                     else setValidations([]);
                 }
                 if (data?.status?.data?.questions && data?.status?.data?.questions[0]?.question_type === "checkbox")
-                    if (parsed[3]?.questions[0]) setMcqs(parsed[3].questions[0]?.answer_meta);
+                    if (parsed[3]?.questions[0]) setMcqs(parsed[3].questions[0]?.answer_meta.options);
             }
         } catch (error: any) {
             const message = error?.response?.data?.status?.message || error?.response?.data || language.promptMessages.errorGeneral;
@@ -84,7 +84,7 @@ const Questionare = ({ step, returnSuccessRedirection }: any) => {
     };
 
     const checkExist = (elem: any, as: any) => {
-        let found: any = elem?.questions.some((q: any) => q?.answer_meta?.index === as.index && q?.answer_meta.statement === as.statement);
+        let found: any = elem?.questions.some((q: any) => q?.answer_meta?.options[0]?.index === as.index && q?.answer_meta?.options[0]?.statement === as.statement);
         return found;
     };
 
@@ -100,21 +100,21 @@ const Questionare = ({ step, returnSuccessRedirection }: any) => {
 
         if (found) {
             let filtered = _selected[q.step]?.questions.filter((qa: any) => qa.question_id !== q.id);
-            filtered.push({ question_id: q.id, answer: [a?.statement], answer_meta: a });
+            filtered.push({ question_id: q.id, answers: [a?.statement], answer_meta: { options: [a] } });
             _selected[q.step].questions = filtered;
             setSelected(_selected);
         }
         else {
             if (_selected[q.step]?.questions?.length)
-                _selected[q.step]?.questions.push({ question_id: q.id, answer: [a?.statement], answer_meta: a })
+                _selected[q.step]?.questions.push({ question_id: q.id, answers: [a?.statement], answer_meta: { options: [a] } })
             else
-                _selected[q.step] = { step, questions: [{ question_id: q.id, answer: [a?.statement], answer_meta: a }] };
+                _selected[q.step] = { step, questions: [{ question_id: q.id, answers: [a?.statement], answer_meta: { options: [a] } }] };
             setSelected(_selected);
         }
     };
 
     const renderMultipleChoiceQuestionaire = (ques: any) => {
-        if (selected && ques.step === 2 && ques.index === 2 && (!selected[`2`] || selected[`2`]?.questions.find((q: any) => q.answer[0] === "No"))) return <React.Fragment></React.Fragment>;
+        if (selected && ques.step === 2 && ques.index === 2 && (!selected[`2`] || selected[`2`]?.questions.find((q: any) => q.answers[0] === "No"))) return <React.Fragment></React.Fragment>;
         if (ques?.question_type === "text") {
             return (
                 <section className="flex items-start justify-center flex-col mt-12 max-w-[420px] screen500:max-w-[300px]">
@@ -124,13 +124,13 @@ const Questionare = ({ step, returnSuccessRedirection }: any) => {
                         <span className="color-blue font-medium cursor-pointer" onClick={() => setOpen(true)}>{language.common.learn}</span>
                     </p>
                     <section className="mb-8 w-full relative mt-3">
-                        <textarea value={selected[step]?.questions[0]?.answer} onChange={(e) => {
+                        <textarea value={selected[step]?.questions[0]?.answers[0]} onChange={(e) => {
                             setTextAnswer(e.target.value);
                             let _selected = { ...selected };
                             if (_selected[ques.step])
-                                _selected[ques.step].questions = [{ question_id: ques.id, answer: [e.target.value], answer_meta: {} }]
+                                _selected[ques.step].questions = [{ question_id: ques.id, answers: [e.target.value], answer_meta: {} }]
                             else
-                                _selected[ques.step] = { questions: [{ question_id: ques.id, answer: [e.target.value], answer_meta: {} }] }
+                                _selected[ques.step] = { questions: [{ question_id: ques.id, answers: [e.target.value], answer_meta: {} }] }
 
                             setSelected(_selected);
                         }} className="rounded-md shadow-sm appearance-none border border-neutral-300 rounded-md w-full py-2 px-3 text-gray-500 leading-tight focus:outline-none focus:shadow-outline h-[100px] resize-none"></textarea>
@@ -174,7 +174,7 @@ const Questionare = ({ step, returnSuccessRedirection }: any) => {
     }
 
     const renderCheckboxQuestionaire = (ques: any) => {
-        if (selected && ques.step === 2 && ques.index === 2 && (!selected[`2`] || selected[`2`]?.questions.find((q: any) => q.answer === "No"))) return <React.Fragment></React.Fragment>;
+        if (selected && ques.step === 2 && ques.index === 2 && (!selected[`2`] || selected[`2`]?.questions.find((q: any) => q.answers[0] === "No"))) return <React.Fragment></React.Fragment>;
         return (
             <section className="flex items-start justify-center flex-col mt-12 max-w-[420px] screen500:max-w-[300px]">
                 <h3 className="text-neutral-700 font-medium text-base w-[420px]">{ques?.title}</h3>
@@ -273,10 +273,10 @@ const Questionare = ({ step, returnSuccessRedirection }: any) => {
         else {
             let _mcqs = [...mcqs];
             let answers = _mcqs.map(m => m.statement);
-            let philData: any = { ...JSON.parse(philisophyData), 3: { step: 3, questions: [{ question_id: 1, answer: answers, answer_meta: mcqs }] } };
+            let philData: any = { ...JSON.parse(philisophyData), 3: { step: 3, questions: [{ question_id: 1, answers, answer_meta: { options: mcqs } }] } };
             localStorage.setItem("philosophy", JSON.stringify(philData));
             payload.investment_philosophy.step = 3;
-            payload.investment_philosophy.questions = [{ question_id: 1, answer: answers, answer_meta: { options: mcqs } }];
+            payload.investment_philosophy.questions = [{ question_id: 1, answers, answer_meta: { options: mcqs } }];
         }
         submitData(payload);
         if (step !== questions?.total_steps)
