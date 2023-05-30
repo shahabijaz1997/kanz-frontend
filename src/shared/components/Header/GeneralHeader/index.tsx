@@ -10,6 +10,7 @@ import { useNavigate } from "react-router-dom";
 import { saveToken } from "../../../../redux-toolkit/slicer/auth.slicer";
 import { saveUserData } from "../../../../redux-toolkit/slicer/user.slicer";
 import { KanzRoles } from "../../../../enums/roles.enum";
+import CrossIcon from "../../../../ts-icons/crossIcon.svg";
 
 const GeneralHeader = ({ responsive = false, showMenu = false }: any) => {
     const navigate = useNavigate();
@@ -108,13 +109,13 @@ const GeneralHeader = ({ responsive = false, showMenu = false }: any) => {
                         </div>
 
                         <button className="md:hidden rounded-lg focus:outline-none focus:shadow-outline" onClick={toggleMenu}>
-                            <svg className="h-6 w-6 fill-current text-gray-600" viewBox="0 0 24 24" >
-                                {isMenuOpen ? (
-                                    <path fillRule="evenodd" clipRule="evenodd" d="M5 8h14v2H5V8zm0 5h14v2H5v-2zm0 5h14v2H5v-2z" />
-                                ) : (
+                            {isMenuOpen ? (
+                                <CrossIcon stroke={"#717171"} className="h-8 w-8" />
+                            ) : (
+                                <svg className="h-6 w-6 fill-current text-gray-600" viewBox="0 0 24 24" >
                                     <path fillRule="evenodd" clipRule="evenodd" d="M4 5h16v2H4V5zm0 7h16v2H4v-2zm0 7h16v2H4v-2z" />
-                                )}
-                            </svg>
+                                </svg>
+                            )}
                         </button>
                     </div>
 
