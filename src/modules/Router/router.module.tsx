@@ -42,8 +42,8 @@ const AuthenticateAuthRoute = (props: PropsWithChildren) => {
 const AuthenticateRole = (props: PropsWithChildren | any) => {
     const { children } = props;
     const user: any = useSelector((state: RootState) => state.user.value);
-    
-    if (user && user.type === props.role && (user.status === ApplicationStatus.PENDING || user.status === ApplicationStatus.IN_PROGRESS) ) {
+
+    if (user && (user.type === props.role || props.role === KanzRoles.ALL) && (user.status === ApplicationStatus.PENDING || user.status === ApplicationStatus.IN_PROGRESS)) {
         return <React.Fragment>{children}</React.Fragment>;
     }
     return <Navigate to="/welcome" replace />;
@@ -69,10 +69,10 @@ const RouterModule = () => {
             <Route path="/philosophy-goals/:id" element={<Suspense fallback={<Loader />}><AuthenticateRoute><PhilosophyGoals guard={authToken} /></AuthenticateRoute>
             </Suspense>} />
             <Route path="/add-attachments" element={<Suspense fallback={<Loader />}>
-                <AuthenticateRoute><AddAttachments guard={authToken} /></AuthenticateRoute>
+                <AuthenticateRoute><AuthenticateRole role={KanzRoles.ALL}><AddAttachments guard={authToken} /></AuthenticateRole></AuthenticateRoute>
             </Suspense>} />
             <Route path="/syndicate-lead/:id" element={<Suspense fallback={<Loader />}>
-                <AuthenticateRoute><SyndicateLeadInfo guard={authToken} /></AuthenticateRoute>
+                <AuthenticateRoute><AuthenticateRole role={KanzRoles.SYNDICATE}><SyndicateLeadInfo guard={authToken} /></AuthenticateRole></AuthenticateRoute>
             </Suspense>} />
             <Route path="/signup" element={<Suspense fallback={<Loader />}>
                 <AuthenticateAuthRoute><Onboarding guard={authToken} /></AuthenticateAuthRoute>
