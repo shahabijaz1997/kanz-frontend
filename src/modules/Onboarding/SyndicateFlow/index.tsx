@@ -13,6 +13,7 @@ import { toastUtil } from "../../../utils/toast.utils";
 import CrossIcon from "../../../ts-icons/crossIcon.svg";
 import Spinner from "../../../shared/components/Spinner";
 import { postSyndicateInformation } from "../../../apis/syndicate.api";
+import { isValidUrl } from "../../../utils/regex.utils";
 
 const SyndicateFlow = ({ }: any) => {
     const params = useParams();
@@ -63,7 +64,10 @@ const SyndicateFlow = ({ }: any) => {
 
     const ontoNextStep = () => {
         if (step === 1) {
-            if (!payload.amountRaised || !payload.timesRaised || !payload.industry.length || !payload.region || !payload.profileLink || !payload.deadflow) return toast.warning(language.promptMessages.pleaseSelectAllData, toastUtil)
+            let errors = [];
+            if (!payload.amountRaised || !payload.timesRaised || !payload.industry.length || !payload.region || !payload.profileLink || !payload.deadflow) errors.push(language.promptMessages.pleaseSelectAllData);
+            if (!isValidUrl(payload.profileLink)) errors.push(language.promptMessages.pleaseEnterUrl);
+            if (errors.length) return errors.forEach(e => toast.warning(e, toastUtil));
             setStep(2);
             navigate(`/syndicate-lead/${step + 1}`);
         } else {
