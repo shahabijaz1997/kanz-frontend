@@ -16,7 +16,7 @@ const CompleteDetails = (props: any) => {
     const [isOpen, setOpen] = useState(false);
 
     useLayoutEffect(() => {
-        if (user.status !== ApplicationStatus.PENDING) navigate("/welcome")
+        if (user.status !== ApplicationStatus.PENDING && user.status !== ApplicationStatus.IN_PROGRESS) navigate("/welcome")
     }, []);
 
     return (

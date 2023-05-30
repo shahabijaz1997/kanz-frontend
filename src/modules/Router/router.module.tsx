@@ -43,7 +43,7 @@ const AuthenticateRole = (props: PropsWithChildren | any) => {
     const { children } = props;
     const user: any = useSelector((state: RootState) => state.user.value);
     
-    if (user && user.type === props.role && user.status === ApplicationStatus.PENDING) {
+    if (user && user.type === props.role && (user.status === ApplicationStatus.PENDING || user.status === ApplicationStatus.IN_PROGRESS) ) {
         return <React.Fragment>{children}</React.Fragment>;
     }
     return <Navigate to="/welcome" replace />;

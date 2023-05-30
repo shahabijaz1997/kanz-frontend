@@ -88,13 +88,19 @@ const Firm = ({ language }: any) => {
       );
     try {
       setLoading(true);
-
+ 
       let pData: any = {
         investor: {
           meta_info: {
             legal_name: payload?.legal,
             location: payload?.residence?.country_name,
-            accreditation: selectedAssert,
+            accreditation: {
+              statement: selectedAssert?.title,
+              lower_limit: selectedAssert?.low_limit,
+              uper_limit: selectedAssert?.upper_limit,
+              unit: selectedAssert?.currency || "",
+              currency: "AED"
+            },
             lower_limit: selectedAssert.low_limit,
             upper_limit: selectedAssert.upper_limit,
             accept_investment_criteria: String(selectedAssert.low_limit),
@@ -170,11 +176,10 @@ const Firm = ({ language }: any) => {
             assertQuestions.map((as) => {
               return (
                 <li
-                  className={`h-[50px] w-[420px] p-4 grey-neutral-200 text-sm font-medium cursor-pointer border border-grey inline-flex items-center justify-start first:rounded-t-md last:rounded-b-md screen500:w-full ${
-                    selectedAssert?.id === as.id
+                  className={`h-[50px] w-[420px] p-4 grey-neutral-200 text-sm font-medium cursor-pointer border border-grey inline-flex items-center justify-start first:rounded-t-md last:rounded-b-md screen500:w-full ${selectedAssert?.id === as.id
                       ? "check-background"
                       : "bg-white"
-                  }`}
+                    }`}
                   onClick={() => setSelectedAssert(as)}
                 >
                   <input

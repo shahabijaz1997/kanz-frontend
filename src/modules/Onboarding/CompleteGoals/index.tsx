@@ -29,7 +29,7 @@ const CompleteGoals = ({ }: any) => {
     const [currentStepper, setCurrentStepper] = useState(0);
 
     useLayoutEffect(() => {
-        if (user.status !== ApplicationStatus.PENDING) navigate("/welcome")
+        if (user.status !== ApplicationStatus.PENDING && user.status !== ApplicationStatus.IN_PROGRESS) navigate("/welcome")
         let item = localStorage.getItem("step");
         if (item) setCurrentStepper(Number(item));
     }, []);
@@ -79,7 +79,7 @@ const CompleteGoals = ({ }: any) => {
                                 <h3 className="text-neutral-900 text-lg font-semibold">{apiResp?.status?.data?.role}</h3>
                                 <p className="text-neutral-700 text-sm font-normal mt-1">{apiResp?.status?.data?.role === "Investment Firm" ? apiResp?.status?.data?.meta_info?.location : apiResp?.status?.data?.meta_info?.nationality}</p>
                             </div>
-                            <button className="bg-cyan-800 text-white w-[100px] h-9 inline-flex items-center justify-center rounded-md gap-1" onClick={() => navigate(-1)}>
+                            <button className="bg-cyan-800 text-white w-[100px] h-9 inline-flex items-center justify-center rounded-md gap-1" onClick={() => navigate("/complete-details", { state: localStorage.getItem("investor-type") })}>
                                 <EditIcon stroke="#fff" />
                                 <small className="font-normal text-base">{language.buttons.edit}</small>
                             </button>
