@@ -30,3 +30,11 @@ export const resendConfirmToken = (payload: any, token: string) => {
         },
     });
 };
+
+export const getUser = (token: string) => {
+    return axios.get(`${ENV.API_URL}/${ENV.API_VERSION}/users/1`, {
+        headers: {
+            Authorization: `Bearer ${token}`
+        },
+    });
+};

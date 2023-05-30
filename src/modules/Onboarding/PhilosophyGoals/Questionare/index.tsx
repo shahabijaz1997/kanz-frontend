@@ -291,7 +291,7 @@ const Questionare = ({ step, returnSuccessRedirection }: any) => {
             return false;
         }
         else if (step === 4) {
-            if (textAnswer.length > 0) return true;
+            if (textAnswer?.length > 0) return true;
             return false;
         }
         else {

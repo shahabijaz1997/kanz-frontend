@@ -6,11 +6,10 @@ import Header from "../../../shared/components/Header";
 import { KanzRoles } from "../../../enums/roles.enum";
 import AddAttachmentBanner from "../../../shared/components/AddAttachmentBanner";
 import { ApplicationStatus } from "../../../enums/types.enum";
-import { getInvestor } from "../../../apis/investor.api";
+import { getUser } from "../../../apis/auth.api";
 import { saveToken } from "../../../redux-toolkit/slicer/auth.slicer";
 import { saveUserData } from "../../../redux-toolkit/slicer/user.slicer";
 import Loader from "../../../shared/views/Loader";
-import { getSyndicateInformation } from "../../../apis/syndicate.api";
 
 const Welcome = ({ }: any) => {
     const dispatch = useDispatch();
@@ -22,35 +21,15 @@ const Welcome = ({ }: any) => {
     const [loading, setLoading] = useState(false)
 
     useLayoutEffect(() => {
-        user.type === KanzRoles.INVESTOR && getInvestorDetails();
-        // user.type === KanzRoles.SYNDICATE && getSyndicateDetails();
+        getUserDetails();
     }, [])
 
-    const getInvestorDetails = async () => {
+    const getUserDetails = async () => {
         try {
             setLoading(true);
-            let { status, data } = await getInvestor(authToken);
-            if (status === 200) {
+            let { status, data } = await getUser(authToken);
+            if (status === 200)
                 dispatch(saveUserData(data.status.data));
-            }
-        } catch (error: any) {
-            if (error.response && error.response.status === 401) {
-                dispatch(saveToken(""));
-                navigate("/login", { state: 'complete-goals' });
-            }
-        } finally {
-            setLoading(false);
-        }
-    };
-    const getSyndicateDetails = async () => {
-        try {
-            setLoading(true);
-            let { status, data } = await getSyndicateInformation(1, authToken);
-            if (status === 200) {
-                dispatch(saveUserData(data?.status?.data?.attributes));
-                console.log(data?.status?.data?.attributes);
-                
-            }
         } catch (error: any) {
             if (error.response && error.response.status === 401) {
                 dispatch(saveToken(""));
@@ -93,7 +72,8 @@ const Welcome = ({ }: any) => {
                         <h3 className="text-base font-normal text-neutral-700 screen500:text-[12px]">{language?.onboarding?.appStatus}: <strong>{language.common.submitted}</strong></h3>
                     </React.Fragment>
                 )
-            } else {
+            }
+            else {
                 return (
                     <React.Fragment>
                         <h2 className="text-2xl font-bold text-neutral-900 mb-4 screen500:text-[20px]">{language?.onboarding?.welcomeDashboard}</h2>
@@ -105,15 +85,30 @@ const Welcome = ({ }: any) => {
                 )
             }
         } else if (user.type === KanzRoles.SYNDICATE) {
-            return (
-                <React.Fragment>
-                    <h2 className="text-2xl font-bold text-neutral-900 mb-4 screen500:text-[20px]">{language?.onboarding?.syndicateLead}</h2>
-                    <h3 className="text-base font-normal text-neutral-700 screen500:text-[12px]">{language?.onboarding?.syndicateLeadSub}</h3>
-                    <button className="text-white text-sm tracking-[0.03em] font-bold rounded-md bg-cyan-800 focus:outline-none focus:shadow-outline px-8 mt-14 h-[38px]" type="button" onClick={() => navigate("/syndicate-lead/1")}>
-                        {language?.buttons?.start}
-                    </button>
-                </React.Fragment>
-            )
+            if (user.status === ApplicationStatus.PENDING) {
+                return (
+                    <React.Fragment>
+                        <h2 className="text-2xl font-bold text-neutral-900 mb-4 screen500:text-[20px]">{language?.onboarding?.syndicateLead}</h2>
+                        <h3 className="text-base font-normal text-neutral-700 screen500:text-[12px]">{language?.onboarding?.syndicateLeadSub}</h3>
+                        <button className="text-white text-sm tracking-[0.03em] font-bold rounded-md bg-cyan-800 focus:outline-none focus:shadow-outline px-8 mt-14 h-[38px]" type="button" onClick={() => navigate("/syndicate-lead/1")}>
+                            {language?.buttons?.start}
+                        </button>
+                    </React.Fragment>
+                )
+            }
+            else if (user.status === ApplicationStatus.IN_PROGRESS) {
+                return (
+                    <React.Fragment>
+                        <h2 className="text-2xl font-bold text-neutral-900 mb-4 screen500:text-[20px]">{language?.onboarding?.syndicateLead}</h2>
+                        <h3 className="text-base font-normal text-neutral-700 screen500:text-[12px]">{language?.onboarding?.syndicateLeadSub}</h3>
+                        <h3 className="text-base font-normal text-neutral-700 screen500:text-[12px] mt-3">{language?.onboarding?.appStatus}: <strong>{language.common.inprogress}</strong></h3>
+
+                        <button className="text-white text-sm tracking-[0.03em] font-bold rounded-md bg-cyan-800 focus:outline-none focus:shadow-outline px-8 mt-14 h-[38px]" type="button" onClick={() => navigate("/syndicate-lead/1")}>
+                            {language?.buttons?.continue}
+                        </button>
+                    </React.Fragment>
+                )
+            }
         }
     };
 
