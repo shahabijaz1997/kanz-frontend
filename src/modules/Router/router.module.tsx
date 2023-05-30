@@ -45,8 +45,8 @@ const AuthenticateRole = (props: PropsWithChildren | any) => {
 
   if (
     user &&
-    user.type === props.role &&
-    user.status === ApplicationStatus.PENDING
+    (user.type === props.role || props.role === KanzRoles.ALL) &&
+    user.status === ApplicationStatus.PENDING || user.status === ApplicationStatus.IN_PROGRESS
   ) {
     return <React.Fragment>{children}</React.Fragment>;
   }
@@ -120,7 +120,9 @@ const RouterModule = () => {
         element={
           <Suspense fallback={<Loader />}>
             <AuthenticateRoute>
-              <AddAttachments guard={authToken} />
+              <AuthenticateRole role={KanzRoles.ALL}>
+                <AddAttachments guard={authToken} />
+              </AuthenticateRole>
             </AuthenticateRoute>
           </Suspense>
         }
