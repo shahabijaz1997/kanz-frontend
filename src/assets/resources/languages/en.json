@@ -237,6 +237,7 @@
         "errorFileUpload": "An error occurred while uploading the file",
         "pleaseSelectInvest": "Please select an investor type",
         "pleaseSelectAllData": "Please fill all required data",
+        "pleaseEnterUrl": "Please enter a valid url",
         "pleaseUploadAttachments": "Please upload all files",
         "pleaseAcceptPP": "You have to accept Kanz terms & conditions before submitting",
         "invalidCode": "Authentication code is invalid",
