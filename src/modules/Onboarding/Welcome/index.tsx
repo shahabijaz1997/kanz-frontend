@@ -62,11 +62,17 @@ const Welcome = ({ }: any) => {
                 return (
                     <React.Fragment>
                         <h2 className="text-2xl font-bold text-neutral-900 mb-4 screen500:text-[20px]">
-                            {language?.onboarding?.submitted}
+                            {language?.onboarding?.welcomeDashboard}
                         </h2>
                         <h3 className="text-base font-normal text-neutral-700 screen500:text-[12px]">
-                            {language?.onboarding?.appStatus}: {language.common.inreview}
+                            {language?.onboarding?.starterMessage}
                         </h3>
+                        <h3 className="text-base font-normal text-neutral-700 screen500:text-[12px] mt-2">
+                            {language?.onboarding?.appStatus}: <strong>{language.common.inprogress}</strong>
+                        </h3>
+                        <Button className="mt-[60px] h-[38px] w-[143px]" disabled={loading} htmlType="submit" loading={loading} onClick={() => navigate("/investor-type")} >
+                            {language?.buttons?.continue}
+                        </Button>
                     </React.Fragment>
                 );
             } else if (user.status == ApplicationStatus.SUBMITTED) {
@@ -76,7 +82,7 @@ const Welcome = ({ }: any) => {
                             {language?.onboarding?.submitted}
                         </h2>
                         <h3 className="text-base font-normal text-neutral-700 screen500:text-[12px]">
-                            {language?.onboarding?.appStatus}: {language.common.submitted}
+                            {language?.onboarding?.appStatus}: <strong>{language.common.submitted}</strong>
                         </h3>
                     </React.Fragment>
                 );
@@ -102,25 +108,51 @@ const Welcome = ({ }: any) => {
                 );
             }
         } else if (user.type === KanzRoles.SYNDICATE) {
-            return (
-                <React.Fragment>
-                    <h2 className="text-2xl font-bold text-neutral-900 mb-4 screen500:text-[20px]">
-                        {language?.onboarding?.syndicateLead}
-                    </h2>
-                    <h3 className="text-base font-normal text-neutral-700 screen500:text-[12px]">
-                        {language?.onboarding?.syndicateLeadSub}
-                    </h3>
-                    <Button
-                        className="mt-6 h-[38px]"
-                        disabled={loading}
-                        htmlType="submit"
-                        loading={loading}
-                        onClick={() => navigate("/syndicate-lead/1")}
-                    >
-                        {language?.buttons?.start}
-                    </Button>
-                </React.Fragment>
-            );
+            if (user.status === ApplicationStatus.PENDING) {
+                return (
+                    <React.Fragment>
+                        <h2 className="text-2xl font-bold text-neutral-900 mb-4 screen500:text-[20px]">
+                            {language?.onboarding?.syndicateLead}
+                        </h2>
+                        <h3 className="text-base font-normal text-neutral-700 screen500:text-[12px]">
+                            {language?.onboarding?.syndicateLeadSub}
+                        </h3>
+                        <Button
+                            className="mt-6 h-[38px]"
+                            disabled={loading}
+                            htmlType="submit"
+                            loading={loading}
+                            onClick={() => navigate("/syndicate-lead/1")}
+                        >
+                            {language?.buttons?.start}
+                        </Button>
+                    </React.Fragment>
+                );
+            }
+            else if (user.status === ApplicationStatus.IN_PROGRESS) {
+                return (
+                    <React.Fragment>
+                        <h2 className="text-2xl font-bold text-neutral-900 mb-4 screen500:text-[20px]">
+                            {language?.onboarding?.syndicateLead}
+                        </h2>
+                        <h3 className="text-base font-normal text-neutral-700 screen500:text-[12px]">
+                            {language?.onboarding?.syndicateLeadSub}
+                        </h3>
+                        <h3 className="text-base font-normal text-neutral-700 screen500:text-[12px] mt-2">
+                            {language?.onboarding?.appStatus}: <strong>{language.common.inprogress}</strong>
+                        </h3>
+                        <Button
+                            className="mt-6 h-[38px]"
+                            disabled={loading}
+                            htmlType="submit"
+                            loading={loading}
+                            onClick={() => navigate("/syndicate-lead/1")}
+                        >
+                            {language?.buttons?.start}
+                        </Button>
+                    </React.Fragment>
+                );
+            }
         }
     };
 
@@ -139,7 +171,7 @@ const Welcome = ({ }: any) => {
 
                     <aside className="w-full flex items-center justify-center pt-[75px]">
                         <section
-                            className="px-5 bg-white inline-flex flex-col items-center py-14 w-1/2 screen991:w-3/4 screen991:w-[90%]"
+                            className="px-9 bg-white inline-flex flex-col items-center py-14 w-1/2 text-center screen991:w-3/4 screen991:w-[90%]"
                             style={{ boxShadow: "0px 4px 12px rgba(0, 0, 0, 0.04)" }}
                         >
                             {renderRoleWiseScreen()}
