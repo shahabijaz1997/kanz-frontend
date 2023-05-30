@@ -62,7 +62,7 @@ const InvestorFlow = ({ }: any) => {
     };
 
   return (
-    <main className="h-full max-h-full background-auth overflow-y-auto">
+    <main className="h-full max-h-full  overflow-y-auto">
       <section>
         <Header />
       </section>

@@ -1,7 +1,7 @@
 import React from "react";
 
 type ButtonProps = {
-  type?: "primary" | "secondary" | "danger" | "outlined"; // Button type
+  type?: "primary" | "secondary" | "danger" | "outlined" | "ghost"; // Button type
   size?: "small" | "medium" | "large"; // Button size
   onClick?: () => void; // Click event handler
   disabled?: boolean; // Disable the button
@@ -11,6 +11,7 @@ type ButtonProps = {
   suffix?: React.ReactNode; // Suffix icon
   className?: string; // Custom CSS className
   children?: React.ReactNode; // Suffix icon
+  style?: React.CSSProperties; // button style
 };
 
 const Button: React.FC<ButtonProps> = ({
@@ -24,6 +25,7 @@ const Button: React.FC<ButtonProps> = ({
   suffix,
   className = "",
   children,
+  style, 
   ...props
 }) => {
   // Map button type to Tailwind CSS className
@@ -34,7 +36,9 @@ const Button: React.FC<ButtonProps> = ({
       case "danger":
         return "bg-red-500 text-white hover:bg-red-600";
       case "outlined":
-        return "inline-block rounded border text-cyan-900 bg-white hover:bg-white hover:border-cyan-900"
+        return "inline-block rounded border text-cyan-900 bg-white hover:bg-white hover:border-cyan-900";
+      case "ghost": 
+        return "inline-block shadow rounded border text-cyan-900 bg-white hover:bg-white";
       default:
         return "bg-cyan-800 text-white hover:bg-cyan-900";
     }
@@ -55,12 +59,13 @@ const Button: React.FC<ButtonProps> = ({
   return (
     <div className="flex items-center justify-center">
       <button
+        style={style}
         onClick={onClick}
         disabled={disabled || loading}
         type={htmlType}
         {...props}
         className={`
-        inline-flex justify-center items-center px-4 py-2 text-sm font-semibold leading-6 text-white transition duration-150 ease-in-out bg-cyan-800 rounded-md shadow hover:bg-cyan-900 
+        inline-flex justify-center items-center px-4 py-2 text-sm font-semibold leading-6 transition duration-150 ease-in-out bg-cyan-800 rounded-md shadow hover:bg-cyan-900 
         ${getTypeClass()} ${getSizeClass()} ${
           disabled || loading ? "opacity-50 cursor-not-allowed" : ""
         } ${className}`}
