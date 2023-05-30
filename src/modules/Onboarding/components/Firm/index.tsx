@@ -88,7 +88,7 @@ const Firm = ({ language }: any) => {
       );
     try {
       setLoading(true);
-
+ 
       let pData: any = {
         investor: {
           meta_info: {
