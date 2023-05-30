@@ -128,7 +128,7 @@ const GeneralHeader = ({ responsive = false, showMenu = false }: any) => {
                                     <BellIcon stroke={"#4F4F4F"} />
                                 </div>
                             </li>
-                            <li onClick={onLogout}>
+                            <li onClick={onLogout} className="mr-3">
                                 <button className="text-neutral-500 font-medium cursor-pointer text-sm tracking-[0.03em]">{language.buttons.logout}</button>
                             </li>
                         </ul>
