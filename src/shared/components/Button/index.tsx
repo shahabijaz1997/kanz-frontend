@@ -1,7 +1,7 @@
 import React from "react";
 
 type ButtonProps = {
-  type?: "primary" | "secondary" | "danger"; // Button type
+  type?: "primary" | "secondary" | "danger" | "outlined"; // Button type
   size?: "small" | "medium" | "large"; // Button size
   onClick?: () => void; // Click event handler
   disabled?: boolean; // Disable the button
@@ -33,6 +33,8 @@ const Button: React.FC<ButtonProps> = ({
         return "bg-gray-300 text-gray-700 hover:bg-gray-400";
       case "danger":
         return "bg-red-500 text-white hover:bg-red-600";
+      case "outlined":
+        return "inline-block rounded border text-cyan-900 bg-white hover:bg-white hover:border-cyan-900"
       default:
         return "bg-cyan-800 text-white hover:bg-cyan-900";
     }
