@@ -46,7 +46,7 @@ const AuthenticateRole = (props: PropsWithChildren | any) => {
   if (
     user &&
     (user.type === props.role || props.role === KanzRoles.ALL) &&
-    user.status === ApplicationStatus.PENDING || user.status === ApplicationStatus.IN_PROGRESS
+    user.status === ApplicationStatus.OPENED || user.status === ApplicationStatus.IN_PROGRESS
   ) {
     return <React.Fragment>{children}</React.Fragment>;
   }

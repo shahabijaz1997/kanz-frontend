@@ -6,20 +6,20 @@ import { InvestorType } from "../../../enums/types.enum";
 import Header from "../../../shared/components/Header";
 import ArrowIcon from "../../../ts-icons/arrowIcon.svg";
 import UserIcon from "../../../ts-icons/userIcon.svg";
-import GroupIcon from "../../../ts-icons/groupIcon.svg";
-import { getInvestor, selectInvestorType } from "../../../apis/investor.api";
 import { toast } from "react-toastify";
+import { selectInvestorType } from "../../../apis/investor.api";
 import { toastUtil } from "../../../utils/toast.utils";
 import { saveToken } from "../../../redux-toolkit/slicer/auth.slicer";
 import Drawer from "../../../shared/components/Drawer";
 import Button from "../../../shared/components/Button";
-import { saveUserData, saveUserMetaData } from "../../../redux-toolkit/slicer/user.slicer";
+import GroupIcon from "../../../ts-icons/groupIcon.svg";
 
 const InvestorFlow = ({ }: any) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const authToken: any = useSelector((state: RootState) => state.auth.value);
   const language: any = useSelector((state: RootState) => state.language.value);
+  const metadata: any = useSelector((state: RootState) => state.user.userMetaData.value);
 
   const [selectedAccount, setSelectedAccount]: any = useState();
   const [loading, setLoading] = useState(false);
@@ -30,28 +30,8 @@ const InvestorFlow = ({ }: any) => {
   ]);
 
   useLayoutEffect(() => {
-    getInvestorDetails();
+    setSelectedAccount(accounts?.find(ac => ac.payload === metadata.role));
   }, []);
-
-  const getInvestorDetails = async () => {
-    try {
-      setLoading(true);
-      let { status, data } = await getInvestor(authToken);
-      if (status === 200) {
-        dispatch(saveUserMetaData(data?.status?.data));
-        setSelectedAccount(accounts?.find(ac => ac.payload === data?.status?.data.role))
-      }
-    } catch (error: any) {
-      const message = error?.response?.data?.status?.message || error?.response?.data || language.promptMessages.errorGeneral;
-      toast.error(message, toastUtil);
-      if (error.response && error.response.status === 401) {
-        dispatch(saveToken(""));
-        navigate("/login", { state: 'investor-type' });
-      }
-    } finally {
-      setLoading(false);
-    }
-  };
 
   const onSelectInvestorType = async () => {
     try {
