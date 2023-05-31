@@ -30,10 +30,7 @@ const CompleteGoals = ({}: any) => {
   const [currentStepper, setCurrentStepper] = useState(0);
 
   useLayoutEffect(() => {
-    if (
-      user.status !== ApplicationStatus.PENDING &&
-      user.status !== ApplicationStatus.IN_PROGRESS
-    )
+    if (user.status !== ApplicationStatus.PENDING && user.status !== ApplicationStatus.IN_PROGRESS)
       navigate("/welcome");
     let item = localStorage.getItem("step");
     if (item) setCurrentStepper(Number(item));
@@ -50,6 +47,8 @@ const CompleteGoals = ({}: any) => {
       setLoading(true);
       let { status, data } = await getInvestor(authToken);
       if (status === 200) {
+        console.log("data", data);
+        
         setApiResp(data);
       }
     } catch (error: any) {
@@ -99,9 +98,7 @@ const CompleteGoals = ({}: any) => {
                   {apiResp?.status?.data?.role}
                 </h3>
                 <p className="text-neutral-700 text-sm font-normal mt-1">
-                  {apiResp?.status?.data?.role === "Investment Firm"
-                    ? apiResp?.status?.data?.meta_info?.location
-                    : apiResp?.status?.data?.meta_info?.nationality}
+                  {apiResp?.status?.data?.role === "Investment Firm" ? apiResp?.status?.data?.profile?.location : apiResp?.status?.data?.profile?.nationality}
                 </p>
               </div>
               <Button

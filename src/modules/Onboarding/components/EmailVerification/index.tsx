@@ -27,6 +27,7 @@ const EmailVerification = ({ payload, onReSignup }: any) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const language: any = useSelector((state: RootState) => state.language.value);
+  const user: any = useSelector((state: RootState) => state.user.value);
   const authToken: any = useSelector((state: RootState) => state.auth.value);
 
   const [isEdit, setEdit] = useState(false);
@@ -64,9 +65,7 @@ const EmailVerification = ({ payload, onReSignup }: any) => {
     try {
       if (!token) return;
       setLoading(true);
-      const { status, data, headers }: any = await confirmToken({
-        confirmation_token: token,
-      });
+      const { status, data, headers }: any = await confirmToken(user.id, { confirmation_token: token, });
       if (status === 200 && headers["authorization"]) {
         const token = headers["authorization"].split(" ")[1];
         dispatch(saveToken(token));

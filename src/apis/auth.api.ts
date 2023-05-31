@@ -19,12 +19,12 @@ export const logout = (token: string) => {
     });
 };
 
-export const confirmToken = (payload: any) => {
-    return axios.get(`${ENV.API_URL}/confirmation`, { params: payload });
+export const confirmToken = (userId: string, payload: any) => {
+    return axios.patch(`${ENV.API_URL}/confirmations/${userId}`, payload);
 };
 
 export const resendConfirmToken = (payload: any, token: string) => {
-    return axios.post(`${ENV.API_URL}/confirmation`, payload, {
+    return axios.post(`${ENV.API_URL}/confirmations`, payload, {
         headers: {
             Authorization: `Bearer ${token}`
         },

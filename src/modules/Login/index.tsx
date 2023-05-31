@@ -34,7 +34,6 @@ const Login = ({}: any) => {
 
   useLayoutEffect(() => {
     if (authToken) navigate("/welcome");
-    localStorage.clear()
   }, []);
 
   // Refactor form
