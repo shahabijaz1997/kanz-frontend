@@ -174,7 +174,7 @@ const AddAttachments = (props: any) => {
           />
           <p className="text-neutral-500 text-sm font-normal">
             {language?.common?.agree}&nbsp;
-            <span className="color-blue font-medium cursor-pointer">
+            <span className="color-blue font-medium cursor-pointer" onClick={() => setOpen(true)}>
               {language?.common?.termsConditions}
             </span>
           </p>

@@ -4,4 +4,4 @@ function App() {
   return <RouterModule />
 }
 
-export default App
+export default App;

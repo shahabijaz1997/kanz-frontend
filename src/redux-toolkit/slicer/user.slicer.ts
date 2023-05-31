@@ -12,6 +12,9 @@ export const UserSlice = createSlice({
     reducers: {
         saveUserData: (state, action: PayloadAction<String>) => {
             state.value = action.payload;
+        },
+        saveUserMetaData: (state, action: PayloadAction<String>) => {
+            state.value = action.payload;
         }
     }
 });

@@ -241,6 +241,7 @@
         "pleaseUploadAttachments": "Please upload all files",
         "pleaseAcceptPP": "You have to accept Kanz terms & conditions before submitting",
         "invalidCode": "Authentication code is invalid",
-        "maxLimitInvalid": "You have entered invalid code for 5 times, please signup again"
+        "maxLimitInvalid": "You have entered invalid code for 5 times, please signup again",
+        "validProfile": "Please enter valid profile link"
     }
 }

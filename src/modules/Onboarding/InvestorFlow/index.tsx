@@ -1,4 +1,4 @@
-import React, { useLayoutEffect, useState } from "react";
+import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../../redux-toolkit/store/store";
 import { useNavigate } from "react-router-dom";
@@ -30,12 +30,6 @@ const InvestorFlow = ({ }: any) => {
         { id: 2, payload: "Investment Firm", icon: <GroupIcon stroke="#171717" className="absolute h-6 top-4" />, text: language?.investorFow?.firm, subText: language?.investorFow?.subFirm, link: InvestorType.FIRM },
     ]);
 
-    useLayoutEffect(() => {
-        if (user && user?.meta_info?.accept_investment_criteria && user.type === KanzRoles.INVESTOR) {
-            let find = accounts.find(ac => ac.payload === user.role);
-            setSelectedAccount(find);
-        }
-    }, [])
 
     const onSelectInvestorType = async () => {
         try {

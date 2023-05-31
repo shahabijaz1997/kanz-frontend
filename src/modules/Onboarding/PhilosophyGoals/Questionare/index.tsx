@@ -57,8 +57,8 @@ const Questionare = ({ step, returnSuccessRedirection }: any) => {
           data?.status?.data?.questions &&
           data?.status?.data?.questions[0]?.question_type === "checkbox"
         )
-          if (parsed[3]?.questions[0])
-            setMcqs(parsed[3].questions[0]?.answer_meta);
+          if (parsed[3]?.questions[0]) setMcqs(parsed[3].questions[0]?.answer_meta.options);
+        if (data?.status?.data?.questions[0]?.question_type === "text") setTextAnswer(selected[4]?.questions[0]?.answers[0])
       }
     } catch (error: any) {
       const message =
@@ -101,11 +101,7 @@ const Questionare = ({ step, returnSuccessRedirection }: any) => {
   };
 
   const checkExist = (elem: any, as: any) => {
-    let found: any = elem?.questions.some(
-      (q: any) =>
-        q?.answer_meta?.index === as.index &&
-        q?.answer_meta.statement === as.statement
-    );
+    let found: any = elem?.questions.some((q: any) => q?.answer_meta?.options[0]?.index === as.index && q?.answer_meta?.options[0]?.statement === as.statement);
     return found;
   };
 
@@ -122,42 +118,21 @@ const Questionare = ({ step, returnSuccessRedirection }: any) => {
     );
 
     if (found) {
-      let filtered = _selected[q.step]?.questions.filter(
-        (qa: any) => qa.question_id !== q.id
-      );
-      filtered.push({
-        question_id: q.id,
-        answer: [a?.statement],
-        answer_meta: a,
-      });
+      let filtered = _selected[q.step]?.questions.filter((qa: any) => qa.question_id !== q.id);
+      filtered.push({ question_id: q.id, answers: [a?.statement], answer_meta: { options: [a] } });
       _selected[q.step].questions = filtered;
       setSelected(_selected);
     } else {
       if (_selected[q.step]?.questions?.length)
-        _selected[q.step]?.questions.push({
-          question_id: q.id,
-          answer: [a?.statement],
-          answer_meta: a,
-        });
+      _selected[q.step]?.questions.push({ question_id: q.id, answers: [a?.statement], answer_meta: { options: [a] } })
       else
-        _selected[q.step] = {
-          step,
-          questions: [
-            { question_id: q.id, answer: [a?.statement], answer_meta: a },
-          ],
-        };
+      _selected[q.step] = { step, questions: [{ question_id: q.id, answers: [a?.statement], answer_meta: { options: [a] } }] };
       setSelected(_selected);
     }
   };
 
   const renderMultipleChoiceQuestionaire = (ques: any) => {
-    if (
-      selected &&
-      ques.step === 2 &&
-      ques.index === 2 &&
-      (!selected[`2`] ||
-        selected[`2`]?.questions.find((q: any) => q.answer[0] === "No"))
-    )
+    if ( selected && ques.step === 2 && ques.index === 2 && (!selected[`2`] || selected[`2`]?.questions.find((q: any) => q.answers[0] === "No")))
       return <React.Fragment></React.Fragment>;
     if (ques?.question_type === "text") {
       return (
@@ -176,7 +151,7 @@ const Questionare = ({ step, returnSuccessRedirection }: any) => {
           </p>
           <section className="mb-8 w-full relative mt-3">
             <textarea
-              value={selected[step]?.questions[0]?.answer}
+              value={selected[4]?.questions[0]?.answers[0]}
               onChange={(e) => {
                 setTextAnswer(e.target.value);
                 let _selected = { ...selected };
@@ -184,7 +159,7 @@ const Questionare = ({ step, returnSuccessRedirection }: any) => {
                   _selected[ques.step].questions = [
                     {
                       question_id: ques.id,
-                      answer: [e.target.value],
+                      answers: [e.target.value],
                       answer_meta: {},
                     },
                   ];
@@ -193,7 +168,7 @@ const Questionare = ({ step, returnSuccessRedirection }: any) => {
                     questions: [
                       {
                         question_id: ques.id,
-                        answer: [e.target.value],
+                        answers: [e.target.value],
                         answer_meta: {},
                       },
                     ],
@@ -411,18 +386,10 @@ const Questionare = ({ step, returnSuccessRedirection }: any) => {
     } else {
       let _mcqs = [...mcqs];
       let answers = _mcqs.map((m) => m.statement);
-      let philData: any = {
-        ...JSON.parse(philisophyData),
-        3: {
-          step: 3,
-          questions: [{ question_id: 1, answer: answers, answer_meta: mcqs }],
-        },
-      };
+      let philData: any = { ...JSON.parse(philisophyData), 3: { step: 3, questions: [{ question_id: 1, answers, answer_meta: { options: mcqs } }] } };
       localStorage.setItem("philosophy", JSON.stringify(philData));
       payload.investment_philosophy.step = 3;
-      payload.investment_philosophy.questions = [
-        { question_id: 1, answer: answers, answer_meta: { options: mcqs } },
-      ];
+      payload.investment_philosophy.questions = [{ question_id: 1, answers, answer_meta: { options: mcqs } }];
     }
     submitData(payload);
     if (step !== questions?.total_steps)
@@ -430,10 +397,7 @@ const Questionare = ({ step, returnSuccessRedirection }: any) => {
   };
 
   const checkValidation = () => {
-    if (
-      questions?.questions &&
-      questions?.questions[0]?.question_type === "checkbox"
-    ) {
+    if ( questions?.questions && questions?.questions[0]?.question_type === "checkbox" ) {
       if (mcqs?.length > 0) return true;
       return false;
     } else if (step === 4) {
@@ -441,12 +405,11 @@ const Questionare = ({ step, returnSuccessRedirection }: any) => {
       return false;
     } else {
       if (!questions?.questions?.length) return false;
-      else if (
-        (step !== 2 && validations.length === questions?.questions.length) ||
-        (step === 2 && validations.length > 0)
-      )
-        return true;
-      return false;
+      else {
+        if (!questions?.questions?.length) return false;
+        else if ((step !== 2 && validations.length === questions?.questions.length) || ((step === 2 && validations.length > 0 && selected[`2`]?.questions.find((q: any) => q.answers[0] === "No")) || (step === 2 && validations.length === 2 && selected[`2`]?.questions.find((q: any) => q.answers[0] === "Yes")))) return true;
+        return false;
+      }
     }
   };
 
@@ -456,7 +419,7 @@ const Questionare = ({ step, returnSuccessRedirection }: any) => {
       {loading && (
         <div
           className="absolute left-0 top-0 w-full h-full grid place-items-center"
-          style={{ backgroundColor: "rgba(0, 0, 0, 0.078)", zIndex: 50 }}
+          style={{ backgroundColor: "rgba(255, 255, 255, 1)", zIndex: 50 }}
         >
           <Spinner />
         </div>
