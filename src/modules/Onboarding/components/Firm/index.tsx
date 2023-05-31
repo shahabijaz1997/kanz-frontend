@@ -1,4 +1,4 @@
-import React, { useLayoutEffect, useState } from "react";
+import React, { useEffect, useLayoutEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import CountrySelector from "../../../../shared/components/CountrySelector";
 import { InvestorType } from "../../../../enums/types.enum";
@@ -10,6 +10,12 @@ import { toastUtil } from "../../../../utils/toast.utils";
 import { saveToken } from "../../../../redux-toolkit/slicer/auth.slicer";
 import Drawer from "../../../../shared/components/Drawer";
 import Button from "../../../../shared/components/Button";
+import { AntdInput } from "../../../../shared/components/Input";
+import { useForm } from "react-hook-form";
+
+type FormValues = {
+  name: string;
+};
 
 const Firm = ({ language }: any) => {
   const navigate = useNavigate();
@@ -60,6 +66,15 @@ const Firm = ({ language }: any) => {
   const [riskChecked, setRiskChecked] = useState(false);
   const [isOpen, setOpen] = useState(false);
 
+  const {
+    register,
+    handleSubmit,
+    watch,
+    formState: { errors },
+  } = useForm<FormValues>();
+  
+  const requiredFieldError = language?.common?.required_field;
+
   const onSetPayload = (data: any, type: string) => {
     setPayload((prev: any) => {
       return { ...prev, [type]: data };
@@ -73,8 +88,7 @@ const Firm = ({ language }: any) => {
     if (assertData) setSelectedAssert(JSON.parse(assertData));
   }, []);
 
-  const addinvestmentAccridiation = async (e: any) => {
-    e.preventDefault();
+  const addinvestmentAccridiation = async () => {
     if (
       !selectedAssert?.id ||
       !payload.legal ||
@@ -87,7 +101,7 @@ const Firm = ({ language }: any) => {
       );
     try {
       setLoading(true);
- 
+
       let pData: any = {
         investor: {
           meta_info: {
@@ -98,7 +112,7 @@ const Firm = ({ language }: any) => {
               lower_limit: selectedAssert?.low_limit,
               uper_limit: selectedAssert?.upper_limit,
               unit: selectedAssert?.currency || "",
-              currency: "AED"
+              currency: "AED",
             },
             lower_limit: selectedAssert.low_limit,
             upper_limit: selectedAssert.upper_limit,
@@ -130,10 +144,15 @@ const Firm = ({ language }: any) => {
     }
   };
 
+  useEffect(() => {
+    const subscription = watch((value) => onSetPayload(value.name, "legal"));
+    return () => subscription.unsubscribe();
+  }, [watch]);
+
   return (
     <form
       className="pt-12 pb-8 mb-4 w-full"
-      onSubmit={addinvestmentAccridiation}
+      onSubmit={handleSubmit(addinvestmentAccridiation)}
     >
       <section className="mb-8 w-full">
         <label
@@ -142,12 +161,15 @@ const Firm = ({ language }: any) => {
         >
           {language?.common?.legalName}
         </label>
-        <input
-          className="h-[42px] shadow-sm appearance-none border border-neutral-300 rounded-md w-full py-2 px-3 text-gray-500 leading-tight focus:outline-none focus:shadow-outline"
-          id="full-name"
+        <AntdInput
+          register={register}
+          name="name"
           type="text"
-          value={payload.legal}
-          onChange={(e) => onSetPayload(e.target.value, "legal")}
+          required
+          error={errors.name?.message}
+          validation={{
+            required: requiredFieldError,
+          }}
         />
       </section>
       <section className="mb-8 w-full relative" style={{ zIndex: 90 }}>
@@ -175,10 +197,11 @@ const Firm = ({ language }: any) => {
             assertQuestions.map((as) => {
               return (
                 <li
-                  className={`h-[50px] w-[420px] p-4 grey-neutral-200 text-sm font-medium cursor-pointer border border-grey inline-flex items-center justify-start first:rounded-t-md last:rounded-b-md screen500:w-full ${selectedAssert?.id === as.id
+                  className={`h-[50px] w-[420px] p-4 grey-neutral-200 text-sm font-medium cursor-pointer border border-grey inline-flex items-center justify-start first:rounded-t-md last:rounded-b-md screen500:w-full ${
+                    selectedAssert?.id === as.id
                       ? "check-background"
                       : "bg-white"
-                    }`}
+                  }`}
                   onClick={() => setSelectedAssert(as)}
                 >
                   <input
