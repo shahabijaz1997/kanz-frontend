@@ -36,7 +36,6 @@ const Login = ({}: any) => {
     if (authToken) navigate("/welcome");
   }, []);
 
-  // Refactor form
   const Form = () => {
     const {
       register,
