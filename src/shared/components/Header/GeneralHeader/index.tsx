@@ -8,7 +8,7 @@ import BellIcon from "../../../../ts-icons/BellIcon.svg";
 import { logout } from "../../../../apis/auth.api";
 import { useNavigate } from "react-router-dom";
 import { saveToken } from "../../../../redux-toolkit/slicer/auth.slicer";
-import { saveUserData } from "../../../../redux-toolkit/slicer/user.slicer";
+import { saveUserData, saveUserMetaData } from "../../../../redux-toolkit/slicer/user.slicer";
 import { KanzRoles } from "../../../../enums/roles.enum";
 import CrossIcon from "../../../../ts-icons/crossIcon.svg";
 
@@ -17,7 +17,7 @@ const GeneralHeader = ({ responsive = false, showMenu = false }: any) => {
     const dispatch = useDispatch();
     const language: any = useSelector((state: RootState) => state.language.value);
     const authToken: any = useSelector((state: RootState) => state.auth.value);
-    const user: any = useSelector((state: RootState) => state.user.value);
+    const user: any = useSelector((state: RootState) => state.user.userData.value);
     const navigationMenu = [{ id: 1, title: language.header.investment }, { id: 2, title: language.header.startup }, { id: 3, title: language.header.syndicate }, { id: 4, title: language.header.company }]
     const [isMenuOpen, setIsMenuOpen] = useState(false);
 
@@ -34,6 +34,7 @@ const GeneralHeader = ({ responsive = false, showMenu = false }: any) => {
             navigate("/login");
             localStorage.clear();
             dispatch(saveUserData(""));
+            dispatch(saveUserMetaData(""));
         }
     };
 
@@ -119,7 +120,7 @@ const GeneralHeader = ({ responsive = false, showMenu = false }: any) => {
                         </button>
                     </div>
 
-                    <nav className={`${isMenuOpen ? "block" : "hidden"}`}>
+                    <nav className={`${isMenuOpen ? "block w-full bg-white z-10" : "hidden"}`}>
                         <ul className="flex items-center flex-row-reverse pt-12 w-full justify-between px-4">
                             <li>
                                 <Dropdown dropdownItems={languageDropdownItems} />

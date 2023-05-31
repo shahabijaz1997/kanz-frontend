@@ -23,6 +23,7 @@ const Firm = ({ language }: any) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const authToken: any = useSelector((state: RootState) => state.auth.value);
+  const metadata: any = useSelector((state: RootState) => state.user.userMetaData.value);
   const [assertQuestions] = useState([
     {
       id: 1,
@@ -65,7 +66,6 @@ const Firm = ({ language }: any) => {
   const [countries, setCountries] = useState({ all: [], names: [] });
 
   const { register, handleSubmit, watch, formState: { errors } } = useForm<FormValues>();
-  const requiredFieldError = language?.common?.required_field;
 
   const onSetPayload = (data: any, type: string) => {
     setPayload((prev: any) => {
@@ -83,10 +83,17 @@ const Firm = ({ language }: any) => {
       let { status, data } = await getCountries(authToken);
       if (status === 200) {
         let names = data.status.data.map((c: any) => c.name);
-        let account_info = localStorage.getItem("account_info");
-        let assertData = localStorage.getItem("accert");
-        if (account_info) setPayload(JSON.parse(account_info));
-        if (assertData) setSelectedAssert(JSON.parse(assertData));
+        if (metadata?.profile) {
+          setPayload({ legal: metadata?.profile?.legal_name, residence: { label: metadata?.profile?.location, value: metadata?.profile?.location }, accer: "", risk: false });
+          setSelectedAssert(assertQuestions.find(as => as.title === metadata?.profile?.accreditation));
+        }
+        else {
+          let account_info = localStorage.getItem("account_info");
+          let assertData = localStorage.getItem("accert");
+          if (account_info) setPayload(JSON.parse(account_info));
+          if (assertData) setSelectedAssert(JSON.parse(assertData));
+        }
+
         setCountries({ all: data.status.data, names });
       }
     } catch (error: any) {
@@ -125,8 +132,6 @@ const Firm = ({ language }: any) => {
         localStorage.setItem("accert", JSON.stringify(selectedAssert));
       }
     } catch (error: any) {
-      console.log(error);
-
       const message =
         error?.response?.data?.status?.message ||
         error?.response?.data ||

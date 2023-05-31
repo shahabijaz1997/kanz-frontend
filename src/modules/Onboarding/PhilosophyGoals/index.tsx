@@ -10,7 +10,7 @@ const PhilosophyGoals = (props: any) => {
     const params = useParams();
     const navigate = useNavigate();
     const language: any = useSelector((state: RootState) => state.language.value);
-    const user: any = useSelector((state: RootState) => state.user.value);
+    const user: any = useSelector((state: RootState) => state.user.userData.value);
     const [step, setStep]: any = useState();
 
     useLayoutEffect(() => {

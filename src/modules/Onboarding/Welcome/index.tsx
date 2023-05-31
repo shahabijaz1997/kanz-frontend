@@ -17,7 +17,7 @@ const Welcome = ({ }: any) => {
     const navigate = useNavigate();
     const authToken: any = useSelector((state: RootState) => state.auth.value);
     const language: any = useSelector((state: RootState) => state.language.value);
-    const user: any = useSelector((state: RootState) => state.user.value);
+    const user: any = useSelector((state: RootState) => state.user.userData.value);
 
     const [loading, setLoading] = useState(false);
 

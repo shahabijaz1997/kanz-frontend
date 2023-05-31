@@ -18,6 +18,7 @@ const Individual = ({ language }: any) => {
   const dispatch = useDispatch();
 
   const authToken: any = useSelector((state: RootState) => state.auth.value);
+  const metadata: any = useSelector((state: RootState) => state.user.userMetaData.value);
   const [assertQuestions] = useState([
     {
       id: 1,
@@ -75,15 +76,23 @@ const Individual = ({ language }: any) => {
       let { status, data } = await getCountries(authToken);
       if (status === 200) {
         let names = data.status.data.map((c: any) => c.name);
-        let account_info = localStorage.getItem("account_info");
-        let assertData = localStorage.getItem("accert");
-        if (account_info) {
-          let accInfo = JSON.parse(account_info);
-          setPayload(accInfo);
-          let country: any = data.status.data.find((c: any) => c.name === accInfo.national?.value);
+        if (metadata?.profile) {
+          setPayload({ national: { label: metadata?.profile?.nationality, value: metadata?.profile?.nationality }, residence: { label: metadata?.profile?.residence, value: metadata?.profile?.residence }, accer: "", risk: false });
+          setSelectedAssert(assertQuestions.find(as => as.title === metadata?.profile?.accreditation));
+          let country: any = data.status.data.find((c: any) => c.name === metadata?.profile?.nationality);
           setStates(country?.states || []);
         }
-        if (assertData) setSelectedAssert(JSON.parse(assertData));
+        else {
+          let account_info = localStorage.getItem("account_info");
+          let assertData = localStorage.getItem("accert");
+          if (account_info) {
+            let accInfo = JSON.parse(account_info);
+            setPayload(accInfo);
+            let country: any = data.status.data.find((c: any) => c.name === accInfo.national?.value);
+            setStates(country?.states || []);
+          }
+          if (assertData) setSelectedAssert(JSON.parse(assertData));
+        }
         setCountries({ all: data.status.data, names });
       }
     } catch (error: any) {

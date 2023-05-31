@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useLayoutEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../../redux-toolkit/store/store";
 import { useNavigate } from "react-router-dom";
@@ -7,53 +7,75 @@ import Header from "../../../shared/components/Header";
 import ArrowIcon from "../../../ts-icons/arrowIcon.svg";
 import UserIcon from "../../../ts-icons/userIcon.svg";
 import GroupIcon from "../../../ts-icons/groupIcon.svg";
-import { selectInvestorType } from "../../../apis/investor.api";
+import { getInvestor, selectInvestorType } from "../../../apis/investor.api";
 import { toast } from "react-toastify";
 import { toastUtil } from "../../../utils/toast.utils";
 import { saveToken } from "../../../redux-toolkit/slicer/auth.slicer";
 import Drawer from "../../../shared/components/Drawer";
-import { KanzRoles } from "../../../enums/roles.enum";
 import Button from "../../../shared/components/Button";
+import { saveUserData, saveUserMetaData } from "../../../redux-toolkit/slicer/user.slicer";
 
 const InvestorFlow = ({ }: any) => {
-    const navigate = useNavigate();
-    const dispatch = useDispatch();
-    const authToken: any = useSelector((state: RootState) => state.auth.value);
-    const language: any = useSelector((state: RootState) => state.language.value);
-    const user: any = useSelector((state: RootState) => state.user.value);
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const authToken: any = useSelector((state: RootState) => state.auth.value);
+  const language: any = useSelector((state: RootState) => state.language.value);
 
-    const [selectedAccount, setSelectedAccount]: any = useState();
-    const [loading, setLoading] = useState(false);
-    const [isOpen, setOpen] = useState(false);
-    const [accounts] = useState([
-        { id: 1, payload: "Individual Investor", icon: <UserIcon stroke="#171717" className="absolute h-6 top-4" />, text: language?.investorFow?.individual, subText: language?.investorFow?.subInd, link: InvestorType.INDIVIDUAL },
-        { id: 2, payload: "Investment Firm", icon: <GroupIcon stroke="#171717" className="absolute h-6 top-4" />, text: language?.investorFow?.firm, subText: language?.investorFow?.subFirm, link: InvestorType.FIRM },
-    ]);
+  const [selectedAccount, setSelectedAccount]: any = useState();
+  const [loading, setLoading] = useState(false);
+  const [isOpen, setOpen] = useState(false);
+  const [accounts] = useState([
+    { id: 1, payload: "Individual Investor", icon: <UserIcon stroke="#171717" className="absolute h-6 top-4" />, text: language?.investorFow?.individual, subText: language?.investorFow?.subInd, link: InvestorType.INDIVIDUAL },
+    { id: 2, payload: "Investment Firm", icon: <GroupIcon stroke="#171717" className="absolute h-6 top-4" />, text: language?.investorFow?.firm, subText: language?.investorFow?.subFirm, link: InvestorType.FIRM },
+  ]);
 
+  useLayoutEffect(() => {
+    getInvestorDetails();
+  }, []);
 
-    const onSelectInvestorType = async () => {
-        try {
-            if (!selectedAccount?.link) return toast.warning(language.promptMessages.pleaseSelectInvest, toastUtil);
-            setLoading(true);
-            let fd = new FormData();
+  const getInvestorDetails = async () => {
+    try {
+      setLoading(true);
+      let { status, data } = await getInvestor(authToken);
+      if (status === 200) {
+        dispatch(saveUserMetaData(data?.status?.data));
+        setSelectedAccount(accounts?.find(ac => ac.payload === data?.status?.data.role))
+      }
+    } catch (error: any) {
+      const message = error?.response?.data?.status?.message || error?.response?.data || language.promptMessages.errorGeneral;
+      toast.error(message, toastUtil);
+      if (error.response && error.response.status === 401) {
+        dispatch(saveToken(""));
+        navigate("/login", { state: 'investor-type' });
+      }
+    } finally {
+      setLoading(false);
+    }
+  };
 
-            fd.append("investor[type]", selectedAccount.payload)
-            let { status, data } = await selectInvestorType({ investor: { role: selectedAccount.payload } }, authToken);
-            if (status === 200) {
-                localStorage.setItem("investor-type", selectedAccount?.link)
-                navigate(`/complete-details`, { state: selectedAccount?.link })
-            }
-        } catch (error: any) {
-            const message = error?.response?.data?.status?.message || error?.response?.data || language.promptMessages.errorGeneral;
-            toast.error(message, toastUtil);
-            if (error.response && error.response.status === 401) {
-                dispatch(saveToken(""));
-                navigate("/login", { state: 'investor-type' });
-            }
-        } finally {
-            setLoading(false);
-        }
-    };
+  const onSelectInvestorType = async () => {
+    try {
+      if (!selectedAccount?.link) return toast.warning(language.promptMessages.pleaseSelectInvest, toastUtil);
+      setLoading(true);
+      let fd = new FormData();
+
+      fd.append("investor[type]", selectedAccount.payload)
+      let { status, data } = await selectInvestorType({ investor: { role: selectedAccount.payload } }, authToken);
+      if (status === 200) {
+        localStorage.setItem("investor-type", selectedAccount?.link)
+        navigate(`/complete-details`, { state: selectedAccount?.link })
+      }
+    } catch (error: any) {
+      const message = error?.response?.data?.status?.message || error?.response?.data || language.promptMessages.errorGeneral;
+      toast.error(message, toastUtil);
+      if (error.response && error.response.status === 401) {
+        dispatch(saveToken(""));
+        navigate("/login", { state: 'investor-type' });
+      }
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <main className="h-full max-h-full  overflow-y-auto">
@@ -79,9 +101,8 @@ const InvestorFlow = ({ }: any) => {
             accounts.map((account) => {
               return (
                 <section
-                  className={`w-full cursor-pointer h-24 rounded-xl border-2 border-grey px-4 py-3.5 relative mb-5 transition-all ${
-                    selectedAccount?.id === account.id && "border-cyan-800"
-                  }`}
+                  className={`w-full cursor-pointer h-24 rounded-xl border-2 border-grey px-4 py-3.5 relative mb-5 transition-all ${selectedAccount?.id === account.id && "border-cyan-800"
+                    }`}
                   onClick={() => setSelectedAccount(account)}
                 >
                   {account.icon}

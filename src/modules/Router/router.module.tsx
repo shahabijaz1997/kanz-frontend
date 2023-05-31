@@ -41,7 +41,7 @@ const AuthenticateAuthRoute = (props: PropsWithChildren) => {
 
 const AuthenticateRole = (props: PropsWithChildren | any) => {
   const { children } = props;
-  const user: any = useSelector((state: RootState) => state.user.value);
+  const user: any = useSelector((state: RootState) => state.user.userData.value);
 
   if (
     user &&

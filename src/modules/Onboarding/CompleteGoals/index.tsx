@@ -20,7 +20,7 @@ const CompleteGoals = ({}: any) => {
   const { state } = useLocation();
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const user: any = useSelector((state: RootState) => state.user.value);
+  const user: any = useSelector((state: RootState) => state.user.userData.value);
   const language: any = useSelector((state: RootState) => state.language.value);
   const authToken: any = useSelector((state: RootState) => state.auth.value);
 
@@ -47,8 +47,6 @@ const CompleteGoals = ({}: any) => {
       setLoading(true);
       let { status, data } = await getInvestor(authToken);
       if (status === 200) {
-        console.log("data", data);
-        
         setApiResp(data);
       }
     } catch (error: any) {
