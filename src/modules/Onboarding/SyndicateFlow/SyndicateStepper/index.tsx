@@ -13,7 +13,7 @@ const SyndicateStepper = ({ language, payload, onSetPayload, options, step, remo
     const [showHoverModal, setShowHoverModal] = useState(false);
     const [search, setSearch] = useState({ industry: "", region: "" });
     const [showData, setShowData] = useState({ industry: false, region: false });
-    const [searchResults, setSearchResults]: any = useState({ industry: [], region: "" });
+    const [searchResults, setSearchResults]: any = useState({ industry: [], region: [] });
 
     useLayoutEffect(() => {
         bootstrapData();
@@ -66,29 +66,30 @@ const SyndicateStepper = ({ language, payload, onSetPayload, options, step, remo
                             )}
                         </section>
                     </div>
-
-                    <div className="mb-8 relative">
-                        <h3 className="block text-neutral-700 text-sm font-medium">{language.syndicate.addDetail}</h3>
-                        <small className="font-normal text-sm text-neutral-500">{language.syndicate.subDetail}</small>
-                        <section className="w-full mt-2 p-[18px] rounded-lg check-background border border-grey">
-                            <div className="mb-5">
-                                <label htmlFor="raised" className="text-neutral-700 text-sm font-medium">{language.syndicate.raisedQ}</label>
-                                <input id="raised" value={payload?.amountRaised} onChange={(e) => {
-                                    const enteredValue = e.target.value;
-                                    const numericValue = enteredValue.replace(/[^0-9]/g, '');
-                                    onSetPayload(numericValue, "amountRaised");
-                                }} placeholder="101-500" className=" h-[42px] shadow-sm appearance-none border border-neutral-300 rounded-md w-full py-2 px-3 text-gray-500 leading-tight focus:outline-none focus:shadow-outline" type="text" />
-                            </div>
-                            <div>
-                                <label htmlFor="times" className="text-neutral-700 text-sm font-medium">{language.syndicate.timesQ}</label>
-                                <input id="times" value={payload?.timesRaised} onChange={(e) => {
-                                    const enteredValue = e.target.value;
-                                    const numericValue = enteredValue.replace(/[^0-9]/g, '');
-                                    onSetPayload(numericValue, "timesRaised");
-                                }} placeholder="12" className=" h-[42px] shadow-sm appearance-none border border-neutral-300 rounded-md w-full py-2 px-3 text-gray-500 leading-tight focus:outline-none focus:shadow-outline" type="text" />
-                            </div>
-                        </section>
-                    </div>
+                    {selected && selected.id === options[0].id && (
+                        <div className="mb-8 relative">
+                            <h3 className="block text-neutral-700 text-sm font-medium">{language.syndicate.addDetail}</h3>
+                            <small className="font-normal text-sm text-neutral-500">{language.syndicate.subDetail}</small>
+                            <section className="w-full mt-2 p-[18px] rounded-lg check-background border border-grey">
+                                <div className="mb-5">
+                                    <label htmlFor="raised" className="text-neutral-700 text-sm font-medium">{language.syndicate.raisedQ}</label>
+                                    <input id="raised" value={payload?.amountRaised} onChange={(e) => {
+                                        const enteredValue = e.target.value;
+                                        const numericValue = enteredValue.replace(/[^0-9]/g, '');
+                                        onSetPayload(numericValue, "amountRaised");
+                                    }} placeholder="101-500" className=" h-[42px] shadow-sm appearance-none border border-neutral-300 rounded-md w-full py-2 px-3 text-gray-500 leading-tight focus:outline-none focus:shadow-outline" type="text" />
+                                </div>
+                                <div>
+                                    <label htmlFor="times" className="text-neutral-700 text-sm font-medium">{language.syndicate.timesQ}</label>
+                                    <input id="times" value={payload?.timesRaised} onChange={(e) => {
+                                        const enteredValue = e.target.value;
+                                        const numericValue = enteredValue.replace(/[^0-9]/g, '');
+                                        onSetPayload(numericValue, "timesRaised");
+                                    }} placeholder="12" className=" h-[42px] shadow-sm appearance-none border border-neutral-300 rounded-md w-full py-2 px-3 text-gray-500 leading-tight focus:outline-none focus:shadow-outline" type="text" />
+                                </div>
+                            </section>
+                        </div>
+                    )}
 
                     <div className="mb-8">
                         <label className="block text-neutral-700 text-sm font-medium" htmlFor="industry">{language.syndicate.industry}</label>
@@ -129,16 +130,23 @@ const SyndicateStepper = ({ language, payload, onSetPayload, options, step, remo
                                 <Chevrond stroke="#737373" />
                             </span>
                         </span>
-                        {payload.region && (
+                        {payload.region && payload.region.length > 0 && (
                             <aside className="inline-flex gap-2 flex-wrap min-h-[42px] shadow-sm appearance-none border border-neutral-300 rounded-md w-full py-2 px-3 text-gray-500 leading-tight focus:outline-none focus:shadow-outline">
-                                <div className="check-background rounded-[4px] px-1 py-[2px] inline-flex items-center">
-                                    <small>{payload.region}</small>
-                                    <CrossIcon onClick={() => { onSetPayload("", "region") }} className="cursor-pointer h-5 w-5 ml-1" stroke={"#828282"} />
-                                </div>
+                                {React.Children.toArray(
+                                    payload.region.map((ind: any) => <div className="check-background rounded-[4px] px-1 py-[2px] inline-flex items-center">
+                                        <small>{ind}</small>
+                                        <CrossIcon onClick={() => {
+                                            let payloadItems = payload.region.filter((x: any) => x !== ind)
+                                            onSetPayload(payloadItems, "region");
+                                        }} className="cursor-pointer h-5 w-5 ml-1" stroke={"#828282"} />
+                                    </div>)
+                                )}
                             </aside>
                         )}
                         {(showData.region || search.region) && <SearchedItems items={searchResults.region} searchString={search.region} passItemSelected={(it: any) => {
-                            onSetPayload(it, "region")
+                             let payloadItems = [...payload.region];
+                             payloadItems.push(it);
+                             onSetPayload(Array.from(new Set(payloadItems)), "region");
                         }} />}
                     </div>
 

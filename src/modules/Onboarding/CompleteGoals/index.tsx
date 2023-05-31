@@ -107,7 +107,7 @@ const CompleteGoals = ({}: any) => {
               <Button
                 className="w-[100px] h-9"
                 htmlType="submit"
-                onClick={() => navigate(-1)}
+                onClick={() => navigate("/complete-details", { state: localStorage.getItem("investor-type") })}
               >
                 <EditIcon stroke="#fff" />
                 <small className="font-normal text-base">

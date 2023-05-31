@@ -11,12 +11,10 @@ import { saveToken } from "../../../redux-toolkit/slicer/auth.slicer";
 import { toast } from "react-toastify";
 import { toastUtil } from "../../../utils/toast.utils";
 import CrossIcon from "../../../ts-icons/crossIcon.svg";
-import Spinner from "../../../shared/components/Spinner";
 import { postSyndicateInformation } from "../../../apis/syndicate.api";
-import { isValidUrl } from "../../../utils/regex.utils";
 import Button from "../../../shared/components/Button";
 
-const SyndicateFlow = ({}: any) => {
+const SyndicateFlow = ({ }: any) => {
   const params = useParams();
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -28,7 +26,7 @@ const SyndicateFlow = ({}: any) => {
     amountRaised: "",
     timesRaised: "",
     industry: [],
-    region: "",
+    region: [],
     profileLink: "",
     deadflow: "",
     name: "",
@@ -138,10 +136,7 @@ const SyndicateFlow = ({}: any) => {
           logo: payload.logo,
         },
       };
-      let { status, data } = await postSyndicateInformation(
-        dataPayload,
-        authToken
-      );
+      let { status } = await postSyndicateInformation(dataPayload, authToken);
 
       if (status === 200) {
         navigate("/add-attachments");
@@ -152,10 +147,7 @@ const SyndicateFlow = ({}: any) => {
         dispatch(saveToken(""));
         navigate("/login", { state: "add-attachments" });
       }
-      const message =
-        error?.response?.data?.status?.message ||
-        error?.response?.data ||
-        language.promptMessages.errorGeneral;
+      const message = error?.response?.data?.status?.message || error?.response?.data || language.promptMessages.errorGeneral;
       toast.error(message, toastUtil);
     } finally {
       setLoading(false);
@@ -165,11 +157,7 @@ const SyndicateFlow = ({}: any) => {
   return (
     <main className="h-full max-h-full background-auth overflow-y-auto">
       <section>
-        <Header
-          custom={true}
-          data={{
-            leftMenu: language.header.syndicateLead,
-            button: (
+        <Header custom={true} data={{ leftMenu: language.header.syndicateLead, button: (
               <button onClick={() => navigate(-1)}>
                 <CrossIcon stroke="#171717" className="w-6 h-6" />
               </button>

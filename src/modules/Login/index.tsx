@@ -4,16 +4,12 @@ import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../redux-toolkit/store/store";
 import { useLocation, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-
 import { toastUtil } from "../../utils/toast.utils";
 import Dropdown from "../../shared/components/Dropdown";
 import { languageDropdownItems } from "../../utils/dropdown-items.utils";
 import ClippedBanner from "../Onboarding/components/ClippedBanner";
-import { isValidEmail } from "../../utils/regex.utils";
-import InformationIcon from "../../ts-icons/InformationIcon.svg";
 import EyeIcon from "../../ts-icons/EyeIcon.svg";
 import EyeSlash from "../../ts-icons/EyeSlashIcon.svg";
-import Spinner from "../../shared/components/Spinner";
 import { saveToken } from "../../redux-toolkit/slicer/auth.slicer";
 import { signin } from "../../apis/auth.api";
 import { KanzRoles } from "../../enums/roles.enum";
@@ -38,6 +34,7 @@ const Login = ({}: any) => {
 
   useLayoutEffect(() => {
     if (authToken) navigate("/welcome");
+    localStorage.clear()
   }, []);
 
   // Refactor form
