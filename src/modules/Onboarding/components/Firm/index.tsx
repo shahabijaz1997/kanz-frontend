@@ -10,7 +10,6 @@ import { toastUtil } from "../../../../utils/toast.utils";
 import { saveToken } from "../../../../redux-toolkit/slicer/auth.slicer";
 import Drawer from "../../../../shared/components/Drawer";
 import Button from "../../../../shared/components/Button";
-import { AntdInput } from "../../../../shared/components/Input";
 import { useForm } from "react-hook-form";
 import { getCountries } from "../../../../apis/countries.api";
 import Loader from "../../../../shared/views/Loader";
