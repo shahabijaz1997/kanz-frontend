@@ -114,7 +114,7 @@ const FileUpload = ({ id, setModalOpen, setFile, removeFile }: any) => {
         <React.Fragment>
             {alertTye.type && <FIleUploadAlert type={alertTye.type} message={alertTye.message} removeMessage={() => setAlertType({})} />}
 
-            <div className={`border-2 border-dashed rounded-md h-[140px] mt-4 ${dragOver ? "border-cyan-800" : "border-neutral-300"}`}
+            <div className={`border-2 border-dashed rounded-md h-[140px] mt-1 ${dragOver ? "border-cyan-800" : "border-neutral-300"}`}
                 onDragOver={handleDragOver} onDragLeave={handleDragLeave} onDrop={handleDrop}>
                 <label htmlFor={id}>
                     {selectedFile && selectedFile?.id === id ? (

@@ -16,7 +16,7 @@ const Onboarding = (props: any) => {
                     <section className="absolute top-[26px] right-[5%] w-full text-right">
                         <Dropdown dropdownItems={languageDropdownItems} />
                     </section>
-                    {!payload ? <Signup onSetStepper={(data: any) => { setPayload(data) }} /> : <EmailVerification payload={payload} />}
+                    {!payload ? <Signup onSetStepper={(data: any) => { setPayload(data) }} /> : <EmailVerification payload={payload} onReSignup={()=>setPayload(null)} />}
                 </aside>
             </section>
         </main>
