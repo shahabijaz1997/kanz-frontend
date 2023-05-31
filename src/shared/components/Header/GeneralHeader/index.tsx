@@ -8,15 +8,16 @@ import BellIcon from "../../../../ts-icons/BellIcon.svg";
 import { logout } from "../../../../apis/auth.api";
 import { useNavigate } from "react-router-dom";
 import { saveToken } from "../../../../redux-toolkit/slicer/auth.slicer";
-import { saveUserData } from "../../../../redux-toolkit/slicer/user.slicer";
+import { saveUserData, saveUserMetaData } from "../../../../redux-toolkit/slicer/user.slicer";
 import { KanzRoles } from "../../../../enums/roles.enum";
+import CrossIcon from "../../../../ts-icons/crossIcon.svg";
 
 const GeneralHeader = ({ responsive = false, showMenu = false }: any) => {
     const navigate = useNavigate();
     const dispatch = useDispatch();
     const language: any = useSelector((state: RootState) => state.language.value);
     const authToken: any = useSelector((state: RootState) => state.auth.value);
-    const user: any = useSelector((state: RootState) => state.user.value);
+    const user: any = useSelector((state: RootState) => state.user.userData.value);
     const navigationMenu = [{ id: 1, title: language.header.investment }, { id: 2, title: language.header.startup }, { id: 3, title: language.header.syndicate }, { id: 4, title: language.header.company }]
     const [isMenuOpen, setIsMenuOpen] = useState(false);
 
@@ -33,6 +34,7 @@ const GeneralHeader = ({ responsive = false, showMenu = false }: any) => {
             navigate("/login");
             localStorage.clear();
             dispatch(saveUserData(""));
+            dispatch(saveUserMetaData(""));
         }
     };
 
@@ -108,17 +110,17 @@ const GeneralHeader = ({ responsive = false, showMenu = false }: any) => {
                         </div>
 
                         <button className="md:hidden rounded-lg focus:outline-none focus:shadow-outline" onClick={toggleMenu}>
-                            <svg className="h-6 w-6 fill-current text-gray-600" viewBox="0 0 24 24" >
-                                {isMenuOpen ? (
-                                    <path fillRule="evenodd" clipRule="evenodd" d="M5 8h14v2H5V8zm0 5h14v2H5v-2zm0 5h14v2H5v-2z" />
-                                ) : (
+                            {isMenuOpen ? (
+                                <CrossIcon stroke={"#717171"} className="h-8 w-8" />
+                            ) : (
+                                <svg className="h-6 w-6 fill-current text-gray-600" viewBox="0 0 24 24" >
                                     <path fillRule="evenodd" clipRule="evenodd" d="M4 5h16v2H4V5zm0 7h16v2H4v-2zm0 7h16v2H4v-2z" />
-                                )}
-                            </svg>
+                                </svg>
+                            )}
                         </button>
                     </div>
 
-                    <nav className={`${isMenuOpen ? "block" : "hidden"}`}>
+                    <nav className={`${isMenuOpen ? "block w-full bg-white z-10" : "hidden"}`}>
                         <ul className="flex items-center flex-row-reverse pt-12 w-full justify-between px-4">
                             <li>
                                 <Dropdown dropdownItems={languageDropdownItems} />
@@ -128,7 +130,7 @@ const GeneralHeader = ({ responsive = false, showMenu = false }: any) => {
                                     <BellIcon stroke={"#4F4F4F"} />
                                 </div>
                             </li>
-                            <li onClick={onLogout}>
+                            <li onClick={onLogout} className="mr-3">
                                 <button className="text-neutral-500 font-medium cursor-pointer text-sm tracking-[0.03em]">{language.buttons.logout}</button>
                             </li>
                         </ul>

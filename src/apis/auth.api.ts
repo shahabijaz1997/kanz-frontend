@@ -19,37 +19,20 @@ export const logout = (token: string) => {
     });
 };
 
-export const confirmToken = (payload: any) => {
-    return axios.get(`${ENV.API_URL}/confirmation`, { params: payload });
+export const confirmToken = (userId: string, payload: any) => {
+    return axios.patch(`${ENV.API_URL}/confirmations/${userId}`, payload);
 };
 
 export const resendConfirmToken = (payload: any, token: string) => {
-    return axios.post(`${ENV.API_URL}/confirmation`, payload, {
+    return axios.post(`${ENV.API_URL}/confirmations`, payload, {
         headers: {
             Authorization: `Bearer ${token}`
         },
     });
 };
 
-export const selectInvestorType = (payload: any, token: string) => {
-    return axios.post(`${ENV.API_URL}/${ENV.API_VERSION}/investor/type`, payload, {
-        headers: {
-            Authorization: `Bearer ${token}`
-        },
-    });
-};
-
-export const investmentAccridiation = (payload: any, token: string) => {
-    return axios.post(`${ENV.API_URL}/${ENV.API_VERSION}/investor/accreditation`, payload, {
-        headers: {
-            Authorization: `Bearer ${token}`
-        },
-    });
-};
-
-
-export const getInvestor = (token: string) => {
-    return axios.get(`${ENV.API_URL}/${ENV.API_VERSION}/investor`, {
+export const getUser = (token: string) => {
+    return axios.get(`${ENV.API_URL}/${ENV.API_VERSION}/users/1`, {
         headers: {
             Authorization: `Bearer ${token}`
         },

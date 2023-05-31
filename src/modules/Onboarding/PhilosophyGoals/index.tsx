@@ -4,15 +4,20 @@ import Header from "../../../shared/components/Header";
 import { useNavigate, useParams } from "react-router-dom";
 import { RootState } from "../../../redux-toolkit/store/store";
 import Questionare from "./Questionare";
+import { ApplicationStatus } from "../../../enums/types.enum";
 
 const PhilosophyGoals = (props: any) => {
     const params = useParams();
     const navigate = useNavigate();
     const language: any = useSelector((state: RootState) => state.language.value);
-    const [step, setStep]: any = useState();
+    const user: any = useSelector((state: RootState) => state.user.userData.value);
+    const metadata: any = useSelector((state: RootState) => state.user.userMetaData.value);
+    const [step, setStep]: any = useState(1);
 
     useLayoutEffect(() => {
-        setStep(Number(params?.id) || 1)
+        if (user.status !== ApplicationStatus.OPENED) navigate("/welcome")
+
+        setStep(Number(params?.id) || 1);
     }, [params]);
 
     return (

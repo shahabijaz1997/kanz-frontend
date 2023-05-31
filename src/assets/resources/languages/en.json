@@ -35,7 +35,7 @@
         "num": "Number",
         "min8": "Min 8 characters",
         "verificationCode": "Verification Code",
-        "verificationText": "Enter the 4 digit verification code sent to your email",
+        "verificationText": "Enter the 6 digit verification code sent to your email",
         "codeText": "Enter code",
         "sentCode": "Code has been sent to your email",
         "welcomeDashboard": "Welcome to Kanz Dashboard",
@@ -187,7 +187,11 @@
         "uploadSelfie": "Upload your Selfie with passport copy.",
         "example": "See example",
         "agree": "I agree to KANZ",
-        "termsConditions": "Terms and Conditions"
+        "termsConditions": "Terms and Conditions",
+        "inprogress": "In Progress",
+        "inreview": "In Review",
+        "submitted": "Submitted",
+        "required_field":"This field is required."
     },
     "buttons": {
         "start": "Lets start",
@@ -233,7 +237,11 @@
         "errorFileUpload": "An error occurred while uploading the file",
         "pleaseSelectInvest": "Please select an investor type",
         "pleaseSelectAllData": "Please fill all required data",
+        "pleaseEnterUrl": "Please enter a valid url",
         "pleaseUploadAttachments": "Please upload all files",
-        "pleaseAcceptPP": "You have to accept Kanz terms & conditions before submitting"
+        "pleaseAcceptPP": "You have to accept Kanz terms & conditions before submitting",
+        "invalidCode": "Authentication code is invalid",
+        "maxLimitInvalid": "You have entered invalid code for 5 times, please signup again",
+        "validProfile": "Please enter valid profile url"
     }
 }
