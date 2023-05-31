@@ -8,16 +8,19 @@ const initialState: Data = {
 
 export const UserSlice = createSlice({
     name: 'userData',
-    initialState,
+    initialState: {
+        userData: initialState,
+        userMetaData: initialState
+      },
     reducers: {
         saveUserData: (state, action: PayloadAction<String>) => {
-            state.value = action.payload;
+            state.userData.value = action.payload;
         },
         saveUserMetaData: (state, action: PayloadAction<String>) => {
-            state.value = action.payload;
+            state.userMetaData.value = action.payload;
         }
     }
 });
 
-export const { saveUserData } = UserSlice.actions;
+export const { saveUserData, saveUserMetaData } = UserSlice.actions;
 export default UserSlice.reducer;

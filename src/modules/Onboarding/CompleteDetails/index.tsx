@@ -11,7 +11,7 @@ import { ApplicationStatus, InvestorType } from "../../../enums/types.enum";
 const CompleteDetails = (props: any) => {
     const { state } = useLocation();
     const navigate = useNavigate();
-    const user: any = useSelector((state: RootState) => state.user.value);
+    const user: any = useSelector((state: RootState) => state.user.userData.value);
     const language: any = useSelector((state: RootState) => state.language.value);
     const [isOpen, setOpen] = useState(false);
 
