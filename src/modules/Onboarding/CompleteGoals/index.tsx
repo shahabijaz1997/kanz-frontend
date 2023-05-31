@@ -30,8 +30,7 @@ const CompleteGoals = ({}: any) => {
   const [currentStepper, setCurrentStepper] = useState(0);
 
   useLayoutEffect(() => {
-    if (user.status !== ApplicationStatus.PENDING && user.status !== ApplicationStatus.IN_PROGRESS)
-      navigate("/welcome");
+    if (user.status !== ApplicationStatus.OPENED) navigate("/welcome");
     let item = localStorage.getItem("step");
     if (item) setCurrentStepper(Number(item));
   }, []);

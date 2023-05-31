@@ -8,9 +8,12 @@ import AddAttachmentBanner from "../../../shared/components/AddAttachmentBanner"
 import { ApplicationStatus } from "../../../enums/types.enum";
 import { getUser } from "../../../apis/auth.api";
 import { saveToken } from "../../../redux-toolkit/slicer/auth.slicer";
-import { saveUserData } from "../../../redux-toolkit/slicer/user.slicer";
+import { saveUserData, saveUserMetaData } from "../../../redux-toolkit/slicer/user.slicer";
 import Loader from "../../../shared/views/Loader";
 import Button from "../../../shared/components/Button";
+import { getInvestor } from "../../../apis/investor.api";
+import { getSyndicateInformation } from "../../../apis/syndicate.api";
+import { isEmpty } from "../../../utils/object.util";
 
 const Welcome = ({ }: any) => {
     const dispatch = useDispatch();
@@ -18,11 +21,14 @@ const Welcome = ({ }: any) => {
     const authToken: any = useSelector((state: RootState) => state.auth.value);
     const language: any = useSelector((state: RootState) => state.language.value);
     const user: any = useSelector((state: RootState) => state.user.userData.value);
+    const metadata: any = useSelector((state: RootState) => state.user.userMetaData.value);
 
     const [loading, setLoading] = useState(false);
 
     useLayoutEffect(() => {
         getUserDetails();
+        user.type === KanzRoles.INVESTOR && getInvestorDetails();
+        user.type === KanzRoles.SYNDICATE && getSyndicateDetails();
     }, []);
 
     const getUserDetails = async () => {
@@ -42,9 +48,42 @@ const Welcome = ({ }: any) => {
         }
     };
 
+    const getInvestorDetails = async () => {
+        try {
+            setLoading(true);
+            let { status, data } = await getInvestor(authToken);
+            if (status === 200) {
+                dispatch(saveUserMetaData(data?.status?.data));
+            }
+        } catch (error: any) {
+            if (error.response && error.response.status === 401) {
+                dispatch(saveToken(""));
+                navigate("/login", { state: '' });
+            }
+        } finally {
+            setLoading(false);
+        }
+    };
+    const getSyndicateDetails = async () => {
+        try {
+            setLoading(true);
+            let { status, data } = await getSyndicateInformation(1, authToken);
+            if (status === 200) {
+                dispatch(saveUserMetaData(data?.status?.data));
+            }
+        } catch (error: any) {
+            if (error.response && error.response.status === 401) {
+                dispatch(saveToken(""));
+                navigate("/login", { state: '' });
+            }
+        } finally {
+            setLoading(false);
+        }
+    };
+
     const renderRoleWiseScreen = () => {
         if (user.type === KanzRoles.INVESTOR) {
-            if (user.status == ApplicationStatus.PENDING) {
+            if (user.status == ApplicationStatus.OPENED && isEmpty(metadata?.profile)) {
                 return (
                     <React.Fragment>
                         <h2 className="text-2xl font-bold text-neutral-900 mb-4 screen500:text-[20px]">
@@ -58,7 +97,7 @@ const Welcome = ({ }: any) => {
                         </Button>
                     </React.Fragment>
                 );
-            } else if (user.status == ApplicationStatus.IN_PROGRESS) {
+            } else if (user.status == ApplicationStatus.OPENED && !isEmpty(metadata?.profile)) {
                 return (
                     <React.Fragment>
                         <h2 className="text-2xl font-bold text-neutral-900 mb-4 screen500:text-[20px]">
@@ -108,7 +147,7 @@ const Welcome = ({ }: any) => {
                 );
             }
         } else if (user.type === KanzRoles.SYNDICATE) {
-            if (user.status === ApplicationStatus.PENDING) {
+            if (user.status === ApplicationStatus.OPENED && isEmpty(metadata?.profile)) {
                 return (
                     <React.Fragment>
                         <h2 className="text-2xl font-bold text-neutral-900 mb-4 screen500:text-[20px]">
@@ -129,7 +168,7 @@ const Welcome = ({ }: any) => {
                     </React.Fragment>
                 );
             }
-            else if (user.status === ApplicationStatus.IN_PROGRESS) {
+            else if (user.status === ApplicationStatus.OPENED && !isEmpty(metadata?.profile)) {
                 return (
                     <React.Fragment>
                         <h2 className="text-2xl font-bold text-neutral-900 mb-4 screen500:text-[20px]">
@@ -150,6 +189,18 @@ const Welcome = ({ }: any) => {
                         >
                             {language?.buttons?.start}
                         </Button>
+                    </React.Fragment>
+                );
+            }
+            else if (user.status == ApplicationStatus.SUBMITTED) {
+                return (
+                    <React.Fragment>
+                        <h2 className="text-2xl font-bold text-neutral-900 mb-4 screen500:text-[20px]">
+                            {language?.onboarding?.submitted}
+                        </h2>
+                        <h3 className="text-base font-normal text-neutral-700 screen500:text-[12px]">
+                            {language?.onboarding?.appStatus}: <strong>{language.common.submitted}</strong>
+                        </h3>
                     </React.Fragment>
                 );
             }
