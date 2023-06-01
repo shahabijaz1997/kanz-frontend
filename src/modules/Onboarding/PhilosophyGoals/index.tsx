@@ -11,11 +11,10 @@ const PhilosophyGoals = (props: any) => {
     const navigate = useNavigate();
     const language: any = useSelector((state: RootState) => state.language.value);
     const user: any = useSelector((state: RootState) => state.user.value);
-    const [step, setStep]: any = useState(1);
+    const [step, setStep]: any = useState(Number(params?.id));
 
     useLayoutEffect(() => {
         if (user.status !== ApplicationStatus.OPENED) navigate("/welcome")
-
         setStep(Number(params?.id) || 1);
     }, [params]);
 
