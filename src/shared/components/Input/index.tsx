@@ -30,7 +30,7 @@ type InputProps = {
   onPressEnter?: (value: string) => void;
   disabled?: boolean;
   className?: string;
-  type?: "text" | "password" | "email";
+  type?: "text" | "password" | "email" | "number";
   label?: string | React.ReactNode | undefined;
   required?: boolean;
   register?: any;

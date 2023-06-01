@@ -159,6 +159,12 @@ const Individual = ({ language }: any) => {
             </label>
             <CountrySelector onChange={(v: any) => {
               onSetPayload(v, "national");
+              setLoading(true)
+              let timeout = setTimeout(() => {
+                onSetPayload("", "residence");
+                setLoading(false);
+                clearTimeout( timeout);
+              }, 50)
               let country: any = countries.all.find((c: any) => c.name === v?.value);
               setStates(country?.states || []);
             }}
@@ -175,7 +181,8 @@ const Individual = ({ language }: any) => {
               onChange={(v: any) => onSetPayload(v, "residence")}
               selectedValue={payload.residence}
               allCountries={states}
-              defaultValue={payload.residence}
+              value={payload.residence || ""}
+              defaultValue={payload.residence || ""}
             />
           </section>
 

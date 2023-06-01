@@ -19,7 +19,7 @@ const Home = ({}: any) => {
   const longSecContent = () => {
     return (
       <React.Fragment>
-        <aside>
+        <aside id={language.header.startup}>
           <h3 className="text-cyan-800 text-xl tracking-[0.03em] font-bold">
             {language.landing.startup}
           </h3>
@@ -50,7 +50,7 @@ const Home = ({}: any) => {
           </div>
         </aside>
 
-        <aside className="mt-[10rem]">
+        <aside className="mt-[10rem]" id={language.header.syndicate}>
           <h3 className="text-cyan-800 text-xl tracking-[0.03em] font-bold">
             {language.landing.syndicate}
           </h3>
