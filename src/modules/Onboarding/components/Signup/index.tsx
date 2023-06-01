@@ -9,16 +9,13 @@ import {
   hasNumbers,
   hasSpecialCharacters,
   hasUpperCase,
-  isValidEmail,
 } from "../../../../utils/regex.utils";
 import CheckIcon from "../../../../ts-icons/CheckIcon.svg";
 import EyeIcon from "../../../../ts-icons/EyeIcon.svg";
 import EyeSlash from "../../../../ts-icons/EyeSlashIcon.svg";
-import InformationIcon from "../../../../ts-icons/InformationIcon.svg";
 import GoogleIcon from "../../../../assets/icons/google_logo.png";
 import LinkedinIcon from "../../../../assets/icons/linedin_logo.png";
 import { signup } from "../../../../apis/auth.api";
-import Spinner from "../../../../shared/components/Spinner";
 import { KanzRoles } from "../../../../enums/roles.enum";
 import { saveUserData } from "../../../../redux-toolkit/slicer/user.slicer";
 import Button from "../../../../shared/components/Button";
@@ -36,12 +33,6 @@ const Signup = (props: any) => {
   const dispatch = useDispatch();
   const { state } = useLocation();
   const language: any = useSelector((state: RootState) => state.language.value);
-  const [payload, setPayload] = useState({
-    name: "",
-    email: "",
-    password: "",
-    type: state || KanzRoles.INVESTOR,
-  });
   const [loading, setLoading] = useState(false);
 
   useLayoutEffect(() => {
@@ -59,7 +50,6 @@ const Signup = (props: any) => {
     } = useForm<FormValues>({ defaultValues: { email: "" } });
 
     const [password, setPassword] = useState("");
-    // Updated PasswordStrengthUI
     const PasswordStrengthUI = (password: any) => {
       return (
         <div className="inline-flex flex-row items-center justify-center w-full gap-4 mb-6 screen500:flex-col screen500:items-start flex-wrap">

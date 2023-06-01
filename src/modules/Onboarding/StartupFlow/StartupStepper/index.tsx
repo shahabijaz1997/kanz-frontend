@@ -8,7 +8,7 @@ import { getAllIndustries, getAllRegions } from "../../../../apis/fakeData.api";
 import SearchedItems from "../../../../shared/components/SearchedItems";
 import CrossIcon from "../../../../ts-icons/crossIcon.svg";
 
-const SyndicateStepper = ({ language, payload, onSetPayload, options, step, removeFile, setFile, setModalOpen, setFileType }: any) => {
+const StartupStepper = ({ language, payload, onSetPayload, options, step, removeFile, setFile, setModalOpen, setFileType }: any) => {
     const refInd: any = useRef(null);
     const refReg: any = useRef(null);
     const [selected, setSelected]: any = useState(null);
@@ -188,7 +188,7 @@ const SyndicateStepper = ({ language, payload, onSetPayload, options, step, remo
 
                     <div className="mb-4 relative">
                         <label className="block text-neutral-700 text-sm font-medium" htmlFor="dealflow">{language.syndicate.dealflow}</label>
-                        <input id="dealflow" value={payload?.dealflow} onChange={(e) => onSetPayload(e.target.value, "dealflow")} className=" h-[42px] shadow-sm appearance-none border border-neutral-300 rounded-md w-full py-2 px-3 text-gray-500 leading-tight focus:outline-none focus:shadow-outline" type="text" />
+                        <input id="dealflow" value={payload?.dealflow} onChange={(e) => onSetPayload(e.target.value, "dealflow")} placeholder="Add text" className=" h-[42px] shadow-sm appearance-none border border-neutral-300 rounded-md w-full py-2 px-3 text-gray-500 leading-tight focus:outline-none focus:shadow-outline" type="text" />
                     </div>
                 </form>
             </section>
@@ -229,4 +229,4 @@ const SyndicateStepper = ({ language, payload, onSetPayload, options, step, remo
     )
 }
 
-export default SyndicateStepper;
+export default StartupStepper;

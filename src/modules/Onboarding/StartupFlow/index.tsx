@@ -3,7 +3,6 @@ import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router";
 import { RootState } from "../../../redux-toolkit/store/store";
 import Header from "../../../shared/components/Header";
-import SyndicateStepper from "./SyndicateStepper";
 import Modal from "../../../shared/components/Modal";
 import { FileType } from "../../../enums/types.enum";
 import { removeAttachment } from "../../../apis/attachment.api";
@@ -14,8 +13,9 @@ import CrossIcon from "../../../ts-icons/crossIcon.svg";
 import { postSyndicateInformation } from "../../../apis/syndicate.api";
 import Button from "../../../shared/components/Button";
 import { isValidUrl } from "../../../utils/regex.utils";
+import StartupStepper from "./StartupStepper";
 
-const SyndicateFlow = ({ }: any) => {
+const StartupFlow = ({ }: any) => {
   const params = useParams();
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -168,7 +168,7 @@ const SyndicateFlow = ({ }: any) => {
           <hr className="h-px w-full mt-4 bg-gray-200 border-0 bg-cbc-grey" />
         </section>
 
-        <SyndicateStepper
+        <StartupStepper
           language={language}
           payload={payload}
           onSetPayload={onSetPayload}
@@ -227,4 +227,4 @@ const SyndicateFlow = ({ }: any) => {
     </main>
   );
 };
-export default SyndicateFlow;
+export default StartupFlow;

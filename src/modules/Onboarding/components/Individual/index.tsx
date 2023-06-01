@@ -58,7 +58,6 @@ const Individual = ({ language }: any) => {
   const [loading, setLoading] = useState(false);
   const [isOpen, setOpen] = useState(false);
   const [countries, setCountries] = useState({ all: [], names: [] });
-  const [states, setStates] = useState([]);
 
   const onSetPayload = (data: any, type: string) => {
     setPayload((prev: any) => {
@@ -79,8 +78,6 @@ const Individual = ({ language }: any) => {
         if (metadata?.profile) {
           setPayload({ national: { label: metadata?.profile?.nationality, value: metadata?.profile?.nationality }, residence: { label: metadata?.profile?.residence, value: metadata?.profile?.residence }, accer: "", risk: false });
           setSelectedAssert(assertQuestions.find(as => as.title === metadata?.profile?.accreditation));
-          let country: any = data.status.data.find((c: any) => c.name === metadata?.profile?.nationality);
-          setStates(country?.states || []);
         }
         else {
           let account_info = localStorage.getItem("account_info");
@@ -88,8 +85,6 @@ const Individual = ({ language }: any) => {
           if (account_info) {
             let accInfo = JSON.parse(account_info);
             setPayload(accInfo);
-            let country: any = data.status.data.find((c: any) => c.name === accInfo.national?.value);
-            setStates(country?.states || []);
           }
           if (assertData) setSelectedAssert(JSON.parse(assertData));
         }
@@ -159,14 +154,6 @@ const Individual = ({ language }: any) => {
             </label>
             <CountrySelector onChange={(v: any) => {
               onSetPayload(v, "national");
-              setLoading(true)
-              let timeout = setTimeout(() => {
-                onSetPayload("", "residence");
-                setLoading(false);
-                clearTimeout( timeout);
-              }, 50)
-              let country: any = countries.all.find((c: any) => c.name === v?.value);
-              setStates(country?.states || []);
             }}
               selectedValue={payload.national}
               allCountries={countries.names}
@@ -180,7 +167,7 @@ const Individual = ({ language }: any) => {
             <CountrySelector
               onChange={(v: any) => onSetPayload(v, "residence")}
               selectedValue={payload.residence}
-              allCountries={states}
+              allCountries={countries.names}
               value={payload.residence || ""}
               defaultValue={payload.residence || ""}
             />
