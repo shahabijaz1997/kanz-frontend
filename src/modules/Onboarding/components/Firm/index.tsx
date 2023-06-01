@@ -124,7 +124,7 @@ const Firm = ({ language }: any) => {
       let { data, status } = await investmentAccridiation(_payload, authToken);
       if (status === 200) {
         toast.success(data?.status?.message, toastUtil);
-        navigate("/add-attachments", {
+        navigate("/complete-goals", {
           state: { type: InvestorType.FIRM, selected: selectedAssert },
         });
         localStorage.setItem("account_info", JSON.stringify(payload));

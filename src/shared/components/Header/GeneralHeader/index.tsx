@@ -88,7 +88,7 @@ const GeneralHeader = ({ responsive = false, showMenu = false }: any) => {
                         <nav className="absolute left-1/2 translate-x-[-50%]">
                             <ul className="inline-flex gap-9">
                                 {React.Children.toArray(
-                                    navigationMenu.map(i => <li className="cursor-pointer transition-all text-neutral-500 text-base font-medium hover:text-neutral-900 hover:underline">{i.title}</li>)
+                                    navigationMenu.map(i => <li className="cursor-pointer transition-all text-neutral-500 text-base font-medium hover:text-neutral-900 hover:underline"><a href={`#${i.title}`}>{i.title}</a></li>)
                                 )}
                             </ul>
                         </nav>
