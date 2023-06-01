@@ -225,6 +225,28 @@ const Welcome = ({ }: any) => {
               </Button>
             </React.Fragment>
           );
+        } else
+        if (user.type !== KanzRoles.STARTUP) {
+          return (
+            <React.Fragment>
+              <h2 className="text-2xl font-bold text-neutral-900 mb-4 screen500:text-[20px]">
+                {language?.onboarding?.addCompanyDetails}
+              </h2>
+              <h3 className="text-base font-normal text-neutral-700 screen500:text-[12px]">
+                {language?.onboarding?.syndicateLeadSub}
+              </h3>
+              <Button
+                className="mt-6 h-[38px]"
+                disabled={loading}
+                htmlType="submit"
+                loading={loading}
+                // note : change the route according to role
+                onClick={() => navigate("/realtor-type")}
+              >
+                {language?.buttons?.start}
+              </Button>
+            </React.Fragment>
+          );
         }
     };
 

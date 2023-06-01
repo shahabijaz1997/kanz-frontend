@@ -21,6 +21,7 @@
         "submitted": "Your application is submitted for review",
         "appStatus": "Application status",
         "realtorWelcomeText":"Add Owner Info",
+         "addCompanyDetails":"Add Company Details",
         "syndicateLead": "Add Syndicate Lead Info",
         "syndicateLeadSub": "Norem ipsum dolor sit amet, consectetur adipiscing elit. consectetur adipiscing elit.",
         "loginBgAlt": "Login Background",
