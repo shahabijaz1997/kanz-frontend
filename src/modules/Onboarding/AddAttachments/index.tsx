@@ -1,18 +1,17 @@
+import { toast } from "react-toastify";
 import React, { useState } from "react";
 import { useSelector } from "react-redux";
-import { RootState } from "../../../redux-toolkit/store/store";
 import { useNavigate } from "react-router-dom";
-import { toast } from "react-toastify";
+
+import { FileType } from "../../../enums/types.enum";
+import Modal from "../../../shared/components/Modal";
 import { toastUtil } from "../../../utils/toast.utils";
 import Header from "../../../shared/components/Header";
-import CrossIcon from "../../../ts-icons/crossIcon.svg";
-import Modal from "../../../shared/components/Modal";
-import Drawer from "../../../shared/components/Drawer";
-import { FileType } from "../../../enums/types.enum";
-import SampleImage from "../../../assets/example_id.png";
-import SampleImage_2 from "../../../assets/example_id_2.png";
 import Button from "../../../shared/components/Button";
+import Drawer from "../../../shared/components/Drawer";
+import CrossIcon from "../../../ts-icons/crossIcon.svg";
 import UploadComp from "../../../shared/components/Upload";
+import { RootState } from "../../../redux-toolkit/store/store";
 
 const AddAttachments = (props: any) => {
   const navigate = useNavigate();
@@ -42,7 +41,6 @@ const AddAttachments = (props: any) => {
   const [fileType, setFileType]: any = useState(null);
   const [agreeToTerms, setAgreeToTerms] = useState(false);
   const [files, setFiles]: any = useState([]);
-  const [loading, setLoading] = useState(false);
 
   const setFile = (file: File, id: string, attachment_id: string) => {
     setFiles((prev: any) => {
@@ -87,16 +85,15 @@ const AddAttachments = (props: any) => {
               uploading.map((item) => {
                 return (
                   <UploadComp
-                    item={item}
-                    setFile={setFile}
-                    language={language}
-                    setFileType={setFileType}
-                    SampleImage={SampleImage}
-                    setModalOpen={setModalOpen}
-                    SampleImage_2={SampleImage_2}
-                    setLoading={setLoading}
-                    setFiles={setFiles}
+                    id={item.id}
                     files={files}
+                    setFile={setFile}
+                    title={item.title}
+                    subTitle={item.sub}
+                    language={language}
+                    setFiles={setFiles}
+                    setFileType={setFileType}
+                    setModalOpen={setModalOpen}
                   />
                 );
               })
@@ -133,7 +130,6 @@ const AddAttachments = (props: any) => {
             disabled={files.length === 3 && agreeToTerms ? false : true}
             className="h-[38px] w-[140px]"
             htmlType="submit"
-            loading={loading}
             onClick={() => {
               let errors: string[] = [];
               if (files.length !== 3)

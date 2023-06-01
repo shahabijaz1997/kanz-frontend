@@ -1,26 +1,27 @@
 import { useState } from "react";
+import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
 
 import FileUpload from "../FileUpload";
 import HoverModal from "../HoverModal";
-import { useDispatch, useSelector } from "react-redux";
+import Image1 from "../../../assets/example_id.png";
+import Image2 from "../../../assets/example_id_2.png";
+import { toastUtil } from "../../../utils/toast.utils";
 import { RootState } from "../../../redux-toolkit/store/store";
 import { removeAttachment } from "../../../apis/attachment.api";
 import { saveToken } from "../../../redux-toolkit/slicer/auth.slicer";
-import { useNavigate } from "react-router-dom";
-import { toast } from "react-toastify";
-import { toastUtil } from "../../../utils/toast.utils";
 
 const UploadComp = (props: any) => {
   const {
-    item,
+    id,
+    title,
+    subTitle,
     language,
-    SampleImage_2,
-    SampleImage,
     setFile,
     setModalOpen,
     setFileType,
     setFiles,
-    setLoading,
     files,
   } = props;
   const dispatch = useDispatch();
@@ -28,7 +29,7 @@ const UploadComp = (props: any) => {
   const [selectedId, setSelectedId]: any = useState(null);
   const authToken: any = useSelector((state: RootState) => state.auth.value);
 
-  const removeFile = async (id: string) => {
+  const removeFile = async (id: string, setLoading: Function) => {
     try {
       setLoading(true);
       let { status } = await removeAttachment(id, authToken);
@@ -37,8 +38,10 @@ const UploadComp = (props: any) => {
           .slice()
           .filter((file: any) => file.attachment_id !== id);
         setFiles(_files);
+        setLoading(false);
       }
     } catch (error: any) {
+      setLoading(false);
       if (error.response && error.response.status === 401) {
         dispatch(saveToken(""));
         navigate("/login", { state: "add-attachments" });
@@ -49,40 +52,31 @@ const UploadComp = (props: any) => {
         language.promptMessages.errorGeneral;
       toast.error(message, toastUtil);
     } finally {
-      setLoading(false);
     }
   };
 
   return (
     <div className="mb-4 w-full">
       <div className="block text-neutral-700 text-base font-medium">
-        <div>{item.title}</div>
-        <small className="text-neutral-700 font-normal">{item.sub}</small>
+        <div>{title}</div>
+        <small className="text-neutral-700 font-normal">{subTitle}</small>
         <small
           className="relative font-normal color-blue cursor-pointer"
-          onMouseEnter={() => setSelectedId(item.id)}
+          onMouseEnter={() => setSelectedId(id)}
           onMouseLeave={() => setSelectedId(null)}
         >
           &nbsp;<span>{language?.common?.example}</span>
-          {selectedId === item.id && (
+          {selectedId === id && (
             <HoverModal>
               <section className="inline-flex flex-row items-center justify-evenly h-full">
-                <img
-                  src={SampleImage_2}
-                  alt={item.title}
-                  className="max-h-[90px]"
-                />
-                <img
-                  src={SampleImage}
-                  alt={item.title}
-                  className="max-h-[140px]"
-                />
+                <img src={Image2} alt={title} className="max-h-[90px]" />
+                <img src={Image1} alt={title} className="max-h-[140px]" />
               </section>
             </HoverModal>
           )}
         </small>
         <FileUpload
-          id={item.id}
+          id={id}
           setFile={setFile}
           removeFile={removeFile}
           setModalOpen={(e: any) => {
