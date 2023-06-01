@@ -135,7 +135,7 @@ const Questionare = ({ step, returnSuccessRedirection }: any) => {
       return <React.Fragment></React.Fragment>;
     if (ques?.question_type === "text") {
       return (
-        <section className="flex items-start justify-center flex-col mt-12 max-w-[420px] screen500:max-w-[300px]">
+        <section className="flex items-start justify-center flex-col mt-10 max-w-[420px] screen500:max-w-[300px]">
           <h3 className="text-neutral-700 font-medium text-base w-[420px]">
             {ques?.title}
           </h3>
@@ -182,7 +182,7 @@ const Questionare = ({ step, returnSuccessRedirection }: any) => {
       );
     }
     return (
-      <section className="flex items-start justify-center flex-col mt-12 max-w-[420px] screen500:max-w-[300px]">
+      <section className="flex items-start justify-center flex-col mt-10 max-w-[420px] screen500:max-w-[300px]">
         <h3 className="text-neutral-700 font-medium text-base w-[420px]">
           {ques?.title}
         </h3>
@@ -245,7 +245,7 @@ const Questionare = ({ step, returnSuccessRedirection }: any) => {
     )
       return <React.Fragment></React.Fragment>;
     return (
-      <section className="flex items-start justify-center flex-col mt-12 max-w-[420px] screen500:max-w-[300px]">
+      <section className="flex items-start justify-center flex-col mt-10 max-w-[420px] screen500:max-w-[300px]">
         <h3 className="text-neutral-700 font-medium text-base w-[420px]">
           {ques?.title}
         </h3>
@@ -307,7 +307,7 @@ const Questionare = ({ step, returnSuccessRedirection }: any) => {
 
   const renderBooleanQuestionaire = (ques: any) => {
     return (
-      <section className="flex items-start justify-center flex-col mt-12 max-w-[420px] screen500:max-w-[300px]">
+      <section className="flex items-start justify-center flex-col mt-10 max-w-[420px] screen500:max-w-[300px]">
         <h3 className="text-neutral-700 font-medium text-base w-[420px]">
           {ques?.title}
         </h3>
@@ -421,7 +421,7 @@ const Questionare = ({ step, returnSuccessRedirection }: any) => {
         </div>
       )}
 
-      <section className="flex items-start flex-col mt-12 max-w-[420px] screen500:max-w-[300px]">
+      <section className="flex items-start flex-col mt-10 max-w-[420px] screen500:max-w-[300px]">
         {questions?.questions && (
           <h3 className="text-neutral-700 font-bold text-2xl w-[420px]">
             {questions?.questions[0]?.category}
