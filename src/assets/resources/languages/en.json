@@ -73,9 +73,28 @@
         "industrySub": "Norem ipsum dolor sit amet ipsum dolor.",
         "region": "Region",
         "profile": "Profile Link",
-        "deadflow": "Expected Deadflow",
+        "dealflow": "Expected Dealflow",
         "syndName": "Syndicate name",
         "tagline": "Add tagline",
+        "logo": "Logo",
+        "uploadCompLogo": "Upload a company logo."
+    },
+    "company": {
+        "step": "Step",
+        "compName": "Company name",
+        "legal": "Legal name",
+        "selectCountry": "Select Country",
+        "marker": "Industry Market",
+        "compWeb": "Company Website",
+        "address": "Address",
+        "descBus": "Describe your business",
+        "descBusQues": "How would you describe your business?",
+        "produServ": "What product and services do provide to customers?",
+        "ceoDet": "Add CEO detail",
+        "ceoDetSub": "Norem ipsum dolor sit amet",
+        "dealflow": "Expected Dealflow",
+        "name": "Name",
+        "dummyemail": "you@example.com",
         "logo": "Logo",
         "uploadCompLogo": "Upload a company logo."
     },
@@ -158,6 +177,7 @@
     "header": {
         "attachment": "Attachments",
         "syndicateLead": "Syndicate Lead Info",
+        "companyDetails": "Company Details",
         "investment": "Investment",
         "startup": "Startup",
         "syndicate": "Syndicate",
@@ -193,7 +213,11 @@
         "inprogress": "In Progress",
         "inreview": "In Review",
         "submitted": "Submitted",
-        "required_field":"This field is required."
+        "required_field":"This field is required.",
+        "tradeLic": "Trade Licence",
+        "uploadTrade": "Upload a photo of your trade licence",
+        "assoctArt": "Article of Association",
+        "uploadAsc": "Upload a photo of the article"
     },
     "buttons": {
         "start": "Lets start",
