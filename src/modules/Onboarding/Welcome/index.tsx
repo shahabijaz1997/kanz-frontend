@@ -22,7 +22,7 @@ const Welcome = ({ }: any) => {
     const authToken: any = useSelector((state: RootState) => state.auth.value);
     const language: any = useSelector((state: RootState) => state.language.value);
     const user: any = useSelector((state: RootState) => state.user.value);
-    const metadata: any = useSelector((state: RootState) => state.user.value);
+    const metadata: any = useSelector((state: RootState) => state.metadata.value);
 
     const [loading, setLoading] = useState(false);
 
