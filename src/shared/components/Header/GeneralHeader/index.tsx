@@ -8,16 +8,17 @@ import BellIcon from "../../../../ts-icons/BellIcon.svg";
 import { logout } from "../../../../apis/auth.api";
 import { useNavigate } from "react-router-dom";
 import { saveToken } from "../../../../redux-toolkit/slicer/auth.slicer";
-import { saveUserData, saveUserMetaData } from "../../../../redux-toolkit/slicer/user.slicer";
+import { saveUserData } from "../../../../redux-toolkit/slicer/user.slicer";
 import { KanzRoles } from "../../../../enums/roles.enum";
 import CrossIcon from "../../../../ts-icons/crossIcon.svg";
+import { saveUserMetaData } from "../../../../redux-toolkit/slicer/metadata.slicer";
 
 const GeneralHeader = ({ responsive = false, showMenu = false }: any) => {
     const navigate = useNavigate();
     const dispatch = useDispatch();
     const language: any = useSelector((state: RootState) => state.language.value);
     const authToken: any = useSelector((state: RootState) => state.auth.value);
-    const user: any = useSelector((state: RootState) => state.user.userData.value);
+    const user: any = useSelector((state: RootState) => state.user.value);
     const navigationMenu = [{ id: 1, title: language.header.investment }, { id: 2, title: language.header.startup }, { id: 3, title: language.header.syndicate }, { id: 4, title: language.header.company }]
     const [isMenuOpen, setIsMenuOpen] = useState(false);
 
