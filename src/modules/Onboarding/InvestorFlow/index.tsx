@@ -2,7 +2,7 @@ import React, { useState, useLayoutEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../../redux-toolkit/store/store";
 import { useNavigate } from "react-router-dom";
-import { InvestorType } from "../../../enums/types.enum";
+import { ApplicationStatus, InvestorType } from "../../../enums/types.enum";
 import Header from "../../../shared/components/Header";
 import ArrowIcon from "../../../ts-icons/arrowIcon.svg";
 import UserIcon from "../../../ts-icons/userIcon.svg";
@@ -19,7 +19,8 @@ const InvestorFlow = ({ }: any) => {
   const dispatch = useDispatch();
   const authToken: any = useSelector((state: RootState) => state.auth.value);
   const language: any = useSelector((state: RootState) => state.language.value);
-  const metadata: any = useSelector((state: RootState) => state.user.value);
+  const user: any = useSelector((state: RootState) => state.user.value);
+  const metadata: any = useSelector((state: RootState) => state.metadata.value);
 
   const [selectedAccount, setSelectedAccount]: any = useState();
   const [loading, setLoading] = useState(false);
@@ -30,7 +31,8 @@ const InvestorFlow = ({ }: any) => {
   ]);
 
   useLayoutEffect(() => {
-    setSelectedAccount(accounts?.find(ac => ac.payload === metadata.role));
+    if (user.status == ApplicationStatus.OPENED)
+      setSelectedAccount(accounts?.find(ac => ac.payload === metadata.role));
   }, []);
 
   const onSelectInvestorType = async () => {
