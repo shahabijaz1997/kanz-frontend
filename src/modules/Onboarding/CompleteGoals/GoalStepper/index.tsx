@@ -13,16 +13,8 @@ const GoalStepper = ({ language, navigate, currentStepper }: any) => {
         </p>
 
         <Stepper currentStep={currentStepper} />
-        <Button
-          className="mt-6 h-[38px] w-[140px]"
-          htmlType="submit"
-          onClick={navigate}
-        >
-          <small>
-            {currentStepper === 0
-              ? language.buttons.start
-              : language.buttons.continue}
-          </small>
+        <Button className="mt-6 h-[38px] w-[140px]" htmlType="submit" onClick={navigate} >
+          <small> {currentStepper === 0 ? language.buttons.start : language.buttons.continue}</small>
         </Button>
       </section>
     </aside>

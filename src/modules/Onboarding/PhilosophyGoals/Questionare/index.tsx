@@ -35,12 +35,11 @@ const Questionare = ({ step, returnSuccessRedirection }: any) => {
   }, [step]);
 
   const getQuestionares = async (pg: number) => {
+    console.log(step);
+    
     setLoading(true);
     try {
-      const { status, data }: any = await getInvestmentPhilisophyQuestions(
-        pg,
-        authToken
-      );
+      const { status, data }: any = await getInvestmentPhilisophyQuestions(pg, authToken);
       if (status === 200) {
         let philisophyData: any = localStorage.getItem("philosophy");
         let parsed = JSON.parse(philisophyData) || {};
@@ -124,15 +123,15 @@ const Questionare = ({ step, returnSuccessRedirection }: any) => {
       setSelected(_selected);
     } else {
       if (_selected[q.step]?.questions?.length)
-      _selected[q.step]?.questions.push({ question_id: q.id, answers: [a?.statement], answer_meta: { options: [a] } })
+        _selected[q.step]?.questions.push({ question_id: q.id, answers: [a?.statement], answer_meta: { options: [a] } })
       else
-      _selected[q.step] = { step, questions: [{ question_id: q.id, answers: [a?.statement], answer_meta: { options: [a] } }] };
+        _selected[q.step] = { step, questions: [{ question_id: q.id, answers: [a?.statement], answer_meta: { options: [a] } }] };
       setSelected(_selected);
     }
   };
 
   const renderMultipleChoiceQuestionaire = (ques: any) => {
-    if ( selected && ques.step === 2 && ques.index === 2 && (!selected[`2`] || selected[`2`]?.questions.find((q: any) => q.answers[0] === "No")))
+    if (selected && ques.step === 2 && ques.index === 2 && (!selected[`2`] || selected[`2`]?.questions.find((q: any) => q.answers[0] === "No")))
       return <React.Fragment></React.Fragment>;
     if (ques?.question_type === "text") {
       return (
@@ -203,11 +202,10 @@ const Questionare = ({ step, returnSuccessRedirection }: any) => {
                 ques?.options?.schema.map((as: any) => {
                   return (
                     <li
-                      className={`h-[50px] w-[420px] p-4 grey-neutral-200 text-sm font-medium cursor-pointer border border-grey inline-flex items-center justify-start first:rounded-t-md last:rounded-b-md screen500:w-full ${
-                        checkExist(selected[ques.step], as)
+                      className={`h-[50px] w-[420px] p-4 grey-neutral-200 text-sm font-medium cursor-pointer border border-grey inline-flex items-center justify-start first:rounded-t-md last:rounded-b-md screen500:w-full ${checkExist(selected[ques.step], as)
                           ? "check-background"
                           : "bg-white"
-                      }`}
+                        }`}
                       onClick={() => {
                         toggleAnswerSelection(ques, as);
                         let _validations = [...validations];
@@ -219,7 +217,7 @@ const Questionare = ({ step, returnSuccessRedirection }: any) => {
                       }}
                     >
                       <input
-                        onChange={() => {}}
+                        onChange={() => { }}
                         className="accent-cyan-800 relative float-left mr-2 h-3 w-3 rounded-full border-2 border-solid border-cyan-300 before:pointer-events-none before:absolute before:h-4 before:w-4 before:scale-0 before:rounded-full before:bg-transparent before:opacity-0 before:content-[''] after:absolute after:z-[1] after:block after:h-4 after:w-4 after:rounded-full after:content-[''] checked:border-primary checked:before:opacity-[0.16] checked:after:absolute checked:after:left-1/2 checked:after:top-1/2 checked:after:h-[0.625rem] checked:after:w-[0.625rem] checked:after:rounded-full checked:after:border-primary checked:after:bg-primary checked:after:content-[''] checked:after:[transform:translate(-50%,-50%)] hover:cursor-pointer hover:before:opacity-[0.04]"
                         type="radio"
                         checked={
@@ -267,9 +265,8 @@ const Questionare = ({ step, returnSuccessRedirection }: any) => {
                 ques?.options?.schema.map((as: any) => {
                   return (
                     <li
-                      className={`h-[50px] w-[420px] p-4 grey-neutral-200 text-sm font-medium cursor-pointer border border-grey inline-flex items-center justify-start first:rounded-t-md last:rounded-b-md screen500:w-full ${
-                        checkBoxCheckExist(as) ? "check-background" : "bg-white"
-                      }`}
+                      className={`h-[50px] w-[420px] p-4 grey-neutral-200 text-sm font-medium cursor-pointer border border-grey inline-flex items-center justify-start first:rounded-t-md last:rounded-b-md screen500:w-full ${checkBoxCheckExist(as) ? "check-background" : "bg-white"
+                        }`}
                       onClick={() => {
                         let _mcqs = [...mcqs];
                         if (
@@ -292,7 +289,7 @@ const Questionare = ({ step, returnSuccessRedirection }: any) => {
                       }}
                     >
                       <input
-                        onChange={() => {}}
+                        onChange={() => { }}
                         className="accent-cyan-800 relative float-left mr-2 h-3 w-3 rounded-full border-2 border-solid border-cyan-300 before:pointer-events-none before:absolute before:h-4 before:w-4 before:scale-0 before:rounded-full before:bg-transparent before:opacity-0 before:content-[''] after:absolute after:z-[1] after:block after:h-4 after:w-4 after:rounded-full after:content-[''] checked:border-primary checked:before:opacity-[0.16] checked:after:absolute checked:after:left-1/2 checked:after:top-1/2 checked:after:h-[0.625rem] checked:after:w-[0.625rem] checked:after:rounded-full checked:after:border-primary checked:after:bg-primary checked:after:content-[''] checked:after:[transform:translate(-50%,-50%)] hover:cursor-pointer hover:before:opacity-[0.04]"
                         type="checkbox"
                         checked={checkBoxCheckExist(as) ? true : false}
@@ -329,11 +326,10 @@ const Questionare = ({ step, returnSuccessRedirection }: any) => {
               ques?.options?.schema.map((as: any) => {
                 return (
                   <li
-                    className={`rounded-md bg-white h-[50px] w-[420px] p-4 grey-neutral-200 text-sm font-medium cursor-pointer border border-grey inline-flex items-center justify-start screen500:w-full${
-                      checkExist(selected[ques.step], as)
+                    className={`rounded-md bg-white h-[50px] w-[420px] p-4 grey-neutral-200 text-sm font-medium cursor-pointer border border-grey inline-flex items-center justify-start screen500:w-full${checkExist(selected[ques.step], as)
                         ? "check-background"
                         : "bg-white"
-                    }`}
+                      }`}
                     onClick={() => {
                       toggleAnswerSelection(ques, as);
                       let _validations = [...validations];
@@ -345,7 +341,7 @@ const Questionare = ({ step, returnSuccessRedirection }: any) => {
                     }}
                   >
                     <input
-                      onChange={() => {}}
+                      onChange={() => { }}
                       className="accent-cyan-800 relative float-left mr-2 h-3 w-3 rounded-full border-2 border-solid border-cyan-300 before:pointer-events-none before:absolute before:h-4 before:w-4 before:scale-0 before:rounded-full before:bg-transparent before:opacity-0 before:content-[''] after:absolute after:z-[1] after:block after:h-4 after:w-4 after:rounded-full after:content-[''] checked:border-primary checked:before:opacity-[0.16] checked:after:absolute checked:after:left-1/2 checked:after:top-1/2 checked:after:h-[0.625rem] checked:after:w-[0.625rem] checked:after:rounded-full checked:after:border-primary checked:after:bg-primary checked:after:content-[''] checked:after:[transform:translate(-50%,-50%)] hover:cursor-pointer hover:before:opacity-[0.04]"
                       type="radio"
                       checked={
@@ -397,7 +393,7 @@ const Questionare = ({ step, returnSuccessRedirection }: any) => {
   };
 
   const checkValidation = () => {
-    if ( questions?.questions && questions?.questions[0]?.question_type === "checkbox" ) {
+    if (questions?.questions && questions?.questions[0]?.question_type === "checkbox") {
       if (mcqs?.length > 0) return true;
       return false;
     } else if (step === 4) {
@@ -477,7 +473,7 @@ const Questionare = ({ step, returnSuccessRedirection }: any) => {
 
       <Drawer isOpen={isOpen} setIsOpen={(val: boolean) => setOpen(val)}>
         {questions?.questions &&
-        questions?.questions[0]?.question_type === "checkbox" ? (
+          questions?.questions[0]?.question_type === "checkbox" ? (
           <React.Fragment>
             <p className="text-neutral-700 font-normal text-sm text-justify">
               {language.modal.horizon_para_1}

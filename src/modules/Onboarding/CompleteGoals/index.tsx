@@ -16,7 +16,7 @@ import AddAttachmentBanner from "../../../shared/components/AddAttachmentBanner"
 import { ApplicationStatus } from "../../../enums/types.enum";
 import Button from "../../../shared/components/Button";
 
-const CompleteGoals = ({}: any) => {
+const CompleteGoals = ({ }: any) => {
   const { state } = useLocation();
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -95,7 +95,7 @@ const CompleteGoals = ({}: any) => {
                   {apiResp?.status?.data?.role}
                 </h3>
                 <p className="text-neutral-700 text-sm font-normal mt-1">
-                  {apiResp?.status?.data?.role === "Investment Firm" ? apiResp?.status?.data?.profile?.location : apiResp?.status?.data?.profile?.nationality}
+                  {apiResp?.status?.data?.role === "Investment Firm" ? apiResp?.status?.data?.profile?.location : `${apiResp?.status?.data?.profile?.residence}, ${apiResp?.status?.data?.profile?.nationality}`}
                 </p>
               </div>
               <Button
@@ -138,7 +138,12 @@ const CompleteGoals = ({}: any) => {
           <GoalStepper
             language={language}
             currentStepper={currentStepper}
-            navigate={() => navigate(`/philosophy-goals/${currentStepper + 1}`)}
+            navigate={() => {
+              if (currentStepper === 5)
+                navigate(`/philosophy-goals/${currentStepper}`);
+              else
+                navigate(`/philosophy-goals/${currentStepper + 1}`);
+            }}
           />
         </section>
       </aside>
