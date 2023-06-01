@@ -20,7 +20,7 @@ const CompleteGoals = ({}: any) => {
   const { state } = useLocation();
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const user: any = useSelector((state: RootState) => state.user.userData.value);
+  const user: any = useSelector((state: RootState) => state.user.value);
   const language: any = useSelector((state: RootState) => state.language.value);
   const authToken: any = useSelector((state: RootState) => state.auth.value);
 

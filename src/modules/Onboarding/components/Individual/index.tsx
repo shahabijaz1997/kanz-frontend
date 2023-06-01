@@ -18,7 +18,7 @@ const Individual = ({ language }: any) => {
   const dispatch = useDispatch();
 
   const authToken: any = useSelector((state: RootState) => state.auth.value);
-  const metadata: any = useSelector((state: RootState) => state.user.userMetaData.value);
+  const metadata: any = useSelector((state: RootState) => state.user.value);
   const [assertQuestions] = useState([
     {
       id: 1,

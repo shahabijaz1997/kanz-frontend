@@ -27,7 +27,7 @@ const EmailVerification = ({ payload, onReSignup }: any) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const language: any = useSelector((state: RootState) => state.language.value);
-  const user: any = useSelector((state: RootState) => state.user.userData.value);
+  const user: any = useSelector((state: RootState) => state.user.value);
   const authToken: any = useSelector((state: RootState) => state.auth.value);
 
   const [isEdit, setEdit] = useState(false);

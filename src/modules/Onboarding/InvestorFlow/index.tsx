@@ -19,7 +19,7 @@ const InvestorFlow = ({ }: any) => {
   const dispatch = useDispatch();
   const authToken: any = useSelector((state: RootState) => state.auth.value);
   const language: any = useSelector((state: RootState) => state.language.value);
-  const metadata: any = useSelector((state: RootState) => state.user.userMetaData.value);
+  const metadata: any = useSelector((state: RootState) => state.user.value);
 
   const [selectedAccount, setSelectedAccount]: any = useState();
   const [loading, setLoading] = useState(false);

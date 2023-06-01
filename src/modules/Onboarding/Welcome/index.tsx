@@ -8,20 +8,21 @@ import AddAttachmentBanner from "../../../shared/components/AddAttachmentBanner"
 import { ApplicationStatus } from "../../../enums/types.enum";
 import { getUser } from "../../../apis/auth.api";
 import { saveToken } from "../../../redux-toolkit/slicer/auth.slicer";
-import { saveUserData, saveUserMetaData } from "../../../redux-toolkit/slicer/user.slicer";
+import { saveUserData } from "../../../redux-toolkit/slicer/user.slicer";
 import Loader from "../../../shared/views/Loader";
 import Button from "../../../shared/components/Button";
 import { getInvestor } from "../../../apis/investor.api";
 import { getSyndicateInformation } from "../../../apis/syndicate.api";
 import { isEmpty } from "../../../utils/object.util";
+import { saveUserMetaData } from "../../../redux-toolkit/slicer/metadata.slicer";
 
 const Welcome = ({ }: any) => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const authToken: any = useSelector((state: RootState) => state.auth.value);
     const language: any = useSelector((state: RootState) => state.language.value);
-    const user: any = useSelector((state: RootState) => state.user.userData.value);
-    const metadata: any = useSelector((state: RootState) => state.user.userMetaData.value);
+    const user: any = useSelector((state: RootState) => state.user.value);
+    const metadata: any = useSelector((state: RootState) => state.user.value);
 
     const [loading, setLoading] = useState(false);
 
