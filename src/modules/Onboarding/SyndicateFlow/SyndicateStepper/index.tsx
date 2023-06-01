@@ -1,4 +1,4 @@
-import React, { useState, useLayoutEffect } from "react";
+import React, { useState, useLayoutEffect, useRef } from "react";
 import Chevrond from "../../../../ts-icons/chevrond.svg";
 import HoverModal from "../../../../shared/components/HoverModal";
 import FileUpload from "../../../../shared/components/FileUpload";
@@ -9,6 +9,8 @@ import SearchedItems from "../../../../shared/components/SearchedItems";
 import CrossIcon from "../../../../ts-icons/crossIcon.svg";
 
 const SyndicateStepper = ({ language, payload, onSetPayload, options, step, removeFile, setFile, setModalOpen, setFileType }: any) => {
+    const refInd: any = useRef(null);
+    const refReg: any = useRef(null);
     const [selected, setSelected]: any = useState(null);
     const [showHoverModal, setShowHoverModal] = useState(false);
     const [search, setSearch] = useState({ industry: "", region: "" });
@@ -22,6 +24,32 @@ const SyndicateStepper = ({ language, payload, onSetPayload, options, step, remo
     useLayoutEffect(() => {
         selected && onSetPayload(selected?.id === 1 ? true : false, "raised")
     }, [selected]);
+
+    useLayoutEffect(() => {
+        const handleClickOutside = (event: any) => {
+            if (refInd.current && !refInd.current.contains(event.target)) {
+                setShowData(p => {
+                    return {...p, industry: false};
+                });
+            }
+        };
+        
+        const handleClickOutsideRegion = (event: any) => {
+            if (refReg.current && !refReg.current.contains(event.target)) {
+                setShowData(p => {
+                    return {...p, region: false};
+                });
+            }
+        };
+
+        document.addEventListener('mousedown', handleClickOutside);
+        document.addEventListener('mousedown', handleClickOutsideRegion);
+
+        return () => {
+            document.removeEventListener('mousedown', handleClickOutside);
+            document.removeEventListener('mousedown', handleClickOutsideRegion);
+        };
+    }, []);
 
     const onSetSearch = (data: any, type: string) => {
         setSearch((prev: any) => {
@@ -49,7 +77,7 @@ const SyndicateStepper = ({ language, payload, onSetPayload, options, step, remo
                 <form className="pt-12 mb-4 w-full">
                     <div className="mb-8 relative">
                         <h3 className="text-neutral-700 text-sm font-medium">{language.syndicate.raisedBefore}</h3>
-                        <section className="w-full inline-flex items-center justify-between mt-2 gap-5">
+                        <section className="w-full inline-flex items-center justify-between gap-5">
                             {React.Children.toArray(
                                 options.map((opt: any) => {
                                     return (
@@ -91,7 +119,7 @@ const SyndicateStepper = ({ language, payload, onSetPayload, options, step, remo
                         </div>
                     )}
 
-                    <div className="mb-8">
+                    <div className="mb-8" ref={refInd}>
                         <label className="block text-neutral-700 text-sm font-medium" htmlFor="industry">{language.syndicate.industry}</label>
                         <small className="font-normal text-sm text-neutral-500">{language.syndicate.industrySub}</small>
                         <span className="relative">
@@ -114,14 +142,14 @@ const SyndicateStepper = ({ language, payload, onSetPayload, options, step, remo
                                 )}
                             </aside>
                         )}
-                        {(showData.industry || search.industry) && <SearchedItems items={searchResults.industry} searchString={search.industry} passItemSelected={(it: any) => {
+                        {(showData.industry) && <SearchedItems items={searchResults.industry} searchString={search.industry} passItemSelected={(it: any) => {
                             let payloadItems = [...payload.industry];
                             payloadItems.push(it);
                             onSetPayload(Array.from(new Set(payloadItems)), "industry");
                         }} />}
                     </div>
 
-                    <div className="mb-8 relative">
+                    <div className="mb-8 relative" ref={refReg}>
                         <label className="block text-neutral-700 text-sm font-medium" htmlFor="region">{language.syndicate.region}</label>
                         <span className="relative">
                             <input id="region" autoComplete="off" value={search.region} onChange={(e) => onSetSearch(e.target.value, "region")} onClick={() => setShowData(p => { return { ...p, region: !p.region } })}
@@ -143,10 +171,10 @@ const SyndicateStepper = ({ language, payload, onSetPayload, options, step, remo
                                 )}
                             </aside>
                         )}
-                        {(showData.region || search.region) && <SearchedItems items={searchResults.region} searchString={search.region} passItemSelected={(it: any) => {
-                             let payloadItems = [...payload.region];
-                             payloadItems.push(it);
-                             onSetPayload(Array.from(new Set(payloadItems)), "region");
+                        {(showData.region) && <SearchedItems items={searchResults.region} searchString={search.region} passItemSelected={(it: any) => {
+                            let payloadItems = [...payload.region];
+                            payloadItems.push(it);
+                            onSetPayload(Array.from(new Set(payloadItems)), "region");
                         }} />}
                     </div>
 
