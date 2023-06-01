@@ -4,9 +4,10 @@ import RouterModule from "./modules/Router/router.module";
 function App() {
   useLayoutEffect(() => {
     let clearFlag = localStorage.getItem("clearFlag");
-    if (!clearFlag)
+    if (!clearFlag) {
       localStorage.clear();
-    localStorage.setItem("clearFlag", "true");
+      localStorage.setItem("clearFlag", "true");
+    }
   }, []);
 
   return <RouterModule />
