@@ -151,7 +151,7 @@ const StartupFlow = ({ }: any) => {
     <main className="h-full max-h-full background-auth overflow-y-auto">
       <section>
         <Header custom={true} data={{
-          leftMenu: language.header.syndicateLead, button: (
+          leftMenu: language.header.companyDetails, button: (
             <button onClick={() => navigate(-1)}>
               <CrossIcon stroke="#171717" className="w-6 h-6" />
             </button>
