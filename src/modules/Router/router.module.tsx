@@ -20,6 +20,7 @@ const CompleteGoals = lazy(() => import("../Onboarding/CompleteGoals"));
 const PhilosophyGoals = lazy(() => import("../Onboarding/PhilosophyGoals"));
 const AddAttachments = lazy(() => import("../Onboarding/AddAttachments"));
 const SyndicateLeadInfo = lazy(() => import("../Onboarding/SyndicateFlow"));
+const Startup = lazy(() => import("../Onboarding/StartupFlow"));
 
 const AuthenticateRoute = (props: PropsWithChildren) => {
   const { children } = props;
@@ -81,6 +82,18 @@ const RouterModule = () => {
               <AuthenticateRole role={KanzRoles.INVESTOR}>
                 <InvestorFlow guard={authToken} />
               </AuthenticateRole>
+            </AuthenticateRoute>
+          </Suspense>
+        }
+      />
+      <Route
+        path="/startup-type"
+        element={
+          <Suspense fallback={<Loader />}>
+            <AuthenticateRoute>
+              {/* <AuthenticateRole role={KanzRoles.STARTUP}> */}
+                <Startup guard={authToken} />
+              {/* </AuthenticateRole> */}
             </AuthenticateRoute>
           </Suspense>
         }
