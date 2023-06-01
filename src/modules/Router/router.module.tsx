@@ -15,6 +15,7 @@ const Login = lazy(() => import("../Login"));
 const Welcome = lazy(() => import("../Onboarding/Welcome"));
 const InvestorFlow = lazy(() => import("../Onboarding/InvestorFlow"));
 const CompleteDetails = lazy(() => import("../Onboarding/CompleteDetails"));
+const Realtors = lazy(() => import("../Onboarding/RealtorsFlow"));
 const CompleteGoals = lazy(() => import("../Onboarding/CompleteGoals"));
 const PhilosophyGoals = lazy(() => import("../Onboarding/PhilosophyGoals"));
 const AddAttachments = lazy(() => import("../Onboarding/AddAttachments"));
@@ -44,9 +45,10 @@ const AuthenticateRole = (props: PropsWithChildren | any) => {
   const user: any = useSelector((state: RootState) => state.user.value);
 
   if (
-    user &&
-    (user.type === props.role || props.role === KanzRoles.ALL) &&
-    user.status === ApplicationStatus.OPENED || user.status === ApplicationStatus.IN_PROGRESS
+    (user &&
+      (user.type === props.role || props.role === KanzRoles.ALL) &&
+      user.status === ApplicationStatus.OPENED) ||
+    user.status === ApplicationStatus.IN_PROGRESS
   ) {
     return <React.Fragment>{children}</React.Fragment>;
   }
@@ -79,6 +81,16 @@ const RouterModule = () => {
               <AuthenticateRole role={KanzRoles.INVESTOR}>
                 <InvestorFlow guard={authToken} />
               </AuthenticateRole>
+            </AuthenticateRoute>
+          </Suspense>
+        }
+      />
+      <Route
+        path="/realtor-type"
+        element={
+          <Suspense fallback={<Loader />}>
+            <AuthenticateRoute>
+              <Realtors guard={authToken} />
             </AuthenticateRoute>
           </Suspense>
         }

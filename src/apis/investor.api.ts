@@ -19,6 +19,14 @@ export const investmentAccridiation = (payload: any, token: string) => {
     });
 };
 
+export const realtorApi = (payload: any, token: string) => {
+    return axios.post(`${ENV.API_URL}/${ENV.API_VERSION}/realtors`, payload, {
+        headers: {
+            Authorization: `Bearer ${token}`
+        },
+    });
+};
+
 
 export const getInvestor = (token: string) => {
     return axios.get(`${ENV.API_URL}/${ENV.API_VERSION}/investor`, {
