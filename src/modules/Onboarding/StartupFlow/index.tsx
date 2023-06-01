@@ -14,6 +14,8 @@ import { postSyndicateInformation } from "../../../apis/syndicate.api";
 import Button from "../../../shared/components/Button";
 import { isValidUrl } from "../../../utils/regex.utils";
 import StartupStepper from "./StartupStepper";
+import { getCountries } from "../../../apis/countries.api";
+import { postCompanyInformation } from "../../../apis/company.api";
 
 const StartupFlow = ({ }: any) => {
   const params = useParams();
@@ -23,15 +25,16 @@ const StartupFlow = ({ }: any) => {
   const authToken: any = useSelector((state: RootState) => state.auth.value);
 
   const [payload, setPayload]: any = useState({
-    raised: false,
-    amountRaised: "",
-    timesRaised: "",
-    industry: [],
-    region: [],
-    profileLink: "",
-    dealflow: "",
+    company: "",
+    legal: "",
+    country: "",
+    market: "",
+    web: "",
+    business: "",
     name: "",
-    tagline: "",
+    email: "",
+    raised: "",
+    target: "",
     logo: null,
   });
   const [options] = useState([
@@ -45,7 +48,7 @@ const StartupFlow = ({ }: any) => {
   const [loading, setLoading] = useState(false);
 
   useLayoutEffect(() => {
-    let _payload: any = localStorage.getItem("syndicate");
+    let _payload: any = localStorage.getItem("startup");
     if (_payload) setPayload(JSON.parse(_payload));
   }, []);
 
@@ -57,6 +60,8 @@ const StartupFlow = ({ }: any) => {
     setFile({ file, id, attachment_id });
     onSetPayload(id, "logo");
   };
+
+
 
   const removeFile = async (id: string) => {
     try {
@@ -81,28 +86,16 @@ const StartupFlow = ({ }: any) => {
   const ontoNextStep = () => {
     if (step === 1) {
       let errors = [];
-      if ((payload.amountRaised && (!payload.timesRaised || !payload.timesRaised)) || !payload.industry.length || !payload.region || !payload.profileLink || !payload.dealflow)
+      if (!payload.company || !payload.legal || !payload.company || !payload.market || !payload.web)
         errors.push(language.promptMessages.pleaseSelectAllData)
-      if (!isValidUrl(payload.profileLink)) errors.push(language.promptMessages.validProfile);
+      if (!isValidUrl(payload.web)) errors.push(language.promptMessages.validComp);
       if (errors.length) return errors.forEach(e => toast.warning(e, toastUtil));
       setStep(2);
-      navigate(`/syndicate-lead/${step + 1}`);
+      navigate(`/startup-type/${step + 1}`);
     } else {
-      if (
-        (payload.amountRaised && (!payload.timesRaised || !payload.timesRaised)) ||
-        !payload.industry.length ||
-        !payload.region.length ||
-        !payload.profileLink ||
-        !payload.dealflow ||
-        !payload.name ||
-        !payload.tagline ||
-        !payload.logo
-      )
-        return toast.warning(
-          language.promptMessages.pleaseSelectAllData,
-          toastUtil
-        );
-      onPostSyndicateData();
+      if (!payload.company || !payload.legal || !payload.company || !payload.market || !payload.web || !payload.name || !payload.email || !payload.logo || !payload.business || !payload.raised || !payload.target)
+        return toast.warning(language.promptMessages.pleaseSelectAllData, toastUtil);
+      onPostCompanyData();
     }
   };
 
@@ -112,28 +105,32 @@ const StartupFlow = ({ }: any) => {
     });
   };
 
-  const onPostSyndicateData = async () => {
+  const onPostCompanyData = async () => {
     try {
       setLoading(true);
       let dataPayload: any = {
-        syndicate_profile: {
-          have_you_raised: payload.raised,
-          raised_amount: payload.amountRaised,
-          no_times_raised: payload.timesRaised,
-          industry_market: payload.industry,
-          region: payload.region,
-          profile_link: payload.profileLink,
-          dealflow: payload.dealflow,
-          name: payload.name,
-          tagline: payload.tagline,
-          logo: payload.logo,
-        },
+        startup:{
+          meta_info: {
+            company_name: payload.company,
+            legal_name: payload.legal,
+            country: payload.country,
+            industry_market: payload.market,
+            website: payload.web,
+            address: payload.address,
+            logo: payload.logo,
+            description: payload.business,
+            ceo_name: payload.name,
+            ceo_email: payload.email,
+            raised: payload.raised,
+            target: payload.target,
+          }
+        }
       };
-      let { status } = await postSyndicateInformation(dataPayload, authToken);
+      let { status } = await postCompanyInformation(dataPayload, authToken);
 
       if (status === 200) {
         navigate("/add-attachments");
-        localStorage.setItem("syndicate", JSON.stringify(payload));
+        localStorage.setItem("startup", JSON.stringify(payload));
       }
     } catch (error: any) {
       if (error.response && error.response.status === 401) {
@@ -178,6 +175,7 @@ const StartupFlow = ({ }: any) => {
           removeFile={removeFile}
           setFile={onSetFile}
           setModalOpen={(e: any) => setModalOpen(e)}
+          authToken={authToken}
         />
 
         <section className="w-full inline-flex items-center justify-between py-16">

@@ -87,7 +87,7 @@ const RouterModule = () => {
         }
       />
       <Route
-        path="/startup-type"
+        path="/startup-type/:id"
         element={
           <Suspense fallback={<Loader />}>
             <AuthenticateRoute>
