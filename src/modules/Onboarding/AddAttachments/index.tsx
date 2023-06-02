@@ -1,29 +1,22 @@
-import React, { useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { RootState } from "../../../redux-toolkit/store/store";
-import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import Spinner from "../../../shared/components/Spinner";
-import { saveToken } from "../../../redux-toolkit/slicer/auth.slicer";
+import React, { useState } from "react";
+import { useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
+
+import { FileType } from "../../../enums/types.enum";
+import Modal from "../../../shared/components/Modal";
 import { toastUtil } from "../../../utils/toast.utils";
 import Header from "../../../shared/components/Header";
-import CrossIcon from "../../../ts-icons/crossIcon.svg";
-import FileUpload from "../../../shared/components/FileUpload";
-import Modal from "../../../shared/components/Modal";
-import Drawer from "../../../shared/components/Drawer";
-import HoverModal from "../../../shared/components/HoverModal";
-import { FileType } from "../../../enums/types.enum";
-import { removeAttachment } from "../../../apis/attachment.api";
-import SampleImage from "../../../assets/example_id.png";
-import SampleImage_2 from "../../../assets/example_id_2.png";
 import Button from "../../../shared/components/Button";
+import Drawer from "../../../shared/components/Drawer";
+import CrossIcon from "../../../ts-icons/crossIcon.svg";
+import UploadComp from "../../../shared/components/Upload";
+import { RootState } from "../../../redux-toolkit/store/store";
 
 const AddAttachments = (props: any) => {
   const navigate = useNavigate();
-  const dispatch = useDispatch();
 
   const language: any = useSelector((state: RootState) => state.language.value);
-  const authToken: any = useSelector((state: RootState) => state.auth.value);
 
   const [uploading] = useState([
     {
@@ -43,43 +36,16 @@ const AddAttachments = (props: any) => {
     },
   ]);
 
-  const [selectedId, setSelectedId]: any = useState(null);
   const [modalOpen, setModalOpen]: any = useState(null);
   const [isOpen, setOpen] = useState(false);
   const [fileType, setFileType]: any = useState(null);
   const [agreeToTerms, setAgreeToTerms] = useState(false);
   const [files, setFiles]: any = useState([]);
-  const [loading, setLoading] = useState(false);
 
   const setFile = (file: File, id: string, attachment_id: string) => {
     setFiles((prev: any) => {
       return [...prev, { file, id, attachment_id }];
     });
-  };
-
-  const removeFile = async (id: string) => {
-    try {
-      setLoading(true);
-      let { status } = await removeAttachment(id, authToken);
-      if (status === 200) {
-        let _files = files
-          .slice()
-          .filter((file: any) => file.attachment_id !== id);
-        setFiles(_files);
-      }
-    } catch (error: any) {
-      if (error.response && error.response.status === 401) {
-        dispatch(saveToken(""));
-        navigate("/login", { state: "add-attachments" });
-      }
-      const message =
-        error?.response?.data?.status?.message ||
-        error?.response?.data ||
-        language.promptMessages.errorGeneral;
-      toast.error(message, toastUtil);
-    } finally {
-      setLoading(false);
-    }
   };
 
   return (
@@ -113,58 +79,27 @@ const AddAttachments = (props: any) => {
             </span>
           </p>
         </section>
-
         <section className="flex items-start justify-center flex-col mt-8">
           <form className="pt-12 mb-4 w-full">
             {React.Children.toArray(
               uploading.map((item) => {
                 return (
-                  <div className="mb-4 w-full">
-                    <div className="block text-neutral-700 text-base font-medium">
-                      <div>{item.title}</div>
-                      <small className="text-neutral-700 font-normal">
-                        {item.sub}
-                      </small>
-                      <small
-                        className="relative font-normal color-blue cursor-pointer"
-                        onMouseEnter={() => setSelectedId(item.id)}
-                        onMouseLeave={() => setSelectedId(null)}
-                      >
-                        &nbsp;<span>{language?.common?.example}</span>
-                        {selectedId === item.id && (
-                          <HoverModal>
-                            <section className="inline-flex flex-row items-center justify-evenly h-full">
-                              <img
-                                src={SampleImage_2}
-                                alt={item.title}
-                                className="max-h-[90px]"
-                              />
-                              <img
-                                src={SampleImage}
-                                alt={item.title}
-                                className="max-h-[140px]"
-                              />
-                            </section>
-                          </HoverModal>
-                        )}
-                      </small>
-                      <FileUpload
-                        id={item.id}
-                        setFile={setFile}
-                        removeFile={removeFile}
-                        setModalOpen={(e: any) => {
-                          setModalOpen(e.open ? e.url : null);
-                          e.type && setFileType(e.type);
-                        }}
-                      />
-                    </div>
-                  </div>
+                  <UploadComp
+                    id={item.id}
+                    files={files}
+                    setFile={setFile}
+                    title={item.title}
+                    subTitle={item.sub}
+                    language={language}
+                    setFiles={setFiles}
+                    setFileType={setFileType}
+                    setModalOpen={setModalOpen}
+                  />
                 );
               })
             )}
           </form>
         </section>
-
         <section className="w-full inline-flex items-center gap-2 rounded-md border border-grey w-[420px] p-4 check-background">
           <input
             type="checkbox"
@@ -174,12 +109,14 @@ const AddAttachments = (props: any) => {
           />
           <p className="text-neutral-500 text-sm font-normal">
             {language?.common?.agree}&nbsp;
-            <span className="color-blue font-medium cursor-pointer" onClick={() => setOpen(true)}>
+            <span
+              className="color-blue font-medium cursor-pointer"
+              onClick={() => setOpen(true)}
+            >
               {language?.common?.termsConditions}
             </span>
           </p>
         </section>
-
         <section className="w-full inline-flex items-center justify-between py-16">
           <Button
             className="h-[38px] w-[140px]"
@@ -193,7 +130,6 @@ const AddAttachments = (props: any) => {
             disabled={files.length === 3 && agreeToTerms ? false : true}
             className="h-[38px] w-[140px]"
             htmlType="submit"
-            loading={loading}
             onClick={() => {
               let errors: string[] = [];
               if (files.length !== 3)
