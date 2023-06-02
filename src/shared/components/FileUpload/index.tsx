@@ -120,7 +120,7 @@ const FileUpload = ({ id, setModalOpen, setFile, removeFile }: any) => {
                     {selectedFile && selectedFile?.id === id ? (
                         <div className="flex items-center relative check-background h-full px-2">
                             <div className="h-8 w-8 p-2 absolute right-2 top-2 rounded-full cursor-pointer bg-white" onClick={(e) => {
-                                removeFile(selectedFile?.attachment_id);
+                                removeFile(selectedFile?.attachment_id,setLoading);
                                 e.preventDefault();
                                 e.stopPropagation();
                                 setSelectedFile(null);
