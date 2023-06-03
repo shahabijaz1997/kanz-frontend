@@ -10,11 +10,9 @@ import { saveToken } from "../../../redux-toolkit/slicer/auth.slicer";
 import { toast } from "react-toastify";
 import { toastUtil } from "../../../utils/toast.utils";
 import CrossIcon from "../../../ts-icons/crossIcon.svg";
-import { postSyndicateInformation } from "../../../apis/syndicate.api";
 import Button from "../../../shared/components/Button";
 import { isValidUrl } from "../../../utils/regex.utils";
 import StartupStepper from "./StartupStepper";
-import { getCountries } from "../../../apis/countries.api";
 import { postCompanyInformation } from "../../../apis/company.api";
 
 const StartupFlow = ({ }: any) => {
@@ -109,21 +107,19 @@ const StartupFlow = ({ }: any) => {
     try {
       setLoading(true);
       let dataPayload: any = {
-        startup:{
-          meta_info: {
-            company_name: payload.company,
-            legal_name: payload.legal,
-            country: payload.country,
-            industry_market: payload.market,
-            website: payload.web,
-            address: payload.address,
-            logo: payload.logo,
-            description: payload.business,
-            ceo_name: payload.name,
-            ceo_email: payload.email,
-            raised: payload.raised,
-            target: payload.target,
-          }
+        startup: {
+          company_name: payload.company,
+          legal_name: payload.legal,
+          country_id: payload.country?.id,
+          industry_market: payload.market,
+          website: payload.web,
+          address: payload.address,
+          logo: payload.logo,
+          description: payload.business,
+          ceo_name: payload.name,
+          ceo_email: payload.email,
+          total_capital_raised: payload.raised,
+          current_round_capital_target: payload.target,
         }
       };
       let { status } = await postCompanyInformation(dataPayload, authToken);

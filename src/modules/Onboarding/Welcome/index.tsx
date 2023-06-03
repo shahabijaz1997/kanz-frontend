@@ -48,7 +48,6 @@ const Welcome = ({ }: any) => {
             setLoading(false);
         }
     };
-
     const getInvestorDetails = async () => {
         try {
             setLoading(true);
@@ -225,8 +224,7 @@ const Welcome = ({ }: any) => {
               </Button>
             </React.Fragment>
           );
-        } else
-        if (user.type !== KanzRoles.STARTUP) {
+        } else if (user.type === KanzRoles.STARTUP) {
           return (
             <React.Fragment>
               <h2 className="text-2xl font-bold text-neutral-900 mb-4 screen500:text-[20px]">
@@ -240,8 +238,7 @@ const Welcome = ({ }: any) => {
                 disabled={loading}
                 htmlType="submit"
                 loading={loading}
-                // note : change the route according to role
-                onClick={() => navigate("/realtor-type")}
+                onClick={() => navigate("/startup-type/1")}
               >
                 {language?.buttons?.start}
               </Button>

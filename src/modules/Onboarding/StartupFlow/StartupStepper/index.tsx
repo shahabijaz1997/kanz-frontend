@@ -76,10 +76,9 @@ const StartupStepper = ({ language, payload, onSetPayload, authToken, step, remo
                             {language?.company?.market}
                         </label>
                         <Selector
-                            onChange={(v: any) => onSetPayload(v, "market")}
+                            onChange={(v: any) => onSetPayload(v.value, "market")}
                             options={industries}
-                            value={payload.market || ""}
-                            defaultValue={payload.market || ""}
+                            defaultValue={{label: payload.market, value: payload.market} || ""}
                         />
                     </div>
 
@@ -88,11 +87,11 @@ const StartupStepper = ({ language, payload, onSetPayload, authToken, step, remo
                             {language?.company?.country}
                         </label>
                         <CountrySelector
-                            onChange={(v: any) => onSetPayload(v, "country")}
-                            selectedValue={payload.country}
+                            onChange={(v: any) => onSetPayload(countries.all.find((c:any) => c.name === v.value), "country")}
+                            selectedValue={{label: payload?.country?.name, value: payload?.country?.name}}
                             allCountries={countries.names}
-                            value={payload.country || ""}
-                            defaultValue={payload.country || ""}
+                            value={payload?.country?.name || ""}
+                            defaultValue={{label: payload?.country?.name, value: payload?.country?.name} || ""}
                         />
                     </div>
 

@@ -62,7 +62,10 @@ const SyndicateFlow = ({ }: any) => {
     try {
       setLoading(true);
       let { status } = await removeAttachment(id, authToken);
-      if (status === 200) setFile(null);
+      if (status === 200) {
+        setFile(null);
+        onSetPayload(null, "logo")
+      };
     } catch (error: any) {
       if (error.response && error.response.status === 401) {
         dispatch(saveToken(""));
