@@ -11,7 +11,7 @@ import { toast } from "react-toastify";
 import { toastUtil } from "../../../utils/toast.utils";
 import CrossIcon from "../../../ts-icons/crossIcon.svg";
 import Button from "../../../shared/components/Button";
-import { isValidUrl } from "../../../utils/regex.utils";
+import { isValidEmail, isValidUrl } from "../../../utils/regex.utils";
 import StartupStepper from "./StartupStepper";
 import { postCompanyInformation } from "../../../apis/company.api";
 
@@ -96,10 +96,13 @@ const StartupFlow = ({ }: any) => {
       setStep(2);
       navigate(`/startup-type/${step + 1}`);
     } else {
-      if (!payload.company || !payload.legal || !payload.country || !payload.market || !payload.address || !payload.web || !payload.name || !payload.email || !payload.logo || !payload.business || !payload.raised || !payload.target){
-        toast.dismiss();
-        return toast.warning(language.promptMessages.pleaseSelectAllData, toastUtil);
+      let errors = []
+      if (!payload.company || !payload.legal || !payload.country || !payload.market || !payload.address || !payload.web || !payload.name || !payload.email || !payload.logo || !payload.business || !payload.raised || !payload.target) {
+        errors.push(language.promptMessages.pleaseSelectAllData);
       }
+      if (!isValidEmail(payload.email)) errors.push(language.promptMessages.invalidEmailCeo)
+      toast.dismiss();
+      if (errors.length) return errors.forEach(e => toast.warning(e, toastUtil));
       onPostCompanyData();
     }
   };

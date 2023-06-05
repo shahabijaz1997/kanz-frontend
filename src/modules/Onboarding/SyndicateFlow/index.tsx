@@ -156,11 +156,7 @@ const SyndicateFlow = ({ }: any) => {
     <main className="h-full max-h-full background-auth overflow-y-auto">
       <section>
         <Header custom={true} data={{
-          leftMenu: language.header.syndicateLead, button: (
-            <button onClick={() => navigate(-1)}>
-              <CrossIcon stroke="#171717" className="w-6 h-6" />
-            </button>
-          ),
+          leftMenu: language.header.syndicateLead, button: (<button onClick={() => navigate("/welcome")} className="text-neutral-900 bg-white font-bold text-sm w-[150px] h-9 cursor-pointer border border-black shadow-sm screen800:w-[120px]">{language.buttons.gotoDashboard}</button>),
         }}
         />
       </section>
