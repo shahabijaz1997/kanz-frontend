@@ -7,6 +7,7 @@ import loadLanguage from "../../utils/load-language.utils";
 import Loader from "../../shared/views/Loader";
 import { KanzRoles } from "../../enums/roles.enum";
 import { ApplicationStatus } from "../../enums/types.enum";
+import StartUpAttachment from "../Onboarding/StartUpAttachment";
 
 // Modules
 const Home = lazy(() => import("../Home"));
@@ -91,9 +92,9 @@ const RouterModule = () => {
         element={
           <Suspense fallback={<Loader />}>
             <AuthenticateRoute>
-              <AuthenticateRole role={KanzRoles.STARTUP}>
-                <Startup guard={authToken} />
-              </AuthenticateRole>
+              {/* <AuthenticateRole role={KanzRoles.STARTUP}> */}
+              <Startup guard={authToken} />
+              {/* </AuthenticateRole> */}
             </AuthenticateRoute>
           </Suspense>
         }
@@ -112,9 +113,9 @@ const RouterModule = () => {
         path="/complete-details"
         element={
           <Suspense fallback={<Loader />}>
-            {/* <AuthenticateRoute> */}
-            <CompleteDetails guard={authToken} />
-            {/* </AuthenticateRoute> */}
+            <AuthenticateRoute>
+              <CompleteDetails guard={authToken} />
+            </AuthenticateRoute>
           </Suspense>
         }
       />
@@ -147,6 +148,18 @@ const RouterModule = () => {
             <AuthenticateRoute>
               <AuthenticateRole role={KanzRoles.ALL}>
                 <AddAttachments guard={authToken} />
+              </AuthenticateRole>
+            </AuthenticateRoute>
+          </Suspense>
+        }
+      />
+      <Route
+        path="/add-startup-attachments"
+        element={
+          <Suspense fallback={<Loader />}>
+            <AuthenticateRoute>
+              <AuthenticateRole role={KanzRoles.ALL}>
+                <StartUpAttachment guard={authToken} />
               </AuthenticateRole>
             </AuthenticateRoute>
           </Suspense>
