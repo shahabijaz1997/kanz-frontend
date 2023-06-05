@@ -49,8 +49,6 @@ const StartupStepper = ({ language, payload, onSetPayload, authToken, step, remo
             if (industryRes.status === 200) {
                 let data = industryRes.data.business.map((item: any) => { return { label: item.name, value: item.name } })
                 setIndustries(data);
-                console.log(data);
-
             }
         } catch (error) {
             console.error("Error in industries: ", error);

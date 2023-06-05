@@ -84,15 +84,14 @@ const SyndicateFlow = ({ }: any) => {
   const ontoNextStep = () => {
     if (step === 1) {
       let errors = [];
-      if ((payload.amountRaised && (!payload.timesRaised || !payload.timesRaised)) || !payload.industry.length || !payload.region || !payload.profileLink || !payload.dealflow)
+      if ((payload.raised && (!payload.timesRaised || !payload.amountRaised)) || !payload.industry.length || !payload.region || !payload.profileLink || !payload.dealflow)
         errors.push(language.promptMessages.pleaseSelectAllData)
       if (!isValidUrl(payload.profileLink)) errors.push(language.promptMessages.validProfile);
       if (errors.length) return errors.forEach(e => toast.warning(e, toastUtil));
       setStep(2);
       navigate(`/syndicate-lead/${step + 1}`);
     } else {
-      if (
-        (payload.amountRaised && (!payload.timesRaised || !payload.timesRaised)) ||
+      if ((payload.raised && (!payload.timesRaised || !payload.amountRaised)) ||
         !payload.industry.length ||
         !payload.region.length ||
         !payload.profileLink ||

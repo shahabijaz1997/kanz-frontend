@@ -142,12 +142,12 @@ const StartUpAttachment = (props: any) => {
             {language?.buttons?.back}
           </Button>
           <Button
-            disabled={files.length === 3 && agreeToTerms ? false : true}
+            disabled={files.length === 6 && agreeToTerms ? false : true}
             className="h-[38px] w-[140px]"
             htmlType="submit"
             onClick={() => {
               let errors: string[] = [];
-              if (files.length !== 3)
+              if (files.length < 6)
                 errors.push(language.promptMessages.pleaseUploadAttachments);
               if (!agreeToTerms)
                 errors.push(language.promptMessages.pleaseAcceptPP);

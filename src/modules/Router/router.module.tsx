@@ -1,5 +1,5 @@
 import React, { PropsWithChildren, Suspense, lazy } from "react";
-import { Navigate, Route, Routes, useLocation } from "react-router-dom";
+import { Navigate, Route, Routes } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../redux-toolkit/store/store";
 import { saveLanguage } from "../../redux-toolkit/slicer/language.slicer";
@@ -8,6 +8,7 @@ import Loader from "../../shared/views/Loader";
 import { KanzRoles } from "../../enums/roles.enum";
 import { ApplicationStatus } from "../../enums/types.enum";
 import StartUpAttachment from "../Onboarding/StartUpAttachment";
+import { RoutesEnums } from "../../enums/routes.enum";
 
 // Modules
 const Home = lazy(() => import("../Home"));
@@ -76,7 +77,7 @@ const RouterModule = () => {
         }
       />
       <Route
-        path="/investor-type"
+        path={RoutesEnums.INVESTOR_DETAILS}
         element={
           <Suspense fallback={<Loader />}>
             <AuthenticateRoute>
@@ -92,15 +93,15 @@ const RouterModule = () => {
         element={
           <Suspense fallback={<Loader />}>
             <AuthenticateRoute>
-              {/* <AuthenticateRole role={KanzRoles.STARTUP}> */}
+              <AuthenticateRole role={KanzRoles.STARTUP}>
               <Startup guard={authToken} />
-              {/* </AuthenticateRole> */}
+              </AuthenticateRole>
             </AuthenticateRoute>
           </Suspense>
         }
       />
       <Route
-        path="/realtor-type"
+        path={RoutesEnums.REALTOR_DETAILS}
         element={
           <Suspense fallback={<Loader />}>
             <AuthenticateRoute>
