@@ -74,18 +74,18 @@
         "industrySub": "Norem ipsum dolor sit amet ipsum dolor.",
         "region": "Region",
         "profile": "Profile Link",
-        "dealflow": "Expected Dealflow",
+        "dealflow": "Add dealflow",
         "syndName": "Syndicate name",
         "tagline": "Add tagline",
         "logo": "Logo",
-        "uploadCompLogo": "Upload a company logo."
+        "uploadCompLogo": "Upload a company logo"
     },
     "company": {
         "step": "Step",
         "compName": "Company name",
         "legal": "Legal name",
-        "selectCountry": "Select Country",
-        "marker": "Industry Market",
+        "country": "Select Country",
+        "market": "Industry Market",
         "compWeb": "Company Website",
         "address": "Address",
         "descBus": "Describe your business",
@@ -93,11 +93,14 @@
         "produServ": "What product and services do provide to customers?",
         "ceoDet": "Add CEO detail",
         "ceoDetSub": "Norem ipsum dolor sit amet",
-        "dealflow": "Expected Dealflow",
         "name": "Name",
         "dummyemail": "you@example.com",
         "logo": "Logo",
-        "uploadCompLogo": "Upload a company logo."
+        "uploadCompLogo": "Upload a company logo",
+        "capRaised": "Total capital raised (before this round)",
+        "capTarget": "Target capital to raise (for this round)",
+        "addCapRaise": "Add capital raised",
+        "addCapTarget": "Add target capital"
     },
     "philosophyGoals": {
         "objective": "Investment Objective",
@@ -273,6 +276,7 @@
         "pleaseAcceptPP": "You have to accept Kanz terms & conditions before submitting",
         "invalidCode": "Authentication code is invalid",
         "maxLimitInvalid": "You have entered invalid code for 5 times, please signup again",
-        "validProfile": "Please enter valid profile url"
+        "validProfile": "Please enter valid profile url",
+        "validComp": "Please enter valid company url"
     }
 }

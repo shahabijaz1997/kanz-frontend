@@ -5,16 +5,19 @@ import { RootState } from "../../../redux-toolkit/store/store";
 import Header from "../../../shared/components/Header";
 import { KanzRoles } from "../../../enums/roles.enum";
 import AddAttachmentBanner from "../../../shared/components/AddAttachmentBanner";
-import { ApplicationStatus } from "../../../enums/types.enum";
 import { getUser } from "../../../apis/auth.api";
 import { saveToken } from "../../../redux-toolkit/slicer/auth.slicer";
 import { saveUserData } from "../../../redux-toolkit/slicer/user.slicer";
 import Loader from "../../../shared/views/Loader";
-import Button from "../../../shared/components/Button";
 import { getInvestor } from "../../../apis/investor.api";
 import { getSyndicateInformation } from "../../../apis/syndicate.api";
-import { isEmpty } from "../../../utils/object.util";
 import { saveUserMetaData } from "../../../redux-toolkit/slicer/metadata.slicer";
+import { getCompanyInformation } from "../../../apis/company.api";
+import { getRealtorInformation } from "../../../apis/realtor.api";
+import InvestorHome from "../../../shared/views/InvestorHome";
+import SyndicateHome from "../../../shared/views/SyndicateHome";
+import RealtorHome from "../../../shared/views/RealtorHome";
+import StartupHome from "../../../shared/views/StartupHome";
 
 const Welcome = ({ }: any) => {
     const dispatch = useDispatch();
@@ -22,14 +25,12 @@ const Welcome = ({ }: any) => {
     const authToken: any = useSelector((state: RootState) => state.auth.value);
     const language: any = useSelector((state: RootState) => state.language.value);
     const user: any = useSelector((state: RootState) => state.user.value);
-    const metadata: any = useSelector((state: RootState) => state.metadata.value);
 
     const [loading, setLoading] = useState(false);
 
     useLayoutEffect(() => {
         getUserDetails();
-        user.type === KanzRoles.INVESTOR && getInvestorDetails();
-        user.type === KanzRoles.SYNDICATE && getSyndicateDetails();
+        getRoleBasedDetails();
     }, []);
 
     const getUserDetails = async () => {
@@ -42,33 +43,25 @@ const Welcome = ({ }: any) => {
         } catch (error: any) {
             if (error.response && error.response.status === 401) {
                 dispatch(saveToken(""));
-                navigate("/login", { state: "complete-goals" });
+                navigate("/login", { state: "" });
             }
         } finally {
             setLoading(false);
         }
     };
-
-    const getInvestorDetails = async () => {
+    const getRoleBasedDetails = async () => {
         try {
             setLoading(true);
-            let { status, data } = await getInvestor(authToken);
-            if (status === 200) {
-                dispatch(saveUserMetaData(data?.status?.data));
-            }
-        } catch (error: any) {
-            if (error.response && error.response.status === 401) {
-                dispatch(saveToken(""));
-                navigate("/login", { state: '' });
-            }
-        } finally {
-            setLoading(false);
-        }
-    };
-    const getSyndicateDetails = async () => {
-        try {
-            setLoading(true);
-            let { status, data } = await getSyndicateInformation(1, authToken);
+            let results: any;
+            if (user.type === KanzRoles.INVESTOR)
+                results = await getInvestor(authToken);
+            else if (user.type === KanzRoles.SYNDICATE)
+                results = await getSyndicateInformation(1, authToken);
+            else if (user.type === KanzRoles.STARTUP)
+                results = await getCompanyInformation(1, authToken);
+            else if (user.type === KanzRoles.STARTUP)
+                results = await getRealtorInformation(1, authToken);
+            let { status, data } = results;
             if (status === 200) {
                 dispatch(saveUserMetaData(data?.status?.data));
             }
@@ -84,169 +77,13 @@ const Welcome = ({ }: any) => {
 
     const renderRoleWiseScreen = () => {
         if (user.type === KanzRoles.INVESTOR) {
-            if (user.status == ApplicationStatus.OPENED && isEmpty(metadata?.profile)) {
-                return (
-                    <React.Fragment>
-                        <h2 className="text-2xl font-bold text-neutral-900 mb-4 screen500:text-[20px]">
-                            {language?.onboarding?.welcomeDashboard}
-                        </h2>
-                        <h3 className="text-base font-normal text-neutral-700 screen500:text-[12px]">
-                            {language?.onboarding?.starterMessage}
-                        </h3>
-                        <Button className="mt-[60px] h-[38px] w-[143px]" disabled={loading} htmlType="submit" loading={loading} onClick={() => navigate("/investor-type")} >
-                            {language?.buttons?.start}
-                        </Button>
-                    </React.Fragment>
-                );
-            } else if (user.status == ApplicationStatus.OPENED && !isEmpty(metadata?.profile)) {
-                return (
-                    <React.Fragment>
-                        <h2 className="text-2xl font-bold text-neutral-900 mb-4 screen500:text-[20px]">
-                            {language?.onboarding?.welcomeDashboard}
-                        </h2>
-                        <h3 className="text-base font-normal text-neutral-700 screen500:text-[12px]">
-                            {language?.onboarding?.starterMessage}
-                        </h3>
-                        <h3 className="text-base font-normal text-neutral-700 screen500:text-[12px] mt-2">
-                            {language?.onboarding?.appStatus}: <strong>{language.common.inprogress}</strong>
-                        </h3>
-                        <Button className="mt-[60px] h-[38px] w-[143px]" disabled={loading} htmlType="submit" loading={loading} onClick={() => navigate("/investor-type")} >
-                            {language?.buttons?.continue}
-                        </Button>
-                    </React.Fragment>
-                );
-            } else if (user.status == ApplicationStatus.SUBMITTED) {
-                return (
-                    <React.Fragment>
-                        <h2 className="text-2xl font-bold text-neutral-900 mb-4 screen500:text-[20px]">
-                            {language?.onboarding?.submitted}
-                        </h2>
-                        <h3 className="text-base font-normal text-neutral-700 screen500:text-[12px]">
-                            {language?.onboarding?.appStatus}: <strong>{language.common.submitted}</strong>
-                        </h3>
-                    </React.Fragment>
-                );
-            } else {
-                return (
-                    <React.Fragment>
-                        <h2 className="text-2xl font-bold text-neutral-900 mb-4 screen500:text-[20px]">
-                            {language?.onboarding?.welcomeDashboard}
-                        </h2>
-                        <h3 className="text-base font-normal text-neutral-700 screen500:text-[12px]">
-                            {language?.onboarding?.starterMessage}
-                        </h3>
-                        <Button
-                            className="mt-6 h-[38px]"
-                            disabled={loading}
-                            htmlType="submit"
-                            loading={loading}
-                            onClick={() => navigate("/investor-type")}
-                        >
-                            {language?.buttons?.start}
-                        </Button>
-                    </React.Fragment>
-                );
-            }
+            return <InvestorHome loading={loading} language={language} />
         } else if (user.type === KanzRoles.SYNDICATE) {
-            if (user.status === ApplicationStatus.OPENED && isEmpty(metadata?.profile)) {
-                return (
-                    <React.Fragment>
-                        <h2 className="text-2xl font-bold text-neutral-900 mb-4 screen500:text-[20px]">
-                            {language?.onboarding?.syndicateLead}
-                        </h2>
-                        <h3 className="text-base font-normal text-neutral-700 screen500:text-[12px]">
-                            {language?.onboarding?.syndicateLeadSub}
-                        </h3>
-                        <Button
-                            className="mt-6 h-[38px]"
-                            disabled={loading}
-                            htmlType="submit"
-                            loading={loading}
-                            onClick={() => navigate("/syndicate-lead/1")}
-                        >
-                            {language?.buttons?.start}
-                        </Button>
-                    </React.Fragment>
-                );
-            }
-            else if (user.status === ApplicationStatus.OPENED && !isEmpty(metadata?.profile)) {
-                return (
-                    <React.Fragment>
-                        <h2 className="text-2xl font-bold text-neutral-900 mb-4 screen500:text-[20px]">
-                            {language?.onboarding?.syndicateLead}
-                        </h2>
-                        <h3 className="text-base font-normal text-neutral-700 screen500:text-[12px]">
-                            {language?.onboarding?.syndicateLeadSub}
-                        </h3>
-                        <h3 className="text-base font-normal text-neutral-700 screen500:text-[12px] mt-2">
-                            {language?.onboarding?.appStatus}: <strong>{language.common.inprogress}</strong>
-                        </h3>
-                        <Button
-                            className="mt-6 h-[38px]"
-                            disabled={loading}
-                            htmlType="submit"
-                            loading={loading}
-                            onClick={() => navigate("/syndicate-lead/1")}
-                        >
-                            {language?.buttons?.start}
-                        </Button>
-                    </React.Fragment>
-                );
-            }
-            else if (user.status == ApplicationStatus.SUBMITTED) {
-                return (
-                    <React.Fragment>
-                        <h2 className="text-2xl font-bold text-neutral-900 mb-4 screen500:text-[20px]">
-                            {language?.onboarding?.submitted}
-                        </h2>
-                        <h3 className="text-base font-normal text-neutral-700 screen500:text-[12px]">
-                            {language?.onboarding?.appStatus}: <strong>{language.common.submitted}</strong>
-                        </h3>
-                    </React.Fragment>
-                );
-            }
+            return <SyndicateHome loading={loading} language={language} />
         } else if (user.type === KanzRoles.REALTOR) {
-          return (
-            <React.Fragment>
-              <h2 className="text-2xl font-bold text-neutral-900 mb-4 screen500:text-[20px]">
-                {language?.onboarding?.realtorWelcomeText}
-              </h2>
-              <h3 className="text-base font-normal text-neutral-700 screen500:text-[12px]">
-                {language?.onboarding?.syndicateLeadSub}
-              </h3>
-              <Button
-                className="mt-6 h-[38px]"
-                disabled={loading}
-                htmlType="submit"
-                loading={loading}
-                onClick={() => navigate("/realtor-type")}
-              >
-                {language?.buttons?.start}
-              </Button>
-            </React.Fragment>
-          );
-        } else
-        if (user.type !== KanzRoles.STARTUP) {
-          return (
-            <React.Fragment>
-              <h2 className="text-2xl font-bold text-neutral-900 mb-4 screen500:text-[20px]">
-                {language?.onboarding?.addCompanyDetails}
-              </h2>
-              <h3 className="text-base font-normal text-neutral-700 screen500:text-[12px]">
-                {language?.onboarding?.syndicateLeadSub}
-              </h3>
-              <Button
-                className="mt-6 h-[38px]"
-                disabled={loading}
-                htmlType="submit"
-                loading={loading}
-                // note : change the route according to role
-                onClick={() => navigate("/realtor-type")}
-              >
-                {language?.buttons?.start}
-              </Button>
-            </React.Fragment>
-          );
+            return <RealtorHome loading={loading} language={language} />
+        } else if (user.type === KanzRoles.STARTUP) {
+            return <StartupHome loading={loading} language={language} />
         }
     };
 

@@ -188,7 +188,7 @@ const SyndicateStepper = ({ language, payload, onSetPayload, options, step, remo
 
                     <div className="mb-4 relative">
                         <label className="block text-neutral-700 text-sm font-medium" htmlFor="dealflow">{language.syndicate.dealflow}</label>
-                        <input id="dealflow" value={payload?.dealflow} onChange={(e) => onSetPayload(e.target.value, "dealflow")} className=" h-[42px] shadow-sm appearance-none border border-neutral-300 rounded-md w-full py-2 px-3 text-gray-500 leading-tight focus:outline-none focus:shadow-outline" type="text" />
+                        <input id="dealflow" value={payload?.dealflow} onChange={(e) => onSetPayload(e.target.value, "dealflow")} placeholder={language.syndicate.dealflow} className=" h-[42px] shadow-sm appearance-none border border-neutral-300 rounded-md w-full py-2 px-3 text-gray-500 leading-tight focus:outline-none focus:shadow-outline" type="text" />
                     </div>
                 </form>
             </section>
@@ -201,7 +201,7 @@ const SyndicateStepper = ({ language, payload, onSetPayload, options, step, remo
                     </section>
                     <section className="mb-8">
                         <label htmlFor="tagline" className="text-neutral-700 text-sm font-medium">{language.syndicate.tagline}</label>
-                        <input id="tagline" value={payload?.tagline} onChange={(e) => onSetPayload(e.target.value, "tagline")} placeholder="Tagline" className=" h-[42px] shadow-sm appearance-none border border-neutral-300 rounded-md w-full py-2 px-3 text-gray-500 leading-tight focus:outline-none focus:shadow-outline" type="text" />
+                        <input id="tagline" value={payload?.tagline} onChange={(e) => onSetPayload(e.target.value, "tagline")} placeholder={language.syndicate.tagline} className=" h-[42px] shadow-sm appearance-none border border-neutral-300 rounded-md w-full py-2 px-3 text-gray-500 leading-tight focus:outline-none focus:shadow-outline" type="text" />
                     </section>
 
                     <div className="mb-4 w-full">

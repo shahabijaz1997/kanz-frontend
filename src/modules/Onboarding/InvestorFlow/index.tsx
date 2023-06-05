@@ -13,6 +13,7 @@ import { saveToken } from "../../../redux-toolkit/slicer/auth.slicer";
 import Drawer from "../../../shared/components/Drawer";
 import Button from "../../../shared/components/Button";
 import GroupIcon from "../../../ts-icons/groupIcon.svg";
+import { isEmpty } from "../../../utils/object.util";
 
 const InvestorFlow = ({ }: any) => {
   const navigate = useNavigate();
@@ -31,7 +32,7 @@ const InvestorFlow = ({ }: any) => {
   ]);
 
   useLayoutEffect(() => {
-    if (user.status == ApplicationStatus.OPENED)
+    if (user.status == ApplicationStatus.OPENED && !isEmpty(metadata?.profile))
       setSelectedAccount(accounts?.find(ac => ac.payload === metadata.role));
   }, []);
 
