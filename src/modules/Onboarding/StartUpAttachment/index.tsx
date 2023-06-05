@@ -132,7 +132,7 @@ const StartUpAttachment = (props: any) => {
             </span>
           </p>
         </section>
-        <section className="w-full inline-flex items-center justify-between py-16">
+        <section className="w-full inline-flex items-center justify-between py-10">
           <Button
             className="h-[38px] w-[140px]"
             htmlType="submit"

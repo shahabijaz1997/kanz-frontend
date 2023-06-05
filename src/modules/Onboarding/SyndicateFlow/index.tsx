@@ -64,7 +64,7 @@ const SyndicateFlow = ({ }: any) => {
       let { status } = await removeAttachment(id, authToken);
       if (status === 200) {
         setFile(null);
-        onSetPayload(null, "logo")
+        onSetPayload(null, "logo");
       };
     } catch (error: any) {
       if (error.response && error.response.status === 401) {
@@ -185,7 +185,7 @@ const SyndicateFlow = ({ }: any) => {
           setModalOpen={(e: any) => setModalOpen(e)}
         />
 
-        <section className="w-full inline-flex items-center justify-between py-16">
+        <section className="w-full inline-flex items-center justify-between py-10">
           <Button
             className="h-[38px] w-[140px]"
             htmlType="submit"
