@@ -13,24 +13,39 @@ import CrossIcon from "../../../ts-icons/crossIcon.svg";
 import UploadComp from "../../../shared/components/Upload";
 import { RootState } from "../../../redux-toolkit/store/store";
 
-const AddAttachments = (props: any) => {
+const StartUpAttachment = (props: any) => {
   const navigate = useNavigate();
 
   const language: any = useSelector((state: RootState) => state.language.value);
 
   const [uploading] = useState([
     {
-      title: language?.common?.idProof,
+      title: language?.common?.presentationDec,
       sub: language?.common?.uploadPic,
       id: "id",
     },
     {
-      title: language?.common?.uploadSelfie,
+      title: language?.common?.passportCopy,
       sub: language?.common?.uploadSelfie,
       id: "self",
     },
     {
       title: language?.common?.resProof,
+      sub: language?.common?.resProof,
+      id: "res",
+    },
+    {
+      title: language?.common?.tradeLic,
+      sub: language?.common?.resProof,
+      id: "res",
+    },
+    {
+      title: language?.common?.articleOfAssociatioon,
+      sub: language?.common?.resProof,
+      id: "res",
+    },
+    {
+      title: language?.common?.kycReport,
       sub: language?.common?.resProof,
       id: "res",
     },
@@ -127,12 +142,12 @@ const AddAttachments = (props: any) => {
             {language?.buttons?.back}
           </Button>
           <Button
-            disabled={files.length === 3 && agreeToTerms ? false : true}
+            disabled={files.length === 6 && agreeToTerms ? false : true}
             className="h-[38px] w-[140px]"
             htmlType="submit"
             onClick={() => {
               let errors: string[] = [];
-              if (files.length !== 3)
+              if (files.length < 6)
                 errors.push(language.promptMessages.pleaseUploadAttachments);
               if (!agreeToTerms)
                 errors.push(language.promptMessages.pleaseAcceptPP);
@@ -221,4 +236,4 @@ const AddAttachments = (props: any) => {
     </main>
   );
 };
-export default AddAttachments;
+export default StartUpAttachment;

@@ -35,8 +35,6 @@ const Questionare = ({ step, returnSuccessRedirection }: any) => {
   }, [step]);
 
   const getQuestionares = async (pg: number) => {
-    console.log(step);
-    
     setLoading(true);
     try {
       const { status, data }: any = await getInvestmentPhilisophyQuestions(pg, authToken);
