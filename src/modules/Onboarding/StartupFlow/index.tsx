@@ -87,12 +87,15 @@ const StartupFlow = ({ }: any) => {
       if (!payload.company || !payload.legal || !payload.company || !payload.market || !payload.web)
         errors.push(language.promptMessages.pleaseSelectAllData)
       if (!isValidUrl(payload.web)) errors.push(language.promptMessages.validComp);
+      toast.dismiss();
       if (errors.length) return errors.forEach(e => toast.warning(e, toastUtil));
       setStep(2);
       navigate(`/startup-type/${step + 1}`);
     } else {
-      if (!payload.company || !payload.legal || !payload.company || !payload.market || !payload.web || !payload.name || !payload.email || !payload.logo || !payload.business || !payload.raised || !payload.target)
+      if (!payload.company || !payload.legal || !payload.company || !payload.market || !payload.web || !payload.name || !payload.email || !payload.logo || !payload.business || !payload.raised || !payload.target){
+        toast.dismiss();
         return toast.warning(language.promptMessages.pleaseSelectAllData, toastUtil);
+      }
       onPostCompanyData();
     }
   };

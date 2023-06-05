@@ -137,6 +137,7 @@ const AddAttachments = (props: any) => {
               if (!agreeToTerms)
                 errors.push(language.promptMessages.pleaseAcceptPP);
               if (errors.length === 0) return setModalOpen(true);
+              toast.dismiss();
               errors.forEach((e) => toast.warning(e, toastUtil));
               errors = [];
             }}

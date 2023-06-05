@@ -87,6 +87,7 @@ const SyndicateFlow = ({ }: any) => {
       if ((payload.raised && (!payload.timesRaised || !payload.amountRaised)) || !payload.industry.length || !payload.region || !payload.profileLink || !payload.dealflow)
         errors.push(language.promptMessages.pleaseSelectAllData)
       if (!isValidUrl(payload.profileLink)) errors.push(language.promptMessages.validProfile);
+      toast.dismiss();
       if (errors.length) return errors.forEach(e => toast.warning(e, toastUtil));
       setStep(2);
       navigate(`/syndicate-lead/${step + 1}`);
@@ -99,11 +100,13 @@ const SyndicateFlow = ({ }: any) => {
         !payload.name ||
         !payload.tagline ||
         !payload.logo
-      )
+      ) {
+        toast.dismiss();
         return toast.warning(
           language.promptMessages.pleaseSelectAllData,
           toastUtil
         );
+      }
       onPostSyndicateData();
     }
   };
