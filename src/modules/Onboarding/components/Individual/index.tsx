@@ -103,8 +103,10 @@ const Individual = ({ language }: any) => {
 
   const addinvestmentAccridiation = async (e: any) => {
     e.preventDefault();
-    if (!payload.national || !payload.residence || !selectedAssert?.id || !riskChecked)
+    if (!payload.national || !payload.residence || !selectedAssert?.id || !riskChecked){
+      toast.dismiss();
       return toast.warning(language.promptMessages.pleaseSelectAllData, toastUtil);
+    }
     try {
       setLoading(true);
       let country: any = countries.all.find((c: any) => c.name === payload?.national?.value);

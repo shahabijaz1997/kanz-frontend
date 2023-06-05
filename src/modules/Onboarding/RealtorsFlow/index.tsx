@@ -79,11 +79,10 @@ const Realtors = (props: any) => {
   });
 
   const onSubmit: SubmitHandler<FormValues> = async () => {
-    if (!payload.national || !payload.residence || !payload.noOfProperty)
-      return toast.warning(
-        language.promptMessages.pleaseSelectAllData,
-        toastUtil
-      );
+    if (!payload.national || !payload.residence || !payload.noOfProperty){
+      toast.dismiss();
+      return toast.warning(language.promptMessages.pleaseSelectAllData,toastUtil);
+    }
     try {
       setLoading(true);
 

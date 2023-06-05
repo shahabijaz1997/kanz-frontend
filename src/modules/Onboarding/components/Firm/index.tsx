@@ -107,8 +107,10 @@ const Firm = ({ language }: any) => {
   };
 
   const addinvestmentAccridiation = async () => {
-    if (!selectedAssert?.id || !payload.legal || !payload.residence || !riskChecked)
+    if (!selectedAssert?.id || !payload.legal || !payload.residence || !riskChecked) {
+      toast.dismiss();
       return toast.warning(language.promptMessages.pleaseSelectAllData, toastUtil);
+    }
     try {
       setLoading(true);
       let country: any = countries.all.find((c: any) => c.name === payload?.residence?.value);

@@ -132,7 +132,7 @@ const StartUpAttachment = (props: any) => {
             </span>
           </p>
         </section>
-        <section className="w-full inline-flex items-center justify-between py-16">
+        <section className="w-full inline-flex items-center justify-between py-10">
           <Button
             className="h-[38px] w-[140px]"
             htmlType="submit"
@@ -152,6 +152,7 @@ const StartUpAttachment = (props: any) => {
               if (!agreeToTerms)
                 errors.push(language.promptMessages.pleaseAcceptPP);
               if (errors.length === 0) return setModalOpen(true);
+              toast.dismiss();
               errors.forEach((e) => toast.warning(e, toastUtil));
               errors = [];
             }}

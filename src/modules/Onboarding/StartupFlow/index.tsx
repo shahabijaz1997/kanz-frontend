@@ -65,7 +65,10 @@ const StartupFlow = ({ }: any) => {
     try {
       setLoading(true);
       let { status } = await removeAttachment(id, authToken);
-      if (status === 200) setFile(null);
+      if (status === 200) {
+        setFile(null);
+        onSetPayload(null, "logo");
+      }
     } catch (error: any) {
       if (error.response && error.response.status === 401) {
         dispatch(saveToken(""));
@@ -87,12 +90,15 @@ const StartupFlow = ({ }: any) => {
       if (!payload.company || !payload.legal || !payload.company || !payload.market || !payload.web)
         errors.push(language.promptMessages.pleaseSelectAllData)
       if (!isValidUrl(payload.web)) errors.push(language.promptMessages.validComp);
+      toast.dismiss();
       if (errors.length) return errors.forEach(e => toast.warning(e, toastUtil));
       setStep(2);
       navigate(`/startup-type/${step + 1}`);
     } else {
-      if (!payload.company || !payload.legal || !payload.company || !payload.market || !payload.web || !payload.name || !payload.email || !payload.logo || !payload.business || !payload.raised || !payload.target)
+      if (!payload.company || !payload.legal || !payload.company || !payload.market || !payload.web || !payload.name || !payload.email || !payload.logo || !payload.business || !payload.raised || !payload.target){
+        toast.dismiss();
         return toast.warning(language.promptMessages.pleaseSelectAllData, toastUtil);
+      }
       onPostCompanyData();
     }
   };
@@ -144,11 +150,7 @@ const StartupFlow = ({ }: any) => {
     <main className="h-full max-h-full background-auth overflow-y-auto">
       <section>
         <Header custom={true} data={{
-          leftMenu: language.header.companyDetails, button: (
-            <button onClick={() => navigate(-1)}>
-              <CrossIcon stroke="#171717" className="w-6 h-6" />
-            </button>
-          ),
+          leftMenu: language.header.companyDetails, button: (<button onClick={() => navigate("/welcome")} className="text-neutral-900 bg-white font-bold text-sm w-[150px] h-9 cursor-pointer border border-black shadow-sm screen800:w-[120px]">{language.buttons.gotoDashboard}</button>),
         }}
         />
       </section>
@@ -174,7 +176,7 @@ const StartupFlow = ({ }: any) => {
           authToken={authToken}
         />
 
-        <section className="w-full inline-flex items-center justify-between py-16">
+        <section className="w-full inline-flex items-center justify-between py-10">
           <Button
             className="h-[38px] w-[140px]"
             htmlType="submit"

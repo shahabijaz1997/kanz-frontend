@@ -22,7 +22,7 @@ type FormValues = {
   password: string;
 };
 
-const Login = ({}: any) => {
+const Login = ({ }: any) => {
   const { state } = useLocation();
 
   const dispatch = useDispatch();
@@ -34,6 +34,7 @@ const Login = ({}: any) => {
 
   useLayoutEffect(() => {
     if (authToken) navigate("/welcome");
+    else localStorage.clear();
   }, []);
 
   const Form = () => {
@@ -61,6 +62,7 @@ const Login = ({}: any) => {
           const token = headers["authorization"].split(" ")[1];
           dispatch(saveToken(token));
           dispatch(saveUserData(data.status.data));
+          toast.dismiss();
           toast.success(data.status.message, toastUtil);
           localStorage.removeItem("role");
           if (state) navigate(`/${state}`);
