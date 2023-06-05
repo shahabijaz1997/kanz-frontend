@@ -23,7 +23,7 @@ const SyndicateFlow = ({ }: any) => {
   const authToken: any = useSelector((state: RootState) => state.auth.value);
 
   const [payload, setPayload]: any = useState({
-    raised: false,
+    raised: null,
     amountRaised: "",
     timesRaised: "",
     industry: [],

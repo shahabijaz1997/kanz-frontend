@@ -135,7 +135,7 @@ export const getAllIndustries = () => {
     return new Promise((resolve, reject) => {
         setTimeout(() => {
             resolve({ status: 200, data: { business: businessIndustries } });
-        }, 1500);
+        }, 100);
     });
 };
 
@@ -143,6 +143,6 @@ export const getAllRegions = () => {
     return new Promise((resolve, reject) => {
         setTimeout(() => {
             resolve({ status: 200, data: { regions } });
-        }, 1500);
+        }, 100);
     });
 };
