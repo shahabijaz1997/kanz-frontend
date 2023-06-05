@@ -13,7 +13,7 @@ import Header from "../../../shared/components/Header";
 import Drawer from "../../../shared/components/Drawer";
 import Button from "../../../shared/components/Button";
 import { toastUtil } from "../../../utils/toast.utils";
-import { realtorApi } from "../../../apis/investor.api";
+import { postRealtorInformation } from "../../../apis/realtor.api";
 
 type FormValues = {
   no_of_properties: number;
@@ -26,8 +26,7 @@ const Realtors = (props: any) => {
   const [isOpen, setOpen]: any = useState("");
   const [loading, setLoading] = useState(false);
   const authToken: any = useSelector((state: RootState) => state.auth.value);
-  const [countries, setCountries] = useState([]);
-  const [states, setStates]: any = useState();
+  const [countries, setCountries] = useState({ all: [], names: [] });
   const [payload, setPayload]: any = useState({
     national: "",
     residence: "",
@@ -58,10 +57,8 @@ const Realtors = (props: any) => {
     try {
       let { status, data } = await getCountries(authToken);
       if (status === 200) {
-        setCountries(data.status.data);
-        if (data.status.data?.states?.[0]) {
-          setStates(data.status.data?.states?.[0]);
-        }
+        let names = data.status.data.map((c: any) => c.name);
+        setCountries({ all: data.status.data, names });
       }
     } catch (error) {
       console.error("Error while getting countries: ", error);
@@ -72,20 +69,9 @@ const Realtors = (props: any) => {
     setPayload((prev: any) => {
       return { ...prev, [type]: data };
     });
-    const states = countries?.find((item: any) => item?.name === data.value);
-    if (states) {
-      setStates(states);
-    }
   };
 
-  const _countries = countries?.map((item: any) => {
-    return {
-      label: item.name,
-      value: item.name,
-    };
-  });
-
-  const _states = states?.states?.map((item: any) => {
+  const _countries = countries.names?.map((item: any) => {
     return {
       label: item,
       value: item,
@@ -101,19 +87,20 @@ const Realtors = (props: any) => {
     try {
       setLoading(true);
 
+      let country: any = countries.all.find((c: any) => c.name === payload?.national?.value);
+      let residence: any = countries.all.find((c: any) => c.name === payload?.residence?.value);
+
       let pData: any = {
-        realtor: {
-          meta_info: {
-            nationality: payload?.national?.value,
-            residence: payload?.residence?.value,
-            noOfProperty: payload?.noOfProperty,
-          },
+        realtor_profile: {
+          nationality_id: country.id,
+          residence_id: residence.id,
+          no_of_properties: payload?.noOfProperty,
         },
       };
-      // note : change the api method with real api
-      let { data, status } = await realtorApi(pData, authToken);
+      let { data, status } = await postRealtorInformation(pData, authToken);
       if (status === 200) {
         toast.success(data?.status?.message, toastUtil);
+        navigate("/add-attachments");
       }
     } catch (error: any) {
       const message =
@@ -123,8 +110,7 @@ const Realtors = (props: any) => {
       toast.error(message, toastUtil);
       if (error.response && error.response.status === 401) {
         dispatch(saveToken(""));
-        //  note: change route and state according to requirements
-        //   navigate("/login", { state: "complete-details" });
+          navigate("/login", { state: "realtor-type" });
       }
     } finally {
       setLoading(false);
@@ -175,7 +161,7 @@ const Realtors = (props: any) => {
                 <div className="relative w-full" style={{ zIndex: 100 }}>
                   <Selector
                     disabled={disabled}
-                    options={_states && _states}
+                    options={_countries && _countries}
                     onChange={(v: any) => onSetPayload(v, "residence")}
                   />
                 </div>
@@ -191,7 +177,7 @@ const Realtors = (props: any) => {
                   <AntdInput
                     register={register}
                     name="no_of_properties"
-                    type="number"
+                    type="text"
                     required
                     placeholder="No of Property"
                     error={errors.no_of_properties?.message} // Pass the error message from form validation

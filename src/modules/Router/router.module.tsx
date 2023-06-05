@@ -1,5 +1,5 @@
 import React, { PropsWithChildren, Suspense, lazy } from "react";
-import { Navigate, Route, Routes, useLocation } from "react-router-dom";
+import { Navigate, Route, Routes } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../redux-toolkit/store/store";
 import { saveLanguage } from "../../redux-toolkit/slicer/language.slicer";
@@ -7,6 +7,8 @@ import loadLanguage from "../../utils/load-language.utils";
 import Loader from "../../shared/views/Loader";
 import { KanzRoles } from "../../enums/roles.enum";
 import { ApplicationStatus } from "../../enums/types.enum";
+import StartUpAttachment from "../Onboarding/StartUpAttachment";
+import { RoutesEnums } from "../../enums/routes.enum";
 
 // Modules
 const Home = lazy(() => import("../Home"));
@@ -75,7 +77,7 @@ const RouterModule = () => {
         }
       />
       <Route
-        path="/investor-type"
+        path={RoutesEnums.INVESTOR_DETAILS}
         element={
           <Suspense fallback={<Loader />}>
             <AuthenticateRoute>
@@ -87,19 +89,19 @@ const RouterModule = () => {
         }
       />
       <Route
-        path="/startup-type"
+        path="/startup-type/:id"
         element={
           <Suspense fallback={<Loader />}>
             <AuthenticateRoute>
-              {/* <AuthenticateRole role={KanzRoles.STARTUP}> */}
-                <Startup guard={authToken} />
-              {/* </AuthenticateRole> */}
+              <AuthenticateRole role={KanzRoles.STARTUP}>
+              <Startup guard={authToken} />
+              </AuthenticateRole>
             </AuthenticateRoute>
           </Suspense>
         }
       />
       <Route
-        path="/realtor-type"
+        path={RoutesEnums.REALTOR_DETAILS}
         element={
           <Suspense fallback={<Loader />}>
             <AuthenticateRoute>
@@ -112,9 +114,9 @@ const RouterModule = () => {
         path="/complete-details"
         element={
           <Suspense fallback={<Loader />}>
-            {/* <AuthenticateRoute> */}
-            <CompleteDetails guard={authToken} />
-            {/* </AuthenticateRoute> */}
+            <AuthenticateRoute>
+              <CompleteDetails guard={authToken} />
+            </AuthenticateRoute>
           </Suspense>
         }
       />
@@ -147,6 +149,18 @@ const RouterModule = () => {
             <AuthenticateRoute>
               <AuthenticateRole role={KanzRoles.ALL}>
                 <AddAttachments guard={authToken} />
+              </AuthenticateRole>
+            </AuthenticateRoute>
+          </Suspense>
+        }
+      />
+      <Route
+        path="/add-startup-attachments"
+        element={
+          <Suspense fallback={<Loader />}>
+            <AuthenticateRoute>
+              <AuthenticateRole role={KanzRoles.ALL}>
+                <StartUpAttachment guard={authToken} />
               </AuthenticateRole>
             </AuthenticateRoute>
           </Suspense>
