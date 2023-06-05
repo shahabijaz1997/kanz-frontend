@@ -201,8 +201,8 @@ const Questionare = ({ step, returnSuccessRedirection }: any) => {
                   return (
                     <li
                       className={`h-[50px] w-[420px] p-4 grey-neutral-200 text-sm font-medium cursor-pointer border border-grey inline-flex items-center justify-start first:rounded-t-md last:rounded-b-md screen500:w-full ${checkExist(selected[ques.step], as)
-                          ? "check-background"
-                          : "bg-white"
+                        ? "check-background"
+                        : "bg-white"
                         }`}
                       onClick={() => {
                         toggleAnswerSelection(ques, as);
@@ -325,8 +325,8 @@ const Questionare = ({ step, returnSuccessRedirection }: any) => {
                 return (
                   <li
                     className={`rounded-md bg-white h-[50px] w-[420px] p-4 grey-neutral-200 text-sm font-medium cursor-pointer border border-grey inline-flex items-center justify-start screen500:w-full${checkExist(selected[ques.step], as)
-                        ? "check-background"
-                        : "bg-white"
+                      ? "check-background"
+                      : "bg-white"
                       }`}
                     onClick={() => {
                       toggleAnswerSelection(ques, as);
@@ -365,11 +365,10 @@ const Questionare = ({ step, returnSuccessRedirection }: any) => {
     else navigate(`/complete-goals`);
   };
   const onSetNext = () => {
-    if (!checkValidation())
-      return toast.warning(
-        language.promptMessages.pleaseSelectAllData,
-        toastUtil
-      );
+    if (!checkValidation()) {
+      toast.dismiss();
+      return toast.warning(language.promptMessages.pleaseSelectAllData, toastUtil);
+    }
     let payload: any = { investment_philosophy: {} };
     let philisophyData: any = localStorage.getItem("philosophy");
     if (step !== 3) {

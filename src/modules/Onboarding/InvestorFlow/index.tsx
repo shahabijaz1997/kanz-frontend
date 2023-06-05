@@ -38,7 +38,10 @@ const InvestorFlow = ({ }: any) => {
 
   const onSelectInvestorType = async () => {
     try {
-      if (!selectedAccount?.link) return toast.warning(language.promptMessages.pleaseSelectInvest, toastUtil);
+      if (!selectedAccount?.link) {
+        toast.dismiss();
+        return toast.warning(language.promptMessages.pleaseSelectInvest, toastUtil);
+      }
       setLoading(true);
       let fd = new FormData();
 
