@@ -73,7 +73,7 @@ const StartupFlow = ({ }: any) => {
     } catch (error: any) {
       if (error.response && error.response.status === 401) {
         dispatch(saveToken(""));
-        navigate("/login", { state: "add-startup-attachments" });
+        navigate("/login", { state: "add-attachments" });
       }
       const message =
         error?.response?.data?.status?.message ||
@@ -135,13 +135,13 @@ const StartupFlow = ({ }: any) => {
       let { status } = await postCompanyInformation(dataPayload, authToken);
 
       if (status === 200) {
-        navigate("/add-startup-attachments");
+        navigate("/add-attachments");
         localStorage.setItem("startup", JSON.stringify(payload));
       }
     } catch (error: any) {
       if (error.response && error.response.status === 401) {
         dispatch(saveToken(""));
-        navigate("/login", { state: "add-startup-attachments" });
+        navigate("/login", { state: "add-attachments" });
       }
       const message = error?.response?.data?.status?.message || error?.response?.data || language.promptMessages.errorGeneral;
       toast.error(message, toastUtil);

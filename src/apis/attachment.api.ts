@@ -3,6 +3,14 @@ import { getEnv } from "../env";
 
 const ENV = getEnv();
 
+export const getRoleBasedAttachments = (token: string) => {
+    return axios.get(`${ENV.API_URL}/${ENV.API_VERSION}/settings/attachments`, {
+        headers: {
+            Authorization: `Bearer ${token}`
+        },
+    });
+};
+
 export const getAttachments = (token: string) => {
     return axios.get(`${ENV.API_URL}/${ENV.API_VERSION}/attachments`, {
         headers: {
