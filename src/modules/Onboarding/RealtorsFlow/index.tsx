@@ -1,9 +1,8 @@
+import { useState, useLayoutEffect, useEffect } from "react";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { useForm, SubmitHandler } from "react-hook-form";
-import { useState, useLayoutEffect, useEffect } from "react";
-
 import { saveToken } from "../../../redux-toolkit/slicer/auth.slicer";
 import { RootState } from "../../../redux-toolkit/store/store";
 import { AntdInput } from "../../../shared/components/Input";
@@ -14,18 +13,23 @@ import Drawer from "../../../shared/components/Drawer";
 import Button from "../../../shared/components/Button";
 import { toastUtil } from "../../../utils/toast.utils";
 import { postRealtorInformation } from "../../../apis/realtor.api";
+import Loader from "../../../shared/views/Loader";
+import { ApplicationStatus } from "../../../enums/types.enum";
 
 type FormValues = {
-  no_of_properties: number;
+  noOfProperty: number;
 };
 
 const Realtors = (props: any) => {
   const { disabled } = props;
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const authToken: any = useSelector((state: RootState) => state.auth.value);
+  const user: any = useSelector((state: RootState) => state.user.value);
+
   const [isOpen, setOpen]: any = useState("");
   const [loading, setLoading] = useState(false);
-  const authToken: any = useSelector((state: RootState) => state.auth.value);
+  const [load, setLoad] = useState(false);
   const [countries, setCountries] = useState({ all: [], names: [] });
   const [payload, setPayload]: any = useState({
     national: "",
@@ -35,12 +39,13 @@ const Realtors = (props: any) => {
   const language: any = useSelector((state: RootState) => state.language.value);
   const requiredFieldError = language?.common?.required_field;
 
-  const {
-    register,
-    handleSubmit,
-    watch,
-    formState: { errors },
-  } = useForm<FormValues>();
+  useLayoutEffect(() => {
+    if (user.status !== ApplicationStatus.OPENED) return navigate("/welcome");
+    let _payload: any = localStorage.getItem("realtor");
+    if (_payload) setPayload(JSON.parse(_payload));
+  }, []);
+
+  const { register, handleSubmit, watch, formState: { errors } } = useForm<FormValues>();
 
   useLayoutEffect(() => {
     getAllCountries();
@@ -48,13 +53,14 @@ const Realtors = (props: any) => {
 
   useEffect(() => {
     const subscription = watch((value) =>
-      onSetPayload(value.no_of_properties, "noOfProperty")
+      onSetPayload(value.noOfProperty, "noOfProperty")
     );
     return () => subscription.unsubscribe();
   }, [watch]);
 
   const getAllCountries = async () => {
     try {
+      setLoad(true);
       let { status, data } = await getCountries(authToken);
       if (status === 200) {
         let names = data.status.data.map((c: any) => c.name);
@@ -62,6 +68,8 @@ const Realtors = (props: any) => {
       }
     } catch (error) {
       console.error("Error while getting countries: ", error);
+    } finally {
+      setLoad(false);
     }
   };
 
@@ -79,9 +87,9 @@ const Realtors = (props: any) => {
   });
 
   const onSubmit: SubmitHandler<FormValues> = async () => {
-    if (!payload.national || !payload.residence || !payload.noOfProperty){
+    if (!payload.national || !payload.residence || !payload.noOfProperty) {
       toast.dismiss();
-      return toast.warning(language.promptMessages.pleaseSelectAllData,toastUtil);
+      return toast.warning(language.promptMessages.pleaseSelectAllData, toastUtil);
     }
     try {
       setLoading(true);
@@ -96,20 +104,17 @@ const Realtors = (props: any) => {
           no_of_properties: payload?.noOfProperty,
         },
       };
-      let { data, status } = await postRealtorInformation(pData, authToken);
+      let { status } = await postRealtorInformation(pData, authToken);
       if (status === 200) {
-        toast.success(data?.status?.message, toastUtil);
+        localStorage.setItem("realtor", JSON.stringify(payload));
         navigate("/add-attachments");
       }
     } catch (error: any) {
-      const message =
-        error?.response?.data?.status?.message ||
-        error?.response?.data ||
-        language.promptMessages.errorGeneral;
+      const message = error?.response?.data?.status?.message || error?.response?.data || language.promptMessages.errorGeneral;
       toast.error(message, toastUtil);
       if (error.response && error.response.status === 401) {
         dispatch(saveToken(""));
-          navigate("/login", { state: "realtor-type" });
+        navigate("/login", { state: "realtor-type" });
       }
     } finally {
       setLoading(false);
@@ -121,92 +126,70 @@ const Realtors = (props: any) => {
       <section className="h-[67px]">
         <Header />
       </section>
-      <form className="pb-8 mb-4 w-full" onSubmit={handleSubmit(onSubmit)}>
-        <div className="flex items-center justify-center">
-          <div>
-            <div className="w-[450px] mt-[78px]">Owner Info</div>
-            <p className="text-neutral-500 font-normal text-sm">
-              <span>{language.syndicate.subDetail}</span>&nbsp;
-              <span
-                className="color-blue font-medium cursor-pointer"
-                onClick={() => setOpen(true)}
-              >
-                {language.common.learn}
-              </span>
-            </p>
-            <div className="bg-cbc-grey-sec pb-[18px]  pl-[18px] pr-[18px] pt-2.5 mt-[13px] rounded-[8px]">
-              <section className="mb-4 w-full">
-                <label
-                  className="mb-2 block text-neutral-700 text-sm font-medium"
-                  htmlFor="name"
-                >
-                  {language?.common?.national}
-                </label>
-                <div className="relative w-full" style={{ zIndex: 101 }}>
-                  <Selector
-                    disabled={disabled}
-                    options={_countries && _countries}
-                    onChange={(v: any) => onSetPayload(v, "national")}
-                  />
+      {
+        load ? (
+          <Loader />
+        ) : (
+          <form className="pb-8 mb-4 w-full" onSubmit={handleSubmit(onSubmit)}>
+            <div className="flex items-center justify-center">
+              <div>
+                <div className="w-[450px] mt-[78px]">Owner Info</div>
+                <p className="text-neutral-500 font-normal text-sm">
+                  <span>{language.syndicate.subDetail}</span>&nbsp;
+                  <span className="color-blue font-medium cursor-pointer" onClick={() => setOpen(true)}>
+                    {language.common.learn}
+                  </span>
+                </p>
+                <div className="bg-cbc-grey-sec pb-[18px]  pl-[18px] pr-[18px] pt-2.5 mt-[13px] rounded-[8px]">
+                  <section className="mb-4 w-full">
+                    <label className="mb-2 block text-neutral-700 text-sm font-medium" htmlFor="name">
+                      {language?.common?.national}
+                    </label>
+                    <div className="relative w-full" style={{ zIndex: 101 }}>
+                      <Selector disabled={disabled} options={_countries && _countries} onChange={(v: any) => onSetPayload(v, "national")} defaultValue={payload?.national} />
+                    </div>
+                  </section>
+                  <section className="mb-4 w-full">
+                    <label className="mb-2 block text-neutral-700 text-sm font-medium" htmlFor="full-name" >
+                      {language?.common?.residence}
+                    </label>
+                    <div className="relative w-full" style={{ zIndex: 100 }}>
+                      <Selector disabled={disabled} options={_countries && _countries} onChange={(v: any) => onSetPayload(v, "residence")} defaultValue={payload?.residence} />
+                    </div>
+                  </section>
+                  <section className="w-full">
+                    <label className="mb-2 block text-neutral-700 text-sm font-medium" htmlFor="full-name" >
+                      {language?.common?.NoOfProperty}
+                    </label>
+                    <div className="relative w-full" style={{ zIndex: 99 }}>
+                      <AntdInput
+                        register={register}
+                        name="noOfProperty"
+                        type="text"
+                        required
+                        placeholder={language.common.NoOfProperty}
+                        value={payload?.noOfProperty}
+                        error={errors.noOfProperty?.message} // Pass the error message from form validation
+                        validation={{
+                          required: requiredFieldError,
+                        }}
+                      />
+                    </div>
+                  </section>
                 </div>
-              </section>
-              <section className="mb-4 w-full">
-                <label
-                  className="mb-2 block text-neutral-700 text-sm font-medium"
-                  htmlFor="full-name"
-                >
-                  {language?.common?.residence}
-                </label>
-                <div className="relative w-full" style={{ zIndex: 100 }}>
-                  <Selector
-                    disabled={disabled}
-                    options={_countries && _countries}
-                    onChange={(v: any) => onSetPayload(v, "residence")}
-                  />
-                </div>
-              </section>
-              <section className="w-full">
-                <label
-                  className="mb-2 block text-neutral-700 text-sm font-medium"
-                  htmlFor="full-name"
-                >
-                  {language?.common?.NoOfProperty}
-                </label>
-                <div className="relative w-full" style={{ zIndex: 99 }}>
-                  <AntdInput
-                    register={register}
-                    name="no_of_properties"
-                    type="text"
-                    required
-                    placeholder="No of Property"
-                    error={errors.no_of_properties?.message} // Pass the error message from form validation
-                    validation={{
-                      required: requiredFieldError,
-                    }}
-                  />
-                </div>
-              </section>
+                <section className="w-full inline-flex items-center justify-between mt-16">
+                  <Button className="mt-6 h-[38px] w-[140px]" type="outlined" onClick={() => navigate(-1)}>
+                    {language?.buttons?.back}
+                  </Button>
+                  <Button className="mt-6 h-[38px] w-[140px]" disabled={loading} htmlType="submit" loading={loading}>
+                    {language?.buttons?.continue}
+                  </Button>
+                </section>
+              </div>
             </div>
-            <section className="w-full inline-flex items-center justify-between mt-16">
-              <Button
-                className="mt-6 h-[38px] w-[140px]"
-                type="outlined"
-                onClick={() => navigate(-1)}
-              >
-                {language?.buttons?.back}
-              </Button>
-              <Button
-                className="mt-6 h-[38px] w-[140px]"
-                disabled={loading}
-                htmlType="submit"
-                loading={loading}
-              >
-                {language?.buttons?.continue}
-              </Button>
-            </section>
-          </div>
-        </div>
-      </form>
+          </form>
+        )
+      }
       <Drawer isOpen={isOpen} setIsOpen={(val: boolean) => setOpen(val)}>
         <div className="z-[103px]">
           <header className="font-bold text-xl">
