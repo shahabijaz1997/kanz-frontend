@@ -37,17 +37,17 @@ const StartUpAttachment = (props: any) => {
     {
       title: language?.common?.tradeLic,
       sub: language?.common?.resProof,
-      id: "res",
+      id: "trl",
     },
     {
       title: language?.common?.articleOfAssociatioon,
       sub: language?.common?.resProof,
-      id: "res",
+      id: "art",
     },
     {
       title: language?.common?.kycReport,
       sub: language?.common?.resProof,
-      id: "res",
+      id: "kyc",
     },
   ]);
 
@@ -80,7 +80,7 @@ const StartUpAttachment = (props: any) => {
       </section>
 
       <aside className="w-[420px] h-full screen500:max-w-[300px] mx-auto py-12">
-        <section className="flex items-start justify-center flex-col">
+        <section className="flex items-start justify-center flex-col select-none">
           <h3 className="text-cc-black font-bold text-2xl">
             {language.buttons.addAttachment}
           </h3>
@@ -151,7 +151,10 @@ const StartUpAttachment = (props: any) => {
                 errors.push(language.promptMessages.pleaseUploadAttachments);
               if (!agreeToTerms)
                 errors.push(language.promptMessages.pleaseAcceptPP);
-              if (errors.length === 0) return setModalOpen(true);
+              if (errors.length === 0) {
+                setOpen(false);
+                return setModalOpen(true);
+              }
               toast.dismiss();
               errors.forEach((e) => toast.warning(e, toastUtil));
               errors = [];

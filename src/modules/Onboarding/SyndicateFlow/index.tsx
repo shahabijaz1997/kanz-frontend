@@ -84,7 +84,7 @@ const SyndicateFlow = ({ }: any) => {
   const ontoNextStep = () => {
     if (step === 1) {
       let errors = [];
-      if ((payload.raised && (!payload.timesRaised || !payload.amountRaised)) || !payload.industry.length || !payload.region || !payload.profileLink || !payload.dealflow)
+      if ((payload.raised && (!payload.timesRaised || !payload.amountRaised)) || !payload.industry.length || !payload.region.length || !payload.profileLink || !payload.dealflow)
         errors.push(language.promptMessages.pleaseSelectAllData)
       if (!isValidUrl(payload.profileLink)) errors.push(language.promptMessages.validProfile);
       toast.dismiss();
