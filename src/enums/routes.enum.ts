@@ -6,7 +6,6 @@ export enum RoutesEnums {
     COMPLETE_GOALS="/complete-goals",
     PHILOSOPHY_GOALS="/philosophy-goals",
     ADD_ATTACHMENTS="/add-attachments",
-    ADD_STARTUP_ATTACHMENTS="/add-startup-attachments",
     SIGNUP="/signup",
     LOGIN="/login",
     WELCOME="/welcome",
