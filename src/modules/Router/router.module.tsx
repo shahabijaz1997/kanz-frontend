@@ -7,7 +7,6 @@ import loadLanguage from "../../utils/load-language.utils";
 import Loader from "../../shared/views/Loader";
 import { KanzRoles } from "../../enums/roles.enum";
 import { ApplicationStatus } from "../../enums/types.enum";
-import StartUpAttachment from "../Onboarding/StartUpAttachment";
 import { RoutesEnums } from "../../enums/routes.enum";
 
 // Modules
@@ -151,18 +150,6 @@ const RouterModule = () => {
             <AuthenticateRoute>
               <AuthenticateRole role={KanzRoles.ALL}>
                 <AddAttachments guard={authToken} />
-              </AuthenticateRole>
-            </AuthenticateRoute>
-          </Suspense>
-        }
-      />
-      <Route
-        path="/add-startup-attachments"
-        element={
-          <Suspense fallback={<Loader />}>
-            <AuthenticateRoute>
-              <AuthenticateRole role={KanzRoles.ALL}>
-                <StartUpAttachment guard={authToken} />
               </AuthenticateRole>
             </AuthenticateRoute>
           </Suspense>

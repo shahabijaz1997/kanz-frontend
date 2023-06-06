@@ -32,7 +32,7 @@ const InvestorFlow = ({ }: any) => {
   ]);
 
   useLayoutEffect(() => {
-    if (user.status == ApplicationStatus.OPENED && !isEmpty(metadata?.profile))
+    if (user.status === ApplicationStatus.OPENED && !isEmpty(metadata?.profile))
       setSelectedAccount(accounts?.find(ac => ac.payload === metadata.role));
   }, []);
 
