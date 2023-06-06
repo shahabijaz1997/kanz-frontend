@@ -1,8 +1,7 @@
+import React, { useState, useLayoutEffect } from "react";
 import { toast } from "react-toastify";
-import React, { useState } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-
 import { FileType } from "../../../enums/types.enum";
 import Modal from "../../../shared/components/Modal";
 import { toastUtil } from "../../../utils/toast.utils";
@@ -12,35 +11,26 @@ import Drawer from "../../../shared/components/Drawer";
 import CrossIcon from "../../../ts-icons/crossIcon.svg";
 import UploadComp from "../../../shared/components/Upload";
 import { RootState } from "../../../redux-toolkit/store/store";
+import { getRoleBasedAttachments } from "../../../apis/attachment.api";
+import { saveToken } from "../../../redux-toolkit/slicer/auth.slicer";
+import Loader from "../../../shared/views/Loader";
 
 const AddAttachments = (props: any) => {
   const navigate = useNavigate();
-
+  const dispatch = useDispatch();
   const language: any = useSelector((state: RootState) => state.language.value);
-
-  const [uploading] = useState([
-    {
-      title: language?.common?.idProof,
-      sub: language?.common?.uploadPic,
-      id: "id",
-    },
-    {
-      title: language?.common?.uploadSelfie,
-      sub: language?.common?.uploadSelfie,
-      id: "self",
-    },
-    {
-      title: language?.common?.resProof,
-      sub: language?.common?.resProof,
-      id: "res",
-    },
-  ]);
-
+  const authToken: any = useSelector((state: RootState) => state.auth.value);
   const [modalOpen, setModalOpen]: any = useState(null);
   const [isOpen, setOpen] = useState(false);
+  const [loading, setLoading] = useState(false);
   const [fileType, setFileType]: any = useState(null);
   const [agreeToTerms, setAgreeToTerms] = useState(false);
   const [files, setFiles]: any = useState([]);
+  const [attachmentData, setAttachmentData]: any = useState([]);
+
+  useLayoutEffect(() => {
+    onGetRoleBasedAttachmentDetails();
+  }, []);
 
   const setFile = (file: File, id: string, attachment_id: string) => {
     setFiles((prev: any) => {
@@ -48,107 +38,134 @@ const AddAttachments = (props: any) => {
     });
   };
 
+  const onGetRoleBasedAttachmentDetails = async () => {
+    try {
+      setLoading(true);
+      let { status, data } = await getRoleBasedAttachments(authToken);
+      if (status === 200) {
+        let uploadPayload = data?.status?.data.map((item: any, idx: number) => {
+          item.id = `at-${idx}`;
+          return item;
+        })
+        setAttachmentData(uploadPayload);
+      }
+    } catch (error: any) {
+      if (error.response && error.response.status === 401) {
+        dispatch(saveToken(""));
+        navigate("/login", { state: 'investor-type' });
+      }
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <main className="h-full max-h-full background-auth overflow-y-auto">
-      <section>
-        <Header
-          custom={true}
-          data={{
-            leftMenu: language.header.attachment,
-            button: (
-              <button onClick={() => navigate(-1)}>
-                <CrossIcon stroke="#171717" className="w-6 h-6" />
-              </button>
-            ),
-          }}
-        />
-      </section>
+      {
+        loading ? (<Loader />) : (
+          <React.Fragment>
+            <section>
+              <Header
+                custom={true}
+                data={{
+                  leftMenu: language.header.attachment,
+                  button: (
+                    <button onClick={() => navigate(-1)}>
+                      <CrossIcon stroke="#171717" className="w-6 h-6" />
+                    </button>
+                  ),
+                }}
+              />
+            </section>
 
-      <aside className="w-[420px] h-full screen500:max-w-[300px] mx-auto py-12">
-        <section className="flex items-start justify-center flex-col select-none">
-          <h3 className="text-cc-black font-bold text-2xl">
-            {language.buttons.addAttachment}
-          </h3>
-          <p className="text-neutral-700 font-medium text-base">
-            <span>{language.philosophyGoals.uploadNecessary}</span>&nbsp;
-            <span
-              className="color-blue cursor-pointer"
-              onClick={() => setOpen(true)}
-            >
-              {language.philosophyGoals.whyToDo}
-            </span>
-          </p>
-        </section>
-        <section className="flex items-start justify-center flex-col mt-8">
-          <form className="pt-12 mb-4 w-full">
-            {React.Children.toArray(
-              uploading.map((item) => {
-                return (
-                  <UploadComp
-                    id={item.id}
-                    files={files}
-                    setFile={setFile}
-                    title={item.title}
-                    subTitle={item.sub}
-                    language={language}
-                    setFiles={setFiles}
-                    setFileType={setFileType}
-                    setModalOpen={setModalOpen}
-                  />
-                );
-              })
-            )}
-          </form>
-        </section>
-        <section className="w-full inline-flex items-center gap-2 rounded-md border border-grey w-[420px] p-4 check-background">
-          <input
-            type="checkbox"
-            className="accent-cyan-800 h-3 w-3 cursor-pointer"
-            checked={agreeToTerms}
-            onChange={() => setAgreeToTerms(!agreeToTerms)}
-          />
-          <p className="text-neutral-500 text-sm font-normal">
-            {language?.common?.agree}&nbsp;
-            <span
-              className="color-blue font-medium cursor-pointer"
-              onClick={() => setOpen(true)}
-            >
-              {language?.common?.termsConditions}
-            </span>
-          </p>
-        </section>
-        <section className="w-full inline-flex items-center justify-between py-10">
-          <Button
-            className="h-[38px] w-[140px]"
-            htmlType="submit"
-            type="outlined"
-            onClick={() => navigate(-1)}
-          >
-            {language?.buttons?.back}
-          </Button>
-          <Button
-            disabled={files.length === 3 && agreeToTerms ? false : true}
-            className="h-[38px] w-[140px]"
-            htmlType="submit"
-            onClick={() => {
-              let errors: string[] = [];
-              if (files.length !== 3)
-                errors.push(language.promptMessages.pleaseUploadAttachments);
-              if (!agreeToTerms)
-                errors.push(language.promptMessages.pleaseAcceptPP);
-              if (errors.length === 0) {
-                setOpen(false);
-                return setModalOpen(true);
-              }
-              toast.dismiss();
-              errors.forEach((e) => toast.warning(e, toastUtil));
-              errors = [];
-            }}
-          >
-            {language?.buttons?.submit}
-          </Button>
-        </section>
-      </aside>
+            <aside className="w-[420px] h-full screen500:max-w-[300px] mx-auto py-12">
+              <section className="flex items-start justify-center flex-col select-none">
+                <h3 className="text-cc-black font-bold text-2xl">
+                  {language.buttons.addAttachment}
+                </h3>
+                <p className="text-neutral-700 font-medium text-base">
+                  <span>{language.philosophyGoals.uploadNecessary}</span>&nbsp;
+                  <span
+                    className="color-blue cursor-pointer"
+                    onClick={() => setOpen(true)}
+                  >
+                    {language.philosophyGoals.whyToDo}
+                  </span>
+                </p>
+              </section>
+              <section className="flex items-start justify-center flex-col mt-8">
+                <form className="pt-12 mb-4 w-full">
+                  {React.Children.toArray(
+                    attachmentData.map((item: any) => {
+                      return (
+                        <UploadComp
+                          id={item.id}
+                          files={files}
+                          setFile={setFile}
+                          title={item?.name}
+                          subTitle={item?.label}
+                          language={language}
+                          setFiles={setFiles}
+                          setFileType={setFileType}
+                          setModalOpen={setModalOpen}
+                        />
+                      );
+                    })
+                  )}
+                </form>
+              </section>
+              <section className="w-full inline-flex items-center gap-2 rounded-md border border-grey w-[420px] p-4 check-background">
+                <input
+                  type="checkbox"
+                  className="accent-cyan-800 h-3 w-3 cursor-pointer"
+                  checked={agreeToTerms}
+                  onChange={() => setAgreeToTerms(!agreeToTerms)}
+                />
+                <p className="text-neutral-500 text-sm font-normal">
+                  {language?.common?.agree}&nbsp;
+                  <span
+                    className="color-blue font-medium cursor-pointer"
+                    onClick={() => setOpen(true)}
+                  >
+                    {language?.common?.termsConditions}
+                  </span>
+                </p>
+              </section>
+              <section className="w-full inline-flex items-center justify-between py-10">
+                <Button
+                  className="h-[38px] w-[140px]"
+                  htmlType="submit"
+                  type="outlined"
+                  onClick={() => navigate(-1)}
+                >
+                  {language?.buttons?.back}
+                </Button>
+                <Button
+                  disabled={files.length === 3 && agreeToTerms ? false : true}
+                  className="h-[38px] w-[140px]"
+                  htmlType="submit"
+                  onClick={() => {
+                    let errors: string[] = [];
+                    if (files.length !== 3)
+                      errors.push(language.promptMessages.pleaseUploadAttachments);
+                    if (!agreeToTerms)
+                      errors.push(language.promptMessages.pleaseAcceptPP);
+                    if (errors.length === 0) {
+                      setOpen(false);
+                      return setModalOpen(true);
+                    }
+                    toast.dismiss();
+                    errors.forEach((e) => toast.warning(e, toastUtil));
+                    errors = [];
+                  }}
+                >
+                  {language?.buttons?.submit}
+                </Button>
+              </section>
+            </aside>
+          </React.Fragment>
+        )
+      }
       <Drawer isOpen={isOpen} setIsOpen={(val: boolean) => setOpen(val)}>
         <header className="font-bold text-xl">
           {language.philosophyGoals.whyToDo}
