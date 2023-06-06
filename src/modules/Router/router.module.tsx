@@ -94,7 +94,7 @@ const RouterModule = () => {
           <Suspense fallback={<Loader />}>
             <AuthenticateRoute>
               <AuthenticateRole role={KanzRoles.STARTUP}>
-              <Startup guard={authToken} />
+                <Startup guard={authToken} />
               </AuthenticateRole>
             </AuthenticateRoute>
           </Suspense>
@@ -105,7 +105,9 @@ const RouterModule = () => {
         element={
           <Suspense fallback={<Loader />}>
             <AuthenticateRoute>
-              <Realtors guard={authToken} />
+              <AuthenticateRole role={KanzRoles.REALTOR}>
+                <Realtors guard={authToken} />
+              </AuthenticateRole>
             </AuthenticateRoute>
           </Suspense>
         }

@@ -157,10 +157,10 @@ const Login = ({ }: any) => {
     <main className="h-full max-h-full background-auth overflow-y-auto">
       <ClippedBanner />
       <section className="h-full w-[55%] inline-block align-top screen991:w-full">
+        <section className="w-full text-right mr-3 mt-3">
+          <Dropdown dropdownItems={languageDropdownItems} />
+        </section>
         <aside className="inline-flex flex-col items-center justify-center w-full h-full">
-          <section className="absolute top-[26px] right-[5%] w-full text-right">
-            <Dropdown dropdownItems={languageDropdownItems} />
-          </section>
           <section className="w-[428px] max-w-md pt-[130px] screen500:max-w-[300px]">
             <h2 className="text-[24px] font-bold text-left text-neutral-900 screen500:text-[20px]">
               {language?.onboarding?.loginKanz}
