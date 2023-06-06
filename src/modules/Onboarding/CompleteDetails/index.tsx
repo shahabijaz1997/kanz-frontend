@@ -16,7 +16,7 @@ const CompleteDetails = (props: any) => {
     const [isOpen, setOpen] = useState(false);
 
     useLayoutEffect(() => {
-        if (user.status !== ApplicationStatus.OPENED && user.status !== ApplicationStatus.IN_PROGRESS) navigate("/welcome")
+        if (user.status !== ApplicationStatus.OPENED) navigate("/welcome");
     }, []);
     return (
         <main className="h-full max-h-full background-auth overflow-y-auto">

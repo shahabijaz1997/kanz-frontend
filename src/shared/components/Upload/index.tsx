@@ -56,7 +56,7 @@ const UploadComp = (props: any) => {
   };
 
   return (
-    <div className="mb-4 w-full">
+    <div className="mb-4 w-full select-none">
       <div className="block text-neutral-700 text-base font-medium">
         <div>{title}</div>
         <small className="text-neutral-700 font-normal">{subTitle}</small>

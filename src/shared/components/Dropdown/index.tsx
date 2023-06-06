@@ -49,7 +49,7 @@ const Dropdown = (props: any) => {
 
             {isOpen && (
                 <div
-                    className="absolute right-0 z-10 mt-2 w-40 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none"
+                    className="absolute right-6 z-10 mt-2 w-40 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none"
                     role="menu"
                     aria-orientation="vertical"
                     aria-labelledby="menu-button"
@@ -59,7 +59,7 @@ const Dropdown = (props: any) => {
                         {React.Children.toArray(
                             dropdownItems.map((item: any) => {
                                 return (
-                                    <a href="#" className="text-gray-700 px-4 py-2 text-sm inline-flex gap-2" role="menuitem" tabIndex={-1} id="menu-item-0">
+                                    <a href="#" className="text-gray-700 px-4 py-2 text-sm inline-flex gap-2" role="menuitem" tabIndex={-1} id="menu-item-0" onClick={()=>setIsOpen(false)}>
                                         {item.icon && <img src={item.icon} alt={item.title} />}
                                         <small className="text-[14px] font-medium">{item.title}</small>
                                     </a>
