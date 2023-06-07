@@ -32,9 +32,9 @@ const AddAttachments = (props: any) => {
     onGetRoleBasedAttachmentDetails();
   }, []);
 
-  const setFile = (file: File, id: string, attachment_id: string) => {
+  const setFile = (file: File, id: string, url: string, attachment_id: string) => {
     setFiles((prev: any) => {
-      return [...prev, { file, id, attachment_id }];
+      return [...prev, { file, id, url, attachment_id }];
     });
   };
 
