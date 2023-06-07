@@ -1,10 +1,19 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useLayoutEffect } from 'react';
+import { useSelector } from 'react-redux';
+import { RootState } from '../../../redux-toolkit/store/store';
 
 const Dropdown = (props: any) => {
-    const { style, dropdownItems } = props;
+    const { style, dropdownItems, onSetSelected } = props;
+    const event: any = useSelector((state: RootState) => state.event.value);
+
     const [isOpen, setIsOpen] = useState(false);
     const dropdownRef: any = useRef(null);
-    const [selected] = useState(dropdownItems[0]);
+    const [selected, setSelected] = useState(dropdownItems[0]);
+
+    useLayoutEffect(() => {
+        let item = dropdownItems.find((x: any) => x.name === event);
+        setSelected(item || dropdownItems[0]);
+    }, [event]);
 
     useEffect(() => {
         const handleOutsideClick = (event: any) => {
@@ -12,9 +21,7 @@ const Dropdown = (props: any) => {
                 setIsOpen(false);
             }
         };
-
         window.addEventListener('click', handleOutsideClick);
-
         return () => {
             window.removeEventListener('click', handleOutsideClick);
         };
@@ -27,8 +34,7 @@ const Dropdown = (props: any) => {
     return (
         <div className={style} ref={dropdownRef}>
             <div>
-                <button type="button"
-                    className="inline-flex justify-center items-center gap-x-1.5 px-3 py-2 text-sm font-medium hover:bg-gray-50 text-neutral-700"
+                <button type="button" className="inline-flex justify-center items-center gap-x-1.5 px-3 py-2 text-sm font-medium hover:bg-gray-50 text-neutral-700"
                     id="menu-button" aria-expanded={isOpen} aria-haspopup="true" onClick={handleToggleDropdown} >
                     {selected.icon && <img src={selected?.icon} alt={selected.title} />}
                     {selected.title}
@@ -55,14 +61,18 @@ const Dropdown = (props: any) => {
                     aria-labelledby="menu-button"
                     tabIndex={-1}
                 >
-                    <div className="py-1 inline-flex justify-start items-center w-full" role="none">
+                    <div className="py-1 inline-flex justify-start items-start w-full flex-col" role="none">
                         {React.Children.toArray(
                             dropdownItems.map((item: any) => {
                                 return (
-                                    <a href="#" className="text-gray-700 px-4 py-2 text-sm inline-flex gap-2" role="menuitem" tabIndex={-1} id="menu-item-0" onClick={()=>setIsOpen(false)}>
-                                        {item.icon && <img src={item.icon} alt={item.title} />}
+                                    <button className="text-gray-700 px-4 py-2 text-sm inline-flex w-full cursor-pointer gap-2 hover:bg-cbc-transparent" role="menuitem" tabIndex={-1} id="menu-item-0" onClick={() => {
+                                        setSelected(item)
+                                        setIsOpen(false);
+                                        onSetSelected(item);
+                                    }}>
+                                        {item.icon && <img src={item.icon} alt={item.title} className="h-4 object-contain" />}
                                         <small className="text-[14px] font-medium">{item.title}</small>
-                                    </a>
+                                    </button>
                                 )
                             })
                         )}

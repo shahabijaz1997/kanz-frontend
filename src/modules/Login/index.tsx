@@ -5,8 +5,6 @@ import { RootState } from "../../redux-toolkit/store/store";
 import { useLocation, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { toastUtil } from "../../utils/toast.utils";
-import Dropdown from "../../shared/components/Dropdown";
-import { languageDropdownItems } from "../../utils/dropdown-items.utils";
 import ClippedBanner from "../Onboarding/components/ClippedBanner";
 import EyeIcon from "../../ts-icons/EyeIcon.svg";
 import EyeSlash from "../../ts-icons/EyeSlashIcon.svg";
@@ -16,6 +14,7 @@ import { KanzRoles } from "../../enums/roles.enum";
 import { saveUserData } from "../../redux-toolkit/slicer/user.slicer";
 import Button from "../../shared/components/Button";
 import { AntdInput } from "../../shared/components/Input";
+import LanguageDrodownWrapper from "../../shared/views/LanguageDrodownWrapper";
 
 type FormValues = {
   email: string;
@@ -139,7 +138,7 @@ const Login = ({ }: any) => {
         </Button>
         <div className="flex justify-end my-[12px]">
           <p className="text-neutral-500 text-left">
-            {language.buttons.notRegistered}{" "}
+            {language?.buttons?.notRegistered}{" "}
           </p>
           &nbsp;
           <button
@@ -158,7 +157,7 @@ const Login = ({ }: any) => {
       <ClippedBanner />
       <section className="h-full w-[55%] inline-block align-top screen991:w-full">
         <section className="w-full text-right mr-3 mt-3">
-          <Dropdown dropdownItems={languageDropdownItems} />
+          <LanguageDrodownWrapper />
         </section>
         <aside className="inline-flex flex-col items-center justify-center w-full h-full">
           <section className="w-[428px] max-w-md pt-[130px] screen500:max-w-[300px]">
