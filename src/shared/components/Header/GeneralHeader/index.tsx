@@ -2,8 +2,6 @@ import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../../../redux-toolkit/store/store";
 import Logo from "../../../../assets/logo.png";
-import Dropdown from "../../Dropdown";
-import { languageDropdownItems } from "../../../../utils/dropdown-items.utils";
 import BellIcon from "../../../../ts-icons/BellIcon.svg";
 import { logout } from "../../../../apis/auth.api";
 import { useNavigate } from "react-router-dom";
@@ -12,6 +10,7 @@ import { saveUserData } from "../../../../redux-toolkit/slicer/user.slicer";
 import { KanzRoles } from "../../../../enums/roles.enum";
 import CrossIcon from "../../../../ts-icons/crossIcon.svg";
 import { saveUserMetaData } from "../../../../redux-toolkit/slicer/metadata.slicer";
+import LanguageDrodownWrapper from "../../../views/LanguageDrodownWrapper";
 
 const GeneralHeader = ({ responsive = false, showMenu = false }: any) => {
     const navigate = useNavigate();
@@ -97,7 +96,7 @@ const GeneralHeader = ({ responsive = false, showMenu = false }: any) => {
                     <nav className="">
                         <ul className="inline-flex items-center gap-6">
                             <li className="relative">
-                                <Dropdown dropdownItems={languageDropdownItems} />
+                                <LanguageDrodownWrapper />
                             </li>
                             {authenticatedHeaderNav()}
                         </ul>
@@ -124,7 +123,7 @@ const GeneralHeader = ({ responsive = false, showMenu = false }: any) => {
                     <nav className={`${isMenuOpen ? "block w-full bg-white z-10" : "hidden"}`}>
                         <ul className="flex items-center flex-row-reverse pt-12 w-full justify-between px-4">
                             <li>
-                                <Dropdown dropdownItems={languageDropdownItems} />
+                               <LanguageDrodownWrapper />
                             </li>
                             <li>
                                 <div className="rounded-full w-8 h-8 inline-grid place-items-center bell-background ">

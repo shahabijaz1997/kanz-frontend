@@ -55,7 +55,7 @@ const FileUpload = ({ id, setModalOpen, setFile, removeFile }: any) => {
             let message = `${language.promptMessages.bigFile} (${size}MB) ${language.promptMessages.maxSize} 10MB`
             return setAlertType({ type: PromptMessage.ERROR, message });
         }
-        const url = URL.createObjectURL(file);
+        // const url = URL.createObjectURL(file);
         let type;
 
         try {
@@ -95,8 +95,8 @@ const FileUpload = ({ id, setModalOpen, setFile, removeFile }: any) => {
             const { status, data } = await uploadAttachments(fd, authToken);
             if (status === 200) {
                 setAlertType({ type: PromptMessage.SUCCESS, message: language.promptMessages.fileUpload });
-                setFile(file, id, data?.status?.data?.attachment_id);
-                setSelectedFile({ file, url, type, id, attachment_id: data?.status?.data?.attachment_id });
+                setFile(file, id, data?.status?.data?.url, data?.status?.data?.attachment_id);
+                setSelectedFile({ file, url: data?.status?.data?.url, type, id, attachment_id: data?.status?.data?.attachment_id });
             }
         } catch (error: any) {
             if (error.response && error.response.status === 401) {
@@ -120,7 +120,7 @@ const FileUpload = ({ id, setModalOpen, setFile, removeFile }: any) => {
                     {selectedFile && selectedFile?.id === id ? (
                         <div className="flex items-center relative check-background h-full px-2">
                             <div className="h-8 w-8 p-2 absolute right-2 top-2 rounded-full cursor-pointer bg-white" onClick={(e) => {
-                                removeFile(selectedFile?.attachment_id,setLoading);
+                                removeFile(selectedFile?.attachment_id, setLoading);
                                 e.preventDefault();
                                 e.stopPropagation();
                                 setSelectedFile(null);
@@ -134,7 +134,7 @@ const FileUpload = ({ id, setModalOpen, setFile, removeFile }: any) => {
 
                             <section className="pl-3 h-[120px] inline-flex flex-col justify-between py-2">
                                 <div>
-                                    <h2 className="text-neutral-900 font-medium text-base truncate mb-3 max-w-[120px]">{selectedFile?.file?.name}</h2>
+                                    <h2 className="text-neutral-900 font-medium text-base truncate mb-3 max-w-[200px]">{selectedFile?.file?.name}</h2>
                                     <h4 className="text-neutral-700 font-medium text-sm truncate max-w-[200px]">{fileInfo?.size}&nbsp;{fileInfo?.dimensions}</h4>
                                 </div>
                                 <div className="rounded-lg w-20 h-6 inline-flex items-center flex-row justify-center gap-2 bg-white cursor-pointer" onClick={() => setModalOpen({ url: selectedFile.url, open: true, type: selectedFile.type })}>
