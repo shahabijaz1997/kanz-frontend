@@ -240,7 +240,7 @@ const Individual = ({ language }: any) => {
             </Button>
             <Button
               className="mt-6 h-[38px] w-[140px]"
-              disabled={loading}
+              disabled={!payload.national || !payload.residence || !selectedAssert?.id || !riskChecked}
               htmlType="submit"
               loading={loading}
             >
