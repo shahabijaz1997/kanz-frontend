@@ -456,7 +456,7 @@ const Questionare = ({ step, returnSuccessRedirection }: any) => {
           </Button>
           <Button
             className="h-[38px] w-[140px]"
-            disabled={loading}
+            disabled={!checkValidation()}
             htmlType="submit"
             loading={loading}
             onClick={onSetNext}
