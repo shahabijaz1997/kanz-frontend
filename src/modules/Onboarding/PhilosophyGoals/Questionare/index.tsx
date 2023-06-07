@@ -467,6 +467,56 @@ const Questionare = ({ step, returnSuccessRedirection }: any) => {
         </React.Fragment>
       )}
 
+      <section className="flex items-start flex-col mt-10 max-w-[420px] screen500:max-w-[300px]">
+        {questions?.questions && (
+          <h3 className="text-neutral-700 font-bold text-2xl w-[420px]">
+            {questions?.questions[0]?.category}
+          </h3>
+        )}
+      </section>
+
+      {questions?.questions?.length &&
+        step !== 3 &&
+        React.Children.toArray(
+          questions?.questions.map((ques: any) =>
+            ques.step === 2 && ques.index === 1
+              ? renderBooleanQuestionaire(ques)
+              : renderMultipleChoiceQuestionaire(ques)
+          )
+        )}
+
+      {questions?.questions?.length &&
+        questions?.questions[0]?.question_type === "checkbox" &&
+        React.Children.toArray(
+          questions?.questions.map((ques: any) =>
+            renderCheckboxQuestionaire(ques)
+          )
+        )}
+
+      <section className="flex items-start justify-center w-full flex-col mt-6 max-w-[420px] screen500:max-w-[300px]">
+        <div className="w-full inline-flex items-center justify-between mt-16">
+          <Button
+            className="h-[38px] w-[140px]"
+            htmlType="submit"
+            type="outlined"
+            onClick={onSetPrev}
+          >
+            {language?.buttons?.back}
+          </Button>
+          <Button
+            className="h-[38px] w-[140px]"
+            disabled={!checkValidation()}
+            htmlType="submit"
+            loading={loading}
+            onClick={onSetNext}
+          >
+            {step < 5
+              ? language?.buttons?.continue
+              : language?.buttons?.proceed}
+          </Button>
+        </div>
+      </section>
+
       <Drawer isOpen={isOpen} setIsOpen={(val: boolean) => setOpen(val)}>
         {questions?.questions &&
           questions?.questions[0]?.question_type === "checkbox" ? (
