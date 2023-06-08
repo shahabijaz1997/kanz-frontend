@@ -48,7 +48,10 @@ const SyndicateFlow = ({ }: any) => {
   useLayoutEffect(() => {
     let _payload: any = localStorage.getItem("syndicate");
     if (_payload) setPayload(JSON.parse(_payload));
-    if(logo) setFile(logo);
+    if(logo) {
+      setFile(logo);
+      onSetPayload(logo?.file, "logo");
+    }
   }, []);
 
   useLayoutEffect(() => {
@@ -104,6 +107,8 @@ const SyndicateFlow = ({ }: any) => {
   };
 
   const onSetPayload = (data: any, type: string) => {
+    console.log(data);
+    
     setPayload((prev: any) => {
       return { ...prev, [type]: data };
     });
@@ -112,13 +117,14 @@ const SyndicateFlow = ({ }: any) => {
   const onPostSyndicateData = async () => {
     try {
       setLoading(true);
+     console.log(payload);
      
       const form: any = new FormData();
       form.append("syndicate_profile[have_you_raised]", payload.raised)
       form.append("syndicate_profile[raised_amount]", payload.amountRaised)
       form.append("syndicate_profile[no_times_raised]", payload.timesRaised)
-      form.append("syndicate_profile[industry_market]", payload.industry)
-      form.append("syndicate_profile[region]", payload.region)
+      form.append("syndicate_profile[industry_market]", JSON.stringify(payload.industry))
+      form.append("syndicate_profile[region]", JSON.stringify(payload.region))
       form.append("syndicate_profile[profile_link]", payload.profileLink)
       form.append("syndicate_profile[dealflow]", payload.dealflow)
       form.append("syndicate_profile[name]", payload.name)

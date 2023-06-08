@@ -77,7 +77,7 @@ const StartupStepper = ({ language, file, payload, onSetPayload, authToken, step
                             {language?.company?.market}
                         </label>
                         <Selector
-                            onChange={(v: any) => onSetPayload(v.value, "market")}
+                            onChange={(v: any) => onSetPayload([v.value], "market")}
                             options={industries}
                             defaultValue={{ label: payload.market, value: payload.market } || ""}
                         />

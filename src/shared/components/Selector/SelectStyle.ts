@@ -9,14 +9,14 @@ export function SelectStyle() {
       borderRadius: 6,
       height: 42,
       cursor: 'pointer',
-      zIndex: 1000,
+      zIndex: 199,
     }),
     menu: (provided: any) => ({
       ...provided,
       marginTop: 8,
       borderRadius: 6,
       backgroundColor:  '#ffffff',
-      zIndex: 1000,
+      zIndex: 199,
     }),
     dropdownIndicator: (provided, state: any) => ({
       ...provided,
