@@ -5,7 +5,6 @@ import { RootState } from "../../../redux-toolkit/store/store";
 import Header from "../../../shared/components/Header";
 import Modal from "../../../shared/components/Modal";
 import { FileType } from "../../../enums/types.enum";
-import { removeAttachment } from "../../../apis/attachment.api";
 import { saveToken } from "../../../redux-toolkit/slicer/auth.slicer";
 import { toast } from "react-toastify";
 import { toastUtil } from "../../../utils/toast.utils";
@@ -14,6 +13,7 @@ import Button from "../../../shared/components/Button";
 import { isValidEmail, isValidUrl } from "../../../utils/regex.utils";
 import StartupStepper from "./StartupStepper";
 import { postCompanyInformation } from "../../../apis/company.api";
+import { saveLogo } from "../../../redux-toolkit/slicer/attachments.slicer";
 
 const StartupFlow = ({ }: any) => {
   const params = useParams();
@@ -21,6 +21,7 @@ const StartupFlow = ({ }: any) => {
   const dispatch = useDispatch();
   const language: any = useSelector((state: RootState) => state.language.value);
   const authToken: any = useSelector((state: RootState) => state.auth.value);
+  const logo: any = useSelector((state: RootState) => state.attachments.logo.value);
 
   const [payload, setPayload]: any = useState({
     company: "",
@@ -35,6 +36,7 @@ const StartupFlow = ({ }: any) => {
     raised: "",
     target: "",
     logo: null,
+    currency: { label: "AED", value: "AED" }
   });
   const [options] = useState([
     { id: 1, title: language?.buttons?.yes },
@@ -49,40 +51,29 @@ const StartupFlow = ({ }: any) => {
   useLayoutEffect(() => {
     let _payload: any = localStorage.getItem("startup");
     if (_payload) setPayload(JSON.parse(_payload));
+    if (logo) setFile(logo);
   }, []);
 
   useLayoutEffect(() => {
     setStep(Number(params?.id) || 1);
   }, [params]);
 
-  const onSetFile = (file: File, id: string, attachment_id: string) => {
-    setFile({ file, id, attachment_id });
-    onSetPayload(id, "logo");
+  const onSetFile = (file: File, id: string, url: string, attachment_id: string, size: string, dimensions: string, type: string) => {
+    let _file: any = {
+      name: file?.name,
+      size,
+      dimensions
+    }
+    let _attachment: any = { file: _file, id, url, attachment_id, type: type };
+    setFile(_attachment);
+    dispatch(saveLogo(_attachment));
+    onSetPayload(file, "logo");
   };
 
-
-
   const removeFile = async (id: string) => {
-    try {
-      setLoading(true);
-      let { status } = await removeAttachment(id, authToken);
-      if (status === 200) {
-        setFile(null);
-        onSetPayload(null, "logo");
-      }
-    } catch (error: any) {
-      if (error.response && error.response.status === 401) {
-        dispatch(saveToken(""));
-        navigate("/login", { state: "add-attachments" });
-      }
-      const message =
-        error?.response?.data?.status?.message ||
-        error?.response?.data ||
-        language.promptMessages.errorGeneral;
-      toast.error(message, toastUtil);
-    } finally {
-      setLoading(false);
-    }
+    dispatch(saveLogo(""));
+    setFile(null);
+    onSetPayload(null, "logo")
   };
 
   const ontoNextStep = () => {
@@ -116,23 +107,21 @@ const StartupFlow = ({ }: any) => {
   const onPostCompanyData = async () => {
     try {
       setLoading(true);
-      let dataPayload: any = {
-        startup: {
-          company_name: payload.company,
-          legal_name: payload.legal,
-          country_id: payload.country?.id,
-          industry_market: payload.market,
-          website: payload.web,
-          address: payload.address,
-          logo: payload.logo,
-          description: payload.business,
-          ceo_name: payload.name,
-          ceo_email: payload.email,
-          total_capital_raised: payload.raised,
-          current_round_capital_target: payload.target,
-        }
-      };
-      let { status } = await postCompanyInformation(dataPayload, authToken);
+      const form: any = new FormData();
+      form.append("startup[company_name]", payload.company);
+      form.append("startup[legal_name]", payload.legal);
+      form.append("startup[country_id]", payload.country?.id);
+      form.append("startup[industry_market]", payload.market);
+      form.append("startup[website]", payload.web);
+      form.append("startup[address]", payload.address);
+      form.append("startup[logo]", payload.logo);
+      form.append("startup[description]", payload.business);
+      form.append("startup[ceo_name]", payload.name);
+      form.append("startup[ceo_email]", payload.email);
+      form.append("startup[total_capital_raised]", payload.raised);
+      form.append("startup[current_round_capital_target]", payload.target);
+      form.append("startup[currency]", payload?.currency?.value);
+      let { status } = await postCompanyInformation(form, authToken);
 
       if (status === 200) {
         navigate("/add-attachments");
@@ -173,6 +162,7 @@ const StartupFlow = ({ }: any) => {
           onSetPayload={onSetPayload}
           options={options}
           step={step}
+          file={file}
           setFileType={(e: any) => setFileType(e)}
           removeFile={removeFile}
           setFile={onSetFile}

@@ -28,15 +28,16 @@ const Questionare = ({ step, returnSuccessRedirection }: any) => {
   const [validations, setValidations]: any = useState([]);
   const [page, setPage] = useState(1);
   const [selected, setSelected]: any = useState({});
-  const [loading, setLoading]: any = useState(false);
+  const [loading, setLoading]: any = useState(true);
 
   useLayoutEffect(() => {
     getQuestionares(step);
+
   }, [step]);
 
   const getQuestionares = async (pg: number) => {
-    setLoading(true);
     try {
+      setLoading(true);
       const { status, data }: any = await getInvestmentPhilisophyQuestions(pg, authToken);
       if (status === 200) {
         let philisophyData: any = localStorage.getItem("philosophy");
@@ -68,17 +69,17 @@ const Questionare = ({ step, returnSuccessRedirection }: any) => {
         navigate("/login", { state: `philosophy-goals/${step}` });
       }
     } finally {
-      setLoading(false);
+      let timer = setTimeout(() => {
+        setLoading(false);
+        clearTimeout(timer);
+      }, 500);
     }
   };
 
   const submitData = async (payload: any) => {
     try {
       setLoading(true);
-      let { status, data } = await postInvestmentPhilisophyData(
-        payload,
-        authToken
-      );
+      let { status, data } = await postInvestmentPhilisophyData(payload, authToken);
       if (status === 200) localStorage.setItem("step", step);
       if (step === questions?.total_steps && status === 200)
         returnSuccessRedirection(data);
@@ -93,7 +94,10 @@ const Questionare = ({ step, returnSuccessRedirection }: any) => {
         navigate("/login", { state: `philosophy-goals/${step}` });
       }
     } finally {
-      setLoading(false);
+      let timer = setTimeout(() => {
+        setLoading(false);
+        clearTimeout(timer);
+      }, 500);
     }
   };
 
@@ -364,6 +368,7 @@ const Questionare = ({ step, returnSuccessRedirection }: any) => {
     if (page !== 1) navigate(`/philosophy-goals/${page - 1}`);
     else navigate(`/complete-goals`);
   };
+
   const onSetNext = () => {
     if (!checkValidation()) {
       toast.dismiss();
@@ -409,16 +414,16 @@ const Questionare = ({ step, returnSuccessRedirection }: any) => {
   return (
     <aside className="w-full flex items-center justify-center flex-col pt-12 pb-5">
       <Stepper currentStep={step - 1} totalSteps={questions?.total_steps} />
-      {loading && (
+      {loading ? (
         <div
           className="absolute left-0 top-0 w-full h-full grid place-items-center"
           style={{ backgroundColor: "rgba(255, 255, 255, 1)", zIndex: 50 }}
         >
           <Spinner />
         </div>
-      )}
-
-      <section className="flex items-start flex-col mt-10 max-w-[420px] screen500:max-w-[300px]">
+      ) : (
+        <React.Fragment>
+         <section className="flex items-start flex-col mt-10 max-w-[420px] screen500:max-w-[300px]">
         {questions?.questions && (
           <h3 className="text-neutral-700 font-bold text-2xl w-[420px]">
             {questions?.questions[0]?.category}
@@ -456,7 +461,7 @@ const Questionare = ({ step, returnSuccessRedirection }: any) => {
           </Button>
           <Button
             className="h-[38px] w-[140px]"
-            disabled={loading}
+            disabled={!checkValidation()}
             htmlType="submit"
             loading={loading}
             onClick={onSetNext}
@@ -467,6 +472,8 @@ const Questionare = ({ step, returnSuccessRedirection }: any) => {
           </Button>
         </div>
       </section>
+        </React.Fragment>
+      )}
 
       <Drawer isOpen={isOpen} setIsOpen={(val: boolean) => setOpen(val)}>
         {questions?.questions &&
