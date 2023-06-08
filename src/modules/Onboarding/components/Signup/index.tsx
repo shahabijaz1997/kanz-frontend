@@ -2,14 +2,9 @@ import React, { useState, useLayoutEffect, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
 import { toastUtil } from "../../../../utils/toast.utils";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { RootState } from "../../../../redux-toolkit/store/store";
-import {
-  hasLowerCase,
-  hasNumbers,
-  hasSpecialCharacters,
-  hasUpperCase,
-} from "../../../../utils/regex.utils";
+import { hasLowerCase, hasNumbers, hasSpecialCharacters, hasUpperCase } from "../../../../utils/regex.utils";
 import CheckIcon from "../../../../ts-icons/CheckIcon.svg";
 import EyeIcon from "../../../../ts-icons/EyeIcon.svg";
 import EyeSlash from "../../../../ts-icons/EyeSlashIcon.svg";
@@ -30,6 +25,7 @@ type FormValues = {
 
 const Signup = (props: any) => {
   const { onSetStepper } = props;
+  const navigate = useNavigate();
   const dispatch = useDispatch();
   const { state } = useLocation();
   const language: any = useSelector((state: RootState) => state.language.value);
@@ -55,16 +51,14 @@ const Signup = (props: any) => {
         <div className="inline-flex flex-row items-center justify-center w-full gap-4 mb-6 screen500:flex-col screen500:items-start flex-wrap">
           <section className="inline-flex items-center">
             <div
-              className={`${
-                hasUpperCase(password)
+              className={`${hasUpperCase(password)
                   ? "checked-background"
                   : "check-background"
-              } rounded-full w-4 h-4 inline-grid place-items-center mr-1`}
+                } rounded-full w-4 h-4 inline-grid place-items-center mr-1`}
             >
               <CheckIcon
-                fill={`${
-                  hasUpperCase(password) ? "#fff" : "rgba(0, 0, 0, 0.3)"
-                }`}
+                fill={`${hasUpperCase(password) ? "#fff" : "rgba(0, 0, 0, 0.3)"
+                  }`}
               />
             </div>
             <small className="text-neutral-500 text-[14px] font-normal">
@@ -73,16 +67,14 @@ const Signup = (props: any) => {
           </section>
           <section className="inline-flex items-center">
             <div
-              className={`${
-                hasLowerCase(password)
+              className={`${hasLowerCase(password)
                   ? "checked-background"
                   : "check-background"
-              } check-background rounded-full w-4 h-4 inline-grid place-items-center mr-1`}
+                } check-background rounded-full w-4 h-4 inline-grid place-items-center mr-1`}
             >
               <CheckIcon
-                fill={`${
-                  hasLowerCase(password) ? "#fff" : "rgba(0, 0, 0, 0.3)"
-                }`}
+                fill={`${hasLowerCase(password) ? "#fff" : "rgba(0, 0, 0, 0.3)"
+                  }`}
               />
             </div>
             <small className="text-neutral-500 text-[14px] font-normal">
@@ -91,9 +83,8 @@ const Signup = (props: any) => {
           </section>
           <section className="inline-flex items-center">
             <div
-              className={`${
-                password.length >= 8 ? "checked-background" : "check-background"
-              } check-background rounded-full w-4 h-4 inline-grid place-items-center mr-1`}
+              className={`${password.length >= 8 ? "checked-background" : "check-background"
+                } check-background rounded-full w-4 h-4 inline-grid place-items-center mr-1`}
             >
               <CheckIcon
                 fill={`${password.length >= 8 ? "#fff" : "rgba(0, 0, 0, 0.3)"}`}
@@ -105,9 +96,8 @@ const Signup = (props: any) => {
           </section>
           <section className="inline-flex items-center">
             <div
-              className={`${
-                hasNumbers(password) ? "checked-background" : "check-background"
-              } check-background rounded-full w-4 h-4 inline-grid place-items-center mr-1`}
+              className={`${hasNumbers(password) ? "checked-background" : "check-background"
+                } check-background rounded-full w-4 h-4 inline-grid place-items-center mr-1`}
             >
               <CheckIcon
                 fill={`${hasNumbers(password) ? "#fff" : "rgba(0, 0, 0, 0.3)"}`}
@@ -119,16 +109,14 @@ const Signup = (props: any) => {
           </section>
           <section className="inline-flex items-center">
             <div
-              className={`${
-                hasSpecialCharacters(password)
+              className={`${hasSpecialCharacters(password)
                   ? "checked-background"
                   : "check-background"
-              } check-background rounded-full w-4 h-4 inline-grid place-items-center mr-1`}
+                } check-background rounded-full w-4 h-4 inline-grid place-items-center mr-1`}
             >
               <CheckIcon
-                fill={`${
-                  hasSpecialCharacters(password) ? "#fff" : "rgba(0, 0, 0, 0.3)"
-                }`}
+                fill={`${hasSpecialCharacters(password) ? "#fff" : "rgba(0, 0, 0, 0.3)"
+                  }`}
               />
             </div>
             <small className="text-neutral-500 text-[14px] font-normal">
@@ -256,6 +244,19 @@ const Signup = (props: any) => {
         >
           {language?.buttons?.createAccount}
         </Button>
+        <div className="flex justify-end my-[12px]">
+          <p className="text-neutral-500 text-left">
+            {language?.buttons?.alreadyAccount}{" "}
+          </p>
+          &nbsp;
+          <button
+            className="text-cyan-800 font-bold cursor-pointer"
+            type="button"
+            onClick={() => navigate("/login")}
+          >
+            {language.buttons.signin}
+          </button>
+        </div>
         <div className="flex items-center justify-center my-[38px]">
           <div className="border-t border-neutral-300 flex-grow"></div>
           <div className="px-4 text-neutral-500 font-normal">

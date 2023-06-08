@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../../redux-toolkit/store/store";
 import { saveToken } from "../../../redux-toolkit/slicer/auth.slicer";
@@ -29,6 +29,12 @@ const FileUpload = ({ id, file, setModalOpen, setFile, removeFile }: any) => {
         setDragOver(true);
     };
 
+    useEffect(() => {
+        if (file) {
+            setSelectedFile(file);
+            setFileInfo({ size: file?.file?.size, dimensions: file?.file?.dimensions });
+        }
+    }, [file])
     const handleDragLeave = () => {
         setDragOver(false);
     };

@@ -1,5 +1,5 @@
-import UKFlag from "../assets/icons/gb.png";
-import UAEFlag from "../assets/icons/uae.png";
+import UKFlag from "../assets/icons/english.svg";
+import UAEFlag from "../assets/icons/arabic.svg";
 
 export const languageDropdownItems = [
     { id: 1, title: "English", icon: UKFlag, name: "en" },

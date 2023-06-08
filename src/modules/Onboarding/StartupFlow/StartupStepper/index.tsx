@@ -11,9 +11,12 @@ import CountrySelector from "../../../../shared/components/CountrySelector";
 import Selector from "../../../../shared/components/Selector";
 import { getAllIndustries } from "../../../../apis/fakeData.api";
 
-const StartupStepper = ({ language, payload, onSetPayload, authToken, step, removeFile, setFile, setModalOpen, setFileType }: any) => {
+const currencies = [{ label: "AED", value: "AED" }, { label: "USD", value: "USD" }];
+
+const StartupStepper = ({ language, file, payload, onSetPayload, authToken, step, removeFile, setFile, setModalOpen, setFileType }: any) => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
+    const [currency, setCurrency] = useState(currencies[0]);
     const [showHoverModal, setShowHoverModal] = useState(false);
     const [loading, setLoading] = useState(false);
     const [countries, setCountries] = useState({ all: [], names: [] });
@@ -76,7 +79,7 @@ const StartupStepper = ({ language, payload, onSetPayload, authToken, step, remo
                         <Selector
                             onChange={(v: any) => onSetPayload(v.value, "market")}
                             options={industries}
-                            defaultValue={{label: payload.market, value: payload.market} || ""}
+                            defaultValue={{ label: payload.market, value: payload.market } || ""}
                         />
                     </div>
 
@@ -85,11 +88,11 @@ const StartupStepper = ({ language, payload, onSetPayload, authToken, step, remo
                             {language?.company?.country}
                         </label>
                         <CountrySelector
-                            onChange={(v: any) => onSetPayload(countries.all.find((c:any) => c.name === v.value), "country")}
-                            selectedValue={{label: payload?.country?.name, value: payload?.country?.name}}
+                            onChange={(v: any) => onSetPayload(countries.all.find((c: any) => c.name === v.value), "country")}
+                            selectedValue={{ label: payload?.country?.name, value: payload?.country?.name }}
                             allCountries={countries.names}
                             value={payload?.country?.name || ""}
-                            defaultValue={{label: payload?.country?.name, value: payload?.country?.name} || ""}
+                            defaultValue={{ label: payload?.country?.name, value: payload?.country?.name } || ""}
                         />
                     </div>
 
@@ -97,7 +100,7 @@ const StartupStepper = ({ language, payload, onSetPayload, authToken, step, remo
                         <label className="block text-neutral-700 text-sm font-medium" htmlFor="link">{language.company.compWeb}</label>
                         <div className="relative inline-flex w-full">
                             <input type="disabled" value={"https://"} className="text-neutral-500 text-base font-normal check-background border-l border-t border-b border-neutral-300 pl-2 rounded-bl-md rounded-tl-md h-[42px] w-[70px]" />
-                            <input id="link" value={payload?.web} onChange={(e) => onSetPayload(e.target.value, "web")} placeholder="www.example.com" className=" h-[42px] shadow-sm appearance-none border border-neutral-300 rounded-br-md rounded-tr-md w-full py-2 px-3 text-gray-500 leading-tight focus:outline-none focus:shadow-outline" type="text" />
+                            <input id="link" value={payload?.web} onChange={(e) => onSetPayload(e.target.value, "web")} placeholder="www.example.com" className="h-[42px] shadow-sm appearance-none border border-neutral-300 rounded-br-md rounded-tr-md w-full py-2 px-3 text-gray-500 leading-tight focus:outline-none focus:shadow-outline" type="text" />
                         </div>
                     </div>
 
@@ -124,7 +127,7 @@ const StartupStepper = ({ language, payload, onSetPayload, authToken, step, remo
                                 </HoverModal>
                             )}
                         </small>
-                        <FileUpload id={'logo'} setFile={setFile} removeFile={removeFile} setModalOpen={(e: any) => {
+                        <FileUpload id={'logo'} file={file} setFile={setFile} removeFile={removeFile} setModalOpen={(e: any) => {
                             setModalOpen(e.open ? e.url : null);
                             e.type && setFileType(e.type);
                         }} />
@@ -149,13 +152,32 @@ const StartupStepper = ({ language, payload, onSetPayload, authToken, step, remo
                     </div>
 
                     <div className="mb-8 relative">
-                        <label className="block text-neutral-700 text-sm font-medium" htmlFor="raised">{language.company.capRaised}</label>
-                        <input id="raised" value={payload?.raised} onChange={(e) => onSetPayload(e.target.value, "raised")} placeholder={language.company.addCapRaise} className=" h-[42px] shadow-sm appearance-none border border-neutral-300 rounded-md w-full py-2 px-3 text-gray-500 leading-tight focus:outline-none focus:shadow-outline" type="text" />
+                        <label className="block text-neutral-700 text-sm font-medium">{language.common.selectCurrency}</label>
+                        <Selector options={currencies} value={payload.currency} onChange={(item: any) => { onSetPayload(item, "currency") }} />
                     </div>
 
-                    <div className="mb-8 relative">
+                    <div className="mb-8 relative inline-flex w-full flex-col">
+                        <label className="block text-neutral-700 text-sm font-medium" htmlFor="raised">{language.company.capRaised}</label>
+                        <span className="inline-flex flex-row">
+                            <input id="raised" value={payload?.raised} onChange={(e) => {
+                                const enteredValue = e.target.value;
+                                const numericValue = enteredValue.replace(/[^0-9]/g, '');
+                                onSetPayload(numericValue, "raised");
+                            }} placeholder={language.company.addCapRaise} className="h-[42px] shadow-sm appearance-none border border-neutral-300 rounded-bl-md rounded-tl-md w-full py-2 px-3 text-gray-500 leading-tight focus:outline-none focus:shadow-outline" type="text" />
+                            <input type="disabled" value={payload.currency.value} className="text-neutral-500 text-base font-normal check-background border-r border-t border-b border-neutral-300 pl-4 rounded-br-md rounded-tr-md h-[42px] w-[70px]" />
+                        </span>
+                    </div>
+
+                    <div className="mb-8 relative inline-flex w-full flex-col">
                         <label className="block text-neutral-700 text-sm font-medium" htmlFor="target">{language.company.capTarget}</label>
-                        <input id="target" value={payload?.target} onChange={(e) => onSetPayload(e.target.value, "target")} placeholder={language.company.addCapTarget} className=" h-[42px] shadow-sm appearance-none border border-neutral-300 rounded-md w-full py-2 px-3 text-gray-500 leading-tight focus:outline-none focus:shadow-outline" type="text" />
+                        <span className="inline-flex flex-row">
+                            <input id="target" value={payload?.target} onChange={(e) => {
+                                const enteredValue = e.target.value;
+                                const numericValue = enteredValue.replace(/[^0-9]/g, '');
+                                onSetPayload(numericValue, "target");
+                            }} placeholder={language.company.addCapTarget} className="h-[42px] shadow-sm appearance-none border border-neutral-300 rounded-bl-md rounded-tl-md w-full py-2 px-3 text-gray-500 leading-tight focus:outline-none focus:shadow-outline" type="text" />
+                            <input type="disabled" value={payload.currency.value} className="text-neutral-500 text-base font-normal check-background border-r border-t border-b border-neutral-300 pl-4 rounded-br-md rounded-tr-md h-[42px] w-[70px]" />
+                        </span>
                     </div>
                 </form>
             </section>

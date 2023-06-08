@@ -11,7 +11,7 @@ import { KanzRoles } from "../../../../enums/roles.enum";
 import CrossIcon from "../../../../ts-icons/crossIcon.svg";
 import { saveUserMetaData } from "../../../../redux-toolkit/slicer/metadata.slicer";
 import LanguageDrodownWrapper from "../../../views/LanguageDrodownWrapper";
-import { saveAttachments } from "../../../../redux-toolkit/slicer/attachments.slicer";
+import { saveAttachments, saveLogo } from "../../../../redux-toolkit/slicer/attachments.slicer";
 
 const GeneralHeader = ({ responsive = false, showMenu = false }: any) => {
     const navigate = useNavigate();
@@ -37,6 +37,7 @@ const GeneralHeader = ({ responsive = false, showMenu = false }: any) => {
             dispatch(saveUserData(""));
             dispatch(saveAttachments(""));
             dispatch(saveUserMetaData(""));
+            dispatch(saveLogo(""));
         }
     };
 

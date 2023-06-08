@@ -21,7 +21,7 @@ const AddAttachments = (props: any) => {
   const dispatch = useDispatch();
   const language: any = useSelector((state: RootState) => state.language.value);
   const authToken: any = useSelector((state: RootState) => state.auth.value);
-  const attachments: any = useSelector((state: RootState) => state.attachments.value);
+  const attachments: any = useSelector((state: RootState) => state.attachments.attachments.value);
   const [modalOpen, setModalOpen]: any = useState(null);
   const [isOpen, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
