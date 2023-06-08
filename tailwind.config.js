@@ -30,7 +30,8 @@ module.exports = {
                 'cbc-grey': '#E0E0E0',
                 'cbc-grey-sec':  '#F2F2F2',
                 'cbc-check': '#F1F1F1',
-                'cbc-check-hover': '#DBDBDB'
+                'cbc-check-hover': '#DBDBDB',
+                'cbc-transparent': 'rgba(0, 0, 0, 0.0758)'
             }
         },
     },

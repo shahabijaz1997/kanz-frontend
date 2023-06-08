@@ -119,7 +119,7 @@ const InvestorFlow = ({ }: any) => {
             </Button>
             <Button
               className="mt-6 h-[38px] w-[140px]"
-              disabled={loading}
+              disabled={!selectedAccount?.link}
               htmlType="submit"
               loading={loading}
               onClick={onSelectInvestorType}

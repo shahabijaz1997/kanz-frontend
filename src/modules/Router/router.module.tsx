@@ -1,4 +1,4 @@
-import React, { PropsWithChildren, Suspense, lazy } from "react";
+import React, { PropsWithChildren, Suspense, lazy, useLayoutEffect, useState } from "react";
 import { Navigate, Route, Routes } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../redux-toolkit/store/store";
@@ -60,144 +60,159 @@ const AuthenticateRole = (props: PropsWithChildren | any) => {
 const RouterModule = () => {
   const dispatch = useDispatch();
   const authToken: any = useSelector((state: RootState) => state.auth.value);
+  const event: any = useSelector((state: RootState) => state.event.value);
+  const [loading, setLoading] = useState(false);
 
-  // Getting language preference
-  const language: any = loadLanguage("en");
-  dispatch(saveLanguage(language));
+  useLayoutEffect(() => {
+    onLoadLanguage();
+  }, [event]);
+
+  const onLoadLanguage = () => {
+    setLoading(true)
+    const _language: any = loadLanguage(event);
+    dispatch(saveLanguage(_language));
+
+    let timer = setTimeout(() => {
+      setLoading(false);
+      clearTimeout(timer);
+    }, 1000);
+  };
 
   return (
-    <Routes>
-      <Route
-        path="/"
-        element={
-          <Suspense fallback={<Loader />}>
-            <Home guard={authToken} />
-          </Suspense>
-        }
-      />
-      <Route
-        path={RoutesEnums.INVESTOR_DETAILS}
-        element={
-          <Suspense fallback={<Loader />}>
-            <AuthenticateRoute>
-              <AuthenticateRole role={KanzRoles.INVESTOR}>
-                <InvestorFlow guard={authToken} />
-              </AuthenticateRole>
-            </AuthenticateRoute>
-          </Suspense>
-        }
-      />
-      <Route
-        path="/startup-type/:id"
-        element={
-          <Suspense fallback={<Loader />}>
-            <AuthenticateRoute>
-              <AuthenticateRole role={KanzRoles.STARTUP}>
-                <Startup guard={authToken} />
-              </AuthenticateRole>
-            </AuthenticateRoute>
-          </Suspense>
-        }
-      />
-      <Route
-        path={RoutesEnums.REALTOR_DETAILS}
-        element={
-          <Suspense fallback={<Loader />}>
-            <AuthenticateRoute>
-              <AuthenticateRole role={KanzRoles.REALTOR}>
-                <Realtors guard={authToken} />
-              </AuthenticateRole>
-            </AuthenticateRoute>
-          </Suspense>
-        }
-      />
-      <Route
-        path="/complete-details"
-        element={
-          <Suspense fallback={<Loader />}>
-            <AuthenticateRoute>
-              <CompleteDetails guard={authToken} />
-            </AuthenticateRoute>
-          </Suspense>
-        }
-      />
-      <Route
-        path="/complete-goals"
-        element={
-          <Suspense fallback={<Loader />}>
-            <AuthenticateRoute>
-              <AuthenticateRole role={KanzRoles.INVESTOR}>
-                <CompleteGoals guard={authToken} />
-              </AuthenticateRole>
-            </AuthenticateRoute>
-          </Suspense>
-        }
-      />
-      <Route
-        path="/philosophy-goals/:id"
-        element={
-          <Suspense fallback={<Loader />}>
-            <AuthenticateRoute>
-              <PhilosophyGoals guard={authToken} />
-            </AuthenticateRoute>
-          </Suspense>
-        }
-      />
-      <Route
-        path="/add-attachments"
-        element={
-          <Suspense fallback={<Loader />}>
-            <AuthenticateRoute>
-              <AuthenticateRole role={KanzRoles.ALL}>
-                <AddAttachments guard={authToken} />
-              </AuthenticateRole>
-            </AuthenticateRoute>
-          </Suspense>
-        }
-      />
-      <Route
-        path="/syndicate-lead/:id"
-        element={
-          <Suspense fallback={<Loader />}>
-            <AuthenticateRoute>
-              <AuthenticateRole role={KanzRoles.SYNDICATE}>
-                <SyndicateLeadInfo guard={authToken} />
-              </AuthenticateRole>
-            </AuthenticateRoute>
-          </Suspense>
-        }
-      />
-      <Route
-        path="/signup"
-        element={
-          <Suspense fallback={<Loader />}>
-            <AuthenticateAuthRoute>
-              <Onboarding guard={authToken} />
-            </AuthenticateAuthRoute>
-          </Suspense>
-        }
-      />
-      <Route
-        path="/login"
-        element={
-          <Suspense fallback={<Loader />}>
-            <AuthenticateAuthRoute>
-              <Login guard={authToken} />
-            </AuthenticateAuthRoute>
-          </Suspense>
-        }
-      />
-      <Route
-        path="/welcome"
-        element={
-          <Suspense fallback={<Loader />}>
-            <AuthenticateRoute>
-              <Welcome guard={authToken} />
-            </AuthenticateRoute>
-          </Suspense>
-        }
-      />
-    </Routes>
+    loading ? (<Loader />) : (
+      <Routes>
+        <Route
+          path="/"
+          element={
+            <Suspense fallback={<Loader />}>
+              <Home guard={authToken} />
+            </Suspense>
+          }
+        />
+        <Route
+          path={RoutesEnums.INVESTOR_DETAILS}
+          element={
+            <Suspense fallback={<Loader />}>
+              <AuthenticateRoute>
+                <AuthenticateRole role={KanzRoles.INVESTOR}>
+                  <InvestorFlow guard={authToken} />
+                </AuthenticateRole>
+              </AuthenticateRoute>
+            </Suspense>
+          }
+        />
+        <Route
+          path="/startup-type/:id"
+          element={
+            <Suspense fallback={<Loader />}>
+              <AuthenticateRoute>
+                <AuthenticateRole role={KanzRoles.STARTUP}>
+                  <Startup guard={authToken} />
+                </AuthenticateRole>
+              </AuthenticateRoute>
+            </Suspense>
+          }
+        />
+        <Route
+          path={RoutesEnums.REALTOR_DETAILS}
+          element={
+            <Suspense fallback={<Loader />}>
+              <AuthenticateRoute>
+                <AuthenticateRole role={KanzRoles.REALTOR}>
+                  <Realtors guard={authToken} />
+                </AuthenticateRole>
+              </AuthenticateRoute>
+            </Suspense>
+          }
+        />
+        <Route
+          path="/complete-details"
+          element={
+            <Suspense fallback={<Loader />}>
+              <AuthenticateRoute>
+                <CompleteDetails guard={authToken} />
+              </AuthenticateRoute>
+            </Suspense>
+          }
+        />
+        <Route
+          path="/complete-goals"
+          element={
+            <Suspense fallback={<Loader />}>
+              <AuthenticateRoute>
+                <AuthenticateRole role={KanzRoles.INVESTOR}>
+                  <CompleteGoals guard={authToken} />
+                </AuthenticateRole>
+              </AuthenticateRoute>
+            </Suspense>
+          }
+        />
+        <Route
+          path="/philosophy-goals/:id"
+          element={
+            <Suspense fallback={<Loader />}>
+              <AuthenticateRoute>
+                <PhilosophyGoals guard={authToken} />
+              </AuthenticateRoute>
+            </Suspense>
+          }
+        />
+        <Route
+          path="/add-attachments"
+          element={
+            <Suspense fallback={<Loader />}>
+              <AuthenticateRoute>
+                <AuthenticateRole role={KanzRoles.ALL}>
+                  <AddAttachments guard={authToken} />
+                </AuthenticateRole>
+              </AuthenticateRoute>
+            </Suspense>
+          }
+        />
+        <Route
+          path="/syndicate-lead/:id"
+          element={
+            <Suspense fallback={<Loader />}>
+              <AuthenticateRoute>
+                <AuthenticateRole role={KanzRoles.SYNDICATE}>
+                  <SyndicateLeadInfo guard={authToken} />
+                </AuthenticateRole>
+              </AuthenticateRoute>
+            </Suspense>
+          }
+        />
+        <Route
+          path="/signup"
+          element={
+            <Suspense fallback={<Loader />}>
+              <AuthenticateAuthRoute>
+                <Onboarding guard={authToken} />
+              </AuthenticateAuthRoute>
+            </Suspense>
+          }
+        />
+        <Route
+          path="/login"
+          element={
+            <Suspense fallback={<Loader />}>
+              <AuthenticateAuthRoute>
+                <Login guard={authToken} />
+              </AuthenticateAuthRoute>
+            </Suspense>
+          }
+        />
+        <Route
+          path="/welcome"
+          element={
+            <Suspense fallback={<Loader />}>
+              <AuthenticateRoute>
+                <Welcome guard={authToken} />
+              </AuthenticateRoute>
+            </Suspense>
+          }
+        />
+      </Routes>
+    )
   );
 };
 export default RouterModule;

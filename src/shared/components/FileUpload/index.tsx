@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../../redux-toolkit/store/store";
 import { saveToken } from "../../../redux-toolkit/slicer/auth.slicer";
@@ -13,23 +13,28 @@ import { handleFileRead } from "../../../utils/files.util";
 import { uploadAttachments } from "../../../apis/attachment.api";
 import Spinner from "../Spinner";
 
-const FileUpload = ({ id, setModalOpen, setFile, removeFile }: any) => {
+const FileUpload = ({ id, file, setModalOpen, setFile, removeFile }: any) => {
     const language: any = useSelector((state: RootState) => state.language.value);
     const authToken: any = useSelector((state: RootState) => state.auth.value);
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
     const [dragOver, setDragOver] = useState(false);
-    const [selectedFile, setSelectedFile]: any = useState<File | null>();
-    const [fileInfo, setFileInfo]: any = useState<File | null>();
+    const [selectedFile, setSelectedFile]: any = useState<File | null>(file);
+    const [fileInfo, setFileInfo]: any = useState({ size: file?.file?.size, dimensions: file?.file?.dimensions });
     const [alertTye, setAlertType]: any = useState({});
     const [loading, setLoading]: any = useState(false);
-
     const handleDragOver = (e: React.DragEvent<HTMLDivElement>) => {
         e.preventDefault();
         setDragOver(true);
     };
 
+    useEffect(() => {
+        if (file) {
+            setSelectedFile(file);
+            setFileInfo({ size: file?.file?.size, dimensions: file?.file?.dimensions });
+        }
+    }, [file])
     const handleDragLeave = () => {
         setDragOver(false);
     };
@@ -55,11 +60,13 @@ const FileUpload = ({ id, setModalOpen, setFile, removeFile }: any) => {
             let message = `${language.promptMessages.bigFile} (${size}MB) ${language.promptMessages.maxSize} 10MB`
             return setAlertType({ type: PromptMessage.ERROR, message });
         }
-        const url = URL.createObjectURL(file);
+        // const url = URL.createObjectURL(file);
         let type;
 
         try {
             setLoading(true);
+            let FileInfo: any;
+
             if (file.type.includes("image")) {
                 type = FileType.IMAGE;
                 const reader = new FileReader();
@@ -70,10 +77,10 @@ const FileUpload = ({ id, setModalOpen, setFile, removeFile }: any) => {
                     img.onload = () => {
                         const { size }: any = file;
                         const { naturalWidth: width, naturalHeight: height } = img;
-                        setFileInfo({
+                        FileInfo = {
                             size: formatFileSize(size),
                             dimensions: `${width} x ${height} px`,
-                        });
+                        };
                     };
                 };
             } else {
@@ -82,7 +89,7 @@ const FileUpload = ({ id, setModalOpen, setFile, removeFile }: any) => {
                 reader.readAsDataURL(file);
                 reader.onloadend = () => {
                     const { size }: any = file;
-                    setFileInfo({ size: formatFileSize(size) });
+                    FileInfo = { size: formatFileSize(size) };
                 };
             }
 
@@ -94,9 +101,13 @@ const FileUpload = ({ id, setModalOpen, setFile, removeFile }: any) => {
 
             const { status, data } = await uploadAttachments(fd, authToken);
             if (status === 200) {
+                setFileInfo({
+                    size: FileInfo?.size,
+                    dimensions: FileInfo?.dimensions,
+                });
                 setAlertType({ type: PromptMessage.SUCCESS, message: language.promptMessages.fileUpload });
-                setFile(file, id, data?.status?.data?.attachment_id);
-                setSelectedFile({ file, url, type, id, attachment_id: data?.status?.data?.attachment_id });
+                setFile(file, id, data?.status?.data?.url, data?.status?.data?.attachment_id, FileInfo?.size, FileInfo?.dimensions, type);
+                setSelectedFile({ file, url: data?.status?.data?.url, type, id, attachment_id: data?.status?.data?.attachment_id });
             }
         } catch (error: any) {
             if (error.response && error.response.status === 401) {
@@ -120,7 +131,7 @@ const FileUpload = ({ id, setModalOpen, setFile, removeFile }: any) => {
                     {selectedFile && selectedFile?.id === id ? (
                         <div className="flex items-center relative check-background h-full px-2">
                             <div className="h-8 w-8 p-2 absolute right-2 top-2 rounded-full cursor-pointer bg-white" onClick={(e) => {
-                                removeFile(selectedFile?.attachment_id,setLoading);
+                                removeFile(selectedFile?.attachment_id, setLoading);
                                 e.preventDefault();
                                 e.stopPropagation();
                                 setSelectedFile(null);
@@ -129,12 +140,12 @@ const FileUpload = ({ id, setModalOpen, setFile, removeFile }: any) => {
                                 <BinIcon stroke="#171717" className="w-full h-full" />
                             </div>
                             <section className="h-[120px] w-[120px] bg-white inline-grid place-items-center shadow-cs-3 rounded-md overflow-hidden">
-                                {selectedFile.type === FileType.IMAGE ? <img src={selectedFile?.url} alt={selectedFile?.file?.name} className="w-[80%] h-[90%]" /> : <embed src={selectedFile?.url} type="application/pdf" className="w-[100%] h-[90%]" />}
+                                {(selectedFile?.type === FileType.IMAGE) ? <img src={selectedFile?.url} alt={selectedFile?.file?.name} className="w-[80%] h-[90%]" /> : <embed src={selectedFile?.url} type="application/pdf" className="w-[100%] h-[90%]" />}
                             </section>
 
                             <section className="pl-3 h-[120px] inline-flex flex-col justify-between py-2">
                                 <div>
-                                    <h2 className="text-neutral-900 font-medium text-base truncate mb-3 max-w-[120px]">{selectedFile?.file?.name}</h2>
+                                    <h2 className="text-neutral-900 font-medium text-base truncate mb-3 max-w-[200px]">{selectedFile?.file?.name}</h2>
                                     <h4 className="text-neutral-700 font-medium text-sm truncate max-w-[200px]">{fileInfo?.size}&nbsp;{fileInfo?.dimensions}</h4>
                                 </div>
                                 <div className="rounded-lg w-20 h-6 inline-flex items-center flex-row justify-center gap-2 bg-white cursor-pointer" onClick={() => setModalOpen({ url: selectedFile.url, open: true, type: selectedFile.type })}>
