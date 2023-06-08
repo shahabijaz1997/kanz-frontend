@@ -94,14 +94,14 @@ const FileUpload = ({ id, file, setModalOpen, setFile, removeFile }: any) => {
                     FileInfo = { size: formatFileSize(size) };
                 };
             }
-            // const fileData: any = await handleFileRead(file);
-            // // let fd = new FormData();
-            // // fd.append("attachment[name]", file?.name);
-            // // fd.append("attachment[attachment_kind]", "files");
-            // // fd.append(`attachment[file]`, file, fileData.name);
+            const fileData: any = await handleFileRead(file);
+            let fd = new FormData();
+            fd.append("attachment[name]", file?.name);
+            fd.append("attachment[attachment_kind]", "files");
+            fd.append(`attachment[file]`, file, fileData.name);
 
-            // const { status, data } = await uploadAttachments(fd, authToken);
-            // if (status === 200) {
+            const { status, data } = await uploadAttachments(fd, authToken);
+            if (status === 200) {
             setFileInfo({ size: FileInfo?.size, dimensions: FileInfo?.dimensions});
             setAlertType({ type: PromptMessage.SUCCESS, message: language.promptMessages.fileUpload });
             setFile(file, id, url, FileInfo?.size, FileInfo?.dimensions, type);
@@ -111,14 +111,14 @@ const FileUpload = ({ id, file, setModalOpen, setFile, removeFile }: any) => {
                 setLoading(false);
                 clearTimeout(timer);
             }, 1000);
-            // }
+            }
         } catch (error: any) {
-            // if (error.response && error.response.status === 401) {
-            //     dispatch(saveToken(""));
-            //     navigate("/login", { state: 'add-attachments' });
-            // }
-            // const message = error?.response?.data?.status?.message || language.promptMessages.errorFileUpload;
-            // return setAlertType({ type: PromptMessage.ERROR, message });
+            if (error.response && error.response.status === 401) {
+                dispatch(saveToken(""));
+                navigate("/login", { state: 'add-attachments' });
+            }
+            const message = error?.response?.data?.status?.message || language.promptMessages.errorFileUpload;
+            return setAlertType({ type: PromptMessage.ERROR, message });
         } finally {
         }
     };
