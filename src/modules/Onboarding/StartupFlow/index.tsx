@@ -61,13 +61,13 @@ const StartupFlow = ({ }: any) => {
     setStep(Number(params?.id) || 1);
   }, [params]);
 
-  const onSetFile = (file: File, id: string, url: string, attachment_id: string, size: string, dimensions: string, type: string) => {
+  const onSetFile = (file: File, id: string, url: string, size: string, dimensions: string, type: string) => {
     let _file: any = {
       name: file?.name,
       size,
       dimensions
     }
-    let _attachment: any = { file: _file, id, url, attachment_id, type: type };
+    let _attachment: any = { file: _file, id, url, type: type };
     setFile(_attachment);
     dispatch(saveLogo(_attachment));
     onSetPayload(file, "logo");
@@ -114,7 +114,9 @@ const StartupFlow = ({ }: any) => {
       form.append("startup[company_name]", payload.company);
       form.append("startup[legal_name]", payload.legal);
       form.append("startup[country_id]", payload.country?.id);
-      form.append("startup[industry_market]", JSON.stringify(payload.market));
+      payload.market.forEach((val: any) => {
+        form.append("startup[industry_market][]", val);
+      });
       form.append("startup[website]", payload.web);
       form.append("startup[address]", payload.address);
       form.append("startup[logo]", payload.logo);
