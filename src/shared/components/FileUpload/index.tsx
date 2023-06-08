@@ -60,7 +60,7 @@ const FileUpload = ({ id, file, setModalOpen, setFile, removeFile }: any) => {
             let message = `${language.promptMessages.bigFile} (${size}MB) ${language.promptMessages.maxSize} 10MB`
             return setAlertType({ type: PromptMessage.ERROR, message });
         }
-        // const url = URL.createObjectURL(file);
+        const url = URL.createObjectURL(file);
         let type;
 
         try {
@@ -77,6 +77,8 @@ const FileUpload = ({ id, file, setModalOpen, setFile, removeFile }: any) => {
                     img.onload = () => {
                         const { size }: any = file;
                         const { naturalWidth: width, naturalHeight: height } = img;
+                        console.log(size);
+                        
                         FileInfo = {
                             size: formatFileSize(size),
                             dimensions: `${width} x ${height} px`,
@@ -92,32 +94,32 @@ const FileUpload = ({ id, file, setModalOpen, setFile, removeFile }: any) => {
                     FileInfo = { size: formatFileSize(size) };
                 };
             }
+            // const fileData: any = await handleFileRead(file);
+            // // let fd = new FormData();
+            // // fd.append("attachment[name]", file?.name);
+            // // fd.append("attachment[attachment_kind]", "files");
+            // // fd.append(`attachment[file]`, file, fileData.name);
 
-            const fileData: any = await handleFileRead(file);
-            let fd = new FormData();
-            fd.append("attachment[name]", file?.name);
-            fd.append("attachment[attachment_kind]", "files");
-            fd.append(`attachment[file]`, file, fileData.name);
-
-            const { status, data } = await uploadAttachments(fd, authToken);
-            if (status === 200) {
-                setFileInfo({
-                    size: FileInfo?.size,
-                    dimensions: FileInfo?.dimensions,
-                });
-                setAlertType({ type: PromptMessage.SUCCESS, message: language.promptMessages.fileUpload });
-                setFile(file, id, data?.status?.data?.url, data?.status?.data?.attachment_id, FileInfo?.size, FileInfo?.dimensions, type);
-                setSelectedFile({ file, url: data?.status?.data?.url, type, id, attachment_id: data?.status?.data?.attachment_id });
-            }
+            // const { status, data } = await uploadAttachments(fd, authToken);
+            // if (status === 200) {
+            setFileInfo({ size: FileInfo?.size, dimensions: FileInfo?.dimensions});
+            setAlertType({ type: PromptMessage.SUCCESS, message: language.promptMessages.fileUpload });
+            setFile(file, id, url, FileInfo?.size, FileInfo?.dimensions, type);
+            setSelectedFile({ file, url: url, type, id });
+       
+            let timer = setTimeout(() => {
+                setLoading(false);
+                clearTimeout(timer);
+            }, 1000);
+            // }
         } catch (error: any) {
-            if (error.response && error.response.status === 401) {
-                dispatch(saveToken(""));
-                navigate("/login", { state: 'add-attachments' });
-            }
-            const message = error?.response?.data?.status?.message || language.promptMessages.errorFileUpload;
-            return setAlertType({ type: PromptMessage.ERROR, message });
+            // if (error.response && error.response.status === 401) {
+            //     dispatch(saveToken(""));
+            //     navigate("/login", { state: 'add-attachments' });
+            // }
+            // const message = error?.response?.data?.status?.message || language.promptMessages.errorFileUpload;
+            // return setAlertType({ type: PromptMessage.ERROR, message });
         } finally {
-            setLoading(false);
         }
     };
 

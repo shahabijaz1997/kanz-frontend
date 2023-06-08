@@ -12,7 +12,7 @@ const Modal = ({ show, children }: any) => {
                             {children}
                         </div>
                     </div>
-                    <div className="opacity-25 fixed inset-0 z-[210] bg-black"></div>
+                    <div className="opacity-25 fixed inset-0 z-[199] bg-black"></div>
                 </React.Fragment>
             )}
         </React.Fragment>
