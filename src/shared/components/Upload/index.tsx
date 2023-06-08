@@ -16,6 +16,7 @@ const UploadComp = (props: any) => {
   const {
     id,
     title,
+    file,
     subTitle,
     language,
     setFile,
@@ -34,9 +35,7 @@ const UploadComp = (props: any) => {
       setLoading(true);
       let { status } = await removeAttachment(id, authToken);
       if (status === 200) {
-        let _files = files
-          .slice()
-          .filter((file: any) => file.attachment_id !== id);
+        let _files = files.slice().filter((file: any) => file.attachment_id !== id);
         setFiles(_files);
         setLoading(false);
       }
@@ -77,6 +76,7 @@ const UploadComp = (props: any) => {
         </small>
         <FileUpload
           id={id}
+          file={file}
           setFile={setFile}
           removeFile={removeFile}
           setModalOpen={(e: any) => {

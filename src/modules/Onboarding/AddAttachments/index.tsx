@@ -14,12 +14,14 @@ import { RootState } from "../../../redux-toolkit/store/store";
 import { getRoleBasedAttachments } from "../../../apis/attachment.api";
 import { saveToken } from "../../../redux-toolkit/slicer/auth.slicer";
 import Loader from "../../../shared/views/Loader";
+import { saveAttachments } from "../../../redux-toolkit/slicer/attachments.slicer";
 
 const AddAttachments = (props: any) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const language: any = useSelector((state: RootState) => state.language.value);
   const authToken: any = useSelector((state: RootState) => state.auth.value);
+  const attachments: any = useSelector((state: RootState) => state.attachments.value);
   const [modalOpen, setModalOpen]: any = useState(null);
   const [isOpen, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -32,15 +34,23 @@ const AddAttachments = (props: any) => {
     onGetRoleBasedAttachmentDetails();
   }, []);
 
-  const setFile = (file: File, id: string, url: string, attachment_id: string) => {
-    setFiles((prev: any) => {
-      return [...prev, { file, id, url, attachment_id }];
-    });
+  const setFile = (file: File, id: string, url: string, attachment_id: string, size: string, dimensions: string, type: string) => {
+    let _file: any = {
+      name: file?.name,
+      size,
+      dimensions
+    }
+    let _attachments: any = [...files, { file: _file, id, url, attachment_id, type: type }];
+    dispatch(saveAttachments(_attachments));
+    setFiles(_attachments);
   };
 
   const onGetRoleBasedAttachmentDetails = async () => {
     try {
       setLoading(true);
+      if (attachments && attachments?.length) {
+        setFiles(attachments)
+      }
       let { status, data } = await getRoleBasedAttachments(authToken);
       if (status === 200) {
         let uploadPayload = data?.status?.data.map((item: any, idx: number) => {
@@ -101,6 +111,7 @@ const AddAttachments = (props: any) => {
                         <UploadComp
                           id={item.id}
                           files={files}
+                          file={files?.length && files.find((f: any) => f.id === item.id)}
                           setFile={setFile}
                           title={item?.name}
                           subTitle={item?.label}
