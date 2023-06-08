@@ -6,7 +6,6 @@ import Header from "../../../shared/components/Header";
 import SyndicateStepper from "./SyndicateStepper";
 import Modal from "../../../shared/components/Modal";
 import { FileType } from "../../../enums/types.enum";
-import { removeAttachment } from "../../../apis/attachment.api";
 import { saveToken } from "../../../redux-toolkit/slicer/auth.slicer";
 import { toast } from "react-toastify";
 import { toastUtil } from "../../../utils/toast.utils";
@@ -14,6 +13,7 @@ import CrossIcon from "../../../ts-icons/crossIcon.svg";
 import { postSyndicateInformation } from "../../../apis/syndicate.api";
 import Button from "../../../shared/components/Button";
 import { isValidUrl } from "../../../utils/regex.utils";
+import { saveLogo } from "../../../redux-toolkit/slicer/attachments.slicer";
 
 const SyndicateFlow = ({ }: any) => {
   const params = useParams();
@@ -21,6 +21,7 @@ const SyndicateFlow = ({ }: any) => {
   const dispatch = useDispatch();
   const language: any = useSelector((state: RootState) => state.language.value);
   const authToken: any = useSelector((state: RootState) => state.auth.value);
+  const logo: any = useSelector((state: RootState) => state.attachments.logo.value);
 
   const [payload, setPayload]: any = useState({
     raised: null,
@@ -47,38 +48,29 @@ const SyndicateFlow = ({ }: any) => {
   useLayoutEffect(() => {
     let _payload: any = localStorage.getItem("syndicate");
     if (_payload) setPayload(JSON.parse(_payload));
+    if(logo) setFile(logo);
   }, []);
 
   useLayoutEffect(() => {
     setStep(Number(params?.id) || 1);
   }, [params]);
 
-  const onSetFile = (file: File, id: string, attachment_id: string) => {
-    setFile({ file, id, attachment_id });
-    onSetPayload(id, "logo");
+  const onSetFile = (file: File, id: string, url: string, attachment_id: string, size: string, dimensions: string, type: string) => {
+    let _file: any = {
+      name: file?.name,
+      size,
+      dimensions
+    }
+    let _attachment: any = { file: _file, id, url, attachment_id, type: type };
+    setFile(_attachment);
+    dispatch(saveLogo(_attachment));
+    onSetPayload(file, "logo");
   };
 
   const removeFile = async (id: string) => {
-    try {
-      setLoading(true);
-      let { status } = await removeAttachment(id, authToken);
-      if (status === 200) {
-        setFile(null);
-        onSetPayload(null, "logo");
-      };
-    } catch (error: any) {
-      if (error.response && error.response.status === 401) {
-        dispatch(saveToken(""));
-        navigate("/login", { state: "add-attachments" });
-      }
-      const message =
-        error?.response?.data?.status?.message ||
-        error?.response?.data ||
-        language.promptMessages.errorGeneral;
-      toast.error(message, toastUtil);
-    } finally {
-      setLoading(false);
-    }
+    dispatch(saveLogo(""));
+    setFile(null);
+    onSetPayload(null, "logo")
   };
 
   const ontoNextStep = () => {
@@ -120,21 +112,19 @@ const SyndicateFlow = ({ }: any) => {
   const onPostSyndicateData = async () => {
     try {
       setLoading(true);
-      let dataPayload: any = {
-        syndicate_profile: {
-          have_you_raised: payload.raised,
-          raised_amount: payload.amountRaised,
-          no_times_raised: payload.timesRaised,
-          industry_market: payload.industry,
-          region: payload.region,
-          profile_link: payload.profileLink,
-          dealflow: payload.dealflow,
-          name: payload.name,
-          tagline: payload.tagline,
-          logo: payload.logo,
-        },
-      };
-      let { status } = await postSyndicateInformation(dataPayload, authToken);
+     
+      const form: any = new FormData();
+      form.append("syndicate_profile[have_you_raised]", payload.raised)
+      form.append("syndicate_profile[raised_amount]", payload.amountRaised)
+      form.append("syndicate_profile[no_times_raised]", payload.timesRaised)
+      form.append("syndicate_profile[industry_market]", payload.industry)
+      form.append("syndicate_profile[region]", payload.region)
+      form.append("syndicate_profile[profile_link]", payload.profileLink)
+      form.append("syndicate_profile[dealflow]", payload.dealflow)
+      form.append("syndicate_profile[name]", payload.name)
+      form.append("syndicate_profile[tagline]", payload.tagline)
+      form.append("syndicate_profile[logo]", payload.logo)
+      let { status } = await postSyndicateInformation(form, authToken);
 
       if (status === 200) {
         navigate("/add-attachments");
@@ -172,6 +162,7 @@ const SyndicateFlow = ({ }: any) => {
         <SyndicateStepper
           language={language}
           payload={payload}
+          file={file}
           onSetPayload={onSetPayload}
           options={options}
           step={step}

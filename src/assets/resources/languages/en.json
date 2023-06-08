@@ -152,7 +152,8 @@
         "inprogress": "In Progress",
         "inreview": "In Review",
         "submitted": "Submitted",
-        "required_field":"This field is required."
+        "required_field":"This field is required.",
+        "selectCurrency":"Select Currency"
     },
     "buttons": {
         "start": "Lets start",
@@ -177,6 +178,7 @@
         "readDocs": "Read Documentation",
         "proceed": "Proceed",
         "notRegistered": "Not already registered?",
+        "alreadyAccount": "Already have an account?",
         "signup": "Sign up"
     },
     "modal": {

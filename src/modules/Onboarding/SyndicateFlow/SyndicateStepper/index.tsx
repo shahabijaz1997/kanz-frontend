@@ -8,7 +8,7 @@ import { getAllIndustries, getAllRegions } from "../../../../apis/fakeData.api";
 import SearchedItems from "../../../../shared/components/SearchedItems";
 import CrossIcon from "../../../../ts-icons/crossIcon.svg";
 
-const SyndicateStepper = ({ language, payload, onSetPayload, options, step, removeFile, setFile, setModalOpen, setFileType }: any) => {
+const SyndicateStepper = ({ language, payload, file, onSetPayload, options, step, removeFile, setFile, setModalOpen, setFileType }: any) => {
     const refInd: any = useRef(null);
     const refReg: any = useRef(null);
     const [selected, setSelected]: any = useState(null);
@@ -222,7 +222,7 @@ const SyndicateStepper = ({ language, payload, onSetPayload, options, step, remo
                                 </HoverModal>
                             )}
                         </small>
-                        <FileUpload id={'logo'} setFile={setFile} removeFile={removeFile} setModalOpen={(e: any) => {
+                        <FileUpload id={'logo'} file={file} setFile={setFile} removeFile={removeFile} setModalOpen={(e: any) => {
                             setModalOpen(e.open ? e.url : null);
                             e.type && setFileType(e.type);
                         }} />
