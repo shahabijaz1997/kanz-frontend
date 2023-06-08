@@ -27,7 +27,7 @@ const StartupFlow = ({ }: any) => {
     company: "",
     legal: "",
     country: "",
-    market: "",
+    market: [],
     web: "",
     address: "",
     business: "",
@@ -51,7 +51,10 @@ const StartupFlow = ({ }: any) => {
   useLayoutEffect(() => {
     let _payload: any = localStorage.getItem("startup");
     if (_payload) setPayload(JSON.parse(_payload));
-    if (logo) setFile(logo);
+    if (logo) {
+      onSetPayload(logo?.file, "logo");
+      setFile(logo)
+    };
   }, []);
 
   useLayoutEffect(() => {
@@ -111,7 +114,7 @@ const StartupFlow = ({ }: any) => {
       form.append("startup[company_name]", payload.company);
       form.append("startup[legal_name]", payload.legal);
       form.append("startup[country_id]", payload.country?.id);
-      form.append("startup[industry_market]", payload.market);
+      form.append("startup[industry_market]", JSON.stringify(payload.market));
       form.append("startup[website]", payload.web);
       form.append("startup[address]", payload.address);
       form.append("startup[logo]", payload.logo);
