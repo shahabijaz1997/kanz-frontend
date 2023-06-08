@@ -117,14 +117,16 @@ const SyndicateFlow = ({ }: any) => {
   const onPostSyndicateData = async () => {
     try {
       setLoading(true);
-     console.log(payload);
-     
       const form: any = new FormData();
-      form.append("syndicate_profile[have_you_raised]", payload.raised)
+      form.append("syndicate_profile[have_you_ever_raised]", payload.raised)
       form.append("syndicate_profile[raised_amount]", payload.amountRaised)
       form.append("syndicate_profile[no_times_raised]", payload.timesRaised)
-      form.append("syndicate_profile[industry_market]", JSON.stringify(payload.industry))
-      form.append("syndicate_profile[region]", JSON.stringify(payload.region))
+      payload.industry.forEach((val: any) => {
+        form.append("syndicate_profile[industry_market][]", val);
+      });
+      payload.region.forEach((val: any) => {
+        form.append("syndicate_profile[region][]", val);
+      });
       form.append("syndicate_profile[profile_link]", payload.profileLink)
       form.append("syndicate_profile[dealflow]", payload.dealflow)
       form.append("syndicate_profile[name]", payload.name)

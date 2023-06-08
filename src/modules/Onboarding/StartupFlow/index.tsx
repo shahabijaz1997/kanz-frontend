@@ -114,7 +114,9 @@ const StartupFlow = ({ }: any) => {
       form.append("startup[company_name]", payload.company);
       form.append("startup[legal_name]", payload.legal);
       form.append("startup[country_id]", payload.country?.id);
-      form.append("startup[industry_market]", JSON.stringify(payload.market));
+      payload.market.forEach((val: any) => {
+        form.append("startup[industry_market][]", val);
+      });
       form.append("startup[website]", payload.web);
       form.append("startup[address]", payload.address);
       form.append("startup[logo]", payload.logo);
@@ -141,6 +143,7 @@ const StartupFlow = ({ }: any) => {
       setLoading(false);
     }
   };
+
 
   return (
     <main className="h-full max-h-full background-auth overflow-y-auto">
