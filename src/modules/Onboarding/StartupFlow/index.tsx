@@ -61,13 +61,13 @@ const StartupFlow = ({ }: any) => {
     setStep(Number(params?.id) || 1);
   }, [params]);
 
-  const onSetFile = (file: File, id: string, url: string, size: string, dimensions: string, type: string) => {
+  const onSetFile = (file: File, id: string, url: string, attachment_id: string, size: string, dimensions: string, type: string) => {
     let _file: any = {
       name: file?.name,
       size,
       dimensions
     }
-    let _attachment: any = { file: _file, id, url, type: type };
+    let _attachment: any = { file: _file, id, url, attachment_id, type: type };
     setFile(_attachment);
     dispatch(saveLogo(_attachment));
     onSetPayload(file, "logo");
