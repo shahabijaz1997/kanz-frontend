@@ -19,7 +19,7 @@ const GeneralHeader = ({ responsive = false, showMenu = false }: any) => {
     const language: any = useSelector((state: RootState) => state.language.value);
     const authToken: any = useSelector((state: RootState) => state.auth.value);
     const user: any = useSelector((state: RootState) => state.user.value);
-    const navigationMenu = [{ id: 1, title: language.header.investment }, { id: 2, title: language.header.startup }, { id: 3, title: language.header.syndicate }, { id: 4, title: language.header.company }]
+    const navigationMenu = [{ id: 1, title: language.header.investment }, { id: 2, title: language.header.startup }, { id: 3, title: language.header.syndicate }, { id: 4, title: language.header.realtor }]
     const [isMenuOpen, setIsMenuOpen] = useState(false);
 
     const toggleMenu = () => {
