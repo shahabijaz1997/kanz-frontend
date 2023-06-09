@@ -59,7 +59,7 @@ const Welcome = ({ }: any) => {
                 results = await getSyndicateInformation(1, authToken);
             else if (user.type === KanzRoles.STARTUP)
                 results = await getCompanyInformation(1, authToken);
-            else if (user.type === KanzRoles.STARTUP)
+            else if (user.type === KanzRoles.REALTOR)
                 results = await getRealtorInformation(1, authToken);
             let { status, data } = results;
             if (status === 200) {
