@@ -83,7 +83,7 @@ const Home = ({}: any) => {
           </div>
         </aside>
 
-        <aside className="mt-[15rem]">
+        <aside className="mt-[15rem]" id={language.header.realtor}>
           <h3 className="text-cyan-800 text-xl tracking-[0.03em] font-bold">
             {language.landing.realtor}
           </h3>
