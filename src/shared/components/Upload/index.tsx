@@ -34,7 +34,6 @@ const UploadComp = (props: any) => {
   const removeFile = async (id: string, setLoading: Function) => {
     try {
       setLoading(true);
-      console.log(attachments);
       let { status } = await removeAttachment(id, authToken);
       if (status === 200) {
         let _files = files.slice().filter((file: any) => file.attachment_id !== id);

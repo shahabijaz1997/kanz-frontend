@@ -87,8 +87,6 @@ const SyndicateFlow = ({ }: any) => {
       setStep(2);
       navigate(`/syndicate-lead/${step + 1}`);
     } else {
-      console.log(payload);
-
       if ((payload.raised && (!payload.timesRaised || !payload.amountRaised)) ||
         !payload.industry.length ||
         !payload.region.length ||
