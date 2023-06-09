@@ -38,7 +38,6 @@ const UploadComp = (props: any) => {
       if (status === 200) {
         let _files = files.slice().filter((file: any) => file.attachment_id !== id);
         setFiles(_files);
-        setLoading(false);
         dispatch(saveAttachments(_files))
         // let allFiles = attachments.filter((at: any) => at?.attachment_id !==);
       }
@@ -54,6 +53,7 @@ const UploadComp = (props: any) => {
         language.promptMessages.errorGeneral;
       toast.error(message, toastUtil);
     } finally {
+      setLoading(false);
     }
   };
 

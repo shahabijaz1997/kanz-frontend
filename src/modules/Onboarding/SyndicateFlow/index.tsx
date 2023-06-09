@@ -49,14 +49,29 @@ const SyndicateFlow = ({ }: any) => {
     let _payload: any = localStorage.getItem("syndicate");
     if (_payload) setPayload(JSON.parse(_payload));
     if (logo) {
+      onGetConvertedToBLOB(JSON.parse(_payload)?.logo);
       setFile(logo);
-      onSetPayload(logo?.file, "logo");
-    }
+    };
   }, []);
 
   useLayoutEffect(() => {
     setStep(Number(params?.id) || 1);
   }, [params]);
+
+  const onGetConvertedToBLOB = async (url: string) => {
+    try {
+    let blob: any = await convertToBlob(url);
+    onSetPayload(blob, "logo");
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const convertToBlob = async (url: any) => {
+    const response = await fetch(url);
+    const data = await response.blob();
+    return data;
+  };
 
   const onSetFile = (file: File, id: string, url: string, attachment_id: string, size: string, dimensions: string, type: string) => {
     let _file: any = {
@@ -64,7 +79,7 @@ const SyndicateFlow = ({ }: any) => {
       size,
       dimensions
     }
-    let _attachment: any = { file: _file, id, url, attachment_id, type: type };
+    let _attachment: any = { file: _file, id, url, attachment_id, type: type, original: file };
     setFile(_attachment);
     dispatch(saveLogo(_attachment));
     onSetPayload(file, "logo");
@@ -130,6 +145,9 @@ const SyndicateFlow = ({ }: any) => {
       form.append("syndicate_profile[name]", payload.name)
       form.append("syndicate_profile[tagline]", payload.tagline)
       form.append("syndicate_profile[logo]", payload.logo)
+     
+      console.log("Syndicate", payload.logo);
+      
       let { status } = await postSyndicateInformation(form, authToken);
 
       if (status === 200) {
