@@ -163,6 +163,7 @@ const AddAttachments = (props: any) => {
                       errors.push(language.promptMessages.pleaseAcceptPP);
                     if (errors.length === 0) {
                       setOpen(false);
+                      dispatch(saveAttachments(""))
                       return setModalOpen(true);
                     }
                     toast.dismiss();

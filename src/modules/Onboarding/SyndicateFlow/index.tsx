@@ -48,7 +48,7 @@ const SyndicateFlow = ({ }: any) => {
   useLayoutEffect(() => {
     let _payload: any = localStorage.getItem("syndicate");
     if (_payload) setPayload(JSON.parse(_payload));
-    if(logo) {
+    if (logo) {
       setFile(logo);
       onSetPayload(logo?.file, "logo");
     }
@@ -58,13 +58,13 @@ const SyndicateFlow = ({ }: any) => {
     setStep(Number(params?.id) || 1);
   }, [params]);
 
-  const onSetFile = (file: File, id: string, url: string, size: string, dimensions: string, type: string) => {
+  const onSetFile = (file: File, id: string, url: string, attachment_id: string, size: string, dimensions: string, type: string) => {
     let _file: any = {
       name: file?.name,
       size,
       dimensions
     }
-    let _attachment: any = { file: _file, id, url, type: type };
+    let _attachment: any = { file: _file, id, url, attachment_id, type: type };
     setFile(_attachment);
     dispatch(saveLogo(_attachment));
     onSetPayload(file, "logo");
@@ -87,8 +87,6 @@ const SyndicateFlow = ({ }: any) => {
       setStep(2);
       navigate(`/syndicate-lead/${step + 1}`);
     } else {
-      console.log(payload);
-      
       if ((payload.raised && (!payload.timesRaised || !payload.amountRaised)) ||
         !payload.industry.length ||
         !payload.region.length ||

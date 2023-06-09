@@ -2,7 +2,6 @@ import { useState } from "react";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-
 import FileUpload from "../FileUpload";
 import HoverModal from "../HoverModal";
 import Image1 from "../../../assets/example_id.png";
@@ -11,6 +10,7 @@ import { toastUtil } from "../../../utils/toast.utils";
 import { RootState } from "../../../redux-toolkit/store/store";
 import { removeAttachment } from "../../../apis/attachment.api";
 import { saveToken } from "../../../redux-toolkit/slicer/auth.slicer";
+import { saveAttachments } from "../../../redux-toolkit/slicer/attachments.slicer";
 
 const UploadComp = (props: any) => {
   const {
@@ -29,6 +29,7 @@ const UploadComp = (props: any) => {
   const navigate = useNavigate();
   const [selectedId, setSelectedId]: any = useState(null);
   const authToken: any = useSelector((state: RootState) => state.auth.value);
+  const attachments: any = useSelector((state: RootState) => state.attachments.attachments.value);
 
   const removeFile = async (id: string, setLoading: Function) => {
     try {
@@ -38,6 +39,8 @@ const UploadComp = (props: any) => {
         let _files = files.slice().filter((file: any) => file.attachment_id !== id);
         setFiles(_files);
         setLoading(false);
+        dispatch(saveAttachments(_files))
+        // let allFiles = attachments.filter((at: any) => at?.attachment_id !==);
       }
     } catch (error: any) {
       setLoading(false);
