@@ -77,8 +77,6 @@ const FileUpload = ({ id, file, setModalOpen, setFile, removeFile }: any) => {
                     img.onload = () => {
                         const { size }: any = file;
                         const { naturalWidth: width, naturalHeight: height } = img;
-                        console.log(size);
-                        
                         FileInfo = {
                             size: formatFileSize(size),
                             dimensions: `${width} x ${height} px`,
@@ -102,15 +100,15 @@ const FileUpload = ({ id, file, setModalOpen, setFile, removeFile }: any) => {
 
             const { status, data } = await uploadAttachments(fd, authToken);
             if (status === 200) {
-            setFileInfo({ size: FileInfo?.size, dimensions: FileInfo?.dimensions});
-            setAlertType({ type: PromptMessage.SUCCESS, message: language.promptMessages.fileUpload });
-            setFile(file, id, url, FileInfo?.size, FileInfo?.dimensions, type);
-            setSelectedFile({ file, url: url, type, id });
-       
-            let timer = setTimeout(() => {
-                setLoading(false);
-                clearTimeout(timer);
-            }, 1000);
+                setFileInfo({ size: FileInfo?.size, dimensions: FileInfo?.dimensions });
+                setAlertType({ type: PromptMessage.SUCCESS, message: language.promptMessages.fileUpload });
+                setFile(file, id, url, data?.status?.data?.attachment_id, FileInfo?.size, FileInfo?.dimensions, type);
+                setSelectedFile({ file, url, attachment_id: data?.status?.data?.attachment_id, type, id });
+
+                let timer = setTimeout(() => {
+                    setLoading(false);
+                    clearTimeout(timer);
+                }, 1000);
             }
         } catch (error: any) {
             if (error.response && error.response.status === 401) {

@@ -15,6 +15,7 @@ import { toastUtil } from "../../../utils/toast.utils";
 import { postRealtorInformation } from "../../../apis/realtor.api";
 import Loader from "../../../shared/views/Loader";
 import { ApplicationStatus } from "../../../enums/types.enum";
+import { isEmpty } from "../../../utils/object.util";
 
 type FormValues = {
   noOfProperty: number;
@@ -24,8 +25,10 @@ const Realtors = (props: any) => {
   const { disabled } = props;
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const language: any = useSelector((state: RootState) => state.language.value);
   const authToken: any = useSelector((state: RootState) => state.auth.value);
   const user: any = useSelector((state: RootState) => state.user.value);
+  const metadata: any = useSelector((state: RootState) => state.metadata.value);
 
   const [isOpen, setOpen]: any = useState("");
   const [loading, setLoading] = useState(false);
@@ -36,13 +39,21 @@ const Realtors = (props: any) => {
     residence: "",
     noOfProperty: "",
   });
-  const language: any = useSelector((state: RootState) => state.language.value);
   const requiredFieldError = language?.common?.required_field;
 
   useLayoutEffect(() => {
+    setLoad(true);
     if (user.status !== ApplicationStatus.OPENED) return navigate("/welcome");
     let _payload: any = localStorage.getItem("realtor");
     if (_payload) setPayload(JSON.parse(_payload));
+    if (!isEmpty(metadata.profile)) {
+      setPayload({
+        national: { label: metadata.profile?.nationality, value: metadata.profile?.nationality },
+        residence: { label: metadata.profile?.residence, value: metadata.profile?.residence },
+        noOfProperty: metadata.profile?.no_of_properties
+      });
+    }
+    setLoad(false);
   }, []);
 
   const { register, handleSubmit, watch, formState: { errors } } = useForm<FormValues>();
@@ -146,7 +157,7 @@ const Realtors = (props: any) => {
                       {language?.common?.national}
                     </label>
                     <div className="relative w-full" style={{ zIndex: 101 }}>
-                      <Selector disabled={disabled} options={_countries && _countries} onChange={(v: any) => onSetPayload(v, "national")} defaultValue={payload?.national} />
+                      <Selector disabled={disabled} value={payload?.national} options={_countries && _countries} onChange={(v: any) => onSetPayload(v, "national")} defaultValue={payload?.national} />
                     </div>
                   </section>
                   <section className="mb-4 w-full">
@@ -154,7 +165,7 @@ const Realtors = (props: any) => {
                       {language?.common?.residence}
                     </label>
                     <div className="relative w-full" style={{ zIndex: 100 }}>
-                      <Selector disabled={disabled} options={_countries && _countries} onChange={(v: any) => onSetPayload(v, "residence")} defaultValue={payload?.residence} />
+                      <Selector disabled={disabled} value={payload?.residence} options={_countries && _countries} onChange={(v: any) => onSetPayload(v, "residence")} defaultValue={payload?.residence} />
                     </div>
                   </section>
                   <section className="w-full">
@@ -162,7 +173,9 @@ const Realtors = (props: any) => {
                       {language?.common?.NoOfProperty}
                     </label>
                     <div className="relative w-full" style={{ zIndex: 99 }}>
-                      <AntdInput
+                      <input value={payload?.noOfProperty} onChange={(e) => onSetPayload(e.target.value, "noOfProperty")} placeholder={language.common.NoOfProperty} className=" h-[42px] shadow-sm appearance-none border border-neutral-300 rounded-md w-full py-2 px-3 text-gray-500 leading-tight focus:outline-none focus:shadow-outline" type="text" />
+
+                      {/* <AntdInput
                         register={register}
                         name="noOfProperty"
                         type="text"
@@ -173,7 +186,7 @@ const Realtors = (props: any) => {
                         validation={{
                           required: requiredFieldError,
                         }}
-                      />
+                      /> */}
                     </div>
                   </section>
                 </div>
