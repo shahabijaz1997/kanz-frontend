@@ -133,7 +133,7 @@ const Realtors = (props: any) => {
   };
 
   return (
-    <main className="h-full max-h-full background-auth overflow-y-auto">
+    <main className="h-full max-h-full background-auth overflow-y-auto overflow-x-hidden">
       <section className="h-[67px]">
         <Header />
       </section>

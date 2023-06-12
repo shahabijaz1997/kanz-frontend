@@ -61,7 +61,7 @@ const Signup = (props: any) => {
                   }`}
               />
             </div>
-            <small className="text-neutral-500 text-[14px] font-normal">
+            <small className="text-neutral-500 text-sm font-normal mx-1">
               {language?.onboarding?.upperCase}
             </small>
           </section>
@@ -77,7 +77,7 @@ const Signup = (props: any) => {
                   }`}
               />
             </div>
-            <small className="text-neutral-500 text-[14px] font-normal">
+            <small className="text-neutral-500 text-sm font-normal mx-1">
               {language?.onboarding?.lowerCase}
             </small>
           </section>
@@ -90,7 +90,7 @@ const Signup = (props: any) => {
                 fill={`${password.length >= 8 ? "#fff" : "rgba(0, 0, 0, 0.3)"}`}
               />
             </div>
-            <small className="text-neutral-500 text-[14px] font-normal">
+            <small className="text-neutral-500 text-sm font-normal mx-1">
               {language?.onboarding?.min8}
             </small>
           </section>
@@ -103,7 +103,7 @@ const Signup = (props: any) => {
                 fill={`${hasNumbers(password) ? "#fff" : "rgba(0, 0, 0, 0.3)"}`}
               />
             </div>
-            <small className="text-neutral-500 text-[14px] font-normal">
+            <small className="text-neutral-500 text-sm font-normal mx-1">
               {language?.onboarding?.num}
             </small>
           </section>
@@ -119,7 +119,7 @@ const Signup = (props: any) => {
                   }`}
               />
             </div>
-            <small className="text-neutral-500 text-[14px] font-normal">
+            <small className="text-neutral-500 text-sm font-normal mx-1">
               {language?.onboarding?.special}
             </small>
           </section>

@@ -6,6 +6,7 @@ import metadataReducer from '../slicer/metadata.slicer';
 import philisophyReducer from '../slicer/philisophy.slicer';
 import eventReducer from '../slicer/event.slicer';
 import attachmentsReducer from '../slicer/attachments.slicer';
+import orientaionReducer from '../slicer/orientation.slicer';
 
 const rootReducer = combineReducers({
   auth: authReducer,
@@ -14,7 +15,8 @@ const rootReducer = combineReducers({
   metadata: metadataReducer,
   philisophy: philisophyReducer,
   event: eventReducer,
-  attachments: attachmentsReducer
+  attachments: attachmentsReducer,
+  orientation: orientaionReducer
 });
 
 export default rootReducer;
