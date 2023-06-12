@@ -167,7 +167,7 @@ const SyndicateFlow = ({ }: any) => {
   };
 
   return (
-    <main className="h-full max-h-full background-auth overflow-y-auto">
+    <main className="h-full max-h-full background-auth overflow-y-auto overflow-x-hidden">
       <section>
         <Header custom={true} data={{
           leftMenu: language.header.syndicateLead, button: (<button onClick={() => navigate("/welcome")} className="text-neutral-900 bg-white font-bold text-sm w-[150px] h-9 cursor-pointer border border-black shadow-sm screen800:w-[120px]">{language.buttons.gotoDashboard}</button>),

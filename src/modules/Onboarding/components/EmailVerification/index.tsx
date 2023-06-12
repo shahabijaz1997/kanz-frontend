@@ -126,15 +126,10 @@ const EmailVerification = ({ payload, onReSignup }: any) => {
       {!isEdit ? (
         <form className="pt-8 pb-8 mb-4" onSubmit={handleSubmit(onSubmit)}>
           <div className="mb-4">
-            <label
-              className="block text-neutral-700 text-sm font-semibold mb-2 screen500:text-[12px]"
-              htmlFor="code"
-            >
-              {language?.onboarding?.codeText}
-            </label>
             <AntdInput
               register={register}
               name="code"
+              label={language?.onboarding?.codeText}
               type="text"
               required
               error={errors?.code?.message} // Pass the error message from form validation
