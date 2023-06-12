@@ -50,7 +50,7 @@ const Home = ({}: any) => {
           </div>
         </aside>
 
-        <aside className="mt-[10rem]" id={language.header.syndicate}>
+        <aside className="mt-[10rem] screen500:mt-[5rem]" id={language.header.syndicate}>
           <h3 className="text-cyan-800 text-xl tracking-[0.03em] font-bold">
             {language.landing.syndicate}
           </h3>
@@ -83,7 +83,7 @@ const Home = ({}: any) => {
           </div>
         </aside>
 
-        <aside className="mt-[15rem]" id={language.header.realtor}>
+        <aside className="mt-[15rem] screen500:mt-[5rem]" id={language.header.realtor}>
           <h3 className="text-cyan-800 text-xl tracking-[0.03em] font-bold">
             {language.landing.realtor}
           </h3>
@@ -128,7 +128,7 @@ const Home = ({}: any) => {
       </div>
       <aside className="w-full pt-[75px] relative">
         {/* Section 1 */}
-        <section className="max-w-[700px] px-[120px] screen1024:px-[50px]">
+        <section className="max-w-[700px] px-[120px] screen1024:px-[50px] screen500:px-[20px]">
           <h3 className="text-cyan-800 text-xl tracking-[0.03em] font-bold">
             {language.landing.unlock}
           </h3>
@@ -136,27 +136,26 @@ const Home = ({}: any) => {
             {language.landing.discoverStart}
           </h1>
         </section>
-        <section className="max-w-[900px] px-[120px] screen1024:px-[50px]">
+        <section className="max-w-[900px] px-[120px] screen1024:px-[50px] screen500:px-[20px]">
           <p className="text-neutral-500 tracking-[0.03em] text-base font-normal">
             {language.landing.discoverSub}
           </p>
           <div className="inline-flex gap-3 mt-5">
             <Button
-              style={{ fontSize: "1.125rem", fontWeight: 500 }}
-              className="bg-cyan-800 h-[56px] w-[173px] font-medium "
+              className="bg-cyan-800 text-lg px-[41px] py-[14px] font-medium screen500:text-sm screen500:px-5"
               htmlType="submit"
               onClick={() => {}}
             >
               {language.buttons.getStart}
             </Button>
-            <button className="font-medium text-lg text-cyan-800 px-[41px] py-[14px] rounded-md shadow-cs-4">
+            <button className="font-medium text-lg text-cyan-800 px-[41px] py-[14px] rounded-md shadow-cs-4 screen500:px-5 screen500:text-sm">
               {language.buttons.readDocs}
             </button>
           </div>
         </section>
 
         {/* Section 2 */}
-        <section className="max-w-[80%] screen800:max-w-full mt-16 relative px-[120px] screen1024:px-[50px]">
+        <section className="max-w-[80%] screen800:max-w-full mt-16 relative px-[120px] screen1024:px-[50px] screen500:px-[20px]">
           <div className="rounded-md bg-cyan-800 p-8 text-white font-semibold text-base tracking-[0.03em] absolute right-[-100px] max-w-[425px] top-[-50px] screen800:text-sm screen800:p-4 screen800:relative screen800:right-0 screen800:top-0">
             {language.landing.kanzNetwork}
           </div>
@@ -173,7 +172,7 @@ const Home = ({}: any) => {
           ></div>
           <img src={PatternSvg} alt="SVG" className="absolute right-0" />
 
-          <aside className="flex flex-row screen991:flex-col justify-between items-center h-full px-[120px] screen1024:px-[50px] relative">
+          <aside className="flex flex-row screen991:flex-col justify-between items-center h-full px-[120px] screen1024:px-[50px] screen500:px-[20px] relative">
             <div className="inline-flex flex-col items-start w-1/2 screen991:justify-center screen991:h-full screen991:w-full pr-[80px]">
               <h3 className="text-cyan-800 text-xl tracking-[0.03em] font-bold">
                 {language.landing.invest}
@@ -204,7 +203,7 @@ const Home = ({}: any) => {
           </aside>
         </section>
 
-        <section className="h-[750px] screen1024:h-[500px] overflow-hidden px-[120px] screen1024:px-[50px] flex items-center justify-center flex-col">
+        <section className="h-[750px] screen1024:h-[500px] overflow-hidden px-[120px] screen1024:px-[50px] screen500:px-[20px] flex items-center justify-center flex-col">
           <QuotesIcon className="w-[141px] h-[125px]" />
           <p className="text-black text-2x text-center max-w-[500px] font-medium my-7">
             Lorem ipsum dolor sit amet consectetur. Adipiscing ut nisi leo nibh
@@ -220,7 +219,7 @@ const Home = ({}: any) => {
         </section>
 
         <section className="flex items-start justify-center">
-          <div className="pl-[120px] screen1024:px-[50px] inline-flex items-center justify-center flex-col h-full">
+          <div className="pl-[120px] screen1024:px-[50px] screen500:px-[20px] inline-flex items-center justify-center flex-col h-full">
             {longSecContent()}
           </div>
           <div
@@ -235,7 +234,7 @@ const Home = ({}: any) => {
         </section>
       </aside>
 
-      <footer className="h-[750px] screen1024:h-[500px] w-full bg-cyan-800 mt-[20rem]"></footer>
+      <footer className="h-[750px] screen1024:h-[500px] w-full bg-cyan-800 mt-[15rem] screen500:mt-[5rem]"></footer>
     </main>
   );
 };

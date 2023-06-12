@@ -33,9 +33,9 @@ const Dropdown = (props: any) => {
     };
 
     return (
-        <div className={`relative ${style}`} ref={dropdownRef}>
+        <div className={`relative w-full ${style}`} ref={dropdownRef}>
             <div>
-                <button type="button" className="inline-flex justify-center items-center gap-x-1.5 px-3 py-2 text-sm font-medium hover:bg-gray-50 text-neutral-700"
+                <button type="button" className={`inline-flex items-center gap-x-1.5 px-3 py-2 text-sm font-medium hover:bg-gray-50 text-neutral-700 ${orientation === "rtl" ? "w-full justify-end pl-5" : "justify-end"}`}
                     id="menu-button" aria-expanded={isOpen} aria-haspopup="true" onClick={handleToggleDropdown} >
                     {selected.icon && <img className="h-4" src={selected?.icon} alt={selected.title} />}
                     {selected.title}
@@ -56,7 +56,7 @@ const Dropdown = (props: any) => {
 
             {isOpen && (
                 <div
-                    className={`absolute z-10 w-[100%] rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none ${orientation === "rtl" ? "left-6 origin-top-left" : "right-6 origin-top-right"}`}
+                    className={`absolute z-10 max-w-[40%] rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none ${orientation === "rtl" ? "left-6 origin-top-left" : "right-6 origin-top-right"}`}
                     role="menu"
                     aria-orientation="vertical"
                     aria-labelledby="menu-button"
