@@ -14,6 +14,7 @@ import { isValidEmail, isValidUrl } from "../../../utils/regex.utils";
 import StartupStepper from "./StartupStepper";
 import { postCompanyInformation } from "../../../apis/company.api";
 import { saveLogo } from "../../../redux-toolkit/slicer/attachments.slicer";
+import { removeAttachment } from "../../../apis/attachment.api";
 
 const StartupFlow = ({ }: any) => {
   const params = useParams();
@@ -52,10 +53,25 @@ const StartupFlow = ({ }: any) => {
     let _payload: any = localStorage.getItem("startup");
     if (_payload) setPayload(JSON.parse(_payload));
     if (logo) {
-      onSetPayload(logo?.file, "logo");
-      setFile(logo)
+      onGetConvertedToBLOB(JSON.parse(_payload)?.logo);
+      setFile(logo);
     };
   }, []);
+
+  const onGetConvertedToBLOB = async (url: string) => {
+    try {
+    let blob: any = await convertToBlob(url);
+    onSetPayload(blob, "logo");
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const convertToBlob = async (url: any) => {
+    const response = await fetch(url);
+    const data = await response.blob();
+    return data;
+  };
 
   useLayoutEffect(() => {
     setStep(Number(params?.id) || 1);
@@ -67,16 +83,33 @@ const StartupFlow = ({ }: any) => {
       size,
       dimensions
     }
-    let _attachment: any = { file: _file, id, url, attachment_id, type: type };
+    let _attachment: any = { file: _file, id, url, attachment_id, type: type, original: file };
     setFile(_attachment);
     dispatch(saveLogo(_attachment));
     onSetPayload(file, "logo");
   };
 
   const removeFile = async (id: string) => {
-    dispatch(saveLogo(""));
-    setFile(null);
-    onSetPayload(null, "logo")
+    try {
+      setLoading(true);
+      await removeAttachment(id, authToken);
+    } catch (error: any) {
+      setLoading(false);
+      if (error.response && error.response.status === 401) {
+        dispatch(saveToken(""));
+        navigate("/login", { state: "add-attachments" });
+      }
+      const message =
+        error?.response?.data?.status?.message ||
+        error?.response?.data ||
+        language.promptMessages.errorGeneral;
+      toast.error(message, toastUtil);
+    } finally {
+      dispatch(saveLogo(""));
+      setFile(null);
+      onSetPayload(null, "logo");
+      setLoading(false);
+    }
   };
 
   const ontoNextStep = () => {
@@ -110,6 +143,7 @@ const StartupFlow = ({ }: any) => {
   const onPostCompanyData = async () => {
     try {
       setLoading(true);
+      console.log("Startup", payload.logo);
       const form: any = new FormData();
       form.append("startup[company_name]", payload.company);
       form.append("startup[legal_name]", payload.legal);
@@ -119,13 +153,16 @@ const StartupFlow = ({ }: any) => {
       });
       form.append("startup[website]", payload.web);
       form.append("startup[address]", payload.address);
-      form.append("startup[logo]", payload.logo);
+      form.append("startup[logo]", payload?.logo, payload?.logo?.name);
       form.append("startup[description]", payload.business);
       form.append("startup[ceo_name]", payload.name);
       form.append("startup[ceo_email]", payload.email);
       form.append("startup[total_capital_raised]", payload.raised);
       form.append("startup[current_round_capital_target]", payload.target);
       form.append("startup[currency]", payload?.currency?.value);
+
+
+
       let { status } = await postCompanyInformation(form, authToken);
 
       if (status === 200) {
@@ -137,6 +174,8 @@ const StartupFlow = ({ }: any) => {
         dispatch(saveToken(""));
         navigate("/login", { state: "add-attachments" });
       }
+      console.log(error);
+
       const message = error?.response?.data?.status?.message || error?.response?.data || language.promptMessages.errorGeneral;
       toast.error(message, toastUtil);
     } finally {
