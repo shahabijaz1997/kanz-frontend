@@ -50,7 +50,8 @@ const FileUpload = ({ id, file, setModalOpen, setFile, removeFile, title, upload
 
     const handleFileInput = (e: React.ChangeEvent<HTMLInputElement>) => {
         const file: any = e.target.files?.[0];
-        setFileInformation(file);
+        if (validTypes.includes(file.type)) setFileInformation(file);
+        else setAlertType({ type: PromptMessage.ERROR, message: language.promptMessages.invalidFormat });
         e.target.value = "";
     };
 

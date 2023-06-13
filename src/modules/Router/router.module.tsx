@@ -173,11 +173,7 @@ const RouterModule = () => {
           path="/syndicate-lead/:id"
           element={
             <Suspense fallback={<Loader />}>
-              <AuthenticateRoute>
-                <AuthenticateRole role={KanzRoles.SYNDICATE}>
                   <SyndicateLeadInfo guard={authToken} />
-                </AuthenticateRole>
-              </AuthenticateRoute>
             </Suspense>
           }
         />

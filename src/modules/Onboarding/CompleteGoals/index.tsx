@@ -119,7 +119,7 @@ const CompleteGoals = ({ }: any) => {
                 </small>
                 <div>
                   <small className="text-neutral-900 text-2xl font-semibold screen800:text-sm">
-                    {language.common.aed}&nbsp;{payload?.selected?.low_limit}{" "}
+                    {language.common.usd}&nbsp;{payload?.selected?.low_limit}{" "}
                     {payload?.selected?.low_limit !==
                       payload?.selected?.upper_limit &&
                       " - " + payload?.selected?.upper_limit}
