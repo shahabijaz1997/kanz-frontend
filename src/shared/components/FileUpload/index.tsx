@@ -13,7 +13,7 @@ import { handleFileRead } from "../../../utils/files.util";
 import { uploadAttachments } from "../../../apis/attachment.api";
 import Spinner from "../Spinner";
 
-const FileUpload = ({ id, file, setModalOpen, setFile, removeFile }: any) => {
+const FileUpload = ({ id, file, setModalOpen, setFile, removeFile, title, uploadDirect = true }: any) => {
     const language: any = useSelector((state: RootState) => state.language.value);
     const authToken: any = useSelector((state: RootState) => state.auth.value);
     const dispatch = useDispatch();
@@ -81,6 +81,9 @@ const FileUpload = ({ id, file, setModalOpen, setFile, removeFile }: any) => {
                             size: formatFileSize(size),
                             dimensions: `${width} x ${height} px`,
                         };
+                        if (!uploadDirect) {
+                            doUploadUtil(file, FileInfo, url, FileType.IMAGE, "1");
+                        }
                     };
                 };
             } else {
@@ -90,25 +93,22 @@ const FileUpload = ({ id, file, setModalOpen, setFile, removeFile }: any) => {
                 reader.onloadend = () => {
                     const { size }: any = file;
                     FileInfo = { size: formatFileSize(size) };
+                    if (!uploadDirect) {
+                        doUploadUtil(file, FileInfo, url, FileType.PDF, "1");
+                    }
                 };
             }
             const fileData: any = await handleFileRead(file);
-            let fd = new FormData();
-            fd.append("attachment[name]", file?.name);
-            fd.append("attachment[attachment_kind]", "files");
-            fd.append(`attachment[file]`, file, fileData.name);
+            if (uploadDirect) {
+                let fd = new FormData();
+                fd.append("attachment[name]", title || file?.name);
+                fd.append("attachment[attachment_kind]", "files");
+                fd.append(`attachment[file]`, file, fileData.name);
 
-            const { status, data } = await uploadAttachments(fd, authToken);
-            if (status === 200) {
-                setFileInfo({ size: FileInfo?.size, dimensions: FileInfo?.dimensions });
-                setAlertType({ type: PromptMessage.SUCCESS, message: language.promptMessages.fileUpload });
-                setFile(file, id, url, data?.status?.data?.attachment_id, FileInfo?.size, FileInfo?.dimensions, type);
-                setSelectedFile({ file, url, attachment_id: data?.status?.data?.attachment_id, type, id });
-
-                let timer = setTimeout(() => {
-                    setLoading(false);
-                    clearTimeout(timer);
-                }, 1000);
+                const { status, data } = await uploadAttachments(fd, authToken);
+                if (status === 200) {
+                    doUploadUtil(file, FileInfo, url, type, data?.status?.data?.attachment_id);
+                }
             }
         } catch (error: any) {
             if (error.response && error.response.status === 401) {
@@ -120,6 +120,18 @@ const FileUpload = ({ id, file, setModalOpen, setFile, removeFile }: any) => {
         } finally {
         }
     };
+
+    const doUploadUtil = (file: any, FileInfo: any, url: string, type: string, aid: string) => {
+        setFileInfo({ size: FileInfo?.size, dimensions: FileInfo?.dimensions });
+        setAlertType({ type: PromptMessage.SUCCESS, message: language.promptMessages.fileUpload });
+        setFile(file, id, url, aid, FileInfo?.size, FileInfo?.dimensions, type);
+        setSelectedFile({ file, url, attachment_id: aid, type, id });
+
+        let timer = setTimeout(() => {
+            setLoading(false);
+            clearTimeout(timer);
+        }, 1000);
+    }
 
     return (
         <React.Fragment>
