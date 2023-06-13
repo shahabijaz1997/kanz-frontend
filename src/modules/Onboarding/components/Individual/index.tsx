@@ -50,6 +50,7 @@ const Individual = ({ language }: any) => {
       low_limit: "10",
       upper_limit: "10",
       is_range: false,
+      currency: language.common.million
     },
   ]);
   const [selectedAssert, setSelectedAssert]: any = useState(null);

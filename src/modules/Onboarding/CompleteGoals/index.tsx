@@ -120,16 +120,12 @@ const CompleteGoals = ({ }: any) => {
                 <div>
                   <small className="text-neutral-900 text-2xl font-semibold screen800:text-sm">
                     {language.common.usd}&nbsp;{payload?.selected?.low_limit}{" "}
-                    {payload?.selected?.low_limit !==
-                      payload?.selected?.upper_limit &&
-                      " - " + payload?.selected?.upper_limit}
+                    {payload?.selected?.low_limit !== payload?.selected?.upper_limit && " - " + payload?.selected?.upper_limit}
                   </small>
                   &nbsp;
-                  {payload?.selected?.currency && (
                     <small className="text-green-600 text-sm font-semibold">
                       {payload?.selected?.currency}
                     </small>
-                  )}
                 </div>
               </div>
             </section>
