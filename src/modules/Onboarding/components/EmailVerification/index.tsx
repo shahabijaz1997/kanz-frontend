@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useForm, SubmitHandler } from "react-hook-form";
-
 import { RootState } from "../../../../redux-toolkit/store/store";
 import { useNavigate } from "react-router-dom";
 import { confirmToken, resendConfirmToken, signup } from "../../../../apis/auth.api";
@@ -29,12 +28,10 @@ const EmailVerification = ({ payload, onReSignup }: any) => {
   const language: any = useSelector((state: RootState) => state.language.value);
   const user: any = useSelector((state: RootState) => state.user.value);
   const authToken: any = useSelector((state: RootState) => state.auth.value);
-
   const [isEdit, setEdit] = useState(false);
   const [email] = useState(payload?.email);
   const [token, setToken] = useState("");
   const [loading, setLoading] = useState(false);
-  const [resendTries, setResendTries] = useState(1);
 
   const requiredFieldError = language?.common?.required_field;
 
@@ -58,12 +55,6 @@ const EmailVerification = ({ payload, onReSignup }: any) => {
 
   const onSubmit: SubmitHandler<FormValues> = async (values) => {
     const { code: token } = values;
-    if (resendTries >= ENV.resendTries) {
-      toast.dismiss();
-      toast.warning(language.promptMessages.maxLimitInvalid, toastUtil);
-      return onReSignup()
-    }
-
     try {
       if (!token) return;
       setLoading(true);
@@ -79,7 +70,8 @@ const EmailVerification = ({ payload, onReSignup }: any) => {
       const message = error?.response?.data?.status?.message || language.promptMessages.invalidCode || language.promptMessages.errorGeneral;
       toast.dismiss();
       toast.error(message, toastUtil);
-      setResendTries(resendTries + 1);
+      if (error?.response?.data?.status?.data?.account_status === "blocked")
+        return onReSignup()
     } finally {
       setLoading(false);
       setToken("");
