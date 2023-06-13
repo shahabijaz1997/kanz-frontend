@@ -22,6 +22,7 @@ const InvestorFlow = ({ }: any) => {
   const language: any = useSelector((state: RootState) => state.language.value);
   const user: any = useSelector((state: RootState) => state.user.value);
   const metadata: any = useSelector((state: RootState) => state.metadata.value);
+  const orientation: any = useSelector((state: RootState) => state.orientation.value);
 
   const [selectedAccount, setSelectedAccount]: any = useState();
   const [loading, setLoading] = useState(false);
@@ -70,10 +71,10 @@ const InvestorFlow = ({ }: any) => {
       </section>
       <aside className="w-full flex items-center justify-center flex-col pt-[100px]">
         <section className="flex items-start justify-center flex-col max-w-md screen500:max-w-[300px]">
-          <h2 className="text-2xl font-bold text-left text-neutral-900 mb-4 screen500:text-[20px]">
+          <h2 className={`text-2xl font-bold text-neutral-900 mb-4 w-full screen500:text-[20px] ${orientation === "rtl" ? "text-right" : "text-left"}`}>
             {language.investorFow.type}
           </h2>
-          <h3 className="text-base text-left text-neutral-700 mb-12 screen500:text-[12px]">
+          <h3 className={`text-base text-neutral-700 mb-12 screen500:text-[12px] ${orientation === "rtl" ? "text-right" : "text-left"}`}>
             <span className="font-normal">{language.investorFow.sub}</span>{" "}
             &nbsp;
             <span
@@ -100,7 +101,7 @@ const InvestorFlow = ({ }: any) => {
                       {account.subText}
                     </p>
                   </div>
-                  <div className="check-background rounded-full w-9 h-9 inline-grid place-items-center absolute right-5 top-1/2 translate-y-[-50%]">
+                  <div className={`check-background rounded-full w-9 h-9 inline-grid place-items-center absolute top-1/2 translate-y-[-50%] ${orientation === "rtl" ? "left-5" : "right-5"}`}>
                     <ArrowIcon stroke="#171717" />
                   </div>
                 </section>

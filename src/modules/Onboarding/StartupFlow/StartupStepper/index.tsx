@@ -1,30 +1,50 @@
-import { useState, useLayoutEffect } from "react";
+import React, { useState, useLayoutEffect, useRef } from "react";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { getCountries } from "../../../../apis/countries.api";
+import Chevrond from "../../../../ts-icons/chevrond.svg";
 import { saveToken } from "../../../../redux-toolkit/slicer/auth.slicer";
 import HoverModal from "../../../../shared/components/HoverModal";
 import FileUpload from "../../../../shared/components/FileUpload";
 import SampleImage from "../../../../assets/example_id.png";
 import SampleImage_2 from "../../../../assets/example_id_2.png";
 import CountrySelector from "../../../../shared/components/CountrySelector";
-import Selector from "../../../../shared/components/Selector";
 import { getAllIndustries } from "../../../../apis/fakeData.api";
+import Selector from "../../../../shared/components/Selector";
+import CrossIcon from "../../../../ts-icons/crossIcon.svg";
+import SearchedItems from "../../../../shared/components/SearchedItems";
 
 const currencies = [{ label: "AED", value: "AED" }, { label: "USD", value: "USD" }];
 
 const StartupStepper = ({ language, file, payload, onSetPayload, authToken, step, removeFile, setFile, setModalOpen, setFileType }: any) => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
+    const refInd: any = useRef(null);
+
     const [currency, setCurrency] = useState(currencies[0]);
     const [showHoverModal, setShowHoverModal] = useState(false);
     const [loading, setLoading] = useState(false);
     const [countries, setCountries] = useState({ all: [], names: [] });
-    const [industries, setIndustries] = useState([]);
+    const [search, setSearch] = useState("");
+    const [showData, setShowData] = useState(false);
+    const [searchResults, setSearchResults]: any = useState([]);
 
     useLayoutEffect(() => {
         getAllCountries();
         bootstrapData();
+    }, []);
+
+    useLayoutEffect(() => {
+        const handleClickOutside = (event: any) => {
+            if (refInd.current && !refInd.current.contains(event.target)) {
+                setShowData(false);
+            }
+        };
+        document.addEventListener('mousedown', handleClickOutside);
+
+        return () => {
+            document.removeEventListener('mousedown', handleClickOutside);
+        };
     }, []);
 
     const getAllCountries = async () => {
@@ -50,12 +70,17 @@ const StartupStepper = ({ language, file, payload, onSetPayload, authToken, step
         try {
             let industryRes: any = await getAllIndustries();
             if (industryRes.status === 200) {
-                let data = industryRes.data.business.map((item: any) => { return { label: item.name, value: item.name } })
-                setIndustries(data);
+                setSearchResults(industryRes.data.business);
             }
         } catch (error) {
             console.error("Error in industries: ", error);
         }
+    };
+
+    const onSetSearch = (data: any, type: string) => {
+        setSearch((prev: any) => {
+            return { ...prev, [type]: data };
+        });
     };
 
     return (
@@ -72,15 +97,34 @@ const StartupStepper = ({ language, file, payload, onSetPayload, authToken, step
                         <input id="legal" value={payload?.legal} onChange={(e) => onSetPayload(e.target.value, "legal")} placeholder={language.company.legal} className=" h-[42px] shadow-sm appearance-none border border-neutral-300 rounded-md w-full py-2 px-3 text-gray-500 leading-tight focus:outline-none focus:shadow-outline" type="text" />
                     </div>
 
-                    <div className="mb-8 w-full">
-                        <label className="block text-neutral-700 text-sm font-medium" htmlFor="full-name" >
-                            {language?.company?.market}
-                        </label>
-                        <Selector
-                            onChange={(v: any) => onSetPayload([v.value], "market")}
-                            options={industries}
-                            defaultValue={{ label: payload.market, value: payload.market } || ""}
-                        />
+                    <div className="mb-8 w-full" ref={refInd}>
+                        <label className="block text-neutral-700 text-sm font-medium" htmlFor="market">{language.syndicate.industry}</label>
+                        <small className="font-normal text-sm text-neutral-500">{language.syndicate.industrySub}</small>
+                        <span className="relative">
+                            <input id="market" autoComplete="off" value={search} onChange={(e) => onSetSearch(e.target.value, "market")} onClick={() => setShowData(!showData)}
+                                className="h-[42px] shadow-sm appearance-none border border-neutral-300 rounded-md w-full py-2 px-3 text-gray-500 leading-tight focus:outline-none focus:shadow-outline" type="text" />
+                            <span className={`absolute top-[0px] right-0 flex items-center pr-2 pointer-events-none}`} style={{ zIndex: 99 }}>
+                                <Chevrond stroke="#737373" />
+                            </span>
+                        </span>
+                        {payload.market && payload.market.length > 0 && (
+                            <aside className="inline-flex gap-2 flex-wrap min-h-[42px] shadow-sm appearance-none border border-neutral-300 rounded-md w-full py-2 px-3 text-gray-500 leading-tight focus:outline-none focus:shadow-outline">
+                                {React.Children.toArray(
+                                    payload.market.map((ind: any) => <div className="check-background rounded-[4px] px-1 py-[2px] inline-flex items-center">
+                                        <small>{ind}</small>
+                                        <CrossIcon onClick={() => {
+                                            let payloadItems = payload.market.filter((x: any) => x !== ind)
+                                            onSetPayload(payloadItems, "market");
+                                        }} className="cursor-pointer h-5 w-5 ml-1" stroke={"#828282"} />
+                                    </div>)
+                                )}
+                            </aside>
+                        )}
+                        {(showData) && <SearchedItems items={searchResults} searchString={search} passItemSelected={(it: any) => {
+                            let payloadItems = [...payload.market];
+                            payloadItems.push(it);
+                            onSetPayload(Array.from(new Set(payloadItems)), "market");
+                        }} />}
                     </div>
 
                     <div className="mb-8 w-full relative" style={{ zIndex: 90 }}>

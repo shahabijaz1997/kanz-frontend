@@ -88,7 +88,7 @@ const Welcome = ({ }: any) => {
     };
 
     return (
-        <main className="h-full max-h-full background-auth overflow-y-auto">
+        <main className="h-full max-h-full background-auth overflow-y-auto overflow-x-hidden">
             {loading ? (
                 <Loader />
             ) : (

@@ -71,6 +71,8 @@ const RouterModule = () => {
     setLoading(true)
     const _language: any = loadLanguage(event);
     dispatch(saveLanguage(_language));
+    if(event === "ar") document.documentElement.dir = "rtl";
+    else document.documentElement.dir = "ltr";
 
     let timer = setTimeout(() => {
       setLoading(false);

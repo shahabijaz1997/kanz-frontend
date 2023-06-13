@@ -63,28 +63,22 @@ export const AntdInput: React.FC<InputProps> = ({
 
   return (
     <div className={`relative ${required ? "required" : ""}`}>
-      {required && (
-        <span className="absolute top-0 left-0 text-red-500">*</span>
-      )}
-      <label
-        style={{ marginLeft: required ? "10px" : "0px" }}
-        className="block text-neutral-700 text-sm font-semibold mb-2"
-        htmlFor={name}
-      >
-        {label}
-      </label>
+      <span className="inline-flex items-center relative mb-2">
+        {required && (<span className="text-red-500">*</span>)}
+        <label style={{ marginLeft: required ? "5px" : "0px" }} className=" text-neutral-700 text-sm font-semibold" htmlFor={name} >
+          {label}
+        </label>
+      </span>
       <div className="relative">
         <input
           ref={ref}
           {...register(name, validation)}
           name={name}
-          className={`h-[42px] pr-10 shadow-sm appearance-none border rounded-md w-full py-2 px-3 text-gray-500 leading-tight transition-all ${
-            disabled ? "opacity-50 cursor-not-allowed" : ""
-          } ${
-            hasError
+          className={`h-[42px] pr-10 shadow-sm appearance-none border rounded-md w-full py-2 px-3 text-gray-500 leading-tight transition-all ${disabled ? "opacity-50 cursor-not-allowed" : ""
+            } ${hasError
               ? "border border-red-500 focus:outline-none focus:ring-1 focus:ring-red-500 hover:border-red-500 hover:ring-1 hover:ring-red-500"
               : "focus:outline-none focus:ring-1 focus:ring-cyan-800 hover:border-cyan-800 hover:ring-1 hover:ring-cyan-800"
-          }${className}`}
+            }${className}`}
           id={type}
           value={value}
           defaultValue={defaultValue}
