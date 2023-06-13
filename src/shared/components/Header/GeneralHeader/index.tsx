@@ -82,7 +82,7 @@ const GeneralHeader = ({ responsive = false, showMenu = false }: any) => {
         <React.Fragment>
             {!responsive ? (
                 <div className="container relative mx-auto px-4 py-4 flex items-center justify-between">
-                    <div className="flex items-center justify-between">
+                    <div className="flex items-center justify-between cursor-pointer" onClick={()=>navigate("/")}>
                         <img src={Logo} alt="App Logo" />
                     </div>
 
@@ -108,7 +108,7 @@ const GeneralHeader = ({ responsive = false, showMenu = false }: any) => {
             ) : (
                 <div className="container mx-auto py-6 flex items-start flex-col">
                     <div className="flex items-center justify-between container px-4">
-                        <div className="text-xl font-bold text-gray-800">
+                        <div className="text-xl font-bold text-gray-800 cursor-pointer" onClick={()=>navigate("/")}>
                             <img src={Logo} alt="App Logo" />
                         </div>
 

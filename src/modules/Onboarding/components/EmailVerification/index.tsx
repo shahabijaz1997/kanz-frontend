@@ -58,7 +58,7 @@ const EmailVerification = ({ payload, onReSignup }: any) => {
 
   const onSubmit: SubmitHandler<FormValues> = async (values) => {
     const { code: token } = values;
-    if (resendTries > ENV.resendTries) {
+    if (resendTries >= ENV.resendTries) {
       toast.dismiss();
       toast.warning(language.promptMessages.maxLimitInvalid, toastUtil);
       return onReSignup()
@@ -76,16 +76,16 @@ const EmailVerification = ({ payload, onReSignup }: any) => {
         navigate("/welcome");
       }
     } catch (error: any) {
-      const message = error?.response?.data?.status?.message || language.promptMessages.errorGeneral;
+      const message = error?.response?.data?.status?.message || language.promptMessages.invalidCode || language.promptMessages.errorGeneral;
       toast.dismiss();
-      toast.error(language.promptMessages.invalidCode, toastUtil);
+      toast.error(message, toastUtil);
       setResendTries(resendTries + 1);
     } finally {
       setLoading(false);
       setToken("");
     }
   };
-  
+
   const onReVerify: SubmitHandler<EmailFormValues> = async (values) => {
     try {
       const { email } = values;
@@ -105,8 +105,8 @@ const EmailVerification = ({ payload, onReSignup }: any) => {
       }
     } catch (error: any) {
       const message =
-      error?.response?.data?.status?.message ||
-      language.promptMessages.errorGeneral;
+        error?.response?.data?.status?.message ||
+        language.promptMessages.errorGeneral;
       toast.dismiss();
       toast.error(message, toastUtil);
     } finally {
