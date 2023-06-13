@@ -13,7 +13,7 @@ const InvestorHome = ({ loading, language }: any) => {
     const metadata: any = useSelector((state: RootState) => state.metadata.value);
 
     const render = () => {
-        if (user.status == ApplicationStatus.OPENED && isEmpty(metadata?.profile)) {
+        if ((user.status === ApplicationStatus.OPENED || user.status === ApplicationStatus.REOPENED) && isEmpty(metadata?.profile)) {
             return (
                 <React.Fragment>
                     <h2 className="text-2xl font-bold text-neutral-900 mb-4 screen500:text-[20px]">
@@ -27,7 +27,7 @@ const InvestorHome = ({ loading, language }: any) => {
                     </Button>
                 </React.Fragment>
             );
-        } else if (user.status == ApplicationStatus.OPENED && !isEmpty(metadata?.profile)) {
+        } else if ((user.status === ApplicationStatus.OPENED || user.status === ApplicationStatus.REOPENED) && !isEmpty(metadata?.profile)) {
             return (
                 <React.Fragment>
                     <h2 className="text-2xl font-bold text-neutral-900 mb-4 screen500:text-[20px]">

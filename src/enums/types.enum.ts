@@ -18,5 +18,6 @@ export enum ApplicationStatus {
     PENDING = "pending",
     IN_PROGRESS = "inprogress",
     SUBMITTED = "submitted",
-    OPENED = "opened"
+    OPENED = "opened",
+    REOPENED = "reopened"
 }

@@ -43,7 +43,7 @@ const Realtors = (props: any) => {
 
   useLayoutEffect(() => {
     setLoad(true);
-    if (user.status !== ApplicationStatus.OPENED) return navigate("/welcome");
+    if ((user.status !== ApplicationStatus.OPENED && user.status !== ApplicationStatus.REOPENED)) return navigate("/welcome");
     let _payload: any = localStorage.getItem("realtor");
     if (_payload) setPayload(JSON.parse(_payload));
     if (!isEmpty(metadata.profile)) {
