@@ -10,7 +10,7 @@ import rootReducer from '../reducer/reduce';
 const persistConfig = {
   key: 'root',
   storage,
-  whitelist: ['auth', 'user', 'philisophy', 'metadata', 'attachments'], // add reducers you want to persist in localstorage
+  whitelist: ['auth', 'user', 'philisophy', 'metadata', 'attachments', 'orientation'], // add reducers you want to persist in localstorage
 };
 const persistedReducer = persistReducer(persistConfig, rootReducer);
 

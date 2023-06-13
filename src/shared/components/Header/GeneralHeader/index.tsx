@@ -82,7 +82,7 @@ const GeneralHeader = ({ responsive = false, showMenu = false }: any) => {
         <React.Fragment>
             {!responsive ? (
                 <div className="container relative mx-auto px-4 py-4 flex items-center justify-between">
-                    <div className="flex items-center justify-between">
+                    <div className="flex items-center justify-between cursor-pointer" onClick={()=>navigate("/")}>
                         <img src={Logo} alt="App Logo" />
                     </div>
 
@@ -105,10 +105,11 @@ const GeneralHeader = ({ responsive = false, showMenu = false }: any) => {
                         </ul>
                     </nav>
                 </div>
+                
             ) : (
                 <div className="container mx-auto py-6 flex items-start flex-col">
                     <div className="flex items-center justify-between container px-4">
-                        <div className="text-xl font-bold text-gray-800">
+                        <div className="text-xl font-bold text-gray-800 cursor-pointer" onClick={()=>navigate("/")}>
                             <img src={Logo} alt="App Logo" />
                         </div>
 
@@ -126,16 +127,22 @@ const GeneralHeader = ({ responsive = false, showMenu = false }: any) => {
                     <nav className={`${isMenuOpen ? "block w-full bg-white z-10" : "hidden"}`}>
                         <ul className="flex items-center flex-row-reverse pt-12 w-full justify-between px-4">
                             <li>
-                               <LanguageDrodownWrapper />
+                                <LanguageDrodownWrapper />
                             </li>
                             <li>
                                 <div className="rounded-full w-8 h-8 inline-grid place-items-center bell-background ">
                                     <BellIcon stroke={"#4F4F4F"} />
                                 </div>
                             </li>
-                            <li onClick={onLogout} className="mr-3">
-                                <button className="text-neutral-500 font-medium cursor-pointer text-sm tracking-[0.03em]">{language.buttons.logout}</button>
-                            </li>
+                            {authToken ? (
+                                <li onClick={onLogout} className="mr-3">
+                                    <button className="text-neutral-500 font-medium cursor-pointer text-sm tracking-[0.03em]">{language.buttons.logout}</button>
+                                </li>
+                            ) : (
+                                <li onClick={() => navigate("/signup", { state: KanzRoles.INVESTOR })}>
+                                    <button className="text-white text-sm tracking-[0.03em] bg-cyan-800 rounded-md focus:outline-none focus:shadow-outline w-full h-[38px] px-3">{language.buttons.getStart}</button>
+                                </li>
+                            )}
                         </ul>
                     </nav>
                 </div>
