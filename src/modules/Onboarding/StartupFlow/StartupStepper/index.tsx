@@ -20,8 +20,6 @@ const StartupStepper = ({ language, file, payload, onSetPayload, authToken, step
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const refInd: any = useRef(null);
-
-    const [currency, setCurrency] = useState(currencies[0]);
     const [showHoverModal, setShowHoverModal] = useState(false);
     const [loading, setLoading] = useState(false);
     const [countries, setCountries] = useState({ all: [], names: [] });
@@ -77,12 +75,6 @@ const StartupStepper = ({ language, file, payload, onSetPayload, authToken, step
         }
     };
 
-    const onSetSearch = (data: any, type: string) => {
-        setSearch((prev: any) => {
-            return { ...prev, [type]: data };
-        });
-    };
-
     return (
         step === 1 ? (
             <section className="flex items-start justify-center flex-col">
@@ -101,7 +93,7 @@ const StartupStepper = ({ language, file, payload, onSetPayload, authToken, step
                         <label className="block text-neutral-700 text-sm font-medium" htmlFor="market">{language.syndicate.industry}</label>
                         <small className="font-normal text-sm text-neutral-500">{language.syndicate.industrySub}</small>
                         <span className="relative">
-                            <input id="market" autoComplete="off" value={search} onChange={(e) => onSetSearch(e.target.value, "market")} onClick={() => setShowData(!showData)}
+                            <input id="market" autoComplete="off" value={search} onChange={(e) =>setSearch(e.target.value)} onClick={() => setShowData(!showData)}
                                 className="h-[42px] shadow-sm appearance-none border border-neutral-300 rounded-md w-full py-2 px-3 text-gray-500 leading-tight focus:outline-none focus:shadow-outline" type="text" />
                             <span className={`absolute top-[0px] right-0 flex items-center pr-2 pointer-events-none}`} style={{ zIndex: 99 }}>
                                 <Chevrond stroke="#737373" />
@@ -171,7 +163,7 @@ const StartupStepper = ({ language, file, payload, onSetPayload, authToken, step
                                 </HoverModal>
                             )}
                         </small>
-                        <FileUpload id={'logo'} file={file} setFile={setFile} removeFile={removeFile} setModalOpen={(e: any) => {
+                        <FileUpload uploadDirect={false} id={'logo'} title={'Logo'} file={file} setFile={setFile} removeFile={removeFile} setModalOpen={(e: any) => {
                             setModalOpen(e.open ? e.url : null);
                             e.type && setFileType(e.type);
                         }} />

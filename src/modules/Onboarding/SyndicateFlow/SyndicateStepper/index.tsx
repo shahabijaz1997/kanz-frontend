@@ -222,7 +222,7 @@ const SyndicateStepper = ({ language, payload, file, onSetPayload, options, step
                                 </HoverModal>
                             )}
                         </small>
-                        <FileUpload id={'logo'} file={file} setFile={setFile} removeFile={removeFile} setModalOpen={(e: any) => {
+                        <FileUpload uploadDirect={false} id={'logo'} title={'Logo'} file={file} setFile={setFile} removeFile={removeFile} setModalOpen={(e: any) => {
                             setModalOpen(e.open ? e.url : null);
                             e.type && setFileType(e.type);
                         }} />

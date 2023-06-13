@@ -3,7 +3,7 @@ import React from "react";
 const SearchedItems = ({ items, searchString, passItemSelected }: any) => {
     const renderSegregatedItems = () => {
         let filtered = items.map((it: any) => {
-            if (searchString !== "" && it.name.toLowerCase().includes(searchString.toLowerCase())) it.blue = true;
+            if (searchString !== "" && it.name.toLowerCase().includes(searchString?.toLowerCase())) it.blue = true;
             else it.blue = false;
             return it;
         });

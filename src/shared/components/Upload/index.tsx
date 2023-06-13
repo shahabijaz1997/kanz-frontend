@@ -80,6 +80,7 @@ const UploadComp = (props: any) => {
         <FileUpload
           id={id}
           file={file}
+          title={title}
           setFile={setFile}
           removeFile={removeFile}
           setModalOpen={(e: any) => {
