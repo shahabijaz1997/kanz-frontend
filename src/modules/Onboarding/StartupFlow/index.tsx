@@ -124,7 +124,7 @@ const StartupFlow = ({ }: any) => {
       navigate(`/startup-type/${step + 1}`);
     } else {
       let errors = []
-      if (!payload.company || !payload.legal || !payload.country || !payload.market || !payload.address || !payload.web || !payload.name || !payload.email || !payload.logo || !payload.business || !payload.raised || !payload.target) {
+      if (!payload.company || !payload.legal || !payload.country || !payload.market.length || !payload.address || !payload.web || !payload.name || !payload.email || !payload.logo || !payload.business || !payload.raised || !payload.target) {
         errors.push(language.promptMessages.pleaseSelectAllData);
       }
       if (!isValidEmail(payload.email)) errors.push(language.promptMessages.invalidEmailCeo)
