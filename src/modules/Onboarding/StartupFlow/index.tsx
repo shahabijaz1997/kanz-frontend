@@ -23,6 +23,7 @@ const StartupFlow = ({ }: any) => {
   const language: any = useSelector((state: RootState) => state.language.value);
   const authToken: any = useSelector((state: RootState) => state.auth.value);
   const logo: any = useSelector((state: RootState) => state.attachments.logo.value);
+  const orientation: any = useSelector((state: RootState) => state.orientation.value);
 
   const [payload, setPayload]: any = useState({
     company: "",
@@ -115,7 +116,7 @@ const StartupFlow = ({ }: any) => {
   const ontoNextStep = () => {
     if (step === 1) {
       let errors = [];
-      if (!payload.company || !payload.legal || !payload.market || !payload.web || !payload.address || !payload.country)
+      if (!payload.company || !payload.legal || !payload.market.length || !payload.web || !payload.address || !payload.country)
         errors.push(language.promptMessages.pleaseSelectAllData)
       if (!isValidUrl(payload.web)) errors.push(language.promptMessages.validComp);
       toast.dismiss();
@@ -213,6 +214,7 @@ const StartupFlow = ({ }: any) => {
           setFile={onSetFile}
           setModalOpen={(e: any) => setModalOpen(e)}
           authToken={authToken}
+          orientation={orientation}
         />
 
         <section className="w-full inline-flex items-center justify-between py-10">

@@ -22,6 +22,7 @@ const SyndicateFlow = ({ }: any) => {
   const language: any = useSelector((state: RootState) => state.language.value);
   const authToken: any = useSelector((state: RootState) => state.auth.value);
   const logo: any = useSelector((state: RootState) => state.attachments.logo.value);
+  const orientation: any = useSelector((state: RootState) => state.orientation.value);
 
   const [payload, setPayload]: any = useState({
     raised: null,
@@ -194,6 +195,7 @@ const SyndicateFlow = ({ }: any) => {
           removeFile={removeFile}
           setFile={onSetFile}
           setModalOpen={(e: any) => setModalOpen(e)}
+          orientation={orientation}
         />
 
         <section className="w-full inline-flex items-center justify-between py-10">
