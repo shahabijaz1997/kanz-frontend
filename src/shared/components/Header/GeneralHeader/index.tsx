@@ -105,6 +105,7 @@ const GeneralHeader = ({ responsive = false, showMenu = false }: any) => {
                         </ul>
                     </nav>
                 </div>
+                
             ) : (
                 <div className="container mx-auto py-6 flex items-start flex-col">
                     <div className="flex items-center justify-between container px-4">
