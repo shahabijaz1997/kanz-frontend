@@ -104,7 +104,7 @@ const AddAttachments = (props: any) => {
                 </p>
               </section>
               <section className="flex items-start justify-center flex-col mt-8">
-                <form className="pt-12 mb-4 w-full">
+                <form className="pt-8 mb-4 w-full">
                   {React.Children.toArray(
                     attachmentData.map((item: any) => {
                       return (

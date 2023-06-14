@@ -16,9 +16,9 @@ import Spinner from "../Spinner";
 const FileUpload = ({ id, file, setModalOpen, setFile, removeFile, title, uploadDirect = true }: any) => {
     const language: any = useSelector((state: RootState) => state.language.value);
     const authToken: any = useSelector((state: RootState) => state.auth.value);
+    const orientation: any = useSelector((state: RootState) => state.orientation.value);
     const dispatch = useDispatch();
     const navigate = useNavigate();
-
     const [dragOver, setDragOver] = useState(false);
     const [selectedFile, setSelectedFile]: any = useState<File | null>(file);
     const [fileInfo, setFileInfo]: any = useState({ size: file?.file?.size, dimensions: file?.file?.dimensions });
@@ -143,7 +143,7 @@ const FileUpload = ({ id, file, setModalOpen, setFile, removeFile, title, upload
                 <label htmlFor={id}>
                     {selectedFile && selectedFile?.id === id ? (
                         <div className="flex items-center relative check-background h-full px-2">
-                            <div className="h-8 w-8 p-2 absolute right-2 top-2 rounded-full cursor-pointer bg-white" onClick={(e) => {
+                            <div className={`h-8 w-8 p-2 absolute top-2 rounded-full cursor-pointer bg-white ${orientation === "rtl" ? "left-2" : "right-2"}`} onClick={(e) => {
                                 removeFile(selectedFile?.attachment_id, setLoading);
                                 e.preventDefault();
                                 e.stopPropagation();
@@ -156,10 +156,10 @@ const FileUpload = ({ id, file, setModalOpen, setFile, removeFile, title, upload
                                 {(selectedFile?.type === FileType.IMAGE) ? <img src={selectedFile?.url} alt={selectedFile?.file?.name} className="w-[80%] h-[90%]" /> : <embed src={selectedFile?.url} type="application/pdf" className="w-[100%] h-[90%]" />}
                             </section>
 
-                            <section className="pl-3 h-[120px] inline-flex flex-col justify-between py-2">
+                            <section className="px-3 h-[120px] inline-flex flex-col justify-between py-2">
                                 <div>
                                     <h2 className="text-neutral-900 font-medium text-base truncate mb-3 max-w-[200px]">{selectedFile?.file?.name}</h2>
-                                    <h4 className="text-neutral-700 font-medium text-sm truncate max-w-[200px]">{fileInfo?.size}&nbsp;{fileInfo?.dimensions}</h4>
+                                    <h4 className="text-neutral-700 font-medium text-sm truncate max-w-[200px]" style={{direction: "ltr"}}>{fileInfo?.size}&nbsp;{fileInfo?.dimensions}</h4>
                                 </div>
                                 <div className="rounded-lg w-20 h-6 inline-flex items-center flex-row justify-center gap-2 bg-white cursor-pointer" onClick={() => setModalOpen({ url: selectedFile.url, open: true, type: selectedFile.type })}>
                                     <PreviewIcon stroke="#404040" />
@@ -179,7 +179,7 @@ const FileUpload = ({ id, file, setModalOpen, setFile, removeFile, title, upload
                                     <small className="text-sm color-blue">{language.buttons.uploadFile}</small>&nbsp;
                                     <small className="text-sm text-neutral-500">{language.buttons.orDragDrop}</small>
                                 </p>
-                                <div className="text-neutral-500 text-sm font-normal">PNG, JPG, PDF up to 10MB</div>
+                                <div className="text-neutral-500 text-sm font-normal">{language?.common?.fileSpecs} 10MB</div>
                                 <input id={id} accept=".jpg,.png,.pdf" type="file" className="hidden" onChange={handleFileInput} />
                             </div>
                         )

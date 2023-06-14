@@ -154,7 +154,8 @@
         "inreview": "In Review",
         "submitted": "Submitted",
         "required_field":"This field is required.",
-        "selectCurrency":"Select Currency"
+        "selectCurrency":"Select Currency",
+        "fileSpecs": "PNG, JPG, PDF up to"
     },
     "buttons": {
         "start": "Lets start",
