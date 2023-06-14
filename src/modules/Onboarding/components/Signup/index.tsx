@@ -66,16 +66,8 @@ const Signup = (props: any) => {
             </small>
           </section>
           <section className="inline-flex items-center">
-            <div
-              className={`${hasLowerCase(password)
-                  ? "checked-background"
-                  : "check-background"
-                } check-background rounded-full w-4 h-4 inline-grid place-items-center mr-1`}
-            >
-              <CheckIcon
-                fill={`${hasLowerCase(password) ? "#fff" : "rgba(0, 0, 0, 0.3)"
-                  }`}
-              />
+            <div className={`${hasLowerCase(password) ? "checked-background" : "check-background" } check-background rounded-full w-4 h-4 inline-grid place-items-center mr-1`} >
+              <CheckIcon fill={`${hasLowerCase(password) ? "#fff" : "rgba(0, 0, 0, 0.3)" }`}/>
             </div>
             <small className="text-neutral-500 text-sm font-normal mx-1">
               {language?.onboarding?.lowerCase}
@@ -108,16 +100,8 @@ const Signup = (props: any) => {
             </small>
           </section>
           <section className="inline-flex items-center">
-            <div
-              className={`${hasSpecialCharacters(password)
-                  ? "checked-background"
-                  : "check-background"
-                } check-background rounded-full w-4 h-4 inline-grid place-items-center mr-1`}
-            >
-              <CheckIcon
-                fill={`${hasSpecialCharacters(password) ? "#fff" : "rgba(0, 0, 0, 0.3)"
-                  }`}
-              />
+            <div className={`${hasSpecialCharacters(password) ? "checked-background" : "check-background" } check-background rounded-full w-4 h-4 inline-grid place-items-center mr-1`} >
+              <CheckIcon fill={`${hasSpecialCharacters(password) ? "#fff" : "rgba(0, 0, 0, 0.3)" }`} />
             </div>
             <small className="text-neutral-500 text-sm font-normal mx-1">
               {language?.onboarding?.special}
@@ -170,11 +154,7 @@ const Signup = (props: any) => {
     }, [watch]);
 
     return (
-      <form
-        className="pt-12 pb-8 mb-4"
-        onSubmit={handleSubmit(onSubmit)}
-        {...(isSubmitSuccessful && { noValidate: true })}
-      >
+      <form className="pt-12 pb-8 mb-4" onSubmit={handleSubmit(onSubmit)} {...(isSubmitSuccessful && { noValidate: true })} >
         <div className="mb-4">
           <AntdInput
             register={register}

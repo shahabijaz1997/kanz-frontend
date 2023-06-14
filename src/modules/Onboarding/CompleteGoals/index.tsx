@@ -90,7 +90,7 @@ const CompleteGoals = ({ }: any) => {
               <div className="rounded-full check-background w-9 h-9 inline-grid place-items-center p-2">
                 <UserIcon stroke="#171717" />
               </div>
-              <div className="center w-[80%] ml-5">
+              <div className="center w-[80%] mx-5">
                 <h3 className="text-neutral-900 text-lg font-semibold">
                   {apiResp?.status?.data?.role}
                 </h3>
