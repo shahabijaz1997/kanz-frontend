@@ -30,7 +30,7 @@ const Stepper = ({ currentStep = 1, totalSteps = 5 }: any) => {
     };
 
     return (
-        <div className="flex items-center justify-center mb-7">
+        <div className="flex items-center justify-center mb-7" style={{ direction: "ltr" }}>
             {React.Children.toArray(
                 steps.map(step => (
                     <div className={`relative flex items-center ${currentStep === step ? 'text-green-500' : 'text-gray-400'} ${step > 1 && "ml-20 screen500:ml-7"}`} >

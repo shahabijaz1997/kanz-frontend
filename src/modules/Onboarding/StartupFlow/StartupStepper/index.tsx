@@ -78,7 +78,7 @@ const StartupStepper = ({ orientation, language, file, payload, onSetPayload, au
     return (
         step === 1 ? (
             <section className="flex items-start justify-center flex-col">
-                <form className="pt-12 mb-4 w-full">
+                <form className="pt-8 mb-4 w-full">
                     <div className="mb-8 relative">
                         <label className="block text-neutral-700 text-sm font-medium" htmlFor="comp">{language.company.compName}</label>
                         <input id="comp" value={payload?.company} onChange={(e) => onSetPayload(e.target.value, "company")} placeholder={language.company.compName} className=" h-[42px] shadow-sm appearance-none border border-neutral-300 rounded-md w-full py-2 px-3 text-gray-500 leading-tight focus:outline-none focus:shadow-outline" type="text" />
@@ -150,7 +150,7 @@ const StartupStepper = ({ orientation, language, file, payload, onSetPayload, au
             </section>
         ) : (
             <section className="flex items-start justify-center flex-col">
-                <form className="pt-12 mb-4 w-full">
+                <form className="pt-8 mb-4 w-full">
                     <div className="mb-8 w-full">
                         <div className="text-neutral-700 text-sm font-medium">{language.syndicate.logo}</div>
                         <small className="text-neutral-500 font-normal">{language.syndicate.uploadCompLogo}</small>

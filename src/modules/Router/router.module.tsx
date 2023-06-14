@@ -59,6 +59,8 @@ const RouterModule = () => {
   const dispatch = useDispatch();
   const authToken: any = useSelector((state: RootState) => state.auth.value);
   const event: any = useSelector((state: RootState) => state.event.value);
+  const orientation: any = useSelector((state: RootState) => state.orientation.value);
+
   const [loading, setLoading] = useState(false);
 
   useLayoutEffect(() => {
@@ -66,10 +68,10 @@ const RouterModule = () => {
   }, [event]);
 
   const onLoadLanguage = () => {
-    setLoading(true)
+    setLoading(true);
     const _language: any = loadLanguage(event);
     dispatch(saveLanguage(_language));
-    if(event === "ar") document.documentElement.dir = "rtl";
+    if (event === "ar") document.documentElement.dir = "rtl";
     else document.documentElement.dir = "ltr";
 
     let timer = setTimeout(() => {
@@ -81,16 +83,13 @@ const RouterModule = () => {
   return (
     loading ? (<Loader />) : (
       <Routes>
-        <Route
-          path="/"
-          element={
-            <Suspense fallback={<Loader />}>
-              <Home guard={authToken} />
-            </Suspense>
-          }
+        <Route path="/" element={
+          <Suspense fallback={<Loader />}>
+            <Home guard={authToken} />
+          </Suspense>
+        }
         />
-        <Route
-          path={RoutesEnums.INVESTOR_DETAILS}
+        <Route path={RoutesEnums.INVESTOR_DETAILS}
           element={
             <Suspense fallback={<Loader />}>
               <AuthenticateRoute>
@@ -173,7 +172,11 @@ const RouterModule = () => {
           path="/syndicate-lead/:id"
           element={
             <Suspense fallback={<Loader />}>
+              <AuthenticateRoute>
+                <AuthenticateRole role={KanzRoles.SYNDICATE}>
                   <SyndicateLeadInfo guard={authToken} />
+                </AuthenticateRole>
+              </AuthenticateRoute>
             </Suspense>
           }
         />
