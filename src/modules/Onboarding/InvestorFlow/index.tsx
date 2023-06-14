@@ -102,7 +102,7 @@ const InvestorFlow = ({ }: any) => {
                     </p>
                   </div>
                   <div className={`check-background rounded-full w-9 h-9 inline-grid place-items-center absolute top-1/2 translate-y-[-50%] ${orientation === "rtl" ? "left-5" : "right-5"}`}>
-                    <ArrowIcon stroke="#171717" className={`${orientation === "rtl" && "rotate-180 h-5 w-5"}`} />
+                    <ArrowIcon stroke="#171717" className={`${orientation === "rtl" ? "rotate-180 h-5 w-5": "h-5 w-5"}`} />
                   </div>
                 </section>
               );

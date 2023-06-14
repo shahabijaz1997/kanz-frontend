@@ -7,8 +7,9 @@ import SampleImage_2 from "../../../../assets/example_id_2.png";
 import { getAllIndustries, getAllRegions } from "../../../../apis/fakeData.api";
 import SearchedItems from "../../../../shared/components/SearchedItems";
 import CrossIcon from "../../../../ts-icons/crossIcon.svg";
+import { isEmpty } from "../../../../utils/object.util";
 
-const SyndicateStepper = ({ orientation, language, payload, file, onSetPayload, options, step, removeFile, setFile, setModalOpen, setFileType }: any) => {
+const SyndicateStepper = ({ orientation, language, metadata, payload, file, onSetPayload, options, step, removeFile, setFile, setModalOpen, setFileType }: any) => {
     const refInd: any = useRef(null);
     const refReg: any = useRef(null);
     const [selected, setSelected]: any = useState(null);
@@ -67,8 +68,14 @@ const SyndicateStepper = ({ orientation, language, payload, file, onSetPayload, 
             if (regionRes.status === 200)
                 setSearchResults((p: any) => { return { ...p, region: regionRes.data.regions } });
 
-            if (payload.raised && typeof payload.raised == "boolean") setSelected(options[1]);
-            else if(!payload.raised && typeof payload.raised == "boolean") (setSelected(options[0]));
+            if (!isEmpty(metadata?.profile)) {
+                if (metadata?.profile?.have_you_ever_raised) setSelected(options[0]);
+                else if (!metadata?.profile?.have_you_ever_raised) (setSelected(options[1]));
+            }
+            else {
+                if (payload.raised && typeof payload.raised == "boolean") setSelected(options[0]);
+                else if (!payload.raised && typeof payload.raised == "boolean") (setSelected(options[1]));
+            }
         } catch (error) {
             console.error("Error in industries: ", error);
         }
@@ -184,10 +191,10 @@ const SyndicateStepper = ({ orientation, language, payload, file, onSetPayload, 
                     <div className="mb-8 relative">
                         <label className="block text-neutral-700 text-sm font-medium" htmlFor="link">{language.syndicate.profile}</label>
                         <div className="relative inline-flex w-full">
-                            <input type="disabled" value={"https://"} 
-                            className={`text-neutral-500 text-base font-normal check-background border-t border-b border-neutral-300 h-[42px] w-[70px] ${orientation === "rtl" ? "border-r rounded-br-md rounded-tr-md pr-2": "border-l rounded-bl-md rounded-tl-md pl-2"}`} />
-                            <input id="link" value={payload?.profileLink} onChange={(e) => onSetPayload(e.target.value, "profileLink")} placeholder="www.example.com" 
-                            className={`h-[42px] shadow-sm appearance-none border border-neutral-300 w-full py-2 px-3 text-gray-500 leading-tight focus:outline-none focus:shadow-outline ${orientation === "rtl" ? " rounded-bl-md rounded-tl-md" : " rounded-br-md rounded-tr-md"}`} type="text" />
+                            <input type="disabled" value={"https://"}
+                                className={`text-neutral-500 text-base font-normal check-background border-t border-b border-neutral-300 h-[42px] w-[70px] ${orientation === "rtl" ? "border-r rounded-br-md rounded-tr-md pr-2" : "border-l rounded-bl-md rounded-tl-md pl-2"}`} />
+                            <input id="link" value={payload?.profileLink} onChange={(e) => onSetPayload(e.target.value, "profileLink")} placeholder="www.example.com"
+                                className={`h-[42px] shadow-sm appearance-none border border-neutral-300 w-full py-2 px-3 text-gray-500 leading-tight focus:outline-none focus:shadow-outline ${orientation === "rtl" ? " rounded-bl-md rounded-tl-md" : " rounded-br-md rounded-tr-md"}`} type="text" />
                         </div>
                     </div>
 
