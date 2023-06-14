@@ -15,6 +15,8 @@ import StartupStepper from "./StartupStepper";
 import { postCompanyInformation } from "../../../apis/company.api";
 import { saveLogo } from "../../../redux-toolkit/slicer/attachments.slicer";
 import { removeAttachment } from "../../../apis/attachment.api";
+import { isEmpty } from "../../../utils/object.util";
+import { getCountries } from "../../../apis/countries.api";
 
 const StartupFlow = ({ }: any) => {
   const params = useParams();
@@ -23,7 +25,9 @@ const StartupFlow = ({ }: any) => {
   const language: any = useSelector((state: RootState) => state.language.value);
   const authToken: any = useSelector((state: RootState) => state.auth.value);
   const logo: any = useSelector((state: RootState) => state.attachments.logo.value);
+  const metadata: any = useSelector((state: RootState) => state.metadata.value);
   const orientation: any = useSelector((state: RootState) => state.orientation.value);
+  const [countries, setCountries] = useState({ all: [], names: [] });
 
   const [payload, setPayload]: any = useState({
     company: "",
@@ -51,18 +55,64 @@ const StartupFlow = ({ }: any) => {
   const [loading, setLoading] = useState(false);
 
   useLayoutEffect(() => {
-    let _payload: any = localStorage.getItem("startup");
-    if (_payload) setPayload(JSON.parse(_payload));
-    if (logo) {
-      onGetConvertedToBLOB(JSON.parse(_payload)?.logo);
-      setFile(logo);
-    };
+    getAllCountries();
+    bootstrapPayload();
   }, []);
+
+  useLayoutEffect(() => {
+    setStep(Number(params?.id) || 1);
+  }, [params]);
+
+  const getAllCountries = async () => {
+    setLoading(true);
+    try {
+      let { status, data } = await getCountries(authToken);
+      if (status === 200) {
+        let names = data.status.data.map((c: any) => c.name);
+        setCountries({ all: data.status.data, names });
+      }
+    } catch (error: any) {
+      console.error("Error in countries: ", error);
+      if (error.response && error.response.status === 401) {
+        dispatch(saveToken(""));
+        navigate("/login", { state: "complete-details" });
+      }
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const bootstrapPayload = () => {
+    if (isEmpty(metadata?.profile)) {
+      let _payload: any = localStorage.getItem("startup");
+      if (_payload) setPayload(JSON.parse(_payload));
+      if (logo) {
+        onGetConvertedToBLOB(JSON.parse(_payload)?.logo);
+        setFile(logo);
+      };
+    } else {
+      setPayload({
+        company: metadata?.profile?.company_name,
+        legal: metadata?.profile?.company_name,
+        country: { name: metadata?.profile?.country },
+        market: metadata?.profile?.industry_market,
+        web: metadata?.profile?.website,
+        address: metadata?.profile?.address,
+        business: metadata?.profile?.description,
+        name: metadata?.profile?.ceo_name,
+        email: metadata?.profile?.ceo_email,
+        raised: metadata?.profile?.total_capital_raised,
+        target: metadata?.profile?.current_round_capital_target,
+        logo: null,
+        currency: { label: "AED", value: "AED" }
+      })
+    }
+  };
 
   const onGetConvertedToBLOB = async (url: string) => {
     try {
-    let blob: any = await convertToBlob(url);
-    onSetPayload(blob, "logo");
+      let blob: any = await convertToBlob(url);
+      onSetPayload(blob, "logo");
     } catch (error) {
       console.error(error);
     }
@@ -74,9 +124,6 @@ const StartupFlow = ({ }: any) => {
     return data;
   };
 
-  useLayoutEffect(() => {
-    setStep(Number(params?.id) || 1);
-  }, [params]);
 
   const onSetFile = (file: File, id: string, url: string, attachment_id: string, size: string, dimensions: string, type: string) => {
     let _file: any = {
@@ -144,11 +191,11 @@ const StartupFlow = ({ }: any) => {
   const onPostCompanyData = async () => {
     try {
       setLoading(true);
-      console.log("Startup", payload.logo);
+      let _country: any = countries.all.find((x: any) => x.name === payload.country.name);
       const form: any = new FormData();
       form.append("startup[company_name]", payload.company);
       form.append("startup[legal_name]", payload.legal);
-      form.append("startup[country_id]", payload.country?.id);
+      form.append("startup[country_id]", payload.country?.id || _country?.id);
       payload.market.forEach((val: any) => {
         form.append("startup[industry_market][]", val);
       });
@@ -161,8 +208,6 @@ const StartupFlow = ({ }: any) => {
       form.append("startup[total_capital_raised]", payload.raised);
       form.append("startup[current_round_capital_target]", payload.target);
       form.append("startup[currency]", payload?.currency?.value);
-
-
 
       let { status } = await postCompanyInformation(form, authToken);
 
@@ -203,6 +248,7 @@ const StartupFlow = ({ }: any) => {
         </section>
 
         <StartupStepper
+          countries={countries}
           language={language}
           payload={payload}
           onSetPayload={onSetPayload}

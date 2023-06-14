@@ -16,19 +16,17 @@ import SearchedItems from "../../../../shared/components/SearchedItems";
 
 const currencies = [{ label: "AED", value: "AED" }, { label: "USD", value: "USD" }];
 
-const StartupStepper = ({ orientation, language, file, payload, onSetPayload, authToken, step, removeFile, setFile, setModalOpen, setFileType }: any) => {
+const StartupStepper = ({ countries,orientation, language, file, payload, onSetPayload, authToken, step, removeFile, setFile, setModalOpen, setFileType }: any) => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const refInd: any = useRef(null);
     const [showHoverModal, setShowHoverModal] = useState(false);
     const [loading, setLoading] = useState(false);
-    const [countries, setCountries] = useState({ all: [], names: [] });
     const [search, setSearch] = useState("");
     const [showData, setShowData] = useState(false);
     const [searchResults, setSearchResults]: any = useState([]);
 
     useLayoutEffect(() => {
-        getAllCountries();
         bootstrapData();
     }, []);
 
@@ -45,24 +43,7 @@ const StartupStepper = ({ orientation, language, file, payload, onSetPayload, au
         };
     }, []);
 
-    const getAllCountries = async () => {
-        setLoading(true);
-        try {
-            let { status, data } = await getCountries(authToken);
-            if (status === 200) {
-                let names = data.status.data.map((c: any) => c.name);
-                setCountries({ all: data.status.data, names });
-            }
-        } catch (error: any) {
-            console.error("Error in countries: ", error);
-            if (error.response && error.response.status === 401) {
-                dispatch(saveToken(""));
-                navigate("/login", { state: "complete-details" });
-            }
-        } finally {
-            setLoading(false);
-        }
-    };
+   
 
     const bootstrapData = async () => {
         try {
