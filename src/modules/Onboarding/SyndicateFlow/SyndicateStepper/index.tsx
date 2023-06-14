@@ -7,8 +7,9 @@ import SampleImage_2 from "../../../../assets/example_id_2.png";
 import { getAllIndustries, getAllRegions } from "../../../../apis/fakeData.api";
 import SearchedItems from "../../../../shared/components/SearchedItems";
 import CrossIcon from "../../../../ts-icons/crossIcon.svg";
+import { isEmpty } from "../../../../utils/object.util";
 
-const SyndicateStepper = ({ orientation, language, payload, file, onSetPayload, options, step, removeFile, setFile, setModalOpen, setFileType }: any) => {
+const SyndicateStepper = ({ orientation, language, metadata, payload, file, onSetPayload, options, step, removeFile, setFile, setModalOpen, setFileType }: any) => {
     const refInd: any = useRef(null);
     const refReg: any = useRef(null);
     const [selected, setSelected]: any = useState(null);
@@ -67,8 +68,14 @@ const SyndicateStepper = ({ orientation, language, payload, file, onSetPayload, 
             if (regionRes.status === 200)
                 setSearchResults((p: any) => { return { ...p, region: regionRes.data.regions } });
 
-            if (payload.raised && typeof payload.raised == "boolean") setSelected(options[1]);
-            else if(!payload.raised && typeof payload.raised == "boolean") (setSelected(options[0]));
+            if (!isEmpty(metadata?.profile)) {
+                if (metadata?.profile?.have_you_ever_raised) setSelected(options[0]);
+                else if (!metadata?.profile?.have_you_ever_raised) (setSelected(options[1]));
+            }
+            else {
+                if (payload.raised && typeof payload.raised == "boolean") setSelected(options[0]);
+                else if (!payload.raised && typeof payload.raised == "boolean") (setSelected(options[1]));
+            }
         } catch (error) {
             console.error("Error in industries: ", error);
         }
@@ -77,7 +84,7 @@ const SyndicateStepper = ({ orientation, language, payload, file, onSetPayload, 
     return (
         step === 1 ? (
             <section className="flex items-start justify-center flex-col">
-                <form className="pt-12 mb-4 w-full">
+                <form className="pt-8 mb-4 w-full">
                     <div className="mb-8 relative">
                         <h3 className="text-neutral-700 text-sm font-medium">{language.syndicate.raisedBefore}</h3>
                         <section className="w-full inline-flex items-center justify-between gap-5">
@@ -88,7 +95,7 @@ const SyndicateStepper = ({ orientation, language, payload, file, onSetPayload, 
                                             onClick={() => setSelected(opt)}>
                                             <input
                                                 type="radio" checked={selected?.id === opt.id ? true : false}
-                                                className="accent-cyan-800 relative float-left mr-2 h-3 w-3 rounded-full border-2 border-solid border-cyan-300 before:pointer-events-none before:absolute before:h-4 before:w-4 before:scale-0 before:rounded-full before:bg-transparent before:opacity-0 before:content-[''] after:absolute after:z-[1] after:block after:h-4 after:w-4 after:rounded-full after:content-[''] checked:border-primary checked:before:opacity-[0.16] checked:after:absolute checked:after:left-1/2 checked:after:top-1/2 checked:after:h-[0.625rem] checked:after:w-[0.625rem] checked:after:rounded-full checked:after:border-primary checked:after:bg-primary checked:after:content-[''] checked:after:[transform:translate(-50%,-50%)] hover:cursor-pointer hover:before:opacity-[0.04]"
+                                                className="accent-cyan-800 relative float-left mx-2 h-3 w-3 rounded-full border-2 border-solid border-cyan-300 before:pointer-events-none before:absolute before:h-4 before:w-4 before:scale-0 before:rounded-full before:bg-transparent before:opacity-0 before:content-[''] after:absolute after:z-[1] after:block after:h-4 after:w-4 after:rounded-full after:content-[''] checked:border-primary checked:before:opacity-[0.16] checked:after:absolute checked:after:left-1/2 checked:after:top-1/2 checked:after:h-[0.625rem] checked:after:w-[0.625rem] checked:after:rounded-full checked:after:border-primary checked:after:bg-primary checked:after:content-[''] checked:after:[transform:translate(-50%,-50%)] hover:cursor-pointer hover:before:opacity-[0.04]"
                                             />
                                             <small>{opt.title}</small>
                                         </li>
@@ -184,10 +191,10 @@ const SyndicateStepper = ({ orientation, language, payload, file, onSetPayload, 
                     <div className="mb-8 relative">
                         <label className="block text-neutral-700 text-sm font-medium" htmlFor="link">{language.syndicate.profile}</label>
                         <div className="relative inline-flex w-full">
-                            <input type="disabled" value={"https://"} 
-                            className={`text-neutral-500 text-base font-normal check-background border-t border-b border-neutral-300 h-[42px] w-[70px] ${orientation === "rtl" ? "border-r rounded-br-md rounded-tr-md pr-2": "border-l rounded-bl-md rounded-tl-md pl-2"}`} />
-                            <input id="link" value={payload?.profileLink} onChange={(e) => onSetPayload(e.target.value, "profileLink")} placeholder="www.example.com" 
-                            className={`h-[42px] shadow-sm appearance-none border border-neutral-300 w-full py-2 px-3 text-gray-500 leading-tight focus:outline-none focus:shadow-outline ${orientation === "rtl" ? " rounded-bl-md rounded-tl-md" : " rounded-br-md rounded-tr-md"}`} type="text" />
+                            <input type="disabled" value={"https://"}
+                                className={`text-neutral-500 text-base font-normal check-background border-t border-b border-neutral-300 h-[42px] w-[70px] ${orientation === "rtl" ? "border-r rounded-br-md rounded-tr-md pr-2" : "border-l rounded-bl-md rounded-tl-md pl-2"}`} />
+                            <input id="link" value={payload?.profileLink} onChange={(e) => onSetPayload(e.target.value, "profileLink")} placeholder="www.example.com"
+                                className={`h-[42px] shadow-sm appearance-none border border-neutral-300 w-full py-2 px-3 text-gray-500 leading-tight focus:outline-none focus:shadow-outline ${orientation === "rtl" ? " rounded-bl-md rounded-tl-md" : " rounded-br-md rounded-tr-md"}`} type="text" />
                         </div>
                     </div>
 
@@ -200,7 +207,7 @@ const SyndicateStepper = ({ orientation, language, payload, file, onSetPayload, 
             </section>
         ) : (
             <section className="flex items-start justify-center flex-col">
-                <form className="pt-12 mb-4 w-full">
+                <form className="pt-8 mb-4 w-full">
                     <section className="mb-8">
                         <label htmlFor="syndname" className="text-neutral-700 text-sm font-medium">{language.syndicate.syndName}</label>
                         <input id="syndname" value={payload?.name} onChange={(e) => onSetPayload(e.target.value, "name")} placeholder="Alex Peter" className=" h-[42px] shadow-sm appearance-none border border-neutral-300 rounded-md w-full py-2 px-3 text-gray-500 leading-tight focus:outline-none focus:shadow-outline" type="text" />

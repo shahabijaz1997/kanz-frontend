@@ -16,19 +16,17 @@ import SearchedItems from "../../../../shared/components/SearchedItems";
 
 const currencies = [{ label: "AED", value: "AED" }, { label: "USD", value: "USD" }];
 
-const StartupStepper = ({ orientation, language, file, payload, onSetPayload, authToken, step, removeFile, setFile, setModalOpen, setFileType }: any) => {
+const StartupStepper = ({ countries,orientation, language, file, payload, onSetPayload, authToken, step, removeFile, setFile, setModalOpen, setFileType }: any) => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const refInd: any = useRef(null);
     const [showHoverModal, setShowHoverModal] = useState(false);
     const [loading, setLoading] = useState(false);
-    const [countries, setCountries] = useState({ all: [], names: [] });
     const [search, setSearch] = useState("");
     const [showData, setShowData] = useState(false);
     const [searchResults, setSearchResults]: any = useState([]);
 
     useLayoutEffect(() => {
-        getAllCountries();
         bootstrapData();
     }, []);
 
@@ -45,24 +43,7 @@ const StartupStepper = ({ orientation, language, file, payload, onSetPayload, au
         };
     }, []);
 
-    const getAllCountries = async () => {
-        setLoading(true);
-        try {
-            let { status, data } = await getCountries(authToken);
-            if (status === 200) {
-                let names = data.status.data.map((c: any) => c.name);
-                setCountries({ all: data.status.data, names });
-            }
-        } catch (error: any) {
-            console.error("Error in countries: ", error);
-            if (error.response && error.response.status === 401) {
-                dispatch(saveToken(""));
-                navigate("/login", { state: "complete-details" });
-            }
-        } finally {
-            setLoading(false);
-        }
-    };
+   
 
     const bootstrapData = async () => {
         try {
@@ -78,7 +59,7 @@ const StartupStepper = ({ orientation, language, file, payload, onSetPayload, au
     return (
         step === 1 ? (
             <section className="flex items-start justify-center flex-col">
-                <form className="pt-12 mb-4 w-full">
+                <form className="pt-8 mb-4 w-full">
                     <div className="mb-8 relative">
                         <label className="block text-neutral-700 text-sm font-medium" htmlFor="comp">{language.company.compName}</label>
                         <input id="comp" value={payload?.company} onChange={(e) => onSetPayload(e.target.value, "company")} placeholder={language.company.compName} className=" h-[42px] shadow-sm appearance-none border border-neutral-300 rounded-md w-full py-2 px-3 text-gray-500 leading-tight focus:outline-none focus:shadow-outline" type="text" />
@@ -150,7 +131,7 @@ const StartupStepper = ({ orientation, language, file, payload, onSetPayload, au
             </section>
         ) : (
             <section className="flex items-start justify-center flex-col">
-                <form className="pt-12 mb-4 w-full">
+                <form className="pt-8 mb-4 w-full">
                     <div className="mb-8 w-full">
                         <div className="text-neutral-700 text-sm font-medium">{language.syndicate.logo}</div>
                         <small className="text-neutral-500 font-normal">{language.syndicate.uploadCompLogo}</small>

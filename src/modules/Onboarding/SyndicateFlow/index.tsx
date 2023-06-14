@@ -14,6 +14,7 @@ import { postSyndicateInformation } from "../../../apis/syndicate.api";
 import Button from "../../../shared/components/Button";
 import { isValidUrl } from "../../../utils/regex.utils";
 import { saveLogo } from "../../../redux-toolkit/slicer/attachments.slicer";
+import { isEmpty } from "../../../utils/object.util";
 
 const SyndicateFlow = ({ }: any) => {
   const params = useParams();
@@ -22,6 +23,7 @@ const SyndicateFlow = ({ }: any) => {
   const language: any = useSelector((state: RootState) => state.language.value);
   const authToken: any = useSelector((state: RootState) => state.auth.value);
   const logo: any = useSelector((state: RootState) => state.attachments.logo.value);
+  const metadata: any = useSelector((state: RootState) => state.metadata.value);
   const orientation: any = useSelector((state: RootState) => state.orientation.value);
 
   const [payload, setPayload]: any = useState({
@@ -34,7 +36,7 @@ const SyndicateFlow = ({ }: any) => {
     dealflow: "",
     name: "",
     tagline: "",
-    logo: null,
+    logo: null
   });
   const [options] = useState([
     { id: 1, title: language?.buttons?.yes },
@@ -47,22 +49,41 @@ const SyndicateFlow = ({ }: any) => {
   const [loading, setLoading] = useState(false);
 
   useLayoutEffect(() => {
-    let _payload: any = localStorage.getItem("syndicate");
-    if (_payload) setPayload(JSON.parse(_payload));
-    if (logo) {
-      onGetConvertedToBLOB(JSON.parse(_payload)?.logo);
-      setFile(logo);
-    };
+    bootstrapPayload();
   }, []);
 
   useLayoutEffect(() => {
     setStep(Number(params?.id) || 1);
   }, [params]);
 
+  const bootstrapPayload = () => {
+    if (isEmpty(metadata?.profile)) {
+      let _payload: any = localStorage.getItem("syndicate");
+      if (_payload) setPayload(JSON.parse(_payload));
+      if (logo) {
+        onGetConvertedToBLOB(JSON.parse(_payload)?.logo);
+        setFile(logo);
+      };
+    } else {
+      setPayload({
+        raised: metadata?.profile?.have_you_ever_raised,
+        amountRaised: metadata?.profile?.raised_amount,
+        timesRaised: metadata?.profile?.no_times_raised,
+        industry: metadata?.profile?.industry_market,
+        region: metadata?.profile?.region,
+        profileLink: metadata?.profile?.profile_link,
+        dealflow: metadata?.profile?.dealflow,
+        name: metadata?.profile?.name,
+        tagline: metadata?.profile?.tagline,
+        logo: null,
+      })
+    }
+  };
+
   const onGetConvertedToBLOB = async (url: string) => {
     try {
-    let blob: any = await convertToBlob(url);
-    onSetPayload(blob, "logo");
+      let blob: any = await convertToBlob(url);
+      onSetPayload(blob, "logo");
     } catch (error) {
       console.error(error);
     }
@@ -146,9 +167,7 @@ const SyndicateFlow = ({ }: any) => {
       form.append("syndicate_profile[name]", payload.name)
       form.append("syndicate_profile[tagline]", payload.tagline)
       form.append("syndicate_profile[logo]", payload.logo)
-     
-      console.log("Syndicate", payload.logo);
-      
+
       let { status } = await postSyndicateInformation(form, authToken);
 
       if (status === 200) {
@@ -185,6 +204,7 @@ const SyndicateFlow = ({ }: any) => {
         </section>
 
         <SyndicateStepper
+          metadata={metadata}
           language={language}
           payload={payload}
           file={file}
