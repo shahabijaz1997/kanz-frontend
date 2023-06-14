@@ -15,6 +15,7 @@ import Button from "../../shared/components/Button";
 const Home = ({}: any) => {
   const navigate = useNavigate();
   const language: any = useSelector((state: RootState) => state.language.value);
+  const orientation: any = useSelector((state: RootState) => state.orientation.value);
 
   const longSecContent = () => {
     return (
@@ -32,7 +33,7 @@ const Home = ({}: any) => {
           <p className="text-neutral-500 tracking-[0.03em] text-base font-normal pt-6 max-w-[70%] screen991:max-w-full">
             {language.landing.investPara2}
           </p>
-          <div className="float-left">
+          <div className={`${orientation === "rtl" ? "float-right" : "float-left"}`}>
             <Button
               style={{ fontSize: "1.125rem", fontWeight: 500 }}
               className="bg-cyan-800 h-[56px] w-[173px] font-medium text-lg mt-6"
@@ -63,7 +64,7 @@ const Home = ({}: any) => {
           <p className="text-neutral-500 tracking-[0.03em] text-base font-normal pt-6 max-w-[70%] screen991:max-w-full">
             {language.landing.investPara2}
           </p>
-          <div className="float-left">
+          <div className={`${orientation === "rtl" ? "float-right" : "float-left"}`}>
             <Button
               style={{ fontSize: "1.125rem", fontWeight: 500 }}
               className="bg-cyan-800 h-[56px] w-[173px] font-medium text-lg mt-6"
@@ -96,7 +97,7 @@ const Home = ({}: any) => {
           <p className="text-neutral-500 tracking-[0.03em] text-base font-normal pt-6 max-w-[70%] screen991:max-w-full">
             {language.landing.investPara2}
           </p>
-          <div className="float-left">
+          <div className={`${orientation === "rtl" ? "float-right" : "float-left"}`}>
             <Button
               style={{ fontSize: "1.125rem", fontWeight: 500 }}
               className="bg-cyan-800 h-[56px] w-[173px] font-medium text-lg mt-6"
@@ -155,8 +156,8 @@ const Home = ({}: any) => {
         </section>
 
         {/* Section 2 */}
-        <section className="max-w-[80%] screen800:max-w-full mt-16 relative px-[120px] screen1024:px-[50px] screen500:px-[20px]">
-          <div className="rounded-md bg-cyan-800 p-8 text-white font-semibold text-base tracking-[0.03em] absolute right-[-100px] max-w-[425px] top-[-50px] screen800:text-sm screen800:p-4 screen800:relative screen800:right-0 screen800:top-0">
+        <section className={`max-w-[80%] screen800:max-w-full mt-16 relative px-[120px] screen1024:px-[50px] screen500:px-[20px]`}>
+          <div className={`rounded-md bg-cyan-800 p-8 text-white font-semibold text-base tracking-[0.03em] absolute max-w-[425px] top-[-50px] screen800:text-sm screen800:p-4 screen800:relative screen800:top-0 ${orientation === "rtl" ? "screen800:left-0 left-[-100px]" : "screen800:right-0 right-[-100px]"}`}>
             {language.landing.kanzNetwork}
           </div>
           <img src={PortalSS} alt="Kanz" className="w-full" />
@@ -219,7 +220,7 @@ const Home = ({}: any) => {
         </section>
 
         <section className="flex items-start justify-center">
-          <div className="pl-[120px] screen1024:px-[50px] screen500:px-[20px] inline-flex items-center justify-center flex-col h-full">
+          <div className={`screen1024:px-[50px] screen500:px-[20px] inline-flex items-center justify-center flex-col h-full ${orientation === "rtl" ? "pr-[120px]" : "pl-[120px]"}`}>
             {longSecContent()}
           </div>
           <div
