@@ -16,6 +16,7 @@ import { saveUserData } from "../../../../redux-toolkit/slicer/user.slicer";
 import Button from "../../../../shared/components/Button";
 import { AntdInput } from "../../../../shared/components/Input";
 import { SubmitHandler, useForm } from "react-hook-form";
+import { GoogleLogin } from '@react-oauth/google';
 
 type FormValues = {
   name: string;
@@ -52,8 +53,8 @@ const Signup = (props: any) => {
           <section className="inline-flex items-center">
             <div
               className={`${hasUpperCase(password)
-                  ? "checked-background"
-                  : "check-background"
+                ? "checked-background"
+                : "check-background"
                 } rounded-full w-4 h-4 inline-grid place-items-center mr-1`}
             >
               <CheckIcon
@@ -66,8 +67,8 @@ const Signup = (props: any) => {
             </small>
           </section>
           <section className="inline-flex items-center">
-            <div className={`${hasLowerCase(password) ? "checked-background" : "check-background" } check-background rounded-full w-4 h-4 inline-grid place-items-center mr-1`} >
-              <CheckIcon fill={`${hasLowerCase(password) ? "#fff" : "rgba(0, 0, 0, 0.3)" }`}/>
+            <div className={`${hasLowerCase(password) ? "checked-background" : "check-background"} check-background rounded-full w-4 h-4 inline-grid place-items-center mr-1`} >
+              <CheckIcon fill={`${hasLowerCase(password) ? "#fff" : "rgba(0, 0, 0, 0.3)"}`} />
             </div>
             <small className="text-neutral-500 text-sm font-normal mx-1">
               {language?.onboarding?.lowerCase}
@@ -100,8 +101,8 @@ const Signup = (props: any) => {
             </small>
           </section>
           <section className="inline-flex items-center">
-            <div className={`${hasSpecialCharacters(password) ? "checked-background" : "check-background" } check-background rounded-full w-4 h-4 inline-grid place-items-center mr-1`} >
-              <CheckIcon fill={`${hasSpecialCharacters(password) ? "#fff" : "rgba(0, 0, 0, 0.3)" }`} />
+            <div className={`${hasSpecialCharacters(password) ? "checked-background" : "check-background"} check-background rounded-full w-4 h-4 inline-grid place-items-center mr-1`} >
+              <CheckIcon fill={`${hasSpecialCharacters(password) ? "#fff" : "rgba(0, 0, 0, 0.3)"}`} />
             </div>
             <small className="text-neutral-500 text-sm font-normal mx-1">
               {language?.onboarding?.special}
@@ -246,6 +247,16 @@ const Signup = (props: any) => {
         </div>
 
         <aside className="inline-flex items-center justify-between w-full gap-4">
+          <GoogleLogin
+            onSuccess={credentialResponse => {
+              console.log(credentialResponse);
+            }}
+            onError={() => {
+              console.log('Login Failed');
+            }}
+          />
+
+
           <button className="hover:border-cyan-800 border border-neutral-300 rounded-md py-2.5 px-4 w-2/4 h-[38px] inline-grid place-items-center bg-white">
             <img src={GoogleIcon} alt={language?.onboarding?.googleLogin} />
           </button>
