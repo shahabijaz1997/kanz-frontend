@@ -10,13 +10,14 @@ import EyeIcon from "../../../../ts-icons/EyeIcon.svg";
 import EyeSlash from "../../../../ts-icons/EyeSlashIcon.svg";
 import GoogleIcon from "../../../../assets/icons/google_logo.png";
 import LinkedinIcon from "../../../../assets/icons/linedin_logo.png";
-import { signup } from "../../../../apis/auth.api";
+import { googleOauth, signup } from "../../../../apis/auth.api";
 import { KanzRoles } from "../../../../enums/roles.enum";
 import { saveUserData } from "../../../../redux-toolkit/slicer/user.slicer";
 import Button from "../../../../shared/components/Button";
 import { AntdInput } from "../../../../shared/components/Input";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { GoogleLogin } from '@react-oauth/google';
+import { useGoogleLogin } from '@react-oauth/google';
 
 type FormValues = {
   name: string;
@@ -31,6 +32,16 @@ const Signup = (props: any) => {
   const { state } = useLocation();
   const language: any = useSelector((state: RootState) => state.language.value);
   const [loading, setLoading] = useState(false);
+
+  const login = useGoogleLogin({
+    onSuccess: async (tokenResponse) => {
+      console.log(tokenResponse);
+      let data = await googleOauth(tokenResponse);
+      console.log("Data ", data);
+      
+    },
+    flow: 'auth-code',
+  });
 
   useLayoutEffect(() => {
     localStorage.setItem("role", state || KanzRoles.INVESTOR);
@@ -247,16 +258,20 @@ const Signup = (props: any) => {
         </div>
 
         <aside className="inline-flex items-center justify-between w-full gap-4">
-          <GoogleLogin
+          {/* <GoogleLogin
             onSuccess={credentialResponse => {
               console.log(credentialResponse);
             }}
             onError={() => {
               console.log('Login Failed');
             }}
-          />
+            login_uri="http://localhost:3000/auth/google_oauth2/callback"
+            useOneTap
+          /> */}
 
-
+          <Button onClick={() => login()}>
+            Sign in with Google 🚀{' '}
+          </Button>;
           <button className="hover:border-cyan-800 border border-neutral-300 rounded-md py-2.5 px-4 w-2/4 h-[38px] inline-grid place-items-center bg-white">
             <img src={GoogleIcon} alt={language?.onboarding?.googleLogin} />
           </button>

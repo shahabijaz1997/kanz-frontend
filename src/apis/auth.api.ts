@@ -11,6 +11,12 @@ export const signup = (payload: any) => {
     return axios.post(`${ENV.API_URL}/signup`, payload);
 };
 
+
+export const googleOauth = (payload: any) => {
+    return axios.post(`${ENV.API_URL}/auth/google_oauth2/callback`, payload);
+};
+
+
 export const logout = (token: string) => {
     return axios.delete(`${ENV.API_URL}/logout`, {
         headers: {
