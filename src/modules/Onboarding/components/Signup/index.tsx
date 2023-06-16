@@ -18,12 +18,16 @@ import { AntdInput } from "../../../../shared/components/Input";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { GoogleLogin } from '@react-oauth/google';
 import { useGoogleLogin } from '@react-oauth/google';
+import { LinkedIn } from 'react-linkedin-login-oauth2';
+import { getEnv } from "../../../../env";
 
 type FormValues = {
   name: string;
   email: string;
   password: string;
 };
+
+const ENV: any = getEnv();
 
 const Signup = (props: any) => {
   const { onSetStepper } = props;
@@ -35,12 +39,11 @@ const Signup = (props: any) => {
 
   const login = useGoogleLogin({
     onSuccess: async (tokenResponse) => {
-      console.log(tokenResponse);
-      let data = await googleOauth(tokenResponse);
-      console.log("Data ", data);
-      
-    },
-    flow: 'auth-code',
+      setLoading(true);
+      let payload: any = { ...tokenResponse, type: state || KanzRoles.INVESTOR }
+      let data = await googleOauth(payload);
+      setLoading(false);
+    }
   });
 
   useLayoutEffect(() => {
@@ -272,6 +275,7 @@ const Signup = (props: any) => {
           <Button onClick={() => login()}>
             Sign in with Google 🚀{' '}
           </Button>;
+
           <button className="hover:border-cyan-800 border border-neutral-300 rounded-md py-2.5 px-4 w-2/4 h-[38px] inline-grid place-items-center bg-white">
             <img src={GoogleIcon} alt={language?.onboarding?.googleLogin} />
           </button>

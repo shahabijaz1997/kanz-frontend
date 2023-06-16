@@ -13,9 +13,12 @@ export const signup = (payload: any) => {
 
 
 export const googleOauth = (payload: any) => {
-    return axios.post(`${ENV.API_URL}/auth/google_oauth2/callback`, payload);
+    return axios.post(`${ENV.API_URL}/users/social_auth/google`, payload);
 };
 
+export const linkedInOauth = (payload: any) => {
+    return axios.post(`${ENV.API_URL}/users/social_auth/linkedin`, payload);
+};
 
 export const logout = (token: string) => {
     return axios.delete(`${ENV.API_URL}/logout`, {
