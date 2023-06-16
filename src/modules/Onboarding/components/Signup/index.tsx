@@ -1,6 +1,9 @@
 import React, { useState, useLayoutEffect, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
+import { SubmitHandler, useForm } from "react-hook-form";
+import { useGoogleLogin } from "@react-oauth/google";
+import { LinkedIn } from "react-linkedin-login-oauth2";
 import { toastUtil } from "../../../../utils/toast.utils";
 import { useLocation, useNavigate } from "react-router-dom";
 import { RootState } from "../../../../redux-toolkit/store/store";
@@ -15,11 +18,8 @@ import { KanzRoles } from "../../../../enums/roles.enum";
 import { saveUserData } from "../../../../redux-toolkit/slicer/user.slicer";
 import Button from "../../../../shared/components/Button";
 import { AntdInput } from "../../../../shared/components/Input";
-import { SubmitHandler, useForm } from "react-hook-form";
-import { GoogleLogin } from '@react-oauth/google';
-import { useGoogleLogin } from '@react-oauth/google';
-import { LinkedIn } from 'react-linkedin-login-oauth2';
 import { getEnv } from "../../../../env";
+import { saveToken } from "../../../../redux-toolkit/slicer/auth.slicer";
 
 type FormValues = {
   name: string;
@@ -39,10 +39,31 @@ const Signup = (props: any) => {
 
   const login = useGoogleLogin({
     onSuccess: async (tokenResponse) => {
-      setLoading(true);
-      let payload: any = { ...tokenResponse, type: state || KanzRoles.INVESTOR }
-      let data = await googleOauth(payload);
-      setLoading(false);
+      try {
+        setLoading(true);
+        let payload: any = { ...tokenResponse, type: state || KanzRoles.INVESTOR }
+        let { data, status, headers } = await googleOauth(payload);
+        
+        if (status === 200) {
+          console.log("data, status, headers", data, status, headers);
+          dispatch(saveUserData(data?.status?.data));
+          const token = headers["authorization"].split(" ")[1];
+          dispatch(saveToken(token));
+          toast.success(data.status.message, toastUtil);
+          localStorage.removeItem("role");
+          let timeout = setTimeout(() => {
+            clearTimeout(timeout);
+            navigate("/welcome");
+          }, 1000)
+        }
+
+      } catch (error: any) {
+        console.error(error);
+        const message = error?.response?.data?.status?.message || language.promptMessages.errorGeneral;
+        toast.error(message, toastUtil);
+      } finally {
+        setLoading(false)
+      }
     }
   });
 
@@ -71,10 +92,7 @@ const Signup = (props: any) => {
                 : "check-background"
                 } rounded-full w-4 h-4 inline-grid place-items-center mr-1`}
             >
-              <CheckIcon
-                fill={`${hasUpperCase(password) ? "#fff" : "rgba(0, 0, 0, 0.3)"
-                  }`}
-              />
+              <CheckIcon fill={`${hasUpperCase(password) ? "#fff" : "rgba(0, 0, 0, 0.3)"}`} />
             </div>
             <small className="text-neutral-500 text-sm font-normal mx-1">
               {language?.onboarding?.upperCase}
@@ -143,9 +161,7 @@ const Signup = (props: any) => {
           onSetStepper(signUpData);
         } else toast.error(language.promptMessages.errorGeneral, toastUtil);
       } catch (error: any) {
-        const message =
-          error?.response?.data?.status?.message ||
-          language.promptMessages.errorGeneral;
+        const message = error?.response?.data?.status?.message || language.promptMessages.errorGeneral;
         toast.error(message, toastUtil);
       } finally {
         setLoading(false);
@@ -165,7 +181,6 @@ const Signup = (props: any) => {
 
     const handleLinkedInLoginSuccess = (data: any) => {
       console.log("Linkedin: ", data);
-
     };
 
     useEffect(() => {
@@ -266,21 +281,9 @@ const Signup = (props: any) => {
         </div>
 
         <aside className="inline-flex items-center justify-between w-full gap-4">
-          {/* <GoogleLogin
-            onSuccess={credentialResponse => {
-              console.log(credentialResponse);
-            }}
-            onError={() => {
-              console.log('Login Failed');
-            }}
-            login_uri="http://localhost:3000/auth/google_oauth2/callback"
-            useOneTap
-          /> */}
-
-          <Button onClick={() => login()}>
-            Sign in with Google 🚀{' '}
-          </Button>
-
+          <button className="hover:border-cyan-800 border border-neutral-300 rounded-md py-2.5 px-4 w-2/4 h-[38px] inline-grid place-items-center bg-white" type="button" onClick={() => login()}>
+            <img src={GoogleIcon} alt={language?.onboarding?.googleLogin} />
+          </button>
           <LinkedIn clientId={ENV.LINKEDIN_API_KEY} onSuccess={handleLinkedInLoginSuccess} onError={(err) => console.log(err)} redirectUri={`${ENV.API_URL}/users/social_auth/linkedin`}>
             {({ linkedInLogin }) => (
               <button className="hover:border-cyan-800 border border-neutral-300 rounded-md py-2.5 px-4 w-2/4 h-[38px] inline-grid place-items-center bg-white" type="button" onClick={linkedInLogin}>
@@ -288,12 +291,6 @@ const Signup = (props: any) => {
               </button>
             )}
           </LinkedIn>
-          <button className="hover:border-cyan-800 border border-neutral-300 rounded-md py-2.5 px-4 w-2/4 h-[38px] inline-grid place-items-center bg-white">
-            <img src={GoogleIcon} alt={language?.onboarding?.googleLogin} />
-          </button>
-          <button className="hover:border-cyan-800 border border-neutral-300 rounded-md py-2.5 px-4 w-2/4 h-[38px] inline-grid place-items-center bg-white">
-            <img src={LinkedinIcon} alt={language?.onboarding?.linkedinLogin} />
-          </button>
         </aside>
       </form>
     );
