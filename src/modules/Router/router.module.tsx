@@ -8,6 +8,7 @@ import Loader from "../../shared/views/Loader";
 import { KanzRoles } from "../../enums/roles.enum";
 import { ApplicationStatus } from "../../enums/types.enum";
 import { RoutesEnums } from "../../enums/routes.enum";
+import { LinkedInCallback } from "react-linkedin-login-oauth2";
 
 // Modules
 const Home = lazy(() => import("../Home"));
@@ -122,6 +123,8 @@ const RouterModule = () => {
             </Suspense>
           }
         />
+        <Route path="/linkedin" element={<Suspense fallback={<Loader />}><LinkedInCallback /></Suspense>} />
+
         <Route
           path="/complete-details"
           element={

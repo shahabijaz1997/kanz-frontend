@@ -13,7 +13,7 @@ import EyeIcon from "../../../../ts-icons/EyeIcon.svg";
 import EyeSlash from "../../../../ts-icons/EyeSlashIcon.svg";
 import GoogleIcon from "../../../../assets/icons/google_logo.png";
 import LinkedinIcon from "../../../../assets/icons/linedin_logo.png";
-import { googleOauth, signup } from "../../../../apis/auth.api";
+import { googleOauth, linkedInOauth, signup } from "../../../../apis/auth.api";
 import { KanzRoles } from "../../../../enums/roles.enum";
 import { saveUserData } from "../../../../redux-toolkit/slicer/user.slicer";
 import Button from "../../../../shared/components/Button";
@@ -66,6 +66,8 @@ const Signup = (props: any) => {
       }
     }
   });
+
+   
 
   useLayoutEffect(() => {
     localStorage.setItem("role", state || KanzRoles.INVESTOR);
@@ -179,8 +181,16 @@ const Signup = (props: any) => {
       setShowPassword((prevShowPassword) => !prevShowPassword);
     };
 
-    const handleLinkedInLoginSuccess = (data: any) => {
-      console.log("Linkedin: ", data);
+    const handleLinkedInLoginSuccess = async (data: any) => {
+      try {
+        console.log("Linkedin: ", data);
+      let res  = await linkedInOauth(data);
+      console.log(res);
+      } catch (error) {
+        console.error("In call of api: ", error);
+        
+      }
+      
     };
 
     useEffect(() => {
@@ -284,7 +294,7 @@ const Signup = (props: any) => {
           <button className="hover:border-cyan-800 border border-neutral-300 rounded-md py-2.5 px-4 w-2/4 h-[38px] inline-grid place-items-center bg-white" type="button" onClick={() => login()}>
             <img src={GoogleIcon} alt={language?.onboarding?.googleLogin} />
           </button>
-          <LinkedIn clientId={ENV.LINKEDIN_API_KEY} onSuccess={handleLinkedInLoginSuccess} onError={(err) => console.log(err)} redirectUri={`${ENV.API_URL}/users/social_auth/linkedin`}>
+          <LinkedIn clientId={ENV.LINKEDIN_API_KEY} onSuccess={handleLinkedInLoginSuccess} onError={(err) => console.log(err)} redirectUri={`${window.location.origin}/linkedin`}>
             {({ linkedInLogin }) => (
               <button className="hover:border-cyan-800 border border-neutral-300 rounded-md py-2.5 px-4 w-2/4 h-[38px] inline-grid place-items-center bg-white" type="button" onClick={linkedInLogin}>
                 <img src={LinkedinIcon} alt={language?.onboarding?.linkedinLogin} />
