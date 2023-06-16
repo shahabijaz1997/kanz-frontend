@@ -163,6 +163,11 @@ const Signup = (props: any) => {
       setShowPassword((prevShowPassword) => !prevShowPassword);
     };
 
+    const handleLinkedInLoginSuccess = (data: any) => {
+      console.log("Linkedin: ", data);
+
+    };
+
     useEffect(() => {
       const subscription = watch((value) => handleChange(value.password));
       return () => subscription.unsubscribe();
@@ -274,8 +279,15 @@ const Signup = (props: any) => {
 
           <Button onClick={() => login()}>
             Sign in with Google 🚀{' '}
-          </Button>;
+          </Button>
 
+          <LinkedIn clientId={ENV.LINKEDIN_API_KEY} onSuccess={handleLinkedInLoginSuccess} onError={(err) => console.log(err)} redirectUri={`${ENV.API_URL}/users/social_auth/linkedin`}>
+            {({ linkedInLogin }) => (
+              <button className="hover:border-cyan-800 border border-neutral-300 rounded-md py-2.5 px-4 w-2/4 h-[38px] inline-grid place-items-center bg-white" type="button" onClick={linkedInLogin}>
+                <img src={LinkedinIcon} alt={language?.onboarding?.linkedinLogin} />
+              </button>
+            )}
+          </LinkedIn>
           <button className="hover:border-cyan-800 border border-neutral-300 rounded-md py-2.5 px-4 w-2/4 h-[38px] inline-grid place-items-center bg-white">
             <img src={GoogleIcon} alt={language?.onboarding?.googleLogin} />
           </button>
