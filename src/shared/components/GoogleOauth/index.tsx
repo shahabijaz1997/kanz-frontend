@@ -22,7 +22,6 @@ const GoogleOauth = ({ loading, setLoading, language, state }: any) => {
                 let { data, status, headers } = await googleOauth(payload);
 
                 if (status === 200) {
-                    console.log("data, status, headers", data, status, headers);
                     dispatch(saveUserData(data?.status?.data));
                     const token = headers["authorization"].split(" ")[1];
                     dispatch(saveToken(token));

@@ -1,21 +1,45 @@
 import { LinkedIn } from "react-linkedin-login-oauth2";
 import LinkedinIcon from "../../../assets/icons/linedin_logo.png";
+import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
 import { getEnv } from "../../../env";
 import { linkedInOauth } from "../../../apis/auth.api";
+import { toast } from "react-toastify";
+import { toastUtil } from "../../../utils/toast.utils";
+import { saveUserData } from "../../../redux-toolkit/slicer/user.slicer";
+import { saveToken } from "../../../redux-toolkit/slicer/auth.slicer";
 
 const ENV: any = getEnv();
 
-const handleLinkedInLoginSuccess = async (data: any) => {
-    try {
-        console.log("Linkedin: ", data);
-        let res = await linkedInOauth({ code: data });
-        console.log("Respomse", res);
-    } catch (error) {
-        console.error("Linkedin error: ", error);
-    }
-};
-
 const LinkedInOauth = ({ loading, language, setLoading }: any) => {
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
+
+    const handleLinkedInLoginSuccess = async (code: any) => {
+        try {
+            setLoading(true);
+            let { status, data, headers }: any = await linkedInOauth({ code });
+            if (status === 200) {
+                console.log(headers);
+                
+                dispatch(saveUserData(data?.status?.data));
+                const token = headers["authorization"].split(" ")[1];
+                dispatch(saveToken(token));
+                toast.success(data.status.message, toastUtil);
+                localStorage.removeItem("role");
+                let timeout = setTimeout(() => {
+                    clearTimeout(timeout);
+                    navigate("/welcome");
+                }, 1000)
+            }
+        } catch (error: any) {
+            console.error(error);
+            const message = error?.response?.data?.status?.message || language.promptMessages.errorGeneral;
+            toast.error(message, toastUtil);
+        } finally {
+            setLoading(false);
+        }
+    };
     return (
         <LinkedIn clientId={ENV.LINKEDIN_API_KEY} onSuccess={handleLinkedInLoginSuccess} onError={(err) => console.log(err)} redirectUri={`http://localhost:3000/linkedin`} scope={'r_emailaddress r_liteprofile'}>
             {({ linkedInLogin }) => (
