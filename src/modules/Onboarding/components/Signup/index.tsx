@@ -43,7 +43,7 @@ const Signup = (props: any) => {
         setLoading(true);
         let payload: any = { ...tokenResponse, type: state || KanzRoles.INVESTOR }
         let { data, status, headers } = await googleOauth(payload);
-        
+
         if (status === 200) {
           console.log("data, status, headers", data, status, headers);
           dispatch(saveUserData(data?.status?.data));
@@ -67,7 +67,7 @@ const Signup = (props: any) => {
     }
   });
 
-   
+
 
   useLayoutEffect(() => {
     localStorage.setItem("role", state || KanzRoles.INVESTOR);
@@ -184,13 +184,11 @@ const Signup = (props: any) => {
     const handleLinkedInLoginSuccess = async (data: any) => {
       try {
         console.log("Linkedin: ", data);
-      let res  = await linkedInOauth(data);
-      console.log(res);
+        let res = await linkedInOauth({ code: data });
+        console.log("Respomse", res);
       } catch (error) {
-        console.error("In call of api: ", error);
-        
+        console.error("Linkedin error: ", error);
       }
-      
     };
 
     useEffect(() => {
@@ -199,7 +197,7 @@ const Signup = (props: any) => {
     }, [watch]);
 
     return (
-      <form className="pt-12 pb-8 mb-4" onSubmit={handleSubmit(onSubmit)} {...(isSubmitSuccessful && { noValidate: true })} >
+      <form className="pt-8 pb-8 mb-4" onSubmit={handleSubmit(onSubmit)} {...(isSubmitSuccessful && { noValidate: true })} >
         <div className="mb-4">
           <AntdInput
             register={register}
@@ -294,7 +292,7 @@ const Signup = (props: any) => {
           <button className="hover:border-cyan-800 border border-neutral-300 rounded-md py-2.5 px-4 w-2/4 h-[38px] inline-grid place-items-center bg-white" type="button" onClick={() => login()}>
             <img src={GoogleIcon} alt={language?.onboarding?.googleLogin} />
           </button>
-          <LinkedIn clientId={ENV.LINKEDIN_API_KEY} onSuccess={handleLinkedInLoginSuccess} onError={(err) => console.log(err)} redirectUri={`${window.location.origin}/linkedin`}>
+          <LinkedIn clientId={ENV.LINKEDIN_API_KEY} onSuccess={handleLinkedInLoginSuccess} onError={(err) => console.log(err)} redirectUri={`http://localhost:3000/linkedin`} scope={'r_emailaddress r_liteprofile'}>
             {({ linkedInLogin }) => (
               <button className="hover:border-cyan-800 border border-neutral-300 rounded-md py-2.5 px-4 w-2/4 h-[38px] inline-grid place-items-center bg-white" type="button" onClick={linkedInLogin}>
                 <img src={LinkedinIcon} alt={language?.onboarding?.linkedinLogin} />
