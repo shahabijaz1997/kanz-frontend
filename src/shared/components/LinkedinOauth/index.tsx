@@ -18,24 +18,28 @@ const LinkedInOauth = ({ loading, language, setLoading }: any) => {
     const handleLinkedInLoginSuccess = async (code: any) => {
         try {
             setLoading(true);
-            let { status, data, headers }: any = await linkedInOauth({ code });
-            if (status === 200) {
-                dispatch(saveUserData(data?.status?.data));
-                const token = headers["authorization"].split(" ")[1];
-                dispatch(saveToken(token));
-                toast.success(data.status.message, toastUtil);
-                localStorage.removeItem("role");
-                let timeout = setTimeout(() => {
-                    clearTimeout(timeout);
-                    navigate("/welcome");
-                }, 1000)
-            }
+            let res = await linkedInOauth({ code });
+  console.log("RES", res);
+  
+            // if (status === 200) {
+            //     console.log("data", data?.status?);
+                
+            //     dispatch(saveUserData(data?.status?.data));
+            //     const token = headers["authorization"].split(" ")[1];
+            //     dispatch(saveToken(token));
+            //     toast.success(data.status.message, toastUtil);
+            //     localStorage.removeItem("role");
+            //     let timeout = setTimeout(() => {
+            //         clearTimeout(timeout);
+            //         navigate("/welcome");
+            //     }, 1000)
+            // }
         } catch (error: any) {
             console.error(error);
             const message = error?.response?.data?.status?.message || language.promptMessages.errorGeneral;
             toast.error(message, toastUtil);
         } finally {
-            setLoading(true);
+            setLoading(false);
         }
     };
     return (
