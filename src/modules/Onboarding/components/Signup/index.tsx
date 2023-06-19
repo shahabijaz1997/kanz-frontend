@@ -2,8 +2,6 @@ import React, { useState, useLayoutEffect, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
 import { SubmitHandler, useForm } from "react-hook-form";
-import { useGoogleLogin } from "@react-oauth/google";
-import { LinkedIn } from "react-linkedin-login-oauth2";
 import { toastUtil } from "../../../../utils/toast.utils";
 import { useLocation, useNavigate } from "react-router-dom";
 import { RootState } from "../../../../redux-toolkit/store/store";
@@ -11,15 +9,13 @@ import { hasLowerCase, hasNumbers, hasSpecialCharacters, hasUpperCase } from "..
 import CheckIcon from "../../../../ts-icons/CheckIcon.svg";
 import EyeIcon from "../../../../ts-icons/EyeIcon.svg";
 import EyeSlash from "../../../../ts-icons/EyeSlashIcon.svg";
-import GoogleIcon from "../../../../assets/icons/google_logo.png";
-import LinkedinIcon from "../../../../assets/icons/linedin_logo.png";
-import { googleOauth, linkedInOauth, signup } from "../../../../apis/auth.api";
+import { signup } from "../../../../apis/auth.api";
 import { KanzRoles } from "../../../../enums/roles.enum";
 import { saveUserData } from "../../../../redux-toolkit/slicer/user.slicer";
 import Button from "../../../../shared/components/Button";
 import { AntdInput } from "../../../../shared/components/Input";
-import { getEnv } from "../../../../env";
-import { saveToken } from "../../../../redux-toolkit/slicer/auth.slicer";
+import GoogleOauth from "../../../../shared/components/GoogleOauth";
+import LinkedInOauth from "../../../../shared/components/LinkedinOauth";
 
 type FormValues = {
   name: string;
@@ -27,7 +23,6 @@ type FormValues = {
   password: string;
 };
 
-const ENV: any = getEnv();
 
 const Signup = (props: any) => {
   const { onSetStepper } = props;
@@ -36,38 +31,6 @@ const Signup = (props: any) => {
   const { state } = useLocation();
   const language: any = useSelector((state: RootState) => state.language.value);
   const [loading, setLoading] = useState(false);
-
-  const login = useGoogleLogin({
-    onSuccess: async (tokenResponse) => {
-      try {
-        setLoading(true);
-        let payload: any = { ...tokenResponse, type: state || KanzRoles.INVESTOR }
-        let { data, status, headers } = await googleOauth(payload);
-
-        if (status === 200) {
-          console.log("data, status, headers", data, status, headers);
-          dispatch(saveUserData(data?.status?.data));
-          const token = headers["authorization"].split(" ")[1];
-          dispatch(saveToken(token));
-          toast.success(data.status.message, toastUtil);
-          localStorage.removeItem("role");
-          let timeout = setTimeout(() => {
-            clearTimeout(timeout);
-            navigate("/welcome");
-          }, 1000)
-        }
-
-      } catch (error: any) {
-        console.error(error);
-        const message = error?.response?.data?.status?.message || language.promptMessages.errorGeneral;
-        toast.error(message, toastUtil);
-      } finally {
-        setLoading(false)
-      }
-    }
-  });
-
-
 
   useLayoutEffect(() => {
     localStorage.setItem("role", state || KanzRoles.INVESTOR);
@@ -181,16 +144,6 @@ const Signup = (props: any) => {
       setShowPassword((prevShowPassword) => !prevShowPassword);
     };
 
-    const handleLinkedInLoginSuccess = async (data: any) => {
-      try {
-        console.log("Linkedin: ", data);
-        let res = await linkedInOauth({ code: data });
-        console.log("Respomse", res);
-      } catch (error) {
-        console.error("Linkedin error: ", error);
-      }
-    };
-
     useEffect(() => {
       const subscription = watch((value) => handleChange(value.password));
       return () => subscription.unsubscribe();
@@ -289,16 +242,8 @@ const Signup = (props: any) => {
         </div>
 
         <aside className="inline-flex items-center justify-between w-full gap-4">
-          <button className="hover:border-cyan-800 border border-neutral-300 rounded-md py-2.5 px-4 w-2/4 h-[38px] inline-grid place-items-center bg-white" type="button" onClick={() => login()}>
-            <img src={GoogleIcon} alt={language?.onboarding?.googleLogin} />
-          </button>
-          <LinkedIn clientId={ENV.LINKEDIN_API_KEY} onSuccess={handleLinkedInLoginSuccess} onError={(err) => console.log(err)} redirectUri={`http://localhost:3000/linkedin`} scope={'r_emailaddress r_liteprofile'}>
-            {({ linkedInLogin }) => (
-              <button className="hover:border-cyan-800 border border-neutral-300 rounded-md py-2.5 px-4 w-2/4 h-[38px] inline-grid place-items-center bg-white" type="button" onClick={linkedInLogin}>
-                <img src={LinkedinIcon} alt={language?.onboarding?.linkedinLogin} />
-              </button>
-            )}
-          </LinkedIn>
+          <GoogleOauth language={language} loading={loading} setLoading={setLoading} state={state} />
+         <LinkedInOauth language={language} loading={loading} setLoading={setLoading} />
         </aside>
       </form>
     );
