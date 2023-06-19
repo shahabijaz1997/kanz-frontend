@@ -17,6 +17,7 @@ const Questionare = ({ step, returnSuccessRedirection }: any) => {
   const dispatch = useDispatch();
   const language: any = useSelector((state: RootState) => state.language.value);
   const authToken: any = useSelector((state: RootState) => state.auth.value);
+  const event: any = useSelector((state: RootState) => state.event.value);
 
   const [mcqs, setMcqs]: any = useState([]);
   const [isOpen, setOpen]: any = useState("");
@@ -40,6 +41,8 @@ const Questionare = ({ step, returnSuccessRedirection }: any) => {
         let parsed = JSON.parse(philisophyData) || {};
         setSelected(parsed);
         setQuestions(data?.status?.data);
+        console.log(data?.status?.data?.questions);
+
         setPage(pg);
         if (JSON.parse(philisophyData)) {
           if (parsed[step]) {
@@ -47,18 +50,12 @@ const Questionare = ({ step, returnSuccessRedirection }: any) => {
             setValidations(d);
           } else setValidations([]);
         }
-        if (
-          data?.status?.data?.questions &&
-          data?.status?.data?.questions[0]?.question_type === "checkbox"
-        )
-          if (parsed[3]?.questions[0]) setMcqs(parsed[3].questions[0]?.answer_meta.options);
+        if (data?.status?.data?.questions && data?.status?.data?.questions[0]?.question_type === "checkbox")
+          if (parsed[3]?.questions[0]) setMcqs(parsed[3].questions[0]?.answer_meta[event].options);
         if (data?.status?.data?.questions[0]?.question_type === "text") setTextAnswer(selected[4]?.questions[0]?.answers[0])
       }
     } catch (error: any) {
-      const message =
-        error?.response?.data?.status?.message ||
-        error?.response?.data ||
-        language.promptMessages.errorGeneral;
+      const message = error?.response?.data?.status?.message || error?.response?.data || language.promptMessages.errorGeneral;
       toast.error(message, toastUtil);
       if (error.response && error.response.status === 401) {
         dispatch(saveToken(""));
@@ -80,10 +77,7 @@ const Questionare = ({ step, returnSuccessRedirection }: any) => {
       if (step === questions?.total_steps && status === 200)
         returnSuccessRedirection(data);
     } catch (error: any) {
-      const message =
-        error?.response?.data?.status?.message ||
-        error?.response?.data ||
-        language.promptMessages.errorGeneral;
+      const message = error?.response?.data?.status?.message || error?.response?.data || language.promptMessages.errorGeneral;
       toast.error(message, toastUtil);
       if (error.response && error.response.status === 401) {
         dispatch(saveToken(""));
@@ -98,7 +92,7 @@ const Questionare = ({ step, returnSuccessRedirection }: any) => {
   };
 
   const checkExist = (elem: any, as: any) => {
-    let found: any = elem?.questions.some((q: any) => q?.answer_meta?.options[0]?.index === as.index && q?.answer_meta?.options[0]?.statement === as.statement);
+    let found: any = elem?.questions.some((q: any) => q?.answer_meta[event]?.options[0]?.index === as.index && q?.answer_meta[event]?.options[0]?.statement === as.statement);
     return found;
   };
 
@@ -129,6 +123,8 @@ const Questionare = ({ step, returnSuccessRedirection }: any) => {
   };
 
   const renderMultipleChoiceQuestionaire = (ques: any) => {
+    console.log("ques", ques[event]);
+    
     if (selected && ques.step === 2 && ques.index === 2 && (!selected[`2`] || selected[`2`]?.questions.find((q: any) => q.answers[0] === "No")))
       return <React.Fragment></React.Fragment>;
     if (ques?.question_type === "text") {
@@ -182,22 +178,18 @@ const Questionare = ({ step, returnSuccessRedirection }: any) => {
     return (
       <section className="flex items-start justify-center flex-col mt-10 max-w-[420px] screen500:max-w-[300px]">
         <h3 className="text-neutral-700 font-medium text-base w-[420px]">
-          {ques?.title}
+          {ques[event]?.title}
         </h3>
         <p className="text-neutral-500 font-normal text-sm">
           <span>{ques?.statement}</span>&nbsp;
-          <span
-            className="color-blue font-medium cursor-pointer"
-            onClick={() => setOpen(true)}
-          >
+          <span className="color-blue font-medium cursor-pointer" onClick={() => setOpen(true)} >
             {language.common.learn}
           </span>
         </p>
         <section className="mb-8 w-full relative mt-3">
           <ul>
-            {ques?.options?.schema &&
-              React.Children.toArray(
-                ques?.options?.schema.map((as: any) => {
+            {ques[event]?.options?.schema && React.Children.toArray(
+                ques[event]?.options?.schema.map((as: any) => {
                   return (
                     <li
                       className={`h-[50px] w-[420px] p-4 grey-neutral-200 text-sm font-medium cursor-pointer border border-grey inline-flex items-center justify-start first:rounded-t-md last:rounded-b-md screen500:w-full ${checkExist(selected[ques.step], as)
@@ -258,9 +250,9 @@ const Questionare = ({ step, returnSuccessRedirection }: any) => {
         </p>
         <section className="mb-8 w-full relative mt-3">
           <ul>
-            {ques?.options?.schema &&
+            {ques[event]?.options?.schema &&
               React.Children.toArray(
-                ques?.options?.schema.map((as: any) => {
+                ques[event]?.options?.schema.map((as: any) => {
                   return (
                     <li
                       className={`h-[50px] w-[420px] p-4 grey-neutral-200 text-sm font-medium cursor-pointer border border-grey inline-flex items-center justify-start first:rounded-t-md last:rounded-b-md screen500:w-full ${checkBoxCheckExist(as) ? "check-background" : "bg-white"
@@ -319,9 +311,9 @@ const Questionare = ({ step, returnSuccessRedirection }: any) => {
           </span>
         </p>
         <section className="w-full inline-flex items-center justify-between mt-4 gap-5">
-          {ques?.options?.schema &&
+          {ques[event]?.options?.schema &&
             React.Children.toArray(
-              ques?.options?.schema.map((as: any) => {
+              ques[event]?.options?.schema.map((as: any) => {
                 return (
                   <li
                     className={`rounded-md bg-white h-[50px] w-[420px] p-4 grey-neutral-200 text-sm font-medium cursor-pointer border border-grey inline-flex items-center justify-start screen500:w-full${checkExist(selected[ques.step], as)
