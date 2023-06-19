@@ -92,7 +92,7 @@ const Questionare = ({ step, returnSuccessRedirection }: any) => {
   };
 
   const checkExist = (elem: any, as: any) => {
-    let found: any = elem?.questions.some((q: any) => q?.answer_meta[event]?.options[0]?.index === as.index && q?.answer_meta[event]?.options[0]?.statement === as.statement);
+    let found: any = elem?.questions.some((q: any) => q?.answer_meta?.options[0]?.index === as.index && q?.answer_meta?.options[0]?.statement === as.statement);
     return found;
   };
 
@@ -104,9 +104,7 @@ const Questionare = ({ step, returnSuccessRedirection }: any) => {
 
   const toggleAnswerSelection = (q: any, a: any) => {
     let _selected = { ...selected };
-    let found: any = _selected[q.step]?.questions.find(
-      (qa: any) => qa.question_id === q.id
-    );
+    let found: any = _selected[q.step]?.questions.find((qa: any) => qa.question_id === q.id);
 
     if (found) {
       let filtered = _selected[q.step]?.questions.filter((qa: any) => qa.question_id !== q.id);
@@ -123,52 +121,31 @@ const Questionare = ({ step, returnSuccessRedirection }: any) => {
   };
 
   const renderMultipleChoiceQuestionaire = (ques: any) => {
-    console.log("ques", ques[event]);
-    
     if (selected && ques.step === 2 && ques.index === 2 && (!selected[`2`] || selected[`2`]?.questions.find((q: any) => q.answers[0] === "No")))
       return <React.Fragment></React.Fragment>;
     if (ques?.question_type === "text") {
+
       return (
         <section className="flex items-start justify-center flex-col mt-10 max-w-[420px] screen500:max-w-[300px]">
           <h3 className="text-neutral-700 font-medium text-base w-[420px]">
-            {ques?.title}
+            {ques[event]?.title}
           </h3>
           <p className="text-neutral-500 font-normal text-sm">
-            <span>{ques?.statement}</span>&nbsp;
-            <span
-              className="color-blue font-medium cursor-pointer"
-              onClick={() => setOpen(true)}
-            >
+            <span>{ques[event]?.statement}</span>&nbsp;
+            <span className="color-blue font-medium cursor-pointer" onClick={() => setOpen(true)} >
               {language.common.learn}
             </span>
           </p>
           <section className="mb-8 w-full relative mt-3">
-            <textarea
-              value={selected[4]?.questions[0]?.answers[0]}
-              onChange={(e) => {
-                setTextAnswer(e.target.value);
-                let _selected = { ...selected };
-                if (_selected[ques.step])
-                  _selected[ques.step].questions = [
-                    {
-                      question_id: ques.id,
-                      answers: [e.target.value],
-                      answer_meta: {},
-                    },
-                  ];
-                else
-                  _selected[ques.step] = {
-                    questions: [
-                      {
-                        question_id: ques.id,
-                        answers: [e.target.value],
-                        answer_meta: {},
-                      },
-                    ],
-                  };
+            <textarea value={selected[4]?.questions[0]?.answers[0]} onChange={(e) => {
+              setTextAnswer(e.target.value);
+              let _selected = { ...selected };
+              if (_selected[ques.step])
+                _selected[ques.step].questions = [{ question_id: ques.id, answers: [e.target.value], answer_meta: {} }];
+              else _selected[ques.step] = { questions: [{ question_id: ques.id, answers: [e.target.value], answer_meta: {} }] };
 
-                setSelected(_selected);
-              }}
+              setSelected(_selected);
+            }}
               className="rounded-md shadow-sm appearance-none border border-neutral-300 rounded-md w-full py-2 px-3 text-gray-500 leading-tight focus:outline-none focus:shadow-outline h-[100px] resize-none"
             ></textarea>
           </section>
@@ -176,49 +153,50 @@ const Questionare = ({ step, returnSuccessRedirection }: any) => {
       );
     }
     return (
+
       <section className="flex items-start justify-center flex-col mt-10 max-w-[420px] screen500:max-w-[300px]">
         <h3 className="text-neutral-700 font-medium text-base w-[420px]">
           {ques[event]?.title}
         </h3>
         <p className="text-neutral-500 font-normal text-sm">
-          <span>{ques?.statement}</span>&nbsp;
+          <span>{ques[event]?.statement}</span>&nbsp;
           <span className="color-blue font-medium cursor-pointer" onClick={() => setOpen(true)} >
             {language.common.learn}
           </span>
         </p>
         <section className="mb-8 w-full relative mt-3">
           <ul>
-            {ques[event]?.options?.schema && React.Children.toArray(
-                ques[event]?.options?.schema.map((as: any) => {
-                  return (
-                    <li
-                      className={`h-[50px] w-[420px] p-4 grey-neutral-200 text-sm font-medium cursor-pointer border border-grey inline-flex items-center justify-start first:rounded-t-md last:rounded-b-md screen500:w-full ${checkExist(selected[ques.step], as)
-                        ? "check-background"
-                        : "bg-white"
-                        }`}
-                      onClick={() => {
-                        toggleAnswerSelection(ques, as);
-                        let _validations = [...validations];
-                        let f = _validations.find((v) => v === ques?.id);
-                        if (!f) {
-                          _validations.push(ques?.id);
-                          setValidations(_validations);
-                        }
-                      }}
-                    >
-                      <input
-                        onChange={() => { }}
-                        className="accent-cyan-800 relative float-left mx-2 h-3 w-3 rounded-full border-2 border-solid border-cyan-300 before:pointer-events-none before:absolute before:h-4 before:w-4 before:scale-0 before:rounded-full before:bg-transparent before:opacity-0 before:content-[''] after:absolute after:z-[1] after:block after:h-4 after:w-4 after:rounded-full after:content-[''] checked:border-primary checked:before:opacity-[0.16] checked:after:absolute checked:after:left-1/2 checked:after:top-1/2 checked:after:h-[0.625rem] checked:after:w-[0.625rem] checked:after:rounded-full checked:after:border-primary checked:after:bg-primary checked:after:content-[''] checked:after:[transform:translate(-50%,-50%)] hover:cursor-pointer hover:before:opacity-[0.04]"
-                        type="radio"
-                        checked={
-                          checkExist(selected[ques.step], as) ? true : false
-                        }
-                      />
-                      <small>{as?.statement}</small>
-                    </li>
-                  );
-                })
-              )}
+            {ques[event]?.options && React.Children.toArray(
+              ques[event]?.options.map((as: any) => {
+                return (
+                  <li
+                    className={`h-[50px] w-[420px] p-4 grey-neutral-200 text-sm font-medium cursor-pointer border border-grey inline-flex items-center justify-start first:rounded-t-md last:rounded-b-md screen500:w-full ${checkExist(selected[ques.step], as)
+                      ? "check-background"
+                      : "bg-white"
+                      }`}
+                    onClick={() => {
+                      toggleAnswerSelection(ques, as);
+                      let _validations = [...validations];
+                      let f = _validations.find((v) => v === ques?.id);
+                      if (!f) {
+                        _validations.push(ques?.id);
+                        setValidations(_validations);
+                      }
+                    }}
+                  >
+                    <input
+                      onChange={() => { }}
+                      className="accent-cyan-800 relative float-left mx-2 h-3 w-3 rounded-full border-2 border-solid border-cyan-300 before:pointer-events-none before:absolute before:h-4 before:w-4 before:scale-0 before:rounded-full before:bg-transparent before:opacity-0 before:content-[''] after:absolute after:z-[1] after:block after:h-4 after:w-4 after:rounded-full after:content-[''] checked:border-primary checked:before:opacity-[0.16] checked:after:absolute checked:after:left-1/2 checked:after:top-1/2 checked:after:h-[0.625rem] checked:after:w-[0.625rem] checked:after:rounded-full checked:after:border-primary checked:after:bg-primary checked:after:content-[''] checked:after:[transform:translate(-50%,-50%)] hover:cursor-pointer hover:before:opacity-[0.04]"
+                      type="radio"
+                      checked={
+                        checkExist(selected[ques.step], as) ? true : false
+                      }
+                    />
+                    <small>{as?.statement}</small>
+                  </li>
+                );
+              })
+            )}
           </ul>
         </section>
       </section>
@@ -226,21 +204,15 @@ const Questionare = ({ step, returnSuccessRedirection }: any) => {
   };
 
   const renderCheckboxQuestionaire = (ques: any) => {
-    if (
-      selected &&
-      ques.step === 2 &&
-      ques.index === 2 &&
-      (!selected[`2`] ||
-        selected[`2`]?.questions.find((q: any) => q.answer === "No"))
-    )
+    if (selected && ques.step === 2 && ques.index === 2 && (!selected[`2`] || selected[`2`]?.questions.find((q: any) => q.answer === "No")))
       return <React.Fragment></React.Fragment>;
     return (
       <section className="flex items-start justify-center flex-col mt-10 max-w-[420px] screen500:max-w-[300px]">
         <h3 className="text-neutral-700 font-medium text-base w-[420px]">
-          {ques?.title}
+          {ques[event]?.title}
         </h3>
         <p className="text-neutral-500 font-normal text-sm">
-          <span>{ques?.statement}</span>&nbsp;
+          <span>{ques[event]?.statement}</span>&nbsp;
           <span
             className="color-blue font-medium cursor-pointer"
             onClick={() => setOpen(true)}
@@ -250,9 +222,9 @@ const Questionare = ({ step, returnSuccessRedirection }: any) => {
         </p>
         <section className="mb-8 w-full relative mt-3">
           <ul>
-            {ques[event]?.options?.schema &&
+            {ques[event]?.options &&
               React.Children.toArray(
-                ques[event]?.options?.schema.map((as: any) => {
+                ques[event]?.options.map((as: any) => {
                   return (
                     <li
                       className={`h-[50px] w-[420px] p-4 grey-neutral-200 text-sm font-medium cursor-pointer border border-grey inline-flex items-center justify-start first:rounded-t-md last:rounded-b-md screen500:w-full ${checkBoxCheckExist(as) ? "check-background" : "bg-white"
@@ -299,27 +271,22 @@ const Questionare = ({ step, returnSuccessRedirection }: any) => {
     return (
       <section className="flex items-start justify-center flex-col mt-10 max-w-[420px] screen500:max-w-[300px]">
         <h3 className="text-neutral-700 font-medium text-base w-[420px]">
-          {ques?.title}
+          {ques[event]?.title}
         </h3>
         <p className="text-neutral-500 font-normal text-sm">
-          <span>{ques?.statement}</span>&nbsp;
-          <span
-            className="color-blue font-medium cursor-pointer"
-            onClick={() => setOpen(true)}
-          >
+          <span>{ques[event]?.statement}</span>&nbsp;
+          <span className="color-blue font-medium cursor-pointer" onClick={() => setOpen(true)} >
             {language.common.learn}
           </span>
         </p>
         <section className="w-full inline-flex items-center justify-between mt-4 gap-5">
-          {ques[event]?.options?.schema &&
+          {ques[event]?.options &&
             React.Children.toArray(
-              ques[event]?.options?.schema.map((as: any) => {
+              ques[event]?.options.map((as: any) => {
                 return (
                   <li
                     className={`rounded-md bg-white h-[50px] w-[420px] p-4 grey-neutral-200 text-sm font-medium cursor-pointer border border-grey inline-flex items-center justify-start screen500:w-full${checkExist(selected[ques.step], as)
-                      ? "check-background"
-                      : "bg-white"
-                      }`}
+                      ? "check-background" : "bg-white"}`}
                     onClick={() => {
                       toggleAnswerSelection(ques, as);
                       let _validations = [...validations];
@@ -383,6 +350,8 @@ const Questionare = ({ step, returnSuccessRedirection }: any) => {
   };
 
   const checkValidation = () => {
+    console.log("questions", questions);
+
     if (questions?.questions && questions?.questions[0]?.question_type === "checkbox") {
       if (mcqs?.length > 0) return true;
       return false;
@@ -414,7 +383,7 @@ const Questionare = ({ step, returnSuccessRedirection }: any) => {
           <section className="flex items-start flex-col mt-10 max-w-[420px] screen500:max-w-[300px]">
             {questions?.questions && (
               <h3 className="text-neutral-700 font-bold text-2xl w-[420px]">
-                {questions?.questions[0]?.category}
+                {questions?.questions[0]?.title}
               </h3>
             )}
           </section>
@@ -439,24 +408,11 @@ const Questionare = ({ step, returnSuccessRedirection }: any) => {
 
           <section className="flex items-start justify-center w-full flex-col mt-6 max-w-[420px] screen500:max-w-[300px]">
             <div className="w-full inline-flex items-center justify-between mt-16">
-              <Button
-                className="h-[38px] w-[140px]"
-                htmlType="submit"
-                type="outlined"
-                onClick={onSetPrev}
-              >
+              <Button className="h-[38px] w-[140px]" htmlType="submit" type="outlined" onClick={onSetPrev}>
                 {language?.buttons?.back}
               </Button>
-              <Button
-                className="h-[38px] w-[140px]"
-                disabled={!checkValidation()}
-                htmlType="submit"
-                loading={loading}
-                onClick={onSetNext}
-              >
-                {step < 5
-                  ? language?.buttons?.continue
-                  : language?.buttons?.proceed}
+              <Button className="h-[38px] w-[140px]" disabled={!checkValidation()} htmlType="submit" loading={loading} onClick={onSetNext} >
+                {step < 5 ? language?.buttons?.continue : language?.buttons?.proceed}
               </Button>
             </div>
           </section>
@@ -464,8 +420,7 @@ const Questionare = ({ step, returnSuccessRedirection }: any) => {
       )}
 
       <Drawer isOpen={isOpen} setIsOpen={(val: boolean) => setOpen(val)}>
-        {questions?.questions &&
-          questions?.questions[0]?.question_type === "checkbox" ? (
+        {questions?.questions && questions?.questions[0]?.question_type === "checkbox" ? (
           <React.Fragment>
             <p className="text-neutral-700 font-normal text-sm text-justify">
               {language.modal.horizon_para_1}

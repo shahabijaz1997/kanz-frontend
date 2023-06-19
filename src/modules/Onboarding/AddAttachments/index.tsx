@@ -21,6 +21,7 @@ const AddAttachments = (props: any) => {
   const dispatch = useDispatch();
   const language: any = useSelector((state: RootState) => state.language.value);
   const authToken: any = useSelector((state: RootState) => state.auth.value);
+  const event: any = useSelector((state: RootState) => state.event.value);
   const attachments: any = useSelector((state: RootState) => state.attachments.attachments.value);
   const [modalOpen, setModalOpen]: any = useState(null);
   const [isOpen, setOpen] = useState(false);
@@ -113,8 +114,8 @@ const AddAttachments = (props: any) => {
                           files={files}
                           file={files?.length && files.find((f: any) => f.id === item.id)}
                           setFile={setFile}
-                          title={item?.name}
-                          subTitle={item?.label}
+                          title={item[event]?.name}
+                          subTitle={item[event]?.label}
                           language={language}
                           setFiles={setFiles}
                           setFileType={setFileType}
