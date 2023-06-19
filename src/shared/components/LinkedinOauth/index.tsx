@@ -20,8 +20,6 @@ const LinkedInOauth = ({ loading, language, setLoading }: any) => {
             setLoading(true);
             let { status, data, headers }: any = await linkedInOauth({ code });
             if (status === 200) {
-                console.log(headers);
-                
                 dispatch(saveUserData(data?.status?.data));
                 const token = headers["authorization"].split(" ")[1];
                 dispatch(saveToken(token));
@@ -37,7 +35,7 @@ const LinkedInOauth = ({ loading, language, setLoading }: any) => {
             const message = error?.response?.data?.status?.message || language.promptMessages.errorGeneral;
             toast.error(message, toastUtil);
         } finally {
-            setLoading(false);
+            setLoading(true);
         }
     };
     return (
