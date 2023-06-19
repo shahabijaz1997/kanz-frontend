@@ -41,8 +41,6 @@ const Questionare = ({ step, returnSuccessRedirection }: any) => {
         let parsed = JSON.parse(philisophyData) || {};
         setSelected(parsed);
         setQuestions(data?.status?.data);
-        console.log(data?.status?.data?.questions);
-
         setPage(pg);
         if (JSON.parse(philisophyData)) {
           if (parsed[step]) {
@@ -51,7 +49,7 @@ const Questionare = ({ step, returnSuccessRedirection }: any) => {
           } else setValidations([]);
         }
         if (data?.status?.data?.questions && data?.status?.data?.questions[0]?.question_type === "checkbox")
-          if (parsed[3]?.questions[0]) setMcqs(parsed[3].questions[0]?.answer_meta[event].options);
+          if (parsed[3]?.questions[0]) setMcqs(parsed[3].questions[0]?.answer_meta?.options);
         if (data?.status?.data?.questions[0]?.question_type === "text") setTextAnswer(selected[4]?.questions[0]?.answers[0])
       }
     } catch (error: any) {
@@ -350,8 +348,6 @@ const Questionare = ({ step, returnSuccessRedirection }: any) => {
   };
 
   const checkValidation = () => {
-    console.log("questions", questions);
-
     if (questions?.questions && questions?.questions[0]?.question_type === "checkbox") {
       if (mcqs?.length > 0) return true;
       return false;
