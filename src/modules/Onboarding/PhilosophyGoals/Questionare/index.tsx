@@ -119,7 +119,7 @@ const Questionare = ({ step, returnSuccessRedirection }: any) => {
   };
 
   const renderMultipleChoiceQuestionaire = (ques: any) => {
-    if (selected && ques.step === 2 && ques.index === 2 && (!selected[`2`] || selected[`2`]?.questions.find((q: any) => q.answers[0] === "No")))
+    if (selected && ques.step === 2 && ques.index === 2 && (!selected[`2`] || selected[`2`]?.questions.find((q: any) => q.answers[0] === questions?.questions[0][event]?.options[1]?.statement)))
       return <React.Fragment></React.Fragment>;
     if (ques?.question_type === "text") {
 
@@ -202,7 +202,7 @@ const Questionare = ({ step, returnSuccessRedirection }: any) => {
   };
 
   const renderCheckboxQuestionaire = (ques: any) => {
-    if (selected && ques.step === 2 && ques.index === 2 && (!selected[`2`] || selected[`2`]?.questions.find((q: any) => q.answer === "No")))
+    if (selected && ques.step === 2 && ques.index === 2 && (!selected[`2`] || selected[`2`]?.questions.find((q: any) => q.answer === questions?.questions[0][event]?.options[1]?.statement)))
       return <React.Fragment></React.Fragment>;
     return (
       <section className="flex items-start justify-center flex-col mt-10 max-w-[420px] screen500:max-w-[300px]">
