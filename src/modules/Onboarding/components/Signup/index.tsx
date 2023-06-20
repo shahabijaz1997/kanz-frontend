@@ -212,12 +212,7 @@ const Signup = (props: any) => {
           />
         </div>
         {PasswordStrengthUI(password)}
-        <Button
-          className="w-full h-[38px]"
-          disabled={loading}
-          htmlType="submit"
-          loading={loading}
-        >
+        <Button className="w-full h-[38px]" disabled={loading} htmlType="submit" loading={loading} >
           {language?.buttons?.createAccount}
         </Button>
         <div className="flex justify-end my-[12px]">

@@ -17,25 +17,23 @@ const LinkedInOauth = ({ loading, language, setLoading }: any) => {
 
     const handleLinkedInLoginSuccess = async (code: any) => {
         try {
+            if(localStorage.getItem("oauth_ld")) return;
+            localStorage.setItem("oauth_ld", "PxhYfeh76BH")
             setLoading(true);
-            let res = await linkedInOauth({ code });
-  console.log("RES", res);
-  
-            // if (status === 200) {
-            //     console.log("data", data?.status?);
-                
-            //     dispatch(saveUserData(data?.status?.data));
-            //     const token = headers["authorization"].split(" ")[1];
-            //     dispatch(saveToken(token));
-            //     toast.success(data.status.message, toastUtil);
-            //     localStorage.removeItem("role");
-            //     let timeout = setTimeout(() => {
-            //         clearTimeout(timeout);
-            //         navigate("/welcome");
-            //     }, 1000)
-            // }
+            let { status, data, headers } = await linkedInOauth({ code });
+            if (status === 200) {
+                dispatch(saveUserData(data?.status?.data));
+                const token = headers["authorization"].split(" ")[1];
+                dispatch(saveToken(token));
+                toast.success(data.status.message, toastUtil);
+                localStorage.removeItem("role");
+                let timeout = setTimeout(() => {
+                    clearTimeout(timeout);
+                    navigate("/welcome");
+                }, 1000)
+            }
         } catch (error: any) {
-            console.error(error);
+            console.error("Linkedin Error: ", error);
             const message = error?.response?.data?.status?.message || language.promptMessages.errorGeneral;
             toast.error(message, toastUtil);
         } finally {
