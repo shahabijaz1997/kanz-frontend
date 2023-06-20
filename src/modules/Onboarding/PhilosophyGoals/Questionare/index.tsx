@@ -358,7 +358,7 @@ const Questionare = ({ step, returnSuccessRedirection }: any) => {
       if (!questions?.questions?.length) return false;
       else {
         if (!questions?.questions?.length) return false;
-        else if ((step !== 2 && validations.length === questions?.questions.length) || ((step === 2 && validations.length > 0 && selected[`2`]?.questions.find((q: any) => q.answers[0] === "No")) || (step === 2 && validations.length === 2 && selected[`2`]?.questions.find((q: any) => q.answers[0] === "Yes")))) return true;
+        else if ((step !== 2 && validations.length === questions?.questions.length) || ((step === 2 && validations.length > 0 && selected[`2`]?.questions.find((q: any) => q.answers[0] === questions?.questions[0][event]?.options[1]?.statement)) || (step === 2 && validations.length === 2 && selected[`2`]?.questions.find((q: any) => q.answers[0] === questions?.questions[0][event]?.options[0]?.statement)))) return true;
         return false;
       }
     }
