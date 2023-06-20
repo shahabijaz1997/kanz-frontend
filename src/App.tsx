@@ -3,7 +3,9 @@ import RouterModule from "./modules/Router/router.module";
 import { useDispatch, useSelector } from "react-redux";
 import { saveOrientation } from "./redux-toolkit/slicer/orientation.slicer";
 import { RootState } from "./redux-toolkit/store/store";
-
+import { GoogleOAuthProvider } from '@react-oauth/google';
+import { getEnv } from "./env";
+const ENV: any = getEnv();
 const App = () => {
   const dispatch = useDispatch();
 
@@ -26,7 +28,7 @@ const App = () => {
       observer.disconnect();
     };
   }, []);
-  return <RouterModule />
+  return <GoogleOAuthProvider clientId={ENV.GOOGLE_API_KEY}> <RouterModule /></GoogleOAuthProvider>
 }
 
 export default App;

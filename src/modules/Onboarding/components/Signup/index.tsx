@@ -1,6 +1,7 @@
 import React, { useState, useLayoutEffect, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
+import { SubmitHandler, useForm } from "react-hook-form";
 import { toastUtil } from "../../../../utils/toast.utils";
 import { useLocation, useNavigate } from "react-router-dom";
 import { RootState } from "../../../../redux-toolkit/store/store";
@@ -8,20 +9,20 @@ import { hasLowerCase, hasNumbers, hasSpecialCharacters, hasUpperCase } from "..
 import CheckIcon from "../../../../ts-icons/CheckIcon.svg";
 import EyeIcon from "../../../../ts-icons/EyeIcon.svg";
 import EyeSlash from "../../../../ts-icons/EyeSlashIcon.svg";
-import GoogleIcon from "../../../../assets/icons/google_logo.png";
-import LinkedinIcon from "../../../../assets/icons/linedin_logo.png";
 import { signup } from "../../../../apis/auth.api";
 import { KanzRoles } from "../../../../enums/roles.enum";
 import { saveUserData } from "../../../../redux-toolkit/slicer/user.slicer";
 import Button from "../../../../shared/components/Button";
 import { AntdInput } from "../../../../shared/components/Input";
-import { SubmitHandler, useForm } from "react-hook-form";
+import GoogleOauth from "../../../../shared/components/GoogleOauth";
+import LinkedInOauth from "../../../../shared/components/LinkedinOauth";
 
 type FormValues = {
   name: string;
   email: string;
   password: string;
 };
+
 
 const Signup = (props: any) => {
   const { onSetStepper } = props;
@@ -52,22 +53,19 @@ const Signup = (props: any) => {
           <section className="inline-flex items-center">
             <div
               className={`${hasUpperCase(password)
-                  ? "checked-background"
-                  : "check-background"
+                ? "checked-background"
+                : "check-background"
                 } rounded-full w-4 h-4 inline-grid place-items-center mr-1`}
             >
-              <CheckIcon
-                fill={`${hasUpperCase(password) ? "#fff" : "rgba(0, 0, 0, 0.3)"
-                  }`}
-              />
+              <CheckIcon fill={`${hasUpperCase(password) ? "#fff" : "rgba(0, 0, 0, 0.3)"}`} />
             </div>
             <small className="text-neutral-500 text-sm font-normal mx-1">
               {language?.onboarding?.upperCase}
             </small>
           </section>
           <section className="inline-flex items-center">
-            <div className={`${hasLowerCase(password) ? "checked-background" : "check-background" } check-background rounded-full w-4 h-4 inline-grid place-items-center mr-1`} >
-              <CheckIcon fill={`${hasLowerCase(password) ? "#fff" : "rgba(0, 0, 0, 0.3)" }`}/>
+            <div className={`${hasLowerCase(password) ? "checked-background" : "check-background"} check-background rounded-full w-4 h-4 inline-grid place-items-center mr-1`} >
+              <CheckIcon fill={`${hasLowerCase(password) ? "#fff" : "rgba(0, 0, 0, 0.3)"}`} />
             </div>
             <small className="text-neutral-500 text-sm font-normal mx-1">
               {language?.onboarding?.lowerCase}
@@ -100,8 +98,8 @@ const Signup = (props: any) => {
             </small>
           </section>
           <section className="inline-flex items-center">
-            <div className={`${hasSpecialCharacters(password) ? "checked-background" : "check-background" } check-background rounded-full w-4 h-4 inline-grid place-items-center mr-1`} >
-              <CheckIcon fill={`${hasSpecialCharacters(password) ? "#fff" : "rgba(0, 0, 0, 0.3)" }`} />
+            <div className={`${hasSpecialCharacters(password) ? "checked-background" : "check-background"} check-background rounded-full w-4 h-4 inline-grid place-items-center mr-1`} >
+              <CheckIcon fill={`${hasSpecialCharacters(password) ? "#fff" : "rgba(0, 0, 0, 0.3)"}`} />
             </div>
             <small className="text-neutral-500 text-sm font-normal mx-1">
               {language?.onboarding?.special}
@@ -128,9 +126,7 @@ const Signup = (props: any) => {
           onSetStepper(signUpData);
         } else toast.error(language.promptMessages.errorGeneral, toastUtil);
       } catch (error: any) {
-        const message =
-          error?.response?.data?.status?.message ||
-          language.promptMessages.errorGeneral;
+        const message = error?.response?.data?.status?.message || language.promptMessages.errorGeneral;
         toast.error(message, toastUtil);
       } finally {
         setLoading(false);
@@ -154,7 +150,7 @@ const Signup = (props: any) => {
     }, [watch]);
 
     return (
-      <form className="pt-12 pb-8 mb-4" onSubmit={handleSubmit(onSubmit)} {...(isSubmitSuccessful && { noValidate: true })} >
+      <form className="pt-8 pb-8 mb-4" onSubmit={handleSubmit(onSubmit)} {...(isSubmitSuccessful && { noValidate: true })} >
         <div className="mb-4">
           <AntdInput
             register={register}
@@ -216,12 +212,7 @@ const Signup = (props: any) => {
           />
         </div>
         {PasswordStrengthUI(password)}
-        <Button
-          className="w-full h-[38px]"
-          disabled={loading}
-          htmlType="submit"
-          loading={loading}
-        >
+        <Button className="w-full h-[38px]" disabled={loading} htmlType="submit" loading={loading} >
           {language?.buttons?.createAccount}
         </Button>
         <div className="flex justify-end my-[12px]">
@@ -246,12 +237,8 @@ const Signup = (props: any) => {
         </div>
 
         <aside className="inline-flex items-center justify-between w-full gap-4">
-          <button className="hover:border-cyan-800 border border-neutral-300 rounded-md py-2.5 px-4 w-2/4 h-[38px] inline-grid place-items-center bg-white">
-            <img src={GoogleIcon} alt={language?.onboarding?.googleLogin} />
-          </button>
-          <button className="hover:border-cyan-800 border border-neutral-300 rounded-md py-2.5 px-4 w-2/4 h-[38px] inline-grid place-items-center bg-white">
-            <img src={LinkedinIcon} alt={language?.onboarding?.linkedinLogin} />
-          </button>
+          <GoogleOauth language={language} loading={loading} setLoading={setLoading} state={state} />
+          <LinkedInOauth language={language} loading={loading} setLoading={setLoading} state={state} />
         </aside>
       </form>
     );

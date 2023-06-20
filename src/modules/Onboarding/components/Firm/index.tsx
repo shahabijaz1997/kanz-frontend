@@ -148,7 +148,7 @@ const Firm = ({ language }: any) => {
   };
 
   return (
-    <form className="pt-12 pb-8 mb-4 w-full" onSubmit={handleSubmit(addinvestmentAccridiation)} >
+    <form className="pt-8 pb-8 mb-4 w-full" onSubmit={handleSubmit(addinvestmentAccridiation)} >
       {
         loading ? <Loader /> : (
           <React.Fragment>

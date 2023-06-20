@@ -8,6 +8,7 @@ import Loader from "../../shared/views/Loader";
 import { KanzRoles } from "../../enums/roles.enum";
 import { ApplicationStatus } from "../../enums/types.enum";
 import { RoutesEnums } from "../../enums/routes.enum";
+import { LinkedInCallback } from "react-linkedin-login-oauth2";
 
 // Modules
 const Home = lazy(() => import("../Home"));
@@ -59,8 +60,6 @@ const RouterModule = () => {
   const dispatch = useDispatch();
   const authToken: any = useSelector((state: RootState) => state.auth.value);
   const event: any = useSelector((state: RootState) => state.event.value);
-  const orientation: any = useSelector((state: RootState) => state.orientation.value);
-
   const [loading, setLoading] = useState(false);
 
   useLayoutEffect(() => {
@@ -124,6 +123,8 @@ const RouterModule = () => {
             </Suspense>
           }
         />
+        <Route path="/linkedin" element={<Suspense fallback={<Loader />}><LinkedInCallback /></Suspense>} />
+
         <Route
           path="/complete-details"
           element={
