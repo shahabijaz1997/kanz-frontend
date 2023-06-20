@@ -72,7 +72,8 @@ const RouterModule = () => {
     dispatch(saveLanguage(_language));
     if (event === "ar") document.documentElement.dir = "rtl";
     else document.documentElement.dir = "ltr";
-
+    const element: HTMLElement | any = document.querySelector('html');
+    element.style.fontFamily = event === "ar" ? "'Almarai', sans-serif" : "Roboto, 'Open Sans', 'Helvetica Neue', sans-serif";
     let timer = setTimeout(() => {
       setLoading(false);
       clearTimeout(timer);

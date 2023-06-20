@@ -154,7 +154,7 @@ const Firm = ({ language }: any) => {
           <React.Fragment>
             <section className="mb-8 w-full">
               <label
-                className="block text-neutral-700 text-sm font-medium"
+                className="block text-neutral-700 text-sm font-medium mb-1"
                 htmlFor="full-name"
               >
                 {language?.common?.legalName}
@@ -168,7 +168,7 @@ const Firm = ({ language }: any) => {
             </section>
             <section className="mb-8 w-full relative" style={{ zIndex: 90 }}>
               <label
-                className="block text-neutral-700 text-sm font-medium"
+                className="block text-neutral-700 text-sm font-medium mb-1"
                 htmlFor="full-name"
               >
                 {language?.common?.location}
@@ -183,7 +183,7 @@ const Firm = ({ language }: any) => {
 
             <section className="mb-8 w-full relative">
               <label
-                className="block text-neutral-700 text-sm font-medium"
+                className="block text-neutral-700 text-sm font-medium mb-1"
                 htmlFor="full-name"
               >
                 {language?.individual?.accerQuestion}
@@ -200,7 +200,7 @@ const Firm = ({ language }: any) => {
                         onClick={() => setSelectedAssert(as)}
                       >
                         <input
-                          className="accent-cyan-800 relative float-left mr-2 h-3 w-3 rounded-full border-2 border-solid border-cyan-300 before:pointer-events-none before:absolute before:h-4 before:w-4 before:scale-0 before:rounded-full before:bg-transparent before:opacity-0 before:content-[''] after:absolute after:z-[1] after:block after:h-4 after:w-4 after:rounded-full after:content-[''] checked:border-primary checked:before:opacity-[0.16] checked:after:absolute checked:after:left-1/2 checked:after:top-1/2 checked:after:h-[0.625rem] checked:after:w-[0.625rem] checked:after:rounded-full checked:after:border-primary checked:after:bg-primary checked:after:content-[''] checked:after:[transform:translate(-50%,-50%)] hover:cursor-pointer hover:before:opacity-[0.04]"
+                          className="accent-cyan-800 relative float-left mx-2 h-3 w-3 rounded-full border-2 border-solid border-cyan-300 before:pointer-events-none before:absolute before:h-4 before:w-4 before:scale-0 before:rounded-full before:bg-transparent before:opacity-0 before:content-[''] after:absolute after:z-[1] after:block after:h-4 after:w-4 after:rounded-full after:content-[''] checked:border-primary checked:before:opacity-[0.16] checked:after:absolute checked:after:left-1/2 checked:after:top-1/2 checked:after:h-[0.625rem] checked:after:w-[0.625rem] checked:after:rounded-full checked:after:border-primary checked:after:bg-primary checked:after:content-[''] checked:after:[transform:translate(-50%,-50%)] hover:cursor-pointer hover:before:opacity-[0.04]"
                           type="radio"
                           checked={selectedAssert?.id === as.id ? true : false}
                         />
