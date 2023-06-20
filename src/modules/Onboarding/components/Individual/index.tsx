@@ -150,7 +150,7 @@ const Individual = ({ language }: any) => {
         <React.Fragment>
           <section className="mb-8 w-full">
             <label
-              className="block text-neutral-700 text-sm font-medium"
+              className="block text-neutral-700 text-sm font-medium mb-1"
               htmlFor="full-name"
             >
               {language?.common?.national}
@@ -164,7 +164,7 @@ const Individual = ({ language }: any) => {
             />
           </section>
           <section className="mb-8 w-full relative" style={{ zIndex: 90 }}>
-            <label className="block text-neutral-700 text-sm font-medium" htmlFor="full-name" >
+            <label className="block text-neutral-700 text-sm font-medium mb-1" htmlFor="full-name" >
               {language?.common?.residence}
             </label>
             <CountrySelector
@@ -178,7 +178,7 @@ const Individual = ({ language }: any) => {
 
           <section className="mb-8 w-full relative">
             <label
-              className="block text-neutral-700 text-sm font-medium mb-2"
+              className="block text-neutral-700 text-sm font-medium mb-1 mb-2"
               htmlFor="full-name"
             >
               {language?.common?.accerQuestion}

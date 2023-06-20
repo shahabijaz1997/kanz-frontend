@@ -1,41 +1,40 @@
-:root {
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
+  @import url('https://fonts.googleapis.com/css2?family=Almarai:wght@300;400;700;800&display=swap');
 
-  --background: #FBFBFB;
-  --background-check: #F1F1F1;
-  --background-submit: #0E2E35;
-  --background-bell: #F5F5F5;
-  --background-checked: #27AE60;
-  --text-blue: #2D9CDB;
-  --header-border: #E0E0E0;
-}
+  :root {
+    font-synthesis: none;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
 
-html {
-  font-family: Roboto, 'Open Sans', 'Helvetica Neue', sans-serif;
-}
+    --background: #FBFBFB;
+    --background-check: #F1F1F1;
+    --background-submit: #0E2E35;
+    --background-bell: #F5F5F5;
+    --background-checked: #27AE60;
+    --text-blue: #2D9CDB;
+    --header-border: #E0E0E0;
+  }
 
-.background-auth {
-  background-color: var(--background);
-}
 
-.check-background {
-  background-color: var(--background-check);
-}
+  .background-auth {
+    background-color: var(--background);
+  }
 
-.bell-background {
-  background-color: var(--background-bell);
-}
+  .check-background {
+    background-color: var(--background-check);
+  }
 
-.checked-background {
-  background-color: var(--background-checked);
-}
+  .bell-background {
+    background-color: var(--background-bell);
+  }
 
-.color-blue {
-  color: var(--text-blue);
-}
+  .checked-background {
+    background-color: var(--background-checked);
+  }
 
-.border-grey {
-  border-color: var(--header-border);
-}
+  .color-blue {
+    color: var(--text-blue);
+  }
+
+  .border-grey {
+    border-color: var(--header-border);
+  }

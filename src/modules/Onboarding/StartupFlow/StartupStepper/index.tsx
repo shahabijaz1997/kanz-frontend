@@ -61,17 +61,17 @@ const StartupStepper = ({ countries,orientation, language, file, payload, onSetP
             <section className="flex items-start justify-center flex-col">
                 <form className="pt-8 mb-4 w-full">
                     <div className="mb-8 relative">
-                        <label className="block text-neutral-700 text-sm font-medium" htmlFor="comp">{language.company.compName}</label>
+                        <label className="block text-neutral-700 text-sm font-medium mb-1" htmlFor="comp">{language.company.compName}</label>
                         <input id="comp" value={payload?.company} onChange={(e) => onSetPayload(e.target.value, "company")} placeholder={language.company.compName} className=" h-[42px] shadow-sm appearance-none border border-neutral-300 rounded-md w-full py-2 px-3 text-gray-500 leading-tight focus:outline-none focus:shadow-outline" type="text" />
                     </div>
 
                     <div className="mb-8 relative">
-                        <label className="block text-neutral-700 text-sm font-medium" htmlFor="legal">{language.company.legal}</label>
+                        <label className="block text-neutral-700 text-sm font-medium mb-1" htmlFor="legal">{language.company.legal}</label>
                         <input id="legal" value={payload?.legal} onChange={(e) => onSetPayload(e.target.value, "legal")} placeholder={language.company.legal} className=" h-[42px] shadow-sm appearance-none border border-neutral-300 rounded-md w-full py-2 px-3 text-gray-500 leading-tight focus:outline-none focus:shadow-outline" type="text" />
                     </div>
 
                     <div className="mb-8 w-full" ref={refInd}>
-                        <label className="block text-neutral-700 text-sm font-medium" htmlFor="market">{language.syndicate.industry}</label>
+                        <label className="block text-neutral-700 text-sm font-medium mb-1" htmlFor="market">{language.syndicate.industry}</label>
                         <small className="font-normal text-sm text-neutral-500">{language.syndicate.industrySub}</small>
                         <span className="relative">
                             <input id="market" autoComplete="off" value={search} onChange={(e) =>setSearch(e.target.value)} onClick={() => setShowData(!showData)}
@@ -101,7 +101,7 @@ const StartupStepper = ({ countries,orientation, language, file, payload, onSetP
                     </div>
 
                     <div className="mb-8 w-full relative" style={{ zIndex: 90 }}>
-                        <label className="block text-neutral-700 text-sm font-medium" htmlFor="full-name" >
+                        <label className="block text-neutral-700 text-sm font-medium mb-1" htmlFor="full-name" >
                             {language?.company?.country}
                         </label>
                         <CountrySelector
@@ -114,7 +114,7 @@ const StartupStepper = ({ countries,orientation, language, file, payload, onSetP
                     </div>
 
                     <div className="mb-8 relative">
-                        <label className="block text-neutral-700 text-sm font-medium" htmlFor="link">{language.company.compWeb}</label>
+                        <label className="block text-neutral-700 text-sm font-medium mb-1" htmlFor="link">{language.company.compWeb}</label>
                         <div className="relative inline-flex w-full">
                             <input type="disabled" value={"https://"} 
                             className={`text-neutral-500 text-base font-normal check-background border-t border-b border-neutral-300 h-[42px] w-[70px] ${orientation === "rtl" ? "border-r rounded-br-md rounded-tr-md pr-2": "border-l rounded-bl-md rounded-tl-md pl-2"}`} />
@@ -124,7 +124,7 @@ const StartupStepper = ({ countries,orientation, language, file, payload, onSetP
                     </div>
 
                     <div className="mb-8 relative">
-                        <label className="block text-neutral-700 text-sm font-medium" htmlFor="legal">{language.company.address}</label>
+                        <label className="block text-neutral-700 text-sm font-medium mb-1" htmlFor="legal">{language.company.address}</label>
                         <input id="legal" value={payload?.address} onChange={(e) => onSetPayload(e.target.value, "address")} placeholder={language.company.address} className=" h-[42px] shadow-sm appearance-none border border-neutral-300 rounded-md w-full py-2 px-3 text-gray-500 leading-tight focus:outline-none focus:shadow-outline" type="text" />
                     </div>
                 </form>
@@ -153,13 +153,13 @@ const StartupStepper = ({ countries,orientation, language, file, payload, onSetP
                     </div>
 
                     <div className="mb-8 relative">
-                        <label className="block text-neutral-700 text-sm font-medium" htmlFor="biz">{language.company.descBusQues}</label>
+                        <label className="block text-neutral-700 text-sm font-medium mb-1" htmlFor="biz">{language.company.descBusQues}</label>
                         <textarea id="biz" value={payload?.business} onChange={(e) => onSetPayload(e.target.value, "business")} placeholder={language.company.descBus} className=" h-[100px] shadow-sm appearance-none border border-neutral-300 rounded-md w-full py-2 px-3 text-gray-500 leading-tight focus:outline-none focus:shadow-outline"></textarea>
                     </div>
 
                     <div className="mb-8 relative">
                         <section className="w-full mt-2 p-[18px] rounded-lg check-background border border-grey">
-                            <h3 className="block text-neutral-700 text-sm font-medium">{language.company.ceoDet}</h3>
+                            <h3 className="block text-neutral-700 text-sm font-medium mb-1">{language.company.ceoDet}</h3>
                             <small className="font-normal text-sm text-neutral-500">{language.company.ceoDetSub}</small>
                             <div className="mt-5">
                                 <input value={payload?.name} onChange={(e) => onSetPayload(e.target.value, "name")} placeholder={language.company.name} className=" h-[42px] shadow-sm appearance-none border border-neutral-300 rounded-md w-full py-2 px-3 text-gray-500 leading-tight focus:outline-none focus:shadow-outline" type="text" />
@@ -171,12 +171,12 @@ const StartupStepper = ({ countries,orientation, language, file, payload, onSetP
                     </div>
 
                     <div className="mb-8 relative">
-                        <label className="block text-neutral-700 text-sm font-medium">{language.common.selectCurrency}</label>
+                        <label className="block text-neutral-700 text-sm font-medium mb-1">{language.common.selectCurrency}</label>
                         <Selector options={currencies} value={payload.currency} onChange={(item: any) => { onSetPayload(item, "currency") }} />
                     </div>
 
                     <div className="mb-8 relative inline-flex w-full flex-col">
-                        <label className="block text-neutral-700 text-sm font-medium" htmlFor="raised">{language.company.capRaised}</label>
+                        <label className="block text-neutral-700 text-sm font-medium mb-1" htmlFor="raised">{language.company.capRaised}</label>
                         <span className="inline-flex flex-row">
                             <input id="raised" value={payload?.raised} onChange={(e) => {
                                 const enteredValue = e.target.value;
@@ -188,7 +188,7 @@ const StartupStepper = ({ countries,orientation, language, file, payload, onSetP
                     </div>
 
                     <div className="mb-8 relative inline-flex w-full flex-col">
-                        <label className="block text-neutral-700 text-sm font-medium" htmlFor="target">{language.company.capTarget}</label>
+                        <label className="block text-neutral-700 text-sm font-medium mb-1" htmlFor="target">{language.company.capTarget}</label>
                         <span className="inline-flex flex-row">
                             <input id="target" value={payload?.target} onChange={(e) => {
                                 const enteredValue = e.target.value;

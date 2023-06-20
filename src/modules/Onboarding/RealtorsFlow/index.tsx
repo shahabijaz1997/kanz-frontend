@@ -153,7 +153,7 @@ const Realtors = (props: any) => {
                 </p>
                 <div className="bg-cbc-grey-sec pb-[18px]  pl-[18px] pr-[18px] pt-2.5 mt-[13px] rounded-[8px]">
                   <section className="mb-4 w-full">
-                    <label className="mb-2 block text-neutral-700 text-sm font-medium" htmlFor="name">
+                    <label className="mb-2 block text-neutral-700 text-sm font-medium mb-1" htmlFor="name">
                       {language?.common?.national}
                     </label>
                     <div className="relative w-full" style={{ zIndex: 101 }}>
@@ -161,7 +161,7 @@ const Realtors = (props: any) => {
                     </div>
                   </section>
                   <section className="mb-4 w-full">
-                    <label className="mb-2 block text-neutral-700 text-sm font-medium" htmlFor="full-name" >
+                    <label className="mb-2 block text-neutral-700 text-sm font-medium mb-1" htmlFor="full-name" >
                       {language?.common?.residence}
                     </label>
                     <div className="relative w-full" style={{ zIndex: 100 }}>
@@ -169,7 +169,7 @@ const Realtors = (props: any) => {
                     </div>
                   </section>
                   <section className="w-full">
-                    <label className="mb-2 block text-neutral-700 text-sm font-medium" htmlFor="full-name" >
+                    <label className="mb-2 block text-neutral-700 text-sm font-medium mb-1" htmlFor="full-name" >
                       {language?.common?.NoOfProperty}
                     </label>
                     <div className="relative w-full" style={{ zIndex: 99 }}>

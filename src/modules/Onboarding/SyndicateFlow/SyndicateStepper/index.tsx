@@ -106,7 +106,7 @@ const SyndicateStepper = ({ orientation, language, metadata, payload, file, onSe
                     </div>
                     {selected && selected.id === options[0].id && (
                         <div className="mb-8 relative">
-                            <h3 className="block text-neutral-700 text-sm font-medium">{language.syndicate.addDetail}</h3>
+                            <h3 className="block text-neutral-700 text-sm font-medium mb-1">{language.syndicate.addDetail}</h3>
                             <small className="font-normal text-sm text-neutral-500">{language.syndicate.subDetail}</small>
                             <section className="w-full mt-2 p-[18px] rounded-lg check-background border border-grey">
                                 <div className="mb-5">
@@ -130,7 +130,7 @@ const SyndicateStepper = ({ orientation, language, metadata, payload, file, onSe
                     )}
 
                     <div className="mb-8" ref={refInd}>
-                        <label className="block text-neutral-700 text-sm font-medium" htmlFor="industry">{language.syndicate.industry}</label>
+                        <label className="block text-neutral-700 text-sm font-medium mb-1" htmlFor="industry">{language.syndicate.industry}</label>
                         <small className="font-normal text-sm text-neutral-500">{language.syndicate.industrySub}</small>
                         <span className="relative">
                             <input id="industry" autoComplete="off" value={search.industry} onChange={(e) => onSetSearch(e.target.value, "industry")} onClick={() => setShowData(p => { return { ...p, industry: !p.industry } })}
@@ -160,7 +160,7 @@ const SyndicateStepper = ({ orientation, language, metadata, payload, file, onSe
                     </div>
 
                     <div className="mb-8 relative" ref={refReg}>
-                        <label className="block text-neutral-700 text-sm font-medium" htmlFor="region">{language.syndicate.region}</label>
+                        <label className="block text-neutral-700 text-sm font-medium mb-1" htmlFor="region">{language.syndicate.region}</label>
                         <span className="relative">
                             <input id="region" autoComplete="off" value={search.region} onChange={(e) => onSetSearch(e.target.value, "region")} onClick={() => setShowData(p => { return { ...p, region: !p.region } })}
                                 className="h-[42px] shadow-sm appearance-none border border-neutral-300 rounded-md w-full py-2 px-3 text-gray-500 leading-tight focus:outline-none focus:shadow-outline" type="text" />
@@ -189,7 +189,7 @@ const SyndicateStepper = ({ orientation, language, metadata, payload, file, onSe
                     </div>
 
                     <div className="mb-8 relative">
-                        <label className="block text-neutral-700 text-sm font-medium" htmlFor="link">{language.syndicate.profile}</label>
+                        <label className="block text-neutral-700 text-sm font-medium mb-1" htmlFor="link">{language.syndicate.profile}</label>
                         <div className="relative inline-flex w-full">
                             <input type="disabled" value={"https://"}
                                 className={`text-neutral-500 text-base font-normal check-background border-t border-b border-neutral-300 h-[42px] w-[70px] ${orientation === "rtl" ? "border-r rounded-br-md rounded-tr-md pr-2" : "border-l rounded-bl-md rounded-tl-md pl-2"}`} />
@@ -199,7 +199,7 @@ const SyndicateStepper = ({ orientation, language, metadata, payload, file, onSe
                     </div>
 
                     <div className="mb-4 relative">
-                        <label className="block text-neutral-700 text-sm font-medium" htmlFor="dealflow">{language.syndicate.dealflow}</label>
+                        <label className="block text-neutral-700 text-sm font-medium mb-1" htmlFor="dealflow">{language.syndicate.dealflow}</label>
                         <input id="dealflow" value={payload?.dealflow} onChange={(e) => onSetPayload(e.target.value, "dealflow")} placeholder={language.syndicate.dealflow} className=" h-[42px] shadow-sm appearance-none border border-neutral-300 rounded-md w-full py-2 px-3 text-gray-500 leading-tight focus:outline-none focus:shadow-outline" type="text" />
                     </div>
                 </form>
