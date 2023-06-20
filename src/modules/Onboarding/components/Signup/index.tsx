@@ -238,7 +238,7 @@ const Signup = (props: any) => {
 
         <aside className="inline-flex items-center justify-between w-full gap-4">
           <GoogleOauth language={language} loading={loading} setLoading={setLoading} state={state} />
-         <LinkedInOauth language={language} loading={loading} setLoading={setLoading} />
+          <LinkedInOauth language={language} loading={loading} setLoading={setLoading} state={state} />
         </aside>
       </form>
     );

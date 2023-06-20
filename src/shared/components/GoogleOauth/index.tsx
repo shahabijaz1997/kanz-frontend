@@ -25,6 +25,7 @@ const GoogleOauth = ({ loading, setLoading, language, state }: any) => {
                     dispatch(saveUserData(data?.status?.data));
                     const token = headers["authorization"].split(" ")[1];
                     dispatch(saveToken(token));
+                    toast.dismiss();
                     toast.success(data.status.message, toastUtil);
                     localStorage.removeItem("role");
                     let timeout = setTimeout(() => {
@@ -36,6 +37,7 @@ const GoogleOauth = ({ loading, setLoading, language, state }: any) => {
             } catch (error: any) {
                 console.error(error);
                 const message = error?.response?.data?.status?.message || language.promptMessages.errorGeneral;
+                toast.dismiss();
                 toast.error(message, toastUtil);
             } finally {
                 setLoading(false)
@@ -44,7 +46,7 @@ const GoogleOauth = ({ loading, setLoading, language, state }: any) => {
     });
 
     return (
-        <button className="hover:border-cyan-800 border border-neutral-300 rounded-md py-2.5 px-4 w-2/4 h-[38px] inline-grid place-items-center bg-white" type="button" onClick={() => login()}>
+        <button className="transition-all hover:border-cyan-800 border border-neutral-300 rounded-md py-2.5 px-4 w-2/4 h-[38px] inline-grid place-items-center bg-white" type="button" onClick={() => login()}>
             <img src={GoogleIcon} alt={language?.onboarding?.googleLogin} />
         </button>
     )
