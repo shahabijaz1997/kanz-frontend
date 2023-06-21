@@ -23,6 +23,7 @@ const Firm = ({ language }: any) => {
   const dispatch = useDispatch();
   const authToken: any = useSelector((state: RootState) => state.auth.value);
   const metadata: any = useSelector((state: RootState) => state.metadata.value);
+  const event: any = useSelector((state: RootState) => state.event.value);
   const [assertQuestions] = useState([
     {
       id: 1,
@@ -81,7 +82,7 @@ const Firm = ({ language }: any) => {
     try {
       let { status, data } = await getCountries(authToken);
       if (status === 200) {
-        let names = data.status.data.map((c: any) => c.name);
+        let names = data.status.data.map((c: any) => c[event].name);
         if (metadata?.profile) {
           setPayload({ legal: metadata?.profile?.legal_name, residence: { label: metadata?.profile?.location, value: metadata?.profile?.location }, accer: "", risk: false });
           setSelectedAssert(assertQuestions.find(as => as.title === metadata?.profile?.accreditation));
@@ -113,7 +114,7 @@ const Firm = ({ language }: any) => {
     }
     try {
       setLoading(true);
-      let country: any = countries.all.find((c: any) => c.name === payload?.residence?.value);
+      let country: any = countries.all.find((c: any) => c[event].name === payload?.residence?.value);
 
       let _payload = {
         investor_profile: {

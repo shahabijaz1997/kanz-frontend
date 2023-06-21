@@ -111,7 +111,8 @@ const Individual = ({ language }: any) => {
     }
     try {
       setLoading(true);
-      let country: any = countries.all.find((c: any) => c.name === payload?.national?.value);
+      let country: any = countries.all.find((c: any) => c[event].name === payload?.national?.value);
+      
       let _payload = {
         investor_profile: {
           country_id: country.id,
