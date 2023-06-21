@@ -70,6 +70,8 @@ const Questionare = ({ step, returnSuccessRedirection }: any) => {
   const submitData = async (payload: any) => {
     try {
       setLoading(true);
+      console.log("payload", payload);
+      
       let { status, data } = await postInvestmentPhilisophyData(payload, authToken);
       if (status === 200) localStorage.setItem("step", step);
       if (step === questions?.total_steps && status === 200)
@@ -337,10 +339,10 @@ const Questionare = ({ step, returnSuccessRedirection }: any) => {
     } else {
       let _mcqs = [...mcqs];
       let answers = _mcqs.map((m) => m.statement);
-      let philData: any = { ...JSON.parse(philisophyData), 3: { step: 3, questions: [{ question_id: 1, answers, answer_meta: { options: mcqs } }] } };
+      let philData: any = { ...JSON.parse(philisophyData), 3: { step: 3, questions: [{ question_id: questions?.questions[0]?.id, answers, answer_meta: { options: mcqs } }] } };
       localStorage.setItem("philosophy", JSON.stringify(philData));
       payload.investment_philosophy.step = 3;
-      payload.investment_philosophy.questions = [{ question_id: 1, answers, answer_meta: { options: mcqs } }];
+      payload.investment_philosophy.questions = [{ question_id: questions?.questions[0]?.id, answers, answer_meta: { options: mcqs } }];
     }
     submitData(payload);
     if (step !== questions?.total_steps)

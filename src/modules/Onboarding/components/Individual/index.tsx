@@ -19,6 +19,7 @@ const Individual = ({ language }: any) => {
 
   const authToken: any = useSelector((state: RootState) => state.auth.value);
   const metadata: any = useSelector((state: RootState) => state.metadata.value);
+  const event: any = useSelector((state: RootState) => state.event.value);
   const [assertQuestions] = useState([
     {
       id: 1,
@@ -75,7 +76,7 @@ const Individual = ({ language }: any) => {
     try {
       let { status, data } = await getCountries(authToken);
       if (status === 200) {
-        let names = data.status.data.map((c: any) => c.name);
+        let names = data.status.data.map((c: any) => c[event].name);
         if (metadata?.profile) {
           setPayload({ national: { label: metadata?.profile?.nationality, value: metadata?.profile?.nationality }, residence: { label: metadata?.profile?.residence, value: metadata?.profile?.residence }, accer: "", risk: false });
           setSelectedAssert(assertQuestions.find(as => as.title === metadata?.profile?.accreditation));
@@ -110,7 +111,8 @@ const Individual = ({ language }: any) => {
     }
     try {
       setLoading(true);
-      let country: any = countries.all.find((c: any) => c.name === payload?.national?.value);
+      let country: any = countries.all.find((c: any) => c[event].name === payload?.national?.value);
+      
       let _payload = {
         investor_profile: {
           country_id: country.id,

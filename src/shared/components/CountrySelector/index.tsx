@@ -34,7 +34,7 @@ export default function CountrySelector({
   const dropDownOptions = countries?.map((item: any) => {
     return {
       label: item,
-      value: item,
+      value: item
     };
   });
 
