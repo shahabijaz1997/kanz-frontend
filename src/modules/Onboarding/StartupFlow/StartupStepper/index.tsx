@@ -97,13 +97,20 @@ const StartupStepper = ({ event, countries, orientation, language, file, payload
                         <label className="block text-neutral-700 text-sm font-medium mb-1" htmlFor="full-name" >
                             {language?.company?.country}
                         </label>
-                        <CountrySelector
+                        {event == "en" && <CountrySelector
                             onChange={(v: any) => onSetPayload(countries.all.find((c: any) => c[event].name === v.value), "country")}
-                            selectedValue={{ label: payload?.country[event].name, value: payload?.country[event].name }}
+                            selectedValue={{ label: payload?.country?.en?.name, value: payload?.country?.en?.name }}
                             allCountries={countries.names}
-                            value={payload?.country[event].name || ""}
-                            defaultValue={{ label: payload?.country[event].name, value: payload?.country[event].name } || ""}
-                        />
+                            value={payload?.country?.en?.name || ""}
+                            defaultValue={{ label: payload?.country?.en?.name, value: payload?.country?.en?.name } || ""}
+                        />}
+                        {event == "ar" && <CountrySelector
+                            onChange={(v: any) => onSetPayload(countries.all.find((c: any) => c[event].name === v.value), "country")}
+                            selectedValue={{ label: payload?.country?.ar?.name, value: payload?.country?.ar?.name }}
+                            allCountries={countries.names}
+                            value={payload?.country?.ar?.name || ""}
+                            defaultValue={{ label: payload?.country?.ar?.name, value: payload?.country?.ar?.name } || ""}
+                        />}
                     </div>
 
                     <div className="mb-8 relative">
@@ -175,7 +182,7 @@ const StartupStepper = ({ event, countries, orientation, language, file, payload
                                 const enteredValue = e.target.value;
                                 const numericValue = enteredValue.replace(/[^0-9]/g, '');
                                 onSetPayload(numericValue, "raised");
-                            }} placeholder={language.company.addCapRaise} className={`h-[42px] shadow-sm appearance-none border border-neutral-300 w-full py-2 px-3 text-gray-500 leading-tight focus:outline-none focus:shadow-outline ${orientation === "rtl" ? "rounded-br-md rounded-tr-md" :"rounded-bl-md rounded-tl-md"}`} type="text" />
+                            }} placeholder={language.company.addCapRaise} className={`h-[42px] shadow-sm appearance-none border border-neutral-300 w-full py-2 px-3 text-gray-500 leading-tight focus:outline-none focus:shadow-outline ${orientation === "rtl" ? "rounded-br-md rounded-tr-md" : "rounded-bl-md rounded-tl-md"}`} type="text" />
                             <input type="disabled" value={payload.currency.value} className={`text-neutral-500 text-base font-normal check-background border-t border-b border-neutral-300 h-[42px] w-[70px] ${orientation === "rtl" ? "pr-4 border-l rounded-bl-md rounded-tl-md" : "pl-4 border-r rounded-br-md rounded-tr-md"}`} />
                         </span>
                     </div>
@@ -187,7 +194,7 @@ const StartupStepper = ({ event, countries, orientation, language, file, payload
                                 const enteredValue = e.target.value;
                                 const numericValue = enteredValue.replace(/[^0-9]/g, '');
                                 onSetPayload(numericValue, "target");
-                            }} placeholder={language.company.addCapTarget} className={`h-[42px] shadow-sm appearance-none border border-neutral-300 w-full py-2 px-3 text-gray-500 leading-tight focus:outline-none focus:shadow-outline ${orientation === "rtl" ? "rounded-br-md rounded-tr-md" :"rounded-bl-md rounded-tl-md"}`} type="text" />
+                            }} placeholder={language.company.addCapTarget} className={`h-[42px] shadow-sm appearance-none border border-neutral-300 w-full py-2 px-3 text-gray-500 leading-tight focus:outline-none focus:shadow-outline ${orientation === "rtl" ? "rounded-br-md rounded-tr-md" : "rounded-bl-md rounded-tl-md"}`} type="text" />
                             <input type="disabled" value={payload.currency.value} className={`text-neutral-500 text-base font-normal check-background border-t border-b border-neutral-300 h-[42px] w-[70px] ${orientation === "rtl" ? "pr-4 border-l rounded-bl-md rounded-tl-md" : "pl-4 border-r rounded-br-md rounded-tr-md"}`} />
                         </span>
                     </div>
