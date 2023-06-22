@@ -12,7 +12,7 @@ import SearchedItems from "../../../../shared/components/SearchedItems";
 
 const currencies = [{ label: "AED", value: "AED" }, { label: "USD", value: "USD" }];
 
-const StartupStepper = ({ countries, orientation, language, file, payload, onSetPayload, step, removeFile, setFile, setModalOpen, setFileType }: any) => {
+const StartupStepper = ({ event, countries, orientation, language, file, payload, onSetPayload, step, removeFile, setFile, setModalOpen, setFileType }: any) => {
     const refInd: any = useRef(null);
     const [showHoverModal, setShowHoverModal] = useState(false);
     const [search, setSearch] = useState("");
@@ -98,7 +98,7 @@ const StartupStepper = ({ countries, orientation, language, file, payload, onSet
                             {language?.company?.country}
                         </label>
                         <CountrySelector
-                            onChange={(v: any) => onSetPayload(countries.all.find((c: any) => c.name === v.value), "country")}
+                            onChange={(v: any) => onSetPayload(countries.all.find((c: any) => c[event].name === v.value), "country")}
                             selectedValue={{ label: payload?.country?.name, value: payload?.country?.name }}
                             allCountries={countries.names}
                             value={payload?.country?.name || ""}
@@ -175,8 +175,8 @@ const StartupStepper = ({ countries, orientation, language, file, payload, onSet
                                 const enteredValue = e.target.value;
                                 const numericValue = enteredValue.replace(/[^0-9]/g, '');
                                 onSetPayload(numericValue, "raised");
-                            }} placeholder={language.company.addCapRaise} className="h-[42px] shadow-sm appearance-none border border-neutral-300 rounded-bl-md rounded-tl-md w-full py-2 px-3 text-gray-500 leading-tight focus:outline-none focus:shadow-outline" type="text" />
-                            <input type="disabled" value={payload.currency.value} className="text-neutral-500 text-base font-normal check-background border-r border-t border-b border-neutral-300 pl-4 rounded-br-md rounded-tr-md h-[42px] w-[70px]" />
+                            }} placeholder={language.company.addCapRaise} className={`h-[42px] shadow-sm appearance-none border border-neutral-300 w-full py-2 px-3 text-gray-500 leading-tight focus:outline-none focus:shadow-outline ${orientation === "rtl" ? "rounded-br-md rounded-tr-md" :"rounded-bl-md rounded-tl-md"}`} type="text" />
+                            <input type="disabled" value={payload.currency.value} className={`text-neutral-500 text-base font-normal check-background border-t border-b border-neutral-300 h-[42px] w-[70px] ${orientation === "rtl" ? "pr-4 border-l rounded-bl-md rounded-tl-md" : "pl-4 border-r rounded-br-md rounded-tr-md"}`} />
                         </span>
                     </div>
 
@@ -187,8 +187,8 @@ const StartupStepper = ({ countries, orientation, language, file, payload, onSet
                                 const enteredValue = e.target.value;
                                 const numericValue = enteredValue.replace(/[^0-9]/g, '');
                                 onSetPayload(numericValue, "target");
-                            }} placeholder={language.company.addCapTarget} className="h-[42px] shadow-sm appearance-none border border-neutral-300 rounded-bl-md rounded-tl-md w-full py-2 px-3 text-gray-500 leading-tight focus:outline-none focus:shadow-outline" type="text" />
-                            <input type="disabled" value={payload.currency.value} className="text-neutral-500 text-base font-normal check-background border-r border-t border-b border-neutral-300 pl-4 rounded-br-md rounded-tr-md h-[42px] w-[70px]" />
+                            }} placeholder={language.company.addCapTarget} className={`h-[42px] shadow-sm appearance-none border border-neutral-300 w-full py-2 px-3 text-gray-500 leading-tight focus:outline-none focus:shadow-outline ${orientation === "rtl" ? "rounded-br-md rounded-tr-md" :"rounded-bl-md rounded-tl-md"}`} type="text" />
+                            <input type="disabled" value={payload.currency.value} className={`text-neutral-500 text-base font-normal check-background border-t border-b border-neutral-300 h-[42px] w-[70px] ${orientation === "rtl" ? "pr-4 border-l rounded-bl-md rounded-tl-md" : "pl-4 border-r rounded-br-md rounded-tr-md"}`} />
                         </span>
                     </div>
                 </form>

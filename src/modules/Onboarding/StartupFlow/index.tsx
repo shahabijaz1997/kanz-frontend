@@ -164,6 +164,8 @@ const StartupFlow = ({ }: any) => {
   const ontoNextStep = () => {
     if (step === 1) {
       let errors = [];
+      console.log(payload);
+      
       if (!payload.company || !payload.legal || !payload.market.length || !payload.web || !payload.address || !payload.country)
         errors.push(language.promptMessages.pleaseSelectAllData)
       if (!isValidUrl(payload.web)) errors.push(language.promptMessages.validComp);
@@ -256,6 +258,7 @@ const StartupFlow = ({ }: any) => {
           options={options}
           step={step}
           file={file}
+          event={event}
           setFileType={(e: any) => setFileType(e)}
           removeFile={removeFile}
           setFile={onSetFile}
