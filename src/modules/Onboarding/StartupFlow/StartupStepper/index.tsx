@@ -99,10 +99,10 @@ const StartupStepper = ({ event, countries, orientation, language, file, payload
                         </label>
                         <CountrySelector
                             onChange={(v: any) => onSetPayload(countries.all.find((c: any) => c[event].name === v.value), "country")}
-                            selectedValue={{ label: payload?.country?.name, value: payload?.country?.name }}
+                            selectedValue={{ label: payload?.country[event].name, value: payload?.country[event].name }}
                             allCountries={countries.names}
-                            value={payload?.country?.name || ""}
-                            defaultValue={{ label: payload?.country?.name, value: payload?.country?.name } || ""}
+                            value={payload?.country[event].name || ""}
+                            defaultValue={{ label: payload?.country[event].name, value: payload?.country[event].name } || ""}
                         />
                     </div>
 
