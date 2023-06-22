@@ -20,7 +20,7 @@ const RealtorHome = ({ loading, language }: any) => {
                         {language?.onboarding?.realtorWelcomeText}
                     </h2>
                     <h3 className="text-base font-normal text-neutral-700 screen500:text-[12px]">
-                        {language?.onboarding?.syndicateLeadSub}
+                        {language?.onboarding?.realtorLeadSub}
                     </h3>
                     <Button
                         className="mt-6 h-[38px]"

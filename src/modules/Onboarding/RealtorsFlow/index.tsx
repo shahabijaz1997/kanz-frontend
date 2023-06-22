@@ -145,9 +145,9 @@ const Realtors = (props: any) => {
           <form className="pb-8 mb-4 w-full" onSubmit={handleSubmit(onSubmit)}>
             <div className="flex items-center justify-center">
               <div>
-                <div className="w-[450px] mt-[78px]">Owner Info</div>
+                <div className="w-[450px] mt-[78px]">{language?.onboarding?.PropertyOwner}</div>
                 <p className="text-neutral-500 font-normal text-sm">
-                  <span>{language.syndicate.subDetail}</span>&nbsp;
+                  <span>{language.onboarding.realtorSubDetail}</span>&nbsp;
                   <span className="color-blue font-medium cursor-pointer" onClick={() => setOpen(true)}>
                     {language.common.learn}
                   </span>

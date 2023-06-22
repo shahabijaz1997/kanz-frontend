@@ -41,7 +41,10 @@
         "codeText": "Enter code",
         "sentCode": "Code has been sent to your email",
         "welcomeDashboard": "Welcome to Your Kanz Dashboard",
-        "starterMessage": "Start investing by adding few details to your profile"
+        "starterMessage": "Start investing by adding few details to your profile",
+        "PropertyOwner": "Owner Info",
+        "realtorSubDetail": "Provide property owner details",
+        "realtorLeadSub": "Norem ipsum dolor sit amet, consectetur adipiscing elit. consectetur adipiscing elit."
     },
     "investorFow": {
         "type": "Select Investor Type",

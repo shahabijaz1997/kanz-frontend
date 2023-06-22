@@ -107,7 +107,6 @@ const SyndicateStepper = ({ orientation, language, metadata, payload, file, onSe
                     {selected && selected.id === options[0].id && (
                         <div className="mb-8 relative">
                             <h3 className="block text-neutral-700 text-sm font-medium mb-1">{language.syndicate.addDetail}</h3>
-                            <small className="font-normal text-sm text-neutral-500">{language.syndicate.subDetail}</small>
                             <section className="w-full mt-2 p-[18px] rounded-lg check-background border border-grey">
                                 <div className="mb-5">
                                     <label htmlFor="raised" className="text-neutral-700 text-sm font-medium">{language.syndicate.raisedQ}</label>
@@ -131,7 +130,6 @@ const SyndicateStepper = ({ orientation, language, metadata, payload, file, onSe
 
                     <div className="mb-8" ref={refInd}>
                         <label className="block text-neutral-700 text-sm font-medium mb-1" htmlFor="industry">{language.syndicate.industry}</label>
-                        <small className="font-normal text-sm text-neutral-500">{language.syndicate.industrySub}</small>
                         <span className="relative">
                             <input id="industry" autoComplete="off" value={search.industry} onChange={(e) => onSetSearch(e.target.value, "industry")} onClick={() => setShowData(p => { return { ...p, industry: !p.industry } })}
                                 className="h-[42px] shadow-sm appearance-none border border-neutral-300 rounded-md w-full py-2 px-3 text-gray-500 leading-tight focus:outline-none focus:shadow-outline" type="text" />
