@@ -191,7 +191,7 @@ const SyndicateStepper = ({ orientation, language, metadata, payload, file, onSe
                     <div className="mb-8 relative">
                         <label className="block text-neutral-700 text-sm font-medium mb-1" htmlFor="link">{language.syndicate.profile}</label>
                         <div className="relative inline-flex w-full">
-                            <input type="disabled" value={"https://"} style={{direction: "ltr"}}
+                            <input type="disabled" value={"https://"} 
                                 className={`text-neutral-500 text-base font-normal check-background border-t border-b border-neutral-300 h-[42px] w-[70px] ${orientation === "rtl" ? "border-r rounded-br-md rounded-tr-md pr-2" : "border-l rounded-bl-md rounded-tl-md pl-2"}`} />
                             <input id="link" value={payload?.profileLink} onChange={(e) => onSetPayload(e.target.value, "profileLink")} placeholder="www.example.com"
                                 className={`h-[42px] shadow-sm appearance-none border border-neutral-300 w-full py-2 px-3 text-gray-500 leading-tight focus:outline-none focus:shadow-outline ${orientation === "rtl" ? " rounded-bl-md rounded-tl-md" : " rounded-br-md rounded-tr-md"}`} type="text" />
