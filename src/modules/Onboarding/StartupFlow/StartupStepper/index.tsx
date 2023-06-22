@@ -1,9 +1,5 @@
 import React, { useState, useLayoutEffect, useRef } from "react";
-import { useDispatch } from "react-redux";
-import { useNavigate } from "react-router-dom";
-import { getCountries } from "../../../../apis/countries.api";
 import Chevrond from "../../../../ts-icons/chevrond.svg";
-import { saveToken } from "../../../../redux-toolkit/slicer/auth.slicer";
 import HoverModal from "../../../../shared/components/HoverModal";
 import FileUpload from "../../../../shared/components/FileUpload";
 import SampleImage from "../../../../assets/example_id.png";
@@ -16,12 +12,9 @@ import SearchedItems from "../../../../shared/components/SearchedItems";
 
 const currencies = [{ label: "AED", value: "AED" }, { label: "USD", value: "USD" }];
 
-const StartupStepper = ({ countries,orientation, language, file, payload, onSetPayload, authToken, step, removeFile, setFile, setModalOpen, setFileType }: any) => {
-    const dispatch = useDispatch();
-    const navigate = useNavigate();
+const StartupStepper = ({ countries, orientation, language, file, payload, onSetPayload, step, removeFile, setFile, setModalOpen, setFileType }: any) => {
     const refInd: any = useRef(null);
     const [showHoverModal, setShowHoverModal] = useState(false);
-    const [loading, setLoading] = useState(false);
     const [search, setSearch] = useState("");
     const [showData, setShowData] = useState(false);
     const [searchResults, setSearchResults]: any = useState([]);
@@ -43,7 +36,7 @@ const StartupStepper = ({ countries,orientation, language, file, payload, onSetP
         };
     }, []);
 
-   
+
 
     const bootstrapData = async () => {
         try {
@@ -74,9 +67,9 @@ const StartupStepper = ({ countries,orientation, language, file, payload, onSetP
                         <label className="block text-neutral-700 text-sm font-medium mb-1" htmlFor="market">{language.syndicate.industry}</label>
                         <small className="font-normal text-sm text-neutral-500">{language.syndicate.industrySub}</small>
                         <span className="relative">
-                            <input id="market" autoComplete="off" value={search} onChange={(e) =>setSearch(e.target.value)} onClick={() => setShowData(!showData)}
+                            <input id="market" autoComplete="off" value={search} onChange={(e) => setSearch(e.target.value)} onClick={() => setShowData(!showData)}
                                 className="h-[42px] shadow-sm appearance-none border border-neutral-300 rounded-md w-full py-2 px-3 text-gray-500 leading-tight focus:outline-none focus:shadow-outline" type="text" />
-                            <span className={`absolute top-[0px] right-0 flex items-center pr-2 pointer-events-none}`} style={{ zIndex: 99 }}>
+                            <span className={`absolute top-[0px] flex items-center pr-2 pointer-events-none ${orientation === "rtl" ? "left-1" : "right-0"}`} style={{ zIndex: 99 }}>
                                 <Chevrond stroke="#737373" />
                             </span>
                         </span>
@@ -116,10 +109,10 @@ const StartupStepper = ({ countries,orientation, language, file, payload, onSetP
                     <div className="mb-8 relative">
                         <label className="block text-neutral-700 text-sm font-medium mb-1" htmlFor="link">{language.company.compWeb}</label>
                         <div className="relative inline-flex w-full">
-                            <input type="disabled" value={"https://"} 
-                            className={`text-neutral-500 text-base font-normal check-background border-t border-b border-neutral-300 h-[42px] w-[70px] ${orientation === "rtl" ? "border-r rounded-br-md rounded-tr-md pr-2": "border-l rounded-bl-md rounded-tl-md pl-2"}`} />
-                            <input id="link" value={payload?.web} onChange={(e) => onSetPayload(e.target.value, "web")} placeholder="www.example.com" 
-                            className={`h-[42px] shadow-sm appearance-none border border-neutral-300 w-full py-2 px-3 text-gray-500 leading-tight focus:outline-none focus:shadow-outline ${orientation === "rtl" ? " rounded-bl-md rounded-tl-md" : " rounded-br-md rounded-tr-md"}`} type="text" />
+                            <input type="disabled" value={"https://"}
+                                className={`text-neutral-500 text-base font-normal check-background border-t border-b border-neutral-300 h-[42px] w-[70px] ${orientation === "rtl" ? "border-r rounded-br-md rounded-tr-md pr-2" : "border-l rounded-bl-md rounded-tl-md pl-2"}`} />
+                            <input id="link" value={payload?.web} onChange={(e) => onSetPayload(e.target.value, "web")} placeholder="www.example.com"
+                                className={`h-[42px] shadow-sm appearance-none border border-neutral-300 w-full py-2 px-3 text-gray-500 leading-tight focus:outline-none focus:shadow-outline ${orientation === "rtl" ? " rounded-bl-md rounded-tl-md" : " rounded-br-md rounded-tr-md"}`} type="text" />
                         </div>
                     </div>
 

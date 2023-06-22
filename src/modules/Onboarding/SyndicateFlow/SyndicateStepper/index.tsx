@@ -135,7 +135,7 @@ const SyndicateStepper = ({ orientation, language, metadata, payload, file, onSe
                         <span className="relative">
                             <input id="industry" autoComplete="off" value={search.industry} onChange={(e) => onSetSearch(e.target.value, "industry")} onClick={() => setShowData(p => { return { ...p, industry: !p.industry } })}
                                 className="h-[42px] shadow-sm appearance-none border border-neutral-300 rounded-md w-full py-2 px-3 text-gray-500 leading-tight focus:outline-none focus:shadow-outline" type="text" />
-                            <span className={`absolute top-[0px] right-0 flex items-center pr-2 pointer-events-none}`} style={{ zIndex: 99 }}>
+                            <span className={`absolute top-[0px] flex items-center pr-2 pointer-events-none ${orientation === "rtl" ? "left-1" : "right-0"}`} style={{ zIndex: 99 }}>
                                 <Chevrond stroke="#737373" />
                             </span>
                         </span>
@@ -164,7 +164,7 @@ const SyndicateStepper = ({ orientation, language, metadata, payload, file, onSe
                         <span className="relative">
                             <input id="region" autoComplete="off" value={search.region} onChange={(e) => onSetSearch(e.target.value, "region")} onClick={() => setShowData(p => { return { ...p, region: !p.region } })}
                                 className="h-[42px] shadow-sm appearance-none border border-neutral-300 rounded-md w-full py-2 px-3 text-gray-500 leading-tight focus:outline-none focus:shadow-outline" type="text" />
-                            <span className={`absolute top-[0px] right-0 flex items-center pr-2 pointer-events-none}`} style={{ zIndex: 99 }}>
+                            <span className={`absolute top-[0px] flex items-center pr-2 pointer-events-none ${orientation === "rtl" ? "left-1" : "right-0"}`} style={{ zIndex: 99 }}>
                                 <Chevrond stroke="#737373" />
                             </span>
                         </span>
@@ -191,7 +191,7 @@ const SyndicateStepper = ({ orientation, language, metadata, payload, file, onSe
                     <div className="mb-8 relative">
                         <label className="block text-neutral-700 text-sm font-medium mb-1" htmlFor="link">{language.syndicate.profile}</label>
                         <div className="relative inline-flex w-full">
-                            <input type="disabled" value={"https://"}
+                            <input type="disabled" value={"https://"} style={{direction: "ltr"}}
                                 className={`text-neutral-500 text-base font-normal check-background border-t border-b border-neutral-300 h-[42px] w-[70px] ${orientation === "rtl" ? "border-r rounded-br-md rounded-tr-md pr-2" : "border-l rounded-bl-md rounded-tl-md pl-2"}`} />
                             <input id="link" value={payload?.profileLink} onChange={(e) => onSetPayload(e.target.value, "profileLink")} placeholder="www.example.com"
                                 className={`h-[42px] shadow-sm appearance-none border border-neutral-300 w-full py-2 px-3 text-gray-500 leading-tight focus:outline-none focus:shadow-outline ${orientation === "rtl" ? " rounded-bl-md rounded-tl-md" : " rounded-br-md rounded-tr-md"}`} type="text" />
