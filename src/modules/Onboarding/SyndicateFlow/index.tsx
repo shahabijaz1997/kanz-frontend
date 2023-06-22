@@ -22,6 +22,7 @@ const SyndicateFlow = ({ }: any) => {
   const dispatch = useDispatch();
   const language: any = useSelector((state: RootState) => state.language.value);
   const authToken: any = useSelector((state: RootState) => state.auth.value);
+  const event: any = useSelector((state: RootState) => state.event.value);
   const logo: any = useSelector((state: RootState) => state.attachments.logo.value);
   const metadata: any = useSelector((state: RootState) => state.metadata.value);
   const orientation: any = useSelector((state: RootState) => state.orientation.value);
