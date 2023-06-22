@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { RootState } from "../../../../redux-toolkit/store/store";
 import { useNavigate } from "react-router-dom";
-import { confirmToken, resendConfirmToken, signup } from "../../../../apis/auth.api";
+import { confirmToken, resendConfirmToken, signup, updateLanguage } from "../../../../apis/auth.api";
 import { toast } from "react-toastify";
 import { toastUtil } from "../../../../utils/toast.utils";
 import { saveToken } from "../../../../redux-toolkit/slicer/auth.slicer";
@@ -28,6 +28,7 @@ const EmailVerification = ({ payload, onReSignup }: any) => {
   const language: any = useSelector((state: RootState) => state.language.value);
   const user: any = useSelector((state: RootState) => state.user.value);
   const authToken: any = useSelector((state: RootState) => state.auth.value);
+  const event: any = useSelector((state: RootState) => state.event.value);
   const [isEdit, setEdit] = useState(false);
   const [email] = useState(payload?.email);
   const [token, setToken] = useState("");
@@ -64,6 +65,7 @@ const EmailVerification = ({ payload, onReSignup }: any) => {
         dispatch(saveToken(token));
         toast.success(data.status.message, toastUtil);
         localStorage.removeItem("role");
+        onUpdateLanguage(token)
         navigate("/welcome");
       }
     } catch (error: any) {
@@ -75,6 +77,17 @@ const EmailVerification = ({ payload, onReSignup }: any) => {
     } finally {
       setLoading(false);
       setToken("");
+    }
+  };
+
+  const onUpdateLanguage = async (token: string) => {
+    try {
+      setLoading(true);
+      await updateLanguage(user?.id, { users: { language: event } }, token);
+    } catch (error) {
+
+    } finally {
+      setLoading(false);
     }
   };
 

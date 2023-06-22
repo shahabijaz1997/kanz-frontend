@@ -109,7 +109,6 @@ const Signup = (props: any) => {
       );
     };
 
-    // form submit handler
     const onSubmit: SubmitHandler<FormValues> = async (values: any) => {
       const signUpData = {
         name: values?.name,

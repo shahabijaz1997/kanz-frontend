@@ -106,8 +106,8 @@ const Realtors = (props: any) => {
     try {
       setLoading(true);
 
-      let country: any = countries.all.find((c: any) => c.name === payload?.national?.value);
-      let residence: any = countries.all.find((c: any) => c.name === payload?.residence?.value);
+      let country: any = countries.all.find((c: any) => c[event].name === payload?.national?.value);
+      let residence: any = countries.all.find((c: any) => c[event].name === payload?.residence?.value);
 
       let pData: any = {
         realtor_profile: {
@@ -175,19 +175,6 @@ const Realtors = (props: any) => {
                     </label>
                     <div className="relative w-full" style={{ zIndex: 99 }}>
                       <input value={payload?.noOfProperty} onChange={(e) => onSetPayload(e.target.value, "noOfProperty")} placeholder={language.common.NoOfProperty} className=" h-[42px] shadow-sm appearance-none border border-neutral-300 rounded-md w-full py-2 px-3 text-gray-500 leading-tight focus:outline-none focus:shadow-outline" type="text" />
-
-                      {/* <AntdInput
-                        register={register}
-                        name="noOfProperty"
-                        type="text"
-                        required
-                        placeholder={language.common.NoOfProperty}
-                        value={payload?.noOfProperty}
-                        error={errors.noOfProperty?.message} // Pass the error message from form validation
-                        validation={{
-                          required: requiredFieldError,
-                        }}
-                      /> */}
                     </div>
                   </section>
                 </div>

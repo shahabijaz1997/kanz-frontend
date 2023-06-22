@@ -32,6 +32,14 @@ export const confirmToken = (userId: string, payload: any) => {
     return axios.patch(`${ENV.API_URL}/confirmations/${userId}`, payload);
 };
 
+export const updateLanguage = (userId: string, payload: any, token: string) => {
+    return axios.patch(`${ENV.API_URL}/${ENV.API_VERSION}/users/${userId}`, payload, {
+        headers: {
+            Authorization: `Bearer ${token}`
+        },
+    });
+};
+
 export const resendConfirmToken = (payload: any, token: string) => {
     return axios.post(`${ENV.API_URL}/confirmations`, payload, {
         headers: {
