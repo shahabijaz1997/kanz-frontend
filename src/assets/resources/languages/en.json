@@ -11,24 +11,24 @@
         "switchPara1": "Anim aute id magna aliqua ad ad non deserunt sunt. Qui irure qui lorem cupidatat commodo. Elit sunt amet fugiat veniam occaecat fugiat aliqua.",
         "switchPara2": "Anim aute id magna aliqua ad ad non deserunt sunt. Qui irure qui lorem cupidatat commodo. Elit sunt amet fugiat veniam occaecat fugiat aliqua. Anim aute id magna aliqua ad ad non deserunt sunt. Qui irure qui lorem cupidatat commodo. Elit sunt amet fugiat veniam occaecat fugiat aliqua.",
         "kanzNetworkBank": "Kanz networked banking provides increased customer access to FDIC insurance and mitigates single-bank risk.",
-        "invest":"Investor",
+        "invest": "Investor",
         "startup": "Startups",
         "syndicate": "Syndicate",
         "realtor": "Realtors"
     },
     "onboarding": {
         "welcome": "Welcome to Kanz",
-        "submitted": "Your application is submitted for review",
+        "submitted": "Your application has been submitted!",
         "appStatus": "Application status",
-        "realtorWelcomeText":"Add Owner Info",
-         "addCompanyDetails":"Add Company Details",
+        "realtorWelcomeText": "Add Owner Info",
+        "addCompanyDetails": "Add Company Details",
         "syndicateLead": "Add Syndicate Lead Info",
         "syndicateLeadSub": "Norem ipsum dolor sit amet, consectetur adipiscing elit. consectetur adipiscing elit.",
         "loginBgAlt": "Login Background",
         "quotes": "Quotes",
         "createAccount": "Create an account with Kanz",
         "loginKanz": "Login to your Kanz account",
-        "orSignIn": "Or Sign in with",
+        "orSignIn": "Or Sign up with",
         "googleLogin": "Google Login",
         "linkedinLogin": "LinkedIn Login",
         "upperCase": "Upper case letter",
@@ -40,21 +40,21 @@
         "verificationText": "Enter the 6 digit verification code sent to your email",
         "codeText": "Enter code",
         "sentCode": "Code has been sent to your email",
-        "welcomeDashboard": "Welcome to Kanz Dashboard",
+        "welcomeDashboard": "Welcome to Your Kanz Dashboard",
         "starterMessage": "Start investing by adding few details to your profile"
     },
     "investorFow": {
         "type": "Select Investor Type",
-        "sub": "Norem ipsum dolor sit amet, consectetur adipiscing elit. consectetur adipiscing elit",
+        "sub": "Build your investment portfolio or business easily with our user-optimized, innovative platform",
         "individual": "Individual",
         "firm": "Firm",
-        "subInd": "Rorem ipsum dolor sit amet, consectetur adipiscing elit.",
-        "subFirm": "Rorem ipsum dolor sit amet, consectetur adipiscing elit."
+        "subInd": "Join a growing community of fresh and seasoned angel investors Firm",
+        "subFirm": "Achieve success as an entrepreneur, fund manager or realtor"
     },
     "individual": {
         "individual": "Individual Accreditation",
         "individualInvestor": "Individual Investor",
-        "sub": "Norem ipsum dolor sit amet, consectetur adipiscing elit.consectetur adipiscing elit",
+        "sub": "Take advantage of opportunities that are perfect for your investment portfolio",
         "understanding": "I understand the criteria of individual investors.",
         "option1": "I have less than USD 1 million",
         "option2": "I have between USD 1 million and 10 million",
@@ -130,7 +130,7 @@
     "common": {
         "risk": "Risk disclaimer:",
         "accredited": "Accredited",
-        "accerQuestion": "How are you accredited?",
+        "accerQuestion": "For investments, I have:",
         "fullName": "Full name",
         "legalName": "Legal name",
         "email": "Email address",
@@ -140,7 +140,7 @@
         "national": "Nationality",
         "location": "Location",
         "residence": "Residence",
-        "NoOfProperty":"No of property",
+        "NoOfProperty": "No of property",
         "attachmentPending": "Your attachment is pending. Add attachments for account approval",
         "aed": "AED",
         "usd": "USD",
@@ -150,14 +150,14 @@
         "agree": "I agree to KANZ",
         "termsConditions": "Terms and Conditions",
         "inprogress": "In Progress",
-        "inreview": "In Review",
+        "inreview": "Under Review",
         "submitted": "Submitted",
-        "required_field":"This field is required.",
-        "selectCurrency":"Select Currency",
+        "required_field": "This field is required.",
+        "selectCurrency": "Select Currency",
         "fileSpecs": "PNG, JPG, PDF up to"
     },
     "buttons": {
-        "start": "Lets start",
+        "start": "Get Started",
         "edit": "Edit",
         "resendVerification": "Resend code",
         "verify": "Verify",
@@ -178,9 +178,9 @@
         "getStart": "Get Started",
         "readDocs": "Read Documentation",
         "proceed": "Proceed",
-        "notRegistered": "Not already registered?",
+        "notRegistered": "Not registered?",
         "alreadyAccount": "Already have an account?",
-        "signup": "Sign up"    
+        "signup": "Sign up"
     },
     "modal": {
         "thankyou": "\"Thank you for submitting your information!",
@@ -218,6 +218,12 @@
         "questionare": "Norem ipsum dolor sit amet, consectetur adipiscing elit. Etiam eu turpis molestie, dictum est a, mattis tellus. Sed dignissim, metus nec fringilla accumsan, risus sem sollicitudin lacus, ut interdum tellus elit sed risus. Maecenas eget condimentum velit, sit amet feugiat lectus. Class aptent taciti sociosqu ad litora torquent per conubia",
         "realtor": "Norem ipsum dolor sit amet, consectetur adipiscing elit. Etiam eu turpis molestie, dictum est a, mattis tellus. Sed dignissim, metus nec fringilla accumsan, risus sem sollicitudin lacus, ut interdum tellus elit sed risus. Maecenas eget condimentum velit, sit amet feugiat lectus. Class aptent taciti sociosqu ad litora torquent per conubia",
         "individual": "Kanz would like to know you better in order to fulfil KYC (Know Your Customer) requirements in compliance with the guidelines issued by the Dubai Financial Services Authority (DFSA).",
-        "country": "Country"
-    }   
+        "country": "Country",
+        "of": "of",
+        "onboardSub_1": "We’re #DemocratizingInvestments in the MENAPT region and beyond",
+        "onboardSub_2": "Start investing today with USD 1,000 only",
+        "onboardSub_3": "Raise funds for your startup, SPV or real estate projects",
+        "cofRes": "Country of Residence",
+        "startSub": "Add few details about your startup to secure an investment"
+    }
 }

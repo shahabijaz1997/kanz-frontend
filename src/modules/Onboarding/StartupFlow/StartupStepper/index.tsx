@@ -65,7 +65,6 @@ const StartupStepper = ({ event, countries, orientation, language, file, payload
 
                     <div className="mb-8 w-full" ref={refInd}>
                         <label className="block text-neutral-700 text-sm font-medium mb-1" htmlFor="market">{language.syndicate.industry}</label>
-                        <small className="font-normal text-sm text-neutral-500">{language.syndicate.industrySub}</small>
                         <span className="relative">
                             <input id="market" autoComplete="off" value={search} onChange={(e) => setSearch(e.target.value)} onClick={() => setShowData(!showData)}
                                 className="h-[42px] shadow-sm appearance-none border border-neutral-300 rounded-md w-full py-2 px-3 text-gray-500 leading-tight focus:outline-none focus:shadow-outline" type="text" />
@@ -160,7 +159,6 @@ const StartupStepper = ({ event, countries, orientation, language, file, payload
                     <div className="mb-8 relative">
                         <section className="w-full mt-2 p-[18px] rounded-lg check-background border border-grey">
                             <h3 className="block text-neutral-700 text-sm font-medium mb-1">{language.company.ceoDet}</h3>
-                            <small className="font-normal text-sm text-neutral-500">{language.company.ceoDetSub}</small>
                             <div className="mt-5">
                                 <input value={payload?.name} onChange={(e) => onSetPayload(e.target.value, "name")} placeholder={language.company.name} className=" h-[42px] shadow-sm appearance-none border border-neutral-300 rounded-md w-full py-2 px-3 text-gray-500 leading-tight focus:outline-none focus:shadow-outline" type="text" />
                             </div>
