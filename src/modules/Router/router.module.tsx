@@ -9,6 +9,7 @@ import { KanzRoles } from "../../enums/roles.enum";
 import { ApplicationStatus } from "../../enums/types.enum";
 import { RoutesEnums } from "../../enums/routes.enum";
 import { LinkedInCallback } from "react-linkedin-login-oauth2";
+import { updateLanguage } from "../../apis/auth.api";
 
 // Modules
 const Home = lazy(() => import("../Home"));
@@ -60,24 +61,34 @@ const RouterModule = () => {
   const dispatch = useDispatch();
   const authToken: any = useSelector((state: RootState) => state.auth.value);
   const event: any = useSelector((state: RootState) => state.event.value);
+  const user: any = useSelector((state: RootState) => state.user.value);
   const [loading, setLoading] = useState(false);
 
   useLayoutEffect(() => {
     onLoadLanguage();
   }, [event]);
 
-  const onLoadLanguage = () => {
-    setLoading(true);
-    const _language: any = loadLanguage(event);
-    dispatch(saveLanguage(_language));
-    if (event === "ar") document.documentElement.dir = "rtl";
-    else document.documentElement.dir = "ltr";
-    const element: HTMLElement | any = document.querySelector('html');
-    element.style.fontFamily = event === "ar" ? "'Almarai', sans-serif" : "Roboto, 'Open Sans', 'Helvetica Neue', sans-serif";
-    let timer = setTimeout(() => {
-      setLoading(false);
-      clearTimeout(timer);
-    }, 1000);
+  const onLoadLanguage = async () => {
+    try {
+      setLoading(true);
+      const _language: any = loadLanguage(event);
+      dispatch(saveLanguage(_language));
+      if (event === "ar") document.documentElement.dir = "rtl";
+      else document.documentElement.dir = "ltr";
+
+      const element: HTMLElement | any = document.querySelector('html');
+      element.style.fontFamily = event === "ar" ? "'Almarai', sans-serif" : "Roboto, 'Open Sans', 'Helvetica Neue', sans-serif";
+      if (authToken)
+        await updateLanguage(user?.id, { users: { language: event } }, authToken);
+
+    } catch (error) {
+
+    } finally {
+      let timer = setTimeout(() => {
+        setLoading(false);
+        clearTimeout(timer);
+      }, 1000);
+    }
   };
 
   return (
