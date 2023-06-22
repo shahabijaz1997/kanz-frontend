@@ -57,9 +57,8 @@
         "sub": "Norem ipsum dolor sit amet, consectetur adipiscing elit.consectetur adipiscing elit",
         "understanding": "I understand the criteria of individual investors.",
         "option1": "I have less than USD 1 million",
-        "option2": "I have between USD 1 million and 5 million",
-        "option3": "I have between USD 5 million and 10 million",
-        "option4": "I have over USD 10 million",
+        "option2": "I have between USD 1 million and 10 million",
+        "option3": "I have over USD 10 million",
         "philosophyGoals": "Investment Philosophy / Goals",
         "philosophysub": "Norem ipsum dolor sit amet, consectetur adipiscing elit. consectetur adipiscing elit."
     },
