@@ -27,6 +27,7 @@ const Realtors = (props: any) => {
   const dispatch = useDispatch();
   const language: any = useSelector((state: RootState) => state.language.value);
   const authToken: any = useSelector((state: RootState) => state.auth.value);
+  const event: any = useSelector((state: RootState) => state.event.value);
   const user: any = useSelector((state: RootState) => state.user.value);
   const metadata: any = useSelector((state: RootState) => state.metadata.value);
 
@@ -74,7 +75,7 @@ const Realtors = (props: any) => {
       setLoad(true);
       let { status, data } = await getCountries(authToken);
       if (status === 200) {
-        let names = data.status.data.map((c: any) => c.name);
+        let names = data.status.data.map((c: any) => c[event].name);
         setCountries({ all: data.status.data, names });
       }
     } catch (error) {
