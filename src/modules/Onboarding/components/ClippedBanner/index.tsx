@@ -21,7 +21,11 @@ const ClippedBanner = () => {
                 <img src={QuotesSvg} alt={language?.onboarding?.quotes} />
                 <div className="relative top-[-20px] px-[20px]">
                     <h2 className="m-0 p-0 text-[36px] font-bold leading-none screen1200:text-[30px] screen1200:text-[22px]">{language?.onboarding?.welcome}</h2>
-                    <p className="font-normal pt-[30px] text-[16px] leading-7 tracking-[3%] text-neutral-500 screen1200:text-[13px] screen1200:leading-4 screen1200:leading-2">{language?.onboarding?.syndicateLeadSub}</p>
+                    <p className="font-normal pt-[13px] text-[16px] leading-7 tracking-[3%] text-neutral-500 screen1200:text-[13px] screen1200:leading-4 screen1200:leading-2">
+                        <div>{language?.drawer?.onboardSub_1}</div>
+                        <div>{language?.drawer?.onboardSub_2}</div>
+                        <div>{language?.drawer?.onboardSub_3}</div>
+                    </p>
                 </div>
             </aside>
         </section>

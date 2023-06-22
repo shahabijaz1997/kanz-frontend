@@ -157,7 +157,7 @@ const Signup = (props: any) => {
             label={language?.common?.fullName}
             type="text"
             required
-            placeholder="Alex Parker"
+            placeholder="Abdulrahman Mohammad"
             error={errors.name?.message} // Pass the error message from form validation
             validation={{
               required: requiredFieldError,

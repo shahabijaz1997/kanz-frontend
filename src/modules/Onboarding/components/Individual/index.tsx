@@ -159,7 +159,7 @@ const Individual = ({ language }: any) => {
           </section>
           <section className="mb-8 w-full relative" style={{ zIndex: 90 }}>
             <label className="block text-neutral-700 text-sm font-medium mb-1" htmlFor="full-name" >
-              {language?.common?.residence}
+              {language?.drawer?.cofRes}
             </label>
             <CountrySelector
               onChange={(v: any) => onSetPayload(v, "residence")}

@@ -20,7 +20,7 @@ const StartupHome = ({ loading, language }: any) => {
                         {language?.onboarding?.addCompanyDetails}
                     </h2>
                     <h3 className="text-base font-normal text-neutral-700 screen500:text-[12px]">
-                        {language?.onboarding?.syndicateLeadSub}
+                        {language?.drawer?.startSub}
                     </h3>
                     <Button
                         className="mt-6 h-[38px]"
@@ -41,7 +41,7 @@ const StartupHome = ({ loading, language }: any) => {
                         {language?.onboarding?.addCompanyDetails}
                     </h2>
                     <h3 className="text-base font-normal text-neutral-700 screen500:text-[12px]">
-                        {language?.onboarding?.syndicateLeadSub}
+                        {language?.drawer?.startSub}
                     </h3>
                     <h3 className="text-base font-normal text-neutral-700 screen500:text-[12px] mt-2">
                         {language?.onboarding?.appStatus}: <strong>{language.common.inprogress}</strong>
@@ -77,7 +77,7 @@ const StartupHome = ({ loading, language }: any) => {
                         {language?.onboarding?.addCompanyDetails}
                     </h2>
                     <h3 className="text-base font-normal text-neutral-700 screen500:text-[12px]">
-                        {language?.onboarding?.syndicateLeadSub}
+                        {language?.drawer?.startSub}
                     </h3>
                     <Button
                         className="mt-6 h-[38px]"
