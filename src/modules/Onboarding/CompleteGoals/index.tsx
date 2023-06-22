@@ -1,4 +1,4 @@
-import { useState, useLayoutEffect } from "react";
+import React, { useState, useLayoutEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../../redux-toolkit/store/store";
 import { useLocation, useNavigate } from "react-router-dom";
@@ -22,6 +22,7 @@ const CompleteGoals = ({ }: any) => {
   const dispatch = useDispatch();
   const user: any = useSelector((state: RootState) => state.user.value);
   const language: any = useSelector((state: RootState) => state.language.value);
+  const event: any = useSelector((state: RootState) => state.event.value);
   const authToken: any = useSelector((state: RootState) => state.auth.value);
 
   const [payload, setPayload] = useState(state);
@@ -92,10 +93,34 @@ const CompleteGoals = ({ }: any) => {
               </div>
               <div className="center w-[80%] mx-5">
                 <h3 className="text-neutral-900 text-lg font-semibold">
-                  {apiResp?.status?.data?.role}
+                  {event === "en" ? apiResp?.status?.data?.role : apiResp?.status?.data?.role_ar}
                 </h3>
                 <p className="text-neutral-700 text-sm font-normal mt-1">
-                  {apiResp?.status?.data?.role === "Investment Firm" ? apiResp?.status?.data?.profile?.location : `${apiResp?.status?.data?.profile?.residence}, ${apiResp?.status?.data?.profile?.nationality}`}
+                  {apiResp?.status?.data?.role === "Investment Firm" && (
+                    <React.Fragment>
+                      <div>
+                        <small className="text-neutral-700 text-sm font-medium">{language?.company?.legal}:</small>&nbsp;
+                        <span className="text-neutral-700 text-sm font-normal">{apiResp?.status?.data?.profile?.legal_name}</span>
+                      </div>
+                      <div>
+                        <small className="text-neutral-700 text-sm font-medium">{language?.common?.location}:</small>&nbsp;
+                        <span className="text-neutral-700 text-sm font-normal">{apiResp?.status?.data?.profile?.location}</span>
+                      </div>
+                    </React.Fragment>
+                  )}
+                  {apiResp?.status?.data?.role !== "Investment Firm" && (
+                    <React.Fragment>
+                      <div>
+                        <small className="text-neutral-700 text-sm font-medium">{language?.common?.residence}:</small> &nbsp;
+                        <span className="text-neutral-700 text-sm font-normal">{apiResp?.status?.data?.profile?.residence}</span>
+                      </div>
+                      <div>
+                        <small className="text-neutral-700 text-sm font-medium">{language?.drawer?.country}:</small>&nbsp;
+                        <span className="text-neutral-700 text-sm font-normal">{apiResp?.status?.data?.profile?.nationality}</span>
+                      </div>
+                    </React.Fragment>
+
+                  )}
                 </p>
               </div>
               <Button
@@ -123,9 +148,9 @@ const CompleteGoals = ({ }: any) => {
                     {payload?.selected?.low_limit !== payload?.selected?.upper_limit && " - " + payload?.selected?.upper_limit}
                   </small>
                   &nbsp;
-                    <small className="text-green-600 text-sm font-semibold">
-                      {payload?.selected?.currency}
-                    </small>
+                  <small className="text-green-600 text-sm font-semibold">
+                    {payload?.selected?.currency}
+                  </small>
                 </div>
               </div>
             </section>

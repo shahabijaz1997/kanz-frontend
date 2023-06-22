@@ -69,9 +69,8 @@ const Questionare = ({ step, returnSuccessRedirection }: any) => {
 
   const submitData = async (payload: any) => {
     try {
+      setOpen(false);
       setLoading(true);
-      console.log("payload", payload);
-      
       let { status, data } = await postInvestmentPhilisophyData(payload, authToken);
       if (status === 200) localStorage.setItem("step", step);
       if (step === questions?.total_steps && status === 200)
@@ -130,7 +129,7 @@ const Questionare = ({ step, returnSuccessRedirection }: any) => {
           <h3 className="text-neutral-700 font-medium text-base w-[420px]">
             {ques[event]?.title}
           </h3>
-          <p className="text-neutral-500 font-normal text-sm">
+          <p className="text-neutral-500 font-normal text-lg">
             <span>{ques[event]?.statement}</span>&nbsp;
             <span className="color-blue font-medium cursor-pointer" onClick={() => setOpen(true)} >
               {language.common.learn}
@@ -158,7 +157,7 @@ const Questionare = ({ step, returnSuccessRedirection }: any) => {
         <h3 className="text-neutral-700 font-medium text-base w-[420px]">
           {ques[event]?.title}
         </h3>
-        <p className="text-neutral-500 font-normal text-sm">
+        <p className="text-neutral-500 font-normal text-lg">
           <span>{ques[event]?.statement}</span>&nbsp;
           <span className="color-blue font-medium cursor-pointer" onClick={() => setOpen(true)} >
             {language.common.learn}
@@ -211,7 +210,7 @@ const Questionare = ({ step, returnSuccessRedirection }: any) => {
         <h3 className="text-neutral-700 font-medium text-base w-[420px]">
           {ques[event]?.title}
         </h3>
-        <p className="text-neutral-500 font-normal text-sm">
+        <p className="text-neutral-500 font-normal text-lg">
           <span>{ques[event]?.statement}</span>&nbsp;
           <span
             className="color-blue font-medium cursor-pointer"
@@ -273,7 +272,7 @@ const Questionare = ({ step, returnSuccessRedirection }: any) => {
         <h3 className="text-neutral-700 font-medium text-base w-[420px]">
           {ques[event]?.title}
         </h3>
-        <p className="text-neutral-500 font-normal text-sm">
+        <p className="text-neutral-500 font-normal text-lg">
           <span>{ques[event]?.statement}</span>&nbsp;
           <span className="color-blue font-medium cursor-pointer" onClick={() => setOpen(true)} >
             {language.common.learn}
@@ -317,6 +316,7 @@ const Questionare = ({ step, returnSuccessRedirection }: any) => {
 
   const onSetPrev = () => {
     checkValidation();
+    setOpen(false);
     let philisophyData: any = localStorage.getItem("philosophy");
     let philData: any = { ...JSON.parse(philisophyData), ...selected };
     localStorage.setItem("philosophy", JSON.stringify(philData));
@@ -433,16 +433,7 @@ const Questionare = ({ step, returnSuccessRedirection }: any) => {
             <header className="font-bold text-xl">
               {language.philosophyGoals.objective}
             </header>
-            <p className="text-neutral-700 font-normal text-sm text-justify">
-              Norem ipsum dolor sit amet, consectetur adipiscing elit. Etiam eu
-              turpis molestie, dictum est a, mattis tellus. Sed dignissim, metus
-              nec fringilla accumsan, risus sem sollicitudin lacus, ut interdum
-              tellus elit sed risus. Maecenas eget condimentum velit, sit amet
-              feugiat lectus. Class aptent taciti sociosqu ad litora torquent
-              per conubia nostra, per inceptos himenaeos. Praesent auctor purus
-              luctus enim egestas, ac scelerisque ante pulvinar. Donec ut
-              rhoncus ex. Suspendisse ac rhoncus nisl.
-            </p>
+            <p className="text-neutral-700 font-normal text-sm text-justify">{language?.drawer?.questionare}</p>
           </React.Fragment>
         )}
       </Drawer>

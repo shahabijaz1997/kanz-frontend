@@ -63,7 +63,6 @@ const EmailVerification = ({ payload, onReSignup }: any) => {
       if (status === 200 && headers["authorization"]) {
         const token = headers["authorization"].split(" ")[1];
         dispatch(saveToken(token));
-        toast.success(data.status.message, toastUtil);
         localStorage.removeItem("role");
         onUpdateLanguage(token)
         navigate("/welcome");

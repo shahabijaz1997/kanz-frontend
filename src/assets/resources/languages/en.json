@@ -60,7 +60,7 @@
         "option2": "I have between USD 1 million and 10 million",
         "option3": "I have over USD 10 million",
         "philosophyGoals": "Investment Philosophy / Goals",
-        "philosophysub": "Norem ipsum dolor sit amet, consectetur adipiscing elit. consectetur adipiscing elit."
+        "philosophysub": "Understanding your investing approach will help simplify the investing process."
     },
     "syndicate": {
         "step": "Step",
@@ -180,7 +180,7 @@
         "proceed": "Proceed",
         "notRegistered": "Not already registered?",
         "alreadyAccount": "Already have an account?",
-        "signup": "Sign up"
+        "signup": "Sign up"    
     },
     "modal": {
         "thankyou": "\"Thank you for submitting your information!",
@@ -209,5 +209,15 @@
         "maxLimitInvalid": "You have entered invalid code for 5 times, please signup again",
         "validProfile": "Please enter valid profile url",
         "validComp": "Please enter valid company url"
-    }
+    },
+    "drawer": {
+        "attachments": "Kanz is committed to complying with all investor registration guidelines set by DFSA, including collecting and maintaining valid and updated information of our investors",
+        "completeDetails": "Norem ipsum dolor sit amet, consectetur adipiscing elit. Etiam eu turpis molestie, dictum est a, mattis tellus. Sed dignissim, metus nec fringilla accumsan, risus sem sollicitudin lacus, ut interdum tellus elit sed risus. Maecenas eget condimentum velit, sit amet feugiat lectus. Class aptent taciti sociosqu ad litora torquent per conubia",
+        "firm": "Norem ipsum dolor sit amet, consectetur adipiscing elit. Etiam eu turpis molestie, dictum est a, mattis tellus. Sed dignissim, metus nec fringilla accumsan, risus sem sollicitudin lacus, ut interdum tellus elit sed risus. Maecenas eget condimentum velit, sit amet feugiat lectus. Class aptent taciti sociosqu ad litora torquent per conubia",
+        "investor": "Norem ipsum dolor sit amet, consectetur adipiscing elit. Etiam eu turpis molestie, dictum est a, mattis tellus. Sed dignissim, metus nec fringilla accumsan, risus sem sollicitudin lacus, ut interdum tellus elit sed risus. Maecenas eget condimentum velit, sit amet feugiat lectus. Class aptent taciti sociosqu ad litora torquent per conubia",
+        "questionare": "Norem ipsum dolor sit amet, consectetur adipiscing elit. Etiam eu turpis molestie, dictum est a, mattis tellus. Sed dignissim, metus nec fringilla accumsan, risus sem sollicitudin lacus, ut interdum tellus elit sed risus. Maecenas eget condimentum velit, sit amet feugiat lectus. Class aptent taciti sociosqu ad litora torquent per conubia",
+        "realtor": "Norem ipsum dolor sit amet, consectetur adipiscing elit. Etiam eu turpis molestie, dictum est a, mattis tellus. Sed dignissim, metus nec fringilla accumsan, risus sem sollicitudin lacus, ut interdum tellus elit sed risus. Maecenas eget condimentum velit, sit amet feugiat lectus. Class aptent taciti sociosqu ad litora torquent per conubia",
+        "individual": "Kanz would like to know you better in order to fulfil KYC (Know Your Customer) requirements in compliance with the guidelines issued by the Dubai Financial Services Authority (DFSA).",
+        "country": "Country"
+    }   
 }
