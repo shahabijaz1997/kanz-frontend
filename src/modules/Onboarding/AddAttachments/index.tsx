@@ -186,9 +186,9 @@ const AddAttachments = (props: any) => {
         <header className="font-bold text-xl">
           {language.v2.realtor.attachment_provider}
         </header>
-        {
-          user?.type === KanzRoles.REALTOR ? (<p className="text-neutral-700 font-normal text-sm text-justify">{language?.drawer?.attach_realtor}</p>) : <p className="text-neutral-700 font-normal text-sm text-justify">{language?.drawer?.attachments}</p>
-        }
+        {user?.type === KanzRoles.INVESTOR && <p className="text-neutral-700 font-normal text-sm text-justify">{language?.drawer?.attachments}</p>}
+        {user?.type === KanzRoles.REALTOR && <p className="text-neutral-700 font-normal text-sm text-justify">{language?.drawer?.attach_realtor}</p>}
+        {user?.type === KanzRoles.STARTUP && <p className="text-neutral-700 font-normal text-sm text-justify">{language?.drawer?.attach_startup}</p>}
       </Drawer>
       <Modal show={modalOpen ? true : false}>
         {typeof modalOpen === "string" ? (

@@ -62,7 +62,7 @@ const RealtorHome = ({ loading, language }: any) => {
                         {language?.onboarding?.appStatus}: <strong>{language.common.submitted}</strong>
                     </h3>
                     <h3 className="text-base font-normal text-neutral-700 screen500:text-[12px]">
-                        {language?.v2?.realtor?.tuned}
+                        {language?.v2?.common?.tuned}
                     </h3>
                 </React.Fragment>
             );
