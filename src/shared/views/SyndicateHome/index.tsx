@@ -20,7 +20,7 @@ const SyndicateHome = ({ loading, language }: any) => {
                         {language?.onboarding?.syndicateLead}
                     </h2>
                     <h3 className="text-base font-normal text-neutral-700 screen500:text-[12px]">
-                        {language?.onboarding?.syndicateLeadSub}
+                        {language?.v2?.syndicate?.home_sub}
                     </h3>
                     <Button
                         className="mt-6 h-[38px]"
@@ -41,7 +41,7 @@ const SyndicateHome = ({ loading, language }: any) => {
                         {language?.onboarding?.syndicateLead}
                     </h2>
                     <h3 className="text-base font-normal text-neutral-700 screen500:text-[12px]">
-                        {language?.onboarding?.syndicateLeadSub}
+                        {language?.v2?.syndicate?.home_sub}
                     </h3>
                     <h3 className="text-base font-normal text-neutral-700 screen500:text-[12px] mt-2">
                         {language?.onboarding?.appStatus}: <strong>{language.common.inprogress}</strong>
@@ -66,6 +66,9 @@ const SyndicateHome = ({ loading, language }: any) => {
                     </h2>
                     <h3 className="text-base font-normal text-neutral-700 screen500:text-[12px]">
                         {language?.onboarding?.appStatus}: <strong>{language.common.submitted}</strong>
+                    </h3>
+                    <h3 className="text-base font-normal text-neutral-700 screen500:text-[12px]">
+                        {language?.v2?.common?.tuned}
                     </h3>
                 </React.Fragment>
             );

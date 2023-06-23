@@ -22,7 +22,7 @@
         "appStatus": "Application status",
         "realtorWelcomeText": "Add Property Owner",
         "addCompanyDetails": "Add Startup",
-        "syndicateLead": "Add Syndicate Lead Info",
+        "syndicateLead": "Add Syndicate Lead",
         "syndicateLeadSub": "Norem ipsum dolor sit amet, consectetur adipiscing elit. consectetur adipiscing elit.",
         "loginBgAlt": "Login Background",
         "quotes": "Quotes",
@@ -64,20 +64,20 @@
     },
     "syndicate": {
         "step": "Step",
-        "raisedBefore": "Have you raised before?",
-        "addDetail": "Add detail for raised amount",
+        "raisedBefore": "Have you raised funds before?",
+        "addDetail": "Details of amount raised",
         "subDetail": "Norem ipsum dolor sit amet ipsum dolor.",
-        "raisedQ": "How much you have raised?",
-        "timesQ": "How many time you have raised?",
-        "industry": "Industry market",
+        "raisedQ": "How much have you raised?",
+        "timesQ": "How many time have you raised?",
+        "industry": "Industry",
         "industrySub": "Norem ipsum dolor sit amet ipsum dolor.",
         "region": "Region",
         "profile": "Profile Link",
-        "dealflow": "Add dealflow",
-        "syndName": "Syndicate name",
-        "tagline": "Add tagline",
+        "dealflow": "Add Deal Flow",
+        "syndName": "Syndicate Name",
+        "tagline": "Tagline",
         "logo": "Logo",
-        "uploadCompLogo": "Upload a company logo"
+        "uploadCompLogo": "Upload your logo (240px x 240px)"
     },
     "company": {
         "step": "Step",
@@ -220,11 +220,12 @@
         "individual": "Kanz would like to know you better in order to fulfil KYC (Know Your Customer) requirements in compliance with the guidelines issued by the Dubai Financial Services Authority (DFSA).",
         "country": "Country",
         "of": "of",
-        "onboardSub_1": "We’re #DemocratizingInvestments in the MENAPT region and beyond",
+        "onboardSub_1": "We’re #DemocratizingInvestments in the MENAPT region and beyond...",
         "cofRes": "Country of Residence",
         "startSub": "Add few details about your startup to secure an investment",
         "attach_realtor": "Kanz is committed to complying with all registration guidelines set by DFSA, including collecting and maintaining valid and updated information of all property owners registering on our platform.",
-        "attach_startup": "Kanz is committed to complying with all registration guidelines set by DFSA, including collecting and maintaining valid and updated information of all startups registering on our platform"
+        "attach_startup": "Kanz is committed to complying with all registration guidelines set by DFSA, including collecting and maintaining valid and updated information of all startups registering on our platform",
+        "attach_syndicate": "Kanz is committed to complying with all registration guidelines set by DFSA, including collecting and maintaining valid and updated information of all startups registering on our platform."
     },
     "v2": {
         "investor": {
@@ -234,6 +235,10 @@
         "startup": {
             "onboardSub_2": "Access a growing network of investors, raise funds, find mentors, and promote your startup!",
             "home_sub": "Begin your fundraising journey by completing your profile"
+        },
+        "syndicate": {
+            "onboardSub_2": "Run SPVs and raise funds privately, on a deal-by-deal basis, via our network of highly vetted investors",
+            "home_sub": "Evaluate deals and invest in game-changing startups by completing your profile"
         },
         "realtor": {
             "onboardSub_2": "Get your properties in front of active investors and asset managers!",
