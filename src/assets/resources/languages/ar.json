@@ -240,6 +240,10 @@
         },
         "buttons": {
             "send": "Send"
+        },
+        "common": {
+            "understood": " and have read and understood the",
+            "privacyPolicy": " Privacy Policy"
         }
     }
 }
