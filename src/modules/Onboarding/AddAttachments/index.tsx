@@ -15,11 +15,13 @@ import { getRoleBasedAttachments } from "../../../apis/attachment.api";
 import { saveToken } from "../../../redux-toolkit/slicer/auth.slicer";
 import Loader from "../../../shared/views/Loader";
 import { saveAttachments } from "../../../redux-toolkit/slicer/attachments.slicer";
+import { KanzRoles } from "../../../enums/roles.enum";
 
 const AddAttachments = (props: any) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const language: any = useSelector((state: RootState) => state.language.value);
+  const user: any = useSelector((state: RootState) => state.user.value);
   const authToken: any = useSelector((state: RootState) => state.auth.value);
   const event: any = useSelector((state: RootState) => state.event.value);
   const attachments: any = useSelector((state: RootState) => state.attachments.attachments.value);
@@ -95,12 +97,12 @@ const AddAttachments = (props: any) => {
                   {language.buttons.addAttachment}
                 </h3>
                 <p className="text-neutral-700 font-medium text-base">
-                  <span>{language.philosophyGoals.uploadNecessary}</span>&nbsp;
+                  <span>{language.philosophyGoals.uploadNecessary}.</span>&nbsp;
                   <span
                     className="color-blue cursor-pointer"
                     onClick={() => setOpen(true)}
                   >
-                    {language.philosophyGoals.whyToDo}
+                    {language.v2?.realtor?.attachment_provider}
                   </span>
                 </p>
               </section>
@@ -135,11 +137,12 @@ const AddAttachments = (props: any) => {
                 />
                 <p className="text-neutral-500 text-sm font-normal">
                   {language?.common?.agree}&nbsp;
-                  <span
-                    className="color-blue font-medium cursor-pointer"
-                    onClick={() => setOpen(true)}
-                  >
+                  <span className="color-blue font-medium cursor-pointer" onClick={() => setOpen(true)} >
                     {language?.common?.termsConditions}
+                  </span>
+                  {language?.v2?.common?.understood}
+                  <span className="color-blue font-medium cursor-pointer" onClick={() => setOpen(true)} >
+                    {language?.v2?.common?.privacyPolicy}
                   </span>
                 </p>
               </section>
@@ -172,7 +175,7 @@ const AddAttachments = (props: any) => {
                     errors = [];
                   }}
                 >
-                  {language?.buttons?.submit}
+                  {language?.v2?.buttons?.send}
                 </Button>
               </section>
             </aside>
@@ -181,24 +184,17 @@ const AddAttachments = (props: any) => {
       }
       <Drawer isOpen={isOpen} setIsOpen={(val: boolean) => setOpen(val)}>
         <header className="font-bold text-xl">
-          {language.philosophyGoals.whyToDo}
+          {language.v2.realtor.attachment_provider}
         </header>
-        <p className="text-neutral-700 font-normal text-sm text-justify">{language?.drawer?.attachments}</p>
+        {
+          user?.type === KanzRoles.REALTOR ? (<p className="text-neutral-700 font-normal text-sm text-justify">{language?.drawer?.attach_realtor}</p>) : <p className="text-neutral-700 font-normal text-sm text-justify">{language?.drawer?.attachments}</p>
+        }
       </Drawer>
       <Modal show={modalOpen ? true : false}>
         {typeof modalOpen === "string" ? (
           <React.Fragment>
-            <div
-              className="rounded-md h-8 w-8 inline-grid place-items-center cursor-pointer absolute right-2 top-2"
-              style={{ backgroundColor: "rgba(0, 0, 0, 0.078" }}
-            >
-              <CrossIcon
-                stroke="#fff"
-                className="w-6 h-6"
-                onClick={() => {
-                  setModalOpen(null);
-                }}
-              />
+            <div className="rounded-md h-8 w-8 inline-grid place-items-center cursor-pointer absolute right-2 top-2" style={{ backgroundColor: "rgba(0, 0, 0, 0.078" }}>
+              <CrossIcon stroke="#fff" className="w-6 h-6" onClick={() => setModalOpen(null)} />
             </div>
             {fileType === FileType.IMAGE ? (
               <img src={modalOpen} alt="Img" className="max-h-[100%]" />
@@ -217,15 +213,8 @@ const AddAttachments = (props: any) => {
             </h3>
 
             <div className="w-[80%] screen800:w-full">
-              <p className="mt-8 text-sm font-normal text-neutral-500 text-center leading-relaxed">
-                {language.modal.sub_2}
-              </p>
               <p className="mt-4 text-sm font-normal text-neutral-500 text-center leading-relaxed">
-                {language.modal.sub_3}
-              </p>
-              <p className="text-sm font-normal text-neutral-500 text-center leading-relaxed">
-                {language.modal.sub_4}{" "}
-                <span className="color-blue">012-345678</span>
+                {language.modal.sub_2} <button className="text-blue-700" onClick={()=>navigate("/welcome")}>{language.modal.sub_3}</button> {language.modal.sub_4}
               </p>
             </div>
             <Button

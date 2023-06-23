@@ -173,7 +173,7 @@ const Home = ({}: any) => {
           ></div>
           <img src={PatternSvg} alt="SVG" className="absolute right-0" />
 
-          <aside className="flex flex-row screen991:flex-col justify-between items-center h-full px-[120px] screen1024:px-[50px] screen500:px-[20px] relative">
+          <aside className="flex flex-row screen991:flex-col justify-between items-center h-full px-[120px] screen1024:px-[50px] screen500:px-[20px] relative" id={language.header.investment}>
             <div className="inline-flex flex-col items-start w-1/2 screen991:justify-center screen991:h-full screen991:w-full pr-[80px]">
               <h3 className="text-cyan-800 text-xl tracking-[0.03em] font-bold">
                 {language.landing.invest}

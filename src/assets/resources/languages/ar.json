@@ -211,19 +211,35 @@
         "validComp": "يرجى إدخال رابط شركة صالح"
     },
     "drawer": {
-        "attachments": "الوصول إلى مستثمرين ملائكة ورأس المال الاستثماري في مختلف الصناعات والمواقع. تأمين التمويل. الحصول على الدعم الاستراتيجي. الحصول على الدعم التنظيمي. العثور على من يرشدك. إنشاء ضجة بكل إنجاز",
-        "completeDetails": "الوصول إلى مستثمرين ملائكة ورأس المال الاستثماري في مختلف الصناعات والمواقع. تأمين التمويل. الحصول على الدعم الاستراتيجي. الحصول على الدعم التنظيمي. العثور على من يرشدك. إنشاء ضجة بكل إنجاز",
-        "firm": "الوصول إلى مستثمرين ملائكة ورأس المال الاستثماري في مختلف الصناعات والمواقع. تأمين التمويل. الحصول على الدعم الاستراتيجي. الحصول على الدعم التنظيمي. العثور على من يرشدك. إنشاء ضجة بكل إنجاز",
-        "investor": "الوصول إلى مستثمرين ملائكة ورأس المال الاستثماري في مختلف الصناعات والمواقع. تأمين التمويل. الحصول على الدعم الاستراتيجي. الحصول على الدعم التنظيمي. العثور على من يرشدك. إنشاء ضجة بكل إنجاز",
-        "questionare": "الوصول إلى مستثمرين ملائكة ورأس المال الاستثماري في مختلف الصناعات والمواقع. تأمين التمويل. الحصول على الدعم الاستراتيجي. الحصول على الدعم التنظيمي. العثور على من يرشدك. إنشاء ضجة بكل إنجاز",
-        "realtor": "الوصول إلى مستثمرين ملائكة ورأس المال الاستثماري في مختلف الصناعات والمواقع. تأمين التمويل. الحصول على الدعم الاستراتيجي. الحصول على الدعم التنظيمي. العثور على من يرشدك. إنشاء ضجة بكل إنجاز",
-        "individual": "الوصول إلى مستثمرين ملائكة ورأس المال الاستثماري في مختلف الصناعات والمواقع. تأمين التمويل. الحصول على الدعم الاستراتيجي. الحصول على الدعم التنظيمي. العثور على من يرشدك. إنشاء ضجة بكل إنجاز",
-        "country": "دولة",
-        "of": "من",
+        "attachments": "Kanz is committed to complying with all investor registration guidelines set by DFSA, including collecting and maintaining valid and updated information of our investors",
+        "completeDetails": "Norem ipsum dolor sit amet, consectetur adipiscing elit. Etiam eu turpis molestie, dictum est a, mattis tellus. Sed dignissim, metus nec fringilla accumsan, risus sem sollicitudin lacus, ut interdum tellus elit sed risus. Maecenas eget condimentum velit, sit amet feugiat lectus. Class aptent taciti sociosqu ad litora torquent per conubia",
+        "firm": "Norem ipsum dolor sit amet, consectetur adipiscing elit. Etiam eu turpis molestie, dictum est a, mattis tellus. Sed dignissim, metus nec fringilla accumsan, risus sem sollicitudin lacus, ut interdum tellus elit sed risus. Maecenas eget condimentum velit, sit amet feugiat lectus. Class aptent taciti sociosqu ad litora torquent per conubia",
+        "investor": "Norem ipsum dolor sit amet, consectetur adipiscing elit. Etiam eu turpis molestie, dictum est a, mattis tellus. Sed dignissim, metus nec fringilla accumsan, risus sem sollicitudin lacus, ut interdum tellus elit sed risus. Maecenas eget condimentum velit, sit amet feugiat lectus. Class aptent taciti sociosqu ad litora torquent per conubia",
+        "questionare": "Norem ipsum dolor sit amet, consectetur adipiscing elit. Etiam eu turpis molestie, dictum est a, mattis tellus. Sed dignissim, metus nec fringilla accumsan, risus sem sollicitudin lacus, ut interdum tellus elit sed risus. Maecenas eget condimentum velit, sit amet feugiat lectus. Class aptent taciti sociosqu ad litora torquent per conubia",
+        "realtor": "Norem ipsum dolor sit amet, consectetur adipiscing elit. Etiam eu turpis molestie, dictum est a, mattis tellus. Sed dignissim, metus nec fringilla accumsan, risus sem sollicitudin lacus, ut interdum tellus elit sed risus. Maecenas eget condimentum velit, sit amet feugiat lectus. Class aptent taciti sociosqu ad litora torquent per conubia",
+        "individual": "Kanz would like to know you better in order to fulfil KYC (Know Your Customer) requirements in compliance with the guidelines issued by the Dubai Financial Services Authority (DFSA).",
+        "country": "Country",
+        "of": "of",
         "onboardSub_1": "We’re #DemocratizingInvestments in the MENAPT region and beyond",
-        "onboardSub_2": "Start investing today with USD 1,000 only",
-        "onboardSub_3": "Raise funds for your startup, SPV or real estate projects",
         "cofRes": "Country of Residence",
-        "startSub": "أضف بعض التفاصيل حول بدء التشغيل الخاص بك لتأمين الاستثما"
+        "startSub": "Add few details about your startup to secure an investment",
+        "attach_realtor": "Kanz is committed to complying with all registration guidelines set by DFSA, including collecting and maintaining valid and updated information of all property owners registering on our platform."
+    },
+    "v2": {
+        "investor": {
+            "onboardSub_2": "Start investing today with USD 1,000 only",
+            "onboardSub_3": "Raise funds for your startup, SPV or real estate projects"
+        },
+        "realtor": {
+            "onboardSub_2": "Get your properties in front of active investors and asset managers!",
+            "home_sub": "Start listing your properties by completing your profile",
+            "add_title": "Property Owner",
+            "country_of_res": "Country of Residence",
+            "attachment_provider": "Why do I need to provide this?",
+            "tuned": "Stay tuned for updates!"
+        },
+        "buttons": {
+            "send": "Send"
+        }
     }
 }
