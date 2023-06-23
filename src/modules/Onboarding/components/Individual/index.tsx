@@ -249,7 +249,7 @@ const Individual = ({ language }: any) => {
         <header className="font-bold text-xl">
           {language.philosophyGoals.whyToDo}
         </header>
-        <p className="text-neutral-700 font-normal text-sm text-justify">{language?.drawer?.individual}</p>
+        <p className="text-neutral-700 font-normal text-sm text-justify">{language?.v2?.investor?.accreditation_drawer}</p>
       </Drawer>
     </form>
   );

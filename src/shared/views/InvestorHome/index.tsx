@@ -20,7 +20,7 @@ const InvestorHome = ({ loading, language }: any) => {
                         {language?.onboarding?.welcomeDashboard}
                     </h2>
                     <h3 className="text-base font-normal text-neutral-700 screen500:text-[12px]">
-                        {language?.onboarding?.starterMessage}
+                        {language?.v2?.investor?.home_sub}
                     </h3>
                     <Button className="mt-[60px] h-[38px] w-[143px]" disabled={loading} htmlType="submit" loading={loading} onClick={() => navigate(RoutesEnums.INVESTOR_DETAILS)} >
                         {language?.buttons?.start}
@@ -34,7 +34,7 @@ const InvestorHome = ({ loading, language }: any) => {
                         {language?.onboarding?.welcomeDashboard}
                     </h2>
                     <h3 className="text-base font-normal text-neutral-700 screen500:text-[12px]">
-                        {language?.onboarding?.starterMessage}
+                        {language?.v2?.investor?.home_sub}
                     </h3>
                     <h3 className="text-base font-normal text-neutral-700 screen500:text-[12px] mt-2">
                         {language?.onboarding?.appStatus}: <strong>{language.common.inprogress}</strong>
@@ -62,7 +62,7 @@ const InvestorHome = ({ loading, language }: any) => {
                         {language?.onboarding?.welcomeDashboard}
                     </h2>
                     <h3 className="text-base font-normal text-neutral-700 screen500:text-[12px]">
-                        {language?.onboarding?.starterMessage}
+                        {language?.v2?.investor?.home_sub}
                     </h3>
                     <Button
                         className="mt-6 h-[38px]"
