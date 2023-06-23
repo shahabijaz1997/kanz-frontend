@@ -59,7 +59,7 @@
         "option1": "I have less than USD 1 million",
         "option2": "I have between USD 1 million and 10 million",
         "option3": "I have over USD 10 million",
-        "philosophyGoals": "Investment Philosophy / Goals",
+        "philosophyGoals": "Investment Philosophy & Goals",
         "philosophysub": "Understanding your investing approach will help simplify the investing process."
     },
     "syndicate": {
@@ -229,8 +229,10 @@
     },
     "v2": {
         "investor": {
+            "home_sub": "Start your investing journey by adding basic details to your profile",
             "onboardSub_2": "Start investing today with USD 1,000 only",
-            "onboardSub_3": "Raise funds for your startup, SPV or real estate projects"
+            "onboardSub_3": "Raise funds for your startup, SPV or real estate projects",
+            "accreditation_drawer": "Kanz would like to know you better in order to fulfil KYC (Know Your Customer) requirements in compliance with the guidelines issued by the Dubai Financial Services Authority (DFSA)."
         },
         "startup": {
             "onboardSub_2": "Access a growing network of investors, raise funds, find mentors, and promote your startup!",

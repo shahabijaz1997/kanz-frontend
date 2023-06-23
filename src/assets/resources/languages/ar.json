@@ -229,6 +229,7 @@
     },
     "v2": {
         "investor": {
+            "home_sub": "Start your investing journey by adding basic details to your profile",
             "onboardSub_2": "Start investing today with USD 1,000 only",
             "onboardSub_3": "Raise funds for your startup, SPV or real estate projects"
         },
