@@ -36,6 +36,12 @@ const ClippedBanner = () => {
                     <div>{language?.v2?.startup?.onboardSub_2}</div>
                 </React.Fragment>
             )
+        } else if (type === KanzRoles.SYNDICATE) {
+            return (
+                <React.Fragment>
+                    <div>{language?.v2?.syndicate?.onboardSub_2}</div>
+                </React.Fragment>
+            )
         }
         return (
             <React.Fragment>

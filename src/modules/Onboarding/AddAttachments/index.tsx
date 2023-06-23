@@ -189,6 +189,7 @@ const AddAttachments = (props: any) => {
         {user?.type === KanzRoles.INVESTOR && <p className="text-neutral-700 font-normal text-sm text-justify">{language?.drawer?.attachments}</p>}
         {user?.type === KanzRoles.REALTOR && <p className="text-neutral-700 font-normal text-sm text-justify">{language?.drawer?.attach_realtor}</p>}
         {user?.type === KanzRoles.STARTUP && <p className="text-neutral-700 font-normal text-sm text-justify">{language?.drawer?.attach_startup}</p>}
+        {user?.type === KanzRoles.SYNDICATE && <p className="text-neutral-700 font-normal text-sm text-justify">{language?.drawer?.attach_syndicate}</p>}
       </Drawer>
       <Modal show={modalOpen ? true : false}>
         {typeof modalOpen === "string" ? (
