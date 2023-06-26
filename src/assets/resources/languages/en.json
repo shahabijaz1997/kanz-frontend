@@ -48,8 +48,8 @@
         "sub": "Build your investment portfolio or business easily with our user-optimized, innovative platform",
         "individual": "Individual",
         "firm": "Firm",
-        "subInd": "Join a growing community of fresh and seasoned angel investors Firm",
-        "subFirm": "Achieve success as an entrepreneur, fund manager or realtor"
+        "subInd": "Join a growing community of fresh and seasoned angel investors",
+        "subFirm": "Find lucrative investment opportunities for your company"
     },
     "individual": {
         "individual": "Individual Accreditation",
@@ -111,7 +111,7 @@
     },
     "firm": {
         "firm": "Firm Accreditation",
-        "sub": "Norem ipsum dolor sit amet, consectetur adipiscing elit.consectetur adipiscing elit",
+        "sub": "Take advantage of opportunities that are perfect for your investment portfolio",
         "understanding": "I understand the criteria of firm investors.",
         "option1": "Firm has over USD 100 million in investments",
         "option2": "Firm has between USD 50 million and 100 million in investment",
@@ -255,7 +255,8 @@
         "common": {
             "understood": " and have read and understood the",
             "privacyPolicy": " Privacy Policy",
-            "tuned": "Stay tuned for updates!"
+            "tuned": "Stay tuned for updates!",
+            "risk_firm": "I understand the criteria for investor firms"
         }
     }
 }
