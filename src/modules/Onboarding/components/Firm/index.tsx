@@ -225,7 +225,7 @@ const Firm = ({ language }: any) => {
                   {language?.common?.risk}
                 </h3>
                 <p className="text-neutral-500 text-sm font-normal mt-1">
-                  {language?.individual?.understanding}&nbsp;
+                  {language?.v2?.common?.risk_firm}&nbsp;
                   <span
                     className="color-blue font-medium cursor-pointer"
                     onClick={() => setOpen(true)}
