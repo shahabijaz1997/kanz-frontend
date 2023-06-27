@@ -143,7 +143,7 @@ const Home = ({ }: any) => {
             <Button className="bg-cyan-800 text-lg px-[41px] py-[14px] font-medium screen500:text-sm screen500:px-5" htmlType="submit" onClick={() => navigate("/login")}>
               {language.buttons.signin}
             </Button>
-            
+
             <Button className="bg-white text-lg px-[41px] !text-cyan-800 py-[14px] font-medium screen500:text-sm screen500:px-5 hover:bg-white" htmlType="submit" onClick={() => navigate("/signup")}>
               {language.buttons.getStart}
             </Button>
@@ -176,12 +176,16 @@ const Home = ({ }: any) => {
               <h1 className="text-neutral-900 text-2xl tracking-[0.03em] font-bold my-2">
                 {language.landing.investSecSub}
               </h1>
-              <p className="text-neutral-500 tracking-[0.03em] text-base font-normal pt-1">
+              <h2 className="text-neutral-900 tracking-[0.03em] text-base font-medium pt-1">
                 {language.landing.investPara1}
-              </p>
+              </h2>
               <p className="text-neutral-500 tracking-[0.03em] text-base font-normal pt-6">
                 {language.landing.investPara2}
               </p>
+                {React.Children.toArray(
+                  language?.v2?.investor?.li?.map((li: any) => <li className="text-neutral-500 tracking-[0.03em] text-base font-normal pt-1 pl-1">{li}</li>)
+                )}
+
               <Button
                 style={{ fontSize: "1.125rem", fontWeight: 500 }}
                 className="bg-cyan-800 h-[56px] w-[173px] font-medium mt-6"
