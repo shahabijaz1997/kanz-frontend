@@ -24,7 +24,7 @@ const Cookie = ({ }: any) => {
                 <div className="btn-container w-[40%] inline-flex gap-2 justify-end">
                     <Button className="text-sm" onClick={onAllowCookie}>{language?.v2?.buttons?.allow}</Button>
                     <Button className="text-sm" onClick={onDiableCookie}>{language?.v2?.buttons?.disable}</Button>
-                    <Button className="border-2 border-cyan-800 bg-white !text-cyan-800 text-sm">{language?.v2?.buttons?.customize}</Button>
+                    <Button className="border-2 border-cyan-800 bg-white !text-cyan-800 text-sm hover:bg-white">{language?.v2?.buttons?.customize}</Button>
                 </div>
             </section>
         </aside>) : <aside></aside>
