@@ -199,7 +199,7 @@ const SyndicateFlow = ({ }: any) => {
       <aside className="w-[420px] h-full screen500:max-w-[300px] mx-auto py-12">
         <section className="flex items-start justify-center flex-col">
           <h3 className="text-cc-black font-bold text-2xl">
-            {language.syndicate.step} {step} of 2
+            {language.syndicate.step} {step} {language.drawer.of} 2
           </h3>
           <hr className="h-px w-full mt-4 bg-gray-200 border-0 bg-cbc-grey" />
         </section>

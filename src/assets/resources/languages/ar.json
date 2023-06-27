@@ -23,7 +23,7 @@
         "realtorWelcomeText": "إضافة معلومات المالك",
         "addCompanyDetails": "إضافة تفاصيل الشركة",
         "syndicateLead": "إضافة معلومات قائد السنديكيت",
-        "syndicateLeadSub": "Norem ipsum dolor sit amet, consectetur adipiscing elit. consectetur adipiscing elit.",
+        "syndicateLeadSub": "ابنِ محفظة استثمارية أو عملك بسهولة باستخدام منصتنا المبتكرة والمحسَّنة للمستخدم",
         "loginBgAlt": "خلفية تسجيل الدخول",
         "quotes": "اقتباسات",
         "createAccount": "إنشاء حساب في كنز",
@@ -41,7 +41,10 @@
         "codeText": "أدخل الرمز",
         "sentCode": "تم إرسال الرمز إلى بريدك الإلكتروني",
         "welcomeDashboard": "مرحبًا بك في لوحة التحكم الخاصة بك في كنز",
-        "starterMessage": "ابدأ رحلتك في الاستثمار عن طريق إضافة التفاصيل الأساسية إلى ملف تعريفك"
+        "starterMessage": "ابدأ رحلتك في الاستثمار عن طريق إضافة التفاصيل الأساسية إلى ملف تعريفك",
+        "PropertyOwner": "معلومات المالك",
+        "realtorSubDetail": "تقديم بيانات مالك العقار",
+        "realtorLeadSub": "ابنِ محفظة استثمارية أو عملك بسهولة باستخدام منصتنا المبتكرة والمحسَّنة للمستخدم"
     },
     "investorFow": {
         "type": "اختر نوع المستثمر",
@@ -211,51 +214,19 @@
         "validComp": "يرجى إدخال رابط شركة صالح"
     },
     "drawer": {
-        "attachments": "Kanz is committed to complying with all investor registration guidelines set by DFSA, including collecting and maintaining valid and updated information of our investors",
-        "completeDetails": "Norem ipsum dolor sit amet, consectetur adipiscing elit. Etiam eu turpis molestie, dictum est a, mattis tellus. Sed dignissim, metus nec fringilla accumsan, risus sem sollicitudin lacus, ut interdum tellus elit sed risus. Maecenas eget condimentum velit, sit amet feugiat lectus. Class aptent taciti sociosqu ad litora torquent per conubia",
-        "firm": "Norem ipsum dolor sit amet, consectetur adipiscing elit. Etiam eu turpis molestie, dictum est a, mattis tellus. Sed dignissim, metus nec fringilla accumsan, risus sem sollicitudin lacus, ut interdum tellus elit sed risus. Maecenas eget condimentum velit, sit amet feugiat lectus. Class aptent taciti sociosqu ad litora torquent per conubia",
-        "investor": "Norem ipsum dolor sit amet, consectetur adipiscing elit. Etiam eu turpis molestie, dictum est a, mattis tellus. Sed dignissim, metus nec fringilla accumsan, risus sem sollicitudin lacus, ut interdum tellus elit sed risus. Maecenas eget condimentum velit, sit amet feugiat lectus. Class aptent taciti sociosqu ad litora torquent per conubia",
-        "questionare": "Norem ipsum dolor sit amet, consectetur adipiscing elit. Etiam eu turpis molestie, dictum est a, mattis tellus. Sed dignissim, metus nec fringilla accumsan, risus sem sollicitudin lacus, ut interdum tellus elit sed risus. Maecenas eget condimentum velit, sit amet feugiat lectus. Class aptent taciti sociosqu ad litora torquent per conubia",
-        "realtor": "Norem ipsum dolor sit amet, consectetur adipiscing elit. Etiam eu turpis molestie, dictum est a, mattis tellus. Sed dignissim, metus nec fringilla accumsan, risus sem sollicitudin lacus, ut interdum tellus elit sed risus. Maecenas eget condimentum velit, sit amet feugiat lectus. Class aptent taciti sociosqu ad litora torquent per conubia",
-        "individual": "Kanz would like to know you better in order to fulfil KYC (Know Your Customer) requirements in compliance with the guidelines issued by the Dubai Financial Services Authority (DFSA).",
-        "country": "Country",
-        "of": "of",
-        "onboardSub_1": "We’re #DemocratizingInvestments in the MENAPT region and beyond...",
-        "cofRes": "Country of Residence",
-        "startSub": "Add few details about your startup to secure an investment",
-        "attach_realtor": "Kanz is committed to complying with all registration guidelines set by DFSA, including collecting and maintaining valid and updated information of all property owners registering on our platform.",
-        "attach_startup": "Kanz is committed to complying with all registration guidelines set by DFSA, including collecting and maintaining valid and updated information of all startups registering on our platform",
-        "attach_syndicate": "Kanz is committed to complying with all registration guidelines set by DFSA, including collecting and maintaining valid and updated information of all startups registering on our platform."
-    },
-    "v2": {
-        "investor": {
-            "home_sub": "Start your investing journey by adding basic details to your profile",
-            "onboardSub_2": "Start investing today with USD 1,000 only",
-            "onboardSub_3": "Raise funds for your startup, SPV or real estate projects",
-            "accreditation_drawer": "Kanz would like to know you better in order to fulfil KYC (Know Your Customer) requirements in compliance with the guidelines issued by the Dubai Financial Services Authority (DFSA)."
-        },
-        "startup": {
-            "onboardSub_2": "Access a growing network of investors, raise funds, find mentors, and promote your startup!",
-            "home_sub": "Begin your fundraising journey by completing your profile"
-        },
-        "syndicate": {
-            "onboardSub_2": "Run SPVs and raise funds privately, on a deal-by-deal basis, via our network of highly vetted investors",
-            "home_sub": "Evaluate deals and invest in game-changing startups by completing your profile"
-        },
-        "realtor": {
-            "onboardSub_2": "Get your properties in front of active investors and asset managers!",
-            "home_sub": "Start listing your properties by completing your profile",
-            "add_title": "Property Owner",
-            "country_of_res": "Country of Residence",
-            "attachment_provider": "Why do I need to provide this?"
-        },
-        "buttons": {
-            "send": "Send"
-        },
-        "common": {
-            "understood": " and have read and understood the",
-            "privacyPolicy": " Privacy Policy",
-            "tuned": "Stay tuned for updates!"
-        }
+        "attachments": "الوصول إلى مستثمرين ملائكة ورأس المال الاستثماري في مختلف الصناعات والمواقع. تأمين التمويل. الحصول على الدعم الاستراتيجي. الحصول على الدعم التنظيمي. العثور على من يرشدك. إنشاء ضجة بكل إنجاز",
+        "completeDetails": "الوصول إلى مستثمرين ملائكة ورأس المال الاستثماري في مختلف الصناعات والمواقع. تأمين التمويل. الحصول على الدعم الاستراتيجي. الحصول على الدعم التنظيمي. العثور على من يرشدك. إنشاء ضجة بكل إنجاز",
+        "firm": "الوصول إلى مستثمرين ملائكة ورأس المال الاستثماري في مختلف الصناعات والمواقع. تأمين التمويل. الحصول على الدعم الاستراتيجي. الحصول على الدعم التنظيمي. العثور على من يرشدك. إنشاء ضجة بكل إنجاز",
+        "investor": "الوصول إلى مستثمرين ملائكة ورأس المال الاستثماري في مختلف الصناعات والمواقع. تأمين التمويل. الحصول على الدعم الاستراتيجي. الحصول على الدعم التنظيمي. العثور على من يرشدك. إنشاء ضجة بكل إنجاز",
+        "questionare": "الوصول إلى مستثمرين ملائكة ورأس المال الاستثماري في مختلف الصناعات والمواقع. تأمين التمويل. الحصول على الدعم الاستراتيجي. الحصول على الدعم التنظيمي. العثور على من يرشدك. إنشاء ضجة بكل إنجاز",
+        "realtor": "الوصول إلى مستثمرين ملائكة ورأس المال الاستثماري في مختلف الصناعات والمواقع. تأمين التمويل. الحصول على الدعم الاستراتيجي. الحصول على الدعم التنظيمي. العثور على من يرشدك. إنشاء ضجة بكل إنجاز",
+        "individual": "الوصول إلى مستثمرين ملائكة ورأس المال الاستثماري في مختلف الصناعات والمواقع. تأمين التمويل. الحصول على الدعم الاستراتيجي. الحصول على الدعم التنظيمي. العثور على من يرشدك. إنشاء ضجة بكل إنجاز",
+        "country": "دولة",
+        "of": "من",
+        "onboardSub_1": "نحن # دمقرطة الاستثمارات في منطقة MENAPT وخارجها",
+        "onboardSub_2": "ابدأ الاستثمار اليوم بمبلغ 1،000 دولار أمريكي فقط",
+        "onboardSub_3": "اجمع الأموال لمشاريعك الناشئة أو ذات الأغراض الخاصة أو المشاريع العقارية",
+        "cofRes": "بلد الإقامة",
+        "startSub": "أضف بعض التفاصيل حول بدء التشغيل الخاص بك لتأمين الاستثما"
     }
 }

@@ -1,9 +1,11 @@
 import { useLayoutEffect } from "react";
 import RouterModule from "./modules/Router/router.module";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
+import { CookiesProvider } from "react-cookie";
 import { saveOrientation } from "./redux-toolkit/slicer/orientation.slicer";
 import { GoogleOAuthProvider } from '@react-oauth/google';
 import { getEnv } from "./env";
+
 const ENV: any = getEnv();
 const App = () => {
   const dispatch = useDispatch();
@@ -27,7 +29,7 @@ const App = () => {
       observer.disconnect();
     };
   }, []);
-  return <GoogleOAuthProvider clientId={ENV.GOOGLE_API_KEY}> <RouterModule /></GoogleOAuthProvider>
+  return <GoogleOAuthProvider clientId={ENV.GOOGLE_API_KEY}> <CookiesProvider><RouterModule /></CookiesProvider></GoogleOAuthProvider>
 }
 
 export default App;

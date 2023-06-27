@@ -11,8 +11,9 @@ import Investors from "../../assets/investors.png";
 import QuotesIcon from "../../ts-icons/quotesIcon.svg";
 import { KanzRoles } from "../../enums/roles.enum";
 import Button from "../../shared/components/Button";
+import Cookie from "../../shared/components/Cookie";
 
-const Home = ({}: any) => {
+const Home = ({ }: any) => {
   const navigate = useNavigate();
   const language: any = useSelector((state: RootState) => state.language.value);
   const orientation: any = useSelector((state: RootState) => state.orientation.value);
@@ -145,7 +146,7 @@ const Home = ({}: any) => {
             <Button
               className="bg-cyan-800 text-lg px-[41px] py-[14px] font-medium screen500:text-sm screen500:px-5"
               htmlType="submit"
-              onClick={() => {}}
+              onClick={() => { }}
             >
               {language.buttons.getStart}
             </Button>
@@ -234,7 +235,7 @@ const Home = ({}: any) => {
           </div>
         </section>
       </aside>
-
+      <Cookie />
       <footer className="h-[750px] screen1024:h-[500px] w-full bg-cyan-800 mt-[15rem] screen500:mt-[5rem]"></footer>
     </main>
   );

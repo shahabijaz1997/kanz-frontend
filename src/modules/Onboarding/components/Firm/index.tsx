@@ -214,22 +214,14 @@ const Firm = ({ language }: any) => {
             </section>
 
             <section className="relative z-10 w-full inline-flex items-start gap-2 rounded-md border border-grey w-[420px] p-4 check-background cursor-pointer">
-              <input
-                type="checkbox"
-                className="accent-cyan-800 h-3 w-3 cursor-pointer"
-                checked={riskChecked}
-                onChange={() => setRiskChecked(!riskChecked)}
-              />
+              <input type="checkbox" className="accent-cyan-800 h-3 w-3 cursor-pointer" checked={riskChecked} onChange={() => setRiskChecked(!riskChecked)} />
               <div>
                 <h3 className="text-neutral-700 font-medium text-[14px] leading-none">
                   {language?.common?.risk}
                 </h3>
                 <p className="text-neutral-500 text-sm font-normal mt-1">
                   {language?.v2?.common?.risk_firm}&nbsp;
-                  <span
-                    className="color-blue font-medium cursor-pointer"
-                    onClick={() => setOpen(true)}
-                  >
+                  <span className="color-blue font-medium cursor-pointer" onClick={() => setOpen(true)} >
                     {language?.common?.learn}
                   </span>
                 </p>

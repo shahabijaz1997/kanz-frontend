@@ -107,7 +107,6 @@ const SyndicateStepper = ({ orientation, language, metadata, payload, file, onSe
                     {selected && selected.id === options[0].id && (
                         <div className="mb-8 relative">
                             <h3 className="block text-neutral-700 text-sm font-medium mb-1">{language.syndicate.addDetail}</h3>
-                            <small className="font-normal text-sm text-neutral-500">{language.syndicate.subDetail}</small>
                             <section className="w-full mt-2 p-[18px] rounded-lg check-background border border-grey">
                                 <div className="mb-5">
                                     <label htmlFor="raised" className="text-neutral-700 text-sm font-medium">{language.syndicate.raisedQ}</label>
