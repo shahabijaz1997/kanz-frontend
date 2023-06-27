@@ -208,7 +208,7 @@ const SyndicateStepper = ({ orientation, language, metadata, payload, file, onSe
                 <form className="pt-8 mb-4 w-full">
                     <section className="mb-8">
                         <label htmlFor="syndname" className="text-neutral-700 text-sm font-medium">{language.syndicate.syndName}</label>
-                        <input id="syndname" value={payload?.name} onChange={(e) => onSetPayload(e.target.value, "name")} placeholder="Alex Peter" className=" h-[42px] shadow-sm appearance-none border border-neutral-300 rounded-md w-full py-2 px-3 text-gray-500 leading-tight focus:outline-none focus:shadow-outline" type="text" />
+                        <input id="syndname" value={payload?.name} onChange={(e) => onSetPayload(e.target.value, "name")} placeholder="Abdulrahman Mohammad" className=" h-[42px] shadow-sm appearance-none border border-neutral-300 rounded-md w-full py-2 px-3 text-gray-500 leading-tight focus:outline-none focus:shadow-outline" type="text" />
                     </section>
                     <section className="mb-8">
                         <label htmlFor="tagline" className="text-neutral-700 text-sm font-medium">{language.syndicate.tagline}</label>
