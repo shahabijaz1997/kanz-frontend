@@ -134,25 +134,19 @@ const Home = ({ }: any) => {
           <h3 className="text-cyan-800 text-xl tracking-[0.03em] font-bold">
             {language.landing.unlock}
           </h3>
-          <h1 className="text-neutral-900 text-2xl tracking-[0.03em] font-bold my-5">
-            {language.landing.discoverStart}
-          </h1>
         </section>
         <section className="max-w-[900px] px-[120px] screen1024:px-[50px] screen500:px-[20px]">
           <p className="text-neutral-500 tracking-[0.03em] text-base font-normal">
             {language.landing.discoverSub}
           </p>
           <div className="inline-flex gap-3 mt-5">
-            <Button
-              className="bg-cyan-800 text-lg px-[41px] py-[14px] font-medium screen500:text-sm screen500:px-5"
-              htmlType="submit"
-              onClick={() => { }}
-            >
+            <Button className="bg-cyan-800 text-lg px-[41px] py-[14px] font-medium screen500:text-sm screen500:px-5" htmlType="submit" onClick={() => navigate("/login")}>
+              {language.buttons.signin}
+            </Button>
+            
+            <Button className="bg-white text-lg px-[41px] !text-cyan-800 py-[14px] font-medium screen500:text-sm screen500:px-5 hover:bg-white" htmlType="submit" onClick={() => navigate("/signup")}>
               {language.buttons.getStart}
             </Button>
-            <button className="font-medium text-lg text-cyan-800 px-[41px] py-[14px] rounded-md shadow-cs-4 screen500:px-5 screen500:text-sm">
-              {language.buttons.readDocs}
-            </button>
           </div>
         </section>
 
