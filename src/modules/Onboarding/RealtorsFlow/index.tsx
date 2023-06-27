@@ -147,7 +147,7 @@ const Realtors = (props: any) => {
               <div>
                 <div className="w-[450px] mt-[78px]">{language?.v2?.realtor?.add_title}</div>
                 <p className="text-neutral-500 font-normal text-sm">
-                  <span>{language.syndicate.subDetail}</span>&nbsp;
+                  <span>{language.onboarding.realtorSubDetail}</span>&nbsp;
                   <span className="color-blue font-medium cursor-pointer" onClick={() => setOpen(true)}>
                     {language.common.learn}
                   </span>
