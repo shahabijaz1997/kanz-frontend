@@ -30,6 +30,8 @@ const Signup = (props: any) => {
   const dispatch = useDispatch();
   const { state } = useLocation();
   const language: any = useSelector((state: RootState) => state.language.value);
+  const event: any = useSelector((state: RootState) => state.event.value);
+
   const [loading, setLoading] = useState(false);
 
   useLayoutEffect(() => {
@@ -236,8 +238,8 @@ const Signup = (props: any) => {
         </div>
 
         <aside className="inline-flex items-center justify-between w-full gap-4">
-          <GoogleOauth language={language} loading={loading} setLoading={setLoading} state={state} />
-          <LinkedInOauth language={language} loading={loading} setLoading={setLoading} state={state} />
+          <GoogleOauth language={language} event={event} loading={loading} setLoading={setLoading} state={state} />
+          <LinkedInOauth language={language} event={event} loading={loading} setLoading={setLoading} state={state} />
         </aside>
       </form>
     );
