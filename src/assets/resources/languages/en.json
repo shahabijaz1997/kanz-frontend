@@ -271,7 +271,10 @@
             "contact": "Contact Kanz",
             "ques_ask": "If you have any questions, concerns, or complaints, we encourage you to drop us an email on:",
             "prim_email": "hello@kanz.capital",
-            "cokie_link": "https://kanz.capital/cookiepolicy"
+            "cokie_link": "https://kanz.capital/cookiepolicy",
+            "rejected": "Rejected",
+            "verified": "Verified",
+            "reopened": "Reopened"
         },
         "risk": {
             "heading": "Risk Disclaimer",

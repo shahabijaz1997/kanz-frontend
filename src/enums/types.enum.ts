@@ -15,9 +15,11 @@ export enum FileType {
 }
 
 export enum ApplicationStatus {
-    PENDING = "pending",
     IN_PROGRESS = "inprogress",
+    APPROVED = "approved",
     SUBMITTED = "submitted",
     OPENED = "opened",
-    REOPENED = "reopened"
+    REOPENED = "reopened",
+    VERIFIED = "verified",
+    REJECTED = "rejected",
 }
