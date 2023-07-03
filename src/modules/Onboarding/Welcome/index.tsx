@@ -32,19 +32,9 @@ const Welcome = ({ }: any) => {
     useLayoutEffect(() => {
         getUserDetails();
         getRoleBasedDetails();
-        //onUpdateLanguage()
     }, []);
 
-    /*const onUpdateLanguage = async () => {
-        try {
-          setLoading(true);
-          await updateLanguage(user?.id, { users: { language: event } }, authToken);
-        } catch (error) {
     
-        } finally {
-          setLoading(false);
-        }
-      };*/
 
     const getUserDetails = async () => {
         try {
