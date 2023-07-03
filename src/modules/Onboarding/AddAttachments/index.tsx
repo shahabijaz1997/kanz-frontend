@@ -137,7 +137,7 @@ const AddAttachments = (props: any) => {
                 />
                 <p className="text-neutral-500 text-sm font-normal">
                   {language?.common?.agree}&nbsp;
-                  <span className="color-blue font-medium cursor-pointer" onClick={() => navigate("/terms-and-condition")} >
+                  <span className="color-blue font-medium cursor-pointer" onClick={() => navigate("/terms-and-conditions")} >
                     {language?.common?.termsConditions}
                   </span>
                   {language?.v2?.common?.understood}
@@ -215,7 +215,7 @@ const AddAttachments = (props: any) => {
 
             <div className="w-[80%] screen800:w-full">
               <p className="mt-4 text-sm font-normal text-neutral-500 text-center leading-relaxed">
-                {language.modal.sub_2} <button className="text-blue-700" onClick={()=>navigate("/welcome")}>{language.modal.sub_3}</button> {language.modal.sub_4}
+                {language.modal.sub_2} <button className="text-blue-700" onClick={() => navigate("/welcome")}>{language.modal.sub_3}</button> {language.modal.sub_4}
               </p>
             </div>
             <Button
