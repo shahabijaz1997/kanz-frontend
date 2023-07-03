@@ -7,6 +7,7 @@ import Individual from "../components/Individual";
 import Firm from "../components/Firm";
 import Drawer from "../../../shared/components/Drawer";
 import { ApplicationStatus, InvestorType } from "../../../enums/types.enum";
+import { KanzRoles } from "../../../enums/roles.enum";
 
 const CompleteDetails = (props: any) => {
     const { state } = useLocation();
@@ -16,7 +17,7 @@ const CompleteDetails = (props: any) => {
     const [isOpen, setOpen] = useState(false);
 
     useLayoutEffect(() => {
-        if ((user.status !== ApplicationStatus.OPENED && user.status !== ApplicationStatus.REOPENED)) navigate("/welcome");
+        if ((user.status !== ApplicationStatus.OPENED && user.status !== ApplicationStatus.REOPENED) || user.type !== KanzRoles.INVESTOR) navigate("/welcome");
     }, []);
     return (
         <main className="h-full max-h-full background-auth overflow-y-auto overflow-x-hidden">

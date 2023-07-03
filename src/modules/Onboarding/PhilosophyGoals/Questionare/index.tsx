@@ -11,10 +11,12 @@ import { saveToken } from "../../../../redux-toolkit/slicer/auth.slicer";
 import Drawer from "../../../../shared/components/Drawer";
 import HorionGraph from "../../../../assets/investment_horizon_graph.png";
 import Button from "../../../../shared/components/Button";
+import { KanzRoles } from "../../../../enums/roles.enum";
 
 const Questionare = ({ step, returnSuccessRedirection }: any) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const user: any = useSelector((state: RootState) => state.user.value);
   const language: any = useSelector((state: RootState) => state.language.value);
   const authToken: any = useSelector((state: RootState) => state.auth.value);
   const event: any = useSelector((state: RootState) => state.event.value);
@@ -27,6 +29,10 @@ const Questionare = ({ step, returnSuccessRedirection }: any) => {
   const [page, setPage] = useState(1);
   const [selected, setSelected]: any = useState({});
   const [loading, setLoading]: any = useState(true);
+
+  useLayoutEffect(() => {
+    if(user.type !== KanzRoles.INVESTOR) navigate("/welcome");
+  }, []);
 
   useLayoutEffect(() => {
     getQuestionares(step);
