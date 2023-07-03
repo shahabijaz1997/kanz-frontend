@@ -37,7 +37,7 @@ const CompleteDetails = (props: any) => {
 
             <Drawer isOpen={isOpen} setIsOpen={(val: boolean) => setOpen(val)}>
                 <header className="font-bold text-xl">{language.philosophyGoals.whyToDo}</header>
-                <p className="text-neutral-700 font-normal text-sm text-justify">{language?.drawer?.completeDetails}</p>
+                <p className="text-neutral-700 font-normal text-sm text-justify">{language?.v2?.investor?.accreditation_drawer}</p>
             </Drawer>
         </main>
     );

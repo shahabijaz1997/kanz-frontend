@@ -97,14 +97,14 @@ const Individual = ({ language }: any) => {
 
   const addinvestmentAccridiation = async (e: any) => {
     e.preventDefault();
-    if (!payload.national || !payload.residence || !selectedAssert?.id || !riskChecked){
+    if (!payload.national || !payload.residence || !selectedAssert?.id || !riskChecked) {
       toast.dismiss();
       return toast.warning(language.promptMessages.pleaseSelectAllData, toastUtil);
     }
     try {
       setLoading(true);
       let country: any = countries.all.find((c: any) => c[event].name === payload?.national?.value);
-      
+
       let _payload = {
         investor_profile: {
           country_id: country.id,
@@ -210,14 +210,11 @@ const Individual = ({ language }: any) => {
             />
             <div>
               <h3 className="text-neutral-700 font-medium text-[14px] leading-none">
-                {language?.common?.risk}
+                {language?.v2?.risk?.heading}
               </h3>
               <p className="text-neutral-500 text-sm font-normal mt-1">
                 {language?.individual?.understanding}&nbsp;
-                <span
-                  className="color-blue font-medium cursor-pointer"
-                  onClick={() => setOpen(true)}
-                >
+                <span className="color-blue font-medium cursor-pointer" onClick={() => setOpen(true)}>
                   {language?.common?.learn}
                 </span>
               </p>
@@ -247,9 +244,16 @@ const Individual = ({ language }: any) => {
 
       <Drawer isOpen={isOpen} setIsOpen={(val: boolean) => setOpen(val)}>
         <header className="font-bold text-xl">
-          {language.philosophyGoals.whyToDo}
+          <h2>{language?.v2?.risk?.sub_head_1}</h2>
+          <h4 className="text-sm my-3">{language?.v2?.risk?.sub_head_2}</h4>
         </header>
-        <p className="text-neutral-700 font-normal text-sm text-justify">{language?.drawer?.individual}</p>
+        <p className="text-neutral-700 font-normal text-sm text-justify">{language?.v2?.risk?.para_1}</p>
+        <p className="text-neutral-700 font-normal text-sm text-justify">{language?.v2?.risk?.para_2}</p>
+        <p className="text-neutral-700 font-normal text-sm text-justify">
+          <span className="font-bold">{language?.v2?.risk?.kanz_edu}</span>
+          {language?.v2?.risk?.para_3}
+        </p>
+        <p className="text-neutral-700 font-normal text-sm text-justify">{language?.v2?.risk?.para_4}</p>
       </Drawer>
     </form>
   );

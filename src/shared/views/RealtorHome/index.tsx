@@ -20,15 +20,9 @@ const RealtorHome = ({ loading, language }: any) => {
                         {language?.onboarding?.realtorWelcomeText}
                     </h2>
                     <h3 className="text-base font-normal text-neutral-700 screen500:text-[12px]">
-                        {language?.onboarding?.realtorLeadSub}
+                        {language?.v2?.realtor?.home_sub}
                     </h3>
-                    <Button
-                        className="mt-6 h-[38px]"
-                        disabled={loading}
-                        htmlType="submit"
-                        loading={loading}
-                        onClick={() => navigate(RoutesEnums.REALTOR_DETAILS)}
-                    >
+                    <Button className="mt-6 h-[38px]" disabled={loading} htmlType="submit" loading={loading} onClick={() => navigate(RoutesEnums.REALTOR_DETAILS)}>
                         {language?.buttons?.start}
                     </Button>
                 </React.Fragment>
@@ -41,7 +35,7 @@ const RealtorHome = ({ loading, language }: any) => {
                         {language?.onboarding?.realtorWelcomeText}
                     </h2>
                     <h3 className="text-base font-normal text-neutral-700 screen500:text-[12px]">
-                        {language?.onboarding?.syndicateLeadSub}
+                        {language?.v2?.realtor?.home_sub}
                     </h3>
                     <h3 className="text-base font-normal text-neutral-700 screen500:text-[12px] mt-2">
                         {language?.onboarding?.appStatus}: <strong>{language.common.inprogress}</strong>
@@ -67,6 +61,9 @@ const RealtorHome = ({ loading, language }: any) => {
                     <h3 className="text-base font-normal text-neutral-700 screen500:text-[12px]">
                         {language?.onboarding?.appStatus}: <strong>{language.common.submitted}</strong>
                     </h3>
+                    <h3 className="text-base font-normal text-neutral-700 screen500:text-[12px]">
+                        {language?.v2?.common?.tuned}
+                    </h3>
                 </React.Fragment>
             );
         }
@@ -77,7 +74,7 @@ const RealtorHome = ({ loading, language }: any) => {
                         {language?.onboarding?.realtorWelcomeText}
                     </h2>
                     <h3 className="text-base font-normal text-neutral-700 screen500:text-[12px]">
-                        {language?.onboarding?.syndicateLeadSub}
+                        {language?.v2?.realtor?.home_sub}
                     </h3>
                     <Button
                         className="mt-6 h-[38px]"

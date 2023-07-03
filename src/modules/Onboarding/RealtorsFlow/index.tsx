@@ -145,7 +145,7 @@ const Realtors = (props: any) => {
           <form className="pb-8 mb-4 w-full" onSubmit={handleSubmit(onSubmit)}>
             <div className="flex items-center justify-center">
               <div>
-                <div className="w-[450px] mt-[78px]">{language?.onboarding?.PropertyOwner}</div>
+                <div className="w-[450px] mt-[78px]">{language?.v2?.realtor?.add_title}</div>
                 <p className="text-neutral-500 font-normal text-sm">
                   <span>{language.onboarding.realtorSubDetail}</span>&nbsp;
                   <span className="color-blue font-medium cursor-pointer" onClick={() => setOpen(true)}>
@@ -163,7 +163,7 @@ const Realtors = (props: any) => {
                   </section>
                   <section className="mb-4 w-full">
                     <label className="mb-2 block text-neutral-700 text-sm font-medium mb-1" htmlFor="full-name" >
-                      {language?.common?.residence}
+                      {language?.v2?.realtor?.country_of_res}
                     </label>
                     <div className="relative w-full" style={{ zIndex: 100 }}>
                       <Selector disabled={disabled} value={payload?.residence} options={_countries && _countries} onChange={(v: any) => onSetPayload(v, "residence")} defaultValue={payload?.residence} />

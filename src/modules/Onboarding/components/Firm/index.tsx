@@ -214,22 +214,14 @@ const Firm = ({ language }: any) => {
             </section>
 
             <section className="relative z-10 w-full inline-flex items-start gap-2 rounded-md border border-grey w-[420px] p-4 check-background cursor-pointer">
-              <input
-                type="checkbox"
-                className="accent-cyan-800 h-3 w-3 cursor-pointer"
-                checked={riskChecked}
-                onChange={() => setRiskChecked(!riskChecked)}
-              />
+              <input type="checkbox" className="accent-cyan-800 h-3 w-3 cursor-pointer" checked={riskChecked} onChange={() => setRiskChecked(!riskChecked)} />
               <div>
                 <h3 className="text-neutral-700 font-medium text-[14px] leading-none">
-                  {language?.common?.risk}
+                  {language?.v2?.risk?.heading}
                 </h3>
                 <p className="text-neutral-500 text-sm font-normal mt-1">
-                  {language?.individual?.understanding}&nbsp;
-                  <span
-                    className="color-blue font-medium cursor-pointer"
-                    onClick={() => setOpen(true)}
-                  >
+                  {language?.v2?.common?.risk_firm}&nbsp;
+                  <span className="color-blue font-medium cursor-pointer" onClick={() => setOpen(true)} >
                     {language?.common?.learn}
                   </span>
                 </p>
@@ -260,9 +252,16 @@ const Firm = ({ language }: any) => {
 
       <Drawer isOpen={isOpen} setIsOpen={(val: boolean) => setOpen(val)}>
         <header className="font-bold text-xl">
-          {language.philosophyGoals.whyToDo}
+          <h2>{language?.v2?.risk?.sub_head_1}</h2>
+          <h4 className="text-sm my-3">{language?.v2?.risk?.sub_head_2}</h4>
         </header>
-        <p className="text-neutral-700 font-normal text-sm text-justify">{language?.drawer?.firm}</p>
+        <p className="text-neutral-700 font-normal text-sm text-justify">{language?.v2?.risk?.para_1}</p>
+        <p className="text-neutral-700 font-normal text-sm text-justify">{language?.v2?.risk?.para_2}</p>
+        <p className="text-neutral-700 font-normal text-sm text-justify">
+          <span className="font-bold">{language?.v2?.risk?.kanz_edu}</span>
+          {language?.v2?.risk?.para_3}
+        </p>
+        <p className="text-neutral-700 font-normal text-sm text-justify">{language?.v2?.risk?.para_4}</p>
       </Drawer>
     </form>
   );

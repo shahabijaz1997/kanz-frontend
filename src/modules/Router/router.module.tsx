@@ -24,6 +24,8 @@ const PhilosophyGoals = lazy(() => import("../Onboarding/PhilosophyGoals"));
 const AddAttachments = lazy(() => import("../Onboarding/AddAttachments"));
 const SyndicateLeadInfo = lazy(() => import("../Onboarding/SyndicateFlow"));
 const Startup = lazy(() => import("../Onboarding/StartupFlow"));
+const PrivacyPolicy = lazy(() => import("../Policies/PrivacyPolicy"));
+const TermsAndConditions = lazy(() => import("../Policies/TermsAndConditions"));
 
 const AuthenticateRoute = (props: PropsWithChildren) => {
   const { children } = props;
@@ -220,6 +222,22 @@ const RouterModule = () => {
               <AuthenticateRoute>
                 <Welcome guard={authToken} />
               </AuthenticateRoute>
+            </Suspense>
+          }
+        />
+        <Route
+          path="/privacy-policy"
+          element={
+            <Suspense fallback={<Loader />}>
+              <PrivacyPolicy />
+            </Suspense>
+          }
+        />
+        <Route
+          path="/terms-and-conditions"
+          element={
+            <Suspense fallback={<Loader />}>
+              <TermsAndConditions />
             </Suspense>
           }
         />

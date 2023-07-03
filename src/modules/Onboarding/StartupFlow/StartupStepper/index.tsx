@@ -64,7 +64,7 @@ const StartupStepper = ({ event, countries, orientation, language, file, payload
                     </div>
 
                     <div className="mb-8 w-full" ref={refInd}>
-                        <label className="block text-neutral-700 text-sm font-medium mb-1" htmlFor="market">{language.syndicate.industry}</label>
+                        <label className="block text-neutral-700 text-sm font-medium mb-1" htmlFor="market">{language.company.market}</label>
                         <span className="relative">
                             <input id="market" autoComplete="off" value={search} onChange={(e) => setSearch(e.target.value)} onClick={() => setShowData(!showData)}
                                 className="h-[42px] shadow-sm appearance-none border border-neutral-300 rounded-md w-full py-2 px-3 text-gray-500 leading-tight focus:outline-none focus:shadow-outline" type="text" />
@@ -133,7 +133,7 @@ const StartupStepper = ({ event, countries, orientation, language, file, payload
                 <form className="pt-8 mb-4 w-full">
                     <div className="mb-8 w-full">
                         <div className="text-neutral-700 text-sm font-medium">{language.syndicate.logo}</div>
-                        <small className="text-neutral-500 font-normal">{language.syndicate.uploadCompLogo}</small>
+                        <small className="text-neutral-500 font-normal">{language.company.uploadCompLogo}</small>
                         <small className="relative font-normal color-blue cursor-pointer" onMouseEnter={() => setShowHoverModal(true)} onMouseLeave={() => setShowHoverModal(false)}>
                             &nbsp;<span>{language.common.example}</span>
                             {showHoverModal && (

@@ -11,8 +11,9 @@ import Investors from "../../assets/investors.png";
 import QuotesIcon from "../../ts-icons/quotesIcon.svg";
 import { KanzRoles } from "../../enums/roles.enum";
 import Button from "../../shared/components/Button";
+import Cookie from "../../shared/components/Cookie";
 
-const Home = ({}: any) => {
+const Home = ({ }: any) => {
   const navigate = useNavigate();
   const language: any = useSelector((state: RootState) => state.language.value);
   const orientation: any = useSelector((state: RootState) => state.orientation.value);
@@ -133,25 +134,19 @@ const Home = ({}: any) => {
           <h3 className="text-cyan-800 text-xl tracking-[0.03em] font-bold">
             {language.landing.unlock}
           </h3>
-          <h1 className="text-neutral-900 text-2xl tracking-[0.03em] font-bold my-5">
-            {language.landing.discoverStart}
-          </h1>
         </section>
         <section className="max-w-[900px] px-[120px] screen1024:px-[50px] screen500:px-[20px]">
           <p className="text-neutral-500 tracking-[0.03em] text-base font-normal">
             {language.landing.discoverSub}
           </p>
           <div className="inline-flex gap-3 mt-5">
-            <Button
-              className="bg-cyan-800 text-lg px-[41px] py-[14px] font-medium screen500:text-sm screen500:px-5"
-              htmlType="submit"
-              onClick={() => {}}
-            >
+            <Button className="bg-cyan-800 text-lg px-[41px] py-[14px] font-medium screen500:text-sm screen500:px-5" htmlType="submit" onClick={() => navigate("/login")}>
+              {language.buttons.signin}
+            </Button>
+
+            <Button className="bg-white text-lg px-[41px] !text-cyan-800 py-[14px] font-medium screen500:text-sm screen500:px-5 hover:bg-white" htmlType="submit" onClick={() => navigate("/signup")}>
               {language.buttons.getStart}
             </Button>
-            <button className="font-medium text-lg text-cyan-800 px-[41px] py-[14px] rounded-md shadow-cs-4 screen500:px-5 screen500:text-sm">
-              {language.buttons.readDocs}
-            </button>
           </div>
         </section>
 
@@ -173,7 +168,7 @@ const Home = ({}: any) => {
           ></div>
           <img src={PatternSvg} alt="SVG" className="absolute right-0" />
 
-          <aside className="flex flex-row screen991:flex-col justify-between items-center h-full px-[120px] screen1024:px-[50px] screen500:px-[20px] relative">
+          <aside className="flex flex-row screen991:flex-col justify-between items-center h-full px-[120px] screen1024:px-[50px] screen500:px-[20px] relative" id={language.header.investment}>
             <div className="inline-flex flex-col items-start w-1/2 screen991:justify-center screen991:h-full screen991:w-full pr-[80px]">
               <h3 className="text-cyan-800 text-xl tracking-[0.03em] font-bold">
                 {language.landing.invest}
@@ -181,12 +176,16 @@ const Home = ({}: any) => {
               <h1 className="text-neutral-900 text-2xl tracking-[0.03em] font-bold my-2">
                 {language.landing.investSecSub}
               </h1>
-              <p className="text-neutral-500 tracking-[0.03em] text-base font-normal pt-1">
+              <h2 className="text-neutral-900 tracking-[0.03em] text-base font-medium pt-1">
                 {language.landing.investPara1}
-              </p>
+              </h2>
               <p className="text-neutral-500 tracking-[0.03em] text-base font-normal pt-6">
                 {language.landing.investPara2}
               </p>
+                {React.Children.toArray(
+                  language?.v2?.investor?.li?.map((li: any) => <li className="text-neutral-500 tracking-[0.03em] text-base font-normal pt-1 pl-1">{li}</li>)
+                )}
+
               <Button
                 style={{ fontSize: "1.125rem", fontWeight: 500 }}
                 className="bg-cyan-800 h-[56px] w-[173px] font-medium mt-6"
@@ -234,7 +233,7 @@ const Home = ({}: any) => {
           </div>
         </section>
       </aside>
-
+      <Cookie />
       <footer className="h-[750px] screen1024:h-[500px] w-full bg-cyan-800 mt-[15rem] screen500:mt-[5rem]"></footer>
     </main>
   );
