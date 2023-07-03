@@ -17,12 +17,14 @@ import { saveLogo } from "../../../redux-toolkit/slicer/attachments.slicer";
 import { removeAttachment } from "../../../apis/attachment.api";
 import { isEmpty } from "../../../utils/object.util";
 import { getCountries } from "../../../apis/countries.api";
+import { KanzRoles } from "../../../enums/roles.enum";
 
 const StartupFlow = ({ }: any) => {
   const params = useParams();
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const language: any = useSelector((state: RootState) => state.language.value);
+  const user: any = useSelector((state: RootState) => state.user.value);
   const authToken: any = useSelector((state: RootState) => state.auth.value);
   const event: any = useSelector((state: RootState) => state.event.value);
   const logo: any = useSelector((state: RootState) => state.attachments.logo.value);
@@ -56,6 +58,7 @@ const StartupFlow = ({ }: any) => {
   const [loading, setLoading] = useState(false);
 
   useLayoutEffect(() => {
+    if(user.type !== KanzRoles.STARTUP) navigate("/welcome");
     getAllCountries();
     bootstrapPayload();
   }, []);

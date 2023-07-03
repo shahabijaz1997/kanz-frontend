@@ -16,6 +16,7 @@ import { postRealtorInformation } from "../../../apis/realtor.api";
 import Loader from "../../../shared/views/Loader";
 import { ApplicationStatus } from "../../../enums/types.enum";
 import { isEmpty } from "../../../utils/object.util";
+import { KanzRoles } from "../../../enums/roles.enum";
 
 type FormValues = {
   noOfProperty: number;
@@ -60,6 +61,8 @@ const Realtors = (props: any) => {
   const { register, handleSubmit, watch, formState: { errors } } = useForm<FormValues>();
 
   useLayoutEffect(() => {
+    if (user.type !== KanzRoles.REALTOR) navigate("/welcome");
+
     getAllCountries();
   }, []);
 

@@ -15,6 +15,7 @@ import { saveToken } from "../../../redux-toolkit/slicer/auth.slicer";
 import AddAttachmentBanner from "../../../shared/components/AddAttachmentBanner";
 import { ApplicationStatus } from "../../../enums/types.enum";
 import Button from "../../../shared/components/Button";
+import { KanzRoles } from "../../../enums/roles.enum";
 
 const CompleteGoals = ({ }: any) => {
   const { state } = useLocation();
@@ -31,7 +32,7 @@ const CompleteGoals = ({ }: any) => {
   const [currentStepper, setCurrentStepper] = useState(0);
 
   useLayoutEffect(() => {
-    if ((user.status !== ApplicationStatus.OPENED && user.status !== ApplicationStatus.REOPENED)) navigate("/welcome");
+    if ((user.status !== ApplicationStatus.OPENED && user.status !== ApplicationStatus.REOPENED) || user.type !== KanzRoles.INVESTOR) navigate("/welcome");
     let item = localStorage.getItem("step");
     if (item) setCurrentStepper(Number(item));
   }, []);

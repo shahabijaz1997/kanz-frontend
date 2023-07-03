@@ -15,12 +15,14 @@ import Button from "../../../shared/components/Button";
 import { isValidUrl } from "../../../utils/regex.utils";
 import { saveLogo } from "../../../redux-toolkit/slicer/attachments.slicer";
 import { isEmpty } from "../../../utils/object.util";
+import { KanzRoles } from "../../../enums/roles.enum";
 
 const SyndicateFlow = ({ }: any) => {
   const params = useParams();
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const language: any = useSelector((state: RootState) => state.language.value);
+  const user: any = useSelector((state: RootState) => state.user.value);
   const authToken: any = useSelector((state: RootState) => state.auth.value);
   const logo: any = useSelector((state: RootState) => state.attachments.logo.value);
   const metadata: any = useSelector((state: RootState) => state.metadata.value);
@@ -49,6 +51,8 @@ const SyndicateFlow = ({ }: any) => {
   const [loading, setLoading] = useState(false);
 
   useLayoutEffect(() => {
+    if(user.type !== KanzRoles.SYNDICATE) navigate("/welcome");
+
     bootstrapPayload();
   }, []);
 
