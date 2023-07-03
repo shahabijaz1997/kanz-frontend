@@ -111,18 +111,8 @@ const AddAttachments = (props: any) => {
                   {React.Children.toArray(
                     attachmentData.map((item: any) => {
                       return (
-                        <UploadComp
-                          id={item.id}
-                          files={files}
-                          file={files?.length && files.find((f: any) => f.id === item.id)}
-                          setFile={setFile}
-                          title={item[event]?.name}
-                          subTitle={item[event]?.label}
-                          language={language}
-                          setFiles={setFiles}
-                          setFileType={setFileType}
-                          setModalOpen={setModalOpen}
-                        />
+                        <UploadComp id={item.id} files={files} file={files?.length && files.find((f: any) => f.id === item.id)} setFile={setFile} title={item[event]?.name} subTitle={item[event]?.label}
+                          language={language} setFiles={setFiles} setFileType={setFileType} setModalOpen={setModalOpen} />
                       );
                     })
                   )}
