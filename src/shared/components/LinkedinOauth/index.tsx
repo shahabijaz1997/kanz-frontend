@@ -4,7 +4,7 @@ import { toast } from "react-toastify";
 import { LinkedIn } from "react-linkedin-login-oauth2";
 import LinkedinIcon from "../../../assets/icons/linedin_logo.png";
 import { getEnv } from "../../../env";
-import { linkedInOauth } from "../../../apis/auth.api";
+import { linkedInOauth, updateLanguage } from "../../../apis/auth.api";
 import { toastUtil } from "../../../utils/toast.utils";
 import { saveUserData } from "../../../redux-toolkit/slicer/user.slicer";
 import { saveToken } from "../../../redux-toolkit/slicer/auth.slicer";
@@ -12,7 +12,7 @@ import { KanzRoles } from "../../../enums/roles.enum";
 
 const ENV: any = getEnv();
 
-const LinkedInOauth = ({ loading, language, setLoading, state }: any) => {
+const LinkedInOauth = ({ event, language, setLoading, state }: any) => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
@@ -28,6 +28,7 @@ const LinkedInOauth = ({ loading, language, setLoading, state }: any) => {
                 dispatch(saveUserData(data?.status?.data));
                 const token = headers["authorization"].split(" ")[1];
                 dispatch(saveToken(token));
+                onUpdateLanguage(data, token);
                 toast.dismiss();
                 toast.success(data.status.message, toastUtil);
                 localStorage.removeItem("role");
@@ -45,6 +46,25 @@ const LinkedInOauth = ({ loading, language, setLoading, state }: any) => {
             setLoading(false);
         }
     };
+
+    const onUpdateLanguage = async (user:any, token: string) => {
+        try {
+          setLoading(true);
+          const {status}= await updateLanguage(user.status.data?.id, { users: { language: event } }, token);
+          if(status === 200) {
+            toast.dismiss();
+            toast.success(user.status.message, toastUtil);
+            localStorage.removeItem("role");
+            if (state) navigate(`/${state}`);
+            else navigate("/welcome");
+          }
+        } catch (error) {
+    
+        } finally {
+          setLoading(false);
+        }
+      };
+
     return (
         <LinkedIn clientId={ENV.LINKEDIN_API_KEY} onSuccess={handleLinkedInLoginSuccess} onError={(err) => console.log(err)} redirectUri={`${window.location.origin}/linkedin`} scope={'r_emailaddress r_liteprofile'}>
             {({ linkedInLogin }) => (
