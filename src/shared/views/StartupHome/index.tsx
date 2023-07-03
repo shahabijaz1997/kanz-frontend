@@ -13,7 +13,7 @@ const StartupHome = ({ loading, language }: any) => {
     const metadata: any = useSelector((state: RootState) => state.metadata.value);
 
     const render = () => {
-        if ((user.status === ApplicationStatus.OPENED || user.status === ApplicationStatus.REOPENED) && isEmpty(metadata?.profile)) {
+        if (user.status === ApplicationStatus.OPENED && isEmpty(metadata?.profile)) {
             return (
                 <React.Fragment>
                     <h2 className="text-2xl font-bold text-neutral-900 mb-4 screen500:text-[20px]">
@@ -34,7 +34,7 @@ const StartupHome = ({ loading, language }: any) => {
                 </React.Fragment>
             );
         }
-        else if ((user.status === ApplicationStatus.OPENED || user.status === ApplicationStatus.REOPENED) && !isEmpty(metadata?.profile)) {
+        else if (user.status === ApplicationStatus.OPENED && !isEmpty(metadata?.profile)) {
             return (
                 <React.Fragment>
                     <h2 className="text-2xl font-bold text-neutral-900 mb-4 screen500:text-[20px]">
@@ -77,20 +77,14 @@ const StartupHome = ({ loading, language }: any) => {
             return (
                 <React.Fragment>
                     <h2 className="text-2xl font-bold text-neutral-900 mb-4 screen500:text-[20px]">
-                        {language?.onboarding?.addCompanyDetails}
+                        {language?.onboarding?.submitted}
                     </h2>
                     <h3 className="text-base font-normal text-neutral-700 screen500:text-[12px]">
-                        {language?.v2?.startup?.home_sub}
+                        {language?.onboarding?.appStatus}: <strong>{language.v2.common[user.status]}</strong>
                     </h3>
-                    <Button
-                        className="mt-6 h-[38px]"
-                        disabled={loading}
-                        htmlType="submit"
-                        loading={loading}
-                        onClick={() => navigate("/startup-type/1")}
-                    >
-                        {language?.buttons?.start}
-                    </Button>
+                    {user.status === ApplicationStatus.REOPENED && <Button className="mt-[30px] h-[38px] w-[143px]" disabled={loading} htmlType="submit" loading={loading} onClick={() => navigate(RoutesEnums.INVESTOR_DETAILS)} >
+                        {language?.buttons?.continue}
+                    </Button>}
                 </React.Fragment>
             );
         }

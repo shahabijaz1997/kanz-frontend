@@ -274,7 +274,8 @@
             "cokie_link": "https://kanz.capital/cookiepolicy",
             "rejected": "Rejected",
             "verified": "Verified",
-            "reopened": "Reopened"
+            "reopened": "Re Opened",
+            "approved": "Approved"
         },
         "risk": {
             "heading": "Risk Disclaimer",
