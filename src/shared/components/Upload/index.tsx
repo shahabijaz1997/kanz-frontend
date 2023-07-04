@@ -15,6 +15,7 @@ import { saveAttachments } from "../../../redux-toolkit/slicer/attachments.slice
 const UploadComp = (props: any) => {
   const {
     id,
+    fid,
     title,
     file,
     subTitle,
@@ -79,6 +80,7 @@ const UploadComp = (props: any) => {
         </small>
         <FileUpload
           id={id}
+          fid={fid}
           file={file}
           title={title}
           setFile={setFile}

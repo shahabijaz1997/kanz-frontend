@@ -57,7 +57,7 @@ const AddAttachments = (props: any) => {
       let { status, data } = await getRoleBasedAttachments(authToken);
       if (status === 200) {
         let uploadPayload = data?.status?.data.map((item: any, idx: number) => {
-          item.id = `at-${idx}`;
+          item.fid = `at-${idx}`;
           return item;
         })
         setAttachmentData(uploadPayload);
@@ -111,7 +111,7 @@ const AddAttachments = (props: any) => {
                   {React.Children.toArray(
                     attachmentData.map((item: any) => {
                       return (
-                        <UploadComp id={item.id} files={files} file={files?.length && files.find((f: any) => f.id === item.id)} setFile={setFile} title={item[event]?.name} subTitle={item[event]?.label}
+                        <UploadComp id={item.fid} fid={item.id} files={files} file={files?.length && files.find((f: any) => f.id === item.id)} setFile={setFile} title={item[event]?.name} subTitle={item[event]?.label}
                           language={language} setFiles={setFiles} setFileType={setFileType} setModalOpen={setModalOpen} />
                       );
                     })

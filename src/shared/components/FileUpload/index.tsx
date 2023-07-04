@@ -13,7 +13,7 @@ import { handleFileRead } from "../../../utils/files.util";
 import { uploadAttachments } from "../../../apis/attachment.api";
 import Spinner from "../Spinner";
 
-const FileUpload = ({ id, file, setModalOpen, setFile, removeFile, title, uploadDirect = true }: any) => {
+const FileUpload = ({ id, fid, file, setModalOpen, setFile, removeFile, title, uploadDirect = true }: any) => {
     const language: any = useSelector((state: RootState) => state.language.value);
     const authToken: any = useSelector((state: RootState) => state.auth.value);
     const orientation: any = useSelector((state: RootState) => state.orientation.value);
@@ -105,6 +105,7 @@ const FileUpload = ({ id, file, setModalOpen, setFile, removeFile, title, upload
                 fd.append("attachment[name]", title || file?.name);
                 fd.append("attachment[attachment_kind]", "files");
                 fd.append(`attachment[file]`, file, fileData.name);
+                fd.append(`attachment[attachment_config_id]`, fid);
 
                 const { status, data } = await uploadAttachments(fd, authToken);
                 if (status === 200) {
@@ -159,7 +160,7 @@ const FileUpload = ({ id, file, setModalOpen, setFile, removeFile, title, upload
                             <section className="px-3 h-[120px] inline-flex flex-col justify-between py-2">
                                 <div>
                                     <h2 className="text-neutral-900 font-medium text-base truncate mb-3 max-w-[200px]">{selectedFile?.file?.name}</h2>
-                                    <h4 className="text-neutral-700 font-medium text-sm truncate max-w-[200px]" style={{direction: "ltr"}}>{fileInfo?.size}&nbsp;{fileInfo?.dimensions}</h4>
+                                    <h4 className="text-neutral-700 font-medium text-sm truncate max-w-[200px]" style={{ direction: "ltr" }}>{fileInfo?.size}&nbsp;{fileInfo?.dimensions}</h4>
                                 </div>
                                 <div className="rounded-lg w-20 h-6 inline-flex items-center flex-row justify-center gap-2 bg-white cursor-pointer" onClick={() => setModalOpen({ url: selectedFile.url, open: true, type: selectedFile.type })}>
                                     <PreviewIcon stroke="#404040" />
