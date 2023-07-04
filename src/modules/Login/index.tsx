@@ -9,7 +9,7 @@ import ClippedBanner from "../Onboarding/components/ClippedBanner";
 import EyeIcon from "../../ts-icons/EyeIcon.svg";
 import EyeSlash from "../../ts-icons/EyeSlashIcon.svg";
 import { saveToken } from "../../redux-toolkit/slicer/auth.slicer";
-import { signin } from "../../apis/auth.api";
+import { signin, updateLanguage } from "../../apis/auth.api";
 import { KanzRoles } from "../../enums/roles.enum";
 import { saveUserData } from "../../redux-toolkit/slicer/user.slicer";
 import Button from "../../shared/components/Button";
@@ -27,6 +27,7 @@ const Login = ({ }: any) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const authToken: any = useSelector((state: RootState) => state.auth.value);
+  const event: any = useSelector((state: RootState) => state.event.value);
   const language: any = useSelector((state: RootState) => state.language.value);
   const [loading, setLoading] = useState(false);
   const requiredFieldError = language?.common?.required_field;
@@ -61,16 +62,30 @@ const Login = ({ }: any) => {
           const token = headers["authorization"].split(" ")[1];
           dispatch(saveToken(token));
           dispatch(saveUserData(data.status.data));
-          toast.dismiss();
-          toast.success(data.status.message, toastUtil);
-          localStorage.removeItem("role");
-          if (state) navigate(`/${state}`);
-          else navigate("/welcome");
+          onUpdateLanguage(data, token);
         } else toast.error(language.promptMessages.errorGeneral, toastUtil);
       } catch (error: any) {
         const message =
           error?.response?.data || language.promptMessages.errorGeneral;
         toast.error(message, toastUtil);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    const onUpdateLanguage = async (user:any, token: string) => {
+      try {
+        setLoading(true);
+        const {status}= await updateLanguage(user.status.data?.id, { users: { language: event } }, token);
+        if(status === 200) {
+          toast.dismiss();
+          toast.success(user.status.message, toastUtil);
+          localStorage.removeItem("role");
+          if (state) navigate(`/${state}`);
+          else navigate("/welcome");
+        }
+      } catch (error) {
+  
       } finally {
         setLoading(false);
       }
