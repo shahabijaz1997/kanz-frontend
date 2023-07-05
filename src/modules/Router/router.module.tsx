@@ -50,10 +50,7 @@ const AuthenticateRole = (props: PropsWithChildren | any) => {
   const { children } = props;
   const user: any = useSelector((state: RootState) => state.user.value);
 
-  if (
-    (user &&
-      (user.type === props.role || props.role === KanzRoles.ALL) && user.status === ApplicationStatus.OPENED || user.status === ApplicationStatus.REOPENED) || user.status === ApplicationStatus.IN_PROGRESS
-  ) {
+  if ((user && (user.type === props.role || props.role === KanzRoles.ALL) && user.status === ApplicationStatus.OPENED || user.status === ApplicationStatus.REOPENED)) {
     return <React.Fragment>{children}</React.Fragment>;
   }
   return <Navigate to="/welcome" replace />;
@@ -80,8 +77,6 @@ const RouterModule = () => {
 
       const element: HTMLElement | any = document.querySelector('html');
       element.style.fontFamily = event === "ar" ? "'Almarai', sans-serif" : "Roboto, 'Open Sans', 'Helvetica Neue', sans-serif";
-      if (authToken)
-        await updateLanguage(user?.id, { users: { language: event } }, authToken);
 
     } catch (error) {
 

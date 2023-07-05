@@ -14,6 +14,7 @@ import Drawer from "../../../shared/components/Drawer";
 import Button from "../../../shared/components/Button";
 import GroupIcon from "../../../ts-icons/groupIcon.svg";
 import { isEmpty } from "../../../utils/object.util";
+import { KanzRoles } from "../../../enums/roles.enum";
 
 const InvestorFlow = ({ }: any) => {
   const navigate = useNavigate();
@@ -33,7 +34,7 @@ const InvestorFlow = ({ }: any) => {
   ]);
 
   useLayoutEffect(() => {
-    if ((user.status === ApplicationStatus.OPENED || user.status === ApplicationStatus.REOPENED) && !isEmpty(metadata?.profile))
+    if ((user.status === ApplicationStatus.OPENED || user.status === ApplicationStatus.REOPENED) && !isEmpty(metadata?.profile) && user.type === KanzRoles.INVESTOR)
       setSelectedAccount(accounts?.find(ac => ac.payload === metadata.role));
   }, []);
 

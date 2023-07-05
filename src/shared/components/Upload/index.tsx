@@ -15,6 +15,7 @@ import { saveAttachments } from "../../../redux-toolkit/slicer/attachments.slice
 const UploadComp = (props: any) => {
   const {
     id,
+    fid,
     title,
     file,
     subTitle,
@@ -24,12 +25,12 @@ const UploadComp = (props: any) => {
     setFileType,
     setFiles,
     files,
+    onRemoveFile
   } = props;
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [selectedId, setSelectedId]: any = useState(null);
   const authToken: any = useSelector((state: RootState) => state.auth.value);
-  const attachments: any = useSelector((state: RootState) => state.attachments.attachments.value);
 
   const removeFile = async (id: string, setLoading: Function) => {
     try {
@@ -38,7 +39,8 @@ const UploadComp = (props: any) => {
       if (status === 200) {
         let _files = files.slice().filter((file: any) => file.attachment_id !== id);
         setFiles(_files);
-        dispatch(saveAttachments(_files))
+        dispatch(saveAttachments(_files));
+        onRemoveFile(fid);
         // let allFiles = attachments.filter((at: any) => at?.attachment_id !==);
       }
     } catch (error: any) {
@@ -79,6 +81,7 @@ const UploadComp = (props: any) => {
         </small>
         <FileUpload
           id={id}
+          fid={fid}
           file={file}
           title={title}
           setFile={setFile}

@@ -5,7 +5,7 @@ import { RootState } from "../../../redux-toolkit/store/store";
 import Header from "../../../shared/components/Header";
 import { KanzRoles } from "../../../enums/roles.enum";
 import AddAttachmentBanner from "../../../shared/components/AddAttachmentBanner";
-import { getUser, updateLanguage } from "../../../apis/auth.api";
+import { getUser } from "../../../apis/auth.api";
 import { saveToken } from "../../../redux-toolkit/slicer/auth.slicer";
 import { saveUserData } from "../../../redux-toolkit/slicer/user.slicer";
 import Loader from "../../../shared/views/Loader";
@@ -32,19 +32,9 @@ const Welcome = ({ }: any) => {
     useLayoutEffect(() => {
         getUserDetails();
         getRoleBasedDetails();
-        onUpdateLanguage()
     }, []);
 
-    const onUpdateLanguage = async () => {
-        try {
-          setLoading(true);
-          await updateLanguage(user?.id, { users: { language: event } }, authToken);
-        } catch (error) {
     
-        } finally {
-          setLoading(false);
-        }
-      };
 
     const getUserDetails = async () => {
         try {

@@ -1,4 +1,4 @@
-import React, { useState, useLayoutEffect } from "react";
+import React, { useState, useLayoutEffect, useEffect } from "react";
 import { toast } from "react-toastify";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
@@ -11,11 +11,12 @@ import Drawer from "../../../shared/components/Drawer";
 import CrossIcon from "../../../ts-icons/crossIcon.svg";
 import UploadComp from "../../../shared/components/Upload";
 import { RootState } from "../../../redux-toolkit/store/store";
-import { getRoleBasedAttachments } from "../../../apis/attachment.api";
+import { getRoleBasedAttachments, submitData } from "../../../apis/attachment.api";
 import { saveToken } from "../../../redux-toolkit/slicer/auth.slicer";
 import Loader from "../../../shared/views/Loader";
 import { saveAttachments } from "../../../redux-toolkit/slicer/attachments.slicer";
 import { KanzRoles } from "../../../enums/roles.enum";
+import EditIcon from "../../../ts-icons/editIcon.svg";
 
 const AddAttachments = (props: any) => {
   const navigate = useNavigate();
@@ -57,7 +58,7 @@ const AddAttachments = (props: any) => {
       let { status, data } = await getRoleBasedAttachments(authToken);
       if (status === 200) {
         let uploadPayload = data?.status?.data.map((item: any, idx: number) => {
-          item.id = `at-${idx}`;
+          item.fid = item.id;
           return item;
         })
         setAttachmentData(uploadPayload);
@@ -70,6 +71,40 @@ const AddAttachments = (props: any) => {
     } finally {
       setLoading(false);
     }
+  };
+
+  const submitAttachmentData = async () => {
+    try {
+      setLoading(true);
+      const { status, data } = await submitData(authToken);
+      if (status === 200) {
+        setOpen(false);
+        dispatch(saveAttachments(""))
+        setModalOpen(true);
+      }
+    } catch (error: any) {
+      const message = error?.response?.data?.status?.message || language.promptMessages.invalidCode || language.promptMessages.errorGeneral;
+      toast.dismiss();
+      toast.error(message, toastUtil);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const checkDisabled = () => {
+    let nec_ats: any[] = attachmentData.filter((at: any) => {
+      if (at.attachment_url && !files.some((f: any) => f.id === at.id)) return at;
+    })
+    if (files.length + nec_ats.length >= 3 && agreeToTerms ? false : true) return true;
+    return false;
+  };
+
+  const checkSubmit = () => {
+    let nec_ats: any[] = attachmentData.filter((at: any) => {
+      if (at.attachment_url && !files.some((f: any) => f.id === at.id)) return at;
+    })
+    if (files.length + nec_ats.length < 3) return true;
+    return false;
   };
 
   return (
@@ -111,19 +146,28 @@ const AddAttachments = (props: any) => {
                   {React.Children.toArray(
                     attachmentData.map((item: any) => {
                       return (
-                        <UploadComp
-                          id={item.id}
-                          files={files}
-                          file={files?.length && files.find((f: any) => f.id === item.id)}
-                          setFile={setFile}
-                          title={item[event]?.name}
-                          subTitle={item[event]?.label}
-                          language={language}
-                          setFiles={setFiles}
-                          setFileType={setFileType}
-                          setModalOpen={setModalOpen}
-                        />
-                      );
+                        item?.attachment_url ? (
+                          <div className="main-embed w-[300px] h-[200px] overflow-hidden relative">
+                            <EditIcon stroke="#fff" className="w-7 h-7 absolute right-2 top-2 cursor-pointer rounded-md p-1" style={{ backgroundColor: "rgba(0, 0, 0, 0.078)" }} onClick={() => {
+                              item.attachment_url = ""
+                              let attachs = attachmentData.slice().map((at: any) => {
+                                if (at.id === item.id) at = item;
+                                return at;
+                              });
+                              setAttachmentData(attachs);
+                            }} />
+                            <embed src={item?.attachment_url} className="block w-[110%] h-[110%] overflow-hidden" />
+                          </div>
+                        ) :
+                          (<UploadComp id={item.fid} fid={item.id} files={files} file={files?.length && files.find((f: any) => f.id === item.id)} setFile={setFile} title={item[event]?.name} subTitle={item[event]?.label}
+                            language={language} setFiles={setFiles} setFileType={setFileType} setModalOpen={setModalOpen} onRemoveFile={(fid: string) => {
+                              let attachs = attachmentData.slice().map((at: any) => {
+                                if (at.id === fid) at.attachment_url = "";
+                                return at;
+                              });
+                              setAttachmentData(attachs);
+                            }} />
+                          ));
                     })
                   )}
                 </form>
@@ -147,28 +191,20 @@ const AddAttachments = (props: any) => {
                 </p>
               </section>
               <section className="w-full inline-flex items-center justify-between py-10">
-                <Button
-                  className="h-[38px] w-[140px]"
-                  htmlType="submit"
-                  type="outlined"
-                  onClick={() => navigate(-1)}
-                >
+                <Button className="h-[38px] w-[140px]" htmlType="submit" type="outlined" onClick={() => navigate(-1)} >
                   {language?.buttons?.back}
                 </Button>
-                <Button
-                  disabled={files.length === 3 && agreeToTerms ? false : true}
-                  className="h-[38px] w-[140px]"
-                  htmlType="submit"
+
+                <Button disabled={checkDisabled()} className="h-[38px] w-[140px]" htmlType="submit"
                   onClick={() => {
                     let errors: string[] = [];
-                    if (files.length !== 3)
+                    if (checkSubmit())
                       errors.push(language.promptMessages.pleaseUploadAttachments);
                     if (!agreeToTerms)
                       errors.push(language.promptMessages.pleaseAcceptPP);
                     if (errors.length === 0) {
-                      setOpen(false);
-                      dispatch(saveAttachments(""))
-                      return setModalOpen(true);
+                      submitAttachmentData();
+                      return;
                     }
                     toast.dismiss();
                     errors.forEach((e) => toast.warning(e, toastUtil));

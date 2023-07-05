@@ -15,14 +15,15 @@ import Button from "../../../shared/components/Button";
 import { isValidUrl } from "../../../utils/regex.utils";
 import { saveLogo } from "../../../redux-toolkit/slicer/attachments.slicer";
 import { isEmpty } from "../../../utils/object.util";
+import { KanzRoles } from "../../../enums/roles.enum";
 
 const SyndicateFlow = ({ }: any) => {
   const params = useParams();
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const language: any = useSelector((state: RootState) => state.language.value);
+  const user: any = useSelector((state: RootState) => state.user.value);
   const authToken: any = useSelector((state: RootState) => state.auth.value);
-  const event: any = useSelector((state: RootState) => state.event.value);
   const logo: any = useSelector((state: RootState) => state.attachments.logo.value);
   const metadata: any = useSelector((state: RootState) => state.metadata.value);
   const orientation: any = useSelector((state: RootState) => state.orientation.value);
@@ -50,6 +51,8 @@ const SyndicateFlow = ({ }: any) => {
   const [loading, setLoading] = useState(false);
 
   useLayoutEffect(() => {
+    if(user.type !== KanzRoles.SYNDICATE) navigate("/welcome");
+
     bootstrapPayload();
   }, []);
 
@@ -76,7 +79,7 @@ const SyndicateFlow = ({ }: any) => {
         dealflow: metadata?.profile?.dealflow,
         name: metadata?.profile?.name,
         tagline: metadata?.profile?.tagline,
-        logo: null,
+        logo: metadata?.profile?.logo,
       })
     }
   };
@@ -154,20 +157,20 @@ const SyndicateFlow = ({ }: any) => {
     try {
       setLoading(true);
       const form: any = new FormData();
-      form.append("syndicate_profile[have_you_ever_raised]", payload.raised)
-      form.append("syndicate_profile[raised_amount]", payload.amountRaised)
-      form.append("syndicate_profile[no_times_raised]", payload.timesRaised)
+      form.append("syndicate_profile[have_you_ever_raised]", payload.raised);
+      form.append("syndicate_profile[raised_amount]", payload.amountRaised);
+      form.append("syndicate_profile[no_times_raised]", payload.timesRaised);
       payload.industry.forEach((val: any) => {
         form.append("syndicate_profile[industry_market][]", val);
       });
       payload.region.forEach((val: any) => {
         form.append("syndicate_profile[region][]", val);
       });
-      form.append("syndicate_profile[profile_link]", payload.profileLink)
-      form.append("syndicate_profile[dealflow]", payload.dealflow)
-      form.append("syndicate_profile[name]", payload.name)
-      form.append("syndicate_profile[tagline]", payload.tagline)
-      form.append("syndicate_profile[logo]", payload.logo)
+      form.append("syndicate_profile[profile_link]", payload.profileLink);
+      form.append("syndicate_profile[dealflow]", payload.dealflow);
+      form.append("syndicate_profile[name]", payload.name);
+      form.append("syndicate_profile[tagline]", payload.tagline);
+      typeof payload?.logo !== "string" && form.append("syndicate_profile[logo]", payload?.logo, payload?.logo?.name);
 
       let { status } = await postSyndicateInformation(form, authToken);
 

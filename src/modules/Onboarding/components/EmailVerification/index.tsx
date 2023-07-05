@@ -65,7 +65,6 @@ const EmailVerification = ({ payload, onReSignup }: any) => {
         dispatch(saveToken(token));
         localStorage.removeItem("role");
         onUpdateLanguage(token)
-        navigate("/welcome");
       }
     } catch (error: any) {
       const message = error?.response?.data?.status?.message || language.promptMessages.invalidCode || language.promptMessages.errorGeneral;
@@ -83,6 +82,8 @@ const EmailVerification = ({ payload, onReSignup }: any) => {
     try {
       setLoading(true);
       await updateLanguage(user?.id, { users: { language: event } }, token);
+      navigate("/welcome");
+
     } catch (error) {
 
     } finally {
