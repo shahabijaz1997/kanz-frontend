@@ -6,7 +6,7 @@ import { useForm, SubmitHandler } from "react-hook-form";
 import { saveToken } from "../../../redux-toolkit/slicer/auth.slicer";
 import { RootState } from "../../../redux-toolkit/store/store";
 import { AntdInput } from "../../../shared/components/Input";
-import { getCountries } from "../../../apis/countries.api";
+import { getCountries } from "../../../apis/bootstrap.api";
 import Selector from "../../../shared/components/Selector";
 import Header from "../../../shared/components/Header";
 import Drawer from "../../../shared/components/Drawer";

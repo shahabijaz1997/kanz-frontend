@@ -16,7 +16,7 @@ import { postCompanyInformation } from "../../../apis/company.api";
 import { saveLogo } from "../../../redux-toolkit/slicer/attachments.slicer";
 import { removeAttachment } from "../../../apis/attachment.api";
 import { isEmpty } from "../../../utils/object.util";
-import { getCountries } from "../../../apis/countries.api";
+import { getCountries } from "../../../apis/bootstrap.api";
 import { KanzRoles } from "../../../enums/roles.enum";
 
 const StartupFlow = ({ }: any) => {
@@ -225,7 +225,7 @@ const StartupFlow = ({ }: any) => {
         dispatch(saveToken(""));
         navigate("/login", { state: "add-attachments" });
       }
-      console.log(error);
+      console.error(error);
 
       const message = error?.response?.data?.status?.message || error?.response?.data || language.promptMessages.errorGeneral;
       toast.error(message, toastUtil);
