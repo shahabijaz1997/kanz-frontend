@@ -235,7 +235,7 @@ const SyndicateStepper = ({ orientation, language, metadata, payload, file, onSe
                             payload.logo && typeof payload.logo === "string" ? (
                                 <div className="main-embed w-[300px] h-[200px] overflow-hidden relative">
                                     <EditIcon stroke="#fff" className="w-7 h-7 absolute right-2 top-2 cursor-pointer rounded-md p-1" style={{ backgroundColor: "rgba(0, 0, 0, 0.078)" }} onClick={() => onSetPayload(null, "logo")} />
-                                    <embed src={payload.logo} className="block w-[110%] h-[110%] overflow-hidden" />
+                                    <img src={payload.logo} className="block w-[110%] h-[110%] overflow-hidden" />
                                 </div>
                             ) : (
                                 <FileUpload uploadDirect={false} id={'logo'} title={'Logo'} file={file} setFile={setFile} removeFile={removeFile} setModalOpen={(e: any) => {

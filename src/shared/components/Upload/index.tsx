@@ -81,6 +81,7 @@ const UploadComp = (props: any) => {
         </small>
         <FileUpload
           id={id}
+          acceptPdf={true}
           fid={fid}
           file={file}
           title={title}
