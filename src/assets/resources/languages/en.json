@@ -276,7 +276,8 @@
             "verified": "Verified",
             "reopened": "Re Opened",
             "approved": "Approved",
-            "has_been": "Your application has been "
+            "has_been": "Your application has been ",
+            "imageSpecs": "PNG, JPG up to"
         },
         "risk": {
             "heading": "Risk Disclaimer",

@@ -8,12 +8,12 @@ import BinIcon from "../../../ts-icons/binIcon.svg";
 import PreviewIcon from "../../../ts-icons/previewIcon.svg";
 import FIleUploadAlert from "../FIleUploadAlert";
 import { FileType, PromptMessage } from "../../../enums/types.enum";
-import { fileSize, formatFileSize, validTypes } from "../../../utils/size-check.utils";
+import { fileSize, formatFileSize, validImages, validTypes } from "../../../utils/size-check.utils";
 import { handleFileRead } from "../../../utils/files.util";
 import { uploadAttachments } from "../../../apis/attachment.api";
 import Spinner from "../Spinner";
 
-const FileUpload = ({ id, fid, file, setModalOpen, setFile, removeFile, title, uploadDirect = true }: any) => {
+const FileUpload = ({ id, fid, file, setModalOpen, setFile, removeFile, title, uploadDirect = true, acceptPdf = false }: any) => {
     const language: any = useSelector((state: RootState) => state.language.value);
     const authToken: any = useSelector((state: RootState) => state.auth.value);
     const orientation: any = useSelector((state: RootState) => state.orientation.value);
@@ -44,13 +44,15 @@ const FileUpload = ({ id, fid, file, setModalOpen, setFile, removeFile, title, u
         setDragOver(false);
         const file = e.dataTransfer.files[0];
 
-        if (validTypes.includes(file.type)) setFileInformation(file);
+        if (!acceptPdf && validImages.includes(file.type)) setFileInformation(file);
+        else if (acceptPdf && validTypes.includes(file.type)) setFileInformation(file);
         else setAlertType({ type: PromptMessage.ERROR, message: language.promptMessages.invalidFormat });
     };
 
     const handleFileInput = (e: React.ChangeEvent<HTMLInputElement>) => {
         const file: any = e.target.files?.[0];
-        if (validTypes.includes(file.type)) setFileInformation(file);
+        if (!acceptPdf && validImages.includes(file.type)) setFileInformation(file);
+        else if (acceptPdf && validTypes.includes(file.type)) setFileInformation(file);
         else setAlertType({ type: PromptMessage.ERROR, message: language.promptMessages.invalidFormat });
         e.target.value = "";
     };
@@ -103,7 +105,7 @@ const FileUpload = ({ id, fid, file, setModalOpen, setFile, removeFile, title, u
             if (uploadDirect) {
                 let fd = new FormData();
                 fd.append("attachment[name]", title || file?.name);
-                fd.append("attachment[attachment_kind]", "files");
+                fd.append("attachment[attachment_kind]", type);
                 fd.append(`attachment[file]`, file, fileData.name);
                 fd.append(`attachment[attachment_config_id]`, fid);
 
@@ -180,7 +182,7 @@ const FileUpload = ({ id, fid, file, setModalOpen, setFile, removeFile, title, u
                                     <small className="text-sm color-blue">{language.buttons.uploadFile}</small>&nbsp;
                                     <small className="text-sm text-neutral-500">{language.buttons.orDragDrop}</small>
                                 </p>
-                                <div className="text-neutral-500 text-sm font-normal">{language?.common?.fileSpecs} 10MB</div>
+                                <div className="text-neutral-500 text-sm font-normal">{acceptPdf ? language?.common?.fileSpecs : language?.v2?.common?.imageSpecs} 10MB</div>
                                 <input id={id} accept=".jpg,.png,.pdf" type="file" className="hidden" onChange={handleFileInput} />
                             </div>
                         )
