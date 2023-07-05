@@ -30,7 +30,6 @@ const UploadComp = (props: any) => {
   const navigate = useNavigate();
   const [selectedId, setSelectedId]: any = useState(null);
   const authToken: any = useSelector((state: RootState) => state.auth.value);
-  const attachments: any = useSelector((state: RootState) => state.attachments.attachments.value);
 
   const removeFile = async (id: string, setLoading: Function) => {
     try {

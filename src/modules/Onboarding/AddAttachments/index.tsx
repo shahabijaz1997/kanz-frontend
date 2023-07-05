@@ -1,4 +1,4 @@
-import React, { useState, useLayoutEffect } from "react";
+import React, { useState, useLayoutEffect, useEffect } from "react";
 import { toast } from "react-toastify";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
@@ -16,6 +16,7 @@ import { saveToken } from "../../../redux-toolkit/slicer/auth.slicer";
 import Loader from "../../../shared/views/Loader";
 import { saveAttachments } from "../../../redux-toolkit/slicer/attachments.slicer";
 import { KanzRoles } from "../../../enums/roles.enum";
+import EditIcon from "../../../ts-icons/editIcon.svg";
 
 const AddAttachments = (props: any) => {
   const navigate = useNavigate();
@@ -111,9 +112,22 @@ const AddAttachments = (props: any) => {
                   {React.Children.toArray(
                     attachmentData.map((item: any) => {
                       return (
-                        <UploadComp id={item.fid} fid={item.id} files={files} file={files?.length && files.find((f: any) => f.id === item.id)} setFile={setFile} title={item[event]?.name} subTitle={item[event]?.label}
-                          language={language} setFiles={setFiles} setFileType={setFileType} setModalOpen={setModalOpen} />
-                      );
+                        item?.attachment_url ? (
+                          <div className="main-embed w-[300px] h-[200px] overflow-hidden relative">
+                            <EditIcon stroke="#fff" className="w-7 h-7 absolute right-2 top-2 cursor-pointer rounded-md p-1" style={{ backgroundColor: "rgba(0, 0, 0, 0.078)" }} onClick={() => {
+                              item.attachment_url = ""
+                              let attachs = attachmentData.slice().map((at: any) => {
+                                if (at.id === item.id) at = item;
+                                return at;
+                              });
+                              setAttachmentData(attachs);
+                            }} />
+                            <embed src={item?.attachment_url} className="block w-[110%] h-[110%] overflow-hidden" />
+                          </div>
+                        ) :
+                          (<UploadComp id={item.fid} fid={item.id} files={files} file={files?.length && files.find((f: any) => f.id === item.id)} setFile={setFile} title={item[event]?.name} subTitle={item[event]?.label}
+                            language={language} setFiles={setFiles} setFileType={setFileType} setModalOpen={setModalOpen} />
+                          ));
                     })
                   )}
                 </form>
@@ -137,21 +151,13 @@ const AddAttachments = (props: any) => {
                 </p>
               </section>
               <section className="w-full inline-flex items-center justify-between py-10">
-                <Button
-                  className="h-[38px] w-[140px]"
-                  htmlType="submit"
-                  type="outlined"
-                  onClick={() => navigate(-1)}
-                >
+                <Button className="h-[38px] w-[140px]" htmlType="submit" type="outlined" onClick={() => navigate(-1)} >
                   {language?.buttons?.back}
                 </Button>
-                <Button
-                  disabled={files.length === 3 && agreeToTerms ? false : true}
-                  className="h-[38px] w-[140px]"
-                  htmlType="submit"
+                <Button disabled={files.length + attachmentData.filter((at:any) => at.attachment_url != "").length >= 3 && agreeToTerms ? false : true} className="h-[38px] w-[140px]" htmlType="submit"
                   onClick={() => {
                     let errors: string[] = [];
-                    if (files.length !== 3)
+                    if (files.length + attachmentData.filter((at:any) => at.attachment_url != "").length < 3)
                       errors.push(language.promptMessages.pleaseUploadAttachments);
                     if (!agreeToTerms)
                       errors.push(language.promptMessages.pleaseAcceptPP);
