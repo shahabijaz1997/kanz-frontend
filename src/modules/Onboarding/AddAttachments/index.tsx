@@ -11,7 +11,7 @@ import Drawer from "../../../shared/components/Drawer";
 import CrossIcon from "../../../ts-icons/crossIcon.svg";
 import UploadComp from "../../../shared/components/Upload";
 import { RootState } from "../../../redux-toolkit/store/store";
-import { getRoleBasedAttachments, submitData } from "../../../apis/attachment.api";
+import { getRoleBasedAttachments, removeAttachment, submitData } from "../../../apis/attachment.api";
 import { saveToken } from "../../../redux-toolkit/slicer/auth.slicer";
 import Loader from "../../../shared/views/Loader";
 import { saveAttachments } from "../../../redux-toolkit/slicer/attachments.slicer";
@@ -68,6 +68,34 @@ const AddAttachments = (props: any) => {
         dispatch(saveToken(""));
         navigate("/login", { state: 'investor-type' });
       }
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const removeFile = async (file: any) => {
+    try {
+      setLoading(true);
+      let { status } = await removeAttachment(file.attachment_id, authToken);
+      if (status === 200) {
+        file.attachment_url = ""
+        let attachs = attachmentData.slice().map((at: any) => {
+          if (at.id === file.id) at = file;
+          return at;
+        });
+        setAttachmentData(attachs);
+      }
+    } catch (error: any) {
+      setLoading(false);
+      if (error.response && error.response.status === 401) {
+        dispatch(saveToken(""));
+        navigate("/login", { state: "add-attachments" });
+      }
+      const message =
+        error?.response?.data?.status?.message ||
+        error?.response?.data ||
+        language.promptMessages.errorGeneral;
+      toast.error(message, toastUtil);
     } finally {
       setLoading(false);
     }
@@ -148,14 +176,7 @@ const AddAttachments = (props: any) => {
                       return (
                         item?.attachment_url ? (
                           <div className="main-embed w-[300px] h-[200px] overflow-hidden relative">
-                            <EditIcon stroke="#fff" className="w-7 h-7 absolute right-2 top-2 cursor-pointer rounded-md p-1" style={{ backgroundColor: "rgba(0, 0, 0, 0.078)" }} onClick={() => {
-                              item.attachment_url = ""
-                              let attachs = attachmentData.slice().map((at: any) => {
-                                if (at.id === item.id) at = item;
-                                return at;
-                              });
-                              setAttachmentData(attachs);
-                            }} />
+                            <EditIcon stroke="#fff" className="w-7 h-7 absolute right-2 top-2 cursor-pointer rounded-md p-1" style={{ backgroundColor: "rgba(0, 0, 0, 0.078)" }} onClick={() => removeFile(item)} />
                             <embed src={item?.attachment_url} className="block w-[110%] h-[110%] overflow-hidden" />
                           </div>
                         ) :
