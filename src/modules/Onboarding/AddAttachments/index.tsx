@@ -175,9 +175,9 @@ const AddAttachments = (props: any) => {
                     attachmentData.map((item: any) => {
                       return (
                         item?.attachment_url ? (
-                          <div className="main-embed w-[300px] h-[200px] overflow-hidden relative">
+                          <div className="main-embed w-[300px] h-[200px] overflow-hidden relative mb-2">
                             <EditIcon stroke="#fff" className="w-7 h-7 absolute right-2 top-2 cursor-pointer rounded-md p-1" style={{ backgroundColor: "rgba(0, 0, 0, 0.078)" }} onClick={() => removeFile(item)} />
-                            <embed src={item?.attachment_url} className="block w-[110%] h-[110%] overflow-hidden" />
+                            {item?.attachment_kind === FileType.IMAGE ? <img src={item?.attachment_url} className="block w-[110%] h-[110%] overflow-hidden" />:<embed src={item?.attachment_url} className="block w-[110%] h-[110%] overflow-hidden" />}
                           </div>
                         ) :
                           (<UploadComp id={item.fid} fid={item.id} files={files} file={files?.length && files.find((f: any) => f.id === item.id)} setFile={setFile} title={item[event]?.name} subTitle={item[event]?.label}
@@ -257,11 +257,7 @@ const AddAttachments = (props: any) => {
             {fileType === FileType.IMAGE ? (
               <img src={modalOpen} alt="Img" className="max-h-[100%]" />
             ) : (
-              <embed
-                src={modalOpen}
-                type="application/pdf"
-                className="w-[100%] h-[90%]"
-              />
+              <embed src={modalOpen} type="application/pdf" className="w-[100%] h-[90%]" />
             )}
           </React.Fragment>
         ) : (

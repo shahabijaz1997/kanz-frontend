@@ -29,3 +29,4 @@ export const formatFileSize = (size: number): string => {
 }
 
 export const validTypes = ['image/jpeg', 'image/png', 'application/pdf'];
+export const validImages = ['image/jpeg', 'image/png'];
