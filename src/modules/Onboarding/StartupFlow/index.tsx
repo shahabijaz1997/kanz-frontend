@@ -107,7 +107,7 @@ const StartupFlow = ({ }: any) => {
         email: metadata?.profile?.ceo_email,
         raised: metadata?.profile?.total_capital_raised,
         target: metadata?.profile?.current_round_capital_target,
-        logo: null,
+        logo: metadata?.profile?.logo,
         currency: { label: "AED", value: "AED" }
       })
     }
@@ -167,8 +167,6 @@ const StartupFlow = ({ }: any) => {
   const ontoNextStep = () => {
     if (step === 1) {
       let errors = [];
-      console.log(payload);
-      
       if (!payload.company || !payload.legal || !payload.market.length || !payload.web || !payload.address || !payload.country)
         errors.push(language.promptMessages.pleaseSelectAllData)
       if (!isValidUrl(payload.web)) errors.push(language.promptMessages.validComp);
@@ -177,7 +175,7 @@ const StartupFlow = ({ }: any) => {
       setStep(2);
       navigate(`/startup-type/${step + 1}`);
     } else {
-      let errors = []
+      let errors = [];
       if (!payload.company || !payload.legal || !payload.country || !payload.market.length || !payload.address || !payload.web || !payload.name || !payload.email || !payload.logo || !payload.business || !payload.raised || !payload.target) {
         errors.push(language.promptMessages.pleaseSelectAllData);
       }
@@ -197,7 +195,8 @@ const StartupFlow = ({ }: any) => {
   const onPostCompanyData = async () => {
     try {
       setLoading(true);
-      let _country: any = countries.all.find((x: any) => x.name === payload.country.name);
+      let _country: any = countries.all.find((x: any) => x[event].name === payload.country.name);
+      
       const form: any = new FormData();
       form.append("startup[company_name]", payload.company);
       form.append("startup[legal_name]", payload.legal);
@@ -207,7 +206,7 @@ const StartupFlow = ({ }: any) => {
       });
       form.append("startup[website]", payload.web);
       form.append("startup[address]", payload.address);
-      form.append("startup[logo]", payload?.logo, payload?.logo?.name);
+      typeof payload?.logo !== "string" && form.append("startup[logo]", payload?.logo, payload?.logo?.name);
       form.append("startup[description]", payload.business);
       form.append("startup[ceo_name]", payload.name);
       form.append("startup[ceo_email]", payload.email);

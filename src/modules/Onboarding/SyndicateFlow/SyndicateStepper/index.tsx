@@ -8,6 +8,7 @@ import { getAllIndustries, getAllRegions } from "../../../../apis/fakeData.api";
 import SearchedItems from "../../../../shared/components/SearchedItems";
 import CrossIcon from "../../../../ts-icons/crossIcon.svg";
 import { isEmpty } from "../../../../utils/object.util";
+import EditIcon from "../../../../ts-icons/editIcon.svg";
 
 const SyndicateStepper = ({ orientation, language, metadata, payload, file, onSetPayload, options, step, removeFile, setFile, setModalOpen, setFileType }: any) => {
     const refInd: any = useRef(null);
@@ -189,7 +190,7 @@ const SyndicateStepper = ({ orientation, language, metadata, payload, file, onSe
                     <div className="mb-8 relative">
                         <label className="block text-neutral-700 text-sm font-medium mb-1" htmlFor="link">{language.syndicate.profile}</label>
                         <div className="relative inline-flex w-full">
-                            <input type="disabled" value={"https://"} 
+                            <input type="disabled" value={"https://"}
                                 className={`text-neutral-500 text-base font-normal check-background border-t border-b border-neutral-300 h-[42px] w-[70px] ${orientation === "rtl" ? "border-r rounded-br-md rounded-tr-md pr-2" : "border-l rounded-bl-md rounded-tl-md pl-2"}`} />
                             <input id="link" value={payload?.profileLink} onChange={(e) => onSetPayload(e.target.value, "profileLink")} placeholder="www.example.com"
                                 className={`h-[42px] shadow-sm appearance-none border border-neutral-300 w-full py-2 px-3 text-gray-500 leading-tight focus:outline-none focus:shadow-outline ${orientation === "rtl" ? " rounded-bl-md rounded-tl-md" : " rounded-br-md rounded-tr-md"}`} type="text" />
@@ -229,10 +230,21 @@ const SyndicateStepper = ({ orientation, language, metadata, payload, file, onSe
                                 </HoverModal>
                             )}
                         </small>
-                        <FileUpload uploadDirect={false} id={'logo'} title={'Logo'} file={file} setFile={setFile} removeFile={removeFile} setModalOpen={(e: any) => {
-                            setModalOpen(e.open ? e.url : null);
-                            e.type && setFileType(e.type);
-                        }} />
+
+                        {
+                            payload.logo && typeof payload.logo === "string" ? (
+                                <div className="main-embed w-[300px] h-[200px] overflow-hidden relative">
+                                    <EditIcon stroke="#fff" className="w-7 h-7 absolute right-2 top-2 cursor-pointer rounded-md p-1" style={{ backgroundColor: "rgba(0, 0, 0, 0.078)" }} onClick={() => onSetPayload(null, "logo")} />
+                                    <embed src={payload.logo} className="block w-[110%] h-[110%] overflow-hidden" />
+                                </div>
+                            ) : (
+                                <FileUpload uploadDirect={false} id={'logo'} title={'Logo'} file={file} setFile={setFile} removeFile={removeFile} setModalOpen={(e: any) => {
+                                    setModalOpen(e.open ? e.url : null);
+                                    e.type && setFileType(e.type);
+                                }} />
+                            )
+                        }
+
                     </div>
                 </form>
             </section>
