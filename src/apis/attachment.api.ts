@@ -34,3 +34,11 @@ export const removeAttachment = (id: any, token: string) => {
         },
     });
 };
+
+export const submitData = (token: string) => {
+    return axios.post(`${ENV.API_URL}/${ENV.API_VERSION}/attachments/submit`,{}, {
+        headers: {
+            Authorization: `Bearer ${token}`
+        },
+    });
+};

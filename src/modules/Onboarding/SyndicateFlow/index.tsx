@@ -79,7 +79,7 @@ const SyndicateFlow = ({ }: any) => {
         dealflow: metadata?.profile?.dealflow,
         name: metadata?.profile?.name,
         tagline: metadata?.profile?.tagline,
-        logo: null,
+        logo: metadata?.profile?.logo,
       })
     }
   };

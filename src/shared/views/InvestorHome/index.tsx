@@ -59,7 +59,7 @@ const InvestorHome = ({ loading, language }: any) => {
             return (
                 <React.Fragment>
                     <h2 className="text-2xl font-bold text-neutral-900 mb-4 screen500:text-[20px]">
-                        {language?.onboarding?.submitted}
+                        {language?.v2?.common?.has_been}{language.v2.common[user.status]}
                     </h2>
                     <h3 className="text-base font-normal text-neutral-700 screen500:text-[12px]">
                         {language?.onboarding?.appStatus}: <strong>{language.v2.common[user.status]}</strong>
