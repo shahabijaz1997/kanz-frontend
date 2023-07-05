@@ -4,13 +4,13 @@ import HoverModal from "../../../../shared/components/HoverModal";
 import FileUpload from "../../../../shared/components/FileUpload";
 import SampleImage from "../../../../assets/example_id.png";
 import SampleImage_2 from "../../../../assets/example_id_2.png";
-import { getAllIndustries, getAllRegions } from "../../../../apis/fakeData.api";
+import { getAllIndustries, getAllRegions } from "../../../../apis/bootstrap.api";
 import SearchedItems from "../../../../shared/components/SearchedItems";
 import CrossIcon from "../../../../ts-icons/crossIcon.svg";
 import { isEmpty } from "../../../../utils/object.util";
 import EditIcon from "../../../../ts-icons/editIcon.svg";
 
-const SyndicateStepper = ({ orientation, language, metadata, payload, file, onSetPayload, options, step, removeFile, setFile, setModalOpen, setFileType }: any) => {
+const SyndicateStepper = ({ orientation, language, metadata, payload, file, onSetPayload, options, step, removeFile, setFile, setModalOpen, setFileType, authToken }: any) => {
     const refInd: any = useRef(null);
     const refReg: any = useRef(null);
     const [selected, setSelected]: any = useState(null);
@@ -61,13 +61,13 @@ const SyndicateStepper = ({ orientation, language, metadata, payload, file, onSe
 
     const bootstrapData = async () => {
         try {
-            let industryRes: any = await getAllIndustries();
-            if (industryRes.status === 200)
-                setSearchResults((p: any) => { return { ...p, industry: industryRes.data.business } });
+            let { status, data } = await getAllIndustries(authToken);
+            if (status === 200)
+                setSearchResults((p: any) => { return { ...p, industry: data?.status?.data } });
 
-            let regionRes: any = await getAllRegions();
+            let regionRes: any = await getAllRegions(authToken);
             if (regionRes.status === 200)
-                setSearchResults((p: any) => { return { ...p, region: regionRes.data.regions } });
+                setSearchResults((p: any) => { return { ...p, region: regionRes?.data?.status?.data } });
 
             if (!isEmpty(metadata?.profile)) {
                 if (metadata?.profile?.have_you_ever_raised) setSelected(options[0]);

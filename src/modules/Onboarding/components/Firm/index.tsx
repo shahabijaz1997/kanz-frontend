@@ -11,7 +11,7 @@ import { saveToken } from "../../../../redux-toolkit/slicer/auth.slicer";
 import Drawer from "../../../../shared/components/Drawer";
 import Button from "../../../../shared/components/Button";
 import { useForm } from "react-hook-form";
-import { getCountries } from "../../../../apis/countries.api";
+import { getCountries } from "../../../../apis/bootstrap.api";
 import Loader from "../../../../shared/views/Loader";
 
 type FormValues = {

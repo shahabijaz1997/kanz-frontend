@@ -220,6 +220,7 @@ const SyndicateFlow = ({ }: any) => {
           setFile={onSetFile}
           setModalOpen={(e: any) => setModalOpen(e)}
           orientation={orientation}
+          authToken={authToken}
         />
 
         <section className="w-full inline-flex items-center justify-between py-10">
