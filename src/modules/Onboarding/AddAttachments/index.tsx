@@ -207,14 +207,14 @@ const AddAttachments = (props: any) => {
                   onChange={() => setAgreeToTerms(!agreeToTerms)}
                 />
                 <p className="text-neutral-500 text-sm font-normal">
-                  {language?.common?.agree}&nbsp;
-                  <span className="color-blue font-medium cursor-pointer" onClick={() => navigate("/terms-and-conditions")} >
+                  {language?.common?.agree}
+                  <a href="/terms-and-conditions" className="color-blue font-medium cursor-pointer" target="_blank" >
                     {language?.common?.termsConditions}
-                  </span>
+                  </a>
                   {language?.v2?.common?.understood}
-                  <span className="color-blue font-medium cursor-pointer" onClick={() => navigate("/privacy-policy")} >
+                  <a href="/privacy-policy" className="color-blue font-medium cursor-pointer"  target="_blank" >
                     {language?.v2?.common?.privacyPolicy}
-                  </span>
+                  </a>
                 </p>
               </section>
               <section className="w-full inline-flex items-center justify-between py-10">
