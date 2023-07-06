@@ -9,7 +9,7 @@ import { hasLowerCase, hasNumbers, hasSpecialCharacters, hasUpperCase } from "..
 import CheckIcon from "../../../../ts-icons/CheckIcon.svg";
 import EyeIcon from "../../../../ts-icons/EyeIcon.svg";
 import EyeSlash from "../../../../ts-icons/EyeSlashIcon.svg";
-import { signup } from "../../../../apis/auth.api";
+import { signup, updateLanguage } from "../../../../apis/auth.api";
 import { KanzRoles } from "../../../../enums/roles.enum";
 import { saveUserData } from "../../../../redux-toolkit/slicer/user.slicer";
 import Button from "../../../../shared/components/Button";
@@ -22,7 +22,6 @@ type FormValues = {
   email: string;
   password: string;
 };
-
 
 const Signup = (props: any) => {
   const { onSetStepper } = props;
@@ -40,6 +39,17 @@ const Signup = (props: any) => {
 
   const requiredFieldError = language?.common?.required_field;
 
+  const onUpdateLanguage = async (user: any) => {
+    try {
+      setLoading(true);
+      await updateLanguage(user?.id, { users: { language: event } });
+
+    } catch (error) {
+
+    } finally {
+      setLoading(false);
+    }
+  };
   const Form = () => {
     const {
       register,
@@ -107,15 +117,16 @@ const Signup = (props: any) => {
     };
 
     const onSubmit: SubmitHandler<FormValues> = async (values: any) => {
-      const signUpData = { name: values?.name, email: values?.email, password: values?.password, type: state || KanzRoles.INVESTOR };
+      const signUpData = { name: values?.name, email: values?.email, password: values?.password, type: state || KanzRoles.INVESTOR, language: event };
 
       try {
-        if (!hasLowerCase(password) || !hasUpperCase(password) || !hasNumbers(password) || !hasSpecialCharacters(password) || password.length < 8) return toast.warning("", toastUtil)
         setLoading(true);
-        const { status, data } = await signup({ user: signUpData });
+        const { status, data } = await signup({ user: signUpData, });
         if (status === 200) {
           dispatch(saveUserData(data.status.data));
+          // onUpdateLanguage(data.status.data)
           onSetStepper(signUpData);
+
         } else toast.error(language.promptMessages.errorGeneral, toastUtil);
       } catch (error: any) {
         console.error(error);

@@ -9,6 +9,7 @@ import { toastUtil } from "../../../utils/toast.utils";
 import { saveUserData } from "../../../redux-toolkit/slicer/user.slicer";
 import { saveToken } from "../../../redux-toolkit/slicer/auth.slicer";
 import { KanzRoles } from "../../../enums/roles.enum";
+import { saveEvent } from "../../../redux-toolkit/slicer/event.slicer";
 
 const ENV: any = getEnv();
 
@@ -21,7 +22,7 @@ const LinkedInOauth = ({ event, language, setLoading, state }: any) => {
             if (localStorage.getItem("oauth_ld")) return;
             localStorage.setItem("oauth_ld", "PxhYfeh76BH")
             setLoading(true);
-            let payload: any = { code, type: state || KanzRoles.INVESTOR }
+            let payload: any = { code, type: state || KanzRoles.INVESTOR, language: event }
 
             let { status, data, headers } = await linkedInOauth(payload);
             if (status === 200) {
@@ -31,6 +32,7 @@ const LinkedInOauth = ({ event, language, setLoading, state }: any) => {
                 // onUpdateLanguage(data, token);
                 toast.dismiss();
                 toast.success(data.status.message, toastUtil);
+                dispatch(saveEvent(event));
                 localStorage.removeItem("role");
                 let timeout = setTimeout(() => {
                     clearTimeout(timeout);
@@ -47,23 +49,23 @@ const LinkedInOauth = ({ event, language, setLoading, state }: any) => {
         }
     };
 
-    const onUpdateLanguage = async (user:any, token: string) => {
+    const onUpdateLanguage = async (user: any, token: string) => {
         try {
-          setLoading(true);
-          const {status}= await updateLanguage(user.status.data?.id, { users: { language: event } }, token);
-          if(status === 200) {
-            toast.dismiss();
-            toast.success(user.status.message, toastUtil);
-            localStorage.removeItem("role");
-            if (state) navigate(`/${state}`);
-            else navigate("/welcome");
-          }
+            setLoading(true);
+            const { status } = await updateLanguage(user.status.data?.id, { users: { language: event } });
+            if (status === 200) {
+                toast.dismiss();
+                toast.success(user.status.message, toastUtil);
+                localStorage.removeItem("role");
+                if (state) navigate(`/${state}`);
+                else navigate("/welcome");
+            }
         } catch (error) {
-    
+
         } finally {
-          setLoading(false);
+            setLoading(false);
         }
-      };
+    };
 
     return (
         <LinkedIn clientId={ENV.LINKEDIN_API_KEY} onSuccess={handleLinkedInLoginSuccess} onError={(err) => console.log(err)} redirectUri={`${window.location.origin}/linkedin`} scope={'r_emailaddress r_liteprofile'}>
