@@ -5,7 +5,6 @@ import { useDispatch, useSelector } from "react-redux";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { saveToken } from "../../../redux-toolkit/slicer/auth.slicer";
 import { RootState } from "../../../redux-toolkit/store/store";
-import { AntdInput } from "../../../shared/components/Input";
 import { getCountries } from "../../../apis/bootstrap.api";
 import Selector from "../../../shared/components/Selector";
 import Header from "../../../shared/components/Header";
@@ -50,8 +49,8 @@ const Realtors = (props: any) => {
     if (_payload) setPayload(JSON.parse(_payload));
     if (!isEmpty(metadata.profile)) {
       setPayload({
-        national: { label: metadata.profile?.nationality, value: metadata.profile?.nationality },
-        residence: { label: metadata.profile?.residence, value: metadata.profile?.residence },
+        national: { label: metadata.profile[event]?.nationality, value: metadata.profile[event]?.nationality },
+        residence: { label: metadata.profile[event]?.residence, value: metadata.profile[event]?.residence },
         noOfProperty: metadata.profile?.no_of_properties
       });
     }
