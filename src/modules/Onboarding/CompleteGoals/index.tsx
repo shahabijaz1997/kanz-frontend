@@ -35,7 +35,9 @@ const CompleteGoals = ({ }: any) => {
   useLayoutEffect(() => {
     if ((user.status !== ApplicationStatus.OPENED && user.status !== ApplicationStatus.REOPENED) || user.type !== KanzRoles.INVESTOR) navigate("/welcome");
     let item = localStorage.getItem("step");
-    if (item) setCurrentStepper(Number(item));
+
+    if (user?.status !== ApplicationStatus.REOPENED) if (item) setCurrentStepper(Number(item));
+    else setCurrentStepper(0);
   }, []);
 
   useLayoutEffect(() => {
@@ -153,16 +155,11 @@ const CompleteGoals = ({ }: any) => {
               </div>
             </section>
           </aside>
-          <GoalStepper
-            language={language}
-            currentStepper={metadata?.steps_completed || currentStepper}
-            navigate={() => {
-              if (currentStepper === 5)
-                navigate(`/philosophy-goals/${currentStepper}`);
-              else
-                navigate(`/philosophy-goals/${currentStepper + 1}`);
-            }}
-          />
+          <GoalStepper language={language} currentStepper={currentStepper} navigate={() => {
+            if (currentStepper === 5) navigate(`/philosophy-goals/${currentStepper}`);
+            else navigate(`/philosophy-goals/${currentStepper + 1}`);
+          }}
+     
         </section>
       </aside>
     </main>
