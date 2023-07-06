@@ -159,7 +159,7 @@ const CompleteGoals = ({ }: any) => {
             if (currentStepper === 5) navigate(`/philosophy-goals/${currentStepper}`);
             else navigate(`/philosophy-goals/${currentStepper + 1}`);
           }}
-          />
+     
         </section>
       </aside>
     </main>
