@@ -28,7 +28,7 @@ const LinkedInOauth = ({ event, language, setLoading, state }: any) => {
                 dispatch(saveUserData(data?.status?.data));
                 const token = headers["authorization"].split(" ")[1];
                 dispatch(saveToken(token));
-                onUpdateLanguage(data, token);
+                // onUpdateLanguage(data, token);
                 toast.dismiss();
                 toast.success(data.status.message, toastUtil);
                 localStorage.removeItem("role");
@@ -39,9 +39,9 @@ const LinkedInOauth = ({ event, language, setLoading, state }: any) => {
                 }, 1000)
             }
         } catch (error: any) {
-            console.error("Linkedin Error: ", error);
+            console.error(error);
             const message = error?.response?.data?.status?.message || language.promptMessages.errorGeneral;
-            toast.dismiss();
+            // const message = language?.v2?.sessions[error?.response?.data?.status?.message] || language.promptMessages.errorGeneral;
             toast.error(message, toastUtil);
             setLoading(false);
         }

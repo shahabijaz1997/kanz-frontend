@@ -55,18 +55,18 @@ const Login = ({ }: any) => {
     const onSubmit: SubmitHandler<FormValues> = async (values) => {
       try {
         setLoading(true);
-        const { status, data, headers } = await signin({
-          user: { email: values?.email, password: values?.password },
-        });
+        const { status, data, headers } = await signin({ user: { email: values?.email, password: values?.password } });
         if (status === 200 && headers["authorization"]) {
           const token = headers["authorization"].split(" ")[1];
           dispatch(saveToken(token));
           dispatch(saveUserData(data.status.data));
-          onUpdateLanguage(data, token);
+          // onUpdateLanguage(data, token);
         } else toast.error(language.promptMessages.errorGeneral, toastUtil);
       } catch (error: any) {
-        const message =
-          error?.response?.data || language.promptMessages.errorGeneral;
+        console.error(error);
+        
+        const message = error?.response?.data?.status?.message || language.promptMessages.errorGeneral;
+        // const message = language?.v2?.sessions[error?.response?.data?.status?.message] || language.promptMessages.errorGeneral;
         toast.error(message, toastUtil);
       } finally {
         setLoading(false);
@@ -156,11 +156,7 @@ const Login = ({ }: any) => {
             {language?.buttons?.notRegistered}{" "}
           </p>
           &nbsp;
-          <button
-            className="text-cyan-800 font-bold cursor-pointer"
-            type="button"
-            onClick={() => navigate("/signup", { state: KanzRoles.INVESTOR })}
-          >
+          <button className="text-cyan-800 font-bold cursor-pointer" type="button" onClick={() => navigate("/signup", { state: KanzRoles.INVESTOR })}>
             {language.buttons.signup}
           </button>
         </div>

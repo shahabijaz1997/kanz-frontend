@@ -28,7 +28,7 @@ const GoogleOauth = ({ event, setLoading, language, state }: any) => {
                     dispatch(saveUserData(data?.status?.data));
                     const token = headers["authorization"].split(" ")[1];
                     dispatch(saveToken(token));
-                    onUpdateLanguage(data, token);
+                    // onUpdateLanguage(data, token);
                     toast.dismiss();
                     toast.success(data.status.message, toastUtil);
                     localStorage.removeItem("role");
@@ -41,7 +41,7 @@ const GoogleOauth = ({ event, setLoading, language, state }: any) => {
             } catch (error: any) {
                 console.error(error);
                 const message = error?.response?.data?.status?.message || language.promptMessages.errorGeneral;
-                toast.dismiss();
+                // const message = language?.v2?.sessions[error?.response?.data?.status?.message] || language.promptMessages.errorGeneral;
                 toast.error(message, toastUtil);
             } finally {
                 setLoading(false)

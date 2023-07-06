@@ -12,12 +12,15 @@ import CrossIcon from "../../../../ts-icons/crossIcon.svg";
 import { saveUserMetaData } from "../../../../redux-toolkit/slicer/metadata.slicer";
 import LanguageDrodownWrapper from "../../../views/LanguageDrodownWrapper";
 import { saveAttachments, saveLogo } from "../../../../redux-toolkit/slicer/attachments.slicer";
+import { languageDropdownItems } from "../../../../utils/dropdown-items.utils";
 
 const GeneralHeader = ({ responsive = false, showMenu = false, showLanguageDropdown = false }: any) => {
     const navigate = useNavigate();
     const dispatch = useDispatch();
     const language: any = useSelector((state: RootState) => state.language.value);
+    const orientation: any = useSelector((state: RootState) => state.orientation.value);
     const authToken: any = useSelector((state: RootState) => state.auth.value);
+    const event: any = useSelector((state: RootState) => state.event.value);
     const user: any = useSelector((state: RootState) => state.user.value);
     const navigationMenu = [{ id: 1, title: language.header.investment }, { id: 2, title: language.header.startup }, { id: 3, title: language.header.syndicate }, { id: 4, title: language.header.realtor }]
     const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -39,6 +42,20 @@ const GeneralHeader = ({ responsive = false, showMenu = false, showLanguageDropd
             dispatch(saveUserMetaData(""));
             dispatch(saveLogo(""));
         }
+    };
+
+    const showSelectedDisabled = () => {
+        let item = languageDropdownItems.find((lang: any) => lang.name === event);
+        return(
+            <button type="button" className={`inline-flex items-center gap-x-1.5 px-3 py-2 text-sm font-medium hover:bg-gray-50 text-neutral-700 cursor-not-allowed ${orientation === "rtl" ? "w-full justify-end pl-5" : "justify-end"}`} >
+               <img className="h-4" src={item?.icon} alt={item?.title} />
+                    {item?.title}
+                    <svg className="-mr-1 h-5 w-5" viewBox="0 0 20 20" fill="#404040" aria-hidden="true" >
+                        <path fillRule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z"
+                            clipRule="evenodd" />
+                    </svg>
+            </button>
+        )
     };
 
     const authenticatedHeaderNav = () => {
@@ -98,9 +115,9 @@ const GeneralHeader = ({ responsive = false, showMenu = false, showLanguageDropd
 
                     <nav className="">
                         <ul className="inline-flex items-center gap-6">
-                            {showLanguageDropdown && <li className="relative">
-                                <LanguageDrodownWrapper />
-                            </li>}
+                            <li className="relative">
+                                {showLanguageDropdown ? <LanguageDrodownWrapper /> : showSelectedDisabled()}
+                            </li>
                             {authenticatedHeaderNav()}
                         </ul>
                     </nav>
@@ -126,9 +143,9 @@ const GeneralHeader = ({ responsive = false, showMenu = false, showLanguageDropd
 
                     <nav className={`${isMenuOpen ? "block w-full bg-white z-10" : "hidden"}`}>
                         <ul className="flex items-center flex-row-reverse pt-12 w-full justify-between px-4">
-                            {showLanguageDropdown && <li>
-                                <LanguageDrodownWrapper />
-                            </li>}
+                            <li>
+                                {showLanguageDropdown ? <LanguageDrodownWrapper /> : showSelectedDisabled()}
+                            </li>
                             <li>
                                 <div className="rounded-full w-8 h-8 inline-grid place-items-center bell-background ">
                                     <BellIcon stroke={"#4F4F4F"} />
