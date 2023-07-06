@@ -15,9 +15,9 @@ const Onboarding = (props: any) => {
             <ClippedBanner />
             <section className="h-full w-[55%] inline-block align-top screen991:w-full overflow-y-auto">
                 <aside className="inline-flex flex-col items-center justify-center w-full">
-                    <section className={`relative w-full top-[26px] ${orientation === "rtl" ? "text-left" : "text-right"}`}>
+                    {!payload && <section className={`relative w-full top-[26px] ${orientation === "rtl" ? "text-left" : "text-right"}`}>
                        <LanguageDrodownWrapper />
-                    </section>
+                    </section>}
                     {!payload ? <Signup onSetStepper={(data: any) => { setPayload(data) }} /> : <EmailVerification payload={payload} onReSignup={()=>setPayload(null)} />}
                 </aside>
             </section>

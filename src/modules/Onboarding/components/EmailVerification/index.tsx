@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { RootState } from "../../../../redux-toolkit/store/store";
 import { useNavigate } from "react-router-dom";
-import { confirmToken, resendConfirmToken, signup, updateLanguage } from "../../../../apis/auth.api";
+import { confirmToken, resendConfirmToken, signup } from "../../../../apis/auth.api";
 import { toast } from "react-toastify";
 import { toastUtil } from "../../../../utils/toast.utils";
 import { saveToken } from "../../../../redux-toolkit/slicer/auth.slicer";
@@ -64,7 +64,7 @@ const EmailVerification = ({ payload, onReSignup }: any) => {
         const token = headers["authorization"].split(" ")[1];
         dispatch(saveToken(token));
         localStorage.removeItem("role");
-        onUpdateLanguage(token)
+        navigate("/welcome");
       }
     } catch (error: any) {
       const message = error?.response?.data?.status?.message || language.promptMessages.invalidCode || language.promptMessages.errorGeneral;
@@ -78,36 +78,15 @@ const EmailVerification = ({ payload, onReSignup }: any) => {
     }
   };
 
-  const onUpdateLanguage = async (token: string) => {
-    try {
-      setLoading(true);
-      await updateLanguage(user?.id, { users: { language: event } }, token);
-      navigate("/welcome");
-
-    } catch (error) {
-
-    } finally {
-      setLoading(false);
-    }
-  };
-
   const onReVerify: SubmitHandler<EmailFormValues> = async (values) => {
     try {
       const { email } = values;
       if (!email) return;
       setLoading(true);
       let role = localStorage.getItem("role");
-      const { status } = await signup({
-        user: {
-          email,
-          password: payload.password,
-          name: payload.name,
-          type: role || KanzRoles.INVESTOR,
-        },
-      });
-      if (status === 200) {
+      const { status } = await signup({ user: { email, password: payload.password, name: payload.name, type: role || KanzRoles.INVESTOR }, language: event });
+      if (status === 200)
         setEdit(false);
-      }
     } catch (error: any) {
       const message =
         error?.response?.data?.status?.message ||

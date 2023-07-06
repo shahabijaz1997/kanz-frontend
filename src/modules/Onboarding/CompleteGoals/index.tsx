@@ -36,7 +36,7 @@ const CompleteGoals = ({ }: any) => {
     if ((user.status !== ApplicationStatus.OPENED && user.status !== ApplicationStatus.REOPENED) || user.type !== KanzRoles.INVESTOR) navigate("/welcome");
     let item = localStorage.getItem("step");
 
-    if (user?.status !== ApplicationStatus.REOPENED) if (item) setCurrentStepper(Number(item));
+    if (user?.status !== ApplicationStatus.REOPENED) if (item) setCurrentStepper(metadata?.steps_completed || Number(item));
     else setCurrentStepper(0);
   }, []);
 
