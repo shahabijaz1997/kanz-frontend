@@ -22,6 +22,7 @@ const CompleteGoals = ({ }: any) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const user: any = useSelector((state: RootState) => state.user.value);
+  const metadata: any = useSelector((state: RootState) => state.metadata.value);
   const language: any = useSelector((state: RootState) => state.language.value);
   const event: any = useSelector((state: RootState) => state.event.value);
   const authToken: any = useSelector((state: RootState) => state.auth.value);
@@ -79,11 +80,7 @@ const CompleteGoals = ({ }: any) => {
         </div>
       )}
 
-      <AddAttachmentBanner
-        language={language}
-        navigate={navigate}
-        currentStepper={currentStepper}
-      />
+      <AddAttachmentBanner language={language} navigate={navigate} currentStepper={currentStepper} />
 
       <aside className="w-full flex items-center justify-center flex-col pt-[75px]">
         <section className="flex items-start justify-center flex-col w-[800px] screen991:w-[90%]">
@@ -156,10 +153,9 @@ const CompleteGoals = ({ }: any) => {
               </div>
             </section>
           </aside>
-
           <GoalStepper
             language={language}
-            currentStepper={currentStepper}
+            currentStepper={metadata?.steps_completed || currentStepper}
             navigate={() => {
               if (currentStepper === 5)
                 navigate(`/philosophy-goals/${currentStepper}`);
