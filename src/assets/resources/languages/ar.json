@@ -603,6 +603,14 @@
             "para_15": "An updated version of this Agreement will be effective immediately upon the posting of the revised Agreement unless otherwise specified. Your continued use of the Web Platform and Services after the effective date of the revised Agreement (or such other act specified at that time) will constitute your consent to those changes.",
             "heading_12": "Acceptance of Terms",
             "para_16": "You acknowledge that you have read this Agreement and agree to all its terms and conditions. By accessing and using the Web Platform and Services you agree to be bound by this Agreement. If you do not agree to abide by the terms of this Agreement, you are not authorized to access or use the Web Platform and Services."
+        },
+        "sessions": {
+            "something_wrong": "هناك خطأ ما",
+            "signed_in": "تم تسجيل الدخول بنجاح",
+            "signed_up": "مرحبًا! لقد قمت بالتسجيل بنجاح",
+            "invalid_password": "اختر كلمة مرور قوية. يجب أن تتكون كلمة المرور الخاصة بك من: 8 أحرف، تحتوي على حرف صغير وحرف كبير ورقم وحرف خاص على الأقل",
+            "email_taken": "البريد الإلكتروني مسجل مسبقا",
+            "invalid_creds": "البريد الإلكتروني أو كلمة المرور غير صالحة"
         }
     }
 }

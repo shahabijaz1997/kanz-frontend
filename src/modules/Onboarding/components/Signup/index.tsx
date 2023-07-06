@@ -9,7 +9,7 @@ import { hasLowerCase, hasNumbers, hasSpecialCharacters, hasUpperCase } from "..
 import CheckIcon from "../../../../ts-icons/CheckIcon.svg";
 import EyeIcon from "../../../../ts-icons/EyeIcon.svg";
 import EyeSlash from "../../../../ts-icons/EyeSlashIcon.svg";
-import { signup } from "../../../../apis/auth.api";
+import { signup, updateLanguage } from "../../../../apis/auth.api";
 import { KanzRoles } from "../../../../enums/roles.enum";
 import { saveUserData } from "../../../../redux-toolkit/slicer/user.slicer";
 import Button from "../../../../shared/components/Button";
@@ -22,7 +22,6 @@ type FormValues = {
   email: string;
   password: string;
 };
-
 
 const Signup = (props: any) => {
   const { onSetStepper } = props;
@@ -40,6 +39,17 @@ const Signup = (props: any) => {
 
   const requiredFieldError = language?.common?.required_field;
 
+  const onUpdateLanguage = async (user: any) => {
+    try {
+      setLoading(true);
+      await updateLanguage(user?.id, { users: { language: event } });
+
+    } catch (error) {
+
+    } finally {
+      setLoading(false);
+    }
+  };
   const Form = () => {
     const {
       register,
@@ -53,12 +63,7 @@ const Signup = (props: any) => {
       return (
         <div className="inline-flex flex-row items-center justify-center w-full gap-4 mb-6 screen500:flex-col screen500:items-start flex-wrap">
           <section className="inline-flex items-center">
-            <div
-              className={`${hasUpperCase(password)
-                ? "checked-background"
-                : "check-background"
-                } rounded-full w-4 h-4 inline-grid place-items-center mr-1`}
-            >
+            <div className={`${hasUpperCase(password) ? "checked-background" : "check-background"} rounded-full w-4 h-4 inline-grid place-items-center mr-1`} >
               <CheckIcon fill={`${hasUpperCase(password) ? "#fff" : "rgba(0, 0, 0, 0.3)"}`} />
             </div>
             <small className="text-neutral-500 text-sm font-normal mx-1">
@@ -112,21 +117,20 @@ const Signup = (props: any) => {
     };
 
     const onSubmit: SubmitHandler<FormValues> = async (values: any) => {
-      const signUpData = {
-        name: values?.name,
-        email: values?.email,
-        password: values?.password,
-        type: state || KanzRoles.INVESTOR,
-      };
+      const signUpData = { name: values?.name, email: values?.email, password: values?.password, type: state || KanzRoles.INVESTOR, language: event };
 
       try {
         setLoading(true);
-        const { status, data } = await signup({ user: signUpData });
+        const { status, data } = await signup({ user: signUpData, });
         if (status === 200) {
           dispatch(saveUserData(data.status.data));
+          // onUpdateLanguage(data.status.data)
           onSetStepper(signUpData);
+
         } else toast.error(language.promptMessages.errorGeneral, toastUtil);
       } catch (error: any) {
+        console.error(error);
+        // const message = language?.v2?.sessions[error?.response?.data?.status?.message] || language.promptMessages.errorGeneral;
         const message = error?.response?.data?.status?.message || language.promptMessages.errorGeneral;
         toast.error(message, toastUtil);
       } finally {

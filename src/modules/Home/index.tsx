@@ -17,6 +17,7 @@ const Home = ({ }: any) => {
   const navigate = useNavigate();
   const language: any = useSelector((state: RootState) => state.language.value);
   const orientation: any = useSelector((state: RootState) => state.orientation.value);
+  const authToken: any = useSelector((state: RootState) => state.auth.value);
 
   const longSecContent = () => {
     return (
@@ -122,7 +123,7 @@ const Home = ({ }: any) => {
   return (
     <main className="h-full max-h-full background-auth overflow-y-auto overflow-x-hidden">
       <section>
-        <Header showMenu={true} />
+        <Header showMenu={true} showLanguageDropdown={!authToken ? true : false} />
       </section>
       <div className="relative">
         <img src={PatternColor} alt="SVG" className="absolute right-0" />
@@ -182,9 +183,9 @@ const Home = ({ }: any) => {
               <p className="text-neutral-500 tracking-[0.03em] text-base font-normal pt-6">
                 {language.landing.investPara2}
               </p>
-                {React.Children.toArray(
-                  language?.v2?.investor?.li?.map((li: any) => <li className="text-neutral-500 tracking-[0.03em] text-base font-normal pt-1 pl-1">{li}</li>)
-                )}
+              {React.Children.toArray(
+                language?.v2?.investor?.li?.map((li: any) => <li className="text-neutral-500 tracking-[0.03em] text-base font-normal pt-1 pl-1">{li}</li>)
+              )}
 
               <Button
                 style={{ fontSize: "1.125rem", fontWeight: 500 }}

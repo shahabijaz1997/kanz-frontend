@@ -15,6 +15,7 @@ import { saveUserData } from "../../redux-toolkit/slicer/user.slicer";
 import Button from "../../shared/components/Button";
 import { AntdInput } from "../../shared/components/Input";
 import LanguageDrodownWrapper from "../../shared/views/LanguageDrodownWrapper";
+import { saveEvent } from "../../redux-toolkit/slicer/event.slicer";
 
 type FormValues = {
   email: string;
@@ -55,29 +56,35 @@ const Login = ({ }: any) => {
     const onSubmit: SubmitHandler<FormValues> = async (values) => {
       try {
         setLoading(true);
-        const { status, data, headers } = await signin({
-          user: { email: values?.email, password: values?.password },
-        });
+        const { status, data, headers } = await signin({ user: { email: values?.email, password: values?.password, language: event } });
         if (status === 200 && headers["authorization"]) {
           const token = headers["authorization"].split(" ")[1];
           dispatch(saveToken(token));
           dispatch(saveUserData(data.status.data));
-          onUpdateLanguage(data, token);
+          dispatch(saveEvent(event));
+          toast.dismiss();
+          toast.success(data.status.message, toastUtil);
+          localStorage.removeItem("role");
+          if (state) navigate(`/${state}`);
+          else navigate("/welcome");
+          // onUpdateLanguage(data, token);
         } else toast.error(language.promptMessages.errorGeneral, toastUtil);
       } catch (error: any) {
-        const message =
-          error?.response?.data || language.promptMessages.errorGeneral;
+        console.error(error);
+
+        const message = error?.response?.data?.status?.message || language.promptMessages.errorGeneral;
+        // const message = language?.v2?.sessions[error?.response?.data?.status?.message] || language.promptMessages.errorGeneral;
         toast.error(message, toastUtil);
       } finally {
         setLoading(false);
       }
     };
 
-    const onUpdateLanguage = async (user:any, token: string) => {
+    const onUpdateLanguage = async (user: any, token: string) => {
       try {
         setLoading(true);
-        const {status}= await updateLanguage(user.status.data?.id, { users: { language: event } }, token);
-        if(status === 200) {
+        const { status } = await updateLanguage(user.status.data?.id, { users: { language: event } });
+        if (status === 200) {
           toast.dismiss();
           toast.success(user.status.message, toastUtil);
           localStorage.removeItem("role");
@@ -85,7 +92,7 @@ const Login = ({ }: any) => {
           else navigate("/welcome");
         }
       } catch (error) {
-  
+
       } finally {
         setLoading(false);
       }
@@ -156,11 +163,7 @@ const Login = ({ }: any) => {
             {language?.buttons?.notRegistered}{" "}
           </p>
           &nbsp;
-          <button
-            className="text-cyan-800 font-bold cursor-pointer"
-            type="button"
-            onClick={() => navigate("/signup", { state: KanzRoles.INVESTOR })}
-          >
+          <button className="text-cyan-800 font-bold cursor-pointer" type="button" onClick={() => navigate("/signup", { state: KanzRoles.INVESTOR })}>
             {language.buttons.signup}
           </button>
         </div>
