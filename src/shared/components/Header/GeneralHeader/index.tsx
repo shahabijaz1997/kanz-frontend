@@ -13,7 +13,7 @@ import { saveUserMetaData } from "../../../../redux-toolkit/slicer/metadata.slic
 import LanguageDrodownWrapper from "../../../views/LanguageDrodownWrapper";
 import { saveAttachments, saveLogo } from "../../../../redux-toolkit/slicer/attachments.slicer";
 
-const GeneralHeader = ({ responsive = false, showMenu = false }: any) => {
+const GeneralHeader = ({ responsive = false, showMenu = false, showLanguageDropdown = false }: any) => {
     const navigate = useNavigate();
     const dispatch = useDispatch();
     const language: any = useSelector((state: RootState) => state.language.value);
@@ -82,7 +82,7 @@ const GeneralHeader = ({ responsive = false, showMenu = false }: any) => {
         <React.Fragment>
             {!responsive ? (
                 <div className="container relative mx-auto px-4 py-4 flex items-center justify-between">
-                    <div className="flex items-center justify-between cursor-pointer" onClick={()=>navigate("/")}>
+                    <div className="flex items-center justify-between cursor-pointer" onClick={() => navigate("/")}>
                         <img src={Logo} alt="App Logo" />
                     </div>
 
@@ -98,18 +98,18 @@ const GeneralHeader = ({ responsive = false, showMenu = false }: any) => {
 
                     <nav className="">
                         <ul className="inline-flex items-center gap-6">
-                            <li className="relative">
+                            {showLanguageDropdown && <li className="relative">
                                 <LanguageDrodownWrapper />
-                            </li>
+                            </li>}
                             {authenticatedHeaderNav()}
                         </ul>
                     </nav>
                 </div>
-                
+
             ) : (
                 <div className="container mx-auto py-6 flex items-start flex-col">
                     <div className="flex items-center justify-between container px-4">
-                        <div className="text-xl font-bold text-gray-800 cursor-pointer" onClick={()=>navigate("/")}>
+                        <div className="text-xl font-bold text-gray-800 cursor-pointer" onClick={() => navigate("/")}>
                             <img src={Logo} alt="App Logo" />
                         </div>
 
@@ -126,9 +126,9 @@ const GeneralHeader = ({ responsive = false, showMenu = false }: any) => {
 
                     <nav className={`${isMenuOpen ? "block w-full bg-white z-10" : "hidden"}`}>
                         <ul className="flex items-center flex-row-reverse pt-12 w-full justify-between px-4">
-                            <li>
+                            {showLanguageDropdown && <li>
                                 <LanguageDrodownWrapper />
-                            </li>
+                            </li>}
                             <li>
                                 <div className="rounded-full w-8 h-8 inline-grid place-items-center bell-background ">
                                     <BellIcon stroke={"#4F4F4F"} />
