@@ -142,26 +142,9 @@ const StartupFlow = ({ }: any) => {
   };
 
   const removeFile = async (id: string) => {
-    try {
-      setLoading(true);
-      await removeAttachment(id, authToken);
-    } catch (error: any) {
-      setLoading(false);
-      if (error.response && error.response.status === 401) {
-        dispatch(saveToken(""));
-        navigate("/login", { state: "add-attachments" });
-      }
-      const message =
-        error?.response?.data?.status?.message ||
-        error?.response?.data ||
-        language.promptMessages.errorGeneral;
-      toast.error(message, toastUtil);
-    } finally {
-      dispatch(saveLogo(""));
-      setFile(null);
-      onSetPayload(null, "logo");
-      setLoading(false);
-    }
+    dispatch(saveLogo(""));
+    setFile(null);
+    onSetPayload(null, "logo")
   };
 
   const ontoNextStep = () => {
