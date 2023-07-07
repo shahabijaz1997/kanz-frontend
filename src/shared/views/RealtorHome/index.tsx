@@ -40,13 +40,7 @@ const RealtorHome = ({ loading, language }: any) => {
                     <h3 className="text-base font-normal text-neutral-700 screen500:text-[12px] mt-2">
                         {language?.onboarding?.appStatus}: <strong>{language.common.inprogress}</strong>
                     </h3>
-                    <Button
-                        className="mt-6 h-[38px]"
-                        disabled={loading}
-                        htmlType="submit"
-                        loading={loading}
-                        onClick={() => navigate("/realtor-type")}
-                    >
+                    <Button className="mt-6 h-[38px]" disabled={loading} htmlType="submit" loading={loading} onClick={() => navigate(RoutesEnums.REALTOR_DETAILS)} >
                         {language?.buttons?.continue}
                     </Button>
                 </React.Fragment>

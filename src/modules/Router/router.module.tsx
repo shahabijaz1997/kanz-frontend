@@ -9,7 +9,6 @@ import { KanzRoles } from "../../enums/roles.enum";
 import { ApplicationStatus } from "../../enums/types.enum";
 import { RoutesEnums } from "../../enums/routes.enum";
 import { LinkedInCallback } from "react-linkedin-login-oauth2";
-import { updateLanguage } from "../../apis/auth.api";
 
 // Modules
 const Home = lazy(() => import("../Home"));
@@ -190,51 +189,41 @@ const RouterModule = () => {
             </Suspense>
           }
         />
-        <Route
-          path="/signup"
-          element={
-            <Suspense fallback={<Loader />}>
-              <AuthenticateAuthRoute>
-                <Onboarding guard={authToken} />
-              </AuthenticateAuthRoute>
-            </Suspense>
-          }
+        <Route path="/signup" element={
+          <Suspense fallback={<Loader />}>
+            <AuthenticateAuthRoute>
+              <Onboarding guard={authToken} />
+            </AuthenticateAuthRoute>
+          </Suspense>
+        }
         />
-        <Route
-          path="/login"
-          element={
-            <Suspense fallback={<Loader />}>
-              <AuthenticateAuthRoute>
-                <Login guard={authToken} />
-              </AuthenticateAuthRoute>
-            </Suspense>
-          }
+        <Route path="/login" element={
+          <Suspense fallback={<Loader />}>
+            <AuthenticateAuthRoute>
+              <Login guard={authToken} />
+            </AuthenticateAuthRoute>
+          </Suspense>
+        }
         />
-        <Route
-          path="/welcome"
-          element={
-            <Suspense fallback={<Loader />}>
-              <AuthenticateRoute>
-                <Welcome guard={authToken} />
-              </AuthenticateRoute>
-            </Suspense>
-          }
+        <Route path="/welcome" element={
+          <Suspense fallback={<Loader />}>
+            <AuthenticateRoute>
+              <Welcome guard={authToken} />
+            </AuthenticateRoute>
+          </Suspense>
+        }
         />
-        <Route
-          path="/privacy-policy"
-          element={
-            <Suspense fallback={<Loader />}>
-              <PrivacyPolicy />
-            </Suspense>
-          }
+        <Route path="/privacy-policy" element={
+          <Suspense fallback={<Loader />}>
+            <PrivacyPolicy />
+          </Suspense>
+        }
         />
-        <Route
-          path="/terms-and-conditions"
-          element={
-            <Suspense fallback={<Loader />}>
-              <TermsAndConditions />
-            </Suspense>
-          }
+        <Route path="/terms-and-conditions" element={
+          <Suspense fallback={<Loader />}>
+            <TermsAndConditions />
+          </Suspense>
+        }
         />
       </Routes>
     )

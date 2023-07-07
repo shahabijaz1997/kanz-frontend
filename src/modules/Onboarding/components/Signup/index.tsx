@@ -9,7 +9,7 @@ import { hasLowerCase, hasNumbers, hasSpecialCharacters, hasUpperCase } from "..
 import CheckIcon from "../../../../ts-icons/CheckIcon.svg";
 import EyeIcon from "../../../../ts-icons/EyeIcon.svg";
 import EyeSlash from "../../../../ts-icons/EyeSlashIcon.svg";
-import { signup, updateLanguage } from "../../../../apis/auth.api";
+import { signup } from "../../../../apis/auth.api";
 import { KanzRoles } from "../../../../enums/roles.enum";
 import { saveUserData } from "../../../../redux-toolkit/slicer/user.slicer";
 import Button from "../../../../shared/components/Button";
@@ -38,18 +38,6 @@ const Signup = (props: any) => {
   }, []);
 
   const requiredFieldError = language?.common?.required_field;
-
-  const onUpdateLanguage = async (user: any) => {
-    try {
-      setLoading(true);
-      await updateLanguage(user?.id, { users: { language: event } });
-
-    } catch (error) {
-
-    } finally {
-      setLoading(false);
-    }
-  };
   const Form = () => {
     const {
       register,
@@ -124,7 +112,6 @@ const Signup = (props: any) => {
         const { status, data } = await signup({ user: signUpData, });
         if (status === 200) {
           dispatch(saveUserData(data.status.data));
-          // onUpdateLanguage(data.status.data)
           onSetStepper(signUpData);
 
         } else toast.error(language.promptMessages.errorGeneral, toastUtil);
