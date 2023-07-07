@@ -39,11 +39,7 @@ const AddAttachments = (props: any) => {
   }, []);
 
   const setFile = (file: File, id: string, url: string, attachment_id: string, size: string, dimensions: string, type: string) => {
-    let _file: any = {
-      name: file?.name,
-      size,
-      dimensions
-    }
+    let _file: any = { name: file?.name, size, dimensions }
     let _attachments: any = [...files, { file: _file, id, url, attachment_id, type: type }];
     dispatch(saveAttachments(_attachments));
     setFiles(_attachments);
@@ -123,6 +119,7 @@ const AddAttachments = (props: any) => {
     let nec_ats: any[] = attachmentData.filter((at: any) => {
       if (at.attachment_url && !files.some((f: any) => f.id === at.id)) return at;
     })
+    console.log("checkDisabled", files.length , nec_ats.length);
     if (files.length + nec_ats.length >= 3 && agreeToTerms ? false : true) return true;
     return false;
   };
@@ -131,6 +128,9 @@ const AddAttachments = (props: any) => {
     let nec_ats: any[] = attachmentData.filter((at: any) => {
       if (at.attachment_url && !files.some((f: any) => f.id === at.id)) return at;
     })
+
+    console.log("checkSubmit", files.length , nec_ats.length);
+    
     if (files.length + nec_ats.length < 3) return true;
     return false;
   };
@@ -141,17 +141,7 @@ const AddAttachments = (props: any) => {
         loading ? (<Loader />) : (
           <React.Fragment>
             <section>
-              <Header
-                custom={true}
-                data={{
-                  leftMenu: language.header.attachment,
-                  button: (
-                    <button onClick={() => navigate(-1)}>
-                      <CrossIcon stroke="#171717" className="w-6 h-6" />
-                    </button>
-                  ),
-                }}
-              />
+              <Header custom={true} data={{ leftMenu: language.header.attachment, button: (<button onClick={() => navigate(-1)}> <CrossIcon stroke="#171717" className="w-6 h-6" /></button>) }} />
             </section>
 
             <aside className="w-[420px] h-full screen500:max-w-[300px] mx-auto py-12">
@@ -200,19 +190,14 @@ const AddAttachments = (props: any) => {
                 </form>
               </section>
               <section className="w-full inline-flex items-center gap-2 rounded-md border border-grey w-[420px] p-4 check-background">
-                <input
-                  type="checkbox"
-                  className="accent-cyan-800 h-3 w-3 cursor-pointer"
-                  checked={agreeToTerms}
-                  onChange={() => setAgreeToTerms(!agreeToTerms)}
-                />
+                <input type="checkbox" className="accent-cyan-800 h-3 w-3 cursor-pointer" checked={agreeToTerms} onChange={() => setAgreeToTerms(!agreeToTerms)} />
                 <p className="text-neutral-500 text-sm font-normal">
                   {language?.common?.agree}
                   <a href="/terms-and-conditions" className="text-cc-blue font-medium cursor-pointer" target="_blank" >
                     {language?.common?.termsConditions}
                   </a>
                   {language?.v2?.common?.understood}
-                  <a href="/privacy-policy" className="text-cc-blue font-medium cursor-pointer"  target="_blank" >
+                  <a href="/privacy-policy" className="text-cc-blue font-medium cursor-pointer" target="_blank" >
                     {language?.v2?.common?.privacyPolicy}
                   </a>
                 </p>

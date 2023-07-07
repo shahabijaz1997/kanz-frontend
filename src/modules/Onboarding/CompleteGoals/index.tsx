@@ -30,13 +30,14 @@ const CompleteGoals = ({ }: any) => {
   const [payload, setPayload] = useState(state);
   const [loading, setLoading] = useState(false);
   const [apiResp, setApiResp]: any = useState();
-  const [currentStepper, setCurrentStepper] = useState(0);
+  const [currentStepper, setCurrentStepper]: any = useState();
 
   useLayoutEffect(() => {
     if ((user.status !== ApplicationStatus.OPENED && user.status !== ApplicationStatus.REOPENED) || user.type !== KanzRoles.INVESTOR) navigate("/welcome");
     let item = localStorage.getItem("step");
 
-    if (user?.status !== ApplicationStatus.REOPENED) if (item) setCurrentStepper(metadata?.steps_completed || Number(item));
+    if (user?.status !== ApplicationStatus.REOPENED)
+      setCurrentStepper(metadata?.steps_completed || Number(item));
     else setCurrentStepper(0);
   }, []);
 
@@ -123,11 +124,7 @@ const CompleteGoals = ({ }: any) => {
                   )}
                 </p>
               </div>
-              <Button
-                className="w-[100px] h-9"
-                htmlType="submit"
-                onClick={() => navigate("/complete-details", { state: localStorage.getItem("investor-type") })}
-              >
+              <Button className="w-[100px] h-9" htmlType="submit" onClick={() => navigate("/complete-details", { state: localStorage.getItem("investor-type") })} >
                 <EditIcon stroke="#fff" />
                 <small className="font-normal text-base">
                   {language.buttons.edit}
