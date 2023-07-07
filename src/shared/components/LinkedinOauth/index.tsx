@@ -4,7 +4,7 @@ import { toast } from "react-toastify";
 import { LinkedIn } from "react-linkedin-login-oauth2";
 import LinkedinIcon from "../../../assets/icons/linedin_logo.png";
 import { getEnv } from "../../../env";
-import { linkedInOauth, updateLanguage } from "../../../apis/auth.api";
+import { linkedInOauth } from "../../../apis/auth.api";
 import { toastUtil } from "../../../utils/toast.utils";
 import { saveUserData } from "../../../redux-toolkit/slicer/user.slicer";
 import { saveToken } from "../../../redux-toolkit/slicer/auth.slicer";
@@ -29,10 +29,9 @@ const LinkedInOauth = ({ event, language, setLoading, state }: any) => {
                 dispatch(saveUserData(data?.status?.data));
                 const token = headers["authorization"].split(" ")[1];
                 dispatch(saveToken(token));
-                // onUpdateLanguage(data, token);
                 toast.dismiss();
                 toast.success(data.status.message, toastUtil);
-                dispatch(saveEvent(event));
+                dispatch(saveEvent(data?.status?.data?.language));
                 localStorage.removeItem("role");
                 let timeout = setTimeout(() => {
                     clearTimeout(timeout);
@@ -43,26 +42,7 @@ const LinkedInOauth = ({ event, language, setLoading, state }: any) => {
         } catch (error: any) {
             console.error(error);
             const message = error?.response?.data?.status?.message || language.promptMessages.errorGeneral;
-            // const message = language?.v2?.sessions[error?.response?.data?.status?.message] || language.promptMessages.errorGeneral;
             toast.error(message, toastUtil);
-            setLoading(false);
-        }
-    };
-
-    const onUpdateLanguage = async (user: any, token: string) => {
-        try {
-            setLoading(true);
-            const { status } = await updateLanguage(user.status.data?.id, { users: { language: event } });
-            if (status === 200) {
-                toast.dismiss();
-                toast.success(user.status.message, toastUtil);
-                localStorage.removeItem("role");
-                if (state) navigate(`/${state}`);
-                else navigate("/welcome");
-            }
-        } catch (error) {
-
-        } finally {
             setLoading(false);
         }
     };

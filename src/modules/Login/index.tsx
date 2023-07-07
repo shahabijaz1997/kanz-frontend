@@ -61,7 +61,7 @@ const Login = ({ }: any) => {
           const token = headers["authorization"].split(" ")[1];
           dispatch(saveToken(token));
           dispatch(saveUserData(data.status.data));
-          dispatch(saveEvent(event));
+          dispatch(saveEvent(data?.status?.data?.language));
           toast.dismiss();
           toast.success(data.status.message, toastUtil);
           localStorage.removeItem("role");
