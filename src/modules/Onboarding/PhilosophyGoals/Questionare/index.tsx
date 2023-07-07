@@ -54,21 +54,25 @@ const Questionare = ({ step, returnSuccessRedirection }: any) => {
           });
           let se_ques = selected[step]?.questions.map((as: any) => as.question_id);
           se_ques && setValidations(se_ques);
-          if (data?.status?.data?.questions[0]?.question_type === "checkbox")
-            setMcqs(data?.status?.data?.questions[0][event]?.options?.filter((it: any) => it.selected));
-          else if (data?.status?.data?.questions[0]?.question_type === "text") setTextAnswer(data?.status?.data?.questions[0][event]?.answer)
+          if (data?.status?.data?.questions[0]?.question_type === "checkbox") {
+            parsed[step]?.questions ? setMcqs(parsed[step].questions[0]?.answer_meta?.options) : setMcqs(data?.status?.data?.questions[0][event]?.options?.filter((it: any) => it.selected));
+          }
+          else if (data?.status?.data?.questions[0]?.question_type === "text") {
+            setTextAnswer(data?.status?.data?.questions[0][event]?.answer);
+          }
+        } else {
+          if (JSON.parse(philisophyData)) {
+            if (parsed[step]) {
+              let d = parsed[step]?.questions.map((as: any) => as.question_id);
+              setValidations(d);
+            } else setValidations([]);
+          }
+          if (data?.status?.data?.questions && data?.status?.data?.questions[0]?.question_type === "checkbox")
+            if (parsed[step]?.questions[0]) setMcqs(parsed[step].questions[0]?.answer_meta?.options);
+          if (data?.status?.data?.questions[0]?.question_type === "text") setTextAnswer(selected[step]?.questions[0]?.answers[0])
         }
         setQuestions(data?.status?.data);
         setPage(pg);
-        if (JSON.parse(philisophyData)) {
-          if (parsed[step]) {
-            let d = parsed[step]?.questions.map((as: any) => as.question_id);
-            setValidations(d);
-          } else setValidations([]);
-        }
-        if (data?.status?.data?.questions && data?.status?.data?.questions[0]?.question_type === "checkbox")
-          if (parsed[step]?.questions[0]) setMcqs(parsed[step].questions[0]?.answer_meta?.options);
-        if (data?.status?.data?.questions[0]?.question_type === "text") setTextAnswer(selected[step]?.questions[0]?.answers[0])
       }
     } catch (error: any) {
       const message = error?.response?.data?.status?.message || error?.response?.data || language.promptMessages.errorGeneral;
@@ -159,15 +163,7 @@ const Questionare = ({ step, returnSuccessRedirection }: any) => {
           </p>
 
           <section className="mb-8 w-full relative mt-3">
-            <textarea value={selected[step]?.questions[0]?.answers[0] || questions?.questions[0][event]?.answer} onChange={(e) => {
-              setTextAnswer(e.target.value);
-              let _selected = { ...selected };
-              if (_selected[ques.step])
-                _selected[ques.step].questions = [{ question_id: ques.id, answers: [e.target.value], answer_meta: {} }];
-              else _selected[ques.step] = { questions: [{ question_id: ques.id, answers: [e.target.value], answer_meta: {} }] };
-
-              setSelected(_selected);
-            }}
+            <textarea value={textAnswer} onChange={(e) => setTextAnswer(e.target.value)}
               className="rounded-md shadow-sm appearance-none border border-neutral-300 rounded-md w-full py-2 px-3 text-gray-500 leading-tight focus:outline-none focus:shadow-outline h-[100px] resize-none"
             ></textarea>
           </section>
@@ -191,9 +187,8 @@ const Questionare = ({ step, returnSuccessRedirection }: any) => {
             {ques[event]?.options && React.Children.toArray(
               ques[event]?.options.map((as: any) => {
                 return (
-                  <li
-                    className={`h-[50px] w-[420px] p-4 grey-neutral-200 text-sm font-medium cursor-pointer border border-grey inline-flex items-center justify-start first:rounded-t-md last:rounded-b-md screen500:w-full ${checkExist(selected[ques.step], as) ? "check-background" : "bg-white"
-                      }`}
+                  <li className={`h-[50px] w-[420px] p-4 grey-neutral-200 text-sm font-medium cursor-pointer border border-grey inline-flex items-center justify-start first:rounded-t-md last:rounded-b-md screen500:w-full ${checkExist(selected[ques.step], as) ? "check-background" : "bg-white"
+                    }`}
                     onClick={() => {
                       toggleAnswerSelection(ques, as);
                       let _validations = [...validations];
@@ -204,14 +199,9 @@ const Questionare = ({ step, returnSuccessRedirection }: any) => {
                       }
                     }}
                   >
-                    <input
-                      onChange={() => { }}
+                    <input onChange={() => { }}
                       className="accent-cyan-800 relative float-left mx-2 h-3 w-3 rounded-full border-2 border-solid border-cyan-300 before:pointer-events-none before:absolute before:h-4 before:w-4 before:scale-0 before:rounded-full before:bg-transparent before:opacity-0 before:content-[''] after:absolute after:z-[1] after:block after:h-4 after:w-4 after:rounded-full after:content-[''] checked:border-primary checked:before:opacity-[0.16] checked:after:absolute checked:after:left-1/2 checked:after:top-1/2 checked:after:h-[0.625rem] checked:after:w-[0.625rem] checked:after:rounded-full checked:after:border-primary checked:after:bg-primary checked:after:content-[''] checked:after:[transform:translate(-50%,-50%)] hover:cursor-pointer hover:before:opacity-[0.04]"
-                      type="radio"
-                      checked={
-                        checkExist(selected[ques.step], as) ? true : false
-                      }
-                    />
+                      type="radio" checked={checkExist(selected[ques.step], as) ? true : false} />
                     <small>{as?.statement}</small>
                   </li>
                 );
@@ -332,7 +322,8 @@ const Questionare = ({ step, returnSuccessRedirection }: any) => {
     checkValidation();
     setOpen(false);
     let philisophyData: any = localStorage.getItem("philosophy");
-    let philData: any = { ...JSON.parse(philisophyData), ...selected };
+    let philData: any = JSON.parse(philisophyData)
+    // let philData: any = { ...JSON.parse(philisophyData), ...selected };
     localStorage.setItem("philosophy", JSON.stringify(philData));
     if (page !== 1) navigate(`/philosophy-goals/${page - 1}`);
     else navigate(`/complete-goals`);
@@ -345,6 +336,14 @@ const Questionare = ({ step, returnSuccessRedirection }: any) => {
     }
     let payload: any = { investment_philosophy: {} };
     let philisophyData: any = localStorage.getItem("philosophy");
+
+    if (questions?.questions[0]?.question_type === "text") {
+      let _selected = { ...selected };
+      if (_selected[step])
+        _selected[step].questions = [{ question_id: questions?.questions[0]?.id, answers: [textAnswer], answer_meta: {} }];
+      else _selected[step] = { questions: [{ question_id: questions?.questions[0]?.id, answers: [textAnswer], answer_meta: {} }] };
+      setSelected(_selected);
+    }
     if (step !== 3) {
       let philData: any = { ...JSON.parse(philisophyData), ...selected };
       localStorage.setItem("philosophy", JSON.stringify(philData));
@@ -358,6 +357,7 @@ const Questionare = ({ step, returnSuccessRedirection }: any) => {
       payload.investment_philosophy.step = 3;
       payload.investment_philosophy.questions = [{ question_id: questions?.questions[0]?.id, answers, answer_meta: { options: mcqs } }];
     }
+
     submitData(payload);
     if (step !== questions?.total_steps)
       navigate(`/philosophy-goals/${page + 1}`);
@@ -371,7 +371,7 @@ const Questionare = ({ step, returnSuccessRedirection }: any) => {
       if ((user?.status !== ApplicationStatus.REOPENED && textAnswer?.length > 0) || user?.status === ApplicationStatus.REOPENED) return true;
       return false;
     } else {
-      if(user?.status === ApplicationStatus.REOPENED) return true;
+      if (user?.status === ApplicationStatus.REOPENED) return true;
       if (!questions?.questions?.length) return false;
       else {
         if (!questions?.questions?.length) return false;
