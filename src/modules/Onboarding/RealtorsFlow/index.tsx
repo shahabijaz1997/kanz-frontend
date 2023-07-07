@@ -136,7 +136,7 @@ const Realtors = (props: any) => {
   };
 
   return (
-    <main className="h-full max-h-full background-auth overflow-y-auto overflow-x-hidden">
+    <main className="h-full max-h-full cbc-auth overflow-y-auto overflow-x-hidden">
       <section className="h-[67px]">
         <Header />
       </section>
@@ -150,7 +150,7 @@ const Realtors = (props: any) => {
                 <div className="w-[450px] mt-[78px]">{language?.v2?.realtor?.add_title}</div>
                 <p className="text-neutral-500 font-normal text-sm">
                   <span>{language.onboarding.realtorSubDetail}</span>&nbsp;
-                  <span className="color-blue font-medium cursor-pointer" onClick={() => setOpen(true)}>
+                  <span className="text-cc-blue font-medium cursor-pointer" onClick={() => setOpen(true)}>
                     {language.common.learn}
                   </span>
                 </p>

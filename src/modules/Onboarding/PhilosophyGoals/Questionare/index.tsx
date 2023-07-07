@@ -153,7 +153,7 @@ const Questionare = ({ step, returnSuccessRedirection }: any) => {
           </h3>
           <p className="text-neutral-500 font-normal text-lg">
             <span>{ques[event]?.statement}</span>&nbsp;
-            <span className="color-blue font-medium cursor-pointer" onClick={() => setOpen(true)} >
+            <span className="text-cc-blue font-medium cursor-pointer" onClick={() => setOpen(true)} >
               {language.common.learn}
             </span>
           </p>
@@ -182,7 +182,7 @@ const Questionare = ({ step, returnSuccessRedirection }: any) => {
         </h3>
         <p className="text-neutral-500 font-normal text-lg">
           <span>{ques[event]?.statement}</span>&nbsp;
-          <span className="color-blue font-medium cursor-pointer" onClick={() => setOpen(true)} >
+          <span className="text-cc-blue font-medium cursor-pointer" onClick={() => setOpen(true)} >
             {language.common.learn}
           </span>
         </p>
@@ -233,7 +233,7 @@ const Questionare = ({ step, returnSuccessRedirection }: any) => {
         </h3>
         <p className="text-neutral-500 font-normal text-lg">
           <span>{ques[event]?.statement}</span>&nbsp;
-          <span className="color-blue font-medium cursor-pointer" onClick={() => setOpen(true)}>
+          <span className="text-cc-blue font-medium cursor-pointer" onClick={() => setOpen(true)}>
             {language.common.learn}
           </span>
         </p>
@@ -288,7 +288,7 @@ const Questionare = ({ step, returnSuccessRedirection }: any) => {
         </h3>
         <p className="text-neutral-500 font-normal text-lg">
           <span>{ques[event]?.statement}</span>&nbsp;
-          <span className="color-blue font-medium cursor-pointer" onClick={() => setOpen(true)} >
+          <span className="text-cc-blue font-medium cursor-pointer" onClick={() => setOpen(true)} >
             {language.common.learn}
           </span>
         </p>

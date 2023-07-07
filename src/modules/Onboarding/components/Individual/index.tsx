@@ -214,7 +214,7 @@ const Individual = ({ language }: any) => {
               </h3>
               <p className="text-neutral-500 text-sm font-normal mt-1">
                 {language?.individual?.understanding}&nbsp;
-                <span className="color-blue font-medium cursor-pointer" onClick={() => setOpen(true)}>
+                <span className="text-cc-blue font-medium cursor-pointer" onClick={() => setOpen(true)}>
                   {language?.common?.learn}
                 </span>
               </p>

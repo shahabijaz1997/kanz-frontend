@@ -136,7 +136,7 @@ const AddAttachments = (props: any) => {
   };
 
   return (
-    <main className="h-full max-h-full background-auth overflow-y-auto overflow-x-hidden">
+    <main className="h-full max-h-full cbc-auth overflow-y-auto overflow-x-hidden">
       {
         loading ? (<Loader />) : (
           <React.Fragment>
@@ -162,7 +162,7 @@ const AddAttachments = (props: any) => {
                 <p className="text-neutral-700 font-medium text-base">
                   <span>{language.philosophyGoals.uploadNecessary}.</span>&nbsp;
                   <span
-                    className="color-blue cursor-pointer"
+                    className="text-cc-blue cursor-pointer"
                     onClick={() => setOpen(true)}
                   >
                     {language.v2?.realtor?.attachment_provider}
@@ -208,11 +208,11 @@ const AddAttachments = (props: any) => {
                 />
                 <p className="text-neutral-500 text-sm font-normal">
                   {language?.common?.agree}
-                  <a href="/terms-and-conditions" className="color-blue font-medium cursor-pointer" target="_blank" >
+                  <a href="/terms-and-conditions" className="text-cc-blue font-medium cursor-pointer" target="_blank" >
                     {language?.common?.termsConditions}
                   </a>
                   {language?.v2?.common?.understood}
-                  <a href="/privacy-policy" className="color-blue font-medium cursor-pointer"  target="_blank" >
+                  <a href="/privacy-policy" className="text-cc-blue font-medium cursor-pointer"  target="_blank" >
                     {language?.v2?.common?.privacyPolicy}
                   </a>
                 </p>

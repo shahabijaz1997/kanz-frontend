@@ -11,7 +11,7 @@ const Onboarding = (props: any) => {
     const orientation: any = useSelector((state: RootState) => state.orientation.value);
 
     return (
-        <main className="h-full max-h-full background-auth overflow-y-auto overflow-x-hidden">
+        <main className="h-full max-h-full cbc-auth overflow-y-auto overflow-x-hidden">
             <ClippedBanner />
             <section className="h-full w-[55%] inline-block align-top screen991:w-full overflow-y-auto">
                 <aside className="inline-flex flex-col items-center justify-center w-full">
