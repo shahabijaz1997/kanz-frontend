@@ -334,21 +334,21 @@ const Questionare = ({ step, returnSuccessRedirection }: any) => {
       toast.dismiss();
       return toast.warning(language.promptMessages.pleaseSelectAllData, toastUtil);
     }
-    let payload: any = { investment_philosophy: {} };
-    let philisophyData: any = localStorage.getItem("philosophy");
-
+    let _selected = { ...selected };
     if (questions?.questions[0]?.question_type === "text") {
-      let _selected = { ...selected };
       if (_selected[step])
         _selected[step].questions = [{ question_id: questions?.questions[0]?.id, answers: [textAnswer], answer_meta: {} }];
       else _selected[step] = { questions: [{ question_id: questions?.questions[0]?.id, answers: [textAnswer], answer_meta: {} }] };
       setSelected(_selected);
     }
+    let payload: any = { investment_philosophy: {} };
+    let philisophyData: any = localStorage.getItem("philosophy");
+
     if (step !== 3) {
-      let philData: any = { ...JSON.parse(philisophyData), ...selected };
+      let philData: any = { ...JSON.parse(philisophyData), ..._selected };
       localStorage.setItem("philosophy", JSON.stringify(philData));
-      payload.investment_philosophy.step = selected[step]?.step;
-      payload.investment_philosophy.questions = selected[step]?.questions;
+      payload.investment_philosophy.step = _selected[step]?.step;
+      payload.investment_philosophy.questions = _selected[step]?.questions;
     } else {
       let _mcqs = [...mcqs];
       let answers = _mcqs.map((m) => m.statement);
