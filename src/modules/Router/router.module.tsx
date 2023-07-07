@@ -45,7 +45,7 @@ const AuthenticateAuthRoute = (props: PropsWithChildren | any) => {
   if (!isVerify && !authToken) {
     return <React.Fragment>{children}</React.Fragment>;
   }
-  else if (isVerify && user?.profile_states) {
+  else if (isVerify && !user?.profile_states?.account_confirmed) {
     return <React.Fragment>{children}</React.Fragment>;
   }
   return <Navigate to="/welcome" replace />;

@@ -62,11 +62,12 @@ const Login = ({ }: any) => {
         } else toast.error(language.promptMessages.errorGeneral, toastUtil);
       } catch (error: any) {
         console.error(error);
-        const message = error?.response?.data || language.promptMessages.errorGeneral;
+        const message = error?.response?.data?.status?.message || error?.response?.data || language.promptMessages.errorGeneral;
         toast.error(message, toastUtil);
-
-        // Check for moving to verification page
-        // navigate("/verification");
+        if (error?.response?.data?.status?.code && !error?.response?.data?.status?.code?.profile_states.account_confirmed) {
+          dispatch(saveUserData(error?.response?.data?.status?.code))
+          navigate("/verification");
+        }
       } finally {
         setLoading(false);
       }
