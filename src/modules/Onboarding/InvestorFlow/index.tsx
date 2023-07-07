@@ -79,7 +79,7 @@ const InvestorFlow = ({ }: any) => {
             <span className="font-normal">{language.investorFow.sub}</span>{" "}
             &nbsp;
             <span
-              className="color-blue font-medium cursor-pointer"
+              className="text-cc-blue font-medium cursor-pointer"
               onClick={() => setOpen(true)}
             >
               {language.common.learn}

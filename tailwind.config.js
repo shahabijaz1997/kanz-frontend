@@ -22,7 +22,8 @@ module.exports = {
                 'cs-5': '0px 4.64831px 7.30449px rgba(0, 0, 0, 0.02)',
             },
             colors: {
-                'cc-black': '#0E2E35'
+                'cc-black': '#0E2E35',
+                'cc-blue': '#2D9CDB'
             },
             backgroundColor:{
                 'cbc-1': '#FCFCFC',
@@ -31,7 +32,8 @@ module.exports = {
                 'cbc-grey-sec':  '#F2F2F2',
                 'cbc-check': '#F1F1F1',
                 'cbc-check-hover': '#DBDBDB',
-                'cbc-transparent': 'rgba(0, 0, 0, 0.0758)'
+                'cbc-transparent': 'rgba(0, 0, 0, 0.0758)',
+                'cbc-auth': '#FBFBFB'
             }
         },
     },

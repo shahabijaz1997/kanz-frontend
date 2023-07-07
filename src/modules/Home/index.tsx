@@ -121,7 +121,7 @@ const Home = ({ }: any) => {
     );
   };
   return (
-    <main className="h-full max-h-full background-auth overflow-y-auto overflow-x-hidden">
+    <main className="h-full max-h-full cbc-auth overflow-y-auto overflow-x-hidden">
       <section>
         <Header showMenu={true} showLanguageDropdown={!authToken ? true : false} />
       </section>

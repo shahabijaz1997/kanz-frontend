@@ -7,7 +7,7 @@ const TermsAndConditions = () => {
     const language: any = useSelector((state: RootState) => state.language.value);
 
     return (
-        <main className="h-full max-h-full background-auth overflow-y-auto overflow-x-hidden">
+        <main className="h-full max-h-full cbc-auth overflow-y-auto overflow-x-hidden">
             <section>
                 <Header />
             </section>

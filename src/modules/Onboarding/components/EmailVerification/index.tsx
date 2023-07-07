@@ -125,7 +125,7 @@ const EmailVerification = ({ payload, onReSignup }: any) => {
           <div className="-mt-2 text-right text-neutral-500 font-normal text-[14px] screen500:text-[12px]">
             {language?.onboarding?.sentCode} ({email})
             <div
-              className="color-blue cursor-pointer"
+              className="text-cc-blue cursor-pointer"
               onClick={onResendConfirmToken}
             >
               {language?.buttons?.resendVerification}{" "}

@@ -65,7 +65,7 @@ const UploadComp = (props: any) => {
         <div>{title}</div>
         <small className="text-neutral-700 font-normal">{subTitle}</small>
         <small
-          className="relative font-normal color-blue cursor-pointer"
+          className="relative font-normal text-cc-blue cursor-pointer"
           onMouseEnter={() => setSelectedId(id)}
           onMouseLeave={() => setSelectedId(null)}
         >

@@ -219,7 +219,7 @@ const SyndicateStepper = ({ orientation, language, metadata, payload, file, onSe
                     <div className="mb-4 w-full">
                         <div className="text-neutral-700 text-sm font-medium">{language.syndicate.logo}</div>
                         <small className="text-neutral-500 font-normal">{language.syndicate.uploadCompLogo}</small>
-                        <small className="relative font-normal color-blue cursor-pointer" onMouseEnter={() => setShowHoverModal(true)} onMouseLeave={() => setShowHoverModal(false)}>
+                        <small className="relative font-normal text-cc-blue cursor-pointer" onMouseEnter={() => setShowHoverModal(true)} onMouseLeave={() => setShowHoverModal(false)}>
                             &nbsp;<span>{language.common.example}</span>
                             {showHoverModal && (
                                 <HoverModal>

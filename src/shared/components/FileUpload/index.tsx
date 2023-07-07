@@ -179,7 +179,7 @@ const FileUpload = ({ id, fid, file, setModalOpen, setFile, removeFile, title, u
                             <div className="inline-flex items-center flex-col align-center justify-center w-full h-full cursor-pointer">
                                 <AddImage stroke="#A3A3A3" />
                                 <p className="font-medium my-1">
-                                    <small className="text-sm color-blue">{language.buttons.uploadFile}</small>&nbsp;
+                                    <small className="text-sm text-cc-blue">{language.buttons.uploadFile}</small>&nbsp;
                                     <small className="text-sm text-neutral-500">{language.buttons.orDragDrop}</small>
                                 </p>
                                 <div className="text-neutral-500 text-sm font-normal">{acceptPdf ? language?.common?.fileSpecs : language?.v2?.common?.imageSpecs} 10MB</div>
