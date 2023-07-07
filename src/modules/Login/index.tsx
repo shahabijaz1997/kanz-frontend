@@ -39,16 +39,8 @@ const Login = ({ }: any) => {
   }, []);
 
   const Form = () => {
-    const {
-      register,
-      handleSubmit,
-      setError,
-      getValues,
-      formState: { errors },
-    } = useForm<FormValues>();
-
+    const { register, handleSubmit, formState: { errors } } = useForm<FormValues>();
     const [showPassword, setShowPassword] = React.useState(false);
-
     const handleTogglePassword = () => {
       setShowPassword((prevShowPassword) => !prevShowPassword);
     };
@@ -70,57 +62,35 @@ const Login = ({ }: any) => {
         } else toast.error(language.promptMessages.errorGeneral, toastUtil);
       } catch (error: any) {
         console.error(error);
-
-        const message = error?.response?.data || language.promptMessages.errorGeneral;
+        const message = error?.response?.data?.status?.message || error?.response?.data || language.promptMessages.errorGeneral;
         toast.error(message, toastUtil);
+        if (error?.response?.data?.status?.code && !error?.response?.data?.status?.code?.profile_states.account_confirmed) {
+          dispatch(saveUserData(error?.response?.data?.status?.code))
+          navigate("/verification");
+        }
       } finally {
         setLoading(false);
       }
     };
 
     return (
-      <form
-        autoComplete="off"
-        noValidate
-        className="pt-10 pb-8 mb-4"
-        onSubmit={handleSubmit(onSubmit)}
-      >
+      <form autoComplete="off" noValidate className="pt-10 pb-8 mb-4" onSubmit={handleSubmit(onSubmit)} >
         <div className="mb-4 relative">
-          <AntdInput
-            register={register}
-            name="email"
-            label={language?.common?.email}
-            type="email"
-            required
-            placeholder="you@example.com"
-            error={errors.email?.message} // Pass the error message from form validation
+          <AntdInput register={register} name="email" label={language?.common?.email} type="email" required placeholder="you@example.com" error={errors.email?.message} // Pass the error message from form validation
             validation={{
-              required: requiredFieldError,
-              pattern: {
+              required: requiredFieldError, pattern: {
                 value: /^[_a-z0-9-]+(\.[_a-z0-9-]+)*(\+[a-z0-9-]+)?@[a-z0-9-]+(\.[a-z0-9-]+)*$/i,
-                message: "Invalid email address",
+                message: "Invalid email address"
               },
             }}
           />
         </div>
         <div className="mt-6 mb-8 relative">
-          <AntdInput
-            register={register}
-            name="password"
-            label={language?.common?.password}
-            type={showPassword ? "text" : "password"}
-            required
-            placeholder="**********"
+          <AntdInput register={register} name="password" label={language?.common?.password} type={showPassword ? "text" : "password"} required placeholder="**********"
             error={errors.password?.message} // Pass the error message from form validation
-            validation={{
-              required: requiredFieldError,
-            }}
+            validation={{ required: requiredFieldError }}
             ShowPasswordIcon={
-              <button
-                type="button"
-                className="absolute top-1/2 right-3 transform -translate-y-1/2 focus:outline-none"
-                onClick={handleTogglePassword}
-              >
+              <button type="button" className="absolute top-1/2 right-3 transform -translate-y-1/2 focus:outline-none" onClick={handleTogglePassword}>
                 {showPassword ? (
                   <EyeIcon stroke="rgb(64 64 64)" />
                 ) : (
@@ -130,12 +100,7 @@ const Login = ({ }: any) => {
             }
           />
         </div>
-        <Button
-          className="w-full h-[38px]"
-          disabled={loading}
-          htmlType="submit"
-          loading={loading}
-        >
+        <Button className="w-full h-[38px]" disabled={loading} htmlType="submit" loading={loading}>
           {language?.buttons?.signin}
         </Button>
         <div className="flex justify-end my-[12px]">

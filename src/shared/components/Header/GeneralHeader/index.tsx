@@ -31,7 +31,7 @@ const GeneralHeader = ({ responsive = false, showMenu = false, showLanguageDropd
 
     const onLogout = async () => {
         try {
-            let { status } = await logout(authToken);
+            await logout(authToken);
         } catch (error: any) {
         } finally {
             dispatch(saveToken(""));
@@ -59,7 +59,7 @@ const GeneralHeader = ({ responsive = false, showMenu = false, showLanguageDropd
     };
 
     const authenticatedHeaderNav = () => {
-        if (user.type) {
+        if (authToken) {
             return (
                 <React.Fragment>
                     <li className="">

@@ -12,7 +12,8 @@ import { LinkedInCallback } from "react-linkedin-login-oauth2";
 
 // Modules
 const Home = lazy(() => import("../Home"));
-const Onboarding = lazy(() => import("../Onboarding"));
+const Signup = lazy(() => import("../Signup"));
+const Verification = lazy(() => import("../EmailVerification"));
 const Login = lazy(() => import("../Login"));
 const Welcome = lazy(() => import("../Onboarding/Welcome"));
 const InvestorFlow = lazy(() => import("../Onboarding/InvestorFlow"));
@@ -36,10 +37,15 @@ const AuthenticateRoute = (props: PropsWithChildren) => {
   return <Navigate to="/login" replace />;
 };
 
-const AuthenticateAuthRoute = (props: PropsWithChildren) => {
-  const { children } = props;
+const AuthenticateAuthRoute = (props: PropsWithChildren | any) => {
+  const { children, isVerify = false } = props;
+  const user: any = useSelector((state: RootState) => state.user.value);
   const authToken: any = useSelector((state: RootState) => state.auth.value);
-  if (!authToken) {
+
+  if (!isVerify && !authToken) {
+    return <React.Fragment>{children}</React.Fragment>;
+  }
+  else if (isVerify && !user?.profile_states?.account_confirmed) {
     return <React.Fragment>{children}</React.Fragment>;
   }
   return <Navigate to="/welcome" replace />;
@@ -59,7 +65,6 @@ const RouterModule = () => {
   const dispatch = useDispatch();
   const authToken: any = useSelector((state: RootState) => state.auth.value);
   const event: any = useSelector((state: RootState) => state.event.value);
-  const user: any = useSelector((state: RootState) => state.user.value);
   const [loading, setLoading] = useState(false);
 
   useLayoutEffect(() => {
@@ -91,140 +96,95 @@ const RouterModule = () => {
     loading ? (<Loader />) : (
       <Routes>
         <Route path="/" element={
-          <Suspense fallback={<Loader />}>
-            <Home guard={authToken} />
-          </Suspense>
-        }
-        />
+          <Suspense fallback={<Loader />}><Home guard={authToken} /></Suspense>
+        } />
         <Route path={RoutesEnums.INVESTOR_DETAILS}
           element={
             <Suspense fallback={<Loader />}>
               <AuthenticateRoute>
-                <AuthenticateRole role={KanzRoles.INVESTOR}>
-                  <InvestorFlow guard={authToken} />
-                </AuthenticateRole>
+                <AuthenticateRole role={KanzRoles.INVESTOR}><InvestorFlow guard={authToken} /></AuthenticateRole>
               </AuthenticateRoute>
             </Suspense>
           }
         />
-        <Route
-          path="/startup-type/:id"
+        <Route path="/startup-type/:id"
           element={
             <Suspense fallback={<Loader />}>
               <AuthenticateRoute>
-                <AuthenticateRole role={KanzRoles.STARTUP}>
-                  <Startup guard={authToken} />
-                </AuthenticateRole>
+                <AuthenticateRole role={KanzRoles.STARTUP}><Startup guard={authToken} /></AuthenticateRole>
               </AuthenticateRoute>
             </Suspense>
           }
         />
-        <Route
-          path={RoutesEnums.REALTOR_DETAILS}
+        <Route path={RoutesEnums.REALTOR_DETAILS}
           element={
             <Suspense fallback={<Loader />}>
               <AuthenticateRoute>
-                <AuthenticateRole role={KanzRoles.REALTOR}>
-                  <Realtors guard={authToken} />
-                </AuthenticateRole>
+                <AuthenticateRole role={KanzRoles.REALTOR}><Realtors guard={authToken} /></AuthenticateRole>
               </AuthenticateRoute>
             </Suspense>
           }
         />
         <Route path="/linkedin" element={<Suspense fallback={<Loader />}><LinkedInCallback /></Suspense>} />
-
-        <Route
-          path="/complete-details"
+        <Route path="/complete-details"
+          element={
+            <Suspense fallback={<Loader />}>
+              <AuthenticateRoute><CompleteDetails guard={authToken} /></AuthenticateRoute>
+            </Suspense>
+          }
+        />
+        <Route path="/complete-goals"
           element={
             <Suspense fallback={<Loader />}>
               <AuthenticateRoute>
-                <CompleteDetails guard={authToken} />
+                <AuthenticateRole role={KanzRoles.INVESTOR}><CompleteGoals guard={authToken} /></AuthenticateRole>
               </AuthenticateRoute>
             </Suspense>
           }
         />
-        <Route
-          path="/complete-goals"
+        <Route path="/philosophy-goals/:id"
+          element={
+            <Suspense fallback={<Loader />}>
+              <AuthenticateRoute><PhilosophyGoals guard={authToken} /></AuthenticateRoute>
+            </Suspense>
+          }
+        />
+        <Route path="/add-attachments"
           element={
             <Suspense fallback={<Loader />}>
               <AuthenticateRoute>
-                <AuthenticateRole role={KanzRoles.INVESTOR}>
-                  <CompleteGoals guard={authToken} />
-                </AuthenticateRole>
+                <AuthenticateRole role={KanzRoles.ALL}><AddAttachments guard={authToken} /></AuthenticateRole>
               </AuthenticateRoute>
             </Suspense>
           }
         />
-        <Route
-          path="/philosophy-goals/:id"
+        <Route path="/syndicate-lead/:id"
           element={
             <Suspense fallback={<Loader />}>
               <AuthenticateRoute>
-                <PhilosophyGoals guard={authToken} />
-              </AuthenticateRoute>
-            </Suspense>
-          }
-        />
-        <Route
-          path="/add-attachments"
-          element={
-            <Suspense fallback={<Loader />}>
-              <AuthenticateRoute>
-                <AuthenticateRole role={KanzRoles.ALL}>
-                  <AddAttachments guard={authToken} />
-                </AuthenticateRole>
-              </AuthenticateRoute>
-            </Suspense>
-          }
-        />
-        <Route
-          path="/syndicate-lead/:id"
-          element={
-            <Suspense fallback={<Loader />}>
-              <AuthenticateRoute>
-                <AuthenticateRole role={KanzRoles.SYNDICATE}>
-                  <SyndicateLeadInfo guard={authToken} />
-                </AuthenticateRole>
+                <AuthenticateRole role={KanzRoles.SYNDICATE}><SyndicateLeadInfo guard={authToken} /></AuthenticateRole>
               </AuthenticateRoute>
             </Suspense>
           }
         />
         <Route path="/signup" element={
-          <Suspense fallback={<Loader />}>
-            <AuthenticateAuthRoute>
-              <Onboarding guard={authToken} />
-            </AuthenticateAuthRoute>
-          </Suspense>
-        }
-        />
+          <Suspense fallback={<Loader />}> <AuthenticateAuthRoute><Signup guard={authToken} /></AuthenticateAuthRoute></Suspense>
+        } />
+        <Route path="/verification" element={
+          <Suspense fallback={<Loader />}><AuthenticateAuthRoute isVerify={true}><Verification guard={authToken} /></AuthenticateAuthRoute></Suspense>
+        } />
         <Route path="/login" element={
-          <Suspense fallback={<Loader />}>
-            <AuthenticateAuthRoute>
-              <Login guard={authToken} />
-            </AuthenticateAuthRoute>
-          </Suspense>
-        }
-        />
+          <Suspense fallback={<Loader />}><AuthenticateAuthRoute><Login guard={authToken} /></AuthenticateAuthRoute></Suspense>
+        } />
         <Route path="/welcome" element={
-          <Suspense fallback={<Loader />}>
-            <AuthenticateRoute>
-              <Welcome guard={authToken} />
-            </AuthenticateRoute>
-          </Suspense>
-        }
-        />
+          <Suspense fallback={<Loader />}><AuthenticateRoute><Welcome guard={authToken} /></AuthenticateRoute></Suspense>
+        } />
         <Route path="/privacy-policy" element={
-          <Suspense fallback={<Loader />}>
-            <PrivacyPolicy />
-          </Suspense>
-        }
-        />
+          <Suspense fallback={<Loader />}><PrivacyPolicy /></Suspense>
+        } />
         <Route path="/terms-and-conditions" element={
-          <Suspense fallback={<Loader />}>
-            <TermsAndConditions />
-          </Suspense>
-        }
-        />
+          <Suspense fallback={<Loader />}><TermsAndConditions /></Suspense>
+        } />
       </Routes>
     )
   );

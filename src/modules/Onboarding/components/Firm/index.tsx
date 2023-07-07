@@ -183,11 +183,8 @@ const Firm = ({ language }: any) => {
             </section>
 
             <section className="mb-8 w-full relative">
-              <label
-                className="block text-neutral-700 text-sm font-medium mb-1"
-                htmlFor="full-name"
-              >
-                {language?.individual?.accerQuestion}
+              <label className="block text-neutral-700 text-sm font-medium mb-1" htmlFor="full-name" >
+                {language?.common?.accerQuestion}
               </label>
               <ul>
                 {React.Children.toArray(
