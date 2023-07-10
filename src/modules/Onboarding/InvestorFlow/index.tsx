@@ -7,7 +7,7 @@ import Header from "../../../shared/components/Header";
 import ArrowIcon from "../../../ts-icons/arrowIcon.svg";
 import UserIcon from "../../../ts-icons/userIcon.svg";
 import { toast } from "react-toastify";
-import { selectInvestorType } from "../../../apis/investor.api";
+import { getInvestor, selectInvestorType } from "../../../apis/investor.api";
 import { toastUtil } from "../../../utils/toast.utils";
 import { saveToken } from "../../../redux-toolkit/slicer/auth.slicer";
 import Drawer from "../../../shared/components/Drawer";
@@ -15,6 +15,8 @@ import Button from "../../../shared/components/Button";
 import GroupIcon from "../../../ts-icons/groupIcon.svg";
 import { isEmpty } from "../../../utils/object.util";
 import { KanzRoles } from "../../../enums/roles.enum";
+import { saveUserMetaData } from "../../../redux-toolkit/slicer/metadata.slicer";
+import { RoutesEnums } from "../../../enums/routes.enum";
 
 const InvestorFlow = ({ }: any) => {
   const navigate = useNavigate();
@@ -36,6 +38,8 @@ const InvestorFlow = ({ }: any) => {
   useLayoutEffect(() => {
     if ((user.status === ApplicationStatus.OPENED || user.status === ApplicationStatus.REOPENED) && !isEmpty(metadata?.profile) && user.type === KanzRoles.INVESTOR)
       setSelectedAccount(accounts?.find(ac => ac.payload === metadata.role));
+    else
+      onGetInvestorDetails();
   }, []);
 
   const onSelectInvestorType = async () => {
@@ -52,6 +56,26 @@ const InvestorFlow = ({ }: any) => {
       if (status === 200) {
         localStorage.setItem("investor-type", selectedAccount?.link)
         navigate(`/complete-details`, { state: selectedAccount?.link })
+      }
+    } catch (error: any) {
+      const message = error?.response?.data?.status?.message || error?.response?.data || language.promptMessages.errorGeneral;
+      toast.error(message, toastUtil);
+      if (error.response && error.response.status === 401) {
+        dispatch(saveToken(""));
+        navigate("/login", { state: 'investor-type' });
+      }
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const onGetInvestorDetails = async () => {
+    try {
+      setLoading(true);
+      let { status, data } = await getInvestor(authToken);
+      if (status === 200) {
+        dispatch(saveUserMetaData(data?.status?.data));
+        data?.status?.data?.investor_type &&  setSelectedAccount(accounts?.find(ac => ac.payload === data?.status?.data?.investor_type));
       }
     } catch (error: any) {
       const message = error?.response?.data?.status?.message || error?.response?.data || language.promptMessages.errorGeneral;
@@ -103,7 +127,7 @@ const InvestorFlow = ({ }: any) => {
                     </p>
                   </div>
                   <div className={`check-background rounded-full w-9 h-9 inline-grid place-items-center absolute top-1/2 translate-y-[-50%] ${orientation === "rtl" ? "left-5" : "right-5"}`}>
-                    <ArrowIcon stroke="#171717" className={`${orientation === "rtl" ? "rotate-180 h-5 w-5": "h-5 w-5"}`} />
+                    <ArrowIcon stroke="#171717" className={`${orientation === "rtl" ? "rotate-180 h-5 w-5" : "h-5 w-5"}`} />
                   </div>
                 </section>
               );
@@ -113,9 +137,9 @@ const InvestorFlow = ({ }: any) => {
           <section className="w-full inline-flex items-center justify-between mt-16">
             <Button
               className="mt-6 h-[38px] w-[140px]"
-              htmlType="submit"
+              htmlType="button"
               type="outlined"
-              onClick={() => navigate(-1)}
+              onClick={() => navigate(RoutesEnums.WELCOME)}
             >
               {language?.buttons?.back}
             </Button>

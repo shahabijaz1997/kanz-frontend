@@ -16,6 +16,7 @@ import Loader from "../../../shared/views/Loader";
 import { ApplicationStatus } from "../../../enums/types.enum";
 import { isEmpty } from "../../../utils/object.util";
 import { KanzRoles } from "../../../enums/roles.enum";
+import { RoutesEnums } from "../../../enums/routes.enum";
 
 type FormValues = {
   noOfProperty: number;
@@ -181,7 +182,7 @@ const Realtors = (props: any) => {
                   </section>
                 </div>
                 <section className="w-full inline-flex items-center justify-between mt-16">
-                  <Button className="mt-6 h-[38px] w-[140px]" type="outlined" onClick={() => navigate(-1)}>
+                  <Button className="mt-6 h-[38px] w-[140px]" type="outlined" htmlType="button" onClick={() => navigate(RoutesEnums.WELCOME)}>
                     {language?.buttons?.back}
                   </Button>
                   <Button className="mt-6 h-[38px] w-[140px]" disabled={loading} htmlType="submit" loading={loading}>

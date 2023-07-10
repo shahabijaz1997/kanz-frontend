@@ -13,6 +13,8 @@ import HorionGraph from "../../../../assets/investment_horizon_graph.png";
 import Button from "../../../../shared/components/Button";
 import { KanzRoles } from "../../../../enums/roles.enum";
 import { ApplicationStatus } from "../../../../enums/types.enum";
+import { checkExist, checkExisting } from "../../../../utils/questioare.utils";
+import { RoutesEnums } from "../../../../enums/routes.enum";
 
 const Questionare = ({ step, returnSuccessRedirection }: any) => {
   const navigate = useNavigate();
@@ -30,14 +32,34 @@ const Questionare = ({ step, returnSuccessRedirection }: any) => {
   const [page, setPage] = useState(1);
   const [selected, setSelected]: any = useState({});
   const [loading, setLoading]: any = useState(true);
+  const [existing, setExisting]: any = useState(true);
 
   useLayoutEffect(() => {
-    if (user.type !== KanzRoles.INVESTOR) navigate("/welcome");
+    if (user.type !== KanzRoles.INVESTOR) navigate(RoutesEnums.WELCOME);
   }, []);
 
   useLayoutEffect(() => {
     getQuestionares(step);
   }, [step]);
+
+  useLayoutEffect(() => {
+    if (Object.keys(selected).length > 0 && existing) {
+      let philisophyData: any = localStorage.getItem("philosophy");
+      let parsed = JSON.parse(philisophyData) || {};
+
+      console.log("selected[step]?.questions", selected[step]?.questions);
+      let se_ques = selected[step]?.questions.map((as: any) => as.question_id);
+      console.log("se_ques", se_ques);
+
+      se_ques && setValidations(se_ques);
+      if (questions?.questions[0]?.question_type === "checkbox") {
+        parsed[step]?.questions ? setMcqs(parsed[step].questions[0]?.answer_meta?.options) : setMcqs(questions?.questions[0][event]?.options?.filter((it: any) => it.selected));
+      }
+      else if (questions?.questions[0]?.question_type === "text") {
+        setTextAnswer(questions?.questions[0][event]?.answer);
+      }
+    }
+  }, [selected, existing]);
 
   const getQuestionares = async (pg: number) => {
     try {
@@ -47,19 +69,15 @@ const Questionare = ({ step, returnSuccessRedirection }: any) => {
         let philisophyData: any = localStorage.getItem("philosophy");
         let parsed = JSON.parse(philisophyData) || {};
         setSelected(parsed);
-        if (user?.status === ApplicationStatus.REOPENED) {
-          data?.status?.data?.questions.forEach((q: any) => {
+        let allQuestions = data?.status?.data?.questions;
+        let inprogress = checkExisting(allQuestions, event);
+
+        if (inprogress) {
+          setExisting(true);
+          allQuestions.forEach((q: any) => {
             let selected = q[event]?.options?.find((s: any) => s.selected);
             toggleAnswerSelection(q, selected);
           });
-          let se_ques = selected[step]?.questions.map((as: any) => as.question_id);
-          se_ques && setValidations(se_ques);
-          if (data?.status?.data?.questions[0]?.question_type === "checkbox") {
-            parsed[step]?.questions ? setMcqs(parsed[step].questions[0]?.answer_meta?.options) : setMcqs(data?.status?.data?.questions[0][event]?.options?.filter((it: any) => it.selected));
-          }
-          else if (data?.status?.data?.questions[0]?.question_type === "text") {
-            setTextAnswer(data?.status?.data?.questions[0][event]?.answer);
-          }
         } else {
           if (JSON.parse(philisophyData)) {
             if (parsed[step]) {
@@ -67,14 +85,16 @@ const Questionare = ({ step, returnSuccessRedirection }: any) => {
               setValidations(d);
             } else setValidations([]);
           }
-          if (data?.status?.data?.questions && data?.status?.data?.questions[0]?.question_type === "checkbox")
+          if (allQuestions && allQuestions[0]?.question_type === "checkbox")
             if (parsed[step]?.questions[0]) setMcqs(parsed[step].questions[0]?.answer_meta?.options);
-          if (data?.status?.data?.questions[0]?.question_type === "text") setTextAnswer(selected[step]?.questions[0]?.answers[0])
+          if (allQuestions[0]?.question_type === "text") setTextAnswer(selected[step]?.questions[0]?.answers[0])
         }
         setQuestions(data?.status?.data);
         setPage(pg);
       }
     } catch (error: any) {
+      console.log(error);
+      
       const message = error?.response?.data?.status?.message || error?.response?.data || language.promptMessages.errorGeneral;
       toast.error(message, toastUtil);
       if (error.response && error.response.status === 401) {
@@ -98,6 +118,8 @@ const Questionare = ({ step, returnSuccessRedirection }: any) => {
       if (step === questions?.total_steps && status === 200)
         returnSuccessRedirection(data);
     } catch (error: any) {
+      console.log(error);
+      
       const message = error?.response?.data?.status?.message || error?.response?.data || language.promptMessages.errorGeneral;
       toast.error(message, toastUtil);
       if (error.response && error.response.status === 401) {
@@ -110,11 +132,6 @@ const Questionare = ({ step, returnSuccessRedirection }: any) => {
         clearTimeout(timer);
       }, 500);
     }
-  };
-
-  const checkExist = (elem: any, as: any) => {
-    let found: any = elem?.questions.some((q: any) => q?.answer_meta?.options[0]?.index === as.index && q?.answer_meta?.options[0]?.statement === as.statement);
-    return found;
   };
 
   const checkBoxCheckExist = (as: any) => {
@@ -163,7 +180,7 @@ const Questionare = ({ step, returnSuccessRedirection }: any) => {
           </p>
 
           <section className="mb-8 w-full relative mt-3">
-            <textarea value={textAnswer} onChange={(e) => setTextAnswer(e.target.value)}
+            <textarea value={textAnswer || ""} onChange={(e) => setTextAnswer(e.target.value)}
               className="rounded-md shadow-sm appearance-none border border-neutral-300 rounded-md w-full py-2 px-3 text-gray-500 leading-tight focus:outline-none focus:shadow-outline h-[100px] resize-none"
             ></textarea>
           </section>
@@ -323,7 +340,6 @@ const Questionare = ({ step, returnSuccessRedirection }: any) => {
     setOpen(false);
     let philisophyData: any = localStorage.getItem("philosophy");
     let philData: any = JSON.parse(philisophyData)
-    // let philData: any = { ...JSON.parse(philisophyData), ...selected };
     localStorage.setItem("philosophy", JSON.stringify(philData));
     if (page !== 1) navigate(`/philosophy-goals/${page - 1}`);
     else navigate(`/complete-goals`);
@@ -374,8 +390,13 @@ const Questionare = ({ step, returnSuccessRedirection }: any) => {
       if (user?.status === ApplicationStatus.REOPENED) return true;
       if (!questions?.questions?.length) return false;
       else {
+        console.log(validations.length);
+
         if (!questions?.questions?.length) return false;
-        else if ((step !== 2 && validations?.length === questions?.questions?.length) || ((step === 2 && validations?.length > 0 && selected[`2`]?.questions?.find((q: any) => q.answers[0] === questions?.questions[0][event]?.options[1]?.statement)) || (step === 2 && validations?.length === 2 && selected[`2`]?.questions.find((q: any) => q.answers[0] === questions?.questions[0][event]?.options[0]?.statement)))) return true;
+        else if ((step !== 2 && validations?.length === questions?.questions?.length) ||
+          ((step === 2 && validations?.length > 0 && selected[`2`]?.questions?.find((q: any) => q.answers[0] === questions?.questions[0][event]?.options[1]?.statement)) ||
+            (step === 2 && validations?.length === 2 && selected[`2`]?.questions.find((q: any) => q.answers[0] === questions?.questions[0][event]?.options[0]?.statement))))
+          return true;
         return false;
       }
     }
@@ -406,7 +427,7 @@ const Questionare = ({ step, returnSuccessRedirection }: any) => {
 
           <section className="flex items-start justify-center w-full flex-col mt-6 max-w-[420px] screen500:max-w-[300px]">
             <div className="w-full inline-flex items-center justify-between mt-16">
-              <Button className="h-[38px] w-[140px]" htmlType="submit" type="outlined" onClick={onSetPrev}>
+              <Button className="h-[38px] w-[140px]" htmlType="button" type="outlined" onClick={onSetPrev}>
                 {language?.buttons?.back}
               </Button>
               <Button className="h-[38px] w-[140px]" disabled={!checkValidation()} htmlType="submit" loading={loading} onClick={onSetNext} >

@@ -61,7 +61,7 @@ const GeneralHeader = ({ responsive = false, showMenu = false, showLanguageDropd
             return (
                 <React.Fragment>
                     <li className="">
-                        <div className="rounded-full w-8 h-8 inline-grid place-items-center bell-background ">
+                        <div className="rounded-full w-8 h-8 inline-grid place-items-center bell-background cursor-not-allowed">
                             <BellIcon stroke={"#4F4F4F"} />
                         </div>
                     </li>
@@ -145,7 +145,7 @@ const GeneralHeader = ({ responsive = false, showMenu = false, showLanguageDropd
                                 {showLanguageDropdown ? <LanguageDrodownWrapper /> : showSelectedDisabled()}
                             </li>
                             <li>
-                                <div className="rounded-full w-8 h-8 inline-grid place-items-center bell-background ">
+                                <div className="rounded-full w-8 h-8 inline-grid place-items-center bell-background cursor-not-allowed">
                                     <BellIcon stroke={"#4F4F4F"} />
                                 </div>
                             </li>
