@@ -31,8 +31,8 @@ const InvestorFlow = ({ }: any) => {
   const [loading, setLoading] = useState(false);
   const [isOpen, setOpen] = useState(false);
   const [accounts] = useState([
-    { id: 1, payload: "Individual Investor", icon: <UserIcon stroke="#171717" className="absolute h-6 top-4" />, text: language?.investorFow?.individual, subText: language?.investorFow?.subInd, link: InvestorType.INDIVIDUAL },
-    { id: 2, payload: "Investment Firm", icon: <GroupIcon stroke="#171717" className="absolute h-6 top-4" />, text: language?.investorFow?.firm, subText: language?.investorFow?.subFirm, link: InvestorType.FIRM },
+    { id: 1, payload: InvestorType.INDIVIDUAL, icon: <UserIcon stroke="#171717" className="absolute h-6 top-4" />, text: language?.investorFow?.individual, subText: language?.investorFow?.subInd, link: InvestorType.INDIVIDUAL },
+    { id: 2, payload: InvestorType.FIRM, icon: <GroupIcon stroke="#171717" className="absolute h-6 top-4" />, text: language?.investorFow?.firm, subText: language?.investorFow?.subFirm, link: InvestorType.FIRM },
   ]);
 
   useLayoutEffect(() => {
