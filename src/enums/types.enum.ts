@@ -1,6 +1,6 @@
 export enum InvestorType {
-    INDIVIDUAL = "individual",
-    FIRM = "firm"
+    INDIVIDUAL = "Individual Investor",
+    FIRM = "Investment Firm"
 }
 
 export enum PromptMessage {

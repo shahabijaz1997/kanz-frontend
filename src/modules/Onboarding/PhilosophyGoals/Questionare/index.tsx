@@ -390,8 +390,6 @@ const Questionare = ({ step, returnSuccessRedirection }: any) => {
       if (user?.status === ApplicationStatus.REOPENED) return true;
       if (!questions?.questions?.length) return false;
       else {
-        console.log(validations.length);
-
         if (!questions?.questions?.length) return false;
         else if ((step !== 2 && validations?.length === questions?.questions?.length) ||
           ((step === 2 && validations?.length > 0 && selected[`2`]?.questions?.find((q: any) => q.answers[0] === questions?.questions[0][event]?.options[1]?.statement)) ||
