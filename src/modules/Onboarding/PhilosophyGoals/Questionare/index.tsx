@@ -47,10 +47,7 @@ const Questionare = ({ step, returnSuccessRedirection }: any) => {
       let philisophyData: any = localStorage.getItem("philosophy");
       let parsed = JSON.parse(philisophyData) || {};
 
-      console.log("selected[step]?.questions", selected[step]?.questions);
       let se_ques = selected[step]?.questions.map((as: any) => as.question_id);
-      console.log("se_ques", se_ques);
-
       se_ques && setValidations(se_ques);
       if (questions?.questions[0]?.question_type === "checkbox") {
         parsed[step]?.questions ? setMcqs(parsed[step].questions[0]?.answer_meta?.options) : setMcqs(questions?.questions[0][event]?.options?.filter((it: any) => it.selected));
@@ -93,8 +90,6 @@ const Questionare = ({ step, returnSuccessRedirection }: any) => {
         setPage(pg);
       }
     } catch (error: any) {
-      console.log(error);
-      
       const message = error?.response?.data?.status?.message || error?.response?.data || language.promptMessages.errorGeneral;
       toast.error(message, toastUtil);
       if (error.response && error.response.status === 401) {
@@ -118,8 +113,6 @@ const Questionare = ({ step, returnSuccessRedirection }: any) => {
       if (step === questions?.total_steps && status === 200)
         returnSuccessRedirection(data);
     } catch (error: any) {
-      console.log(error);
-      
       const message = error?.response?.data?.status?.message || error?.response?.data || language.promptMessages.errorGeneral;
       toast.error(message, toastUtil);
       if (error.response && error.response.status === 401) {
