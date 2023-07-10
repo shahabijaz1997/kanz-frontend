@@ -18,6 +18,7 @@ import { removeAttachment } from "../../../apis/attachment.api";
 import { isEmpty } from "../../../utils/object.util";
 import { getCountries } from "../../../apis/bootstrap.api";
 import { KanzRoles } from "../../../enums/roles.enum";
+import { RoutesEnums } from "../../../enums/routes.enum";
 
 const StartupFlow = ({ }: any) => {
   const params = useParams();
@@ -209,7 +210,6 @@ const StartupFlow = ({ }: any) => {
         navigate("/login", { state: "add-attachments" });
       }
       console.error(error);
-
       const message = error?.response?.data?.status?.message || error?.response?.data || language.promptMessages.errorGeneral;
       toast.error(message, toastUtil);
     } finally {
@@ -253,12 +253,10 @@ const StartupFlow = ({ }: any) => {
         />
 
         <section className="w-full inline-flex items-center justify-between py-10">
-          <Button
-            className="h-[38px] w-[140px]"
-            htmlType="submit"
-            type="outlined"
-            onClick={() => navigate(-1)}
-          >
+          <Button className="h-[38px] w-[140px]" htmlType="button" type="outlined" onClick={() => {
+            if(step === 1) navigate(RoutesEnums.WELCOME);
+            else navigate(-1);
+          }}>
             {language?.buttons?.back}
           </Button>
           <Button

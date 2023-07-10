@@ -13,6 +13,7 @@ import Button from "../../../../shared/components/Button";
 import { useForm } from "react-hook-form";
 import { getCountries } from "../../../../apis/bootstrap.api";
 import Loader from "../../../../shared/views/Loader";
+import { RoutesEnums } from "../../../../enums/routes.enum";
 
 type FormValues = {
   name: string;
@@ -226,20 +227,11 @@ const Firm = ({ language }: any) => {
             </section>
 
             <section className="w-full inline-flex items-center justify-between mt-16">
-              <Button
-                className="mt-6 h-[38px] w-[140px]"
-                htmlType="submit"
-                type="outlined"
-                onClick={() => navigate(-1)}
-              >
+              <Button className="mt-6 h-[38px] w-[140px]" htmlType="button" type="outlined" onClick={() => navigate(RoutesEnums.INVESTOR_DETAILS)} >
                 {language?.buttons?.back}
               </Button>
-              <Button
-                className="mt-6 h-[38px] w-[140px]"
-                disabled={!payload.legal || !payload.residence || !selectedAssert?.id || !riskChecked}
-                htmlType="submit"
-                loading={loading}
-              >
+              <Button className="mt-6 h-[38px] w-[140px]" disabled={!payload.legal || !payload.residence || !selectedAssert?.id || !riskChecked}
+                htmlType="submit" loading={loading} >
                 {language?.buttons?.continue}
               </Button>
             </section>
