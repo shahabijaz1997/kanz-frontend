@@ -75,7 +75,7 @@ const InvestorFlow = ({ }: any) => {
       let { status, data } = await getInvestor(authToken);
       if (status === 200) {
         dispatch(saveUserMetaData(data?.status?.data));
-        data?.status?.data?.investor_type &&  setSelectedAccount(accounts?.find(ac => ac.payload === data?.status?.data?.investor_type));
+        data?.status?.data?.profile_states?.investor_type &&  setSelectedAccount(accounts?.find(ac => ac.payload === data?.status?.data?.investor_type));
       }
     } catch (error: any) {
       const message = error?.response?.data?.status?.message || error?.response?.data || language.promptMessages.errorGeneral;
