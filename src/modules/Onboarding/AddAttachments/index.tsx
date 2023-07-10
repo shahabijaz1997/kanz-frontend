@@ -14,9 +14,10 @@ import { RootState } from "../../../redux-toolkit/store/store";
 import { getRoleBasedAttachments, removeAttachment, submitData } from "../../../apis/attachment.api";
 import { saveToken } from "../../../redux-toolkit/slicer/auth.slicer";
 import Loader from "../../../shared/views/Loader";
-import { saveAttachments } from "../../../redux-toolkit/slicer/attachments.slicer";
 import { KanzRoles } from "../../../enums/roles.enum";
 import EditIcon from "../../../ts-icons/editIcon.svg";
+import { getUser } from "../../../apis/auth.api";
+import { saveUserData } from "../../../redux-toolkit/slicer/user.slicer";
 
 const AddAttachments = (props: any) => {
   const navigate = useNavigate();
@@ -25,7 +26,6 @@ const AddAttachments = (props: any) => {
   const user: any = useSelector((state: RootState) => state.user.value);
   const authToken: any = useSelector((state: RootState) => state.auth.value);
   const event: any = useSelector((state: RootState) => state.event.value);
-  const attachments: any = useSelector((state: RootState) => state.attachments.attachments.value);
   const [modalOpen, setModalOpen]: any = useState(null);
   const [isOpen, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -41,16 +41,12 @@ const AddAttachments = (props: any) => {
   const setFile = (file: File, id: string, url: string, attachment_id: string, size: string, dimensions: string, type: string) => {
     let _file: any = { name: file?.name, size, dimensions }
     let _attachments: any = [...files, { file: _file, id, url, attachment_id, type: type }];
-    dispatch(saveAttachments(_attachments));
     setFiles(_attachments);
   };
 
   const onGetRoleBasedAttachmentDetails = async () => {
     try {
       setLoading(true);
-      if (attachments && attachments?.length) {
-        setFiles(attachments)
-      }
       let { status, data } = await getRoleBasedAttachments(authToken);
       if (status === 200) {
         let uploadPayload = data?.status?.data.map((item: any, idx: number) => {
@@ -103,7 +99,6 @@ const AddAttachments = (props: any) => {
       const { status, data } = await submitData(authToken);
       if (status === 200) {
         setOpen(false);
-        dispatch(saveAttachments(""))
         setModalOpen(true);
       }
     } catch (error: any) {
@@ -114,6 +109,7 @@ const AddAttachments = (props: any) => {
       setLoading(false);
     }
   };
+
 
   const checkDisabled = () => {
     let nec_ats: any[] = attachmentData.filter((at: any) => {

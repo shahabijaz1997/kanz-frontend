@@ -10,7 +10,6 @@ import { toastUtil } from "../../../utils/toast.utils";
 import { RootState } from "../../../redux-toolkit/store/store";
 import { removeAttachment } from "../../../apis/attachment.api";
 import { saveToken } from "../../../redux-toolkit/slicer/auth.slicer";
-import { saveAttachments } from "../../../redux-toolkit/slicer/attachments.slicer";
 
 const UploadComp = (props: any) => {
   const {
@@ -39,7 +38,6 @@ const UploadComp = (props: any) => {
       if (status === 200) {
         let _files = files.slice().filter((file: any) => file.attachment_id !== id);
         setFiles(_files);
-        dispatch(saveAttachments(_files));
         onRemoveFile(fid);
         // let allFiles = attachments.filter((at: any) => at?.attachment_id !==);
       }

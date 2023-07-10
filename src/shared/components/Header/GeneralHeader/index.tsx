@@ -11,7 +11,7 @@ import { KanzRoles } from "../../../../enums/roles.enum";
 import CrossIcon from "../../../../ts-icons/crossIcon.svg";
 import { saveUserMetaData } from "../../../../redux-toolkit/slicer/metadata.slicer";
 import LanguageDrodownWrapper from "../../../views/LanguageDrodownWrapper";
-import { saveAttachments, saveLogo } from "../../../../redux-toolkit/slicer/attachments.slicer";
+import { saveLogo } from "../../../../redux-toolkit/slicer/attachments.slicer";
 import { languageDropdownItems } from "../../../../utils/dropdown-items.utils";
 
 const GeneralHeader = ({ responsive = false, showMenu = false, showLanguageDropdown = false }: any) => {
@@ -21,7 +21,6 @@ const GeneralHeader = ({ responsive = false, showMenu = false, showLanguageDropd
     const orientation: any = useSelector((state: RootState) => state.orientation.value);
     const authToken: any = useSelector((state: RootState) => state.auth.value);
     const event: any = useSelector((state: RootState) => state.event.value);
-    const user: any = useSelector((state: RootState) => state.user.value);
     const navigationMenu = [{ id: 1, title: language.header.investment }, { id: 2, title: language.header.startup }, { id: 3, title: language.header.syndicate }, { id: 4, title: language.header.realtor }]
     const [isMenuOpen, setIsMenuOpen] = useState(false);
 
@@ -38,7 +37,6 @@ const GeneralHeader = ({ responsive = false, showMenu = false, showLanguageDropd
             navigate("/login");
             localStorage.clear();
             dispatch(saveUserData(""));
-            dispatch(saveAttachments(""));
             dispatch(saveUserMetaData(""));
             dispatch(saveLogo(""));
         }
