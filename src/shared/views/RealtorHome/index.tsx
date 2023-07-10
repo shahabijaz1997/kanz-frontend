@@ -12,6 +12,16 @@ const RealtorHome = ({ loading, language }: any) => {
     const user: any = useSelector((state: RootState) => state.user.value);
     const metadata: any = useSelector((state: RootState) => state.metadata.value);
 
+    const onPress = () => {
+      const { profile_states } = metadata;
+
+      if (profile_states?.profile_completed) {
+        navigate(RoutesEnums.ADD_ATTACHMENTS);
+      } else {
+        navigate(RoutesEnums.REALTOR_DETAILS);
+      }
+    }; 
+
     const render = () => {
         if (user.status === ApplicationStatus.OPENED && isEmpty(metadata?.profile)) {
             return (
@@ -22,7 +32,7 @@ const RealtorHome = ({ loading, language }: any) => {
                     <h3 className="text-base font-normal text-neutral-700 screen500:text-[12px]">
                         {language?.v2?.realtor?.home_sub}
                     </h3>
-                    <Button className="mt-6 h-[38px]" disabled={loading} htmlType="submit" loading={loading} onClick={() => navigate(RoutesEnums.REALTOR_DETAILS)}>
+                    <Button className="mt-6 h-[38px]" disabled={loading} htmlType="submit" loading={loading} onClick={onPress}>
                         {language?.buttons?.start}
                     </Button>
                 </React.Fragment>
@@ -40,7 +50,7 @@ const RealtorHome = ({ loading, language }: any) => {
                     <h3 className="text-base font-normal text-neutral-700 screen500:text-[12px] mt-2">
                         {language?.onboarding?.appStatus}: <strong>{language.common.inprogress}</strong>
                     </h3>
-                    <Button className="mt-6 h-[38px]" disabled={loading} htmlType="submit" loading={loading} onClick={() => navigate(RoutesEnums.REALTOR_DETAILS)} >
+                    <Button className="mt-6 h-[38px]" disabled={loading} htmlType="submit" loading={loading} onClick={onPress} >
                         {language?.buttons?.continue}
                     </Button>
                 </React.Fragment>

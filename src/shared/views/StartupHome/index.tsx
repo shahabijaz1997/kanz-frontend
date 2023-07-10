@@ -12,6 +12,21 @@ const StartupHome = ({ loading, language }: any) => {
     const user: any = useSelector((state: RootState) => state.user.value);
     const metadata: any = useSelector((state: RootState) => state.metadata.value);
 
+    const onPress = () => {
+      const { profile, profile_states } = metadata;
+      if (isEmpty(profile) && profile_states.profile_current_step === 0) {
+        navigate(`${RoutesEnums.START_UP}/1`);
+      } else if (
+        !profile_states.profile_completed
+      ) {
+        navigate(
+          `${RoutesEnums.START_UP}/${profile_states.profile_current_step + 1}`
+        );
+      } else if (profile_states.profile_completed) {
+        navigate(RoutesEnums.ADD_ATTACHMENTS);
+      }
+    }; 
+
     const render = () => {
         if (user.status === ApplicationStatus.OPENED && isEmpty(metadata?.profile)) {
             return (
@@ -27,7 +42,7 @@ const StartupHome = ({ loading, language }: any) => {
                         disabled={loading}
                         htmlType="submit"
                         loading={loading}
-                        onClick={() => navigate("/startup-type/1")}
+                        onClick={onPress}
                     >
                         {language?.buttons?.start}
                     </Button>
@@ -51,7 +66,7 @@ const StartupHome = ({ loading, language }: any) => {
                         disabled={loading}
                         htmlType="submit"
                         loading={loading}
-                        onClick={() => navigate("/startup-type/1")}
+                        onClick={onPress}
                     >
                         {language?.buttons?.continue}
                     </Button>
