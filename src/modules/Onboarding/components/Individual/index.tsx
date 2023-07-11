@@ -105,11 +105,12 @@ const Individual = ({ language }: any) => {
     try {
       setLoading(true);
       let country: any = countries.all.find((c: any) => c[event].name === payload?.national?.value);
+      let residence: any = countries.all.find((c: any) => c[event].name === payload?.residence?.value);
 
       let _payload = {
         investor_profile: {
-          country_id: country.id,
-          residence: payload?.residence?.value,
+          country_id: country?.id,
+          residence: residence?.id,
           accreditation: selectedAssert?.title,
           accepted_investment_criteria: riskChecked
         }
