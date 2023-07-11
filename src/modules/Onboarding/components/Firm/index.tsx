@@ -13,6 +13,7 @@ import Button from "../../../../shared/components/Button";
 import { useForm } from "react-hook-form";
 import { getCountries } from "../../../../apis/bootstrap.api";
 import Loader from "../../../../shared/views/Loader";
+import { RoutesEnums } from "../../../../enums/routes.enum";
 
 type FormValues = {
   name: string;
@@ -183,11 +184,8 @@ const Firm = ({ language }: any) => {
             </section>
 
             <section className="mb-8 w-full relative">
-              <label
-                className="block text-neutral-700 text-sm font-medium mb-1"
-                htmlFor="full-name"
-              >
-                {language?.individual?.accerQuestion}
+              <label className="block text-neutral-700 text-sm font-medium mb-1" htmlFor="full-name" >
+                {language?.common?.accerQuestion}
               </label>
               <ul>
                 {React.Children.toArray(
@@ -213,15 +211,18 @@ const Firm = ({ language }: any) => {
               </ul>
             </section>
 
-            <section className="relative z-10 w-full inline-flex items-start gap-2 rounded-md border border-grey w-[420px] p-4 check-background cursor-pointer">
-              <input type="checkbox" className="accent-cyan-800 h-3 w-3 cursor-pointer" checked={riskChecked} onChange={() => setRiskChecked(!riskChecked)} />
+            <section className="relative z-10 w-full inline-flex items-start gap-2 rounded-md border border-grey w-[420px] p-4 check-background cursor-pointer" onClick={()=>setRiskChecked(!riskChecked)}>
+              <input type="checkbox" className="accent-cyan-800 h-3 w-3 cursor-pointer" checked={riskChecked} onChange={() => {}} />
               <div>
                 <h3 className="text-neutral-700 font-medium text-[14px] leading-none">
                   {language?.v2?.risk?.heading}
                 </h3>
                 <p className="text-neutral-500 text-sm font-normal mt-1">
                   {language?.v2?.common?.risk_firm}&nbsp;
-                  <span className="color-blue font-medium cursor-pointer" onClick={() => setOpen(true)} >
+                  <span className="text-cc-blue font-medium cursor-pointer" onClick={(e) => {
+                    e.stopPropagation();
+                    setOpen(true);
+                  }}>
                     {language?.common?.learn}
                   </span>
                 </p>
@@ -229,20 +230,11 @@ const Firm = ({ language }: any) => {
             </section>
 
             <section className="w-full inline-flex items-center justify-between mt-16">
-              <Button
-                className="mt-6 h-[38px] w-[140px]"
-                htmlType="submit"
-                type="outlined"
-                onClick={() => navigate(-1)}
-              >
+              <Button className="mt-6 h-[38px] w-[140px]" htmlType="button" type="outlined" onClick={() => navigate(RoutesEnums.INVESTOR_DETAILS)} >
                 {language?.buttons?.back}
               </Button>
-              <Button
-                className="mt-6 h-[38px] w-[140px]"
-                disabled={!payload.legal || !payload.residence || !selectedAssert?.id || !riskChecked}
-                htmlType="submit"
-                loading={loading}
-              >
+              <Button className="mt-6 h-[38px] w-[140px]" disabled={!payload.legal || !payload.residence || !selectedAssert?.id || !riskChecked}
+                htmlType="submit" loading={loading} >
                 {language?.buttons?.continue}
               </Button>
             </section>

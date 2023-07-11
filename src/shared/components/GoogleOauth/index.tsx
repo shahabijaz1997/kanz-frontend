@@ -10,13 +10,9 @@ import { KanzRoles } from "../../../enums/roles.enum";
 import GoogleIcon from "../../../assets/icons/google_logo.png";
 import { saveEvent } from "../../../redux-toolkit/slicer/event.slicer";
 
-
-
 const GoogleOauth = ({ event, setLoading, language, state }: any) => {
     const navigate = useNavigate();
     const dispatch = useDispatch();
-
-
 
     const login = useGoogleLogin({
         onSuccess: async (tokenResponse) => {

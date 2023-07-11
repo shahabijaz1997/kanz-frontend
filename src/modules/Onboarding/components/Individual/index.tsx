@@ -12,6 +12,7 @@ import Drawer from "../../../../shared/components/Drawer";
 import Button from "../../../../shared/components/Button";
 import { getCountries } from "../../../../apis/bootstrap.api";
 import Loader from "../../../../shared/views/Loader";
+import { RoutesEnums } from "../../../../enums/routes.enum";
 
 const Individual = ({ language }: any) => {
   const navigate = useNavigate();
@@ -201,12 +202,12 @@ const Individual = ({ language }: any) => {
             </ul>
           </section>
 
-          <section className="relative z-10 w-full inline-flex items-start gap-2 rounded-md border border-grey w-[420px] p-4 check-background cursor-pointer">
+          <section className="relative z-10 w-full inline-flex items-start gap-2 rounded-md border border-grey w-[420px] p-4 check-background cursor-pointer" onClick={() => setRiskChecked(!riskChecked)}>
             <input
               type="checkbox"
               className="accent-cyan-800 h-3 w-3 cursor-pointer"
               checked={riskChecked}
-              onChange={() => setRiskChecked(!riskChecked)}
+              onChange={() => {}}
             />
             <div>
               <h3 className="text-neutral-700 font-medium text-[14px] leading-none">
@@ -214,7 +215,10 @@ const Individual = ({ language }: any) => {
               </h3>
               <p className="text-neutral-500 text-sm font-normal mt-1">
                 {language?.individual?.understanding}&nbsp;
-                <span className="color-blue font-medium cursor-pointer" onClick={() => setOpen(true)}>
+                <span className="text-cc-blue font-medium cursor-pointer" onClick={(e) => {
+                  e.stopPropagation();
+                  setOpen(true);
+                }}>
                   {language?.common?.learn}
                 </span>
               </p>
@@ -222,20 +226,10 @@ const Individual = ({ language }: any) => {
           </section>
 
           <section className="w-full inline-flex items-center justify-between mt-16">
-            <Button
-              className="mt-6 h-[38px] w-[140px]"
-              htmlType="submit"
-              type="outlined"
-              onClick={() => navigate(-1)}
-            >
+            <Button className="mt-6 h-[38px] w-[140px]" htmlType="button" type="outlined" onClick={() => navigate(RoutesEnums.INVESTOR_DETAILS)}>
               {language?.buttons?.back}
             </Button>
-            <Button
-              className="mt-6 h-[38px] w-[140px]"
-              disabled={!payload.national || !payload.residence || !selectedAssert?.id || !riskChecked}
-              htmlType="submit"
-              loading={loading}
-            >
+            <Button className="mt-6 h-[38px] w-[140px]" disabled={!payload.national || !payload.residence || !selectedAssert?.id || !riskChecked} htmlType="submit" loading={loading}>
               {language?.buttons?.continue}
             </Button>
           </section>

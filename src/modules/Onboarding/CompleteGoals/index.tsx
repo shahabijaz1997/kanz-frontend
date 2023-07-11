@@ -16,6 +16,7 @@ import AddAttachmentBanner from "../../../shared/components/AddAttachmentBanner"
 import { ApplicationStatus } from "../../../enums/types.enum";
 import Button from "../../../shared/components/Button";
 import { KanzRoles } from "../../../enums/roles.enum";
+import { RoutesEnums } from "../../../enums/routes.enum";
 
 const CompleteGoals = ({ }: any) => {
   const { state } = useLocation();
@@ -30,14 +31,13 @@ const CompleteGoals = ({ }: any) => {
   const [payload, setPayload] = useState(state);
   const [loading, setLoading] = useState(false);
   const [apiResp, setApiResp]: any = useState();
-  const [currentStepper, setCurrentStepper] = useState(0);
+  const [currentStepper, setCurrentStepper]: any = useState();
 
   useLayoutEffect(() => {
     if ((user.status !== ApplicationStatus.OPENED && user.status !== ApplicationStatus.REOPENED) || user.type !== KanzRoles.INVESTOR) navigate("/welcome");
     let item = localStorage.getItem("step");
 
-    if (user?.status !== ApplicationStatus.REOPENED) if (item) setCurrentStepper(metadata?.steps_completed || Number(item));
-    else setCurrentStepper(0);
+    setCurrentStepper(metadata?.steps_completed || Number(item));
   }, []);
 
   useLayoutEffect(() => {
@@ -69,7 +69,7 @@ const CompleteGoals = ({ }: any) => {
   };
 
   return (
-    <main className="h-full max-h-full background-auth overflow-y-auto overflow-x-hidden">
+    <main className="h-full max-h-full cbc-auth overflow-y-auto overflow-x-hidden">
       <section>
         <Header />
       </section>
@@ -123,11 +123,7 @@ const CompleteGoals = ({ }: any) => {
                   )}
                 </p>
               </div>
-              <Button
-                className="w-[100px] h-9"
-                htmlType="submit"
-                onClick={() => navigate("/complete-details", { state: localStorage.getItem("investor-type") })}
-              >
+              <Button className="w-[100px] h-9" htmlType="submit" onClick={() => navigate(RoutesEnums.COMPLETE_DETAILS, { state: metadata?.role })} >
                 <EditIcon stroke="#fff" />
                 <small className="font-normal text-base">
                   {language.buttons.edit}

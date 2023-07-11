@@ -16,6 +16,7 @@ import { isValidUrl } from "../../../utils/regex.utils";
 import { saveLogo } from "../../../redux-toolkit/slicer/attachments.slicer";
 import { isEmpty } from "../../../utils/object.util";
 import { KanzRoles } from "../../../enums/roles.enum";
+import { RoutesEnums } from "../../../enums/routes.enum";
 
 const SyndicateFlow = ({ }: any) => {
   const params = useParams();
@@ -51,7 +52,7 @@ const SyndicateFlow = ({ }: any) => {
   const [loading, setLoading] = useState(false);
 
   useLayoutEffect(() => {
-    if(user.type !== KanzRoles.SYNDICATE) navigate("/welcome");
+    if (user.type !== KanzRoles.SYNDICATE) navigate("/welcome");
 
     bootstrapPayload();
   }, []);
@@ -191,7 +192,7 @@ const SyndicateFlow = ({ }: any) => {
   };
 
   return (
-    <main className="h-full max-h-full background-auth overflow-y-auto overflow-x-hidden">
+    <main className="h-full max-h-full cbc-auth overflow-y-auto overflow-x-hidden">
       <section>
         <Header custom={true} data={{
           leftMenu: language.header.syndicateLead, button: (<button onClick={() => navigate("/welcome")} className="text-neutral-900 bg-white font-bold text-sm w-[150px] h-9 cursor-pointer border border-black shadow-sm screen800:w-[120px]">{language.buttons.gotoDashboard}</button>),
@@ -224,47 +225,27 @@ const SyndicateFlow = ({ }: any) => {
         />
 
         <section className="w-full inline-flex items-center justify-between py-10">
-          <Button
-            className="h-[38px] w-[140px]"
-            htmlType="submit"
-            type="outlined"
-            onClick={() => navigate(-1)}
+          <Button className="h-[38px] w-[140px]" htmlType="button" type="outlined" onClick={() => {
+            if (step === 1) navigate(RoutesEnums.WELCOME);
+            else navigate(-1);
+          }}
           >
             {language?.buttons?.back}
           </Button>
-          <Button
-            className="h-[38px] w-[140px]"
-            disabled={loading}
-            htmlType="submit"
-            loading={loading}
-            onClick={ontoNextStep}
-          >
+          <Button className="h-[38px] w-[140px]" disabled={loading} htmlType="submit" loading={loading} onClick={ontoNextStep}>
             {language?.buttons?.continue}
           </Button>
         </section>
       </aside>
 
       <Modal show={modalOpen ? true : false}>
-        <div
-          className="rounded-md h-8 w-8 inline-grid place-items-center cursor-pointer absolute right-2 top-2"
-          style={{ backgroundColor: "rgba(0, 0, 0, 0.078" }}
-        >
-          <CrossIcon
-            stroke="#fff"
-            className="w-6 h-6"
-            onClick={() => {
-              setModalOpen(null);
-            }}
-          />
+        <div className="rounded-md h-8 w-8 inline-grid place-items-center cursor-pointer absolute right-2 top-2" style={{ backgroundColor: "rgba(0, 0, 0, 0.078" }}>
+          <CrossIcon className="w-6 h-6" onClick={() => setModalOpen(null)} />
         </div>
         {fileType === FileType.IMAGE ? (
           <img src={modalOpen} alt="Img" className="max-h-[100%]" />
         ) : (
-          <embed
-            src={modalOpen}
-            type="application/pdf"
-            className="w-[100%] h-[90%]"
-          />
+          <embed src={modalOpen} type="application/pdf" className="w-[100%] h-[90%]" />
         )}
       </Modal>
     </main>

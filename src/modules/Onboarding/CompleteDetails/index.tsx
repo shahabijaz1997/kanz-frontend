@@ -20,7 +20,7 @@ const CompleteDetails = (props: any) => {
         if ((user.status !== ApplicationStatus.OPENED && user.status !== ApplicationStatus.REOPENED) || user.type !== KanzRoles.INVESTOR) navigate("/welcome");
     }, []);
     return (
-        <main className="h-full max-h-full background-auth overflow-y-auto overflow-x-hidden">
+        <main className="h-full max-h-full cbc-auth overflow-y-auto overflow-x-hidden">
             <section className="h-[67px]">
                 <Header />
             </section>
@@ -29,7 +29,7 @@ const CompleteDetails = (props: any) => {
                     <h2 className="text-[24px] font-bold text-left text-neutral-900 mb-4 screen500:text-[20px]">{state === InvestorType.INDIVIDUAL ? language?.individual?.individual : language?.firm?.firm}</h2>
                     <h3 className="text-[16px] text-left text-neutral-700 mb-12 screen500:text-[12px]">
                         <span className="font-normal">{state === InvestorType.INDIVIDUAL ? language?.individual?.sub : language?.firm?.sub}</span> &nbsp;
-                        <span className="color-blue font-medium cursor-pointer" onClick={() => setOpen(true)}>{language?.common?.learn}</span>
+                        <span className="text-cc-blue font-medium cursor-pointer" onClick={() => setOpen(true)}>{language?.common?.learn}</span>
                     </h3>
                     {state === InvestorType.INDIVIDUAL && <Individual language={language} />}
                     {state === InvestorType.FIRM && <Firm language={language} />}

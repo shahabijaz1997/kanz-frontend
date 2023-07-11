@@ -2,20 +2,22 @@ import React, { useState, useLayoutEffect, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
 import { SubmitHandler, useForm } from "react-hook-form";
-import { toastUtil } from "../../../../utils/toast.utils";
+import { toastUtil } from "../../utils/toast.utils";
 import { useLocation, useNavigate } from "react-router-dom";
-import { RootState } from "../../../../redux-toolkit/store/store";
-import { hasLowerCase, hasNumbers, hasSpecialCharacters, hasUpperCase } from "../../../../utils/regex.utils";
-import CheckIcon from "../../../../ts-icons/CheckIcon.svg";
-import EyeIcon from "../../../../ts-icons/EyeIcon.svg";
-import EyeSlash from "../../../../ts-icons/EyeSlashIcon.svg";
-import { signup, updateLanguage } from "../../../../apis/auth.api";
-import { KanzRoles } from "../../../../enums/roles.enum";
-import { saveUserData } from "../../../../redux-toolkit/slicer/user.slicer";
-import Button from "../../../../shared/components/Button";
-import { AntdInput } from "../../../../shared/components/Input";
-import GoogleOauth from "../../../../shared/components/GoogleOauth";
-import LinkedInOauth from "../../../../shared/components/LinkedinOauth";
+import { RootState } from "../../redux-toolkit/store/store";
+import { hasLowerCase, hasNumbers, hasSpecialCharacters, hasUpperCase } from "../../utils/regex.utils";
+import CheckIcon from "../../ts-icons/CheckIcon.svg";
+import EyeIcon from "../../ts-icons/EyeIcon.svg";
+import EyeSlash from "../../ts-icons/EyeSlashIcon.svg";
+import { signup } from "../../apis/auth.api";
+import { KanzRoles } from "../../enums/roles.enum";
+import { saveUserData } from "../../redux-toolkit/slicer/user.slicer";
+import Button from "../../shared/components/Button";
+import { AntdInput } from "../../shared/components/Input";
+import GoogleOauth from "../../shared/components/GoogleOauth";
+import LinkedInOauth from "../../shared/components/LinkedinOauth";
+import ClippedBanner from "../Onboarding/components/ClippedBanner";
+import LanguageDrodownWrapper from "../../shared/views/LanguageDrodownWrapper";
 
 type FormValues = {
   name: string;
@@ -24,12 +26,12 @@ type FormValues = {
 };
 
 const Signup = (props: any) => {
-  const { onSetStepper } = props;
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { state } = useLocation();
   const language: any = useSelector((state: RootState) => state.language.value);
   const event: any = useSelector((state: RootState) => state.event.value);
+  const orientation: any = useSelector((state: RootState) => state.orientation.value);
 
   const [loading, setLoading] = useState(false);
 
@@ -38,18 +40,6 @@ const Signup = (props: any) => {
   }, []);
 
   const requiredFieldError = language?.common?.required_field;
-
-  const onUpdateLanguage = async (user: any) => {
-    try {
-      setLoading(true);
-      await updateLanguage(user?.id, { users: { language: event } });
-
-    } catch (error) {
-
-    } finally {
-      setLoading(false);
-    }
-  };
   const Form = () => {
     const {
       register,
@@ -121,16 +111,14 @@ const Signup = (props: any) => {
 
       try {
         setLoading(true);
-        const { status, data } = await signup({ user: signUpData, });
+        const { status, data } = await signup({ user: signUpData });
         if (status === 200) {
           dispatch(saveUserData(data.status.data));
-          // onUpdateLanguage(data.status.data)
-          onSetStepper(signUpData);
+          navigate("/verification");
 
         } else toast.error(language.promptMessages.errorGeneral, toastUtil);
       } catch (error: any) {
         console.error(error);
-        // const message = language?.v2?.sessions[error?.response?.data?.status?.message] || language.promptMessages.errorGeneral;
         const message = error?.response?.data?.status?.message || language.promptMessages.errorGeneral;
         toast.error(message, toastUtil);
       } finally {
@@ -157,56 +145,22 @@ const Signup = (props: any) => {
     return (
       <form className="pt-8 pb-8 mb-4" onSubmit={handleSubmit(onSubmit)} {...(isSubmitSuccessful && { noValidate: true })} >
         <div className="mb-4">
-          <AntdInput
-            register={register}
-            name="name"
-            label={language?.common?.fullName}
-            type="text"
-            required
-            placeholder="Abdulrahman Mohammad"
-            error={errors.name?.message} // Pass the error message from form validation
-            validation={{
-              required: requiredFieldError,
-            }}
-          />
+          <AntdInput register={register} name="name" label={language?.common?.fullName} type="text" required placeholder="Abdulrahman Mohammad" error={errors.name?.message} // Pass the error message from form validation
+            validation={{ required: requiredFieldError}}/>
         </div>
         <div className="my-6 relative">
-          <AntdInput
-            register={register}
-            name="email"
-            label={language?.common?.email}
-            type="email"
-            required
-            placeholder="you@example.com"
-            error={errors.email?.message} // Pass the error message from form validation
-            validation={{
-              required: requiredFieldError,
-              pattern: {
-                value:
-                  /^[_a-z0-9-]+(\.[_a-z0-9-]+)*(\+[a-z0-9-]+)?@[a-z0-9-]+(\.[a-z0-9-]+)*$/i,
+          <AntdInput register={register} name="email" label={language?.common?.email} type="email" required placeholder="you@example.com" error={errors.email?.message} // Pass the error message from form validation
+            validation={{ required: requiredFieldError, pattern: {
+                value:/^[_a-z0-9-]+(\.[_a-z0-9-]+)*(\+[a-z0-9-]+)?@[a-z0-9-]+(\.[a-z0-9-]+)*$/i,
                 message: "Invalid email address",
               },
             }}
           />
         </div>
         <div className="mb-3 relative">
-          <AntdInput
-            register={register}
-            name="password"
-            label={language?.common?.password}
-            type={showPassword ? "text" : "password"}
-            required
-            placeholder="**********"
-            error={errors.password?.message} // Pass the error message from form validation
-            validation={{
-              required: requiredFieldError,
-            }}
-            ShowPasswordIcon={
-              <button
-                type="button"
-                className="absolute top-1/2 right-3 transform -translate-y-1/2 focus:outline-none"
-                onClick={handleTogglePassword}
-              >
+          <AntdInput register={register} name="password" label={language?.common?.password} type={showPassword ? "text" : "password"} required placeholder="**********" error={errors.password?.message} // Pass the error message from form validation
+            validation={{ required: requiredFieldError }}
+            ShowPasswordIcon={ <button type="button" className="absolute top-1/2 right-3 transform -translate-y-1/2 focus:outline-none" onClick={handleTogglePassword} >
                 {showPassword ? (
                   <EyeIcon stroke="rgb(64 64 64)" />
                 ) : (
@@ -249,12 +203,22 @@ const Signup = (props: any) => {
     );
   };
   return (
-    <section className="w-[428px] max-w-md pt-[130px] screen500:max-w-[300px]">
-      <h2 className="text-[24px] font-bold text-left text-neutral-900 screen500:text-[20px]">
-        {language?.onboarding?.createAccount}
-      </h2>
-      <Form />
-    </section>
+    <main className="h-full max-h-full cbc-auth overflow-y-auto overflow-x-hidden">
+      <ClippedBanner />
+      <section className="h-full w-[55%] inline-block align-top screen991:w-full overflow-y-auto">
+        <aside className="inline-flex flex-col items-center justify-center w-full">
+          <section className={`relative w-full top-[26px] ${orientation === "rtl" ? "text-left" : "text-right"}`}>
+            <LanguageDrodownWrapper />
+          </section>
+          <section className="w-[428px] max-w-md pt-[130px] screen500:max-w-[300px]">
+            <h2 className="text-[24px] font-bold text-left text-neutral-900 screen500:text-[20px]">
+              {language?.onboarding?.createAccount}
+            </h2>
+            <Form />
+          </section>
+        </aside>
+      </section>
+    </main>
   );
 };
 export default Signup;

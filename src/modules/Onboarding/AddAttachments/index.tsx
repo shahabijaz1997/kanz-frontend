@@ -14,9 +14,10 @@ import { RootState } from "../../../redux-toolkit/store/store";
 import { getRoleBasedAttachments, removeAttachment, submitData } from "../../../apis/attachment.api";
 import { saveToken } from "../../../redux-toolkit/slicer/auth.slicer";
 import Loader from "../../../shared/views/Loader";
-import { saveAttachments } from "../../../redux-toolkit/slicer/attachments.slicer";
 import { KanzRoles } from "../../../enums/roles.enum";
 import EditIcon from "../../../ts-icons/editIcon.svg";
+import { getUser } from "../../../apis/auth.api";
+import { saveUserData } from "../../../redux-toolkit/slicer/user.slicer";
 
 const AddAttachments = (props: any) => {
   const navigate = useNavigate();
@@ -25,7 +26,6 @@ const AddAttachments = (props: any) => {
   const user: any = useSelector((state: RootState) => state.user.value);
   const authToken: any = useSelector((state: RootState) => state.auth.value);
   const event: any = useSelector((state: RootState) => state.event.value);
-  const attachments: any = useSelector((state: RootState) => state.attachments.attachments.value);
   const [modalOpen, setModalOpen]: any = useState(null);
   const [isOpen, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -39,22 +39,14 @@ const AddAttachments = (props: any) => {
   }, []);
 
   const setFile = (file: File, id: string, url: string, attachment_id: string, size: string, dimensions: string, type: string) => {
-    let _file: any = {
-      name: file?.name,
-      size,
-      dimensions
-    }
+    let _file: any = { name: file?.name, size, dimensions }
     let _attachments: any = [...files, { file: _file, id, url, attachment_id, type: type }];
-    dispatch(saveAttachments(_attachments));
     setFiles(_attachments);
   };
 
   const onGetRoleBasedAttachmentDetails = async () => {
     try {
       setLoading(true);
-      if (attachments && attachments?.length) {
-        setFiles(attachments)
-      }
       let { status, data } = await getRoleBasedAttachments(authToken);
       if (status === 200) {
         let uploadPayload = data?.status?.data.map((item: any, idx: number) => {
@@ -107,7 +99,6 @@ const AddAttachments = (props: any) => {
       const { status, data } = await submitData(authToken);
       if (status === 200) {
         setOpen(false);
-        dispatch(saveAttachments(""))
         setModalOpen(true);
       }
     } catch (error: any) {
@@ -119,10 +110,12 @@ const AddAttachments = (props: any) => {
     }
   };
 
+
   const checkDisabled = () => {
     let nec_ats: any[] = attachmentData.filter((at: any) => {
       if (at.attachment_url && !files.some((f: any) => f.id === at.id)) return at;
     })
+    console.log("checkDisabled", files.length , nec_ats.length);
     if (files.length + nec_ats.length >= 3 && agreeToTerms ? false : true) return true;
     return false;
   };
@@ -131,27 +124,20 @@ const AddAttachments = (props: any) => {
     let nec_ats: any[] = attachmentData.filter((at: any) => {
       if (at.attachment_url && !files.some((f: any) => f.id === at.id)) return at;
     })
+
+    console.log("checkSubmit", files.length , nec_ats.length);
+    
     if (files.length + nec_ats.length < 3) return true;
     return false;
   };
 
   return (
-    <main className="h-full max-h-full background-auth overflow-y-auto overflow-x-hidden">
+    <main className="h-full max-h-full cbc-auth overflow-y-auto overflow-x-hidden">
       {
         loading ? (<Loader />) : (
           <React.Fragment>
             <section>
-              <Header
-                custom={true}
-                data={{
-                  leftMenu: language.header.attachment,
-                  button: (
-                    <button onClick={() => navigate(-1)}>
-                      <CrossIcon stroke="#171717" className="w-6 h-6" />
-                    </button>
-                  ),
-                }}
-              />
+              <Header custom={true} data={{ leftMenu: language.header.attachment, button: (<button onClick={() => navigate(-1)}> <CrossIcon stroke="#171717" className="w-6 h-6" /></button>) }} />
             </section>
 
             <aside className="w-[420px] h-full screen500:max-w-[300px] mx-auto py-12">
@@ -162,7 +148,7 @@ const AddAttachments = (props: any) => {
                 <p className="text-neutral-700 font-medium text-base">
                   <span>{language.philosophyGoals.uploadNecessary}.</span>&nbsp;
                   <span
-                    className="color-blue cursor-pointer"
+                    className="text-cc-blue cursor-pointer"
                     onClick={() => setOpen(true)}
                   >
                     {language.v2?.realtor?.attachment_provider}
@@ -200,19 +186,14 @@ const AddAttachments = (props: any) => {
                 </form>
               </section>
               <section className="w-full inline-flex items-center gap-2 rounded-md border border-grey w-[420px] p-4 check-background">
-                <input
-                  type="checkbox"
-                  className="accent-cyan-800 h-3 w-3 cursor-pointer"
-                  checked={agreeToTerms}
-                  onChange={() => setAgreeToTerms(!agreeToTerms)}
-                />
+                <input type="checkbox" className="accent-cyan-800 h-3 w-3 cursor-pointer" checked={agreeToTerms} onChange={() => setAgreeToTerms(!agreeToTerms)} />
                 <p className="text-neutral-500 text-sm font-normal">
                   {language?.common?.agree}
-                  <a href="/terms-and-conditions" className="color-blue font-medium cursor-pointer" target="_blank" >
+                  <a href="/terms-and-conditions" className="text-cc-blue font-medium cursor-pointer" target="_blank" >
                     {language?.common?.termsConditions}
                   </a>
                   {language?.v2?.common?.understood}
-                  <a href="/privacy-policy" className="color-blue font-medium cursor-pointer"  target="_blank" >
+                  <a href="/privacy-policy" className="text-cc-blue font-medium cursor-pointer" target="_blank" >
                     {language?.v2?.common?.privacyPolicy}
                   </a>
                 </p>

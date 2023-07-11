@@ -16,6 +16,7 @@ import Loader from "../../../shared/views/Loader";
 import { ApplicationStatus } from "../../../enums/types.enum";
 import { isEmpty } from "../../../utils/object.util";
 import { KanzRoles } from "../../../enums/roles.enum";
+import { RoutesEnums } from "../../../enums/routes.enum";
 
 type FormValues = {
   noOfProperty: number;
@@ -136,7 +137,7 @@ const Realtors = (props: any) => {
   };
 
   return (
-    <main className="h-full max-h-full background-auth overflow-y-auto overflow-x-hidden">
+    <main className="h-full max-h-full cbc-auth overflow-y-auto overflow-x-hidden">
       <section className="h-[67px]">
         <Header />
       </section>
@@ -150,7 +151,7 @@ const Realtors = (props: any) => {
                 <div className="w-[450px] mt-[78px]">{language?.v2?.realtor?.add_title}</div>
                 <p className="text-neutral-500 font-normal text-sm">
                   <span>{language.onboarding.realtorSubDetail}</span>&nbsp;
-                  <span className="color-blue font-medium cursor-pointer" onClick={() => setOpen(true)}>
+                  <span className="text-cc-blue font-medium cursor-pointer" onClick={() => setOpen(true)}>
                     {language.common.learn}
                   </span>
                 </p>
@@ -181,7 +182,7 @@ const Realtors = (props: any) => {
                   </section>
                 </div>
                 <section className="w-full inline-flex items-center justify-between mt-16">
-                  <Button className="mt-6 h-[38px] w-[140px]" type="outlined" onClick={() => navigate(-1)}>
+                  <Button className="mt-6 h-[38px] w-[140px]" type="outlined" htmlType="button" onClick={() => navigate(RoutesEnums.WELCOME)}>
                     {language?.buttons?.back}
                   </Button>
                   <Button className="mt-6 h-[38px] w-[140px]" disabled={loading} htmlType="submit" loading={loading}>
