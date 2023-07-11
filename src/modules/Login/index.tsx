@@ -31,6 +31,7 @@ const Login = ({ }: any) => {
   const event: any = useSelector((state: RootState) => state.event.value);
   const language: any = useSelector((state: RootState) => state.language.value);
   const [loading, setLoading] = useState(false);
+  const [formValues, setFormValues] = useState({ email: "", password: "" });
   const requiredFieldError = language?.common?.required_field;
 
   useLayoutEffect(() => {
@@ -39,7 +40,7 @@ const Login = ({ }: any) => {
   }, []);
 
   const Form = () => {
-    const { register, handleSubmit, formState: { errors } } = useForm<FormValues>();
+    const { register, handleSubmit, formState: { errors } } = useForm<FormValues>({defaultValues: { email: formValues.email, password:formValues.password } });
     const [showPassword, setShowPassword] = React.useState(false);
     const handleTogglePassword = () => {
       setShowPassword((prevShowPassword) => !prevShowPassword);
@@ -48,6 +49,7 @@ const Login = ({ }: any) => {
     const onSubmit: SubmitHandler<FormValues> = async (values) => {
       try {
         setLoading(true);
+        setFormValues(values);
         const { status, data, headers } = await signin({ user: { email: values?.email, password: values?.password, language: event } });
         if (status === 200 && headers["authorization"]) {
           const token = headers["authorization"].split(" ")[1];
@@ -76,7 +78,9 @@ const Login = ({ }: any) => {
     return (
       <form autoComplete="off" noValidate className="pt-10 pb-8 mb-4" onSubmit={handleSubmit(onSubmit)} >
         <div className="mb-4 relative">
-          <AntdInput register={register} name="email" label={language?.common?.email} type="email" required placeholder="you@example.com" error={errors.email?.message} // Pass the error message from form validation
+          <AntdInput
+          key="email"
+          register={register} name="email" label={language?.common?.email} type="email" required placeholder="you@example.com" error={errors.email?.message} // Pass the error message from form validation
             validation={{
               required: requiredFieldError, pattern: {
                 value: /^[_a-z0-9-]+(\.[_a-z0-9-]+)*(\+[a-z0-9-]+)?@[a-z0-9-]+(\.[a-z0-9-]+)*$/i,
@@ -86,7 +90,9 @@ const Login = ({ }: any) => {
           />
         </div>
         <div className="mt-6 mb-8 relative">
-          <AntdInput register={register} name="password" label={language?.common?.password} type={showPassword ? "text" : "password"} required placeholder="**********"
+          <AntdInput
+          key="password"
+          register={register} name="password" label={language?.common?.password} type={showPassword ? "text" : "password"} required placeholder="**********"
             error={errors.password?.message} // Pass the error message from form validation
             validation={{ required: requiredFieldError }}
             ShowPasswordIcon={

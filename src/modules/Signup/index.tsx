@@ -32,7 +32,7 @@ const Signup = (props: any) => {
   const language: any = useSelector((state: RootState) => state.language.value);
   const event: any = useSelector((state: RootState) => state.event.value);
   const orientation: any = useSelector((state: RootState) => state.orientation.value);
-
+  const [formValues, setFormValues] = useState({ name:"", email: "", password: "" });
   const [loading, setLoading] = useState(false);
 
   useLayoutEffect(() => {
@@ -46,7 +46,7 @@ const Signup = (props: any) => {
       handleSubmit,
       watch,
       formState: { errors, isSubmitSuccessful },
-    } = useForm<FormValues>({ defaultValues: { email: "" } });
+    } = useForm<FormValues>({ defaultValues: { email: formValues.email,name:formValues.name,password:formValues.password } });
 
     const [password, setPassword] = useState("");
     const PasswordStrengthUI = (password: any) => {
@@ -111,6 +111,7 @@ const Signup = (props: any) => {
 
       try {
         setLoading(true);
+        setFormValues(values);
         const { status, data } = await signup({ user: signUpData });
         if (status === 200) {
           dispatch(saveUserData(data.status.data));
@@ -143,24 +144,61 @@ const Signup = (props: any) => {
     }, [watch]);
 
     return (
-      <form className="pt-8 pb-8 mb-4" onSubmit={handleSubmit(onSubmit)} {...(isSubmitSuccessful && { noValidate: true })} >
+      <form
+        className="pt-8 pb-8 mb-4"
+        onSubmit={handleSubmit(onSubmit)}
+        {...(isSubmitSuccessful && { noValidate: true })}
+      >
         <div className="mb-4">
-          <AntdInput register={register} name="name" label={language?.common?.fullName} type="text" required placeholder="Abdulrahman Mohammad" error={errors.name?.message} // Pass the error message from form validation
-            validation={{ required: requiredFieldError}}/>
+          <AntdInput
+            key={"name"}
+            register={register}
+            name="name"
+            label={language?.common?.fullName}
+            type="text"
+            required
+            placeholder="Abdulrahman Mohammad"
+            error={errors.name?.message} // Pass the error message from form validation
+            validation={{ required: requiredFieldError }}
+          />
         </div>
         <div className="my-6 relative">
-          <AntdInput register={register} name="email" label={language?.common?.email} type="email" required placeholder="you@example.com" error={errors.email?.message} // Pass the error message from form validation
-            validation={{ required: requiredFieldError, pattern: {
-                value:/^[_a-z0-9-]+(\.[_a-z0-9-]+)*(\+[a-z0-9-]+)?@[a-z0-9-]+(\.[a-z0-9-]+)*$/i,
+          <AntdInput
+            key={"signUp-email"}
+            register={register}
+            name="email"
+            label={language?.common?.email}
+            type="email"
+            required
+            placeholder="you@example.com"
+            error={errors.email?.message} // Pass the error message from form validation
+            validation={{
+              required: requiredFieldError,
+              pattern: {
+                value:
+                  /^[_a-z0-9-]+(\.[_a-z0-9-]+)*(\+[a-z0-9-]+)?@[a-z0-9-]+(\.[a-z0-9-]+)*$/i,
                 message: "Invalid email address",
               },
             }}
           />
         </div>
         <div className="mb-3 relative">
-          <AntdInput register={register} name="password" label={language?.common?.password} type={showPassword ? "text" : "password"} required placeholder="**********" error={errors.password?.message} // Pass the error message from form validation
+          <AntdInput
+            key={"signUp-password"}
+            register={register}
+            name="password"
+            label={language?.common?.password}
+            type={showPassword ? "text" : "password"}
+            required
+            placeholder="**********"
+            error={errors.password?.message} // Pass the error message from form validation
             validation={{ required: requiredFieldError }}
-            ShowPasswordIcon={ <button type="button" className="absolute top-1/2 right-3 transform -translate-y-1/2 focus:outline-none" onClick={handleTogglePassword} >
+            ShowPasswordIcon={
+              <button
+                type="button"
+                className="absolute top-1/2 right-3 transform -translate-y-1/2 focus:outline-none"
+                onClick={handleTogglePassword}
+              >
                 {showPassword ? (
                   <EyeIcon stroke="rgb(64 64 64)" />
                 ) : (
@@ -171,7 +209,12 @@ const Signup = (props: any) => {
           />
         </div>
         {PasswordStrengthUI(password)}
-        <Button className="w-full h-[38px]" disabled={loading} htmlType="submit" loading={loading} >
+        <Button
+          className="w-full h-[38px]"
+          disabled={loading}
+          htmlType="submit"
+          loading={loading}
+        >
           {language?.buttons?.createAccount}
         </Button>
         <div className="flex justify-end my-[12px]">
@@ -196,8 +239,20 @@ const Signup = (props: any) => {
         </div>
 
         <aside className="inline-flex items-center justify-between w-full gap-4">
-          <GoogleOauth language={language} event={event} loading={loading} setLoading={setLoading} state={state} />
-          <LinkedInOauth language={language} event={event} loading={loading} setLoading={setLoading} state={state} />
+          <GoogleOauth
+            language={language}
+            event={event}
+            loading={loading}
+            setLoading={setLoading}
+            state={state}
+          />
+          <LinkedInOauth
+            language={language}
+            event={event}
+            loading={loading}
+            setLoading={setLoading}
+            state={state}
+          />
         </aside>
       </form>
     );

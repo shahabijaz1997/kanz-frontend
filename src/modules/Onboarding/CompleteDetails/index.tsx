@@ -13,6 +13,7 @@ const CompleteDetails = (props: any) => {
     const { state } = useLocation();
     const navigate = useNavigate();
     const user: any = useSelector((state: RootState) => state.user.value);
+    const metadata: any = useSelector((state: RootState) => state.metadata.value);
     const language: any = useSelector((state: RootState) => state.language.value);
     const [isOpen, setOpen] = useState(false);
 
@@ -31,8 +32,8 @@ const CompleteDetails = (props: any) => {
                         <span className="font-normal">{state === InvestorType.INDIVIDUAL ? language?.individual?.sub : language?.firm?.sub}</span> &nbsp;
                         <span className="text-cc-blue font-medium cursor-pointer" onClick={() => setOpen(true)}>{language?.common?.learn}</span>
                     </h3>
-                    {state === InvestorType.INDIVIDUAL && <Individual language={language} />}
-                    {state === InvestorType.FIRM && <Firm language={language} />}
+                    { ( metadata?.role || state ) === InvestorType.INDIVIDUAL && <Individual language={language} />}
+                    {( metadata?.role || state ) === InvestorType.FIRM && <Firm language={language} />}
                 </section>
             </aside>
 

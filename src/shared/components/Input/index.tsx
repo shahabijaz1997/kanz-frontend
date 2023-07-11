@@ -38,6 +38,7 @@ type InputProps = {
   ref?: any;
   ShowPasswordIcon?: React.ReactNode | undefined;
   error?: any; // Error message
+  key?: string;
 };
 
 export const AntdInput: React.FC<InputProps> = ({
@@ -56,6 +57,7 @@ export const AntdInput: React.FC<InputProps> = ({
   validation,
   error,
   ref,
+  key,
   ShowPasswordIcon,
   ...props
 }) => {
@@ -71,6 +73,7 @@ export const AntdInput: React.FC<InputProps> = ({
       </span>
       <div className="relative">
         <input
+          key={key}
           ref={ref}
           {...register(name, validation)}
           name={name}

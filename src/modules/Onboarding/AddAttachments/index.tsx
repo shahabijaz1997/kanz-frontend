@@ -136,7 +136,7 @@ const AddAttachments = (props: any) => {
       metadata.role === InvestorType.FIRM ||
       metadata.role === InvestorType.INDIVIDUAL
     ) {
-      // todo: remove this constant(5) and use this value from backend
+      // todo: remove these constants(5,2) and use this value from backend
       navigate(`${RoutesEnums.PHILOSOPHY_GOALS}/5`);
     } else if (metadata.role === KanzRoles.REALTOR) {
       navigate(RoutesEnums.REALTOR_DETAILS);
