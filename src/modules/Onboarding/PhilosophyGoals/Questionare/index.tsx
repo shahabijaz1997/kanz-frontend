@@ -159,7 +159,6 @@ const Questionare = ({ step, returnSuccessRedirection }: any) => {
     if (selected && ques.step === 2 && ques.index === 2 && (!selected[`2`] || selected[`2`]?.questions.find((q: any) => q.answers[0] === questions?.questions[0][event]?.options[1]?.statement)))
       return <React.Fragment></React.Fragment>;
     if (ques?.question_type === "text") {
-
       return (
         <section className="flex items-start justify-center flex-col mt-10 max-w-[420px] screen500:max-w-[300px]">
           <h3 className="text-neutral-700 font-medium text-base w-[420px]">
@@ -181,7 +180,6 @@ const Questionare = ({ step, returnSuccessRedirection }: any) => {
       );
     }
     return (
-
       <section className="flex items-start justify-center flex-col mt-10 max-w-[420px] screen500:max-w-[300px]">
         <h3 className="text-neutral-700 font-medium text-base w-[420px]">
           {ques[event]?.title}
@@ -377,7 +375,7 @@ const Questionare = ({ step, returnSuccessRedirection }: any) => {
       if (mcqs?.length > 0) return true;
       return false;
     } else if (questions?.questions && questions?.questions[0]?.question_type === "text") {
-      if ((user?.status !== ApplicationStatus.REOPENED && textAnswer?.length > 0) || user?.status === ApplicationStatus.REOPENED) return true;
+      if (textAnswer?.length > 0) return true;
       return false;
     } else {
       if (user?.status === ApplicationStatus.REOPENED) return true;
