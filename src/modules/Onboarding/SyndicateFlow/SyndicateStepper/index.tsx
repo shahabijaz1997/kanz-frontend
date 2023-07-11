@@ -10,7 +10,7 @@ import CrossIcon from "../../../../ts-icons/crossIcon.svg";
 import { isEmpty } from "../../../../utils/object.util";
 import EditIcon from "../../../../ts-icons/editIcon.svg";
 
-const SyndicateStepper = ({ orientation, language, metadata, payload, file, onSetPayload, options, step, removeFile, setFile, setModalOpen, setFileType, authToken }: any) => {
+const SyndicateStepper = ({ event, orientation, language, metadata, payload, file, onSetPayload, options, step, removeFile, setFile, setModalOpen, setFileType, authToken }: any) => {
     const refInd: any = useRef(null);
     const refReg: any = useRef(null);
     const [selected, setSelected]: any = useState(null);
@@ -138,13 +138,13 @@ const SyndicateStepper = ({ orientation, language, metadata, payload, file, onSe
                                 <Chevrond stroke="#737373" />
                             </span>
                         </span>
-                        {payload.industry && payload.industry.length > 0 && (
+                        {payload?.industry && payload?.industry?.length > 0 && (
                             <aside className="inline-flex gap-2 flex-wrap min-h-[42px] shadow-sm appearance-none border border-neutral-300 rounded-md w-full py-2 px-3 text-gray-500 leading-tight focus:outline-none focus:shadow-outline">
                                 {React.Children.toArray(
-                                    payload.industry.map((ind: any) => <div className="check-background rounded-[4px] px-1 py-[2px] inline-flex items-center">
-                                        <small>{ind}</small>
+                                    payload?.industry.map((ind: any) => <div className="check-background rounded-[4px] px-1 py-[2px] inline-flex items-center">
+                                        <small>{ind[event]?.name}</small>
                                         <CrossIcon onClick={() => {
-                                            let payloadItems = payload.industry.filter((x: any) => x !== ind)
+                                            let payloadItems = payload?.industry.filter((x: any) => x?.id !== ind?.id);
                                             onSetPayload(payloadItems, "industry");
                                         }} className="cursor-pointer h-5 w-5 ml-1" stroke={"#828282"} />
                                     </div>)
@@ -152,8 +152,9 @@ const SyndicateStepper = ({ orientation, language, metadata, payload, file, onSe
                             </aside>
                         )}
                         {(showData.industry) && <SearchedItems items={searchResults.industry} searchString={search.industry} passItemSelected={(it: any) => {
-                            let payloadItems = [...payload.industry];
-                            payloadItems.push(it);
+                            let payloadItems = [...payload?.industry];
+                            let selected_industry = searchResults?.industry?.find((rg: any) => rg[event]?.name === it);
+                            payloadItems.push(selected_industry);
                             onSetPayload(Array.from(new Set(payloadItems)), "industry");
                         }} />}
                     </div>
@@ -171,9 +172,9 @@ const SyndicateStepper = ({ orientation, language, metadata, payload, file, onSe
                             <aside className="inline-flex gap-2 flex-wrap min-h-[42px] shadow-sm appearance-none border border-neutral-300 rounded-md w-full py-2 px-3 text-gray-500 leading-tight focus:outline-none focus:shadow-outline">
                                 {React.Children.toArray(
                                     payload.region.map((ind: any) => <div className="check-background rounded-[4px] px-1 py-[2px] inline-flex items-center">
-                                        <small>{ind}</small>
+                                        <small>{ind[event]?.name}</small>
                                         <CrossIcon onClick={() => {
-                                            let payloadItems = payload.region.filter((x: any) => x !== ind)
+                                            let payloadItems = payload.region.filter((x: any) => x?.id !== ind?.id)
                                             onSetPayload(payloadItems, "region");
                                         }} className="cursor-pointer h-5 w-5 ml-1" stroke={"#828282"} />
                                     </div>)
@@ -181,8 +182,9 @@ const SyndicateStepper = ({ orientation, language, metadata, payload, file, onSe
                             </aside>
                         )}
                         {(showData.region) && <SearchedItems items={searchResults.region} searchString={search.region} passItemSelected={(it: any) => {
-                            let payloadItems = [...payload.region];
-                            payloadItems.push(it);
+                            let payloadItems = [...payload?.region];
+                            let selected_regions = searchResults?.region?.find((rg: any) => rg[event]?.name === it);
+                            payloadItems.push(selected_regions);
                             onSetPayload(Array.from(new Set(payloadItems)), "region");
                         }} />}
                     </div>

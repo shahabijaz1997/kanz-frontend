@@ -1,5 +1,5 @@
 export const checkExist = (elem: any, as: any) => {
-    let found: any = elem?.questions.some((q: any) => q?.answer_meta?.options[0]?.index === as.index && q?.answer_meta?.options[0]?.statement === as.statement);
+    let found: any = elem?.questions.some((q: any) => q?.answer_meta?.options[0]?.index === as.index && q?.answer_meta?.options[0]?.id === as.id);
     return found;
 };
 

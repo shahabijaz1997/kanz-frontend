@@ -108,6 +108,8 @@ const Questionare = ({ step, returnSuccessRedirection }: any) => {
     try {
       setOpen(false);
       setLoading(true);
+      console.log("payload",payload);
+      
       let { status, data } = await postInvestmentPhilisophyData(payload, authToken);
       if (status === 200) localStorage.setItem("step", step);
       if (step === questions?.total_steps && status === 200)
@@ -129,7 +131,7 @@ const Questionare = ({ step, returnSuccessRedirection }: any) => {
 
   const checkBoxCheckExist = (as: any) => {
     if (!mcqs.length) return false;
-    let found: any = mcqs?.some((q: any) => q?.statement === as.statement);
+    let found: any = mcqs?.some((q: any) => q?.id === as.id);
     return found;
   };
 
@@ -142,13 +144,13 @@ const Questionare = ({ step, returnSuccessRedirection }: any) => {
 
       if (found) {
         const filtered = updatedSelected[q.step]?.questions.filter((qa: any) => qa.question_id !== q.id);
-        filtered.push({ question_id: q.id, answers: [a?.statement], answer_meta: { options: [a] } });
+        filtered.push({ question_id: q.id, answers: [a?.id], answer_meta: { options: [a] } });
         updatedSelected[q.step].questions = filtered;
       } else {
         if (updatedSelected[q.step]?.questions?.length) {
-          updatedSelected[q.step]?.questions.push({ question_id: q.id, answers: [a?.statement], answer_meta: { options: [a] } });
+          updatedSelected[q.step]?.questions.push({ question_id: q.id, answers: [a?.id], answer_meta: { options: [a] } });
         } else
-          updatedSelected[q.step] = { step, questions: [{ question_id: q.id, answers: [a?.statement], answer_meta: { options: [a] } }] };
+          updatedSelected[q.step] = { step, questions: [{ question_id: q.id, answers: [a?.id], answer_meta: { options: [a] } }] };
       }
 
       return updatedSelected;
@@ -156,10 +158,9 @@ const Questionare = ({ step, returnSuccessRedirection }: any) => {
   };
 
   const renderMultipleChoiceQuestionaire = (ques: any) => {
-    if (selected && ques.step === 2 && ques.index === 2 && (!selected[`2`] || selected[`2`]?.questions.find((q: any) => q.answers[0] === questions?.questions[0][event]?.options[1]?.statement)))
+    if (selected && ques.step === 2 && ques.index === 2 && (!selected[`2`] || selected[`2`]?.questions.find((q: any) => q.answers[0] === questions?.questions[0][event]?.options[1]?.id)))
       return <React.Fragment></React.Fragment>;
     if (ques?.question_type === "text") {
-
       return (
         <section className="flex items-start justify-center flex-col mt-10 max-w-[420px] screen500:max-w-[300px]">
           <h3 className="text-neutral-700 font-medium text-base w-[420px]">
@@ -181,7 +182,6 @@ const Questionare = ({ step, returnSuccessRedirection }: any) => {
       );
     }
     return (
-
       <section className="flex items-start justify-center flex-col mt-10 max-w-[420px] screen500:max-w-[300px]">
         <h3 className="text-neutral-700 font-medium text-base w-[420px]">
           {ques[event]?.title}
@@ -212,7 +212,7 @@ const Questionare = ({ step, returnSuccessRedirection }: any) => {
                     <input onChange={() => { }}
                       className="accent-cyan-800 relative float-left mx-2 h-3 w-3 rounded-full border-2 border-solid border-cyan-300 before:pointer-events-none before:absolute before:h-4 before:w-4 before:scale-0 before:rounded-full before:bg-transparent before:opacity-0 before:content-[''] after:absolute after:z-[1] after:block after:h-4 after:w-4 after:rounded-full after:content-[''] checked:border-primary checked:before:opacity-[0.16] checked:after:absolute checked:after:left-1/2 checked:after:top-1/2 checked:after:h-[0.625rem] checked:after:w-[0.625rem] checked:after:rounded-full checked:after:border-primary checked:after:bg-primary checked:after:content-[''] checked:after:[transform:translate(-50%,-50%)] hover:cursor-pointer hover:before:opacity-[0.04]"
                       type="radio" checked={checkExist(selected[ques.step], as) ? true : false} />
-                    <small>{as?.statement}</small>
+                    <small>{as?.id}</small>
                   </li>
                 );
               })
@@ -224,7 +224,7 @@ const Questionare = ({ step, returnSuccessRedirection }: any) => {
   };
 
   const renderCheckboxQuestionaire = (ques: any) => {
-    if (selected && ques.step === 2 && ques.index === 2 && (!selected[`2`] || selected[`2`]?.questions.find((q: any) => q.answer === questions?.questions[0][event]?.options[1]?.statement)))
+    if (selected && ques.step === 2 && ques.index === 2 && (!selected[`2`] || selected[`2`]?.questions.find((q: any) => q.answer === questions?.questions[0][event]?.options[1]?.id)))
       return <React.Fragment></React.Fragment>;
     return (
       <section className="flex items-start justify-center flex-col mt-10 max-w-[420px] screen500:max-w-[300px]">
@@ -248,8 +248,8 @@ const Questionare = ({ step, returnSuccessRedirection }: any) => {
                         }`}
                       onClick={() => {
                         let _mcqs = [...mcqs];
-                        if (_mcqs.find((m: any) => m.statement === as.statement)) {
-                          let filtered = _mcqs.filter((m: any) => m.statement !== as.statement);
+                        if (_mcqs.find((m: any) => m.id === as.id)) {
+                          let filtered = _mcqs.filter((m: any) => m.id !== as.id);
                           setMcqs(filtered);
                         } else
                           setMcqs((prv: any) => {
@@ -360,7 +360,7 @@ const Questionare = ({ step, returnSuccessRedirection }: any) => {
       payload.investment_philosophy.questions = _selected[step]?.questions;
     } else {
       let _mcqs = [...mcqs];
-      let answers = _mcqs.map((m) => m.statement);
+      let answers = _mcqs.map((m) => m.id);
       let philData: any = { ...JSON.parse(philisophyData), 3: { step: 3, questions: [{ question_id: questions?.questions[0]?.id, answers, answer_meta: { options: mcqs } }] } };
       localStorage.setItem("philosophy", JSON.stringify(philData));
       payload.investment_philosophy.step = 3;
@@ -377,7 +377,7 @@ const Questionare = ({ step, returnSuccessRedirection }: any) => {
       if (mcqs?.length > 0) return true;
       return false;
     } else if (questions?.questions && questions?.questions[0]?.question_type === "text") {
-      if ((user?.status !== ApplicationStatus.REOPENED && textAnswer?.length > 0) || user?.status === ApplicationStatus.REOPENED) return true;
+      if (textAnswer?.length > 0) return true;
       return false;
     } else {
       if (user?.status === ApplicationStatus.REOPENED) return true;
@@ -385,8 +385,8 @@ const Questionare = ({ step, returnSuccessRedirection }: any) => {
       else {
         if (!questions?.questions?.length) return false;
         else if ((step !== 2 && validations?.length === questions?.questions?.length) ||
-          ((step === 2 && validations?.length > 0 && selected[`2`]?.questions?.find((q: any) => q.answers[0] === questions?.questions[0][event]?.options[1]?.statement)) ||
-            (step === 2 && validations?.length === 2 && selected[`2`]?.questions.find((q: any) => q.answers[0] === questions?.questions[0][event]?.options[0]?.statement))))
+          ((step === 2 && validations?.length > 0 && selected[`2`]?.questions?.find((q: any) => q.answers[0] === questions?.questions[0][event]?.options[1]?.id)) ||
+            (step === 2 && validations?.length === 2 && selected[`2`]?.questions.find((q: any) => q.answers[0] === questions?.questions[0][event]?.options[0]?.id))))
           return true;
         return false;
       }

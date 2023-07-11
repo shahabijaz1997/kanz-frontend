@@ -142,12 +142,12 @@ const CompleteGoals = ({ }: any) => {
                 </small>
                 <div>
                   <small className="text-neutral-900 text-2xl font-semibold screen800:text-sm">
-                    {language.common.usd}&nbsp;{payload?.selected?.low_limit}{" "}
-                    {payload?.selected?.low_limit !== payload?.selected?.upper_limit && " - " + payload?.selected?.upper_limit}
+                    {payload?.selected?.currency}&nbsp;{payload?.selected?.lower_limit}{" "}
+                    {payload?.selected?.lower_limit !== payload?.selected?.upper_limit && " - " + payload?.selected?.upper_limit}
                   </small>
                   &nbsp;
                   <small className="text-green-600 text-sm font-semibold">
-                    {payload?.selected?.currency}
+                    {payload?.selected?.unit}
                   </small>
                 </div>
               </div>
