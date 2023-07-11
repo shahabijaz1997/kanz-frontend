@@ -13,7 +13,6 @@ import { saveToken } from "../../../redux-toolkit/slicer/auth.slicer";
 import Drawer from "../../../shared/components/Drawer";
 import Button from "../../../shared/components/Button";
 import GroupIcon from "../../../ts-icons/groupIcon.svg";
-import { isEmpty } from "../../../utils/object.util";
 import { KanzRoles } from "../../../enums/roles.enum";
 import { saveUserMetaData } from "../../../redux-toolkit/slicer/metadata.slicer";
 import { RoutesEnums } from "../../../enums/routes.enum";
@@ -36,10 +35,9 @@ const InvestorFlow = ({ }: any) => {
   ]);
 
   useLayoutEffect(() => {
-    if ((user.status === ApplicationStatus.OPENED || user.status === ApplicationStatus.REOPENED) && !isEmpty(metadata?.profile) && user.type === KanzRoles.INVESTOR)
+    onGetInvestorDetails();
+    if ((user.status === ApplicationStatus.OPENED || user.status === ApplicationStatus.REOPENED) && metadata?.profile?.id && user.type === KanzRoles.INVESTOR)
       setSelectedAccount(accounts?.find(ac => ac.payload === metadata.role));
-    else
-      onGetInvestorDetails();
   }, []);
 
   const onSelectInvestorType = async () => {
@@ -75,7 +73,7 @@ const InvestorFlow = ({ }: any) => {
       let { status, data } = await getInvestor(authToken);
       if (status === 200) {
         dispatch(saveUserMetaData(data?.status?.data));
-        const {investor_type} = data?.status?.data?.profile_states
+        const { investor_type } = data?.status?.data?.profile_states;
         investor_type && setSelectedAccount(accounts?.find(ac => ac.payload === investor_type));
       }
     } catch (error: any) {

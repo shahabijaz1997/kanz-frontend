@@ -21,32 +21,6 @@ const Individual = ({ language }: any) => {
   const authToken: any = useSelector((state: RootState) => state.auth.value);
   const metadata: any = useSelector((state: RootState) => state.metadata.value);
   const event: any = useSelector((state: RootState) => state.event.value);
-  const [assertQuestions] = useState([
-    {
-      id: 1,
-      title: language?.individual?.option1,
-      low_limit: "1",
-      upper_limit: "1",
-      is_range: false,
-      currency: language.common.million,
-    },
-    {
-      id: 2,
-      title: language?.individual?.option2,
-      low_limit: "1",
-      upper_limit: "10",
-      is_range: true,
-      currency: language.common.million,
-    },
-    {
-      id: 3,
-      title: language?.individual?.option3,
-      low_limit: "10",
-      upper_limit: "10",
-      is_range: false,
-      currency: language.common.million
-    },
-  ]);
   const [selectedAssert, setSelectedAssert]: any = useState(null);
   const [payload, setPayload]: any = useState({ national: "", residence: "", accer: "" });
   const [riskChecked, setRiskChecked] = useState(false);
@@ -70,9 +44,9 @@ const Individual = ({ language }: any) => {
       let { status, data } = await getCountries(authToken);
       if (status === 200) {
         let names = data.status.data.map((c: any) => c[event].name);
-        if (metadata?.profile) {
-          setPayload({ national: { label: metadata?.profile?.nationality, value: metadata?.profile?.nationality }, residence: { label: metadata?.profile?.residence, value: metadata?.profile?.residence }, accer: "", risk: false });
-          setSelectedAssert(assertQuestions.find(as => as.title === metadata?.profile?.accreditation));
+        if (metadata?.profile?.id) {
+          setPayload({ national: { label: metadata?.profile[event]?.nationality, value: metadata?.profile[event]?.nationality }, residence: { label: metadata?.profile[event]?.residence, value: metadata?.profile[event]?.residence }, accer: "", risk: false });
+          setSelectedAssert(metadata?.profile[event]?.accreditation?.options.find((as: any) => as.selected));
         }
         else {
           let account_info = localStorage.getItem("account_info");
@@ -110,9 +84,9 @@ const Individual = ({ language }: any) => {
       let _payload = {
         investor_profile: {
           country_id: country?.id,
-          residence: residence?.id,
-          accreditation: selectedAssert?.title,
-          accepted_investment_criteria: riskChecked
+          residence_id: residence?.id,
+          accepted_investment_criteria: riskChecked,
+          accreditation_option_id: selectedAssert?.id
         }
       }
 
@@ -181,7 +155,7 @@ const Individual = ({ language }: any) => {
             </label>
             <ul>
               {React.Children.toArray(
-                assertQuestions.map((as) => {
+                metadata?.profile[event]?.accreditation?.options.map((as: any) => {
                   return (
                     <li
                       className={`h-[50px] w-[420px] p-4 grey-neutral-200 text-sm font-medium cursor-pointer border border-grey inline-flex items-center justify-start first:rounded-t-md last:rounded-b-md screen500:w-full ${selectedAssert?.id === as.id
@@ -195,7 +169,7 @@ const Individual = ({ language }: any) => {
                         type="radio"
                         checked={selectedAssert?.id === as.id ? true : false}
                       />
-                      <small>{as.title}</small>
+                      <small>{as.statement}</small>
                     </li>
                   );
                 })
@@ -208,7 +182,7 @@ const Individual = ({ language }: any) => {
               type="checkbox"
               className="accent-cyan-800 h-3 w-3 cursor-pointer"
               checked={riskChecked}
-              onChange={() => {}}
+              onChange={() => { }}
             />
             <div>
               <h3 className="text-neutral-700 font-medium text-[14px] leading-none">

@@ -51,6 +51,8 @@ const CompleteGoals = ({ }: any) => {
       setLoading(true);
       let { status, data } = await getInvestor(authToken);
       if (status === 200) {
+        console.log("data: ", data);
+        
         setApiResp(data);
       }
     } catch (error: any) {
@@ -100,11 +102,11 @@ const CompleteGoals = ({ }: any) => {
                     <React.Fragment>
                       <div>
                         <small className="text-neutral-700 text-sm font-medium">{language?.company?.legal}:</small>&nbsp;
-                        <span className="text-neutral-700 text-sm font-normal">{apiResp?.status?.data?.profile?.legal_name}</span>
+                        <span className="text-neutral-700 text-sm font-normal">{apiResp?.status?.data?.profile[event]?.legal_name}</span>
                       </div>
                       <div>
                         <small className="text-neutral-700 text-sm font-medium">{language?.common?.location}:</small>&nbsp;
-                        <span className="text-neutral-700 text-sm font-normal">{apiResp?.status?.data?.profile?.location}</span>
+                        <span className="text-neutral-700 text-sm font-normal">{apiResp?.status?.data?.profile[event]?.location}</span>
                       </div>
                     </React.Fragment>
                   )}
@@ -112,11 +114,11 @@ const CompleteGoals = ({ }: any) => {
                     <React.Fragment>
                       <div>
                         <small className="text-neutral-700 text-sm font-medium">{language?.common?.residence}:</small> &nbsp;
-                        <span className="text-neutral-700 text-sm font-normal">{apiResp?.status?.data?.profile?.residence}</span>
+                        <span className="text-neutral-700 text-sm font-normal">{apiResp?.status?.data?.profile[event]?.residence}</span>
                       </div>
                       <div>
                         <small className="text-neutral-700 text-sm font-medium">{language?.drawer?.country}:</small>&nbsp;
-                        <span className="text-neutral-700 text-sm font-normal">{apiResp?.status?.data?.profile?.nationality}</span>
+                        <span className="text-neutral-700 text-sm font-normal">{apiResp?.status?.data?.profile[event]?.nationality}</span>
                       </div>
                     </React.Fragment>
 

@@ -48,7 +48,7 @@ const Realtors = (props: any) => {
     if ((user.status !== ApplicationStatus.OPENED && user.status !== ApplicationStatus.REOPENED)) return navigate("/welcome");
     let _payload: any = localStorage.getItem("realtor");
     if (_payload) setPayload(JSON.parse(_payload));
-    if (!isEmpty(metadata.profile)) {
+    if (!isEmpty(metadata?.profile)) {
       setPayload({
         national: { label: metadata.profile[event]?.nationality, value: metadata.profile[event]?.nationality },
         residence: { label: metadata.profile[event]?.residence, value: metadata.profile[event]?.residence },
