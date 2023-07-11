@@ -11,12 +11,13 @@ import Header from "../../../shared/components/Header";
 import Drawer from "../../../shared/components/Drawer";
 import Button from "../../../shared/components/Button";
 import { toastUtil } from "../../../utils/toast.utils";
-import { postRealtorInformation } from "../../../apis/realtor.api";
+import { getRealtorInformation, postRealtorInformation } from "../../../apis/realtor.api";
 import Loader from "../../../shared/views/Loader";
 import { ApplicationStatus } from "../../../enums/types.enum";
 import { isEmpty } from "../../../utils/object.util";
 import { KanzRoles } from "../../../enums/roles.enum";
 import { RoutesEnums } from "../../../enums/routes.enum";
+import { saveUserMetaData } from "../../../redux-toolkit/slicer/metadata.slicer";
 
 type FormValues = {
   noOfProperty: number;
@@ -44,21 +45,9 @@ const Realtors = (props: any) => {
   const requiredFieldError = language?.common?.required_field;
 
   useLayoutEffect(() => {
-    setLoad(true);
     if ((user.status !== ApplicationStatus.OPENED && user.status !== ApplicationStatus.REOPENED)) return navigate("/welcome");
-    let _payload: any = localStorage.getItem("realtor");
-    if (_payload) setPayload(JSON.parse(_payload));
-    if (!isEmpty(metadata.profile)) {
-      setPayload({
-        national: { label: metadata.profile[event]?.nationality, value: metadata.profile[event]?.nationality },
-        residence: { label: metadata.profile[event]?.residence, value: metadata.profile[event]?.residence },
-        noOfProperty: metadata.profile?.no_of_properties
-      });
-    }
-    setLoad(false);
+    getRealtorDetails();
   }, []);
-
-  const { register, handleSubmit, watch, formState: { errors } } = useForm<FormValues>();
 
   useLayoutEffect(() => {
     if (user.type !== KanzRoles.REALTOR) navigate("/welcome");
@@ -66,12 +55,38 @@ const Realtors = (props: any) => {
     getAllCountries();
   }, []);
 
+  const getRealtorDetails = async () => {
+    try {
+      setLoad(true);
+      let { status, data } = await getRealtorInformation(1, authToken);
+      if (status === 200) {
+        dispatch(saveUserMetaData(data?.status?.data));
+        let meta = data?.status?.data;
+        setPayload({
+          national: { label: meta.profile[event]?.nationality, value: meta.profile[event]?.nationality },
+          residence: { label: meta.profile[event]?.residence, value: meta.profile[event]?.residence },
+          noOfProperty: meta.profile?.no_of_properties
+        });
+      }
+    } catch (error: any) {
+      if (error.response && error.response.status === 401) {
+        dispatch(saveToken(""));
+        navigate("/login", { state: '' });
+      }
+    } finally {
+      setLoad(false);
+    }
+  };
+
+  const { register, handleSubmit, watch, formState: { errors } } = useForm<FormValues>();
   useEffect(() => {
     const subscription = watch((value) =>
       onSetPayload(value.noOfProperty, "noOfProperty")
     );
     return () => subscription.unsubscribe();
   }, [watch]);
+
+
 
   const getAllCountries = async () => {
     try {
