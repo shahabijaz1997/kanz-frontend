@@ -1,4 +1,4 @@
-import { useState, useLayoutEffect } from "react";
+import { useState, useLayoutEffect, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router";
 import { RootState } from "../../../redux-toolkit/store/store";
@@ -12,13 +12,14 @@ import CrossIcon from "../../../ts-icons/crossIcon.svg";
 import Button from "../../../shared/components/Button";
 import { isValidEmail, isValidUrl } from "../../../utils/regex.utils";
 import StartupStepper from "./StartupStepper";
-import { postCompanyInformation } from "../../../apis/company.api";
+import { getCompanyInformation, postCompanyInformation } from "../../../apis/company.api";
 import { saveLogo } from "../../../redux-toolkit/slicer/attachments.slicer";
 import { removeAttachment } from "../../../apis/attachment.api";
 import { isEmpty } from "../../../utils/object.util";
 import { getCountries } from "../../../apis/bootstrap.api";
 import { KanzRoles } from "../../../enums/roles.enum";
 import { RoutesEnums } from "../../../enums/routes.enum";
+import { saveUserMetaData } from "../../../redux-toolkit/slicer/metadata.slicer";
 
 const StartupFlow = ({ }: any) => {
   const params = useParams();
@@ -58,15 +59,39 @@ const StartupFlow = ({ }: any) => {
   const [file, setFile]: any = useState(null);
   const [loading, setLoading] = useState(false);
 
+  useEffect(()=>{
+    getStartUserUpDetails();
+    getAllCountries();
+  },[])
+
   useLayoutEffect(() => {
     if(user.type !== KanzRoles.STARTUP) navigate("/welcome");
-    getAllCountries();
     bootstrapPayload();
-  }, []);
+  }, [metadata]);
+
+  const getStartUserUpDetails = async () => {
+    try {
+      setLoading(true);
+      let { status, data } = await getCompanyInformation(1,authToken);
+      if (status === 200) {
+        dispatch(saveUserMetaData(data?.status?.data));
+      }
+    } catch (error: any) {
+      const message = error?.response?.data?.status?.message || error?.response?.data || language.promptMessages.errorGeneral;
+      toast.error(message, toastUtil);
+      if (error.response && error.response.status === 401) {
+        dispatch(saveToken(""));
+        navigate("/login", { state: 'Startup' });
+      }
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useLayoutEffect(() => {
     setStep(Number(params?.id) || 1);
   }, [params]);
+  
 
   const getAllCountries = async () => {
     setLoading(true);
@@ -88,19 +113,11 @@ const StartupFlow = ({ }: any) => {
   };
 
   const bootstrapPayload = () => {
-    if (isEmpty(metadata?.profile)) {
-      let _payload: any = localStorage.getItem("startup");
-      if (_payload) setPayload(JSON.parse(_payload));
-      if (logo) {
-        onGetConvertedToBLOB(JSON.parse(_payload)?.logo);
-        setFile(logo);
-      };
-    } else {
       setPayload({
         company: metadata?.profile?.company_name,
         legal: metadata?.profile?.company_name,
-        country: { name: metadata?.profile?.country },
-        market: metadata?.profile?.industry_market,
+        country: { name: metadata?.profile?.[event].country },
+        market: metadata?.profile?.industry_ids,
         web: metadata?.profile?.website,
         address: metadata?.profile?.address,
         business: metadata?.profile?.description,
@@ -111,7 +128,6 @@ const StartupFlow = ({ }: any) => {
         logo: metadata?.profile?.logo,
         currency: { label: "AED", value: "AED" }
       })
-    }
   };
 
   const onGetConvertedToBLOB = async (url: string) => {
@@ -186,7 +202,7 @@ const StartupFlow = ({ }: any) => {
       form.append("startup[legal_name]", payload.legal);
       form.append("startup[country_id]", payload.country?.id || _country?.id);
       payload.market.forEach((val: any) => {
-        form.append("startup[industry_market][]", val);
+        form.append("startup[industry_ids][]", val);
       });
       form.append("startup[website]", payload.web);
       form.append("startup[address]", payload.address);

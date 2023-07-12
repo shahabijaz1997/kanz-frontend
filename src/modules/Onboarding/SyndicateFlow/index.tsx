@@ -69,8 +69,8 @@ const SyndicateFlow = ({ }: any) => {
       raised: meta?.profile?.have_you_ever_raised,
       amountRaised: meta?.profile?.raised_amount,
       timesRaised: meta?.profile?.no_times_raised,
-      industry: meta?.profile[event]?.industry_market,
-      region: meta?.profile[event]?.region,
+      industry: meta?.profile.industry_ids,
+      region: meta?.profile.region_ids,
       profileLink: meta?.profile?.profile_link,
       dealflow: meta?.profile?.dealflow,
       name: meta?.profile?.name,
@@ -164,10 +164,10 @@ const SyndicateFlow = ({ }: any) => {
       form.append("syndicate_profile[raised_amount]", payload.amountRaised);
       form.append("syndicate_profile[no_times_raised]", payload.timesRaised);
       payload.industry.forEach((val: any) => {
-        form.append("syndicate_profile[industry_ids][]", val?.id);
+        form.append("syndicate_profile[industry_ids][]", val);
       });
       payload.region.forEach((val: any) => {
-        form.append("syndicate_profile[region_ids][]", val?.id);
+        form.append("syndicate_profile[region_ids][]", val);
       });
       form.append("syndicate_profile[profile_link]", payload.profileLink);
       form.append("syndicate_profile[dealflow]", payload.dealflow);

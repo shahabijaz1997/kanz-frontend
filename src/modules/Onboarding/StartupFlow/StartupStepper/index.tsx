@@ -50,6 +50,16 @@ const StartupStepper = ({ event, countries, orientation, language, file, payload
         }
     };
 
+    const filteredData:any = [];
+    if (searchResults.length > 0 && payload?.market) {
+      searchResults?.filter((item: any) => {
+        payload?.market?.map((market: any) => {
+          if (market === item.id) {
+            filteredData.push(item);
+          }
+        });
+      });
+    }
     return (
         step === 1 ? (
             <section className="flex items-start justify-center flex-col">
@@ -73,14 +83,14 @@ const StartupStepper = ({ event, countries, orientation, language, file, payload
                                 <Chevrond stroke="#737373" />
                             </span>
                         </span>
-                        {payload.market && payload.market.length > 0 && (
+                        {payload?.market && payload.market.length > 0 && (
                             <aside className="inline-flex gap-2 flex-wrap min-h-[42px] shadow-sm appearance-none border border-neutral-300 rounded-md w-full py-2 px-3 text-gray-500 leading-tight focus:outline-none focus:shadow-outline">
                                 {React.Children.toArray(
-                                    payload.market.map((ind: any) => <div className="check-background rounded-[4px] px-1 py-[2px] inline-flex items-center">
-                                        <small>{ind}</small>
+                                    filteredData.map((ind: any) => <div className="check-background rounded-[4px] px-1 py-[2px] inline-flex items-center">
+                                        <small>{ind[event]?.name}</small>
                                         <CrossIcon onClick={() => {
-                                            let payloadItems = payload.market.filter((x: any) => x !== ind)
-                                            onSetPayload(payloadItems, "market");
+                                            let payloadItems = filteredData.filter((x: any) => x.id !== ind.id);
+                                            onSetPayload(payloadItems.map((item: any)=>item.id), "market");
                                         }} className="cursor-pointer h-5 w-5 ml-1" stroke={"#828282"} />
                                     </div>)
                                 )}
@@ -88,7 +98,7 @@ const StartupStepper = ({ event, countries, orientation, language, file, payload
                         )}
                         {(showData) && <SearchedItems items={searchResults} searchString={search} passItemSelected={(it: any) => {
                             let payloadItems = [...payload.market];
-                            payloadItems.push(it);
+                            payloadItems.push(it.id);
                             onSetPayload(Array.from(new Set(payloadItems)), "market");
                         }} />}
                     </div>

@@ -16,7 +16,7 @@ const rootReducer = combineReducers({
   philisophy: philisophyReducer,
   event: eventReducer,
   attachments: attachmentsReducer,
-  orientation: orientaionReducer
+  orientation: orientaionReducer,
 });
 
 export default rootReducer;
