@@ -42,10 +42,10 @@ const FileUpload = ({ id, fid, file, setModalOpen, setFile, removeFile, title, u
     const handleDrop = (e: React.DragEvent<HTMLDivElement>) => {
         e.preventDefault();
         setDragOver(false);
-        const file = e.dataTransfer.files[0];
-
-        if (!acceptPdf && validImages.includes(file.type)) setFileInformation(file);
-        else if (acceptPdf && validTypes.includes(file.type)) setFileInformation(file);
+        const _file = e.dataTransfer.files[0];
+        if (file) return;
+        if (!acceptPdf && validImages.includes(_file.type)) setFileInformation(_file);
+        else if (acceptPdf && validTypes.includes(_file.type)) setFileInformation(_file);
         else setAlertType({ type: PromptMessage.ERROR, message: language.promptMessages.invalidFormat });
     };
 

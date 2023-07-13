@@ -44,10 +44,6 @@ const Realtors = (props: any) => {
   });
   const requiredFieldError = language?.common?.required_field;
 
-  useLayoutEffect(() => {
-    getRealtorDetails();
-  }, []);
-
   const getRealtorDetails = async () => {
     try {
       setLoading(true);
@@ -82,21 +78,24 @@ const Realtors = (props: any) => {
     }
     setLoad(false);
   }, [metadata]);
-
-  const { register, handleSubmit, watch, formState: { errors } } = useForm<FormValues>();
+    if ((user.status !== ApplicationStatus.OPENED && user.status !== ApplicationStatus.REOPENED)) return navigate("/welcome");
+    getRealtorDetails();
+  }, []);
 
   useLayoutEffect(() => {
     if (user.type !== KanzRoles.REALTOR) navigate("/welcome");
-
     getAllCountries();
   }, []);
 
+  const { register, handleSubmit, watch, formState: { errors } } = useForm<FormValues>();
   useEffect(() => {
     const subscription = watch((value) =>
       onSetPayload(value.noOfProperty, "noOfProperty")
     );
     return () => subscription.unsubscribe();
   }, [watch]);
+
+
 
   const getAllCountries = async () => {
     try {
