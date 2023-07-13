@@ -42,8 +42,6 @@ const CompleteGoals = ({ }: any) => {
 
   useLayoutEffect(() => {
     getInvestorDetails();
-    let accert: any = localStorage.getItem("accert");
-    if (accert) setPayload({ selected: JSON.parse(accert) });
   }, []);
 
   const getInvestorDetails = async () => {
@@ -52,7 +50,6 @@ const CompleteGoals = ({ }: any) => {
       let { status, data } = await getInvestor(authToken);
       if (status === 200) {
         console.log("data: ", data);
-        
         setApiResp(data);
       }
     } catch (error: any) {

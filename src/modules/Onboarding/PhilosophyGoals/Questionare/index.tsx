@@ -16,6 +16,7 @@ import { ApplicationStatus } from "../../../../enums/types.enum";
 import { checkExist, checkExisting } from "../../../../utils/questioare.utils";
 import { RoutesEnums } from "../../../../enums/routes.enum";
 import { saveAnswer, savePhilosophyData } from "../../../../redux-toolkit/slicer/philosophy.slicer";
+import { filterObjectsByTrueValue } from "../../../../utils/object.util";
 
 const Questionare = ({ step, returnSuccessRedirection }: any) => {
   const navigate = useNavigate();
@@ -67,30 +68,37 @@ const Questionare = ({ step, returnSuccessRedirection }: any) => {
       setLoading(true);
       const { status, data }: any = await getInvestmentPhilisophyQuestions(pg, authToken);
       if (status === 200) {
-        let philisophyData: any = localStorage.getItem("philosophy");
-        let parsed = JSON.parse(philisophyData) || {};
-        setSelected(parsed);
-        let allQuestions = data?.status?.data?.questions;
-        let inprogress = checkExisting(allQuestions, event);
+        // let philisophyData: any = localStorage.getItem("philosophy");
+        // let parsed = JSON.parse(philisophyData) || {};
+        // setSelected(parsed);
+        // let allQuestions = data?.status?.data?.questions;
+        // let inprogress = checkExisting(allQuestions, event);
 
-        if (inprogress) {
-          setExisting(true);
-          allQuestions.forEach((q: any) => {
-            let selected = q[event]?.options?.find((s: any) => s.selected);
-            toggleAnswerSelection(q, selected);
-          });
-        } else {
-          if (JSON.parse(philisophyData)) {
-            if (parsed[step]) {
-              let d = parsed[step]?.questions.map((as: any) => as.question_id);
-              setValidations(d);
-            } else setValidations([]);
-          }
-          if (allQuestions && allQuestions[0]?.question_type === "checkbox")
-            if (parsed[step]?.questions[0]) setMcqs(parsed[step].questions[0]?.answer_meta?.options);
-          if (allQuestions[0]?.question_type === "text") setTextAnswer(selected[step]?.questions[0]?.answers[0])
-        }
+        // if (inprogress) {
+        //   setExisting(true);
+        //   allQuestions.forEach((q: any) => {
+        //     let selected = q[event]?.options?.find((s: any) => s.selected);
+        //     toggleAnswerSelection(q, selected);
+        //   });
+        // } else {
+        //   if (JSON.parse(philisophyData)) {
+        //     if (parsed[step]) {
+        //       let d = parsed[step]?.questions.map((as: any) => as.question_id);
+        //       setValidations(d);
+        //     } else setValidations([]);
+        //   }
+        //   if (allQuestions && allQuestions[0]?.question_type === "checkbox")
+        //     if (parsed[step]?.questions[0]) setMcqs(parsed[step].questions[0]?.answer_meta?.options);
+        //   if (allQuestions[0]?.question_type === "text") setTextAnswer(selected[step]?.questions[0]?.answers[0])
+        // }
         setQuestions(data?.status?.data);
+        // console.log(data?.status?.data,"data?.status?.data");
+        // const qes = data?.status?.data.questions;
+        // console.log(qes,"qes")
+        // delete data?.status?.data.questions;
+        // console.log(data?.status?.data,"2222222")
+        // const obj = {...data?.status?.data,questions:[qes]};
+        // console.log(obj,"OBJJJJJJJ")
         dispatch(savePhilosophyData(data?.status?.data));
         setPage(pg);
       }
@@ -163,7 +171,7 @@ const Questionare = ({ step, returnSuccessRedirection }: any) => {
   };
 
   const renderMultipleChoiceQuestionnaires = (ques: any) => {
-    if (selected && ques.step === 2 && ques.index === 2 && (!selected[`2`] || selected[`2`]?.questions.find((q: any) => q.answers[0] === questions?.questions[0][event]?.options[1]?.id)))
+    if (selected && ques.step === 2 && ques.index === 2 && !philosophyData?.questions[0][event]?.options[0]?.selected)
       return <React.Fragment></React.Fragment>;
     if (ques?.question_type === "text") {
       return (
@@ -179,7 +187,10 @@ const Questionare = ({ step, returnSuccessRedirection }: any) => {
           </p>
 
           <section className="mb-8 w-full relative mt-3">
-            <textarea value={textAnswer || ""} onChange={(e) => setTextAnswer(e.target.value)}
+            <textarea value={ques[event].answer || ""} onChange={(e) =>{ 
+              // setTextAnswer(e.target.value);
+              dispatch(saveAnswer({textAnswer:e.target.value,question:ques,questions:philosophyData,lang:event}));
+            }}
               className="rounded-md shadow-sm appearance-none border border-neutral-300 rounded-md w-full py-2 px-3 text-gray-500 leading-tight focus:outline-none focus:shadow-outline h-[100px] resize-none"
             ></textarea>
           </section>
@@ -229,7 +240,7 @@ const Questionare = ({ step, returnSuccessRedirection }: any) => {
     );
   };
 
-  const renderCheckboxQuestionaire = (ques: any) => {
+  const renderCheckboxQuestionnaire = (ques: any) => {
     if (selected && ques.step === 2 && ques.index === 2 && (!selected[`2`] || selected[`2`]?.questions.find((q: any) => q.answer === questions?.questions[0][event]?.options[1]?.id)))
       return <React.Fragment></React.Fragment>;
     return (
@@ -250,30 +261,31 @@ const Questionare = ({ step, returnSuccessRedirection }: any) => {
                 ques[event]?.options.map((as: any) => {
                   return (
                     <li
-                      className={`h-[50px] w-[420px] p-4 grey-neutral-200 text-sm font-medium cursor-pointer border border-grey inline-flex items-center justify-start first:rounded-t-md last:rounded-b-md screen500:w-full ${checkBoxCheckExist(as) ? "check-background" : "bg-white"
+                      className={`h-[50px] w-[420px] p-4 grey-neutral-200 text-sm font-medium cursor-pointer border border-grey inline-flex items-center justify-start first:rounded-t-md last:rounded-b-md screen500:w-full ${as.selected ? "check-background" : "bg-white"
                         }`}
                       onClick={() => {
-                        let _mcqs = [...mcqs];
-                        if (_mcqs.find((m: any) => m.id === as.id)) {
-                          let filtered = _mcqs.filter((m: any) => m.id !== as.id);
-                          setMcqs(filtered);
-                        } else
-                          setMcqs((prv: any) => {
-                            return [...prv, as];
-                          });
-                        let _validations = [...validations];
-                        let f = _validations.find((v) => v === ques?.id);
-                        if (!f) {
-                          _validations.push(ques?.id);
-                          setValidations(_validations);
-                        }
+                      dispatch(saveAnswer({option:as,question:ques,questions:philosophyData,lang:event}));
+                        // let _mcqs = [...mcqs];
+                        // if (_mcqs.find((m: any) => m.id === as.id)) {
+                        //   let filtered = _mcqs.filter((m: any) => m.id !== as.id);
+                        //   setMcqs(filtered);
+                        // } else
+                        //   setMcqs((prv: any) => {
+                        //     return [...prv, as];
+                        //   });
+                        // let _validations = [...validations];
+                        // let f = _validations.find((v) => v === ques?.id);
+                        // if (!f) {
+                        //   _validations.push(ques?.id);
+                        //   setValidations(_validations);
+                        // }
                       }}
                     >
                       <input
                         onChange={() => { }}
                         className="accent-cyan-800 relative float-left mx-2 h-3 w-3 rounded-full border-2 border-solid border-cyan-300 before:pointer-events-none before:absolute before:h-4 before:w-4 before:scale-0 before:rounded-full before:bg-transparent before:opacity-0 before:content-[''] after:absolute after:z-[1] after:block after:h-4 after:w-4 after:rounded-full after:content-[''] checked:border-primary checked:before:opacity-[0.16] checked:after:absolute checked:after:left-1/2 checked:after:top-1/2 checked:after:h-[0.625rem] checked:after:w-[0.625rem] checked:after:rounded-full checked:after:border-primary checked:after:bg-primary checked:after:content-[''] checked:after:[transform:translate(-50%,-50%)] hover:cursor-pointer hover:before:opacity-[0.04]"
                         type="checkbox"
-                        checked={checkBoxCheckExist(as) ? true : false}
+                        checked={as.selected ? true : false}
                       />
                       <small>{as?.statement}</small>
                     </li>
@@ -352,12 +364,12 @@ const Questionare = ({ step, returnSuccessRedirection }: any) => {
       return toast.warning(language.promptMessages.pleaseSelectAllData, toastUtil);
     }
     let _selected = { ...selected };
-    if (questions?.questions[0]?.question_type === "text") {
-      if (_selected[step])
-        _selected[step].questions = [{ question_id: questions?.questions[0]?.id, answers: [textAnswer], answer_meta: {} }];
-      else _selected[step] = { questions: [{ question_id: questions?.questions[0]?.id, answers: [textAnswer], answer_meta: {} }] };
-      setSelected(_selected);
-    }
+    // if (questions?.questions[0]?.question_type === "text") {
+    //   if (_selected[step])
+    //     _selected[step].questions = [{ question_id: questions?.questions[0]?.id, answers: [textAnswer], answer_meta: {} }];
+    //   else _selected[step] = { questions: [{ question_id: questions?.questions[0]?.id, answers: [textAnswer], answer_meta: {} }] };
+    //   setSelected(_selected);
+    // }
     let payload: any = { investment_philosophy: {} };
     // let philisophyData: any = localStorage.getItem("philosophy");
 
@@ -377,15 +389,16 @@ const Questionare = ({ step, returnSuccessRedirection }: any) => {
       payload.investment_philosophy.step = step;
       const _questions: any = [];
       philosophyData.questions.forEach((question: any) => {
-        question[event].options.some((option: any)=>{ if(option.selected){
-          const finalQuestion = {question_id:question.id,answers:[option.id]};
+        if(question.question_type === 'text'){
+          const finalQuestion = {question_id:question.id,selected_option_ids:[],answer:question[event].answer};
           _questions.push(finalQuestion);
-        }});
-        
+        }else{
+        const filteredArray = filterObjectsByTrueValue(question[event].options, 'selected');
+          const finalQuestion = {question_id:question.id,selected_option_ids:filteredArray};
+          _questions.push(finalQuestion);
+        }
       });
-      console.log(_questions,"_questions")
       payload.investment_philosophy.questions = _questions;
-    console.log("payload",payload);
     submitData(payload);
     if (step !== questions?.total_steps)
       navigate(`/philosophy-goals/${page + 1}`);
@@ -398,7 +411,7 @@ const Questionare = ({ step, returnSuccessRedirection }: any) => {
   
   function checkAtLeastOneOptionSelected(questions: any[]): boolean {
     return questions?.every((question: any) =>
-      checkSelected(question[event].options)
+    question[event].options && checkSelected(question[event].options)
     );
   }
   
@@ -413,17 +426,17 @@ const Questionare = ({ step, returnSuccessRedirection }: any) => {
   
 
   const checkValidation = () => {
-    if (questions?.questions && questions?.questions[0]?.question_type === "checkbox") {
+    // if (questions?.questions && questions?.questions[0]?.question_type === "checkbox") {
+      if(false){
       if (mcqs?.length > 0) return true;
       return false;
-    } else if (questions?.questions && questions?.questions[0]?.question_type === "text") {
-      if (textAnswer?.length > 0) return true;
+    } else if (philosophyData?.questions.length > 0 && philosophyData?.questions[0]?.question_type === "text") {
+      if (philosophyData?.questions[0][event]?.answer.length > 0) return true;
       return false;
     } else {
       if (user?.status === ApplicationStatus.REOPENED) return true;
       if (!philosophyData?.questions?.length) return false;
       else {
-        
         if (!philosophyData?.questions?.length) return false;
           else return checkStatement(philosophyData.questions);
         // else if ((step !== 2 && validations?.length === philosophyData?.questions?.length) ||
@@ -456,7 +469,7 @@ const Questionare = ({ step, returnSuccessRedirection }: any) => {
             step !== 3 &&
             React.Children.toArray(philosophyData?.questions.map((ques: any) => ques.step === 2 && ques.index === 1 ? renderBooleanQuestionnaires(ques) : renderMultipleChoiceQuestionnaires(ques)))}
 
-          {questions?.questions?.length && questions?.questions[0]?.question_type === "checkbox" && React.Children.toArray(questions?.questions.map((ques: any) => renderCheckboxQuestionaire(ques)))}
+          {philosophyData?.questions?.length && philosophyData?.questions[0]?.question_type === "checkbox" && React.Children.toArray(philosophyData?.questions.map((ques: any) => renderCheckboxQuestionnaire(ques)))}
 
           <section className="flex items-start justify-center w-full flex-col mt-6 max-w-[420px] screen500:max-w-[300px]">
             <div className="w-full inline-flex items-center justify-between mt-16">

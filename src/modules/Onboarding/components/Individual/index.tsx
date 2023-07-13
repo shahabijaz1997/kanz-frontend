@@ -37,7 +37,7 @@ const Individual = ({ language }: any) => {
   useLayoutEffect(() => {
     getAllCountries();
   }, []);
-
+  console.log(metadata,"metadata")
   const getAllCountries = async () => {
     setLoading(true);
     try {
@@ -48,15 +48,15 @@ const Individual = ({ language }: any) => {
           setPayload({ national: { label: metadata?.profile[event]?.nationality, value: metadata?.profile[event]?.nationality }, residence: { label: metadata?.profile[event]?.residence, value: metadata?.profile[event]?.residence }, accer: "", risk: false });
           setSelectedAssert(metadata?.profile[event]?.accreditation?.options.find((as: any) => as.selected));
         }
-        else {
-          let account_info = localStorage.getItem("account_info");
-          let assertData = localStorage.getItem("accert");
-          if (account_info) {
-            let accInfo = JSON.parse(account_info);
-            setPayload(accInfo);
-          }
-          if (assertData) setSelectedAssert(JSON.parse(assertData));
-        }
+        // else {
+        //   let account_info = localStorage.getItem("account_info");
+        //   let assertData = localStorage.getItem("accert");
+        //   if (account_info) {
+        //     let accInfo = JSON.parse(account_info);
+        //     // setPayload(accInfo);
+        //   }
+        //   if (assertData) setSelectedAssert(JSON.parse(assertData));
+        // }
         setCountries({ all: data.status.data, names });
       }
     } catch (error: any) {
@@ -96,8 +96,8 @@ const Individual = ({ language }: any) => {
         navigate("/complete-goals", {
           state: { type: InvestorType.INDIVIDUAL, selected: selectedAssert },
         });
-        localStorage.setItem("account_info", JSON.stringify(payload));
-        localStorage.setItem("accert", JSON.stringify(selectedAssert));
+        // localStorage.setItem("account_info", JSON.stringify(payload));
+        // localStorage.setItem("accert", JSON.stringify(selectedAssert));
       }
     } catch (error: any) {
       const message =
@@ -155,7 +155,7 @@ const Individual = ({ language }: any) => {
             </label>
             <ul>
               {React.Children.toArray(
-                metadata?.profile[event]?.accreditation?.options.map((as: any) => {
+                metadata?.profile && metadata?.profile[event]?.accreditation?.options?.map((as: any) => {
                   return (
                     <li
                       className={`h-[50px] w-[420px] p-4 grey-neutral-200 text-sm font-medium cursor-pointer border border-grey inline-flex items-center justify-start first:rounded-t-md last:rounded-b-md screen500:w-full ${selectedAssert?.id === as.id

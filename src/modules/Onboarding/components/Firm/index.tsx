@@ -89,10 +89,10 @@ const Firm = ({ language }: any) => {
           setSelectedAssert(metadata?.profile[event]?.accreditation?.options.find((as:any) => as.selected));
         }
         else {
-          let account_info = localStorage.getItem("account_info");
-          let assertData = localStorage.getItem("accert");
-          if (account_info) setPayload(JSON.parse(account_info));
-          if (assertData) setSelectedAssert(JSON.parse(assertData));
+          // let account_info = localStorage.getItem("account_info");
+          // let assertData = localStorage.getItem("accert");
+          // if (account_info) setPayload(JSON.parse(account_info));
+          // if (assertData) setSelectedAssert(JSON.parse(assertData));
         }
 
         setCountries({ all: data.status.data, names });
@@ -131,8 +131,8 @@ const Firm = ({ language }: any) => {
         navigate("/complete-goals", {
           state: { type: InvestorType.FIRM, selected: selectedAssert },
         });
-        localStorage.setItem("account_info", JSON.stringify(payload));
-        localStorage.setItem("accert", JSON.stringify(selectedAssert));
+        // localStorage.setItem("account_info", JSON.stringify(payload));
+        // localStorage.setItem("accert", JSON.stringify(selectedAssert));
       }
     } catch (error: any) {
       const message =

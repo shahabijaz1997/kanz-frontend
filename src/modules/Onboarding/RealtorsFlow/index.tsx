@@ -11,12 +11,13 @@ import Header from "../../../shared/components/Header";
 import Drawer from "../../../shared/components/Drawer";
 import Button from "../../../shared/components/Button";
 import { toastUtil } from "../../../utils/toast.utils";
-import { postRealtorInformation } from "../../../apis/realtor.api";
+import { getRealtorInformation, postRealtorInformation } from "../../../apis/realtor.api";
 import Loader from "../../../shared/views/Loader";
 import { ApplicationStatus } from "../../../enums/types.enum";
 import { isEmpty } from "../../../utils/object.util";
 import { KanzRoles } from "../../../enums/roles.enum";
 import { RoutesEnums } from "../../../enums/routes.enum";
+import { saveUserMetaData } from "../../../redux-toolkit/slicer/metadata.slicer";
 
 type FormValues = {
   noOfProperty: number;
@@ -44,10 +45,34 @@ const Realtors = (props: any) => {
   const requiredFieldError = language?.common?.required_field;
 
   useLayoutEffect(() => {
+    getRealtorDetails();
+  }, []);
+
+  const getRealtorDetails = async () => {
+    try {
+      setLoading(true);
+      let { status, data } = await getRealtorInformation(1,authToken);
+      if (status === 200) {
+        dispatch(saveUserMetaData(data?.status?.data));
+      }
+    } catch (error: any) {
+      const message =
+        error?.response?.data?.status?.message ||
+        error?.response?.data ||
+        language.promptMessages.errorGeneral;
+      toast.error(message, toastUtil);
+      if (error.response && error.response.status === 401) {
+        dispatch(saveToken(""));
+        navigate("/login", { state: RoutesEnums.REALTOR_DETAILS });
+      }
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useLayoutEffect(() => {
     setLoad(true);
     if ((user.status !== ApplicationStatus.OPENED && user.status !== ApplicationStatus.REOPENED)) return navigate("/welcome");
-    let _payload: any = localStorage.getItem("realtor");
-    if (_payload) setPayload(JSON.parse(_payload));
     if (!isEmpty(metadata?.profile)) {
       setPayload({
         national: { label: metadata.profile[event]?.nationality, value: metadata.profile[event]?.nationality },
@@ -56,7 +81,7 @@ const Realtors = (props: any) => {
       });
     }
     setLoad(false);
-  }, []);
+  }, [metadata]);
 
   const { register, handleSubmit, watch, formState: { errors } } = useForm<FormValues>();
 
@@ -121,7 +146,6 @@ const Realtors = (props: any) => {
       };
       let { status } = await postRealtorInformation(pData, authToken);
       if (status === 200) {
-        localStorage.setItem("realtor", JSON.stringify(payload));
         navigate("/add-attachments");
       }
     } catch (error: any) {

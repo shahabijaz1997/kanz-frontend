@@ -1,5 +1,5 @@
 import { useState, useLayoutEffect } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../../redux-toolkit/store/store";
 import { useLocation, useNavigate } from "react-router-dom";
 import Header from "../../../shared/components/Header";
@@ -8,10 +8,18 @@ import Firm from "../components/Firm";
 import Drawer from "../../../shared/components/Drawer";
 import { ApplicationStatus, InvestorType } from "../../../enums/types.enum";
 import { KanzRoles } from "../../../enums/roles.enum";
+import { getInvestor } from "../../../apis/investor.api";
+import { saveUserMetaData } from "../../../redux-toolkit/slicer/metadata.slicer";
+import { saveToken } from "../../../redux-toolkit/slicer/auth.slicer";
+import { toast } from "react-toastify";
+import { toastUtil } from "../../../utils/toast.utils";
 
 const CompleteDetails = (props: any) => {
     const { state } = useLocation();
     const navigate = useNavigate();
+    const dispatch = useDispatch();
+
+    const authToken: any = useSelector((state: RootState) => state.auth.value);
     const user: any = useSelector((state: RootState) => state.user.value);
     const language: any = useSelector((state: RootState) => state.language.value);
     const [isOpen, setOpen] = useState(false);
@@ -19,6 +27,29 @@ const CompleteDetails = (props: any) => {
     useLayoutEffect(() => {
         if ((user.status !== ApplicationStatus.OPENED && user.status !== ApplicationStatus.REOPENED) || user.type !== KanzRoles.INVESTOR) navigate("/welcome");
     }, []);
+    useLayoutEffect(() => {
+        if (user.type !== KanzRoles.INVESTOR) navigate("/welcome");
+        getInvestorDetails();
+      }, []);
+    
+      const getInvestorDetails = async () => {
+        try {
+          let { status, data } = await getInvestor(authToken);
+          if (status === 200) {
+            dispatch(saveUserMetaData(data?.status?.data));
+          }
+        } catch (error: any) {
+          const message = error?.response?.data?.status?.message || error?.response?.data || language.promptMessages.errorGeneral;
+          toast.error(message, toastUtil);
+          if (error.response && error.response.status === 401) {
+            dispatch(saveToken(""));
+            navigate("/login", { state: KanzRoles.INVESTOR });
+          }
+        } finally {
+        }
+      };
+    
+
     return (
         <main className="h-full max-h-full cbc-auth overflow-y-auto overflow-x-hidden">
             <section className="h-[67px]">

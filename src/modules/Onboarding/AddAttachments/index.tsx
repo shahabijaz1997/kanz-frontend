@@ -33,7 +33,7 @@ const AddAttachments = (props: any) => {
   const [agreeToTerms, setAgreeToTerms] = useState(false);
   const [files, setFiles]: any = useState([]);
   const [attachmentData, setAttachmentData]: any = useState([]);
-
+  console.log(attachmentData,"attachmentData")
   useLayoutEffect(() => {
     onGetRoleBasedAttachmentDetails();
   }, []);
@@ -112,8 +112,8 @@ const AddAttachments = (props: any) => {
 
 
   const checkDisabled = () => {
-    let nec_ats: any[] = attachmentData.filter((at: any) => {
-      if (at.attachment_url && !files.some((f: any) => f.id === at.id)) return at;
+    let nec_ats: any[] = attachmentData.filter((attachment: any) => {
+      if (attachment.attachment_url && !files.some((file: any) => file.id === attachment.id)) return attachment;
     })
     if (files.length + nec_ats.length >= 3 && agreeToTerms ? false : true) return true;
     return false;
