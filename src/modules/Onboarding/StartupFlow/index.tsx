@@ -117,7 +117,7 @@ const StartupFlow = ({ }: any) => {
         company: metadata?.profile?.company_name,
         legal: metadata?.profile?.company_name,
         country: { name: metadata?.profile?.[event].country },
-        market: metadata?.profile?.industry_ids,
+        market: metadata?.profile?.industry_ids || [],
         web: metadata?.profile?.website,
         address: metadata?.profile?.address,
         business: metadata?.profile?.description,

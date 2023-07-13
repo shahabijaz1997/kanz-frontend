@@ -64,13 +64,12 @@ const SyndicateFlow = ({ }: any) => {
   }, [params]);
 
   const bootstrapPayload = (meta: any) => {
-    // let industries = 
     setPayload({
       raised: meta?.profile?.have_you_ever_raised,
       amountRaised: meta?.profile?.raised_amount,
       timesRaised: meta?.profile?.no_times_raised,
-      industry: meta?.profile.industry_ids,
-      region: meta?.profile.region_ids,
+      industry: meta?.profile.industry_ids || [],
+      region: meta?.profile.region_ids || [],
       profileLink: meta?.profile?.profile_link,
       dealflow: meta?.profile?.dealflow,
       name: meta?.profile?.name,
