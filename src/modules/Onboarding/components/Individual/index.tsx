@@ -37,7 +37,7 @@ const Individual = ({ language }: any) => {
   useLayoutEffect(() => {
     getAllCountries();
   }, []);
-  console.log(metadata,"metadata")
+  
   const getAllCountries = async () => {
     setLoading(true);
     try {

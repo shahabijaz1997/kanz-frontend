@@ -49,7 +49,6 @@ const CompleteGoals = ({ }: any) => {
       setLoading(true);
       let { status, data } = await getInvestor(authToken);
       if (status === 200) {
-        console.log("data: ", data);
         setApiResp(data);
       }
     } catch (error: any) {

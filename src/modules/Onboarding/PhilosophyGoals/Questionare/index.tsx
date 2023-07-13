@@ -37,8 +37,6 @@ const Questionare = ({ step, returnSuccessRedirection }: any) => {
   const [loading, setLoading]: any = useState(true);
   const [existing, setExisting]: any = useState(true);
 
-  // console.log(philosophyData,"philosophyData")
-
   useLayoutEffect(() => {
     if (user.type !== KanzRoles.INVESTOR) navigate(RoutesEnums.WELCOME);
   }, []);
@@ -92,13 +90,6 @@ const Questionare = ({ step, returnSuccessRedirection }: any) => {
         //   if (allQuestions[0]?.question_type === "text") setTextAnswer(selected[step]?.questions[0]?.answers[0])
         // }
         setQuestions(data?.status?.data);
-        // console.log(data?.status?.data,"data?.status?.data");
-        // const qes = data?.status?.data.questions;
-        // console.log(qes,"qes")
-        // delete data?.status?.data.questions;
-        // console.log(data?.status?.data,"2222222")
-        // const obj = {...data?.status?.data,questions:[qes]};
-        // console.log(obj,"OBJJJJJJJ")
         dispatch(savePhilosophyData(data?.status?.data));
         setPage(pg);
       }
@@ -121,8 +112,6 @@ const Questionare = ({ step, returnSuccessRedirection }: any) => {
     try {
       setOpen(false);
       setLoading(true);
-      console.log("payload",payload);
-      
       let { status, data } = await postInvestmentPhilisophyData(payload, authToken);
       if (status === 200) localStorage.setItem("step", step);
       if (step === questions?.total_steps && status === 200)
@@ -355,8 +344,6 @@ const Questionare = ({ step, returnSuccessRedirection }: any) => {
     if (page !== 1) navigate(`/philosophy-goals/${page - 1}`);
     else navigate(`/complete-goals`);
   };
-
-  console.log(philosophyData,"philosophyDataphilosophyData")
 
   const onSetNext = () => {
     if (!checkValidation()) {

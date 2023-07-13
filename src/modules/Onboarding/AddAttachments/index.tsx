@@ -33,7 +33,6 @@ const AddAttachments = (props: any) => {
   const [agreeToTerms, setAgreeToTerms] = useState(false);
   const [files, setFiles]: any = useState([]);
   const [attachmentData, setAttachmentData]: any = useState([]);
-  console.log(attachmentData,"attachmentData")
   useLayoutEffect(() => {
     onGetRoleBasedAttachmentDetails();
   }, []);
