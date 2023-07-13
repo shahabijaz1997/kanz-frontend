@@ -77,10 +77,10 @@ const Realtors = (props: any) => {
       });
     }
     setLoad(false);
-  }, [metadata]);
     if ((user.status !== ApplicationStatus.OPENED && user.status !== ApplicationStatus.REOPENED)) return navigate("/welcome");
     getRealtorDetails();
-  }, []);
+  }, [metadata]);
+    
 
   useLayoutEffect(() => {
     if (user.type !== KanzRoles.REALTOR) navigate("/welcome");
