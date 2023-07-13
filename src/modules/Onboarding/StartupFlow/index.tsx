@@ -27,8 +27,6 @@ const StartupFlow = ({ }: any) => {
   const user: any = useSelector((state: RootState) => state.user.value);
   const authToken: any = useSelector((state: RootState) => state.auth.value);
   const event: any = useSelector((state: RootState) => state.event.value);
-  const logo: any = useSelector((state: RootState) => state.attachments.logo.value);
-  const metadata: any = useSelector((state: RootState) => state.metadata.value);
   const orientation: any = useSelector((state: RootState) => state.orientation.value);
   const [countries, setCountries] = useState({ all: [], names: [] });
 
@@ -124,7 +122,7 @@ const StartupFlow = ({ }: any) => {
       raised: meta?.profile?.total_capital_raised,
       target: meta?.profile?.current_round_capital_target,
       logo: meta?.profile?.logo,
-      currency: { label: "AED", value: "AED" }
+      currency: { label: meta?.profile?.currency, value: meta?.profile?.currency }
     })
   };
 
@@ -154,8 +152,6 @@ const StartupFlow = ({ }: any) => {
       if (!isValidUrl(payload.web)) errors.push(language.promptMessages.validComp);
       toast.dismiss();
       if (errors.length) return errors.forEach(e => toast.warning(e, toastUtil));
-      setStep(2);
-      navigate(`/startup-type/${step + 1}`);
     } else {
       let errors = [];
       if (!payload.company || !payload.legal || !payload.country || !payload.market.length || !payload.address || !payload.web || !payload.name || !payload.email || !payload.logo || !payload.business || !payload.raised || !payload.target) {
@@ -164,8 +160,8 @@ const StartupFlow = ({ }: any) => {
       if (!isValidEmail(payload.email)) errors.push(language.promptMessages.invalidEmailCeo)
       toast.dismiss();
       if (errors.length) return errors.forEach(e => toast.warning(e, toastUtil));
-      onPostCompanyData();
     }
+    onPostCompanyData();
   };
 
   const onSetPayload = (data: any, type: string) => {
@@ -180,27 +176,42 @@ const StartupFlow = ({ }: any) => {
       let _country: any = countries.all.find((x: any) => x[event].name === payload.country.name);
 
       const form: any = new FormData();
-      form.append("startup[company_name]", payload.company);
-      form.append("startup[legal_name]", payload.legal);
-      form.append("startup[country_id]", payload.country?.id || _country?.id);
-      payload.market.forEach((val: any) => {
-        form.append("startup[industry_ids][]", val);
-      });
-      form.append("startup[website]", payload.web);
-      form.append("startup[address]", payload.address);
-      typeof payload?.logo !== "string" && form.append("startup[logo]", payload?.logo, payload?.logo?.name);
-      form.append("startup[description]", payload.business);
-      form.append("startup[ceo_name]", payload.name);
-      form.append("startup[ceo_email]", payload.email);
-      form.append("startup[total_capital_raised]", payload.raised);
-      form.append("startup[current_round_capital_target]", payload.target);
-      form.append("startup[currency]", payload?.currency?.value);
+      if (step == 1) {
+        form.append("startup_profile[step]", step);
+        form.append("startup_profile[company_name]", payload.company);
+        form.append("startup_profile[legal_name]", payload.legal);
+        form.append("startup_profile[country_id]", payload.country?.id || _country?.id);
+        payload.market.forEach((val: any) => {
+          form.append("startup_profile[industry_ids][]", val);
+        });
+        form.append("startup_profile[website]", payload.web);
+        form.append("startup_profile[address]", payload.address);
+      } else {
+        form.append("startup_profile[step]", step);
+        form.append("startup_profile[company_name]", payload.company);
+        form.append("startup_profile[legal_name]", payload.legal);
+        form.append("startup_profile[country_id]", payload.country?.id || _country?.id);
+        payload.market.forEach((val: any) => {
+          form.append("startup_profile[industry_ids][]", val);
+        });
+        form.append("startup_profile[website]", payload.web);
+        form.append("startup_profile[address]", payload.address);
+        typeof payload?.logo !== "string" && form.append("startup_profile[logo]", payload?.logo, payload?.logo?.name);
+        form.append("startup_profile[description]", payload.business);
+        form.append("startup_profile[ceo_name]", payload.name);
+        form.append("startup_profile[ceo_email]", payload.email);
+        form.append("startup_profile[total_capital_raised]", payload.raised);
+        form.append("startup_profile[current_round_capital_target]", payload.target);
+        form.append("startup_profile[currency]", payload?.currency?.value);
+      }
 
       let { status } = await postCompanyInformation(form, authToken);
 
-      if (status === 200) {
+      if (status === 200 && step == 2)
         navigate("/add-attachments");
-        localStorage.setItem("startup", JSON.stringify(payload));
+      else if (step == 1) {
+        setStep(2);
+        navigate(`/startup-type/${step + 1}`);
       }
     } catch (error: any) {
       if (error.response && error.response.status === 401) {
@@ -214,7 +225,6 @@ const StartupFlow = ({ }: any) => {
       setLoading(false);
     }
   };
-
 
   return (
     <main className="h-full max-h-full cbc-auth overflow-y-auto overflow-x-hidden">
