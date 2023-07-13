@@ -84,15 +84,15 @@ const SyndicateFlow = ({ }: any) => {
       let { status, data } = await getSyndicateInformation(1, authToken);
       if (status === 200) {
         dispatch(saveUserMetaData(data?.status?.data));
-        if(data?.status?.data?.profile) bootstrapPayload(data?.status?.data);
+        if (data?.status?.data?.profile) bootstrapPayload(data?.status?.data);
       }
-      else setPayload((prev:any) => {return {...prev, loading: false}} );
+      else setPayload((prev: any) => { return { ...prev, loading: false } });
     } catch (error: any) {
       if (error.response && error.response.status === 401) {
         dispatch(saveToken(""));
         navigate("/login", { state: '' });
       }
-      setPayload((prev:any) => {return {...prev, loading: false}} );
+      setPayload((prev: any) => { return { ...prev, loading: false } });
     } finally {
       let timer = setTimeout(() => {
         clearTimeout(timer);
@@ -127,8 +127,6 @@ const SyndicateFlow = ({ }: any) => {
       if (!isValidUrl(payload.profileLink)) errors.push(language.promptMessages.validProfile);
       toast.dismiss();
       if (errors.length) return errors.forEach(e => toast.warning(e, toastUtil));
-      setStep(2);
-      navigate(`/syndicate-lead/${step + 1}`);
     } else {
       if ((payload.raised && (!payload.timesRaised || !payload.amountRaised)) ||
         !payload.industry.length ||
@@ -145,8 +143,8 @@ const SyndicateFlow = ({ }: any) => {
           toastUtil
         );
       }
-      onPostSyndicateData();
     }
+    onPostSyndicateData();
   };
 
   const onSetPayload = (data: any, type: string) => {
@@ -159,26 +157,32 @@ const SyndicateFlow = ({ }: any) => {
     try {
       setLoading(true);
       const form: any = new FormData();
-      form.append("syndicate_profile[have_you_ever_raised]", payload.raised);
-      form.append("syndicate_profile[raised_amount]", payload.amountRaised);
-      form.append("syndicate_profile[no_times_raised]", payload.timesRaised);
-      payload.industry.forEach((val: any) => {
-        form.append("syndicate_profile[industry_ids][]", val);
-      });
-      payload.region.forEach((val: any) => {
-        form.append("syndicate_profile[region_ids][]", val);
-      });
-      form.append("syndicate_profile[profile_link]", payload.profileLink);
-      form.append("syndicate_profile[dealflow]", payload.dealflow);
-      form.append("syndicate_profile[name]", payload.name);
-      form.append("syndicate_profile[tagline]", payload.tagline);
-      typeof payload?.logo !== "string" && form.append("syndicate_profile[logo]", payload?.logo, payload?.logo?.name);
+      form.append("syndicate_profile[step]", step);
+      if (step == 1) {
+        form.append("syndicate_profile[have_you_ever_raised]", payload.raised);
+        form.append("syndicate_profile[raised_amount]", payload.amountRaised);
+        form.append("syndicate_profile[no_times_raised]", payload.timesRaised);
+        form.append("syndicate_profile[profile_link]", payload.profileLink);
+        payload.region.forEach((val: any) => {
+          form.append("syndicate_profile[region_ids][]", val);
+        });
+        form.append("syndicate_profile[dealflow]", payload.dealflow);
+        payload.industry.forEach((val: any) => {
+          form.append("syndicate_profile[industry_ids][]", val);
+        });
+      } else {
+        form.append("syndicate_profile[name]", payload.name);
+        form.append("syndicate_profile[tagline]", payload.tagline);
+        typeof payload?.logo !== "string" && form.append("syndicate_profile[logo]", payload?.logo, payload?.logo?.name);
+      }
 
       let { status } = await postSyndicateInformation(form, authToken);
 
-      if (status === 200) {
+      if (status === 200 && step == 2)
         navigate("/add-attachments");
-        localStorage.setItem("syndicate", JSON.stringify(payload));
+      else if (step == 1) {
+        setStep(2);
+        navigate(`/syndicate-lead/${step + 1}`);
       }
     } catch (error: any) {
       if (error.response && error.response.status === 401) {
