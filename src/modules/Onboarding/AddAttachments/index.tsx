@@ -33,7 +33,6 @@ const AddAttachments = (props: any) => {
   const [agreeToTerms, setAgreeToTerms] = useState(false);
   const [files, setFiles]: any = useState([]);
   const [attachmentData, setAttachmentData]: any = useState([]);
-
   useLayoutEffect(() => {
     onGetRoleBasedAttachmentDetails();
   }, []);
@@ -112,10 +111,9 @@ const AddAttachments = (props: any) => {
 
 
   const checkDisabled = () => {
-    let nec_ats: any[] = attachmentData.filter((at: any) => {
-      if (at.attachment_url && !files.some((f: any) => f.id === at.id)) return at;
+    let nec_ats: any[] = attachmentData.filter((attachment: any) => {
+      if (attachment.attachment_url && !files.some((file: any) => file.id === attachment.id)) return attachment;
     })
-    console.log("checkDisabled", files.length , nec_ats.length);
     if (files.length + nec_ats.length >= 3 && agreeToTerms ? false : true) return true;
     return false;
   };
@@ -125,8 +123,6 @@ const AddAttachments = (props: any) => {
       if (at.attachment_url && !files.some((f: any) => f.id === at.id)) return at;
     })
 
-    console.log("checkSubmit", files.length , nec_ats.length);
-    
     if (files.length + nec_ats.length < 3) return true;
     return false;
   };
@@ -203,15 +199,15 @@ const AddAttachments = (props: any) => {
                   )}
                 </form>
               </section>
-              <section className="w-full inline-flex items-center gap-2 rounded-md border border-grey w-[420px] p-4 check-background">
-                <input type="checkbox" className="accent-cyan-800 h-3 w-3 cursor-pointer" checked={agreeToTerms} onChange={() => setAgreeToTerms(!agreeToTerms)} />
+              <section className="w-full inline-flex items-center gap-2 rounded-md border border-grey w-[420px] p-4 check-background cursor-pointer" onClick={() => setAgreeToTerms(!agreeToTerms)}>
+                <input type="checkbox" className="accent-cyan-800 h-3 w-3 cursor-pointer" checked={agreeToTerms} />
                 <p className="text-neutral-500 text-sm font-normal">
                   {language?.common?.agree}
-                  <a href="/terms-and-conditions" className="text-cc-blue font-medium cursor-pointer" target="_blank" >
+                  <a onClick={(e) => e.stopPropagation()} href="/terms-and-conditions" className="text-cc-blue font-medium cursor-pointer" target="_blank" >
                     {language?.common?.termsConditions}
                   </a>
                   {language?.v2?.common?.understood}
-                  <a href="/privacy-policy" className="text-cc-blue font-medium cursor-pointer" target="_blank" >
+                  <a onClick={(e) => e.stopPropagation()} href="/privacy-policy" className="text-cc-blue font-medium cursor-pointer" target="_blank" >
                     {language?.v2?.common?.privacyPolicy}
                   </a>
                 </p>

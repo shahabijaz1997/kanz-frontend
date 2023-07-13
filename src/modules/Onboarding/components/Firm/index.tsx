@@ -84,15 +84,15 @@ const Firm = ({ language }: any) => {
       let { status, data } = await getCountries(authToken);
       if (status === 200) {
         let names = data.status.data.map((c: any) => c[event].name);
-        if (metadata?.profile) {
-          setPayload({ legal: metadata?.profile?.legal_name, residence: { label: metadata?.profile?.location, value: metadata?.profile?.location }, accer: "", risk: false });
-          setSelectedAssert(assertQuestions.find(as => as.title === metadata?.profile?.accreditation));
+        if (metadata?.profile?.id) {
+          setPayload({ legal: metadata?.profile[event]?.legal_name, residence: { label: metadata?.profile[event]?.location, value: metadata?.profile[event]?.location }, accer: "", risk: false });
+          setSelectedAssert(metadata?.profile[event]?.accreditation?.options.find((as:any) => as.selected));
         }
         else {
-          let account_info = localStorage.getItem("account_info");
-          let assertData = localStorage.getItem("accert");
-          if (account_info) setPayload(JSON.parse(account_info));
-          if (assertData) setSelectedAssert(JSON.parse(assertData));
+          // let account_info = localStorage.getItem("account_info");
+          // let assertData = localStorage.getItem("accert");
+          // if (account_info) setPayload(JSON.parse(account_info));
+          // if (assertData) setSelectedAssert(JSON.parse(assertData));
         }
 
         setCountries({ all: data.status.data, names });
@@ -121,8 +121,8 @@ const Firm = ({ language }: any) => {
         investor_profile: {
           country_id: country.id,
           legal_name: payload?.legal,
-          accreditation: selectedAssert?.title,
-          accepted_investment_criteria: riskChecked
+          accepted_investment_criteria: riskChecked,
+          accreditation_option_id: selectedAssert?.id
         }
       }
       let { data, status } = await investmentAccridiation(_payload, authToken);
@@ -131,8 +131,8 @@ const Firm = ({ language }: any) => {
         navigate("/complete-goals", {
           state: { type: InvestorType.FIRM, selected: selectedAssert },
         });
-        localStorage.setItem("account_info", JSON.stringify(payload));
-        localStorage.setItem("accert", JSON.stringify(selectedAssert));
+        // localStorage.setItem("account_info", JSON.stringify(payload));
+        // localStorage.setItem("accert", JSON.stringify(selectedAssert));
       }
     } catch (error: any) {
       const message =
@@ -189,7 +189,7 @@ const Firm = ({ language }: any) => {
               </label>
               <ul>
                 {React.Children.toArray(
-                  assertQuestions.map((as) => {
+                  metadata?.profile[event]?.accreditation?.options.map((as: any) => {
                     return (
                       <li
                         className={`h-[50px] w-[420px] p-4 grey-neutral-200 text-sm font-medium cursor-pointer border border-grey inline-flex items-center justify-start first:rounded-t-md last:rounded-b-md screen500:w-full ${selectedAssert?.id === as.id
@@ -203,7 +203,7 @@ const Firm = ({ language }: any) => {
                           type="radio"
                           checked={selectedAssert?.id === as.id ? true : false}
                         />
-                        <small>{as.title}</small>
+                        <small>{as.statement}</small>
                       </li>
                     );
                   })
@@ -211,15 +211,18 @@ const Firm = ({ language }: any) => {
               </ul>
             </section>
 
-            <section className="relative z-10 w-full inline-flex items-start gap-2 rounded-md border border-grey w-[420px] p-4 check-background cursor-pointer">
-              <input type="checkbox" className="accent-cyan-800 h-3 w-3 cursor-pointer" checked={riskChecked} onChange={() => setRiskChecked(!riskChecked)} />
+            <section className="relative z-10 w-full inline-flex items-start gap-2 rounded-md border border-grey w-[420px] p-4 check-background cursor-pointer" onClick={() => setRiskChecked(!riskChecked)}>
+              <input type="checkbox" className="accent-cyan-800 h-3 w-3 cursor-pointer" checked={riskChecked} onChange={() => { }} />
               <div>
                 <h3 className="text-neutral-700 font-medium text-[14px] leading-none">
                   {language?.v2?.risk?.heading}
                 </h3>
                 <p className="text-neutral-500 text-sm font-normal mt-1">
                   {language?.v2?.common?.risk_firm}&nbsp;
-                  <span className="text-cc-blue font-medium cursor-pointer" onClick={() => setOpen(true)} >
+                  <span className="text-cc-blue font-medium cursor-pointer" onClick={(e) => {
+                    e.stopPropagation();
+                    setOpen(true);
+                  }}>
                     {language?.common?.learn}
                   </span>
                 </p>

@@ -11,10 +11,9 @@ const SearchedItems = ({ items, searchString, passItemSelected }: any) => {
             else it.blue = false;
             return it;
         });
-
         return (
             React.Children.toArray(
-                filtered.map((it: any) => <div onClick={() => passItemSelected(it[event]?.name)} className={`cursor-pointer rounded-md py-1 px-2 bg-cbc-check text-neutral-700 font-normal text-sm hover:bg-cbc-check-hover transition-all ${it.blue && "border-2 border-blue-500"}`}>{it[event].name}</div>)
+                filtered.map((it: any) => <div onClick={() => passItemSelected(it) } className={`cursor-pointer rounded-md py-1 px-2 bg-cbc-check text-neutral-700 font-normal text-sm hover:bg-cbc-check-hover transition-all ${it.blue && "border-2 border-blue-500"}`}> {it[event].name} </div>)
             ))
     };
 

@@ -42,8 +42,6 @@ const CompleteGoals = ({ }: any) => {
 
   useLayoutEffect(() => {
     getInvestorDetails();
-    let accert: any = localStorage.getItem("accert");
-    if (accert) setPayload({ selected: JSON.parse(accert) });
   }, []);
 
   const getInvestorDetails = async () => {
@@ -100,11 +98,11 @@ const CompleteGoals = ({ }: any) => {
                     <React.Fragment>
                       <div>
                         <small className="text-neutral-700 text-sm font-medium">{language?.company?.legal}:</small>&nbsp;
-                        <span className="text-neutral-700 text-sm font-normal">{apiResp?.status?.data?.profile?.legal_name}</span>
+                        <span className="text-neutral-700 text-sm font-normal">{apiResp?.status?.data?.profile[event]?.legal_name}</span>
                       </div>
                       <div>
                         <small className="text-neutral-700 text-sm font-medium">{language?.common?.location}:</small>&nbsp;
-                        <span className="text-neutral-700 text-sm font-normal">{apiResp?.status?.data?.profile?.location}</span>
+                        <span className="text-neutral-700 text-sm font-normal">{apiResp?.status?.data?.profile[event]?.location}</span>
                       </div>
                     </React.Fragment>
                   )}
@@ -112,11 +110,11 @@ const CompleteGoals = ({ }: any) => {
                     <React.Fragment>
                       <div>
                         <small className="text-neutral-700 text-sm font-medium">{language?.common?.residence}:</small> &nbsp;
-                        <span className="text-neutral-700 text-sm font-normal">{apiResp?.status?.data?.profile?.residence}</span>
+                        <span className="text-neutral-700 text-sm font-normal">{apiResp?.status?.data?.profile[event]?.residence}</span>
                       </div>
                       <div>
                         <small className="text-neutral-700 text-sm font-medium">{language?.drawer?.country}:</small>&nbsp;
-                        <span className="text-neutral-700 text-sm font-normal">{apiResp?.status?.data?.profile?.nationality}</span>
+                        <span className="text-neutral-700 text-sm font-normal">{apiResp?.status?.data?.profile[event]?.nationality}</span>
                       </div>
                     </React.Fragment>
 
@@ -140,12 +138,12 @@ const CompleteGoals = ({ }: any) => {
                 </small>
                 <div>
                   <small className="text-neutral-900 text-2xl font-semibold screen800:text-sm">
-                    {language.common.usd}&nbsp;{payload?.selected?.low_limit}{" "}
-                    {payload?.selected?.low_limit !== payload?.selected?.upper_limit && " - " + payload?.selected?.upper_limit}
+                    {payload?.selected?.currency}&nbsp;{payload?.selected?.lower_limit}{" "}
+                    {payload?.selected?.lower_limit !== payload?.selected?.upper_limit && " - " + payload?.selected?.upper_limit}
                   </small>
                   &nbsp;
                   <small className="text-green-600 text-sm font-semibold">
-                    {payload?.selected?.currency}
+                    {payload?.selected?.unit}
                   </small>
                 </div>
               </div>

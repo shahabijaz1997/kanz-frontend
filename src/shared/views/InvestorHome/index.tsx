@@ -4,7 +4,6 @@ import { useSelector } from "react-redux";
 import { RootState } from "../../../redux-toolkit/store/store";
 import Button from "../../components/Button";
 import { ApplicationStatus } from "../../../enums/types.enum";
-import { isEmpty } from "../../../utils/object.util";
 import { RoutesEnums } from "../../../enums/routes.enum";
 
 const InvestorHome = ({ loading, language }: any) => {
@@ -43,7 +42,7 @@ const InvestorHome = ({ loading, language }: any) => {
   
 
     const render = () => {
-        if (user.status === ApplicationStatus.OPENED && isEmpty(metadata?.profile)) {
+        if (user.status === ApplicationStatus.OPENED && !metadata?.profile?.id) {
             return (
                 <React.Fragment>
                     <h2 className="text-2xl font-bold text-neutral-900 mb-4 screen500:text-[20px]">
@@ -57,7 +56,7 @@ const InvestorHome = ({ loading, language }: any) => {
                     </Button>
                 </React.Fragment>
             );
-        } else if (user.status === ApplicationStatus.OPENED && !isEmpty(metadata?.profile)) {
+        } else if (user.status === ApplicationStatus.OPENED && metadata?.profile?.id) {
             return (
                 <React.Fragment>
                     <h2 className="text-2xl font-bold text-neutral-900 mb-4 screen500:text-[20px]">

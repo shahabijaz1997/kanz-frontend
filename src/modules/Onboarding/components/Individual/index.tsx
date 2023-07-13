@@ -21,32 +21,6 @@ const Individual = ({ language }: any) => {
   const authToken: any = useSelector((state: RootState) => state.auth.value);
   const metadata: any = useSelector((state: RootState) => state.metadata.value);
   const event: any = useSelector((state: RootState) => state.event.value);
-  const [assertQuestions] = useState([
-    {
-      id: 1,
-      title: language?.individual?.option1,
-      low_limit: "1",
-      upper_limit: "1",
-      is_range: false,
-      currency: language.common.million,
-    },
-    {
-      id: 2,
-      title: language?.individual?.option2,
-      low_limit: "1",
-      upper_limit: "10",
-      is_range: true,
-      currency: language.common.million,
-    },
-    {
-      id: 3,
-      title: language?.individual?.option3,
-      low_limit: "10",
-      upper_limit: "10",
-      is_range: false,
-      currency: language.common.million
-    },
-  ]);
   const [selectedAssert, setSelectedAssert]: any = useState(null);
   const [payload, setPayload]: any = useState({ national: "", residence: "", accer: "" });
   const [riskChecked, setRiskChecked] = useState(false);
@@ -63,26 +37,26 @@ const Individual = ({ language }: any) => {
   useLayoutEffect(() => {
     getAllCountries();
   }, []);
-
+  
   const getAllCountries = async () => {
     setLoading(true);
     try {
       let { status, data } = await getCountries(authToken);
       if (status === 200) {
         let names = data.status.data.map((c: any) => c[event].name);
-        if (metadata?.profile) {
-          setPayload({ national: { label: metadata?.profile?.nationality, value: metadata?.profile?.nationality }, residence: { label: metadata?.profile?.residence, value: metadata?.profile?.residence }, accer: "", risk: false });
-          setSelectedAssert(assertQuestions.find(as => as.title === metadata?.profile?.accreditation));
+        if (metadata?.profile?.id) {
+          setPayload({ national: { label: metadata?.profile[event]?.nationality, value: metadata?.profile[event]?.nationality }, residence: { label: metadata?.profile[event]?.residence, value: metadata?.profile[event]?.residence }, accer: "", risk: false });
+          setSelectedAssert(metadata?.profile[event]?.accreditation?.options.find((as: any) => as.selected));
         }
-        else {
-          let account_info = localStorage.getItem("account_info");
-          let assertData = localStorage.getItem("accert");
-          if (account_info) {
-            let accInfo = JSON.parse(account_info);
-            setPayload(accInfo);
-          }
-          if (assertData) setSelectedAssert(JSON.parse(assertData));
-        }
+        // else {
+        //   let account_info = localStorage.getItem("account_info");
+        //   let assertData = localStorage.getItem("accert");
+        //   if (account_info) {
+        //     let accInfo = JSON.parse(account_info);
+        //     // setPayload(accInfo);
+        //   }
+        //   if (assertData) setSelectedAssert(JSON.parse(assertData));
+        // }
         setCountries({ all: data.status.data, names });
       }
     } catch (error: any) {
@@ -105,13 +79,14 @@ const Individual = ({ language }: any) => {
     try {
       setLoading(true);
       let country: any = countries.all.find((c: any) => c[event].name === payload?.national?.value);
+      let residence: any = countries.all.find((c: any) => c[event].name === payload?.residence?.value);
 
       let _payload = {
         investor_profile: {
-          country_id: country.id,
-          residence: payload?.residence?.value,
-          accreditation: selectedAssert?.title,
-          accepted_investment_criteria: riskChecked
+          country_id: country?.id,
+          residence_id: residence?.id,
+          accepted_investment_criteria: riskChecked,
+          accreditation_option_id: selectedAssert?.id
         }
       }
 
@@ -121,8 +96,8 @@ const Individual = ({ language }: any) => {
         navigate("/complete-goals", {
           state: { type: InvestorType.INDIVIDUAL, selected: selectedAssert },
         });
-        localStorage.setItem("account_info", JSON.stringify(payload));
-        localStorage.setItem("accert", JSON.stringify(selectedAssert));
+        // localStorage.setItem("account_info", JSON.stringify(payload));
+        // localStorage.setItem("accert", JSON.stringify(selectedAssert));
       }
     } catch (error: any) {
       const message =
@@ -180,7 +155,7 @@ const Individual = ({ language }: any) => {
             </label>
             <ul>
               {React.Children.toArray(
-                assertQuestions.map((as) => {
+                metadata?.profile && metadata?.profile[event]?.accreditation?.options?.map((as: any) => {
                   return (
                     <li
                       className={`h-[50px] w-[420px] p-4 grey-neutral-200 text-sm font-medium cursor-pointer border border-grey inline-flex items-center justify-start first:rounded-t-md last:rounded-b-md screen500:w-full ${selectedAssert?.id === as.id
@@ -194,7 +169,7 @@ const Individual = ({ language }: any) => {
                         type="radio"
                         checked={selectedAssert?.id === as.id ? true : false}
                       />
-                      <small>{as.title}</small>
+                      <small>{as.statement}</small>
                     </li>
                   );
                 })
@@ -202,12 +177,12 @@ const Individual = ({ language }: any) => {
             </ul>
           </section>
 
-          <section className="relative z-10 w-full inline-flex items-start gap-2 rounded-md border border-grey w-[420px] p-4 check-background cursor-pointer">
+          <section className="relative z-10 w-full inline-flex items-start gap-2 rounded-md border border-grey w-[420px] p-4 check-background cursor-pointer" onClick={() => setRiskChecked(!riskChecked)}>
             <input
               type="checkbox"
               className="accent-cyan-800 h-3 w-3 cursor-pointer"
               checked={riskChecked}
-              onChange={() => setRiskChecked(!riskChecked)}
+              onChange={() => { }}
             />
             <div>
               <h3 className="text-neutral-700 font-medium text-[14px] leading-none">
@@ -215,7 +190,10 @@ const Individual = ({ language }: any) => {
               </h3>
               <p className="text-neutral-500 text-sm font-normal mt-1">
                 {language?.individual?.understanding}&nbsp;
-                <span className="text-cc-blue font-medium cursor-pointer" onClick={() => setOpen(true)}>
+                <span className="text-cc-blue font-medium cursor-pointer" onClick={(e) => {
+                  e.stopPropagation();
+                  setOpen(true);
+                }}>
                   {language?.common?.learn}
                 </span>
               </p>

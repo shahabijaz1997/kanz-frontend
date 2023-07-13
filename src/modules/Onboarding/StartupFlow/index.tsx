@@ -1,4 +1,4 @@
-import { useState, useLayoutEffect } from "react";
+import { useState, useLayoutEffect, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router";
 import { RootState } from "../../../redux-toolkit/store/store";
@@ -12,13 +12,12 @@ import CrossIcon from "../../../ts-icons/crossIcon.svg";
 import Button from "../../../shared/components/Button";
 import { isValidEmail, isValidUrl } from "../../../utils/regex.utils";
 import StartupStepper from "./StartupStepper";
-import { postCompanyInformation } from "../../../apis/company.api";
+import { getCompanyInformation, postCompanyInformation } from "../../../apis/company.api";
 import { saveLogo } from "../../../redux-toolkit/slicer/attachments.slicer";
-import { removeAttachment } from "../../../apis/attachment.api";
-import { isEmpty } from "../../../utils/object.util";
 import { getCountries } from "../../../apis/bootstrap.api";
 import { KanzRoles } from "../../../enums/roles.enum";
 import { RoutesEnums } from "../../../enums/routes.enum";
+import { saveUserMetaData } from "../../../redux-toolkit/slicer/metadata.slicer";
 
 const StartupFlow = ({ }: any) => {
   const params = useParams();
@@ -28,8 +27,6 @@ const StartupFlow = ({ }: any) => {
   const user: any = useSelector((state: RootState) => state.user.value);
   const authToken: any = useSelector((state: RootState) => state.auth.value);
   const event: any = useSelector((state: RootState) => state.event.value);
-  const logo: any = useSelector((state: RootState) => state.attachments.logo.value);
-  const metadata: any = useSelector((state: RootState) => state.metadata.value);
   const orientation: any = useSelector((state: RootState) => state.orientation.value);
   const [countries, setCountries] = useState({ all: [], names: [] });
 
@@ -58,15 +55,39 @@ const StartupFlow = ({ }: any) => {
   const [file, setFile]: any = useState(null);
   const [loading, setLoading] = useState(false);
 
-  useLayoutEffect(() => {
-    if(user.type !== KanzRoles.STARTUP) navigate("/welcome");
+  useEffect(() => {
     getAllCountries();
-    bootstrapPayload();
+  }, [])
+
+  useLayoutEffect(() => {
+    if (user.type !== KanzRoles.STARTUP) navigate("/welcome");
+    getStartupDetails();
   }, []);
+
+  const getStartupDetails = async () => {
+    try {
+      setLoading(true);
+      let { status, data } = await getCompanyInformation(1, authToken);
+      if (status === 200) {
+        dispatch(saveUserMetaData(data?.status?.data));
+        if (data?.status?.data?.profile) bootstrapPayload(data?.status?.data);
+      }
+    } catch (error: any) {
+      const message = error?.response?.data?.status?.message || error?.response?.data || language.promptMessages.errorGeneral;
+      toast.error(message, toastUtil);
+      if (error.response && error.response.status === 401) {
+        dispatch(saveToken(""));
+        navigate("/login", { state: 'Startup' });
+      }
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useLayoutEffect(() => {
     setStep(Number(params?.id) || 1);
   }, [params]);
+
 
   const getAllCountries = async () => {
     setLoading(true);
@@ -87,48 +108,23 @@ const StartupFlow = ({ }: any) => {
     }
   };
 
-  const bootstrapPayload = () => {
-    if (isEmpty(metadata?.profile)) {
-      let _payload: any = localStorage.getItem("startup");
-      if (_payload) setPayload(JSON.parse(_payload));
-      if (logo) {
-        onGetConvertedToBLOB(JSON.parse(_payload)?.logo);
-        setFile(logo);
-      };
-    } else {
-      setPayload({
-        company: metadata?.profile?.company_name,
-        legal: metadata?.profile?.company_name,
-        country: { name: metadata?.profile?.country },
-        market: metadata?.profile?.industry_market,
-        web: metadata?.profile?.website,
-        address: metadata?.profile?.address,
-        business: metadata?.profile?.description,
-        name: metadata?.profile?.ceo_name,
-        email: metadata?.profile?.ceo_email,
-        raised: metadata?.profile?.total_capital_raised,
-        target: metadata?.profile?.current_round_capital_target,
-        logo: metadata?.profile?.logo,
-        currency: { label: "AED", value: "AED" }
-      })
-    }
+  const bootstrapPayload = (meta: any) => {
+    setPayload({
+      company: meta?.profile?.company_name,
+      legal: meta?.profile?.company_name,
+      country: { name: meta?.profile[event].country },
+      market: meta?.profile?.industry_ids || [],
+      web: meta?.profile?.website,
+      address: meta?.profile?.address,
+      business: meta?.profile?.description,
+      name: meta?.profile?.ceo_name,
+      email: meta?.profile?.ceo_email,
+      raised: meta?.profile?.total_capital_raised,
+      target: meta?.profile?.current_round_capital_target,
+      logo: meta?.profile?.logo,
+      currency: { label: meta?.profile?.currency, value: meta?.profile?.currency }
+    })
   };
-
-  const onGetConvertedToBLOB = async (url: string) => {
-    try {
-      let blob: any = await convertToBlob(url);
-      onSetPayload(blob, "logo");
-    } catch (error) {
-      console.error(error);
-    }
-  };
-
-  const convertToBlob = async (url: any) => {
-    const response = await fetch(url);
-    const data = await response.blob();
-    return data;
-  };
-
 
   const onSetFile = (file: File, id: string, url: string, attachment_id: string, size: string, dimensions: string, type: string) => {
     let _file: any = {
@@ -156,8 +152,6 @@ const StartupFlow = ({ }: any) => {
       if (!isValidUrl(payload.web)) errors.push(language.promptMessages.validComp);
       toast.dismiss();
       if (errors.length) return errors.forEach(e => toast.warning(e, toastUtil));
-      setStep(2);
-      navigate(`/startup-type/${step + 1}`);
     } else {
       let errors = [];
       if (!payload.company || !payload.legal || !payload.country || !payload.market.length || !payload.address || !payload.web || !payload.name || !payload.email || !payload.logo || !payload.business || !payload.raised || !payload.target) {
@@ -166,8 +160,8 @@ const StartupFlow = ({ }: any) => {
       if (!isValidEmail(payload.email)) errors.push(language.promptMessages.invalidEmailCeo)
       toast.dismiss();
       if (errors.length) return errors.forEach(e => toast.warning(e, toastUtil));
-      onPostCompanyData();
     }
+    onPostCompanyData();
   };
 
   const onSetPayload = (data: any, type: string) => {
@@ -180,29 +174,44 @@ const StartupFlow = ({ }: any) => {
     try {
       setLoading(true);
       let _country: any = countries.all.find((x: any) => x[event].name === payload.country.name);
-      
+
       const form: any = new FormData();
-      form.append("startup[company_name]", payload.company);
-      form.append("startup[legal_name]", payload.legal);
-      form.append("startup[country_id]", payload.country?.id || _country?.id);
-      payload.market.forEach((val: any) => {
-        form.append("startup[industry_market][]", val);
-      });
-      form.append("startup[website]", payload.web);
-      form.append("startup[address]", payload.address);
-      typeof payload?.logo !== "string" && form.append("startup[logo]", payload?.logo, payload?.logo?.name);
-      form.append("startup[description]", payload.business);
-      form.append("startup[ceo_name]", payload.name);
-      form.append("startup[ceo_email]", payload.email);
-      form.append("startup[total_capital_raised]", payload.raised);
-      form.append("startup[current_round_capital_target]", payload.target);
-      form.append("startup[currency]", payload?.currency?.value);
+      if (step == 1) {
+        form.append("startup_profile[step]", step);
+        form.append("startup_profile[company_name]", payload.company);
+        form.append("startup_profile[legal_name]", payload.legal);
+        form.append("startup_profile[country_id]", payload.country?.id || _country?.id);
+        payload.market.forEach((val: any) => {
+          form.append("startup_profile[industry_ids][]", val);
+        });
+        form.append("startup_profile[website]", payload.web);
+        form.append("startup_profile[address]", payload.address);
+      } else {
+        form.append("startup_profile[step]", step);
+        form.append("startup_profile[company_name]", payload.company);
+        form.append("startup_profile[legal_name]", payload.legal);
+        form.append("startup_profile[country_id]", payload.country?.id || _country?.id);
+        payload.market.forEach((val: any) => {
+          form.append("startup_profile[industry_ids][]", val);
+        });
+        form.append("startup_profile[website]", payload.web);
+        form.append("startup_profile[address]", payload.address);
+        typeof payload?.logo !== "string" && form.append("startup_profile[logo]", payload?.logo, payload?.logo?.name);
+        form.append("startup_profile[description]", payload.business);
+        form.append("startup_profile[ceo_name]", payload.name);
+        form.append("startup_profile[ceo_email]", payload.email);
+        form.append("startup_profile[total_capital_raised]", payload.raised);
+        form.append("startup_profile[current_round_capital_target]", payload.target);
+        form.append("startup_profile[currency]", payload?.currency?.value);
+      }
 
       let { status } = await postCompanyInformation(form, authToken);
 
-      if (status === 200) {
+      if (status === 200 && step == 2)
         navigate("/add-attachments");
-        localStorage.setItem("startup", JSON.stringify(payload));
+      else if (step == 1) {
+        setStep(2);
+        navigate(`/startup-type/${step + 1}`);
       }
     } catch (error: any) {
       if (error.response && error.response.status === 401) {
@@ -216,7 +225,6 @@ const StartupFlow = ({ }: any) => {
       setLoading(false);
     }
   };
-
 
   return (
     <main className="h-full max-h-full cbc-auth overflow-y-auto overflow-x-hidden">
@@ -250,11 +258,12 @@ const StartupFlow = ({ }: any) => {
           setModalOpen={(e: any) => setModalOpen(e)}
           authToken={authToken}
           orientation={orientation}
+          loading={loading}
         />
 
         <section className="w-full inline-flex items-center justify-between py-10">
           <Button className="h-[38px] w-[140px]" htmlType="button" type="outlined" onClick={() => {
-            if(step === 1) navigate(RoutesEnums.WELCOME);
+            if (step === 1) navigate(RoutesEnums.WELCOME);
             else navigate(-1);
           }}>
             {language?.buttons?.back}
