@@ -237,7 +237,7 @@ const SyndicateFlow = ({ }: any) => {
             <section className="w-full inline-flex items-center justify-between py-10">
               <Button className="h-[38px] w-[140px]" htmlType="button" type="outlined" onClick={() => {
                 if (step === 1) navigate(RoutesEnums.WELCOME);
-                else navigate(-1);
+                else navigate(`${RoutesEnums.SYNIDCATE_DETAILS}/1`);
               }}
               >
                 {language?.buttons?.back}

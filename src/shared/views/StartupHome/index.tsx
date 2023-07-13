@@ -12,6 +12,7 @@ const StartupHome = ({ loading, language }: any) => {
     const user: any = useSelector((state: RootState) => state.user.value);
     const metadata: any = useSelector((state: RootState) => state.metadata.value);
 
+    console.log(metadata.profile_states,"profile_states")
     const onPress = () => {
       const { profile, profile_states } = metadata;
       if (isEmpty(profile) && profile_states.profile_current_step === 0) {
@@ -20,7 +21,7 @@ const StartupHome = ({ loading, language }: any) => {
         !profile_states.profile_completed
       ) {
         navigate(
-          `${RoutesEnums.START_UP}/${profile_states.profile_current_step + 1}`
+          `${RoutesEnums.START_UP}/${profile_states.profile_current_step}`
         );
       } else if (profile_states.profile_completed) {
         navigate(RoutesEnums.ADD_ATTACHMENTS);

@@ -12,6 +12,7 @@ const SyndicateHome = ({ loading, language }: any) => {
     const user: any = useSelector((state: RootState) => state.user.value);
     const metadata: any = useSelector((state: RootState) => state.metadata.value);
 
+    console.log(metadata.profile_states,"profile_states")
     const onPress = () => {
       const { profile, profile_states } = metadata;
       if (isEmpty(profile) && profile_states.profile_current_step === 0) {
