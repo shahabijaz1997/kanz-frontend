@@ -44,39 +44,48 @@ const Realtors = (props: any) => {
   });
   const requiredFieldError = language?.common?.required_field;
 
+  const getRealtorDetails = async () => {
+    try {
+      setLoading(true);
+      let { status, data } = await getRealtorInformation(1,authToken);
+      if (status === 200) {
+        dispatch(saveUserMetaData(data?.status?.data));
+      }
+    } catch (error: any) {
+      const message =
+        error?.response?.data?.status?.message ||
+        error?.response?.data ||
+        language.promptMessages.errorGeneral;
+      toast.error(message, toastUtil);
+      if (error.response && error.response.status === 401) {
+        dispatch(saveToken(""));
+        navigate("/login", { state: RoutesEnums.REALTOR_DETAILS });
+      }
+    } finally {
+      setLoading(false);
+    }
+  };
+
   useLayoutEffect(() => {
+    setLoad(true);
+    if ((user.status !== ApplicationStatus.OPENED && user.status !== ApplicationStatus.REOPENED)) return navigate("/welcome");
+    if (!isEmpty(metadata?.profile)) {
+      setPayload({
+        national: { label: metadata.profile[event]?.nationality, value: metadata.profile[event]?.nationality },
+        residence: { label: metadata.profile[event]?.residence, value: metadata.profile[event]?.residence },
+        noOfProperty: metadata.profile?.no_of_properties
+      });
+    }
+    setLoad(false);
+  }, [metadata]);
     if ((user.status !== ApplicationStatus.OPENED && user.status !== ApplicationStatus.REOPENED)) return navigate("/welcome");
     getRealtorDetails();
   }, []);
 
   useLayoutEffect(() => {
     if (user.type !== KanzRoles.REALTOR) navigate("/welcome");
-
     getAllCountries();
   }, []);
-
-  const getRealtorDetails = async () => {
-    try {
-      setLoad(true);
-      let { status, data } = await getRealtorInformation(1, authToken);
-      if (status === 200) {
-        dispatch(saveUserMetaData(data?.status?.data));
-        let meta = data?.status?.data;
-        setPayload({
-          national: { label: meta.profile[event]?.nationality, value: meta.profile[event]?.nationality },
-          residence: { label: meta.profile[event]?.residence, value: meta.profile[event]?.residence },
-          noOfProperty: meta.profile?.no_of_properties
-        });
-      }
-    } catch (error: any) {
-      if (error.response && error.response.status === 401) {
-        dispatch(saveToken(""));
-        navigate("/login", { state: '' });
-      }
-    } finally {
-      setLoad(false);
-    }
-  };
 
   const { register, handleSubmit, watch, formState: { errors } } = useForm<FormValues>();
   useEffect(() => {
@@ -136,7 +145,6 @@ const Realtors = (props: any) => {
       };
       let { status } = await postRealtorInformation(pData, authToken);
       if (status === 200) {
-        localStorage.setItem("realtor", JSON.stringify(payload));
         navigate("/add-attachments");
       }
     } catch (error: any) {

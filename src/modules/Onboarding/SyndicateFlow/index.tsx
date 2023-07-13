@@ -1,4 +1,4 @@
-import { useState, useLayoutEffect } from "react";
+import React, { useState, useLayoutEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router";
 import { RootState } from "../../../redux-toolkit/store/store";
@@ -10,22 +10,23 @@ import { saveToken } from "../../../redux-toolkit/slicer/auth.slicer";
 import { toast } from "react-toastify";
 import { toastUtil } from "../../../utils/toast.utils";
 import CrossIcon from "../../../ts-icons/crossIcon.svg";
-import { postSyndicateInformation } from "../../../apis/syndicate.api";
+import { getSyndicateInformation, postSyndicateInformation } from "../../../apis/syndicate.api";
 import Button from "../../../shared/components/Button";
 import { isValidUrl } from "../../../utils/regex.utils";
 import { saveLogo } from "../../../redux-toolkit/slicer/attachments.slicer";
-import { isEmpty } from "../../../utils/object.util";
 import { KanzRoles } from "../../../enums/roles.enum";
 import { RoutesEnums } from "../../../enums/routes.enum";
+import { saveUserMetaData } from "../../../redux-toolkit/slicer/metadata.slicer";
+import Loader from "../../../shared/views/Loader";
 
 const SyndicateFlow = ({ }: any) => {
   const params = useParams();
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const event: any = useSelector((state: RootState) => state.event.value);
   const language: any = useSelector((state: RootState) => state.language.value);
   const user: any = useSelector((state: RootState) => state.user.value);
   const authToken: any = useSelector((state: RootState) => state.auth.value);
-  const logo: any = useSelector((state: RootState) => state.attachments.logo.value);
   const metadata: any = useSelector((state: RootState) => state.metadata.value);
   const orientation: any = useSelector((state: RootState) => state.orientation.value);
 
@@ -39,7 +40,8 @@ const SyndicateFlow = ({ }: any) => {
     dealflow: "",
     name: "",
     tagline: "",
-    logo: null
+    logo: null,
+    loading: true
   });
   const [options] = useState([
     { id: 1, title: language?.buttons?.yes },
@@ -50,54 +52,53 @@ const SyndicateFlow = ({ }: any) => {
   const [fileType, setFileType] = useState(null);
   const [file, setFile]: any = useState(null);
   const [loading, setLoading] = useState(false);
+  const [load, setLoad] = useState(false);
 
   useLayoutEffect(() => {
     if (user.type !== KanzRoles.SYNDICATE) navigate("/welcome");
-
-    bootstrapPayload();
+    getSyndicateDetails();
   }, []);
 
   useLayoutEffect(() => {
     setStep(Number(params?.id) || 1);
   }, [params]);
 
-  const bootstrapPayload = () => {
-    if (isEmpty(metadata?.profile)) {
-      let _payload: any = localStorage.getItem("syndicate");
-      if (_payload) setPayload(JSON.parse(_payload));
-      if (logo) {
-        onGetConvertedToBLOB(JSON.parse(_payload)?.logo);
-        setFile(logo);
-      };
-    } else {
-      setPayload({
-        raised: metadata?.profile?.have_you_ever_raised,
-        amountRaised: metadata?.profile?.raised_amount,
-        timesRaised: metadata?.profile?.no_times_raised,
-        industry: metadata?.profile?.industry_market,
-        region: metadata?.profile?.region,
-        profileLink: metadata?.profile?.profile_link,
-        dealflow: metadata?.profile?.dealflow,
-        name: metadata?.profile?.name,
-        tagline: metadata?.profile?.tagline,
-        logo: metadata?.profile?.logo,
-      })
-    }
+  const bootstrapPayload = (meta: any) => {
+    setPayload({
+      raised: meta?.profile?.have_you_ever_raised,
+      amountRaised: meta?.profile?.raised_amount,
+      timesRaised: meta?.profile?.no_times_raised,
+      industry: meta?.profile.industry_ids || [],
+      region: meta?.profile.region_ids || [],
+      profileLink: meta?.profile?.profile_link,
+      dealflow: meta?.profile?.dealflow,
+      name: meta?.profile?.name,
+      tagline: meta?.profile?.tagline,
+      logo: meta?.profile?.logo,
+    });
   };
 
-  const onGetConvertedToBLOB = async (url: string) => {
+  const getSyndicateDetails = async () => {
+    setLoad(true);
     try {
-      let blob: any = await convertToBlob(url);
-      onSetPayload(blob, "logo");
-    } catch (error) {
-      console.error(error);
+      let { status, data } = await getSyndicateInformation(1, authToken);
+      if (status === 200) {
+        dispatch(saveUserMetaData(data?.status?.data));
+        if (data?.status?.data?.profile) bootstrapPayload(data?.status?.data);
+      }
+      else setPayload((prev: any) => { return { ...prev, loading: false } });
+    } catch (error: any) {
+      if (error.response && error.response.status === 401) {
+        dispatch(saveToken(""));
+        navigate("/login", { state: '' });
+      }
+      setPayload((prev: any) => { return { ...prev, loading: false } });
+    } finally {
+      let timer = setTimeout(() => {
+        clearTimeout(timer);
+        setLoad(false);
+      }, 750)
     }
-  };
-
-  const convertToBlob = async (url: any) => {
-    const response = await fetch(url);
-    const data = await response.blob();
-    return data;
   };
 
   const onSetFile = (file: File, id: string, url: string, attachment_id: string, size: string, dimensions: string, type: string) => {
@@ -126,8 +127,6 @@ const SyndicateFlow = ({ }: any) => {
       if (!isValidUrl(payload.profileLink)) errors.push(language.promptMessages.validProfile);
       toast.dismiss();
       if (errors.length) return errors.forEach(e => toast.warning(e, toastUtil));
-      setStep(2);
-      navigate(`/syndicate-lead/${step + 1}`);
     } else {
       if ((payload.raised && (!payload.timesRaised || !payload.amountRaised)) ||
         !payload.industry.length ||
@@ -144,8 +143,8 @@ const SyndicateFlow = ({ }: any) => {
           toastUtil
         );
       }
-      onPostSyndicateData();
     }
+    onPostSyndicateData();
   };
 
   const onSetPayload = (data: any, type: string) => {
@@ -158,26 +157,32 @@ const SyndicateFlow = ({ }: any) => {
     try {
       setLoading(true);
       const form: any = new FormData();
-      form.append("syndicate_profile[have_you_ever_raised]", payload.raised);
-      form.append("syndicate_profile[raised_amount]", payload.amountRaised);
-      form.append("syndicate_profile[no_times_raised]", payload.timesRaised);
-      payload.industry.forEach((val: any) => {
-        form.append("syndicate_profile[industry_market][]", val);
-      });
-      payload.region.forEach((val: any) => {
-        form.append("syndicate_profile[region][]", val);
-      });
-      form.append("syndicate_profile[profile_link]", payload.profileLink);
-      form.append("syndicate_profile[dealflow]", payload.dealflow);
-      form.append("syndicate_profile[name]", payload.name);
-      form.append("syndicate_profile[tagline]", payload.tagline);
-      typeof payload?.logo !== "string" && form.append("syndicate_profile[logo]", payload?.logo, payload?.logo?.name);
+      form.append("syndicate_profile[step]", step);
+      if (step == 1) {
+        form.append("syndicate_profile[have_you_ever_raised]", payload.raised);
+        form.append("syndicate_profile[raised_amount]", payload.amountRaised);
+        form.append("syndicate_profile[no_times_raised]", payload.timesRaised);
+        form.append("syndicate_profile[profile_link]", payload.profileLink);
+        payload.region.forEach((val: any) => {
+          form.append("syndicate_profile[region_ids][]", val);
+        });
+        form.append("syndicate_profile[dealflow]", payload.dealflow);
+        payload.industry.forEach((val: any) => {
+          form.append("syndicate_profile[industry_ids][]", val);
+        });
+      } else {
+        form.append("syndicate_profile[name]", payload.name);
+        form.append("syndicate_profile[tagline]", payload.tagline);
+        typeof payload?.logo !== "string" && form.append("syndicate_profile[logo]", payload?.logo, payload?.logo?.name);
+      }
 
       let { status } = await postSyndicateInformation(form, authToken);
 
-      if (status === 200) {
+      if (status === 200 && step == 2)
         navigate("/add-attachments");
-        localStorage.setItem("syndicate", JSON.stringify(payload));
+      else if (step == 1) {
+        setStep(2);
+        navigate(`/syndicate-lead/${step + 1}`);
       }
     } catch (error: any) {
       if (error.response && error.response.status === 401) {
@@ -193,50 +198,57 @@ const SyndicateFlow = ({ }: any) => {
 
   return (
     <main className="h-full max-h-full cbc-auth overflow-y-auto overflow-x-hidden">
-      <section>
-        <Header custom={true} data={{
-          leftMenu: language.header.syndicateLead, button: (<button onClick={() => navigate("/welcome")} className="text-neutral-900 bg-white font-bold text-sm w-[150px] h-9 cursor-pointer border border-black shadow-sm screen800:w-[120px]">{language.buttons.gotoDashboard}</button>),
-        }}
-        />
-      </section>
+      {load ? (
+        <Loader />
+      ) : (
+        <React.Fragment>
+          <section>
+            <Header custom={true} data={{
+              leftMenu: language.header.syndicateLead, button: (<button onClick={() => navigate("/welcome")} className="text-neutral-900 bg-white font-bold text-sm w-[150px] h-9 cursor-pointer border border-black shadow-sm screen800:w-[120px]">{language.buttons.gotoDashboard}</button>),
+            }}
+            />
+          </section>
 
-      <aside className="w-[420px] h-full screen500:max-w-[300px] mx-auto py-12">
-        <section className="flex items-start justify-center flex-col">
-          <h3 className="text-cc-black font-bold text-2xl">
-            {language.syndicate.step} {step} {language.drawer.of} 2
-          </h3>
-          <hr className="h-px w-full mt-4 bg-gray-200 border-0 bg-cbc-grey" />
-        </section>
+          <aside className="w-[420px] h-full screen500:max-w-[300px] mx-auto py-12">
+            <section className="flex items-start justify-center flex-col">
+              <h3 className="text-cc-black font-bold text-2xl">
+                {language.syndicate.step} {step} {language.drawer.of} 2
+              </h3>
+              <hr className="h-px w-full mt-4 bg-gray-200 border-0 bg-cbc-grey" />
+            </section>
 
-        <SyndicateStepper
-          metadata={metadata}
-          language={language}
-          payload={payload}
-          file={file}
-          onSetPayload={onSetPayload}
-          options={options}
-          step={step}
-          setFileType={(e: any) => setFileType(e)}
-          removeFile={removeFile}
-          setFile={onSetFile}
-          setModalOpen={(e: any) => setModalOpen(e)}
-          orientation={orientation}
-          authToken={authToken}
-        />
+            <SyndicateStepper
+              metadata={metadata}
+              language={language}
+              payload={payload}
+              file={file}
+              onSetPayload={onSetPayload}
+              options={options}
+              step={step}
+              setFileType={(e: any) => setFileType(e)}
+              removeFile={removeFile}
+              setFile={onSetFile}
+              setModalOpen={(e: any) => setModalOpen(e)}
+              orientation={orientation}
+              authToken={authToken}
+              event={event}
+            />
 
-        <section className="w-full inline-flex items-center justify-between py-10">
-          <Button className="h-[38px] w-[140px]" htmlType="button" type="outlined" onClick={() => {
-            if (step === 1) navigate(RoutesEnums.WELCOME);
-            else navigate(-1);
-          }}
-          >
-            {language?.buttons?.back}
-          </Button>
-          <Button className="h-[38px] w-[140px]" disabled={loading} htmlType="submit" loading={loading} onClick={ontoNextStep}>
-            {language?.buttons?.continue}
-          </Button>
-        </section>
-      </aside>
+            <section className="w-full inline-flex items-center justify-between py-10">
+              <Button className="h-[38px] w-[140px]" htmlType="button" type="outlined" onClick={() => {
+                if (step === 1) navigate(RoutesEnums.WELCOME);
+                else navigate(-1);
+              }}
+              >
+                {language?.buttons?.back}
+              </Button>
+              <Button className="h-[38px] w-[140px]" disabled={loading} htmlType="submit" loading={loading} onClick={ontoNextStep}>
+                {language?.buttons?.continue}
+              </Button>
+            </section>
+          </aside>
+        </React.Fragment>
+      )}
 
       <Modal show={modalOpen ? true : false}>
         <div className="rounded-md h-8 w-8 inline-grid place-items-center cursor-pointer absolute right-2 top-2" style={{ backgroundColor: "rgba(0, 0, 0, 0.078" }}>
