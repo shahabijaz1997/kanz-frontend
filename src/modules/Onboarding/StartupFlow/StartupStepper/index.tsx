@@ -13,7 +13,7 @@ import EditIcon from "../../../../ts-icons/editIcon.svg";
 
 const currencies = [{ label: "AED", value: "AED" }, { label: "USD", value: "USD" }];
 
-const StartupStepper = ({ event, countries, orientation, language, file, payload, onSetPayload, step, removeFile, setFile, setModalOpen, setFileType, authToken }: any) => {
+const StartupStepper = ({ loading, event, countries, orientation, language, file, payload, onSetPayload, step, removeFile, setFile, setModalOpen, setFileType, authToken }: any) => {
     const refInd: any = useRef(null);
     const [showHoverModal, setShowHoverModal] = useState(false);
     const [search, setSearch] = useState("");
@@ -41,7 +41,7 @@ const StartupStepper = ({ event, countries, orientation, language, file, payload
 
     const bootstrapData = async () => {
         try {
-            let {status, data} = await getAllIndustries(authToken);
+            let { status, data } = await getAllIndustries(authToken);
             if (status === 200) {
                 setSearchResults(data.status.data);
             }
@@ -50,15 +50,15 @@ const StartupStepper = ({ event, countries, orientation, language, file, payload
         }
     };
 
-    const filteredData:any = [];
+    const filteredData: any = [];
     if (searchResults.length > 0 && payload?.market) {
-      searchResults?.filter((item: any) => {
-        payload?.market?.map((market: any) => {
-          if (market === item.id) {
-            filteredData.push(item);
-          }
+        searchResults?.filter((item: any) => {
+            payload?.market?.map((market: any) => {
+                if (market === item.id) {
+                    filteredData.push(item);
+                }
+            });
         });
-      });
     }
     return (
         step === 1 ? (
@@ -90,7 +90,7 @@ const StartupStepper = ({ event, countries, orientation, language, file, payload
                                         <small>{ind[event]?.name}</small>
                                         <CrossIcon onClick={() => {
                                             let payloadItems = filteredData.filter((x: any) => x.id !== ind.id);
-                                            onSetPayload(payloadItems.map((item: any)=>item.id), "market");
+                                            onSetPayload(payloadItems.map((item: any) => item.id), "market");
                                         }} className="cursor-pointer h-5 w-5 ml-1" stroke={"#828282"} />
                                     </div>)
                                 )}
@@ -107,16 +107,19 @@ const StartupStepper = ({ event, countries, orientation, language, file, payload
                         <label className="block text-neutral-700 text-sm font-medium mb-1" htmlFor="full-name" >
                             {language?.company?.country}
                         </label>
-                        <CountrySelector
-                            onChange={(v: any) => {
-                                let c = countries.all.find((c: any) => c[event].name === v.value)
-                                onSetPayload(c, "country")
-                            }}
-                            selectedValue={{ label: payload?.country?.name, value: payload?.country?.name }}
-                            allCountries={countries.names}
-                            value={payload?.country?.name || ""}
-                            defaultValue={{ label: payload?.country?.name, value: payload?.country?.name } || ""}
-                        />
+
+                        {!loading && (
+                            <CountrySelector
+                                onChange={(v: any) => {
+                                    let c = countries.all.find((c: any) => c[event].name === v.value)
+                                    onSetPayload(c, "country")
+                                }}
+                                selectedValue={{ label: payload?.country?.name, value: payload?.country?.name }}
+                                allCountries={countries.names}
+                                value={payload?.country?.name || ""}
+                                defaultValue={{ label: payload?.country?.name, value: payload?.country?.name } || ""}
+                            />
+                        )}
                     </div>
 
                     <div className="mb-8 relative">
@@ -155,7 +158,7 @@ const StartupStepper = ({ event, countries, orientation, language, file, payload
                         {
                             payload.logo && typeof payload.logo === "string" ? (
                                 <div className="main-embed w-[300px] h-[200px] overflow-hidden relative">
-                                    <EditIcon stroke="#fff" className="w-7 h-7 absolute right-2 top-2 cursor-pointer rounded-md p-1" style={{backgroundColor: "rgba(0, 0, 0, 0.078)"}} onClick={()=>onSetPayload(null, "logo")} />
+                                    <EditIcon stroke="#fff" className="w-7 h-7 absolute right-2 top-2 cursor-pointer rounded-md p-1" style={{ backgroundColor: "rgba(0, 0, 0, 0.078)" }} onClick={() => onSetPayload(null, "logo")} />
                                     <img src={payload.logo} className="block w-[110%] h-[110%] overflow-hidden" />
                                 </div>
                             ) : (

@@ -258,6 +258,7 @@ const StartupFlow = ({ }: any) => {
           setModalOpen={(e: any) => setModalOpen(e)}
           authToken={authToken}
           orientation={orientation}
+          loading={loading}
         />
 
         <section className="w-full inline-flex items-center justify-between py-10">
