@@ -378,7 +378,7 @@ const Questionare = ({ step, returnSuccessRedirection }: any) => {
       const _questions: any = [];
       philosophyData.questions.forEach((question: any) => {
         question[event].options.some((option: any)=>{ if(option.selected){
-          const finalQuestion = {question_id:question.id,answers:[...option.id]};
+          const finalQuestion = {question_id:question.id,answers:[option.id]};
           _questions.push(finalQuestion);
         }});
         
