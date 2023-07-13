@@ -603,14 +603,6 @@
             "para_15": "An updated version of this Agreement will be effective immediately upon the posting of the revised Agreement unless otherwise specified. Your continued use of the Web Platform and Services after the effective date of the revised Agreement (or such other act specified at that time) will constitute your consent to those changes.",
             "heading_12": "Acceptance of Terms",
             "para_16": "You acknowledge that you have read this Agreement and agree to all its terms and conditions. By accessing and using the Web Platform and Services you agree to be bound by this Agreement. If you do not agree to abide by the terms of this Agreement, you are not authorized to access or use the Web Platform and Services."
-        },
-        "sessions": {
-            "something_wrong": "Oops! Something Went Wrong",
-            "signed_in": "Signed in successfully",
-            "signed_up": "Welcome! You have signed up successfully",
-            "invalid_password": "Weak Password; must be 8 characters long, includes at-least one lower case, one upper case letter and at least one number and special character",
-            "email_taken": "Email is already registered",
-            "invalid_creds": "Invalid email or password"
         }
     }
 }
