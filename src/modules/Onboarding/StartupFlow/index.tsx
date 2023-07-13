@@ -14,8 +14,6 @@ import { isValidEmail, isValidUrl } from "../../../utils/regex.utils";
 import StartupStepper from "./StartupStepper";
 import { getCompanyInformation, postCompanyInformation } from "../../../apis/company.api";
 import { saveLogo } from "../../../redux-toolkit/slicer/attachments.slicer";
-import { removeAttachment } from "../../../apis/attachment.api";
-import { isEmpty } from "../../../utils/object.util";
 import { getCountries } from "../../../apis/bootstrap.api";
 import { KanzRoles } from "../../../enums/roles.enum";
 import { RoutesEnums } from "../../../enums/routes.enum";
@@ -59,22 +57,22 @@ const StartupFlow = ({ }: any) => {
   const [file, setFile]: any = useState(null);
   const [loading, setLoading] = useState(false);
 
-  useEffect(()=>{
-    getStartUserUpDetails();
+  useEffect(() => {
     getAllCountries();
-  },[])
+  }, [])
 
   useLayoutEffect(() => {
-    if(user.type !== KanzRoles.STARTUP) navigate("/welcome");
-    bootstrapPayload();
-  }, [metadata]);
+    if (user.type !== KanzRoles.STARTUP) navigate("/welcome");
+    getStartupDetails();
+  }, []);
 
-  const getStartUserUpDetails = async () => {
+  const getStartupDetails = async () => {
     try {
       setLoading(true);
-      let { status, data } = await getCompanyInformation(1,authToken);
+      let { status, data } = await getCompanyInformation(1, authToken);
       if (status === 200) {
         dispatch(saveUserMetaData(data?.status?.data));
+        if (data?.status?.data?.profile) bootstrapPayload(data?.status?.data);
       }
     } catch (error: any) {
       const message = error?.response?.data?.status?.message || error?.response?.data || language.promptMessages.errorGeneral;
@@ -91,7 +89,7 @@ const StartupFlow = ({ }: any) => {
   useLayoutEffect(() => {
     setStep(Number(params?.id) || 1);
   }, [params]);
-  
+
 
   const getAllCountries = async () => {
     setLoading(true);
@@ -112,39 +110,23 @@ const StartupFlow = ({ }: any) => {
     }
   };
 
-  const bootstrapPayload = () => {
-      setPayload({
-        company: metadata?.profile?.company_name,
-        legal: metadata?.profile?.company_name,
-        country: { name: metadata?.profile?.[event].country },
-        market: metadata?.profile?.industry_ids || [],
-        web: metadata?.profile?.website,
-        address: metadata?.profile?.address,
-        business: metadata?.profile?.description,
-        name: metadata?.profile?.ceo_name,
-        email: metadata?.profile?.ceo_email,
-        raised: metadata?.profile?.total_capital_raised,
-        target: metadata?.profile?.current_round_capital_target,
-        logo: metadata?.profile?.logo,
-        currency: { label: "AED", value: "AED" }
-      })
+  const bootstrapPayload = (meta: any) => {
+    setPayload({
+      company: meta?.profile?.company_name,
+      legal: meta?.profile?.company_name,
+      country: { name: meta?.profile[event].country },
+      market: meta?.profile?.industry_ids || [],
+      web: meta?.profile?.website,
+      address: meta?.profile?.address,
+      business: meta?.profile?.description,
+      name: meta?.profile?.ceo_name,
+      email: meta?.profile?.ceo_email,
+      raised: meta?.profile?.total_capital_raised,
+      target: meta?.profile?.current_round_capital_target,
+      logo: meta?.profile?.logo,
+      currency: { label: "AED", value: "AED" }
+    })
   };
-
-  const onGetConvertedToBLOB = async (url: string) => {
-    try {
-      let blob: any = await convertToBlob(url);
-      onSetPayload(blob, "logo");
-    } catch (error) {
-      console.error(error);
-    }
-  };
-
-  const convertToBlob = async (url: any) => {
-    const response = await fetch(url);
-    const data = await response.blob();
-    return data;
-  };
-
 
   const onSetFile = (file: File, id: string, url: string, attachment_id: string, size: string, dimensions: string, type: string) => {
     let _file: any = {
@@ -196,7 +178,7 @@ const StartupFlow = ({ }: any) => {
     try {
       setLoading(true);
       let _country: any = countries.all.find((x: any) => x[event].name === payload.country.name);
-      
+
       const form: any = new FormData();
       form.append("startup[company_name]", payload.company);
       form.append("startup[legal_name]", payload.legal);
@@ -270,7 +252,7 @@ const StartupFlow = ({ }: any) => {
 
         <section className="w-full inline-flex items-center justify-between py-10">
           <Button className="h-[38px] w-[140px]" htmlType="button" type="outlined" onClick={() => {
-            if(step === 1) navigate(RoutesEnums.WELCOME);
+            if (step === 1) navigate(RoutesEnums.WELCOME);
             else navigate(-1);
           }}>
             {language?.buttons?.back}
