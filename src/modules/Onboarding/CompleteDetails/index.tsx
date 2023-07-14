@@ -1,4 +1,4 @@
-import { useState, useLayoutEffect } from "react";
+import { useState, useLayoutEffect, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../../redux-toolkit/store/store";
 import { useLocation, useNavigate } from "react-router-dom";
@@ -30,8 +30,11 @@ const CompleteDetails = (props: any) => {
     }, []);
     useLayoutEffect(() => {
         if (user.type !== KanzRoles.INVESTOR) navigate("/welcome");
-        getInvestorDetails();
       }, []);
+
+    useEffect(()=>{
+      getInvestorDetails();
+    },[])
     
       const getInvestorDetails = async () => {
         try {

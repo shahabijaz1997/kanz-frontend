@@ -48,15 +48,6 @@ const Individual = ({ language }: any) => {
           setPayload({ national: { label: metadata?.profile[event]?.nationality, value: metadata?.profile[event]?.nationality }, residence: { label: metadata?.profile[event]?.residence, value: metadata?.profile[event]?.residence }, accer: "", risk: false });
           setSelectedAssert(metadata?.profile[event]?.accreditation?.options.find((as: any) => as.selected));
         }
-        // else {
-        //   let account_info = localStorage.getItem("account_info");
-        //   let assertData = localStorage.getItem("accert");
-        //   if (account_info) {
-        //     let accInfo = JSON.parse(account_info);
-        //     // setPayload(accInfo);
-        //   }
-        //   if (assertData) setSelectedAssert(JSON.parse(assertData));
-        // }
         setCountries({ all: data.status.data, names });
       }
     } catch (error: any) {
@@ -93,11 +84,7 @@ const Individual = ({ language }: any) => {
       let { data, status } = await investmentAccridiation(_payload, authToken);
       if (status === 200) {
         toast.success(data?.status?.message, toastUtil);
-        navigate("/complete-goals", {
-          state: { type: InvestorType.INDIVIDUAL, selected: selectedAssert },
-        });
-        // localStorage.setItem("account_info", JSON.stringify(payload));
-        // localStorage.setItem("accert", JSON.stringify(selectedAssert));
+        navigate("/complete-goals");
       }
     } catch (error: any) {
       const message =
