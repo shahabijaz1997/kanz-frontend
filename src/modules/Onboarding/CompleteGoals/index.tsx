@@ -35,9 +35,9 @@ const CompleteGoals = ({ }: any) => {
 
   useLayoutEffect(() => {
     if ((user.status !== ApplicationStatus.OPENED && user.status !== ApplicationStatus.REOPENED) || user.type !== KanzRoles.INVESTOR) navigate("/welcome");
-    let item = localStorage.getItem("step");
+    // let item = localStorage.getItem("step");
 
-    setCurrentStepper(metadata?.steps_completed || Number(item));
+    setCurrentStepper(metadata?.profile_states.questionnaire_steps_completed);
   }, []);
 
   useLayoutEffect(() => {

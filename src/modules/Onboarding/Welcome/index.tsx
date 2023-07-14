@@ -25,7 +25,6 @@ const Welcome = ({ }: any) => {
     const authToken: any = useSelector((state: RootState) => state.auth.value);
     const language: any = useSelector((state: RootState) => state.language.value);
     const user: any = useSelector((state: RootState) => state.user.value);
-    const event: any = useSelector((state: RootState) => state.event.value);
 
     const [loading, setLoading] = useState(false);
 
@@ -33,8 +32,6 @@ const Welcome = ({ }: any) => {
         getUserDetails();
         getRoleBasedDetails();
     }, []);
-
-    
 
     const getUserDetails = async () => {
         try {
@@ -52,6 +49,7 @@ const Welcome = ({ }: any) => {
             setLoading(false);
         }
     };
+
     const getRoleBasedDetails = async () => {
         try {
             setLoading(true);
@@ -79,6 +77,7 @@ const Welcome = ({ }: any) => {
     };
 
     const renderRoleWiseScreen = () => {
+        console.log(user,"USERRRRRRRR")
         if (user.type === KanzRoles.INVESTOR) {
             return <InvestorHome loading={loading} language={language} />
         } else if (user.type === KanzRoles.SYNDICATE) {

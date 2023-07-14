@@ -11,6 +11,36 @@ const InvestorHome = ({ loading, language }: any) => {
     const user: any = useSelector((state: RootState) => state.user.value);
     const metadata: any = useSelector((state: RootState) => state.metadata.value);
 
+    const onPress = () => {
+      const { profile_states } = metadata;
+      if (
+        profile_states.profile_completed &&
+        !profile_states.questionnaire_completed &&
+        profile_states.questionnaire_steps_completed < 5 &&
+        profile_states.questionnaire_steps_completed !== 0
+      ) {
+        navigate(
+          `${RoutesEnums.PHILOSOPHY_GOALS}/${
+            profile_states.questionnaire_steps_completed + 1
+          }`
+        );
+      } else if (!profile_states.profile_completed) {
+        navigate(RoutesEnums.INVESTOR_DETAILS);
+      } else if (
+        profile_states.profile_completed &&
+        profile_states.questionnaire_steps_completed === 0
+      ) {
+        navigate(RoutesEnums.COMPLETE_GOALS);
+      } else if (
+        profile_states.profile_completed &&
+        profile_states.questionnaire_completed &&
+        profile_states.questionnaire_steps_completed === 5
+      ) {
+        navigate(RoutesEnums.ADD_ATTACHMENTS);
+      }
+    };
+  
+
     const render = () => {
         if (user.status === ApplicationStatus.OPENED && !metadata?.profile?.id) {
             return (
@@ -21,7 +51,7 @@ const InvestorHome = ({ loading, language }: any) => {
                     <h3 className="text-base font-normal text-neutral-700 screen500:text-[12px]">
                         {language?.v2?.investor?.home_sub}
                     </h3>
-                    <Button className="mt-[60px] h-[38px] w-[143px]" disabled={loading} htmlType="submit" loading={loading} onClick={() => navigate(RoutesEnums.INVESTOR_DETAILS)} >
+                    <Button className="mt-[60px] h-[38px] w-[143px]" disabled={loading} htmlType="submit" loading={loading} onClick={onPress} >
                         {language?.buttons?.start}
                     </Button>
                 </React.Fragment>
@@ -38,7 +68,7 @@ const InvestorHome = ({ loading, language }: any) => {
                     <h3 className="text-base font-normal text-neutral-700 screen500:text-[12px] mt-2">
                         {language?.onboarding?.appStatus}: <strong>{language.common.inprogress}</strong>
                     </h3>
-                    <Button className="mt-[60px] h-[38px] w-[143px]" disabled={loading} htmlType="submit" loading={loading} onClick={() => navigate(RoutesEnums.INVESTOR_DETAILS)} >
+                    <Button className="mt-[60px] h-[38px] w-[143px]" disabled={loading} htmlType="submit" loading={loading} onClick={onPress} >
                         {language?.buttons?.continue}
                     </Button>
                 </React.Fragment>

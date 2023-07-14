@@ -2,7 +2,7 @@ import React, { useState, useLayoutEffect, useEffect } from "react";
 import { toast } from "react-toastify";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { FileType } from "../../../enums/types.enum";
+import { FileType, InvestorType } from "../../../enums/types.enum";
 import Modal from "../../../shared/components/Modal";
 import { toastUtil } from "../../../utils/toast.utils";
 import Header from "../../../shared/components/Header";
@@ -16,14 +16,14 @@ import { saveToken } from "../../../redux-toolkit/slicer/auth.slicer";
 import Loader from "../../../shared/views/Loader";
 import { KanzRoles } from "../../../enums/roles.enum";
 import EditIcon from "../../../ts-icons/editIcon.svg";
-import { getUser } from "../../../apis/auth.api";
-import { saveUserData } from "../../../redux-toolkit/slicer/user.slicer";
+import { RoutesEnums } from "../../../enums/routes.enum";
 
 const AddAttachments = (props: any) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const language: any = useSelector((state: RootState) => state.language.value);
   const user: any = useSelector((state: RootState) => state.user.value);
+  const metadata: any = useSelector((state: RootState) => state.metadata.value);
   const authToken: any = useSelector((state: RootState) => state.auth.value);
   const event: any = useSelector((state: RootState) => state.event.value);
   const [modalOpen, setModalOpen]: any = useState(null);
@@ -127,6 +127,24 @@ const AddAttachments = (props: any) => {
     return false;
   };
 
+  const handleBack = () => {
+    if (
+      metadata.role === InvestorType.FIRM ||
+      metadata.role === InvestorType.INDIVIDUAL
+    ) {
+      // todo: remove these constants(5,2) and use this value from backend
+      navigate(`${RoutesEnums.PHILOSOPHY_GOALS}/5`);
+    } else if (metadata.role === KanzRoles.REALTOR) {
+      navigate(RoutesEnums.REALTOR_DETAILS);
+    } else if (metadata.role === KanzRoles.SYNDICATE) {
+      navigate(`${RoutesEnums.SYNIDCATE_DETAILS}/2`);
+    } else if (metadata.role === KanzRoles.STARTUP) {
+      navigate(`${RoutesEnums.START_UP}/2`);
+    } else {
+      navigate(-1);
+    }
+  };
+
   return (
     <main className="h-full max-h-full cbc-auth overflow-y-auto overflow-x-hidden">
       {
@@ -195,7 +213,7 @@ const AddAttachments = (props: any) => {
                 </p>
               </section>
               <section className="w-full inline-flex items-center justify-between py-10">
-                <Button className="h-[38px] w-[140px]" htmlType="submit" type="outlined" onClick={() => navigate(-1)} >
+                <Button className="h-[38px] w-[140px]" htmlType="submit" type="outlined" onClick={handleBack} >
                   {language?.buttons?.back}
                 </Button>
 

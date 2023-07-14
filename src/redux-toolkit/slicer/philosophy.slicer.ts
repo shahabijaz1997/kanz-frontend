@@ -84,7 +84,7 @@ export const PhilosophySlice = createSlice({
       
           questionToUpdate[lang].options = updatedOptions;
         }else if(textAnswer && questionToUpdate){
-          questionToUpdate[lang].answer = textAnswer;
+          questionToUpdate.answer = textAnswer;
         }
         state.value = existingQuestions;
       }
