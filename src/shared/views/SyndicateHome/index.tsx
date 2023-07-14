@@ -15,15 +15,14 @@ const SyndicateHome = ({ loading, language }: any) => {
     console.log(metadata.profile_states,"profile_states")
     const onPress = () => {
       const { profile, profile_states } = metadata;
-      if (isEmpty(profile) && profile_states.profile_current_step === 0) {
-        navigate(`${RoutesEnums.SYNIDCATE_DETAILS}/1`);
-      } else if (!profile_states.profile_completed) {
-        navigate(
-          `${RoutesEnums.SYNIDCATE_DETAILS}/${profile_states.profile_current_step + 1}`
-        );
-      } else if (profile_states.profile_completed) {
+      if (profile_states.profile_completed) {
         navigate(RoutesEnums.ADD_ATTACHMENTS);
-      }
+      }else
+      if (isEmpty(profile)) {
+         navigate(
+          `${RoutesEnums.SYNIDCATE_DETAILS}/${profile_states.profile_current_step}`
+        );
+      } 
     }; 
   
 

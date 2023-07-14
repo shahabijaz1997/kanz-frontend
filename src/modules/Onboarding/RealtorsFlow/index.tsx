@@ -78,9 +78,11 @@ const Realtors = (props: any) => {
     }
     setLoad(false);
     if ((user.status !== ApplicationStatus.OPENED && user.status !== ApplicationStatus.REOPENED)) return navigate("/welcome");
-    getRealtorDetails();
   }, [metadata]);
     
+  useEffect(()=>{
+    getRealtorDetails();
+  },[])
 
   useLayoutEffect(() => {
     if (user.type !== KanzRoles.REALTOR) navigate("/welcome");
@@ -200,7 +202,7 @@ const Realtors = (props: any) => {
                       {language?.common?.NoOfProperty}
                     </label>
                     <div className="relative w-full" style={{ zIndex: 99 }}>
-                      <input value={payload?.noOfProperty} onChange={(e) => onSetPayload(e.target.value, "noOfProperty")} placeholder={language.common.NoOfProperty} className=" h-[42px] shadow-sm appearance-none border border-neutral-300 rounded-md w-full py-2 px-3 text-gray-500 leading-tight focus:outline-none focus:shadow-outline" type="text" />
+                      <input value={payload?.noOfProperty} onChange={(e) => onSetPayload(e.target.value, "noOfProperty")} placeholder={language.common.NoOfProperty} className=" h-[42px] shadow-sm appearance-none border border-neutral-300 rounded-md w-full py-2 px-3 text-gray-500 leading-tight focus:outline-none focus:shadow-outline" type="number" />
                     </div>
                   </section>
                 </div>
