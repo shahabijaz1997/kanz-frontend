@@ -1,4 +1,4 @@
-import React, { useState, useLayoutEffect } from "react";
+import React, { useState, useLayoutEffect, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../../redux-toolkit/store/store";
 import { useLocation, useNavigate } from "react-router-dom";
@@ -17,9 +17,10 @@ import { ApplicationStatus } from "../../../enums/types.enum";
 import Button from "../../../shared/components/Button";
 import { KanzRoles } from "../../../enums/roles.enum";
 import { RoutesEnums } from "../../../enums/routes.enum";
+import { FinancialModal } from "../../../shared/types/definations";
+import { saveUserMetaData } from "../../../redux-toolkit/slicer/metadata.slicer";
 
 const CompleteGoals = ({ }: any) => {
-  const { state } = useLocation();
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const user: any = useSelector((state: RootState) => state.user.value);
@@ -28,16 +29,14 @@ const CompleteGoals = ({ }: any) => {
   const event: any = useSelector((state: RootState) => state.event.value);
   const authToken: any = useSelector((state: RootState) => state.auth.value);
 
-  const [payload, setPayload] = useState(state);
+  const [selectedAccreditation, setSelectedAccreditation] = useState<FinancialModal | null>();
   const [loading, setLoading] = useState(false);
-  const [apiResp, setApiResp]: any = useState();
   const [currentStepper, setCurrentStepper]: any = useState();
 
   useLayoutEffect(() => {
     if ((user.status !== ApplicationStatus.OPENED && user.status !== ApplicationStatus.REOPENED) || user.type !== KanzRoles.INVESTOR) navigate("/welcome");
-    // let item = localStorage.getItem("step");
 
-    setCurrentStepper(metadata?.profile_states.questionnaire_steps_completed);
+    setCurrentStepper(metadata?.steps_completed);
   }, []);
 
   useLayoutEffect(() => {
@@ -49,7 +48,7 @@ const CompleteGoals = ({ }: any) => {
       setLoading(true);
       let { status, data } = await getInvestor(authToken);
       if (status === 200) {
-        setApiResp(data);
+        dispatch(saveUserMetaData(data?.status?.data));
       }
     } catch (error: any) {
       const message =
@@ -65,6 +64,14 @@ const CompleteGoals = ({ }: any) => {
       setLoading(false);
     }
   };
+
+  useEffect(()=>{
+    if(metadata.profile){
+     const _selectedAccreditation  = metadata.profile[event].accreditation.options.find((option:any)=>option.selected);
+     setSelectedAccreditation(_selectedAccreditation);
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  },[metadata.profile])
 
   return (
     <main className="h-full max-h-full cbc-auth overflow-y-auto overflow-x-hidden">
@@ -91,30 +98,30 @@ const CompleteGoals = ({ }: any) => {
               </div>
               <div className="center w-[80%] mx-5">
                 <h3 className="text-neutral-900 text-lg font-semibold">
-                  {event === "en" ? apiResp?.status?.data?.role : apiResp?.status?.data?.role_ar}
+                  {event === "en" ? metadata?.role : metadata?.role_ar}
                 </h3>
                 <p className="text-neutral-700 text-sm font-normal mt-1">
-                  {apiResp?.status?.data?.role === "Investment Firm" && (
+                  {metadata?.role === "Investment Firm" && (
                     <React.Fragment>
                       <div>
                         <small className="text-neutral-700 text-sm font-medium">{language?.company?.legal}:</small>&nbsp;
-                        <span className="text-neutral-700 text-sm font-normal">{apiResp?.status?.data?.profile[event]?.legal_name}</span>
+                        <span className="text-neutral-700 text-sm font-normal">{metadata?.profile[event]?.legal_name}</span>
                       </div>
                       <div>
                         <small className="text-neutral-700 text-sm font-medium">{language?.common?.location}:</small>&nbsp;
-                        <span className="text-neutral-700 text-sm font-normal">{apiResp?.status?.data?.profile[event]?.location}</span>
+                        <span className="text-neutral-700 text-sm font-normal">{metadata?.profile[event]?.location}</span>
                       </div>
                     </React.Fragment>
                   )}
-                  {apiResp?.status?.data?.role !== "Investment Firm" && (
+                  {metadata?.role !== "Investment Firm" && (
                     <React.Fragment>
                       <div>
                         <small className="text-neutral-700 text-sm font-medium">{language?.common?.residence}:</small> &nbsp;
-                        <span className="text-neutral-700 text-sm font-normal">{apiResp?.status?.data?.profile[event]?.residence}</span>
+                        <span className="text-neutral-700 text-sm font-normal">{metadata?.profile[event]?.residence}</span>
                       </div>
                       <div>
                         <small className="text-neutral-700 text-sm font-medium">{language?.drawer?.country}:</small>&nbsp;
-                        <span className="text-neutral-700 text-sm font-normal">{apiResp?.status?.data?.profile[event]?.nationality}</span>
+                        <span className="text-neutral-700 text-sm font-normal">{metadata?.profile[event]?.nationality}</span>
                       </div>
                     </React.Fragment>
 
@@ -138,12 +145,12 @@ const CompleteGoals = ({ }: any) => {
                 </small>
                 <div>
                   <small className="text-neutral-900 text-2xl font-semibold screen800:text-sm">
-                    {payload?.selected?.currency}&nbsp;{payload?.selected?.lower_limit}{" "}
-                    {payload?.selected?.lower_limit !== payload?.selected?.upper_limit && " - " + payload?.selected?.upper_limit}
+                    {selectedAccreditation?.currency}&nbsp;{selectedAccreditation?.lower_limit}{" "}
+                    {selectedAccreditation?.lower_limit !== selectedAccreditation?.upper_limit && " - " + selectedAccreditation?.upper_limit}
                   </small>
                   &nbsp;
                   <small className="text-green-600 text-sm font-semibold">
-                    {payload?.selected?.unit}
+                    {selectedAccreditation?.unit}
                   </small>
                 </div>
               </div>
