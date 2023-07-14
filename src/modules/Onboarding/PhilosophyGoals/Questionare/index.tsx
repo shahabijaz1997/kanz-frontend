@@ -176,7 +176,7 @@ const Questionare = ({ step, returnSuccessRedirection }: any) => {
           </p>
 
           <section className="mb-8 w-full relative mt-3">
-            <textarea value={ques[event].answer || ""} onChange={(e) =>{ 
+            <textarea value={ques.answer || ""} onChange={(e) =>{ 
               // setTextAnswer(e.target.value);
               dispatch(saveAnswer({textAnswer:e.target.value,question:ques,questions:philosophyData,lang:event}));
             }}
@@ -377,7 +377,7 @@ const Questionare = ({ step, returnSuccessRedirection }: any) => {
       const _questions: any = [];
       philosophyData.questions.forEach((question: any) => {
         if(question.question_type === 'text'){
-          const finalQuestion = {question_id:question.id,selected_option_ids:[],answer:question[event].answer};
+          const finalQuestion = {question_id:question.id,selected_option_ids:[],answer:question.answer};
           _questions.push(finalQuestion);
         }else{
         const filteredArray = filterObjectsByTrueValue(question[event].options, 'selected');
@@ -418,7 +418,7 @@ const Questionare = ({ step, returnSuccessRedirection }: any) => {
       if (mcqs?.length > 0) return true;
       return false;
     } else if (philosophyData?.questions.length > 0 && philosophyData?.questions[0]?.question_type === "text") {
-      if (philosophyData?.questions[0][event]?.answer.length > 0) return true;
+      if (philosophyData?.questions[0]?.answer?.length > 0) return true;
       return false;
     } else {
       if (user?.status === ApplicationStatus.REOPENED) return true;

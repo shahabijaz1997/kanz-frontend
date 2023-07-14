@@ -77,6 +77,7 @@ const Welcome = ({ }: any) => {
     };
 
     const renderRoleWiseScreen = () => {
+        console.log(user,"USERRRRRRRR")
         if (user.type === KanzRoles.INVESTOR) {
             return <InvestorHome loading={loading} language={language} />
         } else if (user.type === KanzRoles.SYNDICATE) {

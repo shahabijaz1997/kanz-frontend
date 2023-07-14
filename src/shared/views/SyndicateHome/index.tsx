@@ -12,17 +12,14 @@ const SyndicateHome = ({ loading, language }: any) => {
     const user: any = useSelector((state: RootState) => state.user.value);
     const metadata: any = useSelector((state: RootState) => state.metadata.value);
 
-    console.log(metadata.profile_states,"profile_states")
     const onPress = () => {
-      const { profile, profile_states } = metadata;
+      const { profile_states } = metadata;
       if (profile_states.profile_completed) {
         navigate(RoutesEnums.ADD_ATTACHMENTS);
       }else
-      if (isEmpty(profile)) {
          navigate(
           `${RoutesEnums.SYNIDCATE_DETAILS}/${profile_states.profile_current_step}`
         );
-      } 
     }; 
   
 
@@ -104,7 +101,7 @@ const SyndicateHome = ({ loading, language }: any) => {
                     disabled={loading}
                     htmlType="submit"
                     loading={loading}
-                    onClick={() => navigate(`${RoutesEnums.START_UP}/1`)}
+                    onClick={onPress}
                   >
                     {language?.buttons?.continue}
                   </Button>
