@@ -18,6 +18,7 @@ import { getCountries } from "../../../apis/bootstrap.api";
 import { KanzRoles } from "../../../enums/roles.enum";
 import { RoutesEnums } from "../../../enums/routes.enum";
 import { saveUserMetaData } from "../../../redux-toolkit/slicer/metadata.slicer";
+import { isEmpty } from "../../../utils/object.util";
 
 const StartupFlow = ({ }: any) => {
   const params = useParams();
@@ -54,10 +55,7 @@ const StartupFlow = ({ }: any) => {
   const [fileType, setFileType] = useState(null);
   const [file, setFile]: any = useState(null);
   const [loading, setLoading] = useState(false);
-
-  useEffect(() => {
-    getAllCountries();
-  }, [])
+  const [load, setLoad] = useState(false);
 
   useLayoutEffect(() => {
     if (user.type !== KanzRoles.STARTUP) navigate("/welcome");
@@ -66,11 +64,19 @@ const StartupFlow = ({ }: any) => {
 
   const getStartupDetails = async () => {
     try {
-      setLoading(true);
+      setLoad(true);
       let { status, data } = await getCompanyInformation(1, authToken);
       if (status === 200) {
         dispatch(saveUserMetaData(data?.status?.data));
-        if (data?.status?.data?.profile) bootstrapPayload(data?.status?.data);
+        if (data?.status?.data?.profile && !isEmpty(data?.status?.data?.profile)) {
+          bootstrapPayload(data?.status?.data);
+        }
+      }
+
+      let countryRes: any = await getCountries(authToken);
+      if (countryRes.status === 200) {
+        let names = countryRes.data.status.data.map((c: any) => c[event].name);
+        setCountries({ all: countryRes.data.status.data, names });
       }
     } catch (error: any) {
       const message = error?.response?.data?.status?.message || error?.response?.data || language.promptMessages.errorGeneral;
@@ -80,33 +86,13 @@ const StartupFlow = ({ }: any) => {
         navigate("/login", { state: 'Startup' });
       }
     } finally {
-      setLoading(false);
+      setLoad(false);
     }
   };
 
   useLayoutEffect(() => {
     setStep(Number(params?.id) || 1);
   }, [params]);
-
-
-  const getAllCountries = async () => {
-    setLoading(true);
-    try {
-      let { status, data } = await getCountries(authToken);
-      if (status === 200) {
-        let names = data.status.data.map((c: any) => c[event].name);
-        setCountries({ all: data.status.data, names });
-      }
-    } catch (error: any) {
-      console.error("Error in countries: ", error);
-      if (error.response && error.response.status === 401) {
-        dispatch(saveToken(""));
-        navigate("/login", { state: "complete-details" });
-      }
-    } finally {
-      setLoading(false);
-    }
-  };
 
   const bootstrapPayload = (meta: any) => {
     setPayload({
@@ -123,7 +109,7 @@ const StartupFlow = ({ }: any) => {
       target: meta?.profile?.current_round_capital_target,
       logo: meta?.profile?.logo,
       currency: { label: meta?.profile?.currency, value: meta?.profile?.currency }
-    })
+    });
   };
 
   const onSetFile = (file: File, id: string, url: string, attachment_id: string, size: string, dimensions: string, type: string) => {
@@ -258,7 +244,7 @@ const StartupFlow = ({ }: any) => {
           setModalOpen={(e: any) => setModalOpen(e)}
           authToken={authToken}
           orientation={orientation}
-          loading={loading}
+          load={load}
         />
 
         <section className="w-full inline-flex items-center justify-between py-10">

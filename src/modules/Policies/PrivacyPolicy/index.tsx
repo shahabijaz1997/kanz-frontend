@@ -6,11 +6,12 @@ import { RootState } from "../../../redux-toolkit/store/store";
 
 const PrivacyPolicy = () => {
     const language: any = useSelector((state: RootState) => state.language.value);
+    const authToken: any = useSelector((state: RootState) => state.auth.value);
 
     return (
         <main className="h-full max-h-full cbc-auth overflow-y-auto overflow-x-hidden">
             <section>
-                <Header />
+                <Header showLanguageDropdown={!authToken ? true : false} />
             </section>
 
             <aside className="w-full flex items-center justify-center pt-[75px]">
