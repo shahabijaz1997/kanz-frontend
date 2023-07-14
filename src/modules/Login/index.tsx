@@ -66,7 +66,7 @@ const Login = ({ }: any) => {
         console.error(error);
         const message = error?.response?.data?.status?.message || error?.response?.data || language.promptMessages.errorGeneral;
         toast.error(message, toastUtil);
-        if (error?.response?.data?.status?.code && !error?.response?.data?.status?.code?.profile_states.account_confirmed) {
+        if (error?.response?.data?.status?.code && !error?.response?.data?.status?.code?.profile_states?.account_confirmed) {
           dispatch(saveUserData(error?.response?.data?.status?.code))
           navigate("/verification");
         }
