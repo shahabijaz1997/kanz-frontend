@@ -12,7 +12,7 @@ export const getEnv = () => {
             };
         case "STAGING":
             return {
-                API_URL: 'https://limitless-refuge-86846.herokuapp.com',
+                API_URL: 'https://kanz-staging-81f9fa8939e4.herokuapp.com/',
                 GOOGLE_API_KEY: process.env.REACT_APP_GOOGLE_API_KEY,
                 LINKEDIN_API_KEY: process.env.REACT_APP_LINKEDIN_API_KEY,
                 API_VERSION: '1.0'
