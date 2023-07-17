@@ -1,4 +1,4 @@
-import { useState, useLayoutEffect } from "react";
+import { useState, useLayoutEffect, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router";
 import { RootState } from "../../../redux-toolkit/store/store";
@@ -60,8 +60,17 @@ const StartupFlow = ({}: any) => {
 
   useLayoutEffect(() => {
     if (user.type !== KanzRoles.STARTUP) navigate("/welcome");
-    getStartupDetails();
   }, []);
+
+  useEffect(()=>{
+    getStartupDetails();
+  },[])
+
+  useEffect(()=>{
+    if(metadata){
+      bootstrapPayload();
+    }
+  },[metadata])
 
   const getStartupDetails = async () => {
     try {
@@ -96,7 +105,7 @@ const StartupFlow = ({}: any) => {
     setPayload({
       company: metadata?.profile?.company_name,
       legal: metadata?.profile?.legal_name,
-      country: { name: metadata?.profile[event].country || null },
+      country: { name: metadata?.profile ? metadata?.profile[event]?.country: null  },
       market: metadata?.profile?.industry_ids || [],
       web: metadata?.profile?.website,
       address: metadata?.profile?.address,
@@ -109,6 +118,7 @@ const StartupFlow = ({}: any) => {
       currency: { label: metadata?.profile?.currency, value: metadata?.profile?.currency }
     });
   };
+
 
   const onSetFile = (file: File, id: string, url: string, attachment_id: string, size: string, dimensions: string, type: string) => {
     let _file: any = {
