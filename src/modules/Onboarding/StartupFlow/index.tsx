@@ -71,10 +71,13 @@ const StartupFlow = ({}: any) => {
         dispatch(saveUserMetaData(data?.status?.data));
           bootstrapPayload();
       }
-
+      console.log("1111111111111111111");
       let countryRes: any = await getCountries(authToken);
+      console.log("22222222222222222222",countryRes);
       if (countryRes.status === 200) {
+        console.log("33333333333333333");
         let names = countryRes.data.status.data.map((c: any) => c[event].name);
+        console.log("44444444444444444444",names);
         setCountries({ all: countryRes.data.status.data, names });
       }
     } catch (error: any) {
