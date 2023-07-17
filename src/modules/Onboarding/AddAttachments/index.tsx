@@ -172,29 +172,71 @@ const AddAttachments = (props: any) => {
               <section className="flex items-start justify-center flex-col mt-8">
                 <form className="pt-8 mb-4 w-full">
                   {React.Children.toArray(
-                    attachmentData.map((item: any) => {
-                      return (
-                        item?.attachment_url ? (
-                          <div className="mb-4 w-full select-none">
-                            <div className="block text-neutral-700 text-base font-medium">
-                              <div>{item[event]?.name}</div>
-                              <small className="text-neutral-700 font-normal">{item[event]?.label}</small>
-                              <div className="main-embed w-[300px] h-[200px] overflow-hidden relative mb-2">
-                                <EditIcon stroke="#fff" className="w-7 h-7 absolute right-2 top-2 cursor-pointer rounded-md p-1" style={{ backgroundColor: "rgba(0, 0, 0, 0.078)" }} onClick={() => removeFile(item)} />
-                                {item?.attachment_kind === FileType.IMAGE ? <img src={item?.attachment_url} className="block w-[110%] h-[110%] overflow-hidden" /> : <embed src={item?.attachment_url} className="block w-[110%] h-[110%] overflow-hidden" />}
-                              </div>
+                    attachmentData.map((item: any, index: number) => {
+                      return item?.attachment_url ? (
+                        <div 
+                        key={index}
+                        className="mb-4 w-full select-none content-center bg-cbc-grey-sec p-4 rounded-md">
+                          <div className="block text-neutral-700 text-base font-medium">
+                            <span className="inline-flex w-full items-center justify-between">
+                              <span className="inline-flex flex-col">
+                                <div>{item[event]?.name}</div>
+                                <small className="text-neutral-700 font-normal">
+                                  {item[event]?.label}
+                                </small>
+                              </span>
+                              <EditIcon
+                                stroke="#fff"
+                                className="w-7 h-7 float-right cursor-pointer rounded-md p-1"
+                                style={{
+                                  backgroundColor: "rgba(0, 0, 0, 0.078)",
+                                }}
+                                onClick={() => removeFile(item)}
+                              />
+                            </span>
+                            <div className="content-center text-center mt-2  main-embed  h-[200px] overflow-hidden relative">
+                              {item?.attachment_kind === FileType.IMAGE ? (
+                                <img
+                                  alt={"attachment url missing"}
+                                  src={item.attachment_url}
+                                  className="block w-[110%] h-[110%] overflow-hidden object-contain"
+                                />
+                              ) : (
+                                <embed
+                                  src={item?.attachment_url}
+                                  className="block w-[110%] h-[110%] overflow-hidden"
+                                />
+                              )}
                             </div>
                           </div>
-                        ) :
-                          (<UploadComp id={item.fid} fid={item.id} files={files} file={files?.length && files.find((f: any) => f.id === item.id)} setFile={setFile} title={item[event]?.name} subTitle={item[event]?.label}
-                            language={language} setFiles={setFiles} setFileType={setFileType} setModalOpen={setModalOpen} onRemoveFile={(fid: string) => {
-                              let attachs = attachmentData.slice().map((at: any) => {
+                        </div>
+                      ) : (
+                        <UploadComp
+                          id={item.fid}
+                          fid={item.id}
+                          files={files}
+                          file={
+                            files?.length &&
+                            files.find((f: any) => f.id === item.id)
+                          }
+                          setFile={setFile}
+                          title={item[event]?.name}
+                          subTitle={item[event]?.label}
+                          language={language}
+                          setFiles={setFiles}
+                          setFileType={setFileType}
+                          setModalOpen={setModalOpen}
+                          onRemoveFile={(fid: string) => {
+                            let attachs = attachmentData
+                              .slice()
+                              .map((at: any) => {
                                 if (at.id === fid) at.attachment_url = "";
                                 return at;
                               });
-                              setAttachmentData(attachs);
-                            }} />
-                          ));
+                            setAttachmentData(attachs);
+                          }}
+                        />
+                      );
                     })
                   )}
                 </form>
