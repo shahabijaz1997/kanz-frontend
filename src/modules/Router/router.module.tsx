@@ -145,7 +145,9 @@ const RouterModule = () => {
         <Route path="/philosophy-goals/:id"
           element={
             <Suspense fallback={<Loader />}>
-              <AuthenticateRoute><PhilosophyGoals guard={authToken} /></AuthenticateRoute>
+              <AuthenticateRoute>
+                <AuthenticateRole role={KanzRoles.INVESTOR}><PhilosophyGoals guard={authToken} /></AuthenticateRole>
+              </AuthenticateRoute>
             </Suspense>
           }
         />
