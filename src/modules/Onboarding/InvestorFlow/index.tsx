@@ -134,7 +134,7 @@ const InvestorFlow = ({ }: any) => {
             })
           )}
 
-          <section className="w-full inline-flex items-center justify-between mt-16">
+          <section className="w-full inline-flex items-center justify-between py-10">
             <Button
               className="mt-6 h-[38px] w-[140px]"
               htmlType="button"

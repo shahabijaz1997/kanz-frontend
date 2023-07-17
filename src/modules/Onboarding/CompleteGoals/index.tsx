@@ -35,7 +35,6 @@ const CompleteGoals = ({ }: any) => {
 
   useLayoutEffect(() => {
     if ((user.status !== ApplicationStatus.OPENED && user.status !== ApplicationStatus.REOPENED) || user.type !== KanzRoles.INVESTOR) navigate("/welcome");
-
     setCurrentStepper(metadata?.steps_completed);
   }, []);
 
@@ -157,8 +156,8 @@ const CompleteGoals = ({ }: any) => {
             </section>
           </aside>
           <GoalStepper language={language} currentStepper={currentStepper} navigate={() => {
-            if (currentStepper === 5) navigate(`/philosophy-goals/${currentStepper}`);
-            else navigate(`/philosophy-goals/${currentStepper + 1}`);
+            if (metadata?.profile_states?.questionnaire_steps_completed === 5) navigate(`${RoutesEnums.ADD_ATTACHMENTS}`);
+            else navigate(`/philosophy-goals/${metadata?.profile_states?.questionnaire_steps_completed + 1}`);
           }}
           />
         </section>
