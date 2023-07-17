@@ -197,7 +197,7 @@ const AddAttachments = (props: any) => {
                             <div className="content-center text-center mt-2  main-embed  h-[200px] overflow-hidden relative">
                               {item?.attachment_kind === FileType.IMAGE ? (
                                 <img
-                                  alt={"attachment url missing"}
+                                  alt={"Attachment url missing"}
                                   src={item.attachment_url}
                                   className="block w-[110%] h-[110%] overflow-hidden object-contain"
                                 />
