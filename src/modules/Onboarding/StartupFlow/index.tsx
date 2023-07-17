@@ -26,6 +26,7 @@ const StartupFlow = ({ }: any) => {
   const dispatch = useDispatch();
   const language: any = useSelector((state: RootState) => state.language.value);
   const user: any = useSelector((state: RootState) => state.user.value);
+  const metadata: any = useSelector((state: RootState) => state.metadata.value);
   const authToken: any = useSelector((state: RootState) => state.auth.value);
   const event: any = useSelector((state: RootState) => state.event.value);
   const orientation: any = useSelector((state: RootState) => state.orientation.value);
@@ -97,7 +98,7 @@ const StartupFlow = ({ }: any) => {
   const bootstrapPayload = (meta: any) => {
     setPayload({
       company: meta?.profile?.company_name,
-      legal: meta?.profile?.company_name,
+      legal: meta?.profile?.legal_name,
       country: { name: meta?.profile[event].country },
       market: meta?.profile?.industry_ids || [],
       web: meta?.profile?.website,
@@ -137,7 +138,7 @@ const StartupFlow = ({ }: any) => {
         errors.push(language.promptMessages.pleaseSelectAllData)
       if (!isValidUrl(payload.web)) errors.push(language.promptMessages.validComp);
       toast.dismiss();
-      if (errors.length) return errors.forEach(e => toast.warning(e, toastUtil));
+      if (errors.length) return errors?.forEach(e => toast.warning(e, toastUtil));
     } else {
       let errors = [];
       if (!payload.company || !payload.legal || !payload.country || !payload.market.length || !payload.address || !payload.web || !payload.name || !payload.email || !payload.logo || !payload.business || !payload.raised || !payload.target) {
@@ -145,7 +146,7 @@ const StartupFlow = ({ }: any) => {
       }
       if (!isValidEmail(payload.email)) errors.push(language.promptMessages.invalidEmailCeo)
       toast.dismiss();
-      if (errors.length) return errors.forEach(e => toast.warning(e, toastUtil));
+      if (errors.length) return errors?.forEach(e => toast.warning(e, toastUtil));
     }
     onPostCompanyData();
   };
@@ -167,7 +168,7 @@ const StartupFlow = ({ }: any) => {
         form.append("startup_profile[company_name]", payload.company);
         form.append("startup_profile[legal_name]", payload.legal);
         form.append("startup_profile[country_id]", payload.country?.id || _country?.id);
-        payload.market.forEach((val: any) => {
+        payload.market?.forEach((val: any) => {
           form.append("startup_profile[industry_ids][]", val);
         });
         form.append("startup_profile[website]", payload.web);
@@ -177,7 +178,7 @@ const StartupFlow = ({ }: any) => {
         form.append("startup_profile[company_name]", payload.company);
         form.append("startup_profile[legal_name]", payload.legal);
         form.append("startup_profile[country_id]", payload.country?.id || _country?.id);
-        payload.market.forEach((val: any) => {
+        payload.market?.forEach((val: any) => {
           form.append("startup_profile[industry_ids][]", val);
         });
         form.append("startup_profile[website]", payload.web);
