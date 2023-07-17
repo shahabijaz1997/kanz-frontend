@@ -19,23 +19,27 @@ const InvestorHome = ({ loading, language }: any) => {
         profile_states.questionnaire_steps_completed < 5 &&
         profile_states.questionnaire_steps_completed !== 0
       ) {
+        console.log("1111111111111");
         navigate(
           `${RoutesEnums.PHILOSOPHY_GOALS}/${
             profile_states.questionnaire_steps_completed + 1
           }`
         );
       } else if (!profile_states.profile_completed) {
+        console.log("2222222222222");
         navigate(RoutesEnums.INVESTOR_DETAILS);
       } else if (
         profile_states.profile_completed &&
         profile_states.questionnaire_steps_completed === 0
       ) {
+        console.log("3333333333333");
         navigate(RoutesEnums.COMPLETE_GOALS);
       } else if (
         profile_states.profile_completed &&
         profile_states.questionnaire_completed &&
         profile_states.questionnaire_steps_completed === 5
       ) {
+        console.log("4444444444444");
         navigate(RoutesEnums.ADD_ATTACHMENTS);
       }
     };
@@ -93,7 +97,7 @@ const InvestorHome = ({ loading, language }: any) => {
                     <h3 className="text-base font-normal text-neutral-700 screen500:text-[12px]">
                         {language?.onboarding?.appStatus}: <strong>{language.v2.common[user.status]}</strong>
                     </h3>
-                    {user.status === ApplicationStatus.REOPENED && <Button className="mt-[30px] h-[38px] w-[143px]" disabled={loading} htmlType="submit" loading={loading} onClick={() => navigate(RoutesEnums.INVESTOR_DETAILS)} >
+                    {user.status === ApplicationStatus.REOPENED && <Button className="mt-[30px] h-[38px] w-[143px]" disabled={loading} htmlType="submit" loading={loading} onClick={onPress} >
                         {language?.buttons?.continue}
                     </Button>}
                 </React.Fragment>
