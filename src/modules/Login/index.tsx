@@ -51,6 +51,11 @@ const Login = ({ }: any) => {
         setLoading(true);
         setFormValues(values);
         const { status, data, headers } = await signin({ user: { email: values?.email, password: values?.password, language: event } });
+        if (data?.status?.code && !data?.status?.data?.profile_states?.account_confirmed) {
+          dispatch(saveUserData(data?.status?.data))
+          navigate("/verification");
+          return;
+        }
         if (status === 200 && headers["authorization"]) {
           const token = headers["authorization"].split(" ")[1];
           dispatch(saveToken(token));

@@ -522,7 +522,11 @@ const Questionare = ({ step, returnSuccessRedirection }: any) => {
       const question = philosophyData?.questions?.find(
         (question: any) => question[event]?.options?.length === 2
       );
-      const checkNoOption = question && question[event]?.options?.find((option: any)=>option?.statement === 'No');
+      const checkNoOption =
+        question &&
+        question[event]?.options?.find(
+          (option: any) => (option?.statement === "No" || option?.statement === 'لا')
+        );
       if (step === 2 && checkNoOption?.selected) {
         return true;
       } else if (user?.status === ApplicationStatus.REOPENED) {
