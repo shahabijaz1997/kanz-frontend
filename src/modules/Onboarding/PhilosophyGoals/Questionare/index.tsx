@@ -519,7 +519,7 @@ const Questionare = ({ step, returnSuccessRedirection }: any) => {
     if (hasTextQuestion) {
       return philosophyData.questions[0]?.answer?.length > 0;
     } else {
-      const question = philosophyData?.questions.find(
+      const question = philosophyData?.questions?.find(
         (question: any) => question[event]?.options?.length === 2
       );
       const checkNoOption = question && question[event]?.options?.find((option: any)=>option?.statement === 'No');
