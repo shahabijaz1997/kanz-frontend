@@ -229,9 +229,8 @@ const Questionare = ({ step, returnSuccessRedirection }: any) => {
 
           <section className="mb-8 w-full relative mt-3">
             <textarea
-              value={ques.answer || ""}
+              value={ques.answer}
               onChange={(e) => {
-                // setTextAnswer(e.target.value);
                 dispatch(
                   saveAnswer({
                     textAnswer: e.target.value,

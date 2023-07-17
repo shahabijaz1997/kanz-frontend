@@ -36,7 +36,7 @@ export const PhilosophySlice = createSlice({
             };
           });
           questionToUpdate[lang].options = updatedOptions;
-        }else if(textAnswer && questionToUpdate){
+        }else if(questionToUpdate){
           questionToUpdate.answer = textAnswer;
         }
         state.value = existingQuestions;
