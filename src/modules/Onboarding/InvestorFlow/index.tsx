@@ -2,7 +2,7 @@ import React, { useState, useLayoutEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../../redux-toolkit/store/store";
 import { useNavigate } from "react-router-dom";
-import { ApplicationStatus, InvestorType } from "../../../enums/types.enum";
+import { InvestorType } from "../../../enums/types.enum";
 import Header from "../../../shared/components/Header";
 import ArrowIcon from "../../../ts-icons/arrowIcon.svg";
 import UserIcon from "../../../ts-icons/userIcon.svg";
@@ -13,8 +13,6 @@ import { saveToken } from "../../../redux-toolkit/slicer/auth.slicer";
 import Drawer from "../../../shared/components/Drawer";
 import Button from "../../../shared/components/Button";
 import GroupIcon from "../../../ts-icons/groupIcon.svg";
-import { isEmpty } from "../../../utils/object.util";
-import { KanzRoles } from "../../../enums/roles.enum";
 import { saveUserMetaData } from "../../../redux-toolkit/slicer/metadata.slicer";
 import { RoutesEnums } from "../../../enums/routes.enum";
 
@@ -23,8 +21,6 @@ const InvestorFlow = ({ }: any) => {
   const dispatch = useDispatch();
   const authToken: any = useSelector((state: RootState) => state.auth.value);
   const language: any = useSelector((state: RootState) => state.language.value);
-  const user: any = useSelector((state: RootState) => state.user.value);
-  const metadata: any = useSelector((state: RootState) => state.metadata.value);
   const orientation: any = useSelector((state: RootState) => state.orientation.value);
 
   const [selectedAccount, setSelectedAccount]: any = useState();
@@ -37,8 +33,6 @@ const InvestorFlow = ({ }: any) => {
 
   useLayoutEffect(() => {
     onGetInvestorDetails();
-    if ((user.status === ApplicationStatus.OPENED || user.status === ApplicationStatus.REOPENED) && !isEmpty(metadata?.profile) && user.type === KanzRoles.INVESTOR)
-      setSelectedAccount(accounts?.find(ac => ac.payload === metadata.role));
   }, []);
 
   const onSelectInvestorType = async () => {
