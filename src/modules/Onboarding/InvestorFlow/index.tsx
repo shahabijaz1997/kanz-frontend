@@ -29,7 +29,7 @@ const InvestorFlow = ({ }: any) => {
   const [selectedAccount, setSelectedAccount]: any = useState();
   const [loading, setLoading] = useState(false);
   const [isOpen, setOpen] = useState(false);
-  const [modalOpen, setModalOpen] = useState(false);
+  const [modalOpen, setModalOpen]: any = useState(null);
   const [accounts] = useState([
     { id: 1, payload: InvestorType.INDIVIDUAL, icon: <UserIcon stroke="#171717" className="absolute h-6 top-4" />, text: language?.investorFow?.individual, subText: language?.investorFow?.subInd, link: InvestorType.INDIVIDUAL },
     { id: 2, payload: InvestorType.FIRM, icon: <GroupIcon stroke="#171717" className="absolute h-6 top-4" />, text: language?.investorFow?.firm, subText: language?.investorFow?.subFirm, link: InvestorType.FIRM },
@@ -39,20 +39,20 @@ const InvestorFlow = ({ }: any) => {
     onGetInvestorDetails();
   }, []);
 
-  const onSelectInvestorType = async () => {
+  const onSelectInvestorType = async (acc = selectedAccount) => {
     try {
-      if (!selectedAccount?.link) {
+      if (!acc?.link) {
         toast.dismiss();
         return toast.warning(language.promptMessages.pleaseSelectInvest, toastUtil);
       }
       setLoading(true);
       let fd = new FormData();
 
-      fd.append("investor[type]", selectedAccount.payload)
-      let { status, data } = await selectInvestorType({ investor: { role: selectedAccount.payload } }, authToken);
+      fd.append("investor[type]", acc.payload)
+      let { status, data } = await selectInvestorType({ investor: { role: acc.payload } }, authToken);
       if (status === 200) {
-        localStorage.setItem("investor-type", selectedAccount?.link)
-        navigate(`/complete-details`, { state: selectedAccount?.link })
+        localStorage.setItem("investor-type", acc?.link)
+        navigate(`/complete-details`, { state: acc?.link })
       }
     } catch (error: any) {
       const message = error?.response?.data?.status?.message || error?.response?.data || language.promptMessages.errorGeneral;
@@ -96,7 +96,9 @@ const InvestorFlow = ({ }: any) => {
   const onRoleChange = () => {
     try {
       setLoading(true);
-
+      setSelectedAccount(modalOpen);
+      setModalOpen(false);
+      onSelectInvestorType(modalOpen);
     } catch (error: any) {
       const message = error?.response?.data?.status?.message || error?.response?.data || language.promptMessages.errorGeneral;
       toast.error(message, toastUtil);
@@ -132,7 +134,7 @@ const InvestorFlow = ({ }: any) => {
                   className={`w-full h-24 rounded-xl border-2 border-grey px-4 py-3.5 relative mb-5 transition-all ${getApplicationStatusBasedStyling(account)}`}
                   onClick={() => {
                     if (user.status === ApplicationStatus.REOPENED) return;
-                    else if ((selectedAccount?.id !== account.id) && user.status === ApplicationStatus.OPENED && metadata?.profile?.id) return setModalOpen(true);
+                    else if ((selectedAccount?.id !== account.id) && user.status === ApplicationStatus.OPENED && metadata?.profile?.id) return setModalOpen(account);
                     setSelectedAccount(account);
                   }}
                 >
@@ -167,7 +169,7 @@ const InvestorFlow = ({ }: any) => {
               disabled={!selectedAccount?.link}
               htmlType="submit"
               loading={loading}
-              onClick={onSelectInvestorType}
+              onClick={()=>onSelectInvestorType(selectedAccount)}
             >
               {language?.buttons?.continue}
             </Button>
@@ -188,7 +190,7 @@ const InvestorFlow = ({ }: any) => {
           </aside>
         </div>
       </Modal>
-      <Drawer isOpen={isOpen} setIsOpen={(val: boolean) => setOpen(val)}>
+      <Drawer isOpen={isOpen ? true : false} setIsOpen={(val: boolean) => setOpen(val)}>
         <header className="font-bold text-xl">
           {language.philosophyGoals.whyToDo}
         </header>
