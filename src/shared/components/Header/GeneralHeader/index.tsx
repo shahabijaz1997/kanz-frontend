@@ -45,7 +45,7 @@ const GeneralHeader = ({ responsive = false, showMenu = false, showLanguageDropd
     const showSelectedDisabled = () => {
         let item = languageDropdownItems.find((lang: any) => lang.name === event);
         return(
-            <button type="button" className={`inline-flex items-center gap-x-1.5 px-3 py-2 text-sm font-medium hover:bg-gray-50 text-neutral-700 cursor-not-allowed ${orientation === "rtl" ? "w-full justify-end pl-5" : "justify-end"}`} >
+            <button type="button" className={`inline-flex items-center gap-x-1.5 px-3 py-2 text-sm font-medium text-neutral-700 cursor-not-allowed ${orientation === "rtl" ? "w-full justify-end pl-5" : "justify-end"}`} >
                <img className="h-4" src={item?.icon} alt={item?.title} />
                     {item?.title}
                     <svg className="-mr-1 h-5 w-5" viewBox="0 0 20 20" fill="#404040" aria-hidden="true" >

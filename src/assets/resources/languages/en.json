@@ -141,7 +141,7 @@
         "clickDetails": "Click here for details",
         "national": "Nationality",
         "location": "Location",
-        "residence": "Residence",
+        "residence": "Country of Residence",
         "NoOfProperty": "No. of Properties",
         "attachmentPending": "Your attachment is pending. Add attachments for account approval",
         "aed": "AED",
@@ -220,7 +220,7 @@
         "questionare": "Norem ipsum dolor sit amet, consectetur adipiscing elit. Etiam eu turpis molestie, dictum est a, mattis tellus. Sed dignissim, metus nec fringilla accumsan, risus sem sollicitudin lacus, ut interdum tellus elit sed risus. Maecenas eget condimentum velit, sit amet feugiat lectus. Class aptent taciti sociosqu ad litora torquent per conubia",
         "realtor": "Norem ipsum dolor sit amet, consectetur adipiscing elit. Etiam eu turpis molestie, dictum est a, mattis tellus. Sed dignissim, metus nec fringilla accumsan, risus sem sollicitudin lacus, ut interdum tellus elit sed risus. Maecenas eget condimentum velit, sit amet feugiat lectus. Class aptent taciti sociosqu ad litora torquent per conubia",
         "individual": "Kanz would like to know you better in order to fulfil KYC (Know Your Customer) requirements in compliance with the guidelines issued by the Dubai Financial Services Authority (DFSA).",
-        "country": "Country",
+        "country": "Nationality",
         "of": "of",
         "onboardSub_1": "We’re #DemocratizingInvestments in the MENAPT region and beyond...",
         "cofRes": "Country of Residence",
@@ -277,7 +277,10 @@
             "reopened": "Re Opened",
             "approved": "Approved",
             "has_been": "Your application has been ",
-            "imageSpecs": "PNG, JPG up to"
+            "imageSpecs": "PNG, JPG up to",
+            "sure": "Are you sure?",
+            "investorSelection": "Changing the investor type will remove your existing data and attachments.",
+            "proceed": "Do you want to proceed anyway?"
         },
         "risk": {
             "heading": "Risk Disclaimer",
