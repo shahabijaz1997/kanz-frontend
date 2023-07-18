@@ -19,27 +19,23 @@ const InvestorHome = ({ loading, language }: any) => {
         profile_states.questionnaire_steps_completed < 5 &&
         profile_states.questionnaire_steps_completed !== 0
       ) {
-        console.log("1111111111111");
         navigate(
           `${RoutesEnums.PHILOSOPHY_GOALS}/${
             profile_states.questionnaire_steps_completed + 1
           }`
         );
       } else if (!profile_states.profile_completed) {
-        console.log("2222222222222");
         navigate(RoutesEnums.INVESTOR_DETAILS);
       } else if (
         profile_states.profile_completed &&
         profile_states.questionnaire_steps_completed === 0
       ) {
-        console.log("3333333333333");
         navigate(RoutesEnums.COMPLETE_GOALS);
       } else if (
         profile_states.profile_completed &&
         profile_states.questionnaire_completed &&
         profile_states.questionnaire_steps_completed === 5
       ) {
-        console.log("4444444444444");
         navigate(RoutesEnums.ADD_ATTACHMENTS);
       }
     };

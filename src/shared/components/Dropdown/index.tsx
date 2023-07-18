@@ -35,7 +35,7 @@ const Dropdown = (props: any) => {
     return (
         <div className={`relative w-full ${style}`} ref={dropdownRef}>
             <div>
-                <button type="button" className={`inline-flex items-center gap-x-1.5 px-3 py-2 text-sm font-medium hover:bg-gray-50 text-neutral-700 ${orientation === "rtl" ? "w-full justify-end pl-5" : "justify-end"}`}
+                <button type="button" className={`inline-flex items-center gap-x-1.5 px-3 py-2 text-sm font-medium text-neutral-700 ${orientation === "rtl" ? "w-full justify-end pl-5" : "justify-end"}`}
                     id="menu-button" aria-expanded={isOpen} aria-haspopup="true" onClick={handleToggleDropdown} >
                     {selected.icon && <img className="h-4" src={selected?.icon} alt={selected.title} />}
                     {selected.title}

@@ -2,7 +2,7 @@ import React, { useState, useLayoutEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../../redux-toolkit/store/store";
 import { useNavigate } from "react-router-dom";
-import { InvestorType } from "../../../enums/types.enum";
+import { ApplicationStatus, InvestorType } from "../../../enums/types.enum";
 import Header from "../../../shared/components/Header";
 import ArrowIcon from "../../../ts-icons/arrowIcon.svg";
 import UserIcon from "../../../ts-icons/userIcon.svg";
@@ -15,17 +15,21 @@ import Button from "../../../shared/components/Button";
 import GroupIcon from "../../../ts-icons/groupIcon.svg";
 import { saveUserMetaData } from "../../../redux-toolkit/slicer/metadata.slicer";
 import { RoutesEnums } from "../../../enums/routes.enum";
+import Modal from "../../../shared/components/Modal";
 
 const InvestorFlow = ({ }: any) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const authToken: any = useSelector((state: RootState) => state.auth.value);
   const language: any = useSelector((state: RootState) => state.language.value);
+  const user: any = useSelector((state: RootState) => state.user.value);
+  const metadata: any = useSelector((state: RootState) => state.metadata.value);
   const orientation: any = useSelector((state: RootState) => state.orientation.value);
 
   const [selectedAccount, setSelectedAccount]: any = useState();
   const [loading, setLoading] = useState(false);
   const [isOpen, setOpen] = useState(false);
+  const [modalOpen, setModalOpen] = useState(false);
   const [accounts] = useState([
     { id: 1, payload: InvestorType.INDIVIDUAL, icon: <UserIcon stroke="#171717" className="absolute h-6 top-4" />, text: language?.investorFow?.individual, subText: language?.investorFow?.subInd, link: InvestorType.INDIVIDUAL },
     { id: 2, payload: InvestorType.FIRM, icon: <GroupIcon stroke="#171717" className="absolute h-6 top-4" />, text: language?.investorFow?.firm, subText: language?.investorFow?.subFirm, link: InvestorType.FIRM },
@@ -83,6 +87,24 @@ const InvestorFlow = ({ }: any) => {
     }
   };
 
+  const getApplicationStatusBasedStyling = (account: any) => {
+    if (selectedAccount?.id === account?.id) return "border-cyan-800 cursor-pointer";
+    else if ((selectedAccount?.id !== account.id) && user.status === ApplicationStatus.REOPENED) return "cursor-not-allowed";
+    else return "cursor-pointer";
+  }
+
+  const onRoleChange = () => {
+    try {
+      setLoading(true);
+
+    } catch (error: any) {
+      const message = error?.response?.data?.status?.message || error?.response?.data || language.promptMessages.errorGeneral;
+      toast.error(message, toastUtil);
+    } finally {
+      setLoading(false);
+    }
+  }
+
   return (
     <main className="h-full max-h-full  overflow-y-auto">
       <section>
@@ -107,9 +129,12 @@ const InvestorFlow = ({ }: any) => {
             accounts.map((account) => {
               return (
                 <section
-                  className={`w-full cursor-pointer h-24 rounded-xl border-2 border-grey px-4 py-3.5 relative mb-5 transition-all ${selectedAccount?.id === account.id && "border-cyan-800"
-                    }`}
-                  onClick={() => setSelectedAccount(account)}
+                  className={`w-full h-24 rounded-xl border-2 border-grey px-4 py-3.5 relative mb-5 transition-all ${getApplicationStatusBasedStyling(account)}`}
+                  onClick={() => {
+                    if (user.status === ApplicationStatus.REOPENED) return;
+                    else if ((selectedAccount?.id !== account.id) && user.status === ApplicationStatus.OPENED && metadata?.profile?.id) return setModalOpen(true);
+                    setSelectedAccount(account);
+                  }}
                 >
                   {account.icon}
                   <div className="center w-[80%]" style={{ margin: "0 auto" }}>
@@ -149,6 +174,20 @@ const InvestorFlow = ({ }: any) => {
           </section>
         </section>
       </aside>
+      <Modal show={modalOpen ? true : false}>
+        <div className="rounded-md inline-grid place-items-center cursor-pointer absolute top-1/2 left-1/2 translate-x-[-50%] translate-y-[-50%]" style={{ backgroundColor: "rgba(0, 0, 0, 0.078" }}>
+          <aside className="bg-white w-[400px] rounded-md px-4 py-3">
+            <h1 className="font-bold text-xl">{language?.v2?.common?.sure}</h1>
+            <p className="text-sm font-medium mt-5">{language?.v2?.common?.investorSelection}</p>
+            <p className="text-sm font-medium mb-5">{language?.v2?.common?.proceed}</p>
+
+            <footer className="w-full inline-flex justify-end gap-3">
+              <Button className="w-[80px]" onClick={onRoleChange}>{language?.buttons?.yes}</Button>
+              <Button className="bg-transparent border-cyan-800 border-2 w-[80px] !text-cyan-800 hover:bg-transparent" onClick={() => setModalOpen(false)}>{language?.buttons?.no}</Button>
+            </footer>
+          </aside>
+        </div>
+      </Modal>
       <Drawer isOpen={isOpen} setIsOpen={(val: boolean) => setOpen(val)}>
         <header className="font-bold text-xl">
           {language.philosophyGoals.whyToDo}
