@@ -326,7 +326,7 @@ const StartupStepper = ({ load, event, countries, orientation, language, file, p
                             </small>
                             </div>
                     </span>
-                   {payload.logo &&  <EditIcon
+                   {payload.logo && typeof payload.logo === "string" &&  <EditIcon
                       stroke="#fff"
                       className="w-7 h-7 float-right cursor-pointer rounded-md p-1"
                       style={{
