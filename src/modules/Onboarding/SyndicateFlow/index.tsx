@@ -251,8 +251,17 @@ const SyndicateFlow = ({ }: any) => {
       )}
 
       <Modal show={modalOpen ? true : false}>
-        <div className="rounded-md h-8 w-8 inline-grid place-items-center cursor-pointer absolute right-2 top-2" style={{ backgroundColor: "rgba(0, 0, 0, 0.078" }}>
-          <CrossIcon className="w-6 h-6" onClick={() => setModalOpen(null)} />
+      <div
+          className="rounded-md h-8 w-8 inline-grid place-items-center cursor-pointer absolute right-2 top-2"
+          style={{ backgroundColor: "rgba(0, 0, 0, 0.078" }}
+        >
+          <CrossIcon
+            stroke="#fff"
+            className="w-6 h-6"
+            onClick={() => {
+              setModalOpen(null);
+            }}
+          />
         </div>
         {fileType === FileType.IMAGE ? (
           <img src={modalOpen} alt="Img" className="max-h-[100%]" />
