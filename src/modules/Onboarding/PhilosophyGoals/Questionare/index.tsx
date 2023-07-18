@@ -524,11 +524,10 @@ const Questionare = ({ step, returnSuccessRedirection }: any) => {
       const checkNoOption =
         question &&
         question[event]?.options?.find(
-          (option: any) => (option?.statement === "No" || option?.statement === 'لا')
+          (option: any) =>
+            option?.statement === "No" || option?.statement === "لا"
         );
       if (step === 2 && checkNoOption?.selected) {
-        return true;
-      } else if (user?.status === ApplicationStatus.REOPENED) {
         return true;
       } else if (!philosophyData?.questions?.length) {
         return false;
