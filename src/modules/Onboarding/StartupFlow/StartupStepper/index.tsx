@@ -246,7 +246,7 @@ const StartupStepper = ({ load, event, countries, orientation, language, file, p
             <form className="pt-8 mb-4 w-full">
               <div
                 key={1}
-                className={`mb-4 w-full select-none content-center ${payload.logo ?'bg-cbc-grey-sec p-4 rounded-md' :''}`}
+                className={`mb-4 w-full select-none content-center ${payload.logo && typeof payload.logo === "string" ?'bg-cbc-grey-sec p-4 rounded-md' :''}`}
               >
                 <div className="block text-neutral-700 text-base font-medium">
                   <span className="inline-flex w-full items-center justify-between">
@@ -354,6 +354,7 @@ const StartupStepper = ({ load, event, countries, orientation, language, file, p
                 </label>
                 <Selector
                   options={currencies}
+                  // defaultValue={"AED"}
                   value={payload.currency}
                   onChange={(item: any) => {
                     onSetPayload(item, "currency");
@@ -387,7 +388,7 @@ const StartupStepper = ({ load, event, countries, orientation, language, file, p
                   />
                   <input
                     type="disabled"
-                    value={payload.currency.value}
+                    value={payload?.currency?.value}
                     className={`text-neutral-500 text-base font-normal check-background border-t border-b border-neutral-300 h-[42px] w-[70px] ${
                       orientation === "rtl"
                         ? "pr-4 border-l rounded-bl-md rounded-tl-md"
@@ -423,7 +424,7 @@ const StartupStepper = ({ load, event, countries, orientation, language, file, p
                   />
                   <input
                     type="disabled"
-                    value={payload.currency.value}
+                    value={payload?.currency?.value}
                     className={`text-neutral-500 text-base font-normal check-background border-t border-b border-neutral-300 h-[42px] w-[70px] ${
                       orientation === "rtl"
                         ? "pr-4 border-l rounded-bl-md rounded-tl-md"

@@ -103,9 +103,12 @@ const StartupFlow = ({}: any) => {
 
   const bootstrapPayload = () => {
     setPayload({
+      ...payload,
       company: metadata?.profile?.company_name,
       legal: metadata?.profile?.legal_name,
-      country: { name: metadata?.profile ? metadata?.profile[event]?.country: null  },
+      country: {
+        name: metadata?.profile ? metadata?.profile[event]?.country : null,
+      },
       market: metadata?.profile?.industry_ids || [],
       web: metadata?.profile?.website,
       address: metadata?.profile?.address,
@@ -115,7 +118,16 @@ const StartupFlow = ({}: any) => {
       raised: metadata?.profile?.total_capital_raised,
       target: metadata?.profile?.current_round_capital_target,
       logo: metadata?.profile?.logo,
-      currency: { label: metadata?.profile?.currency, value: metadata?.profile?.currency }
+      currency: {
+        label:
+          metadata?.profile?.currency !== ""
+            ? metadata?.profile?.currency
+            : payload.currency.label,
+        value:
+          metadata?.profile?.currency !== ""
+            ? metadata?.profile?.currency
+            : payload?.currency.value,
+      },
     });
   };
 

@@ -239,40 +239,9 @@ const SyndicateStepper = ({ event, orientation, language, metadata, payload, fil
                         <label htmlFor="tagline" className="text-neutral-700 text-sm font-medium">{language.syndicate.tagline}</label>
                         <input id="tagline" value={payload?.tagline} onChange={(e) => onSetPayload(e.target.value, "tagline")} placeholder={language.syndicate.tagline} className=" h-[42px] shadow-sm appearance-none border border-neutral-300 rounded-md w-full py-2 px-3 text-gray-500 leading-tight focus:outline-none focus:shadow-outline" type="text" />
                     </section>
-
-                    {/* <div className="mb-4 w-full">
-                        <div className="text-neutral-700 text-sm font-medium">{language.syndicate.logo}</div>
-                        <small className="text-neutral-500 font-normal">{language.syndicate.uploadCompLogo}</small>
-                        <small className="relative font-normal text-cc-blue cursor-pointer" onMouseEnter={() => setShowHoverModal(true)} onMouseLeave={() => setShowHoverModal(false)}>
-                            &nbsp;<span>{language.common.example}</span>
-                            {showHoverModal && (
-                                <HoverModal>
-                                    <section className="inline-flex flex-row items-center justify-evenly h-full">
-                                        <img src={SampleImage_2} alt={language.syndicate.logo} className="max-h-[90px]" />
-                                        <img src={SampleImage} alt={language.syndicate.logo} className="max-h-[140px]" />
-                                    </section>
-                                </HoverModal>
-                            )}
-                        </small>
-
-                        {
-                            payload.logo && typeof payload.logo === "string" ? (
-                                <div className="main-embed w-[300px] h-[200px] overflow-hidden relative">
-                                    <EditIcon stroke="#fff" className="w-7 h-7 absolute right-2 top-2 cursor-pointer rounded-md p-1" style={{ backgroundColor: "rgba(0, 0, 0, 0.078)" }} onClick={() => onSetPayload(null, "logo")} />
-                                    <img src={payload.logo} className="block w-[110%] h-[110%] overflow-hidden" />
-                                </div>
-                            ) : (
-                                <FileUpload uploadDirect={false} id={'logo'} title={'Logo'} file={file} setFile={setFile} removeFile={removeFile} setModalOpen={(e: any) => {
-                                    setModalOpen(e.open ? e.url : null);
-                                    e.type && setFileType(e.type);
-                                }} />
-                            )
-                        }
-
-                    </div> */}
                      <div
                 key={1}
-                className={`mb-4 w-full select-none content-center ${payload.logo ?'bg-cbc-grey-sec p-4 rounded-md' :''}`}
+                className={`mb-4 w-full select-none content-center ${payload.logo && typeof payload.logo === "string" ?'bg-cbc-grey-sec p-4 rounded-md' :''}`}
               >
                 <div className="block text-neutral-700 text-base font-medium">
                   <span className="inline-flex w-full items-center justify-between">
