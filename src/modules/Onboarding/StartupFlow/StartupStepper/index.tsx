@@ -272,9 +272,38 @@ const StartupStepper = ({ load, event, countries, orientation, language, file, p
                                 )
                             }
                         </div> */}
+                        {/* previous code */}
+                         {/* <div className="mb-8 w-full">
+                            <div className="text-neutral-700 text-sm font-medium">{language.syndicate.logo}</div>
+                            <small className="text-neutral-500 font-normal">{language.company.uploadCompLogo}</small>
+                            <small className="relative font-normal text-cc-blue cursor-pointer" onMouseEnter={() => setShowHoverModal(true)} onMouseLeave={() => setShowHoverModal(false)}>
+                                &nbsp;<span>{language.common.example}</span>
+                                {showHoverModal && (
+                                    <HoverModal>
+                                        <section className="inline-flex flex-row items-center justify-evenly h-full">
+                                            <img src={SampleImage_2} alt={language.syndicate.logo} className="max-h-[90px]" />
+                                            <img src={SampleImage} alt={language.syndicate.logo} className="max-h-[140px]" />
+                                        </section>
+                                    </HoverModal>
+                                )}
+                            </small>
+                            {
+                                payload.logo && typeof payload.logo === "string" ? (
+                                    <div className="main-embed w-[300px] h-[200px] overflow-hidden relative">
+                                        <EditIcon stroke="#fff" className="w-7 h-7 absolute right-2 top-2 cursor-pointer rounded-md p-1" style={{ backgroundColor: "rgba(0, 0, 0, 0.078)" }} onClick={() => onSetPayload(null, "logo")} />
+                                        <img src={payload.logo} className="block w-[110%] h-[110%] overflow-hidden" />
+                                    </div>
+                                ) : (
+                                    <FileUpload uploadDirect={false} id={'logo'} title={'Logo'} file={file} setFile={setFile} removeFile={removeFile} setModalOpen={(e: any) => {
+                                        setModalOpen(e.open ? e.url : null);
+                                        e.type && setFileType(e.type);
+                                    }} />
+                                )
+                            }
+                        </div> */}
               <div
                 key={1}
-                className="mb-4 w-full select-none content-center bg-cbc-grey-sec p-4 rounded-md"
+                className={`mb-4 w-full select-none content-center ${payload.logo ?'bg-cbc-grey-sec p-4 rounded-md' :''}`}
               >
                 <div className="block text-neutral-700 text-base font-medium">
                   <span className="inline-flex w-full items-center justify-between">
@@ -297,31 +326,26 @@ const StartupStepper = ({ load, event, countries, orientation, language, file, p
                             </small>
                             </div>
                     </span>
-                    <EditIcon
+                   {payload.logo &&  <EditIcon
                       stroke="#fff"
                       className="w-7 h-7 float-right cursor-pointer rounded-md p-1"
                       style={{
                         backgroundColor: "rgba(0, 0, 0, 0.078)",
                       }}
                       onClick={() => onSetPayload(null, "logo")}
-                    />
+                    />}
                   </span>
                   <div className="content-center text-center mt-2  main-embed  h-[200px] overflow-hidden relative">
                     {payload.logo && typeof payload.logo === "string" ? (
                       <img
                         alt="Logo"
-                        src={payload.logo}
-                        // src={
-                        //   "https://images.unsplash.com/photo-1686668108582-5c7074494753?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=387&q=80"
-                        // }
+                        // src={payload.logo}
+                        src={
+                          "https://images.unsplash.com/photo-1686668108582-5c7074494753?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=387&q=80"
+                        }
                         className="block w-[110%] h-[110%] overflow-hidden object-contain"
                       />
                     ) : (
-                      // <img
-                      //   alt={"Attachment url missing"}
-                      //   src={payload.logo}
-                      //   className="block w-[110%] h-[110%] overflow-hidden object-contain"
-                      // />
                       <FileUpload
                         uploadDirect={false}
                         id={"logo"}
