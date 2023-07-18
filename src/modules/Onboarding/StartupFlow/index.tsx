@@ -78,7 +78,6 @@ const StartupFlow = ({}: any) => {
       let { status, data } = await getCompanyInformation(1, authToken);
       if (status === 200) {
         dispatch(saveUserMetaData(data?.status?.data));
-          bootstrapPayload();
       }
       let countryRes: any = await getCountries(authToken);
       if (countryRes.status === 200) {
@@ -218,6 +217,11 @@ const StartupFlow = ({}: any) => {
       else if (step == 1) {
         setStep(2);
         navigate(`/startup-type/${step + 1}`);
+      }
+      let { status:_status, data } = await getCompanyInformation(1, authToken);
+      if (_status === 200) {
+        dispatch(saveUserMetaData(data?.status?.data));
+          bootstrapPayload();
       }
     } catch (error: any) {
       if (error.response && error.response.status === 401) {
