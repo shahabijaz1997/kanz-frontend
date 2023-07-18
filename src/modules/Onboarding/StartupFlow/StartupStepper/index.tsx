@@ -354,7 +354,7 @@ const StartupStepper = ({ load, event, countries, orientation, language, file, p
                         setFile={setFile}
                         removeFile={removeFile}
                         setModalOpen={(e: any) => {
-                          // setModalOpen(e.open ? e.url : null);
+                          setModalOpen(e.open ? e.url : null);
                           e.type && setFileType(e.type);
                         }}
                       />
