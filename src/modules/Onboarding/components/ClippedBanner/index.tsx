@@ -4,51 +4,46 @@ import { RootState } from "../../../../redux-toolkit/store/store";
 import LoginBg from "../../../../assets/login_bg.png";
 import QuotesSvg from "../../../../assets/svg/quotes.svg";
 import { KanzRoles } from "../../../../enums/roles.enum";
+import { useLocation } from "react-router-dom";
 
 const ClippedBanner = () => {
     const language: any = useSelector((state: RootState) => state.language.value);
     const orientation: any = useSelector((state: RootState) => state.orientation.value);
     let [clipPath, setClipPath] = useState("polygon(0px 0px, 100% 0px, 84% 100%, 0% 100%)");
-
+    const {state} = useLocation();
+    
     useLayoutEffect(() => {
         if (orientation === "rtl") setClipPath("polygon(0px 0%, 100% 0px, 100% 100%, 10% 100%)")
         else setClipPath("polygon(0px 0px, 100% 0px, 84% 100%, 0% 100%)")
     }, [orientation]);
 
     const showRoleBasedText = () => {
-        let type: string | null = localStorage.getItem("role");
-        if (type === KanzRoles.REALTOR) {
+        if (state === KanzRoles.REALTOR) {
             return (
                 <React.Fragment>
                     <div>{language?.v2?.realtor?.onboardSub_2}</div>
                 </React.Fragment>
             )
-        } else if (type === KanzRoles.INVESTOR) {
+        } else if (state === KanzRoles.INVESTOR) {
             return (
                 <React.Fragment>
                     <div>{language?.v2?.investor?.onboardSub_2}</div>
                     <div>{language?.v2?.investor?.onboardSub_3}</div>
                 </React.Fragment>
             )
-        } else if (type === KanzRoles.STARTUP) {
+        } else if (state === KanzRoles.STARTUP) {
             return (
                 <React.Fragment>
                     <div>{language?.v2?.startup?.onboardSub_2}</div>
                 </React.Fragment>
             )
-        } else if (type === KanzRoles.SYNDICATE) {
+        } else if (state === KanzRoles.SYNDICATE) {
             return (
                 <React.Fragment>
                     <div>{language?.v2?.syndicate?.onboardSub_2}</div>
                 </React.Fragment>
             )
         }
-        return (
-            <React.Fragment>
-                <div>{language?.v2?.investor?.onboardSub_2}</div>
-                <div>{language?.v2?.investor?.onboardSub_3}</div>
-            </React.Fragment>
-        )
     };
 
     return (
