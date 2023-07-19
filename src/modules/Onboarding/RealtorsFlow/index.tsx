@@ -202,7 +202,11 @@ const Realtors = (props: any) => {
                       {language?.common?.NoOfProperty}
                     </label>
                     <div className="relative w-full" style={{ zIndex: 99 }}>
-                      <input value={payload?.noOfProperty} onChange={(e) => onSetPayload(e.target.value, "noOfProperty")} placeholder={language.common.NoOfProperty} className=" h-[42px] shadow-sm appearance-none border border-neutral-300 rounded-md w-full py-2 px-3 text-gray-500 leading-tight focus:outline-none focus:shadow-outline" type="number" />
+                      <input value={payload?.noOfProperty} onChange={(e) => {
+                        const enteredValue = e.target.value;
+                        const numericValue = enteredValue.replace(/[^0-9]/g, "");
+                        onSetPayload(numericValue, "noOfProperty")}
+                        } placeholder={language.common.NoOfProperty} className=" h-[42px] shadow-sm appearance-none border border-neutral-300 rounded-md w-full py-2 px-3 text-gray-500 leading-tight focus:outline-none focus:shadow-outline" type="text" />
                     </div>
                   </section>
                 </div>

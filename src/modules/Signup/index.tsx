@@ -5,7 +5,7 @@ import { SubmitHandler, useForm } from "react-hook-form";
 import { toastUtil } from "../../utils/toast.utils";
 import { useLocation, useNavigate } from "react-router-dom";
 import { RootState } from "../../redux-toolkit/store/store";
-import { hasLowerCase, hasNumbers, hasSpecialCharacters, hasUpperCase } from "../../utils/regex.utils";
+import { hasLowerCase, hasNumbers, hasSpecialCharacters, hasUpperCase, isValidEmail } from "../../utils/regex.utils";
 import CheckIcon from "../../ts-icons/CheckIcon.svg";
 import EyeIcon from "../../ts-icons/EyeIcon.svg";
 import EyeSlash from "../../ts-icons/EyeSlashIcon.svg";
@@ -107,6 +107,7 @@ const Signup = (props: any) => {
     };
 
     const onSubmit: SubmitHandler<FormValues> = async (values: any) => {
+      if(!isValidEmail(values?.email)) return;
       const signUpData = { name: values?.name, email: values?.email, password: values?.password, type: state || KanzRoles.INVESTOR, language: event };
 
       try {
@@ -176,7 +177,7 @@ const Signup = (props: any) => {
               required: requiredFieldError,
               pattern: {
                 value:
-                  /^[_a-z0-9-]+(\.[_a-z0-9-]+)*(\+[a-z0-9-]+)?@[a-z0-9-]+(\.[a-z0-9-]+)*$/i,
+                  /^[_a-z0-9-]+(\.[_a-z0-9-]+)*(\+[a-z0-9-]+)?@(?:[a-zA-Z0-9-]+\.)+[a-zA-Z]{2,}$/i,
                 message: "Invalid email address",
               },
             }}
