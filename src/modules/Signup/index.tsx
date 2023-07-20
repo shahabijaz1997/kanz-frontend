@@ -267,7 +267,7 @@ const Signup = (props: any) => {
             <LanguageDrodownWrapper />
           </section>
           <section className="w-[428px] max-w-md pt-[130px] screen500:max-w-[300px]">
-            <h2 className="text-[24px] font-bold text-left text-neutral-900 screen500:text-[20px]">
+            <h2 className={`text-[24px] font-bold text-neutral-900 screen500:text-[20px] ${orientation === "rtl" ? "text-right" : "text-left"}`}>
               {language?.onboarding?.createAccount}
             </h2>
             <Form />

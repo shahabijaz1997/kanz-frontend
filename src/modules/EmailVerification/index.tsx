@@ -22,6 +22,7 @@ const EmailVerification = ({ }: any) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const language: any = useSelector((state: RootState) => state.language.value);
+  const orientation: any = useSelector((state: RootState) => state.orientation.value);
   const user: any = useSelector((state: RootState) => state.user.value);
   const authToken: any = useSelector((state: RootState) => state.auth.value);
   const [email] = useState(user?.email);
@@ -81,10 +82,10 @@ const EmailVerification = ({ }: any) => {
       <section className="h-full w-[55%] inline-block align-top screen991:w-full overflow-y-auto">
         <aside className="inline-flex flex-col items-center justify-center w-full">
           <section className="w-[428px] max-w-md pt-[130px] screen500:max-w-[300px]">
-            <h2 className="text-2xl font-bold text-left text-neutral-900 mb-4">
+            <h2 className={`text-2xl font-bold text-neutral-900 mb-4 ${orientation === "rtl" ? "text-right" : "text-left"}`}>
               {language?.onboarding?.verificationCode}
             </h2>
-            <h3 className="text-base font-normal text-left text-neutral-700 screen500:text-[12px]">
+            <h3 className={`text-base font-normal text-neutral-700 screen500:text-[12px] ${orientation === "rtl"? "text-right" : "text-left"}`}>
               {language?.onboarding?.verificationText}
             </h3>
             <form className="pt-8 pb-8 mb-4" onSubmit={handleSubmit(onSubmit)}>

@@ -5,12 +5,13 @@ import Button from "../Button";
 
 const Cookie = ({ }: any) => {
     const language: any = useSelector((state: RootState) => state.language.value);
+    const event: any = useSelector((state: RootState) => state.event.value);
     const token: any = useSelector((state: RootState) => state.auth.value);
     const [cookies, setCookie, removeCookie] = useCookies(['token']);
     // removeCookie('token', { path: '/' });
 
     const onAllowCookie = () => {
-        setCookie('token', token, { path: '/' });
+        setCookie('token', token || event, { path: '/' });
     };
 
     const onDiableCookie = () => {

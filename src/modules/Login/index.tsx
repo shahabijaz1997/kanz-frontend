@@ -29,6 +29,7 @@ const Login = ({ }: any) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const authToken: any = useSelector((state: RootState) => state.auth.value);
+  const orientation: any = useSelector((state: RootState) => state.orientation.value);
   const event: any = useSelector((state: RootState) => state.event.value);
   const language: any = useSelector((state: RootState) => state.language.value);
   const [loading, setLoading] = useState(false);
@@ -136,7 +137,7 @@ const Login = ({ }: any) => {
         </section>
         <aside className="inline-flex flex-col items-center justify-center w-full">
           <section className="w-[428px] max-w-md pt-[130px] screen500:max-w-[300px]">
-            <h2 className="text-[24px] font-bold text-left text-neutral-900 screen500:text-[20px]">
+            <h2 className={`text-[24px] font-bold text-neutral-900 screen500:text-[20px] ${orientation === "rtl" ? "text-right" : "text-left"}`}>
               {language?.onboarding?.loginKanz}
             </h2>
             <Form />
