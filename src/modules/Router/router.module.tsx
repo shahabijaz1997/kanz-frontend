@@ -82,6 +82,12 @@ const RouterModule = () => {
       const element: HTMLElement | any = document.querySelector('html');
       element.style.fontFamily = event === "ar" ? "'Almarai', sans-serif" : "Roboto, 'Open Sans', 'Helvetica Neue', sans-serif";
 
+      const toastElements = document.querySelectorAll('.Toastify__toast');
+      // Set the font-family for each Toastify notification
+      toastElements.forEach((elem: any) => {
+        elem.style.fontFamily = event === "ar" ? "'Almarai', sans-serif" : "Roboto, 'Open Sans', 'Helvetica Neue', sans-serif";
+      });
+
     } catch (error) {
 
     } finally {
