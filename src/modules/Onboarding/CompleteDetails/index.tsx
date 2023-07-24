@@ -27,10 +27,10 @@ const CompleteDetails = (props: any) => {
     const [isOpen, setOpen] = useState(false);
 
     useLayoutEffect(() => {
-        if ((user.status !== ApplicationStatus.OPENED && user.status !== ApplicationStatus.REOPENED) || user.type !== KanzRoles.INVESTOR) navigate("/welcome");
+        if ((user.status !== ApplicationStatus.OPENED && user.status !== ApplicationStatus.REOPENED) || user.type !== KanzRoles.INVESTOR) navigate(RoutesEnums.WELCOME);
     }, []);
     useLayoutEffect(() => {
-        if (user.type !== KanzRoles.INVESTOR) navigate("/welcome");
+        if (user.type !== KanzRoles.INVESTOR) navigate(RoutesEnums.WELCOME);
       }, []);
 
     useEffect(()=>{

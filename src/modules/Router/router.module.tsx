@@ -34,7 +34,7 @@ const AuthenticateRoute = (props: PropsWithChildren) => {
   if (authToken) {
     return <React.Fragment>{children}</React.Fragment>;
   }
-  return <Navigate to="/login" replace />;
+  return <Navigate to={RoutesEnums.LOGIN} replace />;
 };
 
 const AuthenticateAuthRoute = (props: PropsWithChildren | any) => {
@@ -48,7 +48,7 @@ const AuthenticateAuthRoute = (props: PropsWithChildren | any) => {
   else if (isVerify && !user?.profile_states?.account_confirmed) {
     return <React.Fragment>{children}</React.Fragment>;
   }
-  return <Navigate to="/welcome" replace />;
+  return <Navigate to={RoutesEnums.WELCOME} replace />;
 };
 
 const AuthenticateRole = (props: PropsWithChildren | any) => {
@@ -58,7 +58,7 @@ const AuthenticateRole = (props: PropsWithChildren | any) => {
   if ((user && (user.type === props.role || props.role === KanzRoles.ALL) && user.status === ApplicationStatus.OPENED || user.status === ApplicationStatus.REOPENED)) {
     return <React.Fragment>{children}</React.Fragment>;
   }
-  return <Navigate to="/welcome" replace />;
+  return <Navigate to={RoutesEnums.WELCOME} replace />;
 };
 
 const RouterModule = () => {

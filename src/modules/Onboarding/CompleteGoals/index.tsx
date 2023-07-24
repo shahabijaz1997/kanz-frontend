@@ -34,7 +34,7 @@ const CompleteGoals = ({ }: any) => {
   const [currentStepper, setCurrentStepper]: any = useState();
 
   useLayoutEffect(() => {
-    if ((user.status !== ApplicationStatus.OPENED && user.status !== ApplicationStatus.REOPENED) || user.type !== KanzRoles.INVESTOR) navigate("/welcome");
+    if ((user.status !== ApplicationStatus.OPENED && user.status !== ApplicationStatus.REOPENED) || user.type !== KanzRoles.INVESTOR) navigate(RoutesEnums.WELCOME);
     setCurrentStepper(metadata?.steps_completed);
   }, []);
 

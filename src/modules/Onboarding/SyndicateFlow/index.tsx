@@ -55,7 +55,7 @@ const SyndicateFlow = ({ }: any) => {
   const [load, setLoad] = useState(false);
 
   useLayoutEffect(() => {
-    if (user.type !== KanzRoles.SYNDICATE) navigate("/welcome");
+    if (user.type !== KanzRoles.SYNDICATE) navigate(RoutesEnums.WELCOME);
     getSyndicateDetails();
   }, []);
 
@@ -204,7 +204,7 @@ const SyndicateFlow = ({ }: any) => {
         <React.Fragment>
           <section>
             <Header custom={true} data={{
-              leftMenu: language.header.syndicateLead, button: (<button onClick={() => navigate("/welcome")} className="text-neutral-900 bg-white font-bold text-sm w-[150px] h-9 cursor-pointer border border-black shadow-sm screen800:w-[120px]">{language.buttons.gotoDashboard}</button>),
+              leftMenu: language.header.syndicateLead, button: (<button onClick={() => navigate(RoutesEnums.WELCOME)} className="text-neutral-900 bg-white font-bold text-sm w-[150px] h-9 cursor-pointer border border-black shadow-sm screen800:w-[120px]">{language.buttons.gotoDashboard}</button>),
             }}
             />
           </section>

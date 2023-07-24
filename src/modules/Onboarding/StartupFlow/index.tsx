@@ -59,7 +59,7 @@ const StartupFlow = ({}: any) => {
   const [load, setLoad] = useState(false);
 
   useLayoutEffect(() => {
-    if (user.type !== KanzRoles.STARTUP) navigate("/welcome");
+    if (user.type !== KanzRoles.STARTUP) navigate(RoutesEnums.WELCOME);
   }, []);
 
   useEffect(()=>{
@@ -240,7 +240,7 @@ const StartupFlow = ({}: any) => {
     <main className="h-full max-h-full cbc-auth overflow-y-auto overflow-x-hidden">
       <section>
         <Header custom={true} data={{
-          leftMenu: language.header.companyDetails, button: (<button onClick={() => navigate("/welcome")} className="text-neutral-900 bg-white font-bold text-sm w-[150px] h-9 cursor-pointer border border-black shadow-sm screen800:w-[120px]">{language.buttons.gotoDashboard}</button>),
+          leftMenu: language.header.companyDetails, button: (<button onClick={() => navigate(RoutesEnums.WELCOME)} className="text-neutral-900 bg-white font-bold text-sm w-[150px] h-9 cursor-pointer border border-black shadow-sm screen800:w-[120px]">{language.buttons.gotoDashboard}</button>),
         }}
         />
       </section>
