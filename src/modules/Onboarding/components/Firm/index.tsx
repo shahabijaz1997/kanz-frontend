@@ -25,40 +25,6 @@ const Firm = ({ language }: any) => {
   const authToken: any = useSelector((state: RootState) => state.auth.value);
   const metadata: any = useSelector((state: RootState) => state.metadata.value);
   const event: any = useSelector((state: RootState) => state.event.value);
-  const [assertQuestions] = useState([
-    {
-      id: 1,
-      title: language?.firm?.option1,
-      low_limit: "100",
-      upper_limit: "100",
-      is_range: false,
-      currency: language.common.million,
-    },
-    {
-      id: 2,
-      title: language?.firm?.option2,
-      low_limit: "50",
-      upper_limit: "100",
-      is_range: false,
-      currency: language.common.million,
-    },
-    {
-      id: 3,
-      title: language?.firm?.option3,
-      low_limit: "10",
-      upper_limit: "50",
-      is_range: false,
-      currency: language.common.million,
-    },
-    {
-      id: 4,
-      title: language?.firm?.option4,
-      low_limit: "1",
-      upper_limit: "10",
-      is_range: false,
-      currency: language.common.million,
-    },
-  ]);
   const [selectedAssert, setSelectedAssert]: any = useState(null);
   const [payload, setPayload]: any = useState({ legal: "", residence: "", accer: "", risk: false });
   const [loading, setLoading] = useState(false);

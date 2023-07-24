@@ -5,7 +5,6 @@ import { toast } from "react-toastify";
 import { toastUtil } from "../../../../utils/toast.utils";
 import { RootState } from "../../../../redux-toolkit/store/store";
 import CountrySelector from "../../../../shared/components/CountrySelector";
-import { InvestorType } from "../../../../enums/types.enum";
 import { investmentAccridiation } from "../../../../apis/investor.api";
 import { saveToken } from "../../../../redux-toolkit/slicer/auth.slicer";
 import Drawer from "../../../../shared/components/Drawer";
