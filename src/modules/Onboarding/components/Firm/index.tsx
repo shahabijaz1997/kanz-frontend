@@ -88,12 +88,6 @@ const Firm = ({ language }: any) => {
           setPayload({ legal: metadata?.profile[event]?.legal_name, residence: { label: metadata?.profile[event]?.location, value: metadata?.profile[event]?.location }, accer: "", risk: false });
           setSelectedAssert(metadata?.profile[event]?.accreditation?.options.find((as:any) => as.selected));
         }
-        else {
-          // let account_info = localStorage.getItem("account_info");
-          // let assertData = localStorage.getItem("accert");
-          // if (account_info) setPayload(JSON.parse(account_info));
-          // if (assertData) setSelectedAssert(JSON.parse(assertData));
-        }
 
         setCountries({ all: data.status.data, names });
       }
@@ -101,7 +95,7 @@ const Firm = ({ language }: any) => {
       console.error("Error in countries: ", error);
       if (error.response && error.response.status === 401) {
         dispatch(saveToken(""));
-        navigate("/login", { state: "complete-details" });
+        navigate(RoutesEnums.LOGIN, { state: "complete-details" });
       }
     } finally {
       setLoading(false);
@@ -128,11 +122,9 @@ const Firm = ({ language }: any) => {
       let { data, status } = await investmentAccridiation(_payload, authToken);
       if (status === 200) {
         toast.success(data?.status?.message, toastUtil);
-        navigate("/complete-goals", {
+        navigate(RoutesEnums.COMPLETE_GOALS, {
           state: { type: InvestorType.FIRM, selected: selectedAssert },
         });
-        // localStorage.setItem("account_info", JSON.stringify(payload));
-        // localStorage.setItem("accert", JSON.stringify(selectedAssert));
       }
     } catch (error: any) {
       const message =
@@ -142,7 +134,6 @@ const Firm = ({ language }: any) => {
       toast.error(message, toastUtil);
       if (error.response && error.response.status === 401) {
         dispatch(saveToken(""));
-        navigate("/login", { state: `complete-details` });
       }
     } finally {
       setLoading(false);

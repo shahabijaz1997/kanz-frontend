@@ -52,14 +52,14 @@ const InvestorFlow = ({ }: any) => {
       let { status, data } = await selectInvestorType({ investor: { role: acc.payload } }, authToken);
       if (status === 200) {
         localStorage.setItem("investor-type", acc?.link)
-        navigate(`/complete-details`, { state: acc?.link })
+        navigate(RoutesEnums.COMPLETE_DETAILS, { state: acc?.link })
       }
     } catch (error: any) {
       const message = error?.response?.data?.status?.message || error?.response?.data || language.promptMessages.errorGeneral;
       toast.error(message, toastUtil);
       if (error.response && error.response.status === 401) {
         dispatch(saveToken(""));
-        navigate("/login", { state: 'investor-type' });
+        navigate(RoutesEnums.LOGIN, { state: 'investor-type' });
       }
     } finally {
       setLoading(false);
@@ -80,7 +80,7 @@ const InvestorFlow = ({ }: any) => {
       toast.error(message, toastUtil);
       if (error.response && error.response.status === 401) {
         dispatch(saveToken(""));
-        navigate("/login", { state: 'investor-type' });
+        navigate(RoutesEnums.LOGIN, { state: 'investor-type' });
       }
     } finally {
       setLoading(false);

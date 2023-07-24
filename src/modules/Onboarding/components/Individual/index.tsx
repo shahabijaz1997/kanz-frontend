@@ -54,7 +54,7 @@ const Individual = ({ language }: any) => {
       console.error("Error in countries: ", error);
       if (error.response && error.response.status === 401) {
         dispatch(saveToken(""));
-        navigate("/login", { state: "complete-details" });
+        navigate(RoutesEnums.LOGIN, { state: "complete-details" });
       }
     } finally {
       setLoading(false);
@@ -84,7 +84,7 @@ const Individual = ({ language }: any) => {
       let { data, status } = await investmentAccridiation(_payload, authToken);
       if (status === 200) {
         toast.success(data?.status?.message, toastUtil);
-        navigate("/complete-goals");
+        navigate(RoutesEnums.COMPLETE_GOALS);
       }
     } catch (error: any) {
       const message =
@@ -94,7 +94,7 @@ const Individual = ({ language }: any) => {
       toast.error(message, toastUtil);
       if (error.response && error.response.status === 401) {
         dispatch(saveToken(""));
-        navigate("/login", { state: "complete-details" });
+        navigate(RoutesEnums.LOGIN, { state: "complete-details" });
       }
     } finally {
       setLoading(false);

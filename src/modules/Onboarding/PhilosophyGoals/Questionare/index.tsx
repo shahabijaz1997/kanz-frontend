@@ -117,7 +117,7 @@ const Questionare = ({ step, returnSuccessRedirection }: any) => {
       toast.error(message, toastUtil);
       if (error.response && error.response.status === 401) {
         dispatch(saveToken(""));
-        navigate("/login", { state: `philosophy-goals/${step}` });
+        navigate(RoutesEnums.LOGIN, { state: `${RoutesEnums.PHILOSOPHY_GOALS}/${step}` });
       }
     } finally {
       let timer = setTimeout(() => {
@@ -146,7 +146,7 @@ const Questionare = ({ step, returnSuccessRedirection }: any) => {
       toast.error(message, toastUtil);
       if (error.response && error.response.status === 401) {
         dispatch(saveToken(""));
-        navigate("/login", { state: `philosophy-goals/${step}` });
+        navigate(RoutesEnums.LOGIN, { state: `${RoutesEnums.PHILOSOPHY_GOALS}/${step}` });
       }
     } finally {
       let timer = setTimeout(() => {
@@ -447,8 +447,8 @@ const Questionare = ({ step, returnSuccessRedirection }: any) => {
     let philisophyData: any = localStorage.getItem("philosophy");
     let philData: any = JSON.parse(philisophyData);
     localStorage.setItem("philosophy", JSON.stringify(philData));
-    if (page !== 1) navigate(`/philosophy-goals/${page - 1}`);
-    else navigate(`/complete-goals`);
+    if (page !== 1) navigate(`${RoutesEnums.PHILOSOPHY_GOALS}/${page - 1}`);
+    else navigate(RoutesEnums.COMPLETE_GOALS);
   };
 
   const onSetNext = () => {
@@ -488,7 +488,7 @@ const Questionare = ({ step, returnSuccessRedirection }: any) => {
     payload.investment_philosophy.questions = _questions;
     submitData(payload);
     if (step !== questions?.total_steps)
-      navigate(`/philosophy-goals/${page + 1}`);
+      navigate(`${RoutesEnums.PHILOSOPHY_GOALS}/${page + 1}`);
   };
 
   const checkSelected = (options: any[]): boolean => {

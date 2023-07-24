@@ -17,6 +17,7 @@ import { AntdInput } from "../../shared/components/Input";
 import LanguageDrodownWrapper from "../../shared/views/LanguageDrodownWrapper";
 import { saveEvent } from "../../redux-toolkit/slicer/event.slicer";
 import { isEmpty } from "../../utils/object.util";
+import { RoutesEnums } from "../../enums/routes.enum";
 
 type FormValues = {
   email: string;
@@ -121,7 +122,7 @@ const Login = ({ }: any) => {
             {language?.buttons?.notRegistered}{" "}
           </p>
           &nbsp;
-          <button className="text-cyan-800 font-bold cursor-pointer" type="button" onClick={() => navigate("/signup", { state: KanzRoles.INVESTOR })}>
+          <button className="text-cyan-800 font-bold cursor-pointer" type="button" onClick={() => navigate(RoutesEnums.SIGNUP, { state: KanzRoles.INVESTOR })}>
             {language.buttons.signup}
           </button>
         </div>

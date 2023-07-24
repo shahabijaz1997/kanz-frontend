@@ -57,7 +57,7 @@ const AddAttachments = (props: any) => {
     } catch (error: any) {
       if (error.response && error.response.status === 401) {
         dispatch(saveToken(""));
-        navigate("/login", { state: 'investor-type' });
+        navigate(RoutesEnums.LOGIN, { state: 'investor-type' });
       }
     } finally {
       setLoading(false);
@@ -80,7 +80,7 @@ const AddAttachments = (props: any) => {
       setLoading(false);
       if (error.response && error.response.status === 401) {
         dispatch(saveToken(""));
-        navigate("/login", { state: "add-attachments" });
+        navigate(RoutesEnums.LOGIN, { state: "add-attachments" });
       }
       const message =
         error?.response?.data?.status?.message ||

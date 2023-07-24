@@ -12,6 +12,7 @@ import { fileSize, formatFileSize, validImages, validTypes } from "../../../util
 import { handleFileRead } from "../../../utils/files.util";
 import { uploadAttachments } from "../../../apis/attachment.api";
 import Spinner from "../Spinner";
+import { RoutesEnums } from "../../../enums/routes.enum";
 
 const FileUpload = ({ id, fid, file, setModalOpen, setFile, removeFile, title, uploadDirect = true, acceptPdf = false }: any) => {
     const language: any = useSelector((state: RootState) => state.language.value);
@@ -117,7 +118,7 @@ const FileUpload = ({ id, fid, file, setModalOpen, setFile, removeFile, title, u
         } catch (error: any) {
             if (error.response && error.response.status === 401) {
                 dispatch(saveToken(""));
-                navigate("/login", { state: 'add-attachments' });
+                navigate(RoutesEnums.LOGIN, { state: 'add-attachments' });
             }
             const message = error?.response?.data?.status?.message || language.promptMessages.errorFileUpload;
             return setAlertType({ type: PromptMessage.ERROR, message });

@@ -11,6 +11,7 @@ import { AntdInput } from "../../shared/components/Input";
 import Button from "../../shared/components/Button";
 import { getEnv } from "../../env";
 import ClippedBanner from "../Onboarding/components/ClippedBanner";
+import { RoutesEnums } from "../../enums/routes.enum";
 
 type FormValues = {
   code: string;
@@ -69,7 +70,7 @@ const EmailVerification = ({ }: any) => {
       toast.dismiss();
       toast.error(message, toastUtil);
       if (error?.response?.data?.status?.data?.account_status === "blocked")
-        return navigate("/signup");
+        return navigate(RoutesEnums.SIGNUP);
     } finally {
       setLoading(false);
       setToken("");

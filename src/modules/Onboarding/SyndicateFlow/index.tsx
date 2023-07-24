@@ -90,7 +90,7 @@ const SyndicateFlow = ({ }: any) => {
     } catch (error: any) {
       if (error.response && error.response.status === 401) {
         dispatch(saveToken(""));
-        navigate("/login", { state: '' });
+        navigate(RoutesEnums.LOGIN, { state: '' });
       }
       setPayload((prev: any) => { return { ...prev, loading: false } });
     } finally {
@@ -179,15 +179,15 @@ const SyndicateFlow = ({ }: any) => {
       let { status } = await postSyndicateInformation(form, authToken);
 
       if (status === 200 && step == 2)
-        navigate("/add-attachments");
+        navigate(RoutesEnums.ADD_ATTACHMENTS);
       else if (step == 1) {
         setStep(2);
-        navigate(`/syndicate-lead/${step + 1}`);
+        navigate(`${RoutesEnums.SYNIDCATE_DETAILS}/${step + 1}`);
       }
     } catch (error: any) {
       if (error.response && error.response.status === 401) {
         dispatch(saveToken(""));
-        navigate("/login", { state: "add-attachments" });
+        navigate(RoutesEnums.LOGIN, { state: "add-attachments" });
       }
       const message = error?.response?.data?.status?.message || error?.response?.data || language.promptMessages.errorGeneral;
       toast.error(message, toastUtil);

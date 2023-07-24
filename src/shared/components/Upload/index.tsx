@@ -10,6 +10,7 @@ import { toastUtil } from "../../../utils/toast.utils";
 import { RootState } from "../../../redux-toolkit/store/store";
 import { removeAttachment } from "../../../apis/attachment.api";
 import { saveToken } from "../../../redux-toolkit/slicer/auth.slicer";
+import { RoutesEnums } from "../../../enums/routes.enum";
 
 const UploadComp = (props: any) => {
   const {
@@ -45,7 +46,7 @@ const UploadComp = (props: any) => {
       setLoading(false);
       if (error.response && error.response.status === 401) {
         dispatch(saveToken(""));
-        navigate("/login", { state: "add-attachments" });
+        navigate(RoutesEnums.LOGIN, { state: "add-attachments" });
       }
       const message =
         error?.response?.data?.status?.message ||

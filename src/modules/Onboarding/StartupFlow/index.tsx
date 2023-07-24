@@ -89,7 +89,7 @@ const StartupFlow = ({}: any) => {
       toast.error(message, toastUtil);
       if (error.response && error.response.status === 401) {
         dispatch(saveToken(""));
-        navigate("/login", { state: 'Startup' });
+        navigate(RoutesEnums.LOGIN, { state: 'Startup' });
       }
     } finally {
       setLoad(false);
@@ -213,10 +213,10 @@ const StartupFlow = ({}: any) => {
       let { status } = await postCompanyInformation(form, authToken);
 
       if (status === 200 && step == 2)
-        navigate("/add-attachments");
+        navigate(RoutesEnums.ADD_ATTACHMENTS);
       else if (step == 1) {
         setStep(2);
-        navigate(`/startup-type/${step + 1}`);
+        navigate(`${RoutesEnums.START_UP}/${step + 1}`);
       }
       let { status:_status, data } = await getCompanyInformation(1, authToken);
       if (_status === 200) {
@@ -226,7 +226,7 @@ const StartupFlow = ({}: any) => {
     } catch (error: any) {
       if (error.response && error.response.status === 401) {
         dispatch(saveToken(""));
-        navigate("/login", { state: "add-attachments" });
+        navigate(RoutesEnums.LOGIN, { state: "add-attachments" });
       }
       console.error(error);
       const message = error?.response?.data?.status?.message || error?.response?.data || language.promptMessages.errorGeneral;

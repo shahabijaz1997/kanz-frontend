@@ -12,6 +12,7 @@ import QuotesIcon from "../../ts-icons/quotesIcon.svg";
 import { KanzRoles } from "../../enums/roles.enum";
 import Button from "../../shared/components/Button";
 import Cookie from "../../shared/components/Cookie";
+import { RoutesEnums } from "../../enums/routes.enum";
 
 const Home = ({ }: any) => {
   const navigate = useNavigate();
@@ -40,7 +41,7 @@ const Home = ({ }: any) => {
               style={{ fontSize: "1.125rem", fontWeight: 500 }}
               className="bg-cyan-800 h-[56px] w-[173px] font-medium text-lg mt-6"
               htmlType="submit"
-              onClick={() => navigate(`/signup`, { state: KanzRoles.STARTUP })}
+              onClick={() => navigate(RoutesEnums.SIGNUP, { state: KanzRoles.STARTUP })}
             >
               {language.buttons.getStart}
             </Button>
@@ -72,7 +73,7 @@ const Home = ({ }: any) => {
               className="bg-cyan-800 h-[56px] w-[173px] font-medium text-lg mt-6"
               htmlType="submit"
               onClick={() =>
-                navigate(`/signup`, { state: KanzRoles.SYNDICATE })
+                navigate(RoutesEnums.SIGNUP, { state: KanzRoles.SYNDICATE })
               }
             >
               {language.buttons.getStart}
@@ -104,7 +105,7 @@ const Home = ({ }: any) => {
               style={{ fontSize: "1.125rem", fontWeight: 500 }}
               className="bg-cyan-800 h-[56px] w-[173px] font-medium text-lg mt-6"
               htmlType="submit"
-              onClick={() => navigate(`/signup`, { state: KanzRoles.REALTOR })}
+              onClick={() => navigate(RoutesEnums.SIGNUP, { state: KanzRoles.REALTOR })}
             >
               {language.buttons.getStart}
             </Button>
@@ -141,11 +142,11 @@ const Home = ({ }: any) => {
             {language.landing.discoverSub}
           </p>
           <div className="inline-flex gap-3 mt-5">
-            <Button className="bg-cyan-800 text-lg px-[41px] py-[14px] font-medium screen500:text-sm screen500:px-5" htmlType="submit" onClick={() => navigate("/login")}>
+            <Button className="bg-cyan-800 text-lg px-[41px] py-[14px] font-medium screen500:text-sm screen500:px-5" htmlType="submit" onClick={() => navigate(RoutesEnums.LOGIN)}>
               {language.buttons.signin}
             </Button>
 
-            <Button className="bg-white text-lg px-[41px] !text-cyan-800 py-[14px] font-medium screen500:text-sm screen500:px-5 hover:bg-white" htmlType="submit" onClick={() => navigate("/signup")}>
+            <Button className="bg-white text-lg px-[41px] !text-cyan-800 py-[14px] font-medium screen500:text-sm screen500:px-5 hover:bg-white" htmlType="submit" onClick={() => navigate(RoutesEnums.SIGNUP)}>
               {language.buttons.getStart}
             </Button>
           </div>
@@ -192,7 +193,7 @@ const Home = ({ }: any) => {
                 className="bg-cyan-800 h-[56px] w-[173px] font-medium mt-6"
                 htmlType="submit"
                 onClick={() => {
-                  navigate(`/signup`, { state: KanzRoles.INVESTOR });
+                  navigate(RoutesEnums.SIGNUP, { state: KanzRoles.INVESTOR });
                 }}
               >
                 {language.buttons.getStart}

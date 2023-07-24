@@ -5,6 +5,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { RootState } from "../../../redux-toolkit/store/store";
 import Questionare from "./Questionare";
 import { ApplicationStatus } from "../../../enums/types.enum";
+import { RoutesEnums } from "../../../enums/routes.enum";
 
 const PhilosophyGoals = (props: any) => {
     const params = useParams();
@@ -26,7 +27,7 @@ const PhilosophyGoals = (props: any) => {
             </section>
 
             <Questionare step={step} returnSuccessRedirection={(data: any) => {
-                navigate(`/add-attachments`);
+                navigate(RoutesEnums.ADD_ATTACHMENTS);
             }} />
         </main>
     )

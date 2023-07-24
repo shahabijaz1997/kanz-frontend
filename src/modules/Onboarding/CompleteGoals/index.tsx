@@ -57,7 +57,7 @@ const CompleteGoals = ({ }: any) => {
       toast.error(message, toastUtil);
       if (error.response && error.response.status === 401) {
         dispatch(saveToken(""));
-        navigate("/login", { state: "complete-goals" });
+        navigate(RoutesEnums.LOGIN, { state: "complete-goals" });
       }
     } finally {
       setLoading(false);
@@ -157,7 +157,7 @@ const CompleteGoals = ({ }: any) => {
           </aside>
           <GoalStepper language={language} currentStepper={currentStepper} navigate={() => {
             if (metadata?.profile_states?.questionnaire_steps_completed === 5) navigate(`${RoutesEnums.ADD_ATTACHMENTS}`);
-            else navigate(`/philosophy-goals/${metadata?.profile_states?.questionnaire_steps_completed + 1}`);
+            else navigate(`${RoutesEnums.PHILOSOPHY_GOALS}/${metadata?.profile_states?.questionnaire_steps_completed + 1}`);
           }}
           />
         </section>
