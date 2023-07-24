@@ -68,7 +68,7 @@ const Realtors = (props: any) => {
 
   useLayoutEffect(() => {
     setLoad(true);
-    if ((user.status !== ApplicationStatus.OPENED && user.status !== ApplicationStatus.REOPENED)) return navigate("/welcome");
+    if ((user.status !== ApplicationStatus.OPENED && user.status !== ApplicationStatus.REOPENED)) return navigate(RoutesEnums.WELCOME);
     if (!isEmpty(metadata?.profile)) {
       setPayload({
         national: { label: metadata.profile[event]?.nationality, value: metadata.profile[event]?.nationality },
@@ -77,7 +77,7 @@ const Realtors = (props: any) => {
       });
     }
     setLoad(false);
-    if ((user.status !== ApplicationStatus.OPENED && user.status !== ApplicationStatus.REOPENED)) return navigate("/welcome");
+    if ((user.status !== ApplicationStatus.OPENED && user.status !== ApplicationStatus.REOPENED)) return navigate(RoutesEnums.WELCOME);
   }, [metadata]);
     
   useEffect(()=>{
@@ -85,7 +85,7 @@ const Realtors = (props: any) => {
   },[])
 
   useLayoutEffect(() => {
-    if (user.type !== KanzRoles.REALTOR) navigate("/welcome");
+    if (user.type !== KanzRoles.REALTOR) navigate(RoutesEnums.WELCOME);
     getAllCountries();
   }, []);
 

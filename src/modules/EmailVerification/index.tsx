@@ -32,7 +32,7 @@ const EmailVerification = ({ }: any) => {
   const requiredFieldError = language?.common?.required_field;
 
   useLayoutEffect(() => {
-    if (user?.profile_states?.account_confirmed) navigate("/welcome");
+    if (user?.profile_states?.account_confirmed) navigate(RoutesEnums.WELCOME);
   }, []);
 
   const onResendConfirmToken = async (e: any) => {
@@ -63,7 +63,7 @@ const EmailVerification = ({ }: any) => {
         const token = headers["authorization"].split(" ")[1];
         dispatch(saveToken(token));
         localStorage.removeItem("role");
-        navigate("/welcome");
+        navigate(RoutesEnums.WELCOME);
       }
     } catch (error: any) {
       const message = error?.response?.data?.status?.message || language.promptMessages.invalidCode || language.promptMessages.errorGeneral;

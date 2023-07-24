@@ -117,7 +117,7 @@ const Signup = (props: any) => {
         const { status, data } = await signup({ user: signUpData });
         if (status === 200) {
           dispatch(saveUserData(data.status.data));
-          navigate("/verification");
+          navigate(RoutesEnums.VERIFICATION);
 
         } else toast.error(language.promptMessages.errorGeneral, toastUtil);
       } catch (error: any) {
