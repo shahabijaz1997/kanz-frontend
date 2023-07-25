@@ -158,7 +158,7 @@ const SyndicateFlow = ({ }: any) => {
       setLoading(true);
       const form: any = new FormData();
       form.append("syndicate_profile[step]", step);
-      if (step == 1) {
+      if (Number(step) === 1) {
         form.append("syndicate_profile[have_you_ever_raised]", payload.raised);
         form.append("syndicate_profile[raised_amount]", payload.amountRaised);
         form.append("syndicate_profile[no_times_raised]", payload.timesRaised);
@@ -178,9 +178,9 @@ const SyndicateFlow = ({ }: any) => {
 
       let { status } = await postSyndicateInformation(form, authToken);
 
-      if (status === 200 && step == 2)
+      if (status === 200 && Number(step) === 2)
         navigate(RoutesEnums.ADD_ATTACHMENTS);
-      else if (step == 1) {
+      else if (Number(step) === 1) {
         setStep(2);
         navigate(`${RoutesEnums.SYNIDCATE_DETAILS}/${step + 1}`);
       }

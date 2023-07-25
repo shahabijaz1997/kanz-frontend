@@ -1,7 +1,7 @@
 import React, { useState, useLayoutEffect, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../../redux-toolkit/store/store";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import Header from "../../../shared/components/Header";
 import UserIcon from "../../../ts-icons/userIcon.svg";
 import EditIcon from "../../../ts-icons/editIcon.svg";

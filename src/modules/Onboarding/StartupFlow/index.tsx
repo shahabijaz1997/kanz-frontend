@@ -18,9 +18,8 @@ import { getCountries } from "../../../apis/bootstrap.api";
 import { KanzRoles } from "../../../enums/roles.enum";
 import { RoutesEnums } from "../../../enums/routes.enum";
 import { saveUserMetaData } from "../../../redux-toolkit/slicer/metadata.slicer";
-import { isEmpty } from "../../../utils/object.util";
 
-const StartupFlow = ({}: any) => {
+const StartupFlow = ({ }: any) => {
   const params = useParams();
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -62,15 +61,15 @@ const StartupFlow = ({}: any) => {
     if (user.type !== KanzRoles.STARTUP) navigate(RoutesEnums.WELCOME);
   }, []);
 
-  useEffect(()=>{
+  useEffect(() => {
     getStartupDetails();
-  },[])
+  }, [])
 
-  useEffect(()=>{
-    if(metadata){
+  useEffect(() => {
+    if (metadata) {
       bootstrapPayload();
     }
-  },[metadata])
+  }, [metadata])
 
   const getStartupDetails = async () => {
     try {
@@ -181,7 +180,7 @@ const StartupFlow = ({}: any) => {
       let _country: any = countries.all.find((x: any) => x[event].name === payload.country.name);
 
       const form: any = new FormData();
-      if (step == 1) {
+      if (Number(step) === 1) {
         form.append("startup_profile[step]", step);
         form.append("startup_profile[company_name]", payload.company);
         form.append("startup_profile[legal_name]", payload.legal);
@@ -212,16 +211,16 @@ const StartupFlow = ({}: any) => {
 
       let { status } = await postCompanyInformation(form, authToken);
 
-      if (status === 200 && step == 2)
+      if (status === 200 && Number(step) === 2)
         navigate(RoutesEnums.ADD_ATTACHMENTS);
-      else if (step == 1) {
+      else if (Number(step) === 1) {
         setStep(2);
         navigate(`${RoutesEnums.START_UP}/${step + 1}`);
       }
-      let { status:_status, data } = await getCompanyInformation(1, authToken);
+      let { status: _status, data } = await getCompanyInformation(1, authToken);
       if (_status === 200) {
         dispatch(saveUserMetaData(data?.status?.data));
-          bootstrapPayload();
+        bootstrapPayload();
       }
     } catch (error: any) {
       if (error.response && error.response.status === 401) {
@@ -278,39 +277,18 @@ const StartupFlow = ({}: any) => {
           }}>
             {language?.buttons?.back}
           </Button>
-          <Button
-            className="h-[38px] w-[140px]"
-            disabled={loading}
-            htmlType="submit"
-            loading={loading}
-            onClick={ontoNextStep}
-          >
+          <Button className="h-[38px] w-[140px]" disabled={loading} htmlType="submit" loading={loading} onClick={ontoNextStep}>
             {language?.buttons?.continue}
           </Button>
         </section>
       </aside>
 
       <Modal show={modalOpen ? true : false}>
-        <div
-          className="rounded-md h-8 w-8 inline-grid place-items-center cursor-pointer absolute right-2 top-2"
-          style={{ backgroundColor: "rgba(0, 0, 0, 0.078" }}
-        >
-          <CrossIcon
-            stroke="#fff"
-            className="w-6 h-6"
-            onClick={() => {
-              setModalOpen(null);
-            }}
-          />
+        <div className="rounded-md h-8 w-8 inline-grid place-items-center cursor-pointer absolute right-2 top-2" style={{ backgroundColor: "rgba(0, 0, 0, 0.078" }}>
+          <CrossIcon stroke="#fff" className="w-6 h-6" onClick={() => setModalOpen(null)} />
         </div>
-        {fileType === FileType.IMAGE ? (
-          <img src={modalOpen} alt="Img" className="max-h-[100%]" />
-        ) : (
-          <embed
-            src={modalOpen}
-            type="application/pdf"
-            className="w-[100%] h-[90%]"
-          />
+        {fileType === FileType.IMAGE ? (<img src={modalOpen} alt="Img" className="max-h-[100%]" />) : (
+          <embed src={modalOpen} type="application/pdf" className="w-[100%] h-[90%]" />
         )}
       </Modal>
     </main>
