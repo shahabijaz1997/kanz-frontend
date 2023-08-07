@@ -17,6 +17,7 @@ import { AntdInput } from "../../shared/components/Input";
 import LanguageDrodownWrapper from "../../shared/views/LanguageDrodownWrapper";
 import { saveEvent } from "../../redux-toolkit/slicer/event.slicer";
 import { isEmpty } from "../../utils/object.util";
+import { RoutesEnums } from "../../enums/routes.enum";
 
 type FormValues = {
   email: string;
@@ -37,7 +38,7 @@ const Login = ({ }: any) => {
   const requiredFieldError = language?.common?.required_field;
 
   useLayoutEffect(() => {
-    if (authToken) navigate("/welcome");
+    if (authToken) navigate(RoutesEnums.WELCOME);
     else localStorage.clear();
   }, []);
 
@@ -55,7 +56,7 @@ const Login = ({ }: any) => {
         const { status, data, headers } = await signin({ user: { email: values?.email, password: values?.password, language: event } });
         if (data?.status?.code && !data?.status?.data?.profile_states?.account_confirmed) {
           dispatch(saveUserData(data?.status?.data))
-          navigate("/verification");
+          navigate(RoutesEnums.VERIFICATION);
           return;
         }
         if (status === 200 && headers["authorization"]) {
@@ -67,7 +68,7 @@ const Login = ({ }: any) => {
           toast.success(data.status.message, toastUtil);
           localStorage.removeItem("role");
           if (state) navigate(`/${state}`);
-          else navigate("/welcome");
+          else navigate(RoutesEnums.WELCOME);
         } else toast.error(language.promptMessages.errorGeneral, toastUtil);
       } catch (error: any) {
         console.error(error);
@@ -75,7 +76,7 @@ const Login = ({ }: any) => {
         toast.error(message, toastUtil);
         if (error?.response?.data?.status?.code && error?.response?.data?.status?.code?.profile_states && !error?.response?.data?.status?.code?.profile_states?.account_confirmed) {
           dispatch(saveUserData(error?.response?.data?.status?.code))
-          navigate("/verification");
+          navigate(RoutesEnums.VERIFICATION);
         }
       } finally {
         setLoading(false);
@@ -121,7 +122,7 @@ const Login = ({ }: any) => {
             {language?.buttons?.notRegistered}{" "}
           </p>
           &nbsp;
-          <button className="text-cyan-800 font-bold cursor-pointer" type="button" onClick={() => navigate("/signup", { state: KanzRoles.INVESTOR })}>
+          <button className="text-cyan-800 font-bold cursor-pointer" type="button" onClick={() => navigate(RoutesEnums.SIGNUP, { state: KanzRoles.INVESTOR })}>
             {language.buttons.signup}
           </button>
         </div>

@@ -18,6 +18,7 @@ import InvestorHome from "../../../shared/views/InvestorHome";
 import SyndicateHome from "../../../shared/views/SyndicateHome";
 import RealtorHome from "../../../shared/views/RealtorHome";
 import StartupHome from "../../../shared/views/StartupHome";
+import { RoutesEnums } from "../../../enums/routes.enum";
 
 const Welcome = ({ }: any) => {
     const dispatch = useDispatch();
@@ -43,7 +44,7 @@ const Welcome = ({ }: any) => {
         } catch (error: any) {
             if (error.response && error.response.status === 401) {
                 dispatch(saveToken(""));
-                navigate("/login", { state: "" });
+                navigate(RoutesEnums.LOGIN, { state: "" });
             }
         } finally {
             setLoading(false);
@@ -69,7 +70,7 @@ const Welcome = ({ }: any) => {
         } catch (error: any) {
             if (error.response && error.response.status === 401) {
                 dispatch(saveToken(""));
-                navigate("/login", { state: '' });
+                navigate(RoutesEnums.LOGIN, { state: '' });
             }
         } finally {
             setLoading(false);

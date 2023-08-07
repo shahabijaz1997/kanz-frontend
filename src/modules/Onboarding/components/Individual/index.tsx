@@ -5,7 +5,6 @@ import { toast } from "react-toastify";
 import { toastUtil } from "../../../../utils/toast.utils";
 import { RootState } from "../../../../redux-toolkit/store/store";
 import CountrySelector from "../../../../shared/components/CountrySelector";
-import { InvestorType } from "../../../../enums/types.enum";
 import { investmentAccridiation } from "../../../../apis/investor.api";
 import { saveToken } from "../../../../redux-toolkit/slicer/auth.slicer";
 import Drawer from "../../../../shared/components/Drawer";
@@ -54,7 +53,7 @@ const Individual = ({ language }: any) => {
       console.error("Error in countries: ", error);
       if (error.response && error.response.status === 401) {
         dispatch(saveToken(""));
-        navigate("/login", { state: "complete-details" });
+        navigate(RoutesEnums.LOGIN, { state: "complete-details" });
       }
     } finally {
       setLoading(false);
@@ -84,7 +83,7 @@ const Individual = ({ language }: any) => {
       let { data, status } = await investmentAccridiation(_payload, authToken);
       if (status === 200) {
         toast.success(data?.status?.message, toastUtil);
-        navigate("/complete-goals");
+        navigate(RoutesEnums.COMPLETE_GOALS);
       }
     } catch (error: any) {
       const message =
@@ -94,7 +93,7 @@ const Individual = ({ language }: any) => {
       toast.error(message, toastUtil);
       if (error.response && error.response.status === 401) {
         dispatch(saveToken(""));
-        navigate("/login", { state: "complete-details" });
+        navigate(RoutesEnums.LOGIN, { state: "complete-details" });
       }
     } finally {
       setLoading(false);

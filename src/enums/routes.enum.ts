@@ -9,5 +9,9 @@ export enum RoutesEnums {
     ADD_ATTACHMENTS="/add-attachments",
     SIGNUP="/signup",
     LOGIN="/login",
+    VERIFICATION="/verification",
     WELCOME="/welcome",
+    LINKEDIN="/linkedin",
+    PRIVACY_POLICY="/privacy-policy",
+    TERMS_CONDITIONS="/terms-and-conditions",
 }

@@ -55,7 +55,7 @@ const SyndicateFlow = ({ }: any) => {
   const [load, setLoad] = useState(false);
 
   useLayoutEffect(() => {
-    if (user.type !== KanzRoles.SYNDICATE) navigate("/welcome");
+    if (user.type !== KanzRoles.SYNDICATE) navigate(RoutesEnums.WELCOME);
     getSyndicateDetails();
   }, []);
 
@@ -90,7 +90,7 @@ const SyndicateFlow = ({ }: any) => {
     } catch (error: any) {
       if (error.response && error.response.status === 401) {
         dispatch(saveToken(""));
-        navigate("/login", { state: '' });
+        navigate(RoutesEnums.LOGIN, { state: '' });
       }
       setPayload((prev: any) => { return { ...prev, loading: false } });
     } finally {
@@ -158,7 +158,7 @@ const SyndicateFlow = ({ }: any) => {
       setLoading(true);
       const form: any = new FormData();
       form.append("syndicate_profile[step]", step);
-      if (step == 1) {
+      if (Number(step) === 1) {
         form.append("syndicate_profile[have_you_ever_raised]", payload.raised);
         form.append("syndicate_profile[raised_amount]", payload.amountRaised);
         form.append("syndicate_profile[no_times_raised]", payload.timesRaised);
@@ -178,16 +178,16 @@ const SyndicateFlow = ({ }: any) => {
 
       let { status } = await postSyndicateInformation(form, authToken);
 
-      if (status === 200 && step == 2)
-        navigate("/add-attachments");
-      else if (step == 1) {
+      if (status === 200 && Number(step) === 2)
+        navigate(RoutesEnums.ADD_ATTACHMENTS);
+      else if (Number(step) === 1) {
         setStep(2);
-        navigate(`/syndicate-lead/${step + 1}`);
+        navigate(`${RoutesEnums.SYNIDCATE_DETAILS}/${step + 1}`);
       }
     } catch (error: any) {
       if (error.response && error.response.status === 401) {
         dispatch(saveToken(""));
-        navigate("/login", { state: "add-attachments" });
+        navigate(RoutesEnums.LOGIN, { state: "add-attachments" });
       }
       const message = error?.response?.data?.status?.message || error?.response?.data || language.promptMessages.errorGeneral;
       toast.error(message, toastUtil);
@@ -204,7 +204,7 @@ const SyndicateFlow = ({ }: any) => {
         <React.Fragment>
           <section>
             <Header custom={true} data={{
-              leftMenu: language.header.syndicateLead, button: (<button onClick={() => navigate("/welcome")} className="text-neutral-900 bg-white font-bold text-sm w-[150px] h-9 cursor-pointer border border-black shadow-sm screen800:w-[120px]">{language.buttons.gotoDashboard}</button>),
+              leftMenu: language.header.syndicateLead, button: (<button onClick={() => navigate(RoutesEnums.WELCOME)} className="text-neutral-900 bg-white font-bold text-sm w-[150px] h-9 cursor-pointer border border-black shadow-sm screen800:w-[120px]">{language.buttons.gotoDashboard}</button>),
             }}
             />
           </section>

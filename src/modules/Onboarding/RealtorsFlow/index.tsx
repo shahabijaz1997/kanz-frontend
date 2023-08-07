@@ -59,7 +59,7 @@ const Realtors = (props: any) => {
       toast.error(message, toastUtil);
       if (error.response && error.response.status === 401) {
         dispatch(saveToken(""));
-        navigate("/login", { state: RoutesEnums.REALTOR_DETAILS });
+        navigate(RoutesEnums.LOGIN, { state: RoutesEnums.REALTOR_DETAILS });
       }
     } finally {
       setLoading(false);
@@ -68,7 +68,7 @@ const Realtors = (props: any) => {
 
   useLayoutEffect(() => {
     setLoad(true);
-    if ((user.status !== ApplicationStatus.OPENED && user.status !== ApplicationStatus.REOPENED)) return navigate("/welcome");
+    if ((user.status !== ApplicationStatus.OPENED && user.status !== ApplicationStatus.REOPENED)) return navigate(RoutesEnums.WELCOME);
     if (!isEmpty(metadata?.profile)) {
       setPayload({
         national: { label: metadata.profile[event]?.nationality, value: metadata.profile[event]?.nationality },
@@ -77,7 +77,7 @@ const Realtors = (props: any) => {
       });
     }
     setLoad(false);
-    if ((user.status !== ApplicationStatus.OPENED && user.status !== ApplicationStatus.REOPENED)) return navigate("/welcome");
+    if ((user.status !== ApplicationStatus.OPENED && user.status !== ApplicationStatus.REOPENED)) return navigate(RoutesEnums.WELCOME);
   }, [metadata]);
     
   useEffect(()=>{
@@ -85,7 +85,7 @@ const Realtors = (props: any) => {
   },[])
 
   useLayoutEffect(() => {
-    if (user.type !== KanzRoles.REALTOR) navigate("/welcome");
+    if (user.type !== KanzRoles.REALTOR) navigate(RoutesEnums.WELCOME);
     getAllCountries();
   }, []);
 
@@ -147,14 +147,14 @@ const Realtors = (props: any) => {
       };
       let { status } = await postRealtorInformation(pData, authToken);
       if (status === 200) {
-        navigate("/add-attachments");
+        navigate(RoutesEnums.ADD_ATTACHMENTS);
       }
     } catch (error: any) {
       const message = error?.response?.data?.status?.message || error?.response?.data || language.promptMessages.errorGeneral;
       toast.error(message, toastUtil);
       if (error.response && error.response.status === 401) {
         dispatch(saveToken(""));
-        navigate("/login", { state: "realtor-type" });
+        navigate(RoutesEnums.LOGIN, { state: "realtor-type" });
       }
     } finally {
       setLoading(false);

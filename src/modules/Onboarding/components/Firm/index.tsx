@@ -25,40 +25,6 @@ const Firm = ({ language }: any) => {
   const authToken: any = useSelector((state: RootState) => state.auth.value);
   const metadata: any = useSelector((state: RootState) => state.metadata.value);
   const event: any = useSelector((state: RootState) => state.event.value);
-  const [assertQuestions] = useState([
-    {
-      id: 1,
-      title: language?.firm?.option1,
-      low_limit: "100",
-      upper_limit: "100",
-      is_range: false,
-      currency: language.common.million,
-    },
-    {
-      id: 2,
-      title: language?.firm?.option2,
-      low_limit: "50",
-      upper_limit: "100",
-      is_range: false,
-      currency: language.common.million,
-    },
-    {
-      id: 3,
-      title: language?.firm?.option3,
-      low_limit: "10",
-      upper_limit: "50",
-      is_range: false,
-      currency: language.common.million,
-    },
-    {
-      id: 4,
-      title: language?.firm?.option4,
-      low_limit: "1",
-      upper_limit: "10",
-      is_range: false,
-      currency: language.common.million,
-    },
-  ]);
   const [selectedAssert, setSelectedAssert]: any = useState(null);
   const [payload, setPayload]: any = useState({ legal: "", residence: "", accer: "", risk: false });
   const [loading, setLoading] = useState(false);
@@ -88,12 +54,6 @@ const Firm = ({ language }: any) => {
           setPayload({ legal: metadata?.profile[event]?.legal_name, residence: { label: metadata?.profile[event]?.location, value: metadata?.profile[event]?.location }, accer: "", risk: false });
           setSelectedAssert(metadata?.profile[event]?.accreditation?.options.find((as:any) => as.selected));
         }
-        else {
-          // let account_info = localStorage.getItem("account_info");
-          // let assertData = localStorage.getItem("accert");
-          // if (account_info) setPayload(JSON.parse(account_info));
-          // if (assertData) setSelectedAssert(JSON.parse(assertData));
-        }
 
         setCountries({ all: data.status.data, names });
       }
@@ -101,7 +61,7 @@ const Firm = ({ language }: any) => {
       console.error("Error in countries: ", error);
       if (error.response && error.response.status === 401) {
         dispatch(saveToken(""));
-        navigate("/login", { state: "complete-details" });
+        navigate(RoutesEnums.LOGIN, { state: "complete-details" });
       }
     } finally {
       setLoading(false);
@@ -128,11 +88,9 @@ const Firm = ({ language }: any) => {
       let { data, status } = await investmentAccridiation(_payload, authToken);
       if (status === 200) {
         toast.success(data?.status?.message, toastUtil);
-        navigate("/complete-goals", {
+        navigate(RoutesEnums.COMPLETE_GOALS, {
           state: { type: InvestorType.FIRM, selected: selectedAssert },
         });
-        // localStorage.setItem("account_info", JSON.stringify(payload));
-        // localStorage.setItem("accert", JSON.stringify(selectedAssert));
       }
     } catch (error: any) {
       const message =
@@ -142,7 +100,6 @@ const Firm = ({ language }: any) => {
       toast.error(message, toastUtil);
       if (error.response && error.response.status === 401) {
         dispatch(saveToken(""));
-        navigate("/login", { state: `complete-details` });
       }
     } finally {
       setLoading(false);

@@ -10,6 +10,7 @@ import { saveUserData } from "../../../redux-toolkit/slicer/user.slicer";
 import { saveToken } from "../../../redux-toolkit/slicer/auth.slicer";
 import { KanzRoles } from "../../../enums/roles.enum";
 import { saveEvent } from "../../../redux-toolkit/slicer/event.slicer";
+import { RoutesEnums } from "../../../enums/routes.enum";
 
 const ENV: any = getEnv();
 
@@ -36,7 +37,7 @@ const LinkedInOauth = ({ event, language, setLoading, state }: any) => {
                 let timeout = setTimeout(() => {
                     clearTimeout(timeout);
                     setLoading(false);
-                    navigate("/welcome");
+                    navigate(RoutesEnums.WELCOME);
                 }, 1000)
             }
         } catch (error: any) {

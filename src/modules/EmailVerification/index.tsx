@@ -11,6 +11,7 @@ import { AntdInput } from "../../shared/components/Input";
 import Button from "../../shared/components/Button";
 import { getEnv } from "../../env";
 import ClippedBanner from "../Onboarding/components/ClippedBanner";
+import { RoutesEnums } from "../../enums/routes.enum";
 
 type FormValues = {
   code: string;
@@ -31,7 +32,7 @@ const EmailVerification = ({ }: any) => {
   const requiredFieldError = language?.common?.required_field;
 
   useLayoutEffect(() => {
-    if (user?.profile_states?.account_confirmed) navigate("/welcome");
+    if (user?.profile_states?.account_confirmed) navigate(RoutesEnums.WELCOME);
   }, []);
 
   const onResendConfirmToken = async (e: any) => {
@@ -62,14 +63,14 @@ const EmailVerification = ({ }: any) => {
         const token = headers["authorization"].split(" ")[1];
         dispatch(saveToken(token));
         localStorage.removeItem("role");
-        navigate("/welcome");
+        navigate(RoutesEnums.WELCOME);
       }
     } catch (error: any) {
       const message = error?.response?.data?.status?.message || language.promptMessages.invalidCode || language.promptMessages.errorGeneral;
       toast.dismiss();
       toast.error(message, toastUtil);
       if (error?.response?.data?.status?.data?.account_status === "blocked")
-        return navigate("/signup");
+        return navigate(RoutesEnums.SIGNUP);
     } finally {
       setLoading(false);
       setToken("");

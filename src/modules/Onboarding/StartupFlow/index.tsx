@@ -18,9 +18,8 @@ import { getCountries } from "../../../apis/bootstrap.api";
 import { KanzRoles } from "../../../enums/roles.enum";
 import { RoutesEnums } from "../../../enums/routes.enum";
 import { saveUserMetaData } from "../../../redux-toolkit/slicer/metadata.slicer";
-import { isEmpty } from "../../../utils/object.util";
 
-const StartupFlow = ({}: any) => {
+const StartupFlow = ({ }: any) => {
   const params = useParams();
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -59,18 +58,18 @@ const StartupFlow = ({}: any) => {
   const [load, setLoad] = useState(false);
 
   useLayoutEffect(() => {
-    if (user.type !== KanzRoles.STARTUP) navigate("/welcome");
+    if (user.type !== KanzRoles.STARTUP) navigate(RoutesEnums.WELCOME);
   }, []);
 
-  useEffect(()=>{
+  useEffect(() => {
     getStartupDetails();
-  },[])
+  }, [])
 
-  useEffect(()=>{
-    if(metadata){
+  useEffect(() => {
+    if (metadata) {
       bootstrapPayload();
     }
-  },[metadata])
+  }, [metadata])
 
   const getStartupDetails = async () => {
     try {
@@ -89,7 +88,7 @@ const StartupFlow = ({}: any) => {
       toast.error(message, toastUtil);
       if (error.response && error.response.status === 401) {
         dispatch(saveToken(""));
-        navigate("/login", { state: 'Startup' });
+        navigate(RoutesEnums.LOGIN, { state: 'Startup' });
       }
     } finally {
       setLoad(false);
@@ -181,7 +180,7 @@ const StartupFlow = ({}: any) => {
       let _country: any = countries.all.find((x: any) => x[event].name === payload.country.name);
 
       const form: any = new FormData();
-      if (step == 1) {
+      if (Number(step) === 1) {
         form.append("startup_profile[step]", step);
         form.append("startup_profile[company_name]", payload.company);
         form.append("startup_profile[legal_name]", payload.legal);
@@ -212,21 +211,21 @@ const StartupFlow = ({}: any) => {
 
       let { status } = await postCompanyInformation(form, authToken);
 
-      if (status === 200 && step == 2)
-        navigate("/add-attachments");
-      else if (step == 1) {
+      if (status === 200 && Number(step) === 2)
+        navigate(RoutesEnums.ADD_ATTACHMENTS);
+      else if (Number(step) === 1) {
         setStep(2);
-        navigate(`/startup-type/${step + 1}`);
+        navigate(`${RoutesEnums.START_UP}/${step + 1}`);
       }
-      let { status:_status, data } = await getCompanyInformation(1, authToken);
+      let { status: _status, data } = await getCompanyInformation(1, authToken);
       if (_status === 200) {
         dispatch(saveUserMetaData(data?.status?.data));
-          bootstrapPayload();
+        bootstrapPayload();
       }
     } catch (error: any) {
       if (error.response && error.response.status === 401) {
         dispatch(saveToken(""));
-        navigate("/login", { state: "add-attachments" });
+        navigate(RoutesEnums.LOGIN, { state: "add-attachments" });
       }
       console.error(error);
       const message = error?.response?.data?.status?.message || error?.response?.data || language.promptMessages.errorGeneral;
@@ -240,7 +239,7 @@ const StartupFlow = ({}: any) => {
     <main className="h-full max-h-full cbc-auth overflow-y-auto overflow-x-hidden">
       <section>
         <Header custom={true} data={{
-          leftMenu: language.header.companyDetails, button: (<button onClick={() => navigate("/welcome")} className="text-neutral-900 bg-white font-bold text-sm w-[150px] h-9 cursor-pointer border border-black shadow-sm screen800:w-[120px]">{language.buttons.gotoDashboard}</button>),
+          leftMenu: language.header.companyDetails, button: (<button onClick={() => navigate(RoutesEnums.WELCOME)} className="text-neutral-900 bg-white font-bold text-sm w-[150px] h-9 cursor-pointer border border-black shadow-sm screen800:w-[120px]">{language.buttons.gotoDashboard}</button>),
         }}
         />
       </section>
@@ -278,39 +277,18 @@ const StartupFlow = ({}: any) => {
           }}>
             {language?.buttons?.back}
           </Button>
-          <Button
-            className="h-[38px] w-[140px]"
-            disabled={loading}
-            htmlType="submit"
-            loading={loading}
-            onClick={ontoNextStep}
-          >
+          <Button className="h-[38px] w-[140px]" disabled={loading} htmlType="submit" loading={loading} onClick={ontoNextStep}>
             {language?.buttons?.continue}
           </Button>
         </section>
       </aside>
 
       <Modal show={modalOpen ? true : false}>
-        <div
-          className="rounded-md h-8 w-8 inline-grid place-items-center cursor-pointer absolute right-2 top-2"
-          style={{ backgroundColor: "rgba(0, 0, 0, 0.078" }}
-        >
-          <CrossIcon
-            stroke="#fff"
-            className="w-6 h-6"
-            onClick={() => {
-              setModalOpen(null);
-            }}
-          />
+        <div className="rounded-md h-8 w-8 inline-grid place-items-center cursor-pointer absolute right-2 top-2" style={{ backgroundColor: "rgba(0, 0, 0, 0.078" }}>
+          <CrossIcon stroke="#fff" className="w-6 h-6" onClick={() => setModalOpen(null)} />
         </div>
-        {fileType === FileType.IMAGE ? (
-          <img src={modalOpen} alt="Img" className="max-h-[100%]" />
-        ) : (
-          <embed
-            src={modalOpen}
-            type="application/pdf"
-            className="w-[100%] h-[90%]"
-          />
+        {fileType === FileType.IMAGE ? (<img src={modalOpen} alt="Img" className="max-h-[100%]" />) : (
+          <embed src={modalOpen} type="application/pdf" className="w-[100%] h-[90%]" />
         )}
       </Modal>
     </main>

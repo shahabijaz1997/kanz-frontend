@@ -1,7 +1,7 @@
 import React, { useState, useLayoutEffect, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../../redux-toolkit/store/store";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import Header from "../../../shared/components/Header";
 import UserIcon from "../../../ts-icons/userIcon.svg";
 import EditIcon from "../../../ts-icons/editIcon.svg";
@@ -34,7 +34,7 @@ const CompleteGoals = ({ }: any) => {
   const [currentStepper, setCurrentStepper]: any = useState();
 
   useLayoutEffect(() => {
-    if ((user.status !== ApplicationStatus.OPENED && user.status !== ApplicationStatus.REOPENED) || user.type !== KanzRoles.INVESTOR) navigate("/welcome");
+    if ((user.status !== ApplicationStatus.OPENED && user.status !== ApplicationStatus.REOPENED) || user.type !== KanzRoles.INVESTOR) navigate(RoutesEnums.WELCOME);
     setCurrentStepper(metadata?.steps_completed);
   }, []);
 
@@ -57,7 +57,7 @@ const CompleteGoals = ({ }: any) => {
       toast.error(message, toastUtil);
       if (error.response && error.response.status === 401) {
         dispatch(saveToken(""));
-        navigate("/login", { state: "complete-goals" });
+        navigate(RoutesEnums.LOGIN, { state: "complete-goals" });
       }
     } finally {
       setLoading(false);
@@ -157,7 +157,7 @@ const CompleteGoals = ({ }: any) => {
           </aside>
           <GoalStepper language={language} currentStepper={currentStepper} navigate={() => {
             if (metadata?.profile_states?.questionnaire_steps_completed === 5) navigate(`${RoutesEnums.ADD_ATTACHMENTS}`);
-            else navigate(`/philosophy-goals/${metadata?.profile_states?.questionnaire_steps_completed + 1}`);
+            else navigate(`${RoutesEnums.PHILOSOPHY_GOALS}/${metadata?.profile_states?.questionnaire_steps_completed + 1}`);
           }}
           />
         </section>

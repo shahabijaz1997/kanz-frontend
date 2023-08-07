@@ -57,7 +57,7 @@ const AddAttachments = (props: any) => {
     } catch (error: any) {
       if (error.response && error.response.status === 401) {
         dispatch(saveToken(""));
-        navigate("/login", { state: 'investor-type' });
+        navigate(RoutesEnums.LOGIN, { state: 'investor-type' });
       }
     } finally {
       setLoading(false);
@@ -80,7 +80,7 @@ const AddAttachments = (props: any) => {
       setLoading(false);
       if (error.response && error.response.status === 401) {
         dispatch(saveToken(""));
-        navigate("/login", { state: "add-attachments" });
+        navigate(RoutesEnums.LOGIN, { state: "add-attachments" });
       }
       const message =
         error?.response?.data?.status?.message ||
@@ -245,11 +245,11 @@ const AddAttachments = (props: any) => {
                 <input type="checkbox" className="accent-cyan-800 h-3 w-3 cursor-pointer" checked={agreeToTerms} />
                 <p className="text-neutral-500 text-sm font-normal">
                   {language?.common?.agree}
-                  <a onClick={(e) => e.stopPropagation()} href="/terms-and-conditions" className="text-cc-blue font-medium cursor-pointer" target="_blank" >
+                  <a onClick={(e) => e.stopPropagation()} href={RoutesEnums.TERMS_CONDITIONS} className="text-cc-blue font-medium cursor-pointer" target="_blank" >
                     {language?.common?.termsConditions}
                   </a>
                   {language?.v2?.common?.understood}
-                  <a onClick={(e) => e.stopPropagation()} href="/privacy-policy" className="text-cc-blue font-medium cursor-pointer" target="_blank" >
+                  <a onClick={(e) => e.stopPropagation()} href={RoutesEnums.PRIVACY_POLICY} className="text-cc-blue font-medium cursor-pointer" target="_blank" >
                     {language?.v2?.common?.privacyPolicy}
                   </a>
                 </p>
@@ -311,7 +311,7 @@ const AddAttachments = (props: any) => {
 
             <div className="w-[80%] screen800:w-full">
               <p className="mt-4 text-sm font-normal text-neutral-500 text-center leading-relaxed">
-                {language.modal.sub_2} <button className="text-blue-700" onClick={() => navigate("/welcome")}>{language.modal.sub_3}</button> {language.modal.sub_4}
+                {language.modal.sub_2} <button className="text-blue-700" onClick={() => navigate(RoutesEnums.WELCOME)}>{language.modal.sub_3}</button> {language.modal.sub_4}
               </p>
             </div>
             <Button
@@ -321,7 +321,7 @@ const AddAttachments = (props: any) => {
                 setModalOpen(false);
                 localStorage.removeItem("investor-type");
                 localStorage.removeItem("accert");
-                navigate("/welcome");
+                navigate(RoutesEnums.WELCOME);
               }}
             >
               {language.buttons.continue}

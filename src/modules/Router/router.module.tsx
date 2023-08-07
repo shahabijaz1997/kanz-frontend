@@ -34,7 +34,7 @@ const AuthenticateRoute = (props: PropsWithChildren) => {
   if (authToken) {
     return <React.Fragment>{children}</React.Fragment>;
   }
-  return <Navigate to="/login" replace />;
+  return <Navigate to={RoutesEnums.LOGIN} replace />;
 };
 
 const AuthenticateAuthRoute = (props: PropsWithChildren | any) => {
@@ -48,17 +48,17 @@ const AuthenticateAuthRoute = (props: PropsWithChildren | any) => {
   else if (isVerify && !user?.profile_states?.account_confirmed) {
     return <React.Fragment>{children}</React.Fragment>;
   }
-  return <Navigate to="/welcome" replace />;
+  return <Navigate to={RoutesEnums.WELCOME} replace />;
 };
 
 const AuthenticateRole = (props: PropsWithChildren | any) => {
   const { children } = props;
   const user: any = useSelector((state: RootState) => state.user.value);
 
-  if ((user && (user.type === props.role || props.role === KanzRoles.ALL) && user.status === ApplicationStatus.OPENED || user.status === ApplicationStatus.REOPENED)) {
+  if ((user && (user.type === props.role || props.role === KanzRoles.ALL) && (user.status === ApplicationStatus.OPENED || user.status === ApplicationStatus.REOPENED))) {
     return <React.Fragment>{children}</React.Fragment>;
   }
-  return <Navigate to="/welcome" replace />;
+  return <Navigate to={RoutesEnums.WELCOME} replace />;
 };
 
 const RouterModule = () => {
@@ -113,7 +113,7 @@ const RouterModule = () => {
             </Suspense>
           }
         />
-        <Route path="/startup-type/:id"
+        <Route path={`${RoutesEnums.START_UP}/:id`}
           element={
             <Suspense fallback={<Loader />}>
               <AuthenticateRoute>
@@ -131,15 +131,15 @@ const RouterModule = () => {
             </Suspense>
           }
         />
-        <Route path="/linkedin" element={<Suspense fallback={<Loader />}><LinkedInCallback /></Suspense>} />
-        <Route path="/complete-details"
+        <Route path={RoutesEnums.LINKEDIN} element={<Suspense fallback={<Loader />}><LinkedInCallback /></Suspense>} />
+        <Route path={RoutesEnums.COMPLETE_DETAILS}
           element={
             <Suspense fallback={<Loader />}>
               <AuthenticateRoute><CompleteDetails guard={authToken} /></AuthenticateRoute>
             </Suspense>
           }
         />
-        <Route path="/complete-goals"
+        <Route path={RoutesEnums.COMPLETE_GOALS}
           element={
             <Suspense fallback={<Loader />}>
               <AuthenticateRoute>
@@ -148,7 +148,7 @@ const RouterModule = () => {
             </Suspense>
           }
         />
-        <Route path="/philosophy-goals/:id"
+        <Route path={`${RoutesEnums.PHILOSOPHY_GOALS}/:id`}
           element={
             <Suspense fallback={<Loader />}>
               <AuthenticateRoute>
@@ -157,7 +157,7 @@ const RouterModule = () => {
             </Suspense>
           }
         />
-        <Route path="/add-attachments"
+        <Route path={RoutesEnums.ADD_ATTACHMENTS}
           element={
             <Suspense fallback={<Loader />}>
               <AuthenticateRoute>
@@ -166,7 +166,7 @@ const RouterModule = () => {
             </Suspense>
           }
         />
-        <Route path="/syndicate-lead/:id"
+        <Route path={`${RoutesEnums.SYNIDCATE_DETAILS}/:id`}
           element={
             <Suspense fallback={<Loader />}>
               <AuthenticateRoute>
@@ -175,22 +175,22 @@ const RouterModule = () => {
             </Suspense>
           }
         />
-        <Route path="/signup" element={
+        <Route path={RoutesEnums.SIGNUP} element={
           <Suspense fallback={<Loader />}> <AuthenticateAuthRoute><Signup guard={authToken} /></AuthenticateAuthRoute></Suspense>
         } />
-        <Route path="/verification" element={
+        <Route path={RoutesEnums.VERIFICATION} element={
           <Suspense fallback={<Loader />}><AuthenticateAuthRoute isVerify={true}><Verification guard={authToken} /></AuthenticateAuthRoute></Suspense>
         } />
-        <Route path="/login" element={
+        <Route path={RoutesEnums.LOGIN} element={
           <Suspense fallback={<Loader />}><AuthenticateAuthRoute><Login guard={authToken} /></AuthenticateAuthRoute></Suspense>
         } />
-        <Route path="/welcome" element={
+        <Route path={RoutesEnums.WELCOME} element={
           <Suspense fallback={<Loader />}><AuthenticateRoute><Welcome guard={authToken} /></AuthenticateRoute></Suspense>
         } />
-        <Route path="/privacy-policy" element={
+        <Route path={RoutesEnums.PRIVACY_POLICY} element={
           <Suspense fallback={<Loader />}><PrivacyPolicy /></Suspense>
         } />
-        <Route path="/terms-and-conditions" element={
+        <Route path={RoutesEnums.TERMS_CONDITIONS} element={
           <Suspense fallback={<Loader />}><TermsAndConditions /></Suspense>
         } />
       </Routes>

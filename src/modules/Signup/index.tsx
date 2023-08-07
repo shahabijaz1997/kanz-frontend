@@ -18,6 +18,7 @@ import GoogleOauth from "../../shared/components/GoogleOauth";
 import LinkedInOauth from "../../shared/components/LinkedinOauth";
 import ClippedBanner from "../Onboarding/components/ClippedBanner";
 import LanguageDrodownWrapper from "../../shared/views/LanguageDrodownWrapper";
+import { RoutesEnums } from "../../enums/routes.enum";
 
 type FormValues = {
   name: string;
@@ -116,7 +117,7 @@ const Signup = (props: any) => {
         const { status, data } = await signup({ user: signUpData });
         if (status === 200) {
           dispatch(saveUserData(data.status.data));
-          navigate("/verification");
+          navigate(RoutesEnums.VERIFICATION);
 
         } else toast.error(language.promptMessages.errorGeneral, toastUtil);
       } catch (error: any) {
@@ -226,7 +227,7 @@ const Signup = (props: any) => {
           <button
             className="text-cyan-800 font-bold cursor-pointer"
             type="button"
-            onClick={() => navigate("/login")}
+            onClick={() => navigate(RoutesEnums.LOGIN)}
           >
             {language.buttons.signin}
           </button>

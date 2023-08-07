@@ -13,6 +13,7 @@ import { saveUserMetaData } from "../../../../redux-toolkit/slicer/metadata.slic
 import LanguageDrodownWrapper from "../../../views/LanguageDrodownWrapper";
 import { saveLogo } from "../../../../redux-toolkit/slicer/attachments.slicer";
 import { languageDropdownItems } from "../../../../utils/dropdown-items.utils";
+import { RoutesEnums } from "../../../../enums/routes.enum";
 
 const GeneralHeader = ({ responsive = false, showMenu = false, showLanguageDropdown = false }: any) => {
     const navigate = useNavigate();
@@ -34,7 +35,7 @@ const GeneralHeader = ({ responsive = false, showMenu = false, showLanguageDropd
         } catch (error: any) {
         } finally {
             dispatch(saveToken(""));
-            navigate("/login");
+            navigate(RoutesEnums.LOGIN);
             localStorage.clear();
             dispatch(saveUserData(""));
             dispatch(saveUserMetaData(""));
@@ -79,10 +80,10 @@ const GeneralHeader = ({ responsive = false, showMenu = false, showLanguageDropd
                         </li>
                     ) : (
                         <React.Fragment>
-                            <li onClick={() => navigate("/login")}>
+                            <li onClick={() => navigate(RoutesEnums.LOGIN)}>
                                 <button className="text-neutral-500 cursor-pointer text-sm tracking-[0.03em]">{language.buttons.signin}</button>
                             </li>
-                            <li onClick={() => navigate("/signup", { state: KanzRoles.INVESTOR })}>
+                            <li onClick={() => navigate(RoutesEnums.SIGNUP, { state: KanzRoles.INVESTOR })}>
                                 <button className="text-white text-sm tracking-[0.03em] bg-cyan-800 rounded-md focus:outline-none focus:shadow-outline w-full h-[38px] px-3">{language.buttons.getStart}</button>
                             </li>
                         </React.Fragment>
@@ -154,7 +155,7 @@ const GeneralHeader = ({ responsive = false, showMenu = false, showLanguageDropd
                                     <button className="text-neutral-500 font-medium cursor-pointer text-sm tracking-[0.03em]">{language.buttons.logout}</button>
                                 </li>
                             ) : (
-                                <li onClick={() => navigate("/signup", { state: KanzRoles.INVESTOR })}>
+                                <li onClick={() => navigate(RoutesEnums.SIGNUP, { state: KanzRoles.INVESTOR })}>
                                     <button className="text-white text-sm tracking-[0.03em] bg-cyan-800 rounded-md focus:outline-none focus:shadow-outline w-full h-[38px] px-3">{language.buttons.getStart}</button>
                                 </li>
                             )}

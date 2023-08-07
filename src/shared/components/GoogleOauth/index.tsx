@@ -9,6 +9,7 @@ import { toastUtil } from "../../../utils/toast.utils";
 import { KanzRoles } from "../../../enums/roles.enum";
 import GoogleIcon from "../../../assets/icons/google_logo.png";
 import { saveEvent } from "../../../redux-toolkit/slicer/event.slicer";
+import { RoutesEnums } from "../../../enums/routes.enum";
 
 const GoogleOauth = ({ event, setLoading, language, state }: any) => {
     const navigate = useNavigate();
@@ -31,7 +32,7 @@ const GoogleOauth = ({ event, setLoading, language, state }: any) => {
                     localStorage.removeItem("role");
                     let timeout = setTimeout(() => {
                         clearTimeout(timeout);
-                        navigate("/welcome");
+                        navigate(RoutesEnums.WELCOME);
                     }, 1000)
                 }
 

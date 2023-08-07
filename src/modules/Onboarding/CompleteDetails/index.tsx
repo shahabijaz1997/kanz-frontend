@@ -13,6 +13,7 @@ import { saveUserMetaData } from "../../../redux-toolkit/slicer/metadata.slicer"
 import { saveToken } from "../../../redux-toolkit/slicer/auth.slicer";
 import { toast } from "react-toastify";
 import { toastUtil } from "../../../utils/toast.utils";
+import { RoutesEnums } from "../../../enums/routes.enum";
 
 const CompleteDetails = (props: any) => {
     const { state } = useLocation();
@@ -26,10 +27,10 @@ const CompleteDetails = (props: any) => {
     const [isOpen, setOpen] = useState(false);
 
     useLayoutEffect(() => {
-        if ((user.status !== ApplicationStatus.OPENED && user.status !== ApplicationStatus.REOPENED) || user.type !== KanzRoles.INVESTOR) navigate("/welcome");
+        if ((user.status !== ApplicationStatus.OPENED && user.status !== ApplicationStatus.REOPENED) || user.type !== KanzRoles.INVESTOR) navigate(RoutesEnums.WELCOME);
     }, []);
     useLayoutEffect(() => {
-        if (user.type !== KanzRoles.INVESTOR) navigate("/welcome");
+        if (user.type !== KanzRoles.INVESTOR) navigate(RoutesEnums.WELCOME);
       }, []);
 
     useEffect(()=>{
@@ -47,7 +48,7 @@ const CompleteDetails = (props: any) => {
           toast.error(message, toastUtil);
           if (error.response && error.response.status === 401) {
             dispatch(saveToken(""));
-            navigate("/login", { state: KanzRoles.INVESTOR });
+            navigate(RoutesEnums.LOGIN, { state: KanzRoles.INVESTOR });
           }
         } finally {
         }
