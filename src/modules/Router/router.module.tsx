@@ -10,54 +10,52 @@ import { ApplicationStatus } from "../../enums/types.enum";
 import { RoutesEnums } from "../../enums/routes.enum";
 import { LinkedInCallback } from "react-linkedin-login-oauth2";
 
-// Modules
+/* --- Modules --- */
+
+/* ---### Authentication ###--- */
 const Home = lazy(() => import("../Home"));
 const Signup = lazy(() => import("../Signup"));
 const Verification = lazy(() => import("../EmailVerification"));
 const Login = lazy(() => import("../Login"));
 const Welcome = lazy(() => import("../Onboarding/Welcome"));
-const InvestorFlow = lazy(() => import("../Onboarding/InvestorFlow"));
+
+/* ---### Onboarding ###--- */
+const InvestorOnboarding = lazy(() => import("../Onboarding/InvestorFlow"));
 const CompleteDetails = lazy(() => import("../Onboarding/CompleteDetails"));
-const Realtors = lazy(() => import("../Onboarding/RealtorsFlow"));
 const CompleteGoals = lazy(() => import("../Onboarding/CompleteGoals"));
 const PhilosophyGoals = lazy(() => import("../Onboarding/PhilosophyGoals"));
+const StartupOnboarding = lazy(() => import("../Onboarding/StartupFlow"));
+const RealtorsOnboarding = lazy(() => import("../Onboarding/RealtorsFlow"));
+const SyndicateOnboarding = lazy(() => import("../Onboarding/SyndicateFlow"));
 const AddAttachments = lazy(() => import("../Onboarding/AddAttachments"));
-const SyndicateLeadInfo = lazy(() => import("../Onboarding/SyndicateFlow"));
-const Startup = lazy(() => import("../Onboarding/StartupFlow"));
+
+/* ---### Post Onboarding ###--- */
+const StartupDashboard = lazy(() => import("../Onboarding/StartupFlow"));
+
+/* ---### Static ###--- */
 const PrivacyPolicy = lazy(() => import("../Policies/PrivacyPolicy"));
 const TermsAndConditions = lazy(() => import("../Policies/TermsAndConditions"));
 
-const AuthenticateRoute = (props: PropsWithChildren) => {
+const CHECK_LOGGED_IN = (props: PropsWithChildren) => {
   const { children } = props;
   const authToken: any = useSelector((state: RootState) => state.auth.value);
-
-  if (authToken) {
-    return <React.Fragment>{children}</React.Fragment>;
-  }
+  if (authToken) return <React.Fragment>{children}</React.Fragment>;
   return <Navigate to={RoutesEnums.LOGIN} replace />;
 };
 
-const AuthenticateAuthRoute = (props: PropsWithChildren | any) => {
+const CHECK_LOGGED_OUT = (props: PropsWithChildren | any) => {
   const { children, isVerify = false } = props;
   const user: any = useSelector((state: RootState) => state.user.value);
   const authToken: any = useSelector((state: RootState) => state.auth.value);
-
-  if (!isVerify && !authToken) {
-    return <React.Fragment>{children}</React.Fragment>;
-  }
-  else if (isVerify && !user?.profile_states?.account_confirmed) {
-    return <React.Fragment>{children}</React.Fragment>;
-  }
+  if (!isVerify && !authToken) return <React.Fragment>{children}</React.Fragment>;
+  else if (isVerify && !user?.profile_states?.account_confirmed) return <React.Fragment>{children}</React.Fragment>;
   return <Navigate to={RoutesEnums.WELCOME} replace />;
 };
 
-const AuthenticateRole = (props: PropsWithChildren | any) => {
+const GUARD_ROUTE = (props: PropsWithChildren | any) => {
   const { children } = props;
   const user: any = useSelector((state: RootState) => state.user.value);
-
-  if ((user && (user.type === props.role || props.role === KanzRoles.ALL) && (user.status === ApplicationStatus.OPENED || user.status === ApplicationStatus.REOPENED))) {
-    return <React.Fragment>{children}</React.Fragment>;
-  }
+  if ((user && (user.type === props.role || props.role === KanzRoles.ALL) && (user.status === ApplicationStatus.OPENED || user.status === ApplicationStatus.REOPENED))) return <React.Fragment>{children}</React.Fragment>;
   return <Navigate to={RoutesEnums.WELCOME} replace />;
 };
 
@@ -78,18 +76,11 @@ const RouterModule = () => {
       dispatch(saveLanguage(_language));
       if (event === "ar") document.documentElement.dir = "rtl";
       else document.documentElement.dir = "ltr";
-
       const element: HTMLElement | any = document.querySelector('html');
       element.style.fontFamily = event === "ar" ? "'Almarai', sans-serif" : "Roboto, 'Open Sans', 'Helvetica Neue', sans-serif";
-
       const toastElements = document.querySelectorAll('.Toastify__toast');
-      // Set the font-family for each Toastify notification
-      toastElements.forEach((elem: any) => {
-        elem.style.fontFamily = event === "ar" ? "'Almarai', sans-serif" : "Roboto, 'Open Sans', 'Helvetica Neue', sans-serif";
-      });
-
+      toastElements.forEach((elem: any) => elem.style.fontFamily = event === "ar" ? "'Almarai', sans-serif" : "Roboto, 'Open Sans', 'Helvetica Neue', sans-serif");
     } catch (error) {
-
     } finally {
       let timer = setTimeout(() => {
         setLoading(false);
@@ -101,92 +92,87 @@ const RouterModule = () => {
   return (
     loading ? (<Loader />) : (
       <Routes>
-        <Route path="/" element={
-          <Suspense fallback={<Loader />}><Home guard={authToken} /></Suspense>
-        } />
+        <Route path="/" element={<Suspense fallback={<Loader />}><Home guard={authToken} /></Suspense>} />
+
+        {/* Onboarding Routes */}
         <Route path={RoutesEnums.INVESTOR_DETAILS}
           element={
             <Suspense fallback={<Loader />}>
-              <AuthenticateRoute>
-                <AuthenticateRole role={KanzRoles.INVESTOR}><InvestorFlow guard={authToken} /></AuthenticateRole>
-              </AuthenticateRoute>
+              <CHECK_LOGGED_IN>
+                <GUARD_ROUTE role={KanzRoles.INVESTOR}><InvestorOnboarding guard={authToken} /></GUARD_ROUTE>
+              </CHECK_LOGGED_IN>
             </Suspense>
-          }
-        />
+          } />
         <Route path={`${RoutesEnums.START_UP}/:id`}
           element={
             <Suspense fallback={<Loader />}>
-              <AuthenticateRoute>
-                <AuthenticateRole role={KanzRoles.STARTUP}><Startup guard={authToken} /></AuthenticateRole>
-              </AuthenticateRoute>
+              <CHECK_LOGGED_IN>
+                <GUARD_ROUTE role={KanzRoles.STARTUP}><StartupOnboarding guard={authToken} /></GUARD_ROUTE>
+              </CHECK_LOGGED_IN>
             </Suspense>
-          }
-        />
-        <Route path={RoutesEnums.REALTOR_DETAILS}
-          element={
-            <Suspense fallback={<Loader />}>
-              <AuthenticateRoute>
-                <AuthenticateRole role={KanzRoles.REALTOR}><Realtors guard={authToken} /></AuthenticateRole>
-              </AuthenticateRoute>
-            </Suspense>
-          }
-        />
-        <Route path={RoutesEnums.LINKEDIN} element={<Suspense fallback={<Loader />}><LinkedInCallback /></Suspense>} />
-        <Route path={RoutesEnums.COMPLETE_DETAILS}
-          element={
-            <Suspense fallback={<Loader />}>
-              <AuthenticateRoute><CompleteDetails guard={authToken} /></AuthenticateRoute>
-            </Suspense>
-          }
-        />
-        <Route path={RoutesEnums.COMPLETE_GOALS}
-          element={
-            <Suspense fallback={<Loader />}>
-              <AuthenticateRoute>
-                <AuthenticateRole role={KanzRoles.INVESTOR}><CompleteGoals guard={authToken} /></AuthenticateRole>
-              </AuthenticateRoute>
-            </Suspense>
-          }
-        />
-        <Route path={`${RoutesEnums.PHILOSOPHY_GOALS}/:id`}
-          element={
-            <Suspense fallback={<Loader />}>
-              <AuthenticateRoute>
-                <AuthenticateRole role={KanzRoles.INVESTOR}><PhilosophyGoals guard={authToken} /></AuthenticateRole>
-              </AuthenticateRoute>
-            </Suspense>
-          }
-        />
-        <Route path={RoutesEnums.ADD_ATTACHMENTS}
-          element={
-            <Suspense fallback={<Loader />}>
-              <AuthenticateRoute>
-                <AuthenticateRole role={KanzRoles.ALL}><AddAttachments guard={authToken} /></AuthenticateRole>
-              </AuthenticateRoute>
-            </Suspense>
-          }
-        />
+          } />
         <Route path={`${RoutesEnums.SYNIDCATE_DETAILS}/:id`}
           element={
             <Suspense fallback={<Loader />}>
-              <AuthenticateRoute>
-                <AuthenticateRole role={KanzRoles.SYNDICATE}><SyndicateLeadInfo guard={authToken} /></AuthenticateRole>
-              </AuthenticateRoute>
+              <CHECK_LOGGED_IN>
+                <GUARD_ROUTE role={KanzRoles.SYNDICATE}><SyndicateOnboarding guard={authToken} /></GUARD_ROUTE>
+              </CHECK_LOGGED_IN>
             </Suspense>
-          }
-        />
+          } />
+        <Route path={RoutesEnums.REALTOR_DETAILS}
+          element={
+            <Suspense fallback={<Loader />}>
+              <CHECK_LOGGED_IN>
+                <GUARD_ROUTE role={KanzRoles.REALTOR}><RealtorsOnboarding guard={authToken} /></GUARD_ROUTE>
+              </CHECK_LOGGED_IN>
+            </Suspense>
+          } />
+        <Route path={RoutesEnums.LINKEDIN} element={<Suspense fallback={<Loader />}><LinkedInCallback /></Suspense>} />
+        <Route path={RoutesEnums.COMPLETE_DETAILS} element={
+          <Suspense fallback={<Loader />}>
+            <CHECK_LOGGED_IN><CompleteDetails guard={authToken} /></CHECK_LOGGED_IN>
+          </Suspense>
+        } />
+        <Route path={RoutesEnums.COMPLETE_GOALS}
+          element={
+            <Suspense fallback={<Loader />}>
+              <CHECK_LOGGED_IN>
+                <GUARD_ROUTE role={KanzRoles.INVESTOR}><CompleteGoals guard={authToken} /></GUARD_ROUTE>
+              </CHECK_LOGGED_IN>
+            </Suspense>
+          } />
+        <Route path={`${RoutesEnums.PHILOSOPHY_GOALS}/:id`}
+          element={
+            <Suspense fallback={<Loader />}>
+              <CHECK_LOGGED_IN>
+                <GUARD_ROUTE role={KanzRoles.INVESTOR}><PhilosophyGoals guard={authToken} /></GUARD_ROUTE>
+              </CHECK_LOGGED_IN>
+            </Suspense>
+          } />
+        <Route path={RoutesEnums.ADD_ATTACHMENTS}
+          element={
+            <Suspense fallback={<Loader />}>
+              <CHECK_LOGGED_IN>
+                <GUARD_ROUTE role={KanzRoles.ALL}><AddAttachments guard={authToken} /></GUARD_ROUTE>
+              </CHECK_LOGGED_IN>
+            </Suspense>
+          } />
+
+        {/* Authentication Routes */}
         <Route path={RoutesEnums.SIGNUP} element={
-          <Suspense fallback={<Loader />}> <AuthenticateAuthRoute><Signup guard={authToken} /></AuthenticateAuthRoute></Suspense>
+          <Suspense fallback={<Loader />}> <CHECK_LOGGED_OUT><Signup guard={authToken} /></CHECK_LOGGED_OUT></Suspense>
         } />
         <Route path={RoutesEnums.VERIFICATION} element={
-          <Suspense fallback={<Loader />}><AuthenticateAuthRoute isVerify={true}><Verification guard={authToken} /></AuthenticateAuthRoute></Suspense>
+          <Suspense fallback={<Loader />}><CHECK_LOGGED_OUT isVerify={true}><Verification guard={authToken} /></CHECK_LOGGED_OUT></Suspense>
         } />
         <Route path={RoutesEnums.LOGIN} element={
-          <Suspense fallback={<Loader />}><AuthenticateAuthRoute><Login guard={authToken} /></AuthenticateAuthRoute></Suspense>
+          <Suspense fallback={<Loader />}><CHECK_LOGGED_OUT><Login guard={authToken} /></CHECK_LOGGED_OUT></Suspense>
         } />
         <Route path={RoutesEnums.WELCOME} element={
-          <Suspense fallback={<Loader />}><AuthenticateRoute><Welcome guard={authToken} /></AuthenticateRoute></Suspense>
+          <Suspense fallback={<Loader />}><CHECK_LOGGED_IN><Welcome guard={authToken} /></CHECK_LOGGED_IN></Suspense>
         } />
+
+        {/* Static Routes */}
         <Route path={RoutesEnums.PRIVACY_POLICY} element={
           <Suspense fallback={<Loader />}><PrivacyPolicy /></Suspense>
         } />

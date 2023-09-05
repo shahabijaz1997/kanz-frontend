@@ -314,18 +314,14 @@ const AddAttachments = (props: any) => {
                 {language.modal.sub_2} <button className="text-blue-700" onClick={() => navigate(RoutesEnums.WELCOME)}>{language.modal.sub_3}</button> {language.modal.sub_4}
               </p>
             </div>
-            <Button
-              className="mt-8 w-[120px] h-9"
-              htmlType="button"
+            <Button className="mt-8 w-[120px] h-9" htmlType="button"
               onClick={() => {
                 setModalOpen(false);
                 localStorage.removeItem("investor-type");
                 localStorage.removeItem("accert");
                 navigate(RoutesEnums.WELCOME);
               }}
-            >
-              {language.buttons.continue}
-            </Button>
+            >{language.buttons.continue}</Button>
           </div>
         )}
       </Modal>

@@ -1,8 +1,8 @@
 export enum RoutesEnums {
-    INVESTOR_DETAILS="/investor-type",
-    REALTOR_DETAILS="/realtor-type",
-    START_UP ="/startup-type",
-    SYNIDCATE_DETAILS="/syndicate-lead",
+    INVESTOR_DETAILS="/investor-onboarding",
+    REALTOR_DETAILS="/realtor-onboarding",
+    START_UP ="/startup-onboarding",
+    SYNIDCATE_DETAILS="/syndicate-onboarding",
     COMPLETE_DETAILS="/complete-details",
     COMPLETE_GOALS="/complete-goals",
     PHILOSOPHY_GOALS="/philosophy-goals",
