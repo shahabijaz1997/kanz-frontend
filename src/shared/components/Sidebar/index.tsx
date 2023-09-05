@@ -61,7 +61,7 @@ const Sidebar = ({ type }: any) => {
                         sidebarData?.items?.map((item: any) => {
                             return (
                                 <li onClick={() => setSelected(item)}
-                                    className={`pl-[2rem] py-3 text-sm font-medium text-neutral-600 cursor-pointer transition-all hover:bg-sidebar-item-hover hover:border-sidebar-item-hover border-l-4 border-white ${selected?.id === item.id && "bg-sidebar-item-hover border-l-4 border-l-cyan-800"}`}>{item?.title}</li>
+                                    className={`pl-[2rem] py-3 text-sm font-medium text-neutral-600 cursor-pointer transition-all hover:bg-sidebar-item-hover hover:border-l-sidebar-item-hover border-l-4 border-white ${selected?.id === item.id && "bg-sidebar-item-hover border-l-4 border-l-cyan-800 hover:!border-l-cyan-800"}`}>{item?.title}</li>
                             )
                         })
                     )}

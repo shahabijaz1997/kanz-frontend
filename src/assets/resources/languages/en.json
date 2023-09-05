@@ -610,6 +610,12 @@
     },
     "v3": {
         "startup": {
+            "overview": {
+                "heading": "Deals",
+                "all": "All",
+                "raising": "Raising",
+                "closed": "Closed"
+            },
             "sidebar": {
                 "sidebar_title": "Deal Model",
                 "overview": "Overview",
@@ -618,6 +624,12 @@
                 "market_insights": "Market Insights",
                 "contacts": "Contacts"
             }
+        },
+        "common": {
+            "search": "Search"
+        },
+        "button": {
+            "new_deal": "Create New Deal"
         }
     }
 }
