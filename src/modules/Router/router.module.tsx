@@ -30,7 +30,7 @@ const SyndicateOnboarding = lazy(() => import("../Onboarding/SyndicateFlow"));
 const AddAttachments = lazy(() => import("../Onboarding/AddAttachments"));
 
 /* ---### Post Onboarding ###--- */
-const StartupDashboard = lazy(() => import("../Onboarding/StartupFlow"));
+const StartupDashboard = lazy(() => import("../Startup"));
 
 /* ---### Static ###--- */
 const PrivacyPolicy = lazy(() => import("../Policies/PrivacyPolicy"));
@@ -103,7 +103,7 @@ const RouterModule = () => {
               </CHECK_LOGGED_IN>
             </Suspense>
           } />
-        <Route path={`${RoutesEnums.START_UP}/:id`}
+        <Route path={`${RoutesEnums.STARTUP_DETAILS}/:id`}
           element={
             <Suspense fallback={<Loader />}>
               <CHECK_LOGGED_IN>
@@ -159,6 +159,14 @@ const RouterModule = () => {
           } />
 
         {/* Authentication Routes */}
+        <Route path={`${RoutesEnums.STARTUP_DETAILS}/:id`}
+          element={
+            <Suspense fallback={<Loader />}>
+              <CHECK_LOGGED_IN>
+                <GUARD_ROUTE role={KanzRoles.STARTUP}><StartupOnboarding guard={authToken} /></GUARD_ROUTE>
+              </CHECK_LOGGED_IN>
+            </Suspense>
+          } />
         <Route path={RoutesEnums.SIGNUP} element={
           <Suspense fallback={<Loader />}> <CHECK_LOGGED_OUT><Signup guard={authToken} /></CHECK_LOGGED_OUT></Suspense>
         } />
@@ -171,6 +179,17 @@ const RouterModule = () => {
         <Route path={RoutesEnums.WELCOME} element={
           <Suspense fallback={<Loader />}><CHECK_LOGGED_IN><Welcome guard={authToken} /></CHECK_LOGGED_IN></Suspense>
         } />
+
+        {/* Dashboard */}
+        <Route path={`${RoutesEnums.STARTUP_DASHBOARD}`}
+          element={
+            <Suspense fallback={<Loader />}>
+              {/* <CHECK_LOGGED_IN>
+                <GUARD_ROUTE role={KanzRoles.STARTUP}><StartupDashboard guard={authToken} /></GUARD_ROUTE>
+              </CHECK_LOGGED_IN> */}
+              <StartupDashboard />
+            </Suspense>
+          } />
 
         {/* Static Routes */}
         <Route path={RoutesEnums.PRIVACY_POLICY} element={

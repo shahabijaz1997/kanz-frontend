@@ -215,7 +215,7 @@ const StartupFlow = ({ }: any) => {
         navigate(RoutesEnums.ADD_ATTACHMENTS);
       else if (Number(step) === 1) {
         setStep(2);
-        navigate(`${RoutesEnums.START_UP}/${step + 1}`);
+        navigate(`${RoutesEnums.STARTUP_DETAILS}/${step + 1}`);
       }
       let { status: _status, data } = await getCompanyInformation(1, authToken);
       if (_status === 200) {
@@ -273,7 +273,7 @@ const StartupFlow = ({ }: any) => {
         <section className="w-full inline-flex items-center justify-between py-10">
           <Button className="h-[38px] w-[140px]" htmlType="button" type="outlined" onClick={() => {
             if (step === 1) navigate(RoutesEnums.WELCOME);
-            else navigate(`${RoutesEnums.START_UP}/1`);
+            else navigate(`${RoutesEnums.STARTUP_DETAILS}/1`);
           }}>
             {language?.buttons?.back}
           </Button>

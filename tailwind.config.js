@@ -33,7 +33,11 @@ module.exports = {
                 'cbc-check': '#F1F1F1',
                 'cbc-check-hover': '#DBDBDB',
                 'cbc-transparent': 'rgba(0, 0, 0, 0.0758)',
-                'cbc-auth': '#FBFBFB'
+                'cbc-auth': '#FBFBFB',
+                'sidebar-item-hover': '#0e2e350d'
+            },
+            borderColor: {
+                'sidebar-item-hover': '#0e2e350d'
             }
         },
     },

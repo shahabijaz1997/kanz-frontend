@@ -139,7 +139,7 @@ const AddAttachments = (props: any) => {
     } else if (metadata.role === KanzRoles.SYNDICATE) {
       navigate(`${RoutesEnums.SYNIDCATE_DETAILS}/2`);
     } else if (metadata.role === KanzRoles.STARTUP) {
-      navigate(`${RoutesEnums.START_UP}/2`);
+      navigate(`${RoutesEnums.STARTUP_DETAILS}/2`);
     } else {
       navigate(-1);
     }

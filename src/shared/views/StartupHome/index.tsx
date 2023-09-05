@@ -18,7 +18,7 @@ const StartupHome = ({ loading, language }: any) => {
       navigate(RoutesEnums.ADD_ATTACHMENTS);
     } else {
       navigate(
-        `${RoutesEnums.START_UP}/${profile_states.profile_current_step}`
+        `${RoutesEnums.STARTUP_DETAILS}/${profile_states.profile_current_step}`
       );
     }
   };
