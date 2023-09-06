@@ -20,37 +20,26 @@ const Stepper = ({ currentStep = 1, totalSteps = [{ id: 1 }, { id: 2 }, { id: 3 
     };
 
     return (
-        direction === "row" ? (
-            <div className={`flex items-center justify-center mb-7`}>
-                {React.Children.toArray(totalSteps?.map((step: any) => (
-                    <div className={`relative flex items-center ${currentStep === step?.id ? "text-green-500" : "text-gray-400"} 
-                    ${step?.id > 1 && orientation !== "rtl" && "ml-20 screen500:ml-7"}
-                    ${step?.id > 1 && orientation === "rtl" && "mr-20 screen500:ml-7"}
+        <div className={`flex items-center justify-center mb-7 ${direction !== "row" && "flex-col"}`}>
+            {React.Children.toArray(totalSteps?.map((step: any) => (
+                <div className={`relative flex items-center ${currentStep === step?.id ? "text-green-500" : "text-gray-400"} 
+                    ${step?.id > 1 && orientation !== "rtl" && (direction === "row" ? "ml-20 screen500:ml-7" : "mt-20 screen500:mt-7")}
+                    ${step?.id > 1 && orientation === "rtl" && (direction === "row" ? "mr-20 screen500:ml-7" : "screen500:ml-7")}
                     `}>
-                        {renderCircle(step)}
-                        {step?.id < totalSteps?.at(-1)?.id && <div className={`h-0.5 
-                        ${currentStep >= step?.id ? "bg-cyan-800" : "bg-neutral-200"} w-20 absolute top-3.5 ${orientation !== "rtl" ? "left-4.5 left-[100%]" : "right-4.5 right-[100%]"} screen500:w-7
-                        `} />}
-                    </div>
-                ))
-                )}
-            </div>
-        ) : (
-            <div className={`flex items-center justify-center flex-col`}>
-                {React.Children.toArray(totalSteps?.map((step: any) => (
-                    <div className={`relative flex items-center ${currentStep === step?.id ? "text-green-500" : "text-gray-400"} 
-                    ${step?.id > 1 && orientation !== "rtl" && "mt-20 screen500:ml-7"}
-                    ${step?.id > 1 && orientation === "rtl" && "screen500:ml-7"}
-                    `}>
-                        {renderCircle(step)}
-                        {step?.id < totalSteps?.at(-1)?.id && <div className={`h-20 w-0.5 absolute left-3.5
+                    {renderCircle(step)}
+                    {step?.id < totalSteps?.at(-1)?.id && (
+                        direction === "row" ? (<div className={`h-0.5 
+                            ${currentStep >= step?.id ? "bg-cyan-800" : "bg-neutral-200"} w-20 absolute top-3.5 ${orientation !== "rtl" ? "left-4.5 left-[100%]" : "right-4.5 right-[100%]"} screen500:w-7
+                            `} />) : (
+                            <div className={`h-20 w-0.5 absolute left-3.5
                         ${currentStep >= step?.id ? "bg-cyan-800" : "bg-neutral-200"} ${orientation !== "rtl" ? "top-[100%]" : "right-4.5 right-[100%]"} screen500:w-7
-                        `} />}
-                    </div>
-                ))
-                )}
-            </div>
-        )
+                        `} />
+                        )
+                    )}
+                </div>
+            ))
+            )}
+        </div>
     );
 }
 export default Stepper;
