@@ -10,15 +10,8 @@ import Table from "../../shared/components/Table";
 
 const columns = ['Name', 'Type', 'Status', 'Stage', 'Raised', 'Target'];
 
-const data = [
-    {
-        Name: 'John Doe',
-        Type: 'User',
-        Status: 'Active',
-        Stage: 'Seed',
-        Raised: "$ 550",
-        Target: "$ 10000",
-    },
+const data: any = [
+
 ];
 const Startup = ({ }: any) => {
     const language: any = useSelector((state: RootState) => state.language.value);
@@ -52,7 +45,7 @@ const Startup = ({ }: any) => {
                     </section>
 
                     <section className="mt-10">
-                        <Table columns={columns} data={data}  />
+                        <Table columns={columns} data={data} noDataNode={<Button className="absolute left-1/2 top-1/2 translate-x-[-50%] translate-y-[-50%]">{language?.v3?.button?.new_deal}</Button>} />
                     </section>
                 </section>
             </aside>

@@ -1,8 +1,8 @@
 import React from "react";
 
-const Table = ({ columns, data }: any) => {
+const Table = ({ columns, data, noDataNode }: any) => {
     return (
-        <section className="rounded-lg shadow-cs-5 border-[1px] border-neutral-200">
+        <section className="rounded-lg shadow-cs-5 border-[1px] border-neutral-200 min">
             <table className="min-w-full overflow-hidden rounded-lg bg-white">
                 <thead className="bg-neutral-50">
                     <tr>
@@ -16,22 +16,28 @@ const Table = ({ columns, data }: any) => {
                         )}
                     </tr>
                 </thead>
-                <tbody className="divide-y divide-gray-200">
-                    {React.Children.toArray(
-                        data.map((row: any) => (
-                            <tr>
-                                {columns.map((column: any, index: number) => (
-                                    <td  className={`px-3 py-4 text-sm font-medium text-gray-800 whitespace-nowrap ${index === columns.length - 1 && `text-right`}
-                                        }`}>
-                                        {row[column]}
-                                    </td>
-                                ))}
-                            </tr>
-                        ))
-                    )}
+                <tbody className={`relative divide-y divide-gray-200 ${data?.length === 0 && "h-[13rem]"}`}>
+                    {
+                        data?.length > 0 ? (
+                            React.Children.toArray(
+                                data.map((row: any) => (
+                                    <tr>
+                                        {columns.map((column: any, index: number) => (
+                                            <td className={`px-3 py-4 text-sm font-medium text-gray-800 whitespace-nowrap ${index === columns.length - 1 && `text-right`}
+                                                }`}>
+                                                {row[column]}
+                                            </td>
+                                        ))}
+                                    </tr>
+                                ))
+                            )
+                        ) : (noDataNode)
+
+                    }
                 </tbody>
             </table>
         </section>
+
     );
 }
 
