@@ -6,8 +6,20 @@ import { RootState } from "../../redux-toolkit/store/store";
 import SearchIcon from "../../ts-icons/searchIcon.svg";
 import React, { useState } from "react";
 import Button from "../../shared/components/Button";
-import { Table } from "../../shared/components/Table";
+import Table from "../../shared/components/Table";
 
+const columns = ['Name', 'Type', 'Status', 'Stage', 'Raised', 'Target'];
+
+const data = [
+    {
+        Name: 'John Doe',
+        Type: 'User',
+        Status: 'Active',
+        Stage: 'Seed',
+        Raised: "$ 550",
+        Target: "$ 10000",
+    },
+];
 const Startup = ({ }: any) => {
     const language: any = useSelector((state: RootState) => state.language.value);
     const [selectedTab, setSelectedTab] = useState();
@@ -32,14 +44,16 @@ const Startup = ({ }: any) => {
                                 </div>
 
                                 <ul className="inline-flex items-center">
-                                    {React.Children.toArray(tabs.map(tab => <li onClick={() => setSelectedTab(tab)} className={`py-2 px-3 text-g font-medium cursor-pointer rounded-md transition-all ${selectedTab === tab ? "text-neutral-900 bg-neutral-100" : "text-gray-500"} `}><small>{tab}</small> <span>(0)</span></li>))}
+                                    {React.Children.toArray(tabs.map(tab => <li onClick={() => setSelectedTab(tab)} className={`py-2 px-3 font-medium cursor-pointer rounded-md transition-all ${selectedTab === tab ? "text-neutral-900 bg-neutral-100" : "text-gray-500"} `}>{tab} &nbsp;(0)</li>))}
                                 </ul>
                             </span>
                         </div>
                         <Button className="w-[170px]">{language?.v3?.button?.new_deal}</Button>
                     </section>
 
-                    <Table />
+                    <section className="mt-10">
+                        <Table columns={columns} data={data}  />
+                    </section>
                 </section>
             </aside>
         </main>

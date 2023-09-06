@@ -1,1 +1,1 @@
-export  const CHECK_BOX = "checkbox";
+export const CHECK_BOX = "checkbox";

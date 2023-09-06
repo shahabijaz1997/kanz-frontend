@@ -7,7 +7,7 @@ import SampleImage_2 from "../../../../assets/example_id_2.png";
 import { getAllIndustries, getAllRegions } from "../../../../apis/bootstrap.api";
 import SearchedItems from "../../../../shared/components/SearchedItems";
 import CrossIcon from "../../../../ts-icons/crossIcon.svg";
-import { isEmpty } from "../../../../utils/object.util";
+import { isEmpty } from "../../../../utils/object.utils";
 import EditIcon from "../../../../ts-icons/editIcon.svg";
 
 const SyndicateStepper = ({ event, orientation, language, metadata, payload, file, onSetPayload, options, step, removeFile, setFile, setModalOpen, setFileType, authToken }: any) => {

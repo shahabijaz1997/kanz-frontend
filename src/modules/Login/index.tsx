@@ -16,7 +16,7 @@ import Button from "../../shared/components/Button";
 import { AntdInput } from "../../shared/components/Input";
 import LanguageDrodownWrapper from "../../shared/views/LanguageDrodownWrapper";
 import { saveEvent } from "../../redux-toolkit/slicer/event.slicer";
-import { isEmpty } from "../../utils/object.util";
+import { isEmpty } from "../../utils/object.utils";
 import { RoutesEnums } from "../../enums/routes.enum";
 
 type FormValues = {

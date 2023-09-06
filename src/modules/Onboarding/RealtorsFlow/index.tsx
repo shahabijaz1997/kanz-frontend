@@ -14,7 +14,7 @@ import { toastUtil } from "../../../utils/toast.utils";
 import { getRealtorInformation, postRealtorInformation } from "../../../apis/realtor.api";
 import Loader from "../../../shared/views/Loader";
 import { ApplicationStatus } from "../../../enums/types.enum";
-import { isEmpty } from "../../../utils/object.util";
+import { isEmpty } from "../../../utils/object.utils";
 import { KanzRoles } from "../../../enums/roles.enum";
 import { RoutesEnums } from "../../../enums/routes.enum";
 import { saveUserMetaData } from "../../../redux-toolkit/slicer/metadata.slicer";
