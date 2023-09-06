@@ -625,6 +625,7 @@
                 "contacts": "Contacts"
             },
             "create_deal": {
+                "title": "Create Deal",
                 "stage": "stage",
                 "instrument": "instrument",
                 "round_size": "Round Size",
