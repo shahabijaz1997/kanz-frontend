@@ -3,51 +3,54 @@ import CheckIcon from "../../../ts-icons/CheckIcon.svg";
 import { useSelector } from "react-redux";
 import { RootState } from "../../../redux-toolkit/store/store";
 
-const Stepper = ({ currentStep = 1, totalSteps = 5 }: any) => {
+const Stepper = ({ currentStep = 1, totalSteps = [{ id: 1 }, { id: 2 }, { id: 3 }, { id: 4 }, { id: 5 }], direction = "row" }: any) => {
     const orientation: any = useSelector((state: RootState) => state.orientation.value);
-    const steps: number[] = [];
-    for (let i = 1; i <= totalSteps; i++) steps.push(i);
+    const renderCircle = (step: any) => {
+        let circle;
+        if (step?.id <= currentStep) circle = <div className="h-8 w-8 rounded-full flex items-center justify-center bg-cyan-800"><CheckIcon stroke="#fff" /></div>
+        else if ((step?.id - currentStep) === 1) circle = <div className="h-8 w-8 rounded-full flex items-center justify-center border-2 border-cyan-800"><div className="h-2 w-2 bg-cyan-800 rounded-full"></div></div>
+        else circle = <div className="h-8 w-8 rounded-full flex items-center justify-center border-2 border-neutral-200"></div>
 
-    const renderCircle = (step: number) => {
-        if (step <= currentStep) {
-            return (
-                <div className="h-8 w-8 rounded-full flex items-center justify-center bg-cyan-800">
-                    <CheckIcon stroke="#fff" />
-                </div>
-            )
-        }
-        else if ((step - currentStep) === 1) {
-            return (
-                <div className="h-8 w-8 rounded-full flex items-center justify-center border-2 border-cyan-800">
-                    <div className="h-2 w-2 bg-cyan-800 rounded-full"></div>
-                </div>
-            )
-        }
-        else {
-            return (
-                <div className="h-8 w-8 rounded-full flex items-center justify-center border-2 border-neutral-200">
-                </div>
-            )
-        }
-
+        return (
+            <span className="relative">
+                {circle}
+                {step?.text && <p className={`absolute uppercase text-xs font-bold text-cyan-800 ${direction === "row" ? "" : "top-1/2 translate-y-[-50%] left-[160%] w-[200px]"}`}>{step.text}</p>}
+            </span>
+        )
     };
 
     return (
-        <div className={`flex items-center justify-center mb-7`}>
-            {React.Children.toArray(
-                steps.map(step => (
-                    <div className={`relative flex items-center ${currentStep === step ? "text-green-500" : "text-gray-400"} 
-                    ${step > 1 && orientation !== "rtl" && "ml-20 screen500:ml-7"}
-                    ${step > 1 && orientation === "rtl" && "mr-20 screen500:ml-7"}
+        direction === "row" ? (
+            <div className={`flex items-center justify-center mb-7`}>
+                {React.Children.toArray(totalSteps?.map((step: any) => (
+                    <div className={`relative flex items-center ${currentStep === step?.id ? "text-green-500" : "text-gray-400"} 
+                    ${step?.id > 1 && orientation !== "rtl" && "ml-20 screen500:ml-7"}
+                    ${step?.id > 1 && orientation === "rtl" && "mr-20 screen500:ml-7"}
                     `}>
                         {renderCircle(step)}
-                        {step < totalSteps && <div className={`h-0.5 
-                        ${currentStep >= step ? "bg-cyan-800" : "bg-neutral-200"} w-20 absolute top-3.5 ${orientation !== "rtl" ? "left-4.5 left-[100%]" : "right-4.5 right-[100%]"} screen500:w-7
+                        {step?.id < totalSteps?.at(-1)?.id && <div className={`h-0.5 
+                        ${currentStep >= step?.id ? "bg-cyan-800" : "bg-neutral-200"} w-20 absolute top-3.5 ${orientation !== "rtl" ? "left-4.5 left-[100%]" : "right-4.5 right-[100%]"} screen500:w-7
                         `} />}
                     </div>
                 ))
-            )}
-        </div>
+                )}
+            </div>
+        ) : (
+            <div className={`flex items-center justify-center flex-col`}>
+                {React.Children.toArray(totalSteps?.map((step: any) => (
+                    <div className={`relative flex items-center ${currentStep === step?.id ? "text-green-500" : "text-gray-400"} 
+                    ${step?.id > 1 && orientation !== "rtl" && "mt-20 screen500:ml-7"}
+                    ${step?.id > 1 && orientation === "rtl" && "screen500:ml-7"}
+                    `}>
+                        {renderCircle(step)}
+                        {step?.id < totalSteps?.at(-1)?.id && <div className={`h-20 w-0.5 absolute left-3.5
+                        ${currentStep >= step?.id ? "bg-cyan-800" : "bg-neutral-200"} ${orientation !== "rtl" ? "top-[100%]" : "right-4.5 right-[100%]"} screen500:w-7
+                        `} />}
+                    </div>
+                ))
+                )}
+            </div>
+        )
     );
 }
 export default Stepper;

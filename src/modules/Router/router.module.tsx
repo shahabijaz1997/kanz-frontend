@@ -7,7 +7,7 @@ import loadLanguage from "../../utils/load-language.utils";
 import Loader from "../../shared/views/Loader";
 import { KanzRoles } from "../../enums/roles.enum";
 import { ApplicationStatus } from "../../enums/types.enum";
-import { RoutesEnums } from "../../enums/routes.enum";
+import { RoutesEnums, StartupRoutes } from "../../enums/routes.enum";
 import { LinkedInCallback } from "react-linkedin-login-oauth2";
 
 /* --- Modules --- */
@@ -31,6 +31,7 @@ const AddAttachments = lazy(() => import("../Onboarding/AddAttachments"));
 
 /* ---### Post Onboarding ###--- */
 const StartupDashboard = lazy(() => import("../Startup"));
+const CreateDeal = lazy(() => import("../Startup/CreateDeal"));
 
 /* ---### Static ###--- */
 const PrivacyPolicy = lazy(() => import("../Policies/PrivacyPolicy"));
@@ -188,6 +189,15 @@ const RouterModule = () => {
                 <GUARD_ROUTE role={KanzRoles.STARTUP}><StartupDashboard guard={authToken} /></GUARD_ROUTE>
               </CHECK_LOGGED_IN> */}
               <StartupDashboard />
+            </Suspense>
+          } />
+        <Route path={`${StartupRoutes.CREATE_DEAL}/:id`}
+          element={
+            <Suspense fallback={<Loader />}>
+              {/* <CHECK_LOGGED_IN>
+                <GUARD_ROUTE role={KanzRoles.STARTUP}><StartupDashboard guard={authToken} /></GUARD_ROUTE>
+              </CHECK_LOGGED_IN> */}
+              <CreateDeal />
             </Suspense>
           } />
 

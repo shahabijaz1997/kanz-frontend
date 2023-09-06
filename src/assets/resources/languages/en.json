@@ -623,6 +623,15 @@
                 "data_rooms": "Data Rooms",
                 "market_insights": "Market Insights",
                 "contacts": "Contacts"
+            },
+            "create_deal": {
+                "stage": "stage",
+                "instrument": "instrument",
+                "round_size": "Round Size",
+                "attachments": "Attachments",
+                "terms": "Terms",
+                "additional_detail": "Additional Details",
+                "review": "Review"
             }
         },
         "common": {

@@ -26,6 +26,7 @@ const Questionare = ({ step, returnSuccessRedirection }: any) => {
   const philosophyData: any = useSelector((state: RootState) => state.philosophy.value);
   const [isOpen, setOpen]: any = useState("");
   const [questions, setQuestions]: any = useState([]);
+  const [totalSteps, setTotalSteps] = useState();
   const [page, setPage] = useState(1);
   const [selected]: any = useState({});
   const [loading, setLoading]: any = useState(true);
@@ -44,6 +45,10 @@ const Questionare = ({ step, returnSuccessRedirection }: any) => {
       const { status, data }: any = await getInvestmentPhilisophyQuestions(pg, authToken);
       if (status === 200) {
         setQuestions(data?.status?.data);
+        let steps: any = [];
+        for (let i = 1; i <= data?.status?.data?.total_steps; i++)
+          steps.push({ id: i });
+        setTotalSteps(steps);
         dispatch(savePhilosophyData(data?.status?.data));
         setPage(pg);
       }
@@ -295,7 +300,7 @@ const Questionare = ({ step, returnSuccessRedirection }: any) => {
 
   return (
     <aside className="w-full flex items-center justify-center flex-col pt-12 pb-5">
-      <Stepper currentStep={step - 1} totalSteps={questions?.total_steps} />
+      <Stepper currentStep={step - 1} totalSteps={totalSteps} />
       {loading ? (
         <div className="absolute left-0 top-0 w-full h-full grid place-items-center" style={{ backgroundColor: "rgba(255, 255, 255, 1)", zIndex: 50 }} >
           <Spinner />

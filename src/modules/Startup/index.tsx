@@ -1,4 +1,5 @@
 import { useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 import { KanzRoles } from "../../enums/roles.enum";
 import Header from "../../shared/components/Header";
 import Sidebar from "../../shared/components/Sidebar";
@@ -7,6 +8,7 @@ import SearchIcon from "../../ts-icons/searchIcon.svg";
 import React, { useState } from "react";
 import Button from "../../shared/components/Button";
 import Table from "../../shared/components/Table";
+import { StartupRoutes } from "../../enums/routes.enum";
 
 const columns = ['Name', 'Type', 'Status', 'Stage', 'Raised', 'Target'];
 
@@ -14,6 +16,7 @@ const data: any = [
 
 ];
 const Startup = ({ }: any) => {
+    const navigate = useNavigate();
     const language: any = useSelector((state: RootState) => state.language.value);
     const [selectedTab, setSelectedTab] = useState();
     const [tabs] = useState([language?.v3?.startup?.overview?.all, language?.v3?.startup?.overview?.raising, language?.v3?.startup?.overview?.closed]);
@@ -41,11 +44,11 @@ const Startup = ({ }: any) => {
                                 </ul>
                             </span>
                         </div>
-                        <Button className="w-[170px]">{language?.v3?.button?.new_deal}</Button>
+                        <Button onClick={()=>navigate(`${StartupRoutes.CREATE_DEAL}/1`)} className="w-[170px]">{language?.v3?.button?.new_deal}</Button>
                     </section>
 
                     <section className="mt-10">
-                        <Table columns={columns} data={data} noDataNode={<Button className="absolute left-1/2 top-1/2 translate-x-[-50%] translate-y-[-50%]">{language?.v3?.button?.new_deal}</Button>} />
+                        <Table columns={columns} data={data} noDataNode={<Button onClick={()=>navigate(`${StartupRoutes.CREATE_DEAL}/1`)} className="absolute left-1/2 top-1/2 translate-x-[-50%] translate-y-[-50%]">{language?.v3?.button?.new_deal}</Button>} />
                     </section>
                 </section>
             </aside>

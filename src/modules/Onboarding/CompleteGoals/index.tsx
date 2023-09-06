@@ -17,7 +17,7 @@ import { ApplicationStatus } from "../../../enums/types.enum";
 import Button from "../../../shared/components/Button";
 import { KanzRoles } from "../../../enums/roles.enum";
 import { RoutesEnums } from "../../../enums/routes.enum";
-import { FinancialModal } from "../../../shared/types/definations";
+import { FinancialModal } from "../../../interfaces/types/definitions.interface";
 import { saveUserMetaData } from "../../../redux-toolkit/slicer/metadata.slicer";
 
 const CompleteGoals = ({ }: any) => {

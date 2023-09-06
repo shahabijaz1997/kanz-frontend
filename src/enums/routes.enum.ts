@@ -23,4 +23,5 @@ export enum StartupRoutes {
     DATA_ROOMS= "/data-rooms",
     MARKET_INSIGHTS= "/market-insights",
     CONTACTS= "/contacts",
+    CREATE_DEAL= "/create-deal",
 }
