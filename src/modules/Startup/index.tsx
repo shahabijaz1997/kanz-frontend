@@ -9,6 +9,8 @@ import React, { useState } from "react";
 import Button from "../../shared/components/Button";
 import Table from "../../shared/components/Table";
 import { StartupRoutes } from "../../enums/routes.enum";
+import Modal from "../../shared/components/Modal";
+import CrossIcon from "../../ts-icons/crossIcon.svg";
 
 const columns = ['Name', 'Type', 'Status', 'Stage', 'Raised', 'Target'];
 
@@ -19,6 +21,7 @@ const Startup = ({ }: any) => {
     const navigate = useNavigate();
     const language: any = useSelector((state: RootState) => state.language.value);
     const [selectedTab, setSelectedTab] = useState();
+    const [modalOpen, setModalOpen] = useState(false);
     const [tabs] = useState([language?.v3?.startup?.overview?.all, language?.v3?.startup?.overview?.raising, language?.v3?.startup?.overview?.closed]);
 
     return (
@@ -44,14 +47,28 @@ const Startup = ({ }: any) => {
                                 </ul>
                             </span>
                         </div>
-                        <Button onClick={()=>navigate(`${StartupRoutes.CREATE_DEAL}/1`)} className="w-[170px]">{language?.v3?.button?.new_deal}</Button>
+                        <Button onClick={() => setModalOpen(true)} className="w-[170px]">{language?.v3?.button?.new_deal}</Button>
                     </section>
 
                     <section className="mt-10">
-                        <Table columns={columns} data={data} noDataNode={<Button onClick={()=>navigate(`${StartupRoutes.CREATE_DEAL}/1`)} className="absolute left-1/2 top-1/2 translate-x-[-50%] translate-y-[-50%]">{language?.v3?.button?.new_deal}</Button>} />
+                        <Table columns={columns} data={data} noDataNode={<Button onClick={() => setModalOpen(true)} className="absolute left-1/2 top-1/2 translate-x-[-50%] translate-y-[-50%]">{language?.v3?.button?.new_deal}</Button>} />
                     </section>
                 </section>
             </aside>
+
+            <Modal show={modalOpen}>
+                <div className="relative p-12 rounded-md shadow-cs-1 flex flex-col items-center w-full bg-white outline-none focus:outline-none screen800:px-3">
+                    <div className="rounded-md h-8 w-8 inline-grid place-items-center cursor-pointer absolute right-2 top-2">
+                        <CrossIcon stroke="#171717" className="w-6 h-6" onClick={() => setModalOpen(false)} />
+                    </div>
+
+                    <aside>
+                        <h2 className="font-bold text-xl text-center text-neutral-900">{language?.v3?.common?.disclaimer}</h2>
+                        <p className="text-sm font-normal text-center text-neutral-500 mt-8 mb-12">{language?.v3?.common?.disclaimer_desc}</p>
+                        <Button onClick={() => navigate(`${StartupRoutes.CREATE_DEAL}/1`)}>{language?.buttons?.continue}</Button>
+                    </aside>
+                </div>
+            </Modal>
         </main>
     );
 };

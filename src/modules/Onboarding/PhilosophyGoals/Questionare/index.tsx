@@ -13,7 +13,7 @@ import HorionGraph from "../../../../assets/investment_horizon_graph.png";
 import Button from "../../../../shared/components/Button";
 import { KanzRoles } from "../../../../enums/roles.enum";
 import { RoutesEnums } from "../../../../enums/routes.enum";
-import { saveAnswer, savePhilosophyData } from "../../../../redux-toolkit/slicer/philosophy.slicer";
+import { saveAnswer, saveQuestionnaire } from "../../../../redux-toolkit/slicer/philosophy.slicer";
 import { filterObjectsByTrueValue } from "../../../../utils/object.utils";
 
 const Questionare = ({ step, returnSuccessRedirection }: any) => {
@@ -23,7 +23,7 @@ const Questionare = ({ step, returnSuccessRedirection }: any) => {
   const language: any = useSelector((state: RootState) => state.language.value);
   const authToken: any = useSelector((state: RootState) => state.auth.value);
   const event: any = useSelector((state: RootState) => state.event.value);
-  const philosophyData: any = useSelector((state: RootState) => state.philosophy.value);
+  const philosophyData: any = useSelector((state: RootState) => state.questionnaire.value);
   const [isOpen, setOpen]: any = useState("");
   const [questions, setQuestions]: any = useState([]);
   const [totalSteps, setTotalSteps] = useState();
@@ -49,7 +49,7 @@ const Questionare = ({ step, returnSuccessRedirection }: any) => {
         for (let i = 1; i <= data?.status?.data?.total_steps; i++)
           steps.push({ id: i });
         setTotalSteps(steps);
-        dispatch(savePhilosophyData(data?.status?.data));
+        dispatch(saveQuestionnaire(data?.status?.data));
         setPage(pg);
       }
     } catch (error: any) {
