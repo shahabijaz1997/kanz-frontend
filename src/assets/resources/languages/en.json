@@ -612,9 +612,14 @@
         "startup": {
             "overview": {
                 "heading": "Deals",
+                "heading_2": "Overview",
                 "all": "All",
                 "raising": "Raising",
-                "closed": "Closed"
+                "closed": "Closed",
+                "total": "Total Raised",
+                "committed": "Committed",
+                "investors": "Investors",
+                "rounds": "Rounds"
             },
             "sidebar": {
                 "sidebar_title": "Deal Model",

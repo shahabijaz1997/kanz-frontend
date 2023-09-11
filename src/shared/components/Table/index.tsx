@@ -2,7 +2,7 @@ import React from "react";
 
 const Table = ({ columns, data, noDataNode }: any) => {
     return (
-        <section className="rounded-lg shadow-cs-5 border-[1px] border-neutral-200 min">
+        <section className="rounded-lg shadow-cs-5 border-[1px] border-neutral-200">
             <table className="min-w-full overflow-hidden rounded-lg bg-white">
                 <thead className="bg-neutral-50">
                     <tr>
