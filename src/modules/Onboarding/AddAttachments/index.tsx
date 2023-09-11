@@ -172,11 +172,9 @@ const AddAttachments = (props: any) => {
               <section className="flex items-start justify-center flex-col mt-8">
                 <form className="pt-8 mb-4 w-full">
                   {React.Children.toArray(
-                    attachmentData.map((item: any, index: number) => {
+                    attachmentData.map((item: any) => {
                       return item?.attachment_url ? (
-                        <div 
-                        key={index}
-                        className="mb-4 w-full select-none content-center bg-cbc-grey-sec p-4 rounded-md">
+                        <div className="mb-4 w-full select-none content-center bg-cbc-grey-sec p-4 rounded-md">
                           <div className="block text-neutral-700 text-base font-medium">
                             <span className="inline-flex w-full items-center justify-between">
                               <span className="inline-flex flex-col">
