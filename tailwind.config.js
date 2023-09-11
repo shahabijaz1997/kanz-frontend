@@ -24,7 +24,8 @@ module.exports = {
             },
             colors: {
                 'cc-black': '#0E2E35',
-                'cc-blue': '#2D9CDB'
+                'cc-blue': '#2D9CDB',
+                'cc-gray': '#828282'
             },
             backgroundColor:{
                 'cbc-1': '#FCFCFC',

@@ -643,10 +643,13 @@
         "common": {
             "search": "Search",
             "disclaimer": "Disclaimer",
+            "deal": "Deal",
+            "noData": "No Data Available",
             "disclaimer_desc": "Lorem ipsum dolor sit amet consectetur, adipisicing elit. Repudiandae quidem libero impedit voluptatum quasi delectus, fuga in aliquid deserunt exercitationem explicabo asperiores, dolorem veritatis maiores, illo vitae officiis sapiente? Est?"
         },
         "button": {
-            "new_deal": "Create New Deal"
+            "new_deal": "Create New Deal",
+            "invite": "Invite"
         }
     }
 }
