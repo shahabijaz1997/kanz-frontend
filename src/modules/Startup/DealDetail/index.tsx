@@ -7,10 +7,12 @@ import Sidebar from "../../../shared/components/Sidebar";
 import Chevrond from "../../../ts-icons/chevrond.svg";
 import Button from "../../../shared/components/Button";
 import DealTable from "../../../shared/components/DealTable";
+import CustomDropdown from "../../../shared/components/CustomDropdown";
+import MenuIcon from "../../../ts-icons/menuIcon.svg";
 
 const DealDetail = ({ }: any) => {
     const language: any = useSelector((state: RootState) => state.language.value);
-    const [tabs] = useState(["Investors", "Details", "Documents", "Existing SAFE/Note Holders", "Activity"]);
+    const tabs = ["Investors", "Details", "Documents", "Existing SAFE/Note Holders", "Activity"];
     const [selected, setSelected]: any = useState(tabs[0]);
 
     return (
@@ -21,14 +23,17 @@ const DealDetail = ({ }: any) => {
             <aside className="w-full h-full flex items-start justify-start">
                 <Sidebar type={KanzRoles.STARTUP} />
                 <section className="bg-cbc-auth h-full p-[5rem]" style={{ width: "calc(100% - 250px)" }}>
-                    <span className="inline-flex gap-2">
-                        <Chevrond stroke="#000" className="rotate-90 w-6 h-6" />
+                    <span className="inline-flex items-center gap-2 relative top-[-25px]">
+                        <Chevrond stroke="#000" className="rotate-90 w-4 h-4" />
                         <small className="text-neutral-500 text-sm font-medium">{language?.v3?.common?.deal}</small>
                     </span>
 
-                    <section className="inline-flex justify-between items-center w-full">
-                        <h1 className="text-black font-medium text-2xl mb-2">Angle Round</h1>
-                        <Button onClick={() => { }} className="w-[80px]">{language?.v3?.button?.invite}</Button>
+                    <section className="inline-flex justify-between items-center w-full mb-4">
+                        <h1 className="text-black font-medium text-2xl">Angel Round</h1>
+                        <span className="inline-flex items-center gap-2">
+                            <Button onClick={() => { }} className="w-[80px]">{language?.v3?.button?.invite}</Button>
+                            <div className="bg-white rounded-md border-neutral-300 border-[1px] inline-flex items-center justify-center"><CustomDropdown className="px-5 py-3" mainNode={<MenuIcon />} /></div>
+                        </span>
                     </section>
 
                     <section className="mt-1 mb-16">
