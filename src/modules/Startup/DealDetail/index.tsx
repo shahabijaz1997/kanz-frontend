@@ -6,15 +6,19 @@ import Header from "../../../shared/components/Header";
 import Sidebar from "../../../shared/components/Sidebar";
 import Chevrond from "../../../ts-icons/chevrond.svg";
 import Button from "../../../shared/components/Button";
-import DealTable from "../../../shared/components/DealTable";
 import CustomDropdown from "../../../shared/components/CustomDropdown";
 import MenuIcon from "../../../ts-icons/menuIcon.svg";
+import DealInvestors from "./DealInvestors";
+import DealTable from "../../../shared/components/DealTable";
+import DealDetails from "./DealDetails";
+import DocumentDetails from "./DocumentDetails";
+import NoteDetails from "./NoteDetails";
+import ActivityDetails from "./ActivityDetails";
 
 const DealDetail = ({ }: any) => {
     const language: any = useSelector((state: RootState) => state.language.value);
-    const tabs = ["Investors", "Details", "Documents", "Existing SAFE/Note Holders", "Activity"];
+    const tabs = [{ id: 1, title: "Investors" }, { id: 2, title: "Details" }, { id: 3, title: "Documents" }, { id: 4, title: "Existing SAFE/Note Holders" }, { id: 5, title: "Activity" }];
     const [selected, setSelected]: any = useState(tabs[0]);
-
     return (
         <main className="h-full max-h-full overflow-y-auto">
             <section>
@@ -35,7 +39,6 @@ const DealDetail = ({ }: any) => {
                             <div className="bg-white rounded-md border-neutral-300 border-[1px] inline-flex items-center justify-center"><CustomDropdown className="px-5 py-3" mainNode={<MenuIcon />} /></div>
                         </span>
                     </section>
-
                     <section className="mt-1 mb-16">
                         <DealTable />
                     </section>
@@ -43,18 +46,20 @@ const DealDetail = ({ }: any) => {
                     <section>
                         <ul className="flex border-neutral-200 border-b-[1px]">
                             {React.Children.toArray(
-                                tabs.map(tab => <li className={`${selected === tab ? "border-cyan-800 border-b-[1px] text-cyan-800" : "text-neutral-500"} cursor-pointer font-medium text-sm py-4 mr-9 px-2 transition-all`} onClick={() => setSelected(tab)}>{tab}</li>)
+                                tabs.map(tab => <li className={`${selected?.id === tab?.id ? "border-cyan-800 border-b-[1px] text-cyan-800" : "text-neutral-500"} cursor-pointer font-medium text-sm py-4 mr-9 px-2 transition-all`} onClick={() => setSelected(tab)}>{tab.title}</li>)
                             )}
                         </ul>
 
                         <div className="mt-10 mb-4">
-                            <h2 className="text-black text-xl font-medium">{selected}</h2>
-                        </div>
-
-                        <div className="rounded-md bg-white border-[1px] border-neutral-200 overflow-hidden p-8">
-                            <p className="text-cc-gray text-xl font-medium text-center w-full py-[6rem]">{language?.v3?.common?.noData}</p>
+                            <h2 className="text-black text-xl font-medium">{selected?.title}</h2>
                         </div>
                     </section>
+
+                   {selected?.id === 1 && <DealInvestors />}
+                   {selected?.id === 2 && <DealDetails />}
+                   {selected?.id === 3 && <DocumentDetails />}
+                   {selected?.id === 4 && <NoteDetails />}
+                   {selected?.id === 5 && <ActivityDetails />}
                 </section>
             </aside>
         </main>

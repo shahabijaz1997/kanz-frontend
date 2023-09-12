@@ -640,6 +640,9 @@
                 "review": "Review"
             }
         },
+        "deal": {
+            "status": "Deal Status"
+        },
         "common": {
             "search": "Search",
             "disclaimer": "Disclaimer",
