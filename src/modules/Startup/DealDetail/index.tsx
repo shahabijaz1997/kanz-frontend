@@ -14,8 +14,10 @@ import DealDetails from "./DealDetails";
 import DocumentDetails from "./DocumentDetails";
 import NoteDetails from "./NoteDetails";
 import ActivityDetails from "./ActivityDetails";
+import { useNavigate } from "react-router-dom";
 
 const DealDetail = ({ }: any) => {
+    const navigate = useNavigate();
     const language: any = useSelector((state: RootState) => state.language.value);
     const tabs = [{ id: 1, title: "Investors" }, { id: 2, title: "Details" }, { id: 3, title: "Documents" }, { id: 4, title: "Existing SAFE/Note Holders" }, { id: 5, title: "Activity" }];
     const [selected, setSelected]: any = useState(tabs[0]);
@@ -27,7 +29,7 @@ const DealDetail = ({ }: any) => {
             <aside className="w-full h-full flex items-start justify-start">
                 <Sidebar type={KanzRoles.STARTUP} />
                 <section className="bg-cbc-auth h-full p-[5rem]" style={{ width: "calc(100% - 250px)" }}>
-                    <span className="inline-flex items-center gap-2 relative top-[-25px]">
+                    <span className="inline-flex items-center gap-2 relative top-[-25px] cursor-pointer" onClick={() => navigate(-1)}>
                         <Chevrond stroke="#000" className="rotate-90 w-4 h-4" />
                         <small className="text-neutral-500 text-sm font-medium">{language?.v3?.common?.deal}</small>
                     </span>
@@ -55,11 +57,11 @@ const DealDetail = ({ }: any) => {
                         </div>
                     </section>
 
-                   {selected?.id === 1 && <DealInvestors />}
-                   {selected?.id === 2 && <DealDetails />}
-                   {selected?.id === 3 && <DocumentDetails />}
-                   {selected?.id === 4 && <NoteDetails />}
-                   {selected?.id === 5 && <ActivityDetails />}
+                    {selected?.id === 1 && <DealInvestors />}
+                    {selected?.id === 2 && <DealDetails />}
+                    {selected?.id === 3 && <DocumentDetails />}
+                    {selected?.id === 4 && <NoteDetails />}
+                    {selected?.id === 5 && <ActivityDetails />}
                 </section>
             </aside>
         </main>

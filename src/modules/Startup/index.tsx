@@ -14,10 +14,8 @@ import CrossIcon from "../../ts-icons/crossIcon.svg";
 import DealTable from "../../shared/components/DealTable";
 
 const columns = ['Name', 'Type', 'Status', 'Stage', 'Raised', 'Target'];
+const data: any = [];
 
-const data: any = [
-
-];
 const Startup = ({ }: any) => {
     const navigate = useNavigate();
     const language: any = useSelector((state: RootState) => state.language.value);

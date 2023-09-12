@@ -33,6 +33,7 @@ const AddAttachments = lazy(() => import("../Onboarding/AddAttachments"));
 const StartupDashboard = lazy(() => import("../Startup"));
 const CreateDeal = lazy(() => import("../Startup/CreateDeal"));
 const DealDetail = lazy(() => import("../Startup/DealDetail"));
+const InvestorUpdates = lazy(() => import("../InvestorUpdates"));
 
 /* ---### Static ###--- */
 const PrivacyPolicy = lazy(() => import("../Policies/PrivacyPolicy"));
@@ -209,6 +210,16 @@ const RouterModule = () => {
                 <GUARD_ROUTE role={KanzRoles.STARTUP}><StartupDashboard guard={authToken} /></GUARD_ROUTE>
               </CHECK_LOGGED_IN> */}
               <DealDetail />
+            </Suspense>
+          } />
+        
+        <Route path={`${StartupRoutes.INVESTOR_UPDATES}`}
+          element={
+            <Suspense fallback={<Loader />}>
+              {/* <CHECK_LOGGED_IN>
+                <GUARD_ROUTE role={KanzRoles.STARTUP}><StartupDashboard guard={authToken} /></GUARD_ROUTE>
+              </CHECK_LOGGED_IN> */}
+              <InvestorUpdates />
             </Suspense>
           } />
 

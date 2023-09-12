@@ -652,7 +652,8 @@
         },
         "button": {
             "new_deal": "Create New Deal",
-            "invite": "Invite"
+            "invite": "Invite",
+            "new" :"New"
         }
     }
 }
