@@ -31,6 +31,7 @@ const AddAttachments = lazy(() => import("../Onboarding/AddAttachments"));
 
 /* ---### Post Onboarding ###--- */
 const StartupDashboard = lazy(() => import("../Startup"));
+const RealtorDashboard = lazy(() => import("../Realtor"));
 const CreateDeal = lazy(() => import("../CreateDeal"));
 const DealDetail = lazy(() => import("../Startup/DealDetail"));
 const InvestorUpdates = lazy(() => import("../InvestorUpdates"));
@@ -194,6 +195,15 @@ const RouterModule = () => {
                 <GUARD_ROUTE role={KanzRoles.STARTUP}><StartupDashboard guard={authToken} /></GUARD_ROUTE>
               </CHECK_LOGGED_IN> */}
               <StartupDashboard />
+            </Suspense>
+          } />
+        <Route path={`${RoutesEnums.REALTOR_DASHBOARD}`}
+          element={
+            <Suspense fallback={<Loader />}>
+              {/* <CHECK_LOGGED_IN>
+                <GUARD_ROUTE role={KanzRoles.STARTUP}><StartupDashboard guard={authToken} /></GUARD_ROUTE>
+              </CHECK_LOGGED_IN> */}
+              <RealtorDashboard />
             </Suspense>
           } />
         <Route path={`${StartupRoutes.CREATE_DEAL}/:id`}

@@ -13,8 +13,9 @@ import { handleFileRead } from "../../../utils/files.utils";
 import { uploadAttachments } from "../../../apis/attachment.api";
 import Spinner from "../Spinner";
 import { RoutesEnums } from "../../../enums/routes.enum";
+import AddVideo from "../../../ts-icons/addVideoIcon.svg";
 
-const FileUpload = ({ id, fid, file, setModalOpen, setFile, removeFile, title, uploadDirect = true, acceptPdf = false, className = "" }: any) => {
+const FileUpload = ({ id, fid, file, setModalOpen, setFile, removeFile, title, uploadDirect = true, acceptPdf = false, className = "", video = false }: any) => {
     const language: any = useSelector((state: RootState) => state.language.value);
     const authToken: any = useSelector((state: RootState) => state.auth.value);
     const orientation: any = useSelector((state: RootState) => state.orientation.value);
@@ -178,12 +179,19 @@ const FileUpload = ({ id, fid, file, setModalOpen, setFile, removeFile, title, u
                             </div>
                         ) : (
                             <div className="inline-flex items-center flex-col align-center justify-center w-full h-full cursor-pointer">
-                                <AddImage stroke="#A3A3A3" />
+                                {video ? <AddVideo stroke="#A3A3A3" /> : <AddImage stroke="#A3A3A3" />}
                                 <p className="font-medium my-1">
                                     <small className="text-sm text-cc-blue">{language.buttons.uploadFile}</small>&nbsp;
                                     <small className="text-sm text-neutral-500">{language.buttons.orDragDrop}</small>
                                 </p>
-                                <div className="text-neutral-500 text-sm font-normal">{acceptPdf ? language?.common?.fileSpecs : language?.v2?.common?.imageSpecs} 10MB</div>
+                                {
+                                    video ? (
+                                        <div className="text-neutral-500 text-sm font-normal">{acceptPdf ? language?.common?.fileSpecs : language?.v2?.common?.imageSpecs} 10MB</div>
+                                    ) : (
+                                        <div className="text-neutral-500 text-sm font-normal">{language?.v3?.common?.vid_specs}</div>
+
+                                    )
+                                }
                                 <input id={id} accept=".jpg,.png,.pdf" type="file" className="hidden" onChange={handleFileInput} />
                             </div>
                         )

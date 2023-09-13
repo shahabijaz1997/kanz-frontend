@@ -15,7 +15,6 @@ const PhilosophyGoals = (props: any) => {
     const [step, setStep]: any = useState(Number(params?.id));
 
     useLayoutEffect(() => {
-        console.log(user.status,"user.status")
         if ((user.status !== ApplicationStatus.OPENED && user.status !== ApplicationStatus.REOPENED)) navigate(RoutesEnums.WELCOME)
         setStep(Number(params?.id) || 1);
     }, [params]);

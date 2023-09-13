@@ -11,7 +11,6 @@ import Table from "../../shared/components/Table";
 import { StartupRoutes } from "../../enums/routes.enum";
 import Modal from "../../shared/components/Modal";
 import CrossIcon from "../../ts-icons/crossIcon.svg";
-import DealTable from "../../shared/components/DealTable";
 
 const columns = ['Name', 'Type', 'Status', 'Stage', 'Raised', 'Target'];
 const data: any = [];
@@ -29,19 +28,8 @@ const Realtor = ({ }: any) => {
                 <Header />
             </section>
             <aside className="w-full h-full flex items-start justify-start">
-                <Sidebar type={KanzRoles.STARTUP} />
+                <Sidebar type={KanzRoles.REALTOR} />
                 <section className="bg-cbc-auth h-full p-[5rem]" style={{ width: "calc(100% - 250px)" }}>
-                    <section className="inline-flex justify-between items-center w-full">
-                        <div className="w-full">
-                            <h1 className="text-black font-medium text-2xl mb-2">{language?.v3?.startup?.overview?.heading_2}</h1>
-                        </div>
-                        <Button onClick={() => setModalOpen(true)} className="w-[170px]">{language?.v3?.button?.new_deal}</Button>
-                    </section>
-
-                    <section className="mt-10 mb-16">
-                        <DealTable />
-                    </section>
-
                     <section className="inline-flex justify-between items-center w-full">
                         <div className="w-full">
                             <h1 className="text-black font-medium text-2xl mb-2">{language?.v3?.startup?.overview?.heading}</h1>
@@ -75,7 +63,17 @@ const Realtor = ({ }: any) => {
                     <aside>
                         <h2 className="font-bold text-xl text-center text-neutral-900">{language?.v3?.common?.disclaimer}</h2>
                         <p className="text-sm font-normal text-center text-neutral-500 mt-8 mb-12">{language?.v3?.common?.disclaimer_desc}</p>
-                        <Button onClick={() => navigate(`${StartupRoutes.CREATE_DEAL}/1`)}>{language?.buttons?.continue}</Button>
+                        <div className="py-3 border-t-[1px] border-neutral0=-200 inline-flex justify-between w-full">
+                            <span>
+                                <h2 className="font-medium text-neutral-700 text-xl">Disclaimer 1</h2>
+                                <p className="font-normal text-neutral-500 text-sm">Description of Disclaimer</p>
+                            </span>
+                            <input type="checkbox" />
+                        </div>
+                        <div className="w-full inline-flex items-center justify-center gap-3 mt-10">
+                            <Button className="bg-transparent border-cyan-800 border-[1px] !text-cyan-800 w-[100px]" onClick={() => setModalOpen(false)}>{language?.v3?.button?.cancel}</Button>
+                            <Button className="w-[100px]" onClick={() => navigate(`${StartupRoutes.CREATE_DEAL}/1`)}>{language?.buttons?.continue}</Button>
+                        </div>
                     </aside>
                 </div>
             </Modal>

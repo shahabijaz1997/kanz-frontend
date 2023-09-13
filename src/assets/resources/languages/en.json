@@ -632,11 +632,21 @@
             "create_deal": {
                 "title": "Create Deal",
                 "stage": "stage",
-                "instrument": "instrument",
+                "instrument": "Instrument",
                 "round_size": "Round Size",
                 "attachments": "Attachments",
                 "terms": "Terms",
                 "additional_detail": "Additional Details",
+                "review": "Review"
+            }
+        },
+        "realtor": {
+            "create_deal": {
+                "details": "Details",
+                "attachments": "Attachments",
+                "selling_price": "Selling Price",
+                "terms": "Terms",
+                "expected_return": "Expected Return",
                 "review": "Review"
             }
         },
@@ -648,12 +658,16 @@
             "disclaimer": "Disclaimer",
             "deal": "Deal",
             "noData": "No Data Available",
+            "vid_specs": "mp4 upto 10MB",
+            "i_agree": "Agree with the terms",
+            "i_agree_desc": "I agree with all the above mentioned terms",
             "disclaimer_desc": "Lorem ipsum dolor sit amet consectetur, adipisicing elit. Repudiandae quidem libero impedit voluptatum quasi delectus, fuga in aliquid deserunt exercitationem explicabo asperiores, dolorem veritatis maiores, illo vitae officiis sapiente? Est?"
         },
         "button": {
             "new_deal": "Create New Deal",
             "invite": "Invite",
-            "new" :"New"
+            "new": "New",
+            "cancel": "Cancel"
         }
     }
 }
