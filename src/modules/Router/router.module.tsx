@@ -31,7 +31,7 @@ const AddAttachments = lazy(() => import("../Onboarding/AddAttachments"));
 
 /* ---### Post Onboarding ###--- */
 const StartupDashboard = lazy(() => import("../Startup"));
-const CreateDeal = lazy(() => import("../Startup/CreateDeal"));
+const CreateDeal = lazy(() => import("../CreateDeal"));
 const DealDetail = lazy(() => import("../Startup/DealDetail"));
 const InvestorUpdates = lazy(() => import("../InvestorUpdates"));
 const DataRooms = lazy(() => import("../DataRooms"));

@@ -1,16 +1,16 @@
-import { useDispatch, useSelector } from "react-redux";
-import Stepper from "../../../shared/components/Stepper";
-import { RootState } from "../../../redux-toolkit/store/store";
 import React, { useState } from "react";
-import Header from "../../../shared/components/Header";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import CrossIcon from "../../../ts-icons/crossIcon.svg";
-import Spinner from "../../../shared/components/Spinner";
-import Button from "../../../shared/components/Button";
-import { saveAnswer } from "../../../redux-toolkit/slicer/philosophy.slicer";
-import { Constants } from "../../../enums/constants.enum";
-import Selector from "../../../shared/components/Selector";
-import FileUpload from "../../../shared/components/FileUpload";
+import Stepper from "../../shared/components/Stepper";
+import { RootState } from "../../redux-toolkit/store/store";
+import Header from "../../shared/components/Header";
+import CrossIcon from "../../ts-icons/crossIcon.svg";
+import Spinner from "../../shared/components/Spinner";
+import Button from "../../shared/components/Button";
+import { saveAnswer } from "../../redux-toolkit/slicer/philosophy.slicer";
+import { Constants } from "../../enums/constants.enum";
+import Selector from "../../shared/components/Selector";
+import FileUpload from "../../shared/components/FileUpload";
 const CURRENCIES = ["USD", "AED"];
 
 const CreateDeal = ({ step }: any) => {

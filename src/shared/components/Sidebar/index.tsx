@@ -26,7 +26,7 @@ const Sidebar = ({ type }: any) => {
 
     const renderRoleBasedSidebar = () => {
         switch (type) {
-            case KanzRoles.STARTUP:
+            case KanzRoles.STARTUP || KanzRoles.REALTOR:
                 setSidebarData({
                     title: language?.v3?.startup?.sidebar?.sidebar_title, icon: <BagIcon />, items: STARTUP_ITEMS
                 });
@@ -34,11 +34,6 @@ const Sidebar = ({ type }: any) => {
                 setSelected(route);
                 break;
             case KanzRoles.SYNDICATE:
-                setSidebarData({
-                    title: language?.v3?.startup?.sidebar?.sidebar_title, items: []
-                });
-                break;
-            case KanzRoles.REALTOR:
                 setSidebarData({
                     title: language?.v3?.startup?.sidebar?.sidebar_title, items: []
                 });
