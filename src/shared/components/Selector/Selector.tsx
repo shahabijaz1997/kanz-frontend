@@ -34,7 +34,7 @@ const Selector: FC<SelectProps> = ({
   return (
     <Select
       isDisabled={disabled}
-      placeholder={<p className={"text-neutral-04"}>{placeholder}</p>}
+      placeholder={<p className={"text-neutral-500"}>{placeholder}</p>}
       ref={selectRef as any}
       onInputChange={(value) => {
         // eslint-disable-next-line @typescript-eslint/no-unused-expressions

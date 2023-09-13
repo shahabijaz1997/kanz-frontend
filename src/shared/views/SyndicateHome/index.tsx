@@ -4,7 +4,7 @@ import { useSelector } from "react-redux";
 import { RootState } from "../../../redux-toolkit/store/store";
 import Button from "../../components/Button";
 import { ApplicationStatus } from "../../../enums/types.enum";
-import { isEmpty } from "../../../utils/object.util";
+import { isEmpty } from "../../../utils/object.utils";
 import { RoutesEnums } from "../../../enums/routes.enum";
 
 const SyndicateHome = ({ loading, language }: any) => {

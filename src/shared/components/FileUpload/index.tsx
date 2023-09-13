@@ -8,13 +8,13 @@ import BinIcon from "../../../ts-icons/binIcon.svg";
 import PreviewIcon from "../../../ts-icons/previewIcon.svg";
 import FIleUploadAlert from "../FIleUploadAlert";
 import { FileType, PromptMessage } from "../../../enums/types.enum";
-import { fileSize, formatFileSize, validImages, validTypes } from "../../../utils/size-check.utils";
-import { handleFileRead } from "../../../utils/files.util";
+import { fileSize, formatFileSize, validImages, validTypes } from "../../../utils/files.utils";
+import { handleFileRead } from "../../../utils/files.utils";
 import { uploadAttachments } from "../../../apis/attachment.api";
 import Spinner from "../Spinner";
 import { RoutesEnums } from "../../../enums/routes.enum";
 
-const FileUpload = ({ id, fid, file, setModalOpen, setFile, removeFile, title, uploadDirect = true, acceptPdf = false }: any) => {
+const FileUpload = ({ id, fid, file, setModalOpen, setFile, removeFile, title, uploadDirect = true, acceptPdf = false, className = "" }: any) => {
     const language: any = useSelector((state: RootState) => state.language.value);
     const authToken: any = useSelector((state: RootState) => state.auth.value);
     const orientation: any = useSelector((state: RootState) => state.orientation.value);
@@ -142,7 +142,7 @@ const FileUpload = ({ id, fid, file, setModalOpen, setFile, removeFile, title, u
         <React.Fragment>
             {alertTye.type && <FIleUploadAlert type={alertTye.type} message={alertTye.message} removeMessage={() => setAlertType({})} />}
 
-            <div className={`border-2 border-dashed rounded-md h-[140px] select-none ${dragOver ? "border-cyan-800" : "border-neutral-300"}`}
+            <div className={`border-2 border-dashed rounded-md h-[140px] ${className} select-none ${dragOver ? "border-cyan-800" : "border-neutral-300"}`}
                 onDragOver={handleDragOver} onDragLeave={handleDragLeave} onDrop={handleDrop}>
                 <label htmlFor={id}>
                     {selectedFile && selectedFile?.id === id ? (

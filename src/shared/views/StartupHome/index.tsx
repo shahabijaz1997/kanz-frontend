@@ -4,7 +4,7 @@ import { useSelector } from "react-redux";
 import { RootState } from "../../../redux-toolkit/store/store";
 import Button from "../../components/Button";
 import { ApplicationStatus } from "../../../enums/types.enum";
-import { isEmpty } from "../../../utils/object.util";
+import { isEmpty } from "../../../utils/object.utils";
 import { RoutesEnums } from "../../../enums/routes.enum";
 
 const StartupHome = ({ loading, language }: any) => {
@@ -18,7 +18,7 @@ const StartupHome = ({ loading, language }: any) => {
       navigate(RoutesEnums.ADD_ATTACHMENTS);
     } else {
       navigate(
-        `${RoutesEnums.START_UP}/${profile_states.profile_current_step}`
+        `${RoutesEnums.STARTUP_DETAILS}/${profile_states.profile_current_step}`
       );
     }
   };

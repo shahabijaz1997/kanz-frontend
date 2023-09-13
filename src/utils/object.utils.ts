@@ -12,6 +12,6 @@ export const isEmpty = (value: any) => {
     return true;
 }
 
-export function filterObjectsByTrueValue(objectsArray: any, key: any) {
+export const filterObjectsByTrueValue = (objectsArray: any, key: any) => {
     return objectsArray.filter((obj: any) => obj[key] === true).map((obj1: any) => obj1.id);
-  }
+}

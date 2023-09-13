@@ -607,5 +607,53 @@
             "heading_12": "Acceptance of Terms",
             "para_16": "You acknowledge that you have read this Agreement and agree to all its terms and conditions. By accessing and using the Web Platform and Services you agree to be bound by this Agreement. If you do not agree to abide by the terms of this Agreement, you are not authorized to access or use the Web Platform and Services."
         }
+    },
+    "v3": {
+        "startup": {
+            "overview": {
+                "heading": "Deals",
+                "heading_2": "Overview",
+                "all": "All",
+                "raising": "Raising",
+                "closed": "Closed",
+                "total": "Total Raised",
+                "committed": "Committed",
+                "investors": "Investors",
+                "rounds": "Rounds"
+            },
+            "sidebar": {
+                "sidebar_title": "Deal Model",
+                "overview": "Overview",
+                "investor_updates": "Investor Updates",
+                "data_rooms": "Data Rooms",
+                "market_insights": "Market Insights",
+                "contacts": "Contacts"
+            },
+            "create_deal": {
+                "title": "Create Deal",
+                "stage": "stage",
+                "instrument": "instrument",
+                "round_size": "Round Size",
+                "attachments": "Attachments",
+                "terms": "Terms",
+                "additional_detail": "Additional Details",
+                "review": "Review"
+            }
+        },
+        "deal": {
+            "status": "Deal Status"
+        },
+        "common": {
+            "search": "Search",
+            "disclaimer": "Disclaimer",
+            "deal": "Deal",
+            "noData": "No Data Available",
+            "disclaimer_desc": "Lorem ipsum dolor sit amet consectetur, adipisicing elit. Repudiandae quidem libero impedit voluptatum quasi delectus, fuga in aliquid deserunt exercitationem explicabo asperiores, dolorem veritatis maiores, illo vitae officiis sapiente? Est?"
+        },
+        "button": {
+            "new_deal": "Create New Deal",
+            "invite": "Invite",
+            "new" :"New"
+        }
     }
 }

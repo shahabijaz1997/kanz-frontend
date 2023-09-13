@@ -13,8 +13,8 @@ import HorionGraph from "../../../../assets/investment_horizon_graph.png";
 import Button from "../../../../shared/components/Button";
 import { KanzRoles } from "../../../../enums/roles.enum";
 import { RoutesEnums } from "../../../../enums/routes.enum";
-import { saveAnswer, savePhilosophyData } from "../../../../redux-toolkit/slicer/philosophy.slicer";
-import { filterObjectsByTrueValue } from "../../../../utils/object.util";
+import { saveAnswer, saveQuestionnaire } from "../../../../redux-toolkit/slicer/philosophy.slicer";
+import { filterObjectsByTrueValue } from "../../../../utils/object.utils";
 
 const Questionare = ({ step, returnSuccessRedirection }: any) => {
   const navigate = useNavigate();
@@ -23,9 +23,10 @@ const Questionare = ({ step, returnSuccessRedirection }: any) => {
   const language: any = useSelector((state: RootState) => state.language.value);
   const authToken: any = useSelector((state: RootState) => state.auth.value);
   const event: any = useSelector((state: RootState) => state.event.value);
-  const philosophyData: any = useSelector((state: RootState) => state.philosophy.value);
+  const philosophyData: any = useSelector((state: RootState) => state.questionnaire.value);
   const [isOpen, setOpen]: any = useState("");
   const [questions, setQuestions]: any = useState([]);
+  const [totalSteps, setTotalSteps] = useState();
   const [page, setPage] = useState(1);
   const [selected]: any = useState({});
   const [loading, setLoading]: any = useState(true);
@@ -41,10 +42,14 @@ const Questionare = ({ step, returnSuccessRedirection }: any) => {
   const getQuestionares = async (pg: number) => {
     try {
       setLoading(true);
-      const { status, data }: any = await getInvestmentPhilisophyQuestions( pg, authToken);
+      const { status, data }: any = await getInvestmentPhilisophyQuestions(pg, authToken);
       if (status === 200) {
         setQuestions(data?.status?.data);
-        dispatch(savePhilosophyData(data?.status?.data));
+        let steps: any = [];
+        for (let i = 1; i <= data?.status?.data?.total_steps; i++)
+          steps.push({ id: i });
+        setTotalSteps(steps);
+        dispatch(saveQuestionnaire(data?.status?.data));
         setPage(pg);
       }
     } catch (error: any) {
@@ -66,7 +71,7 @@ const Questionare = ({ step, returnSuccessRedirection }: any) => {
     try {
       setOpen(false);
       setLoading(true);
-      let { status, data } = await postInvestmentPhilisophyData( payload, authToken);
+      let { status, data } = await postInvestmentPhilisophyData(payload, authToken);
       if (status === 200) localStorage.setItem("step", step);
       if (step === questions?.total_steps && status === 200)
         returnSuccessRedirection(data);
@@ -86,7 +91,7 @@ const Questionare = ({ step, returnSuccessRedirection }: any) => {
   };
 
   const renderMultipleChoiceQuestionnaires = (ques: any) => {
-    if ( selected && ques.step === 2 && ques.index === 2 && !philosophyData?.questions[0][event]?.options[0]?.selected)
+    if (selected && ques.step === 2 && ques.index === 2 && !philosophyData?.questions[0][event]?.options[0]?.selected)
       return <React.Fragment></React.Fragment>;
     if (ques?.question_type === "text") {
       return (
@@ -104,7 +109,7 @@ const Questionare = ({ step, returnSuccessRedirection }: any) => {
           <section className="mb-8 w-full relative mt-3">
             <textarea
               value={ques.answer}
-              onChange={(e) => dispatch(saveAnswer({textAnswer: e.target.value, question: ques, questions: philosophyData, lang: event}))}
+              onChange={(e) => dispatch(saveAnswer({ textAnswer: e.target.value, question: ques, questions: philosophyData, lang: event }))}
               className="rounded-md shadow-sm appearance-none border border-neutral-300 rounded-md w-full py-2 px-3 text-gray-500 leading-tight focus:outline-none focus:shadow-outline h-[100px] resize-none"
             ></textarea>
           </section>
@@ -129,8 +134,8 @@ const Questionare = ({ step, returnSuccessRedirection }: any) => {
                 ques[event]?.options.map((as: any) => {
                   return (
                     <li
-                      className={`h-[50px] w-[420px] p-4 grey-neutral-200 text-sm font-medium cursor-pointer border border-grey inline-flex items-center justify-start first:rounded-t-md last:rounded-b-md screen500:w-full ${as.selected ? "check-background" : "bg-white" }`}
-                      onClick={() =>  dispatch(saveAnswer({ option: as, question: ques, questions: philosophyData, lang: event}))}>
+                      className={`h-[50px] w-[420px] p-4 grey-neutral-200 text-sm font-medium cursor-pointer border border-grey inline-flex items-center justify-start first:rounded-t-md last:rounded-b-md screen500:w-full ${as.selected ? "check-background" : "bg-white"}`}
+                      onClick={() => dispatch(saveAnswer({ option: as, question: ques, questions: philosophyData, lang: event }))}>
                       <input onChange={() => { }}
                         className="accent-cyan-800 relative float-left mx-2 h-3 w-3 rounded-full border-2 border-solid border-cyan-300 before:pointer-events-none before:absolute before:h-4 before:w-4 before:scale-0 before:rounded-full before:bg-transparent before:opacity-0 before:content-[''] after:absolute after:z-[1] after:block after:h-4 after:w-4 after:rounded-full after:content-[''] checked:border-primary checked:before:opacity-[0.16] checked:after:absolute checked:after:left-1/2 checked:after:top-1/2 checked:after:h-[0.625rem] checked:after:w-[0.625rem] checked:after:rounded-full checked:after:border-primary checked:after:bg-primary checked:after:content-[''] checked:after:[transform:translate(-50%,-50%)] hover:cursor-pointer hover:before:opacity-[0.04]"
                         type="radio" checked={as.selected ? true : false} />
@@ -146,7 +151,7 @@ const Questionare = ({ step, returnSuccessRedirection }: any) => {
   };
 
   const renderCheckboxQuestionnaire = (ques: any) => {
-    if ( selected && ques.step === 2 && ques.index === 2 && (!selected[`2`] || selected[`2`]?.questions.find((q: any) => q.answer === questions?.questions[0][event]?.options[1]?.id)))
+    if (selected && ques.step === 2 && ques.index === 2 && (!selected[`2`] || selected[`2`]?.questions.find((q: any) => q.answer === questions?.questions[0][event]?.options[1]?.id)))
       return <React.Fragment></React.Fragment>;
     return (
       <section className="flex items-start justify-center flex-col mt-10 max-w-[420px] screen500:max-w-[300px]">
@@ -167,7 +172,7 @@ const Questionare = ({ step, returnSuccessRedirection }: any) => {
                   return (
                     <li className={`h-[50px] w-[420px] p-4 grey-neutral-200 text-sm font-medium cursor-pointer border border-grey inline-flex items-center justify-start first:rounded-t-md last:rounded-b-md screen500:w-full ${as.selected ? "check-background" : "bg-white"}`}
                       onClick={() => {
-                        dispatch(saveAnswer({ option: as, question: ques, questions: philosophyData, lang: event})
+                        dispatch(saveAnswer({ option: as, question: ques, questions: philosophyData, lang: event })
                         );
                       }}
                     >
@@ -204,7 +209,7 @@ const Questionare = ({ step, returnSuccessRedirection }: any) => {
                 return (
                   <li className={`rounded-md bg-white h-[50px] w-[420px] p-4 grey-neutral-200 text-sm font-medium cursor-pointer border border-grey inline-flex items-center justify-start screen500:w-full${as.selected ? "check-background" : "bg-white"}`}
                     onClick={() => {
-                      dispatch( saveAnswer({ option: as, question: ques, questions: philosophyData, lang: event}));
+                      dispatch(saveAnswer({ option: as, question: ques, questions: philosophyData, lang: event }));
                     }}
                   >
                     <input onChange={() => { }}
@@ -233,7 +238,7 @@ const Questionare = ({ step, returnSuccessRedirection }: any) => {
   const onSetNext = () => {
     if (!checkValidation()) {
       toast.dismiss();
-      return toast.warning( language.promptMessages.pleaseSelectAllData, toastUtil);
+      return toast.warning(language.promptMessages.pleaseSelectAllData, toastUtil);
     }
     let payload: any = { investment_philosophy: {} };
     payload.investment_philosophy.step = step;
@@ -247,10 +252,7 @@ const Questionare = ({ step, returnSuccessRedirection }: any) => {
         };
         _questions.push(finalQuestion);
       } else {
-        const filteredArray = filterObjectsByTrueValue(
-          question[event].options,
-          "selected"
-        );
+        const filteredArray = filterObjectsByTrueValue(question[event].options, "selected");
         const finalQuestion = {
           question_id: question.id,
           selected_option_ids: filteredArray,
@@ -268,7 +270,7 @@ const Questionare = ({ step, returnSuccessRedirection }: any) => {
   };
 
   function checkAtLeastOneOptionSelected(questions: any[]): boolean {
-    return questions?.every( (question: any) => question[event].options && checkSelected(question[event].options));
+    return questions?.every((question: any) => question[event].options && checkSelected(question[event].options));
   }
 
   function checkStatement(questions: any[]): boolean {
@@ -285,7 +287,7 @@ const Questionare = ({ step, returnSuccessRedirection }: any) => {
       const question = philosophyData?.questions?.find(
         (question: any) => question[event]?.options?.length === 2
       );
-      const checkNoOption = question && question[event]?.options?.find( (option: any) => option?.statement === "No" || option?.statement === "لا" );
+      const checkNoOption = question && question[event]?.options?.find((option: any) => option?.statement === "No" || option?.statement === "لا");
       if (step === 2 && checkNoOption?.selected) {
         return true;
       } else if (!philosophyData?.questions?.length) {
@@ -298,7 +300,7 @@ const Questionare = ({ step, returnSuccessRedirection }: any) => {
 
   return (
     <aside className="w-full flex items-center justify-center flex-col pt-12 pb-5">
-      <Stepper currentStep={step - 1} totalSteps={questions?.total_steps} />
+      <Stepper currentStep={step - 1} totalSteps={totalSteps} />
       {loading ? (
         <div className="absolute left-0 top-0 w-full h-full grid place-items-center" style={{ backgroundColor: "rgba(255, 255, 255, 1)", zIndex: 50 }} >
           <Spinner />

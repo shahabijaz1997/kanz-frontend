@@ -139,7 +139,7 @@ const AddAttachments = (props: any) => {
     } else if (metadata.role === KanzRoles.SYNDICATE) {
       navigate(`${RoutesEnums.SYNIDCATE_DETAILS}/2`);
     } else if (metadata.role === KanzRoles.STARTUP) {
-      navigate(`${RoutesEnums.START_UP}/2`);
+      navigate(`${RoutesEnums.STARTUP_DETAILS}/2`);
     } else {
       navigate(-1);
     }
@@ -172,11 +172,9 @@ const AddAttachments = (props: any) => {
               <section className="flex items-start justify-center flex-col mt-8">
                 <form className="pt-8 mb-4 w-full">
                   {React.Children.toArray(
-                    attachmentData.map((item: any, index: number) => {
+                    attachmentData.map((item: any) => {
                       return item?.attachment_url ? (
-                        <div 
-                        key={index}
-                        className="mb-4 w-full select-none content-center bg-cbc-grey-sec p-4 rounded-md">
+                        <div className="mb-4 w-full select-none content-center bg-cbc-grey-sec p-4 rounded-md">
                           <div className="block text-neutral-700 text-base font-medium">
                             <span className="inline-flex w-full items-center justify-between">
                               <span className="inline-flex flex-col">
@@ -314,18 +312,14 @@ const AddAttachments = (props: any) => {
                 {language.modal.sub_2} <button className="text-blue-700" onClick={() => navigate(RoutesEnums.WELCOME)}>{language.modal.sub_3}</button> {language.modal.sub_4}
               </p>
             </div>
-            <Button
-              className="mt-8 w-[120px] h-9"
-              htmlType="button"
+            <Button className="mt-8 w-[120px] h-9" htmlType="button"
               onClick={() => {
                 setModalOpen(false);
                 localStorage.removeItem("investor-type");
                 localStorage.removeItem("accert");
                 navigate(RoutesEnums.WELCOME);
               }}
-            >
-              {language.buttons.continue}
-            </Button>
+            >{language.buttons.continue}</Button>
           </div>
         )}
       </Modal>

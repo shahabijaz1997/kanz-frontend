@@ -20,10 +20,12 @@ module.exports = {
                 'cs-3': '0px 0.885714px 2.65714px rgba(0, 0, 0, 0.1), 0px 0.885714px 1.77143px rgba(0, 0, 0, 0.06)',
                 'cs-4': '0px 1px 3px rgba(0, 0, 0, 0.1), 0px 1px 2px rgba(0, 0, 0, 0.06)',
                 'cs-5': '0px 4.64831px 7.30449px rgba(0, 0, 0, 0.02)',
+                'cs-6': '0px 1px 2px 0px rgba(0, 0, 0, 0.05)',
             },
             colors: {
                 'cc-black': '#0E2E35',
-                'cc-blue': '#2D9CDB'
+                'cc-blue': '#2D9CDB',
+                'cc-gray': '#828282'
             },
             backgroundColor:{
                 'cbc-1': '#FCFCFC',
@@ -33,7 +35,11 @@ module.exports = {
                 'cbc-check': '#F1F1F1',
                 'cbc-check-hover': '#DBDBDB',
                 'cbc-transparent': 'rgba(0, 0, 0, 0.0758)',
-                'cbc-auth': '#FBFBFB'
+                'cbc-auth': '#FBFBFB',
+                'sidebar-item-hover': '#0e2e350d'
+            },
+            borderColor: {
+                'sidebar-item-hover': '#0e2e350d'
             }
         },
     },
