@@ -1,31 +1,35 @@
 import React, { useState } from "react";
-import {  useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import Stepper from "../../../shared/components/Stepper";
 import { RootState } from "../../../redux-toolkit/store/store";
 import Spinner from "../../../shared/components/Spinner";
 import Button from "../../../shared/components/Button";
-import Selector from "../../../shared/components/Selector";
 import DetailUI from "./DetailUI";
 import AttachmentUI from "./AttachmentUI";
 import SellingPriceUI from "./SellingPriceUI";
 import TermsUI from "./TermsUI";
 import ReviewUI from "./ReviewUI";
 import ExpectedReturnUI from "./ExpectedReturnUI";
+import Modal from "../../../shared/components/Modal";
 const CURRENCIES = ["USD", "AED"];
 
 const RealtorDeal = ({ step }: any) => {
     const [loading, setLoading] = useState(false);
-    const [currency, setCurrency] = useState(0);
     const [questions, setQuestions]: any = useState(false);
     const language: any = useSelector((state: RootState) => state.language.value);
     const orientation: any = useSelector((state: RootState) => state.orientation.value);
-    const dealData: any = useSelector((state: RootState) => state.questionnaire.value);
+    const [modalOpen, setModalOpen] = useState(false);
 
     const [totalSteps] = useState([{ id: 1, text: language?.v3?.realtor?.create_deal?.details }, { id: 2, text: language?.v3?.realtor?.create_deal?.attachments }, { id: 3, text: language?.v3?.realtor?.create_deal?.selling_price }, { id: 4, text: language?.v3?.realtor?.create_deal?.expected_return }, { id: 5, text: language?.v3?.realtor?.create_deal?.terms },
     { id: 6, text: language?.v3?.realtor?.create_deal?.review }])
 
-   
-    const onSetNext = () => { };
+    const onSetNext = () => {
+        try {
+            if (step === totalSteps.length) setModalOpen(true);
+        } catch (error) {
+
+        }
+    };
     const onSetPrev = () => { };
     const checkValidation = () => {
         return false;
@@ -34,7 +38,7 @@ const RealtorDeal = ({ step }: any) => {
     return (
         <React.Fragment>
             <section className="w-10 inline-block align-start">
-                <Stepper totalSteps={totalSteps} currentStep={0} direction="col" />
+                <Stepper totalSteps={totalSteps} currentStep={step} direction="col" />
             </section>
             <section className="w-[calc(100%-3rem)] inline-block align-start">
                 <div className="w-full inline-flex items-center justify-cneter flex-col">
@@ -73,6 +77,16 @@ const RealtorDeal = ({ step }: any) => {
                     )}
                 </div>
             </section>
+            <Modal show={modalOpen}>
+                <div className="p-12 rounded-md shadow-cs-1 flex flex-col items-center w-full bg-white outline-none focus:outline-none screen800:px-3">
+                    <h2 className="text-2xl font-bold text-neutral-900 mb-4 screen500:text-[20px]">
+                        {language?.v3?.deal?.submitted}
+                    </h2>
+                    <h3 className="text-base font-normal text-neutral-700 screen500:text-[12px]">
+                        {language?.onboarding?.appStatus}: <strong>{language.common.submitted}</strong>
+                    </h3>
+                </div>
+            </Modal>
         </React.Fragment>
     )
 };

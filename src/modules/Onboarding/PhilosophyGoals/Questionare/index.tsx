@@ -72,7 +72,6 @@ const Questionare = ({ step, returnSuccessRedirection }: any) => {
       setOpen(false);
       setLoading(true);
       let { status, data } = await postInvestmentPhilisophyData(payload, authToken);
-      if (status === 200) localStorage.setItem("step", step);
       if (step === questions?.total_steps && status === 200)
         returnSuccessRedirection(data);
     } catch (error: any) {

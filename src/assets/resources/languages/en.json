@@ -651,7 +651,9 @@
             }
         },
         "deal": {
-            "status": "Deal Status"
+            "status": "Deal Status",
+            "submitted": "Your deal has been Submitted!",
+            "re_opened": "Your deal has been Re Opened!"
         },
         "common": {
             "search": "Search",
