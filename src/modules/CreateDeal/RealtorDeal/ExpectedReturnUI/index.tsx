@@ -1,12 +1,9 @@
-import { useState } from "react";
-
 const ExpectedReturnUI = ({ language }: any) => {
-    const [currency, setCurrency] = useState(0);
 
     return (
         <section className="flex items-start justify-center flex-col mt-10 max-w-[420px] screen500:max-w-[300px]">
             <h3 className="text-neutral-700 font-medium text-base w-[420px]">
-                Expected Dividend Yield
+                {language?.v3?.deal?.exp_ret}
             </h3>
 
             <section className="mb-8 w-full relative mt-3">
@@ -20,7 +17,7 @@ const ExpectedReturnUI = ({ language }: any) => {
             </section>
 
             <h3 className="text-neutral-700 font-medium text-base w-[420px] mt-7">
-                Expected Annual Appreciation
+                {language?.v3?.deal?.exp_ann}
             </h3>
 
             <section className="mb-8 w-full relative mt-3">

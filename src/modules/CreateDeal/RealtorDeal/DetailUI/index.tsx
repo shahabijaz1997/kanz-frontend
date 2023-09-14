@@ -28,39 +28,39 @@ const DetailUI = ({language}:any) => {
     return (
         <section className="flex items-start justify-center flex-col mt-10 max-w-[420px] screen500:max-w-[300px]">
             <div className="mb-7">
-                <h3 className="text-neutral-700 font-medium text-base w-[420px]">Title</h3>
+                <h3 className="text-neutral-700 font-medium text-base w-[420px]">{language?.v3?.deal?.title}</h3>
                 <Input type="text" placeholder="Add Text" />
             </div>
 
             <div className="mb-7">
-                <h3 className="text-neutral-700 font-medium text-base w-[420px]">Location</h3>
+                <h3 className="text-neutral-700 font-medium text-base w-[420px]">{language?.v3?.deal?.location}</h3>
                 <section className="w-full mt-2 p-[18px] rounded-lg check-background border border-grey flex flex-col">
                     <div className="inline-flex items-center gap-3 w-full">
                         <span className="w-1/2">
-                            <label className="font-medium text-sm text-neutral-700">Country</label>
+                            <label className="font-medium text-sm text-neutral-700">{language?.v3?.deal?.country}</label>
                             <div className="w-full mt-2"><CountrySelector allCountries={countries.names} onChange={(v: any) => { }} selectedValue={""} defaultValue={""} /></div>
                         </span>
                         <span className="w-1/2">
-                            <label className="font-medium text-sm text-neutral-700">State</label>
+                            <label className="font-medium text-sm text-neutral-700">{language?.v3?.deal?.state}</label>
                             <Input type="text" />
                         </span>
                     </div>
                     <div className="inline-flex items-center gap-3 mt-5">
                         <span className="w-1/2">
-                            <label className="font-medium text-sm text-neutral-700">City</label>
+                            <label className="font-medium text-sm text-neutral-700">{language?.v3?.deal?.city}</label>
                             <Input type="text" />
                         </span>
                         <span className="w-1/2">
-                            <label className="font-medium text-sm text-neutral-700">Area</label>
+                            <label className="font-medium text-sm text-neutral-700">{language?.v3?.deal?.area}</label>
                             <Input type="text" />
                         </span>
                     </div>
                     <div className="inline-flex items-start flex-col mt-5">
-                        <label className="font-medium text-sm text-neutral-700">Building Name</label>
+                        <label className="font-medium text-sm text-neutral-700">{language?.v3?.deal?.build_name}</label>
                         <Input type="text" />
                     </div>
                     <div className="inline-flex items-start flex-col mt-5">
-                        <label className="font-medium text-sm text-neutral-700">Street Address</label>
+                        <label className="font-medium text-sm text-neutral-700">{language?.v3?.deal?.street_address}</label>
                         <Input type="text" />
                     </div>
                 </section>
@@ -68,7 +68,7 @@ const DetailUI = ({language}:any) => {
 
             <div className="flex items-start justify-center flex-col mt-10 max-w-[420px] screen500:max-w-[300px] mb-7">
                 <h3 className="text-neutral-700 font-medium text-base w-[420px] mb-[-10px]">
-                    Size
+                    {language?.v3?.deal?.size}
                 </h3>
 
                 <section className="mb-8 w-full relative mt-3">
@@ -84,10 +84,10 @@ const DetailUI = ({language}:any) => {
             </div>
 
             <div className="mb-7">
-                <h3 className="text-neutral-700 font-medium text-base w-[420px]">Features</h3>
+                <h3 className="text-neutral-700 font-medium text-base w-[420px]">{language?.v3?.deal?.features}</h3>
                 <section className="w-full mt-2 p-[18px] rounded-lg check-background border border-grey flex flex-col">
                     <div className="inline-flex items-start mt-5 justify-between">
-                        <label className="font-medium text-sm text-neutral-700">Bedrooms</label>
+                        <label className="font-medium text-sm text-neutral-700">{language?.v3?.deal?.beds}</label>
                         <label className="relative inline-flex items-center cursor-pointer">
                             <input type="checkbox" value="" className="sr-only peer" checked={true} />
                             <div className="w-11 h-6 bg-cyan-800 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-cyan-800"></div>
@@ -95,35 +95,35 @@ const DetailUI = ({language}:any) => {
                     </div>
 
                     <div className="inline-flex items-start mt-5 justify-between">
-                        <label className="font-medium text-sm text-neutral-700">Kitchen</label>
+                        <label className="font-medium text-sm text-neutral-700">{language?.v3?.deal?.kitchen}</label>
                         <label className="relative inline-flex items-center cursor-pointer">
                             <input type="checkbox" value="" className="sr-only peer" checked={true} />
                             <div className="w-11 h-6 bg-cyan-800 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-cyan-800"></div>
                         </label>
                     </div>
                     <div className="inline-flex items-start mt-5 justify-between">
-                        <label className="font-medium text-sm text-neutral-700">Washroom</label>
+                        <label className="font-medium text-sm text-neutral-700">{language?.v3?.deal?.washroom}</label>
                         <label className="relative inline-flex items-center cursor-pointer">
                             <input type="checkbox" value="" className="sr-only peer" checked={true} />
                             <div className="w-11 h-6 bg-cyan-800 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-cyan-800"></div>
                         </label>
                     </div>
                     <div className="inline-flex items-start mt-5 justify-between">
-                        <label className="font-medium text-sm text-neutral-700">Parking</label>
+                        <label className="font-medium text-sm text-neutral-700">{language?.v3?.deal?.parking}</label>
                         <label className="relative inline-flex items-center cursor-pointer">
                             <input type="checkbox" value="" className="sr-only peer" checked={true} />
                             <div className="w-11 h-6 bg-cyan-800 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-cyan-800"></div>
                         </label>
                     </div>
                     <div className="inline-flex items-start mt-5 justify-between">
-                        <label className="font-medium text-sm text-neutral-700">Swimming pool</label>
+                        <label className="font-medium text-sm text-neutral-700">{language?.v3?.deal?.swim}</label>
                         <label className="relative inline-flex items-center cursor-pointer">
                             <input type="checkbox" value="" className="sr-only peer" checked={true} />
                             <div className="w-11 h-6 bg-cyan-800 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-cyan-800"></div>
                         </label>
                     </div>
                     <div className="inline-flex items-start mt-5 justify-between">
-                        <label className="font-medium text-sm text-neutral-700">Property on a rent?</label>
+                        <label className="font-medium text-sm text-neutral-700">{language?.v3?.deal?.por}</label>
                         <label className="relative inline-flex items-center cursor-pointer">
                             <input type="checkbox" value="" className="sr-only peer" checked={true} />
                             <div className="w-11 h-6 bg-cyan-800 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-cyan-800"></div>

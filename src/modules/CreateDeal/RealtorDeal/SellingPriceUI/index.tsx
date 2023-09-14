@@ -7,7 +7,7 @@ const SellingPriceUI = ({ language }: any) => {
     return (
         <section className="flex items-start justify-center flex-col mt-10 max-w-[420px] screen500:max-w-[300px]">
             <h3 className="text-neutral-700 font-medium text-base w-[420px]">
-                Price
+                {language?.v3?.deal?.price}
             </h3>
 
             <section className="mb-8 w-full relative mt-3">

@@ -653,7 +653,28 @@
         "deal": {
             "status": "Deal Status",
             "submitted": "Your deal has been Submitted!",
-            "re_opened": "Your deal has been Re Opened!"
+            "re_opened": "Your deal has been Re Opened!",
+            "title": "Title",
+            "location": "Location",
+            "country": "Country",
+            "state": "State",
+            "city": "City",
+            "area": "Area",
+            "build_name": "Building Name",
+            "street_address": "Street Address",
+            "size": "Size",
+            "features": "Features",
+            "beds": "Bedrooms",
+            "kitchen": "Kitchen",
+            "washroom":"Washroom",
+            "parking":"Parking",
+            "swim": "Swimming pool",
+            "por": "Property on a rent?",
+            "upload_docs": "Upload the necessary documents",
+            "add_links": "Add Links",
+            "price": "Price",
+            "exp_ret": "Expected Dividend Yield",
+            "exp_ann": "Expected Annual Appreciation"
         },
         "common": {
             "search": "Search",
@@ -669,7 +690,8 @@
             "new_deal": "Create New Deal",
             "invite": "Invite",
             "new": "New",
-            "cancel": "Cancel"
+            "cancel": "Cancel",
+            "add_new_link": "Add New Link"
         }
     }
 }
