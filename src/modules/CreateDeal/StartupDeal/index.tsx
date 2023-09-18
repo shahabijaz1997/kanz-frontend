@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useLayoutEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import Stepper from "../../../shared/components/Stepper";
@@ -9,6 +9,8 @@ import { saveAnswer } from "../../../redux-toolkit/slicer/philosophy.slicer";
 import { Constants } from "../../../enums/constants.enum";
 import Selector from "../../../shared/components/Selector";
 import FileUpload from "../../../shared/components/FileUpload";
+import { getDealQuestion } from "../../../apis/deal.api";
+import { DealType } from "../../../enums/types.enum";
 const CURRENCIES = ["USD", "AED"];
 
 const StartupDeal = ({ step }: any) => {
@@ -19,12 +21,33 @@ const StartupDeal = ({ step }: any) => {
     const [questions, setQuestions]: any = useState(false);
     const [open, setOpen]: any = useState(false);
     const language: any = useSelector((state: RootState) => state.language.value);
+    const authToken: any = useSelector((state: RootState) => state.auth.value);
     const event: any = useSelector((state: RootState) => state.event.value);
     const dealData: any = useSelector((state: RootState) => state.questionnaire.value);
 
-    const [totalSteps] = useState([{ id: 1, text: language?.v3?.startup?.create_deal?.stage }, { id: 2, text: language?.v3?.startup?.create_deal?.instrument }, { id: 3, text: language?.v3?.startup?.create_deal?.round_size }, { id: 4, text: language?.v3?.startup?.create_deal?.attachments },
+    const [totalSteps, setTotalSteps] = useState([{ id: 1, text: language?.v3?.startup?.create_deal?.stage }, { id: 2, text: language?.v3?.startup?.create_deal?.instrument }, { id: 3, text: language?.v3?.startup?.create_deal?.round_size }, { id: 4, text: language?.v3?.startup?.create_deal?.attachments },
     { id: 5, text: language?.v3?.startup?.create_deal?.terms }, { id: 6, text: language?.v3?.startup?.create_deal?.additional_detail }, { id: 7, text: language?.v3?.startup?.create_deal?.review }])
 
+
+    useLayoutEffect(() => {
+        getDealStepDetails();
+    }, [step]);
+
+    const getDealStepDetails = async () => {
+        try {
+            setLoading(true);
+            let { status, data } = await getDealQuestion({ type: DealType.STARTUP, step }, authToken);
+            if(status === 200) {
+                console.log(data);
+                setQuestions(data?.status?.data?.questions);
+            }
+            
+        } catch (error) {
+
+        } finally {
+            setLoading(false);
+        }
+    };
 
     const onSetNext = () => { };
     const onSetPrev = () => { };

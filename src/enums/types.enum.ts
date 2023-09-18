@@ -23,3 +23,8 @@ export enum ApplicationStatus {
     VERIFIED = "verified",
     REJECTED = "rejected",
 }
+
+export enum DealType {
+    STARTUP = "startup_deal",
+    REALTOR = "realtor_deal",
+}

@@ -18,7 +18,12 @@ const CreateDeal = ({ }: any) => {
 
   return (
     <main className="h-full max-h-full overflow-y-auto overflow-x-hidden">
-      <section> <Header custom={true} data={{ leftMenu: language?.v3?.startup?.create_deal?.title, button: (<button onClick={() => navigate(-1)}> <CrossIcon stroke="#171717" className="w-6 h-6" /></button>) }} /></section>
+      <section>
+        <Header
+          custom={true}
+          data={{ leftMenu: language?.v3?.startup?.create_deal?.title, button: (<button onClick={() => navigate(-1)}> <CrossIcon stroke="#171717" className="w-6 h-6" /></button>) }}
+        />
+      </section>
 
       <aside className="w-full pt-14 px-12">
         {metadata.role === KanzRoles.STARTUP ? <StartupDeal step={step} /> : <RealtorDeal step={step} />}
