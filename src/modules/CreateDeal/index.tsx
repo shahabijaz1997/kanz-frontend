@@ -1,3 +1,4 @@
+import { useLayoutEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
 import { RootState } from "../../redux-toolkit/store/store";
@@ -6,7 +7,6 @@ import CrossIcon from "../../ts-icons/crossIcon.svg";
 import { KanzRoles } from "../../enums/roles.enum";
 import StartupDeal from "./StartupDeal";
 import RealtorDeal from "./RealtorDeal";
-import { useState } from "react";
 
 const CreateDeal = ({ }: any) => {
   const navigate = useNavigate();
@@ -14,7 +14,11 @@ const CreateDeal = ({ }: any) => {
   const [step, setStep]: any = useState(Number(params?.id));
   const language: any = useSelector((state: RootState) => state.language.value);
   const metadata: any = useSelector((state: RootState) => state.metadata.value);
-  const event: any = useSelector((state: RootState) => state.event.value);
+  const user: any = useSelector((state: RootState) => state.user.value);
+
+  useLayoutEffect(() => {
+    setStep(Number(params?.id) || 1);
+}, [params]);
 
   return (
     <main className="h-full max-h-full overflow-y-auto overflow-x-hidden">

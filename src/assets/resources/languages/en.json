@@ -628,26 +628,6 @@
                 "data_rooms": "Data Rooms",
                 "market_insights": "Market Insights",
                 "contacts": "Contacts"
-            },
-            "create_deal": {
-                "title": "Create Deal",
-                "stage": "stage",
-                "instrument": "Instrument",
-                "round_size": "Round Size",
-                "attachments": "Attachments",
-                "terms": "Terms",
-                "additional_detail": "Additional Details",
-                "review": "Review"
-            }
-        },
-        "realtor": {
-            "create_deal": {
-                "details": "Details",
-                "attachments": "Attachments",
-                "selling_price": "Selling Price",
-                "terms": "Terms",
-                "expected_return": "Expected Return",
-                "review": "Review"
             }
         },
         "deal": {
