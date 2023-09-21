@@ -72,7 +72,7 @@ export const QuestionnaireSlice = createSlice({
             if (opt.id === option.id) opt.selected = !option.selected;
           });
         }
-        else if (currentQuestion.question_type === Constants.MULTIPLE_CHOICE) {
+        else if (currentQuestion.question_type === Constants.MULTIPLE_CHOICE || currentQuestion.question_type === Constants.DROPDOWN) {
           currentQuestion?.options.map((opt: any) => {
             if (opt.id === option.id) opt.selected = true;
             else opt.selected = false;

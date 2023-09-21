@@ -71,7 +71,7 @@ const StartupDeal = ({ step }: any) => {
     };
     const multipleChoice = (ques: any, secIndex: number) => {
         return (
-            <section className="flex items-start justify-center flex-col mt-10 max-w-[420px] screen500:max-w-[300px]">
+            <section className="flex items-start justify-center flex-col mt-3 max-w-[420px] screen500:max-w-[300px]">
                 <h3 className="text-neutral-700 font-medium text-base w-[420px]">
                     {ques?.title}
                 </h3>
@@ -104,7 +104,7 @@ const StartupDeal = ({ step }: any) => {
     const numberInput = (ques: any, secIndex: number) => {
         let suggestions: any = ["30"]
         return (
-            <section className="flex items-start justify-center flex-col mt-10 max-w-[420px] screen500:max-w-[300px]">
+            <section className="flex items-start justify-center flex-col mt-3 max-w-[420px] screen500:max-w-[300px]">
                 <h3 className="text-neutral-700 font-medium text-base w-[420px]">
                     {ques?.statement}
                 </h3>
@@ -134,7 +134,7 @@ const StartupDeal = ({ step }: any) => {
 
     const attachments = (ques: any, secIndex: number) => {
         return (
-            <section className="flex items-start justify-center flex-col mt-10 max-w-[420px] min-w-[400px] screen500:max-w-[300px]">
+            <section className="flex items-start justify-center flex-col mt-3 max-w-[420px] min-w-[400px] screen500:max-w-[300px]">
                 <h3 className="text-neutral-700 font-medium text-base w-[420px]">
                     <span>Upload the necessary documents.</span>&nbsp;<span className="text-cc-blue font-medium cursor-pointer" onClick={() => setOpen(true)} >
                         {language.philosophyGoals.whyToDo}
@@ -152,9 +152,36 @@ const StartupDeal = ({ step }: any) => {
 
                 <FileUpload id={1} fid={1} file={{}} setModalOpen={() => { }} setFile={() => { }} removeFile={() => { }} title={"Document"} className="w-full" />
             </section>
-
         );
     };
+
+    const dropdowns = (ques: any, secIndex: number) => {
+        let options = ques?.options?.map((opt: any) => {
+            return { label: opt?.statement, value: opt?.statement }
+        });
+
+        return (
+            <section className="flex items-start justify-center flex-col mt-2 max-w-[420px] screen500:max-w-[300px]">
+                <h3 className="text-neutral-700 font-medium text-base w-[420px]">
+                    {ques?.statement}
+                </h3>
+                <section className="mb-8 w-full relative mt-3">
+                    <div className="relative w-full" style={{ zIndex: 101 }}>
+                        {!loading && (
+                            <Selector disabled={false} value={ques?.options?.find((op: any) => op.selected)?.statement} options={options}
+                                onChange={(v: any) => {
+                                    setLoading(true)
+                                    let opt = ques?.options?.find((op: any) => op.statement === v.value);
+                                    dispatch(saveDealSelection({ option: opt, question: ques, questions: dealData, lang: event, secIndex, step }))
+                                    setLoading(false)
+                                }}
+                                defaultValue={options[0]?.value} />
+                        )}
+                    </div>
+                </section>
+            </section>
+        );
+    }
 
     const mixOptionQuestion = (ques: any) => {
         return (
@@ -254,7 +281,9 @@ const StartupDeal = ({ step }: any) => {
         else if (ques?.question_type === Constants.ATTACHMENTS) {
             return attachments(ques, secIndex)
         }
-        else if (ques?.question_type === Constants.CHECK_BOX) { }
+        else if (ques?.question_type === Constants.DROPDOWN) {
+            return dropdowns(ques, secIndex)
+        }
         else if (ques?.question_type === Constants.CHECK_BOX) { }
     };
 
@@ -265,7 +294,7 @@ const StartupDeal = ({ step }: any) => {
         dealData[step - 1][event]?.sections.forEach((sec: any, index: number) => {
             flags.push({ section: sec.id, validations: [] });
             sec.questions.forEach((ques: any) => {
-                if (ques?.question_type === Constants.MULTIPLE_CHOICE) {
+                if (ques?.question_type === Constants.MULTIPLE_CHOICE || ques?.question_type === Constants.DROPDOWN) {
                     let flag = ques.options?.some((opt: any) => opt.selected);
                     flags[index].validations.push(flag);
                 }
