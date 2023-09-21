@@ -159,6 +159,7 @@ const StartupDeal = ({ step }: any) => {
         let options = ques?.options?.map((opt: any) => {
             return { label: opt?.statement, value: opt?.statement }
         });
+        let currentValue = ques?.options?.find((op: any) => op.selected)?.statement || "";
 
         return (
             <section className="flex items-start justify-center flex-col mt-2 max-w-[420px] screen500:max-w-[300px]">
@@ -168,14 +169,12 @@ const StartupDeal = ({ step }: any) => {
                 <section className="mb-8 w-full relative mt-3">
                     <div className="relative w-full" style={{ zIndex: 101 }}>
                         {!loading && (
-                            <Selector disabled={false} value={ques?.options?.find((op: any) => op.selected)?.statement} options={options}
+                            <Selector disabled={false} value={currentValue} options={options}
                                 onChange={(v: any) => {
-                                    setLoading(true)
                                     let opt = ques?.options?.find((op: any) => op.statement === v.value);
                                     dispatch(saveDealSelection({ option: opt, question: ques, questions: dealData, lang: event, secIndex, step }))
-                                    setLoading(false)
                                 }}
-                                defaultValue={options[0]?.value} />
+                                defaultValue={{label:currentValue, value: currentValue} || options[0]} />
                         )}
                     </div>
                 </section>
