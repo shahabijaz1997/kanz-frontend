@@ -32,10 +32,7 @@ const Startup = ({ }: any) => {
                 <Sidebar type={KanzRoles.STARTUP} />
                 <section className="bg-cbc-auth h-full p-[5rem]" style={{ width: "calc(100% - 250px)" }}>
                     <section className="inline-flex justify-between items-center w-full">
-                        <div className="w-full">
-                            <h1 className="text-black font-medium text-2xl mb-2">{language?.v3?.startup?.overview?.heading_2}</h1>
-                        </div>
-                        <Button onClick={() => setModalOpen(true)} className="w-[170px]">{language?.v3?.button?.new_deal}</Button>
+                        <h1 className="text-black font-medium text-2xl mb-2">{language?.v3?.startup?.overview?.heading_2}</h1>
                     </section>
 
                     <section className="mt-10 mb-16">

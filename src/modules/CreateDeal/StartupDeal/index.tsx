@@ -132,6 +132,30 @@ const StartupDeal = ({ step }: any) => {
         );
     };
 
+    const attachments = (ques: any, secIndex: number) => {
+        return (
+            <section className="flex items-start justify-center flex-col mt-10 max-w-[420px] min-w-[400px] screen500:max-w-[300px]">
+                <h3 className="text-neutral-700 font-medium text-base w-[420px]">
+                    <span>Upload the necessary documents.</span>&nbsp;<span className="text-cc-blue font-medium cursor-pointer" onClick={() => setOpen(true)} >
+                        {language.philosophyGoals.whyToDo}
+                    </span>
+                </h3>
+                <h3 className="text-neutral-700 font-medium text-base w-[420px] mt-3">
+                    Pitch Deck
+                </h3>
+                <p className="text-neutral-500 font-normal text-sm">
+                    <span>Upload a PDF of your Pitch Deck</span>&nbsp;
+                    <span className="text-cc-blue font-medium cursor-pointer" onClick={() => setOpen(true)} >
+                        {language.common.example}
+                    </span>
+                </p>
+
+                <FileUpload id={1} fid={1} file={{}} setModalOpen={() => { }} setFile={() => { }} removeFile={() => { }} title={"Document"} className="w-full" />
+            </section>
+
+        );
+    };
+
     const mixOptionQuestion = (ques: any) => {
         return (
             <React.Fragment>
@@ -189,30 +213,6 @@ const StartupDeal = ({ step }: any) => {
         );
     };
 
-    const attachmentsOptions = (ques: any) => {
-        return (
-            <section className="flex items-start justify-center flex-col mt-10 max-w-[420px] min-w-[400px] screen500:max-w-[300px]">
-                <h3 className="text-neutral-700 font-medium text-base w-[420px]">
-                    <span>Upload the necessary documents.</span>&nbsp;<span className="text-cc-blue font-medium cursor-pointer" onClick={() => setOpen(true)} >
-                        {language.philosophyGoals.whyToDo}
-                    </span>
-                </h3>
-                <h3 className="text-neutral-700 font-medium text-base w-[420px] mt-3">
-                    Pitch Deck
-                </h3>
-                <p className="text-neutral-500 font-normal text-sm">
-                    <span>Upload a PDF of your Pitch Deck</span>&nbsp;
-                    <span className="text-cc-blue font-medium cursor-pointer" onClick={() => setOpen(true)} >
-                        {language.common.example}
-                    </span>
-                </p>
-
-                <FileUpload id={1} fid={1} file={{}} setModalOpen={() => { }} setFile={() => { }} removeFile={() => { }} title={"Document"} className="w-full" />
-            </section>
-
-        );
-    };
-
     const reviewUI = () => {
         return (
             <section className="flex items-start justify-center flex-col mt-10 max-w-[420px] min-w-[400px] screen500:max-w-[300px]">
@@ -251,7 +251,9 @@ const StartupDeal = ({ step }: any) => {
         else if (ques?.question_type === Constants.NUMBER_INPUT) {
             return numberInput(ques, secIndex);
         }
-        else if (ques?.question_type === Constants.CHECK_BOX) { }
+        else if (ques?.question_type === Constants.ATTACHMENTS) {
+            return attachments(ques, secIndex)
+        }
         else if (ques?.question_type === Constants.CHECK_BOX) { }
         else if (ques?.question_type === Constants.CHECK_BOX) { }
     };
@@ -284,7 +286,7 @@ const StartupDeal = ({ step }: any) => {
     return (
         <React.Fragment>
             <section className="w-10 inline-block align-middle">
-                <Stepper totalSteps={totalSteps} currentStep={0} direction="col" />
+                <Stepper totalSteps={totalSteps} currentStep={step} direction="col" />
             </section>
             <section className="w-[calc(100%-3rem)] inline-block align-middle">
                 <div className="w-full inline-flex items-center justify-cneter flex-col">
