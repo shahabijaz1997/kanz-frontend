@@ -13,6 +13,7 @@ import { getDealQuestion } from "../../../apis/deal.api";
 import { DealType } from "../../../enums/types.enum";
 import { saveToken } from "../../../redux-toolkit/slicer/auth.slicer";
 import { RoutesEnums } from "../../../enums/routes.enum";
+import { numberFormatter } from "../../../utils/object.utils";
 const CURRENCIES = ["USD", "AED"];
 
 const StartupDeal = ({ step }: any) => {
@@ -28,7 +29,6 @@ const StartupDeal = ({ step }: any) => {
     const [questions, setQuestions]: any = useState(false);
     const [open, setOpen]: any = useState(false);
     const [totalSteps, setTotalSteps]: any = useState([])
-
 
 
     useLayoutEffect(() => {
@@ -69,6 +69,7 @@ const StartupDeal = ({ step }: any) => {
         if (step > 1)
             navigate(`/create-deal/${step - 1}`)
     };
+
     const multipleChoice = (ques: any, secIndex: number) => {
         return (
             <section className="flex items-start justify-center flex-col mt-3 max-w-[420px] screen500:max-w-[300px]">
@@ -87,7 +88,7 @@ const StartupDeal = ({ step }: any) => {
                             React.Children.toArray(ques?.options.map((as: any) => {
                                 return (
                                     <li className={`h-[50px] w-[420px] p-4 grey-neutral-200 text-sm font-medium cursor-pointer border border-grey inline-flex items-center justify-start first:rounded-t-md last:rounded-b-md screen500:w-full ${as.selected ? "check-background" : "bg-white"}`}
-                                        onClick={() => dispatch(saveDealSelection({ option: as, question: ques, questions: dealData, lang: event, secIndex, step }))}>
+                                        onClick={() => dispatch(saveDealSelection({ option: as, question: ques, fields: dealData, lang: event, secIndex, step }))}>
                                         <input onChange={(e) => { }} className="accent-cyan-800 relative float-left mx-2 h-3 w-3 rounded-full border-2 border-solid border-cyan-300 before:pointer-events-none before:absolute before:h-4 before:w-4 before:scale-0 before:rounded-full before:bg-transparent before:opacity-0 before:content-[''] after:absolute after:z-[1] after:block after:h-4 after:w-4 after:rounded-full after:content-[''] checked:border-primary checked:before:opacity-[0.16] checked:after:absolute checked:after:left-1/2 checked:after:top-1/2 checked:after:h-[0.625rem] checked:after:w-[0.625rem] checked:after:rounded-full checked:after:border-primary checked:after:bg-primary checked:after:content-[''] checked:after:[transform:translate(-50%,-50%)] hover:cursor-pointer hover:before:opacity-[0.04]"
                                             type="radio" checked={as.selected ? true : false} />
                                         <div className="text-sm font-medium text-cyan-900">{as?.statement}</div>
@@ -102,7 +103,6 @@ const StartupDeal = ({ step }: any) => {
     };
 
     const numberInput = (ques: any, secIndex: number) => {
-        let suggestions: any = ["30"]
         return (
             <section className="flex items-start justify-center flex-col mt-3 max-w-[420px] screen500:max-w-[300px]">
                 <h3 className="text-neutral-700 font-medium text-base w-[420px]">
@@ -111,19 +111,19 @@ const StartupDeal = ({ step }: any) => {
 
                 <section className="mb-8 w-full relative mt-3">
                     <div className="relative rounded-md w-full h-10 border-[1px] border-neutral-300 overflow-hidden inline-flex items-center px-3">
-                        <input onInput={(e: any) => dispatch(saveDealSelection({ option: e.target.value, question: ques, questions: dealData, lang: event, secIndex, step }))} id={`num-${ques.id}`} placeholder={`${currency === 0 ? "$" : "د.إ"} 0.00`} type="text" className="outline-none w-full h-full placeholder-neutral-500" />
+                        <input onInput={(e: any) => dispatch(saveDealSelection({ option: e.target.value, question: ques, fields: dealData, lang: event, secIndex, step }))} id={`num-${ques.id}`} placeholder={`${currency === 0 ? "$" : "د.إ"} 0.00`} type="text" className="outline-none w-full h-full placeholder-neutral-500" />
                         <span className="cursor-pointer inline-flex items-center" onClick={() => setCurrency(prev => { return prev === 0 ? 1 : 0 })}>
                             <button className="font-normal text-lg text-neutral-500">{CURRENCIES[currency]}</button>
                         </span>
                     </div>
                     <ul className="inline-flex items-center gap-3 mt-3">
                         {React.Children.toArray(
-                            suggestions.map((suggestion: any) => (
+                            ques?.suggestions.map((suggestion: any) => (
                                 <li onClick={() => {
                                     let elem: HTMLInputElement | any = document.getElementById(`num-${ques.id}`);
                                     elem.value = suggestion;
-                                    dispatch(saveDealSelection({ option: suggestion, question: ques, questions: dealData, lang: event, secIndex, step }));
-                                }} className="cursor-pointer py-2 px-3 h-9 w-24 bg-cbc-grey-sec rounded-md text-center text-sm font-normal text-neutral-900">{currency === 0 ? "$" : "د.إ"} {suggestion}</li>
+                                    dispatch(saveDealSelection({ option: suggestion, question: ques, fields: dealData, lang: event, secIndex, step }));
+                                }} className="cursor-pointer py-2 px-3 h-9 w-24 bg-cbc-grey-sec rounded-md text-center text-sm font-normal text-neutral-900">{currency === 0 ? "$" : "د.إ"} {numberFormatter(Number(suggestion))}</li>
                             ))
                         )}
                     </ul>
@@ -132,25 +132,27 @@ const StartupDeal = ({ step }: any) => {
         );
     };
 
-    const attachments = (ques: any, secIndex: number) => {
+    const attachments = (ques: any, secIndex: number, section: any) => {
         return (
-            <section className="flex items-start justify-center flex-col mt-3 max-w-[420px] min-w-[400px] screen500:max-w-[300px]">
-                <h3 className="text-neutral-700 font-medium text-base w-[420px]">
-                    <span>Upload the necessary documents.</span>&nbsp;<span className="text-cc-blue font-medium cursor-pointer" onClick={() => setOpen(true)} >
-                        {language.philosophyGoals.whyToDo}
-                    </span>
-                </h3>
+            <section className="flex items-start justify-center flex-col mt-3 mb-6 max-w-[420px] min-w-[400px] screen500:max-w-[300px]">
+                {ques?.index < 1 && (
+                    <h3 className="text-neutral-700 font-medium text-base w-[420px]">
+                        <span>{section?.description}</span>&nbsp;<span className="text-cc-blue font-medium cursor-pointer" onClick={() => setOpen(true)} >
+                            {language.philosophyGoals.whyToDo}
+                        </span>
+                    </h3>
+                )}
                 <h3 className="text-neutral-700 font-medium text-base w-[420px] mt-3">
-                    Pitch Deck
+                    {ques?.statement}
                 </h3>
                 <p className="text-neutral-500 font-normal text-sm">
-                    <span>Upload a PDF of your Pitch Deck</span>&nbsp;
+                    <span>{language?.buttons?.upload} {React.Children.toArray(ques?.permitted_types?.map((type: any) => <span className="uppercase">{type}</span>))} {language?.drawer?.of} {ques?.statement}</span>&nbsp;
                     <span className="text-cc-blue font-medium cursor-pointer" onClick={() => setOpen(true)} >
                         {language.common.example}
                     </span>
                 </p>
 
-                <FileUpload id={1} fid={1} file={{}} setModalOpen={() => { }} setFile={() => { }} removeFile={() => { }} title={"Document"} className="w-full" />
+                <FileUpload onlyPDF={`${ques?.size_constraints?.limit}${ques?.size_constraints?.unit}`} id={ques?.id} fid={ques?.id} file={{}} setModalOpen={() => { }} setFile={() => { }} removeFile={() => { }} title={ques?.statement} className="w-full" />
             </section>
         );
     };
@@ -172,9 +174,9 @@ const StartupDeal = ({ step }: any) => {
                             <Selector disabled={false} value={currentValue} options={options}
                                 onChange={(v: any) => {
                                     let opt = ques?.options?.find((op: any) => op.statement === v.value);
-                                    dispatch(saveDealSelection({ option: opt, question: ques, questions: dealData, lang: event, secIndex, step }))
+                                    dispatch(saveDealSelection({ option: opt, question: ques, fields: dealData, lang: event, secIndex, step }))
                                 }}
-                                defaultValue={{label:currentValue, value: currentValue} || options[0]} />
+                                defaultValue={{ label: currentValue, value: currentValue } || options[0]} />
                         )}
                     </div>
                 </section>
@@ -270,20 +272,20 @@ const StartupDeal = ({ step }: any) => {
         )
     };
 
-    const renderQuestionType = (ques: any, secIndex: number) => {
-        if (ques?.question_type === Constants.MULTIPLE_CHOICE) {
+    const renderQuestionType = (ques: any, secIndex: number, section: any) => {
+        if (ques?.field_type === Constants.MULTIPLE_CHOICE) {
             return multipleChoice(ques, secIndex);
         }
-        else if (ques?.question_type === Constants.NUMBER_INPUT) {
+        else if (ques?.field_type === Constants.NUMBER_INPUT) {
             return numberInput(ques, secIndex);
         }
-        else if (ques?.question_type === Constants.ATTACHMENTS) {
-            return attachments(ques, secIndex)
+        else if (ques?.field_type === Constants.FILE) {
+            return attachments(ques, secIndex, section)
         }
-        else if (ques?.question_type === Constants.DROPDOWN) {
+        else if (ques?.field_type === Constants.DROPDOWN) {
             return dropdowns(ques, secIndex)
         }
-        else if (ques?.question_type === Constants.CHECK_BOX) { }
+        else if (ques?.field_type === Constants.CHECK_BOX) { }
     };
 
     const checkValidation = () => {
@@ -292,12 +294,12 @@ const StartupDeal = ({ step }: any) => {
 
         dealData[step - 1][event]?.sections.forEach((sec: any, index: number) => {
             flags.push({ section: sec.id, validations: [] });
-            sec.questions.forEach((ques: any) => {
-                if (ques?.question_type === Constants.MULTIPLE_CHOICE || ques?.question_type === Constants.DROPDOWN) {
+            sec.fields.forEach((ques: any) => {
+                if (ques?.field_type === Constants.MULTIPLE_CHOICE || ques?.field_type === Constants.DROPDOWN) {
                     let flag = ques.options?.some((opt: any) => opt.selected);
                     flags[index].validations.push(flag);
                 }
-                if (ques?.question_type === Constants.NUMBER_INPUT) {
+                if (ques?.field_type === Constants.NUMBER_INPUT) {
                     let flag = ques.answer ? true : false;
                     flags[index].validations.push(flag);
                 }
@@ -336,7 +338,7 @@ const StartupDeal = ({ step }: any) => {
                                                 </h3>
                                                 {
                                                     React.Children.toArray(
-                                                        section?.questions?.map((ques: any) => renderQuestionType(ques, index))
+                                                        section?.fields?.map((ques: any, quesIndex: number) => renderQuestionType(ques, index, section))
                                                     )
                                                 }
                                             </section>

@@ -156,7 +156,8 @@
         "submitted": "Under Review",
         "required_field": "This field is required.",
         "selectCurrency": "Currency",
-        "fileSpecs": "PNG, JPG, PDF up to"
+        "fileSpecs": "PNG, JPG, PDF up to",
+        "fileSpecsPDF": "PDF up to"
     },
     "buttons": {
         "start": "Get Started",

@@ -57,28 +57,28 @@ export const QuestionnaireSlice = createSlice({
               id: step,
               [lang]: {
                 sections: [{
-                  questions: [{ id: question.id, options: question?.options }]
+                  fields: [{ id: question.id, options: question?.options }]
                 }]
               }
             }
           ]
       }
       else {
-        const currentStep = existing.find((item: any) => item.id === step);
+        const currentStep = existing.find((item: any) => item.index === (step - 1));
         const currentSection = currentStep[lang]?.sections[secIndex];
-        const currentQuestion = currentSection.questions.find((ques: any) => ques.id === question.id);
-        if (currentQuestion.question_type === Constants.CHECK_BOX) {
+        const currentQuestion = currentSection.fields.find((ques: any) => ques.id === question.id);
+        if (currentQuestion.field_type === Constants.CHECK_BOX) {
           currentQuestion?.options.forEach((opt: any) => {
             if (opt.id === option.id) opt.selected = !option.selected;
           });
         }
-        else if (currentQuestion.question_type === Constants.MULTIPLE_CHOICE || currentQuestion.question_type === Constants.DROPDOWN) {
+        else if (currentQuestion.field_type === Constants.MULTIPLE_CHOICE || currentQuestion.field_type === Constants.DROPDOWN) {
           currentQuestion?.options.map((opt: any) => {
             if (opt.id === option.id) opt.selected = true;
             else opt.selected = false;
           });
         }
-        else if (currentQuestion.question_type === Constants.NUMBER_INPUT) {
+        else if (currentQuestion.field_type === Constants.NUMBER_INPUT) {
           currentQuestion.answer = option
         }
         else {

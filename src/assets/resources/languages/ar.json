@@ -156,7 +156,8 @@
         "submitted": "تم الإرسال",
         "required_field": "هذا الحقل مطلوب.",
         "selectCurrency": "حدد العملة",
-        "fileSpecs": "PNG، JPG، PDF حتى"
+        "fileSpecs": "PNG، JPG، PDF حتى",
+        "fileSpecsPDF": "PDF حتى"
     },
     "buttons": {
         "start": "البدء",

@@ -15,7 +15,7 @@ import Spinner from "../Spinner";
 import { RoutesEnums } from "../../../enums/routes.enum";
 import AddVideo from "../../../ts-icons/addVideoIcon.svg";
 
-const FileUpload = ({ id, fid, file, setModalOpen, setFile, removeFile, title, uploadDirect = true, acceptPdf = false, className = "", video = false }: any) => {
+const FileUpload = ({ id, fid, file, setModalOpen, setFile, removeFile, title, uploadDirect = true, acceptPdf = false, className = "", video = false, onlyPDF = false }: any) => {
     const language: any = useSelector((state: RootState) => state.language.value);
     const authToken: any = useSelector((state: RootState) => state.auth.value);
     const orientation: any = useSelector((state: RootState) => state.orientation.value);
@@ -184,14 +184,9 @@ const FileUpload = ({ id, fid, file, setModalOpen, setFile, removeFile, title, u
                                     <small className="text-sm text-cc-blue">{language.buttons.uploadFile}</small>&nbsp;
                                     <small className="text-sm text-neutral-500">{language.buttons.orDragDrop}</small>
                                 </p>
-                                {
-                                    video ? (
-                                        <div className="text-neutral-500 text-sm font-normal">{acceptPdf ? language?.common?.fileSpecs : language?.v2?.common?.imageSpecs} 10MB</div>
-                                    ) : (
-                                        <div className="text-neutral-500 text-sm font-normal">{language?.v3?.common?.vid_specs}</div>
-
-                                    )
-                                }
+                                {(video && !onlyPDF) && <div className="text-neutral-500 text-sm font-normal">{language?.v3?.common?.vid_specs}</div>}
+                                {(!video && !onlyPDF) && <div className="text-neutral-500 text-sm font-normal">{acceptPdf ? language?.common?.fileSpecs : language?.v2?.common?.imageSpecs} 10MB</div>}
+                                {onlyPDF && <div className="text-neutral-500 text-sm font-normal">{language?.common?.fileSpecsPDF} {onlyPDF}</div> }
                                 <input id={id} accept=".jpg,.png,.pdf" type="file" className="hidden" onChange={handleFileInput} />
                             </div>
                         )
