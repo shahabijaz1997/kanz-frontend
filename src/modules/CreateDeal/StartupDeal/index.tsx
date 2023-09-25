@@ -1,4 +1,4 @@
-import React, { useLayoutEffect, useRef, useState } from "react";
+import React, { useLayoutEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import Stepper from "../../../shared/components/Stepper";
@@ -14,6 +14,7 @@ import { DealType } from "../../../enums/types.enum";
 import { saveToken } from "../../../redux-toolkit/slicer/auth.slicer";
 import { RoutesEnums } from "../../../enums/routes.enum";
 import { numberFormatter } from "../../../utils/object.utils";
+import Input from "../../../shared/components/Input";
 const CURRENCIES = ["USD", "AED"];
 
 const StartupDeal = ({ step }: any) => {
@@ -72,7 +73,7 @@ const StartupDeal = ({ step }: any) => {
 
     const multipleChoice = (ques: any, secIndex: number) => {
         return (
-            <section className="flex items-start justify-center flex-col mt-3 max-w-[420px] screen500:max-w-[300px]">
+            <section className="flex items-start justify-center flex-col mt-3 max-w-[400px] screen500:max-w-[300px]">
                 <h3 className="text-neutral-700 font-medium text-base w-[420px]">
                     {ques?.title}
                 </h3>
@@ -82,7 +83,7 @@ const StartupDeal = ({ step }: any) => {
                         {language.common.learn}
                     </span>
                 </p>
-                <section className="mb-8 w-full relative mt-3">
+                <section className="mb-8 w-full relative mt-2">
                     <ul>
                         {ques?.options &&
                             React.Children.toArray(ques?.options.map((as: any) => {
@@ -104,12 +105,12 @@ const StartupDeal = ({ step }: any) => {
 
     const numberInput = (ques: any, secIndex: number) => {
         return (
-            <section className="flex items-start justify-center flex-col mt-3 max-w-[420px] screen500:max-w-[300px]">
+            <section className="flex items-start justify-center flex-col mt-3 max-w-[400px] screen500:max-w-[300px]">
                 <h3 className="text-neutral-700 font-medium text-base w-[420px]">
                     {ques?.statement}
                 </h3>
 
-                <section className="mb-8 w-full relative mt-3">
+                <section className="mb-8 w-full relative mt-2">
                     <div className="relative rounded-md w-full h-10 border-[1px] border-neutral-300 overflow-hidden inline-flex items-center px-3">
                         <input onInput={(e: any) => dispatch(saveDealSelection({ option: e.target.value, question: ques, fields: dealData, lang: event, secIndex, step }))} id={`num-${ques.id}`} placeholder={`${currency === 0 ? "$" : "د.إ"} 0.00`} type="text" className="outline-none w-full h-full placeholder-neutral-500" />
                         <span className="cursor-pointer inline-flex items-center" onClick={() => setCurrency(prev => { return prev === 0 ? 1 : 0 })}>
@@ -134,7 +135,7 @@ const StartupDeal = ({ step }: any) => {
 
     const attachments = (ques: any, secIndex: number, section: any) => {
         return (
-            <section className="flex items-start justify-center flex-col mt-3 mb-6 max-w-[420px] min-w-[400px] screen500:max-w-[300px]">
+            <section className="flex items-start justify-center flex-col mt-3 mb-6 max-w-[400px] min-w-[400px] screen500:max-w-[300px]">
                 {ques?.index < 1 && (
                     <h3 className="text-neutral-700 font-medium text-base w-[420px]">
                         <span>{section?.description}</span>&nbsp;<span className="text-cc-blue font-medium cursor-pointer" onClick={() => setOpen(true)} >
@@ -161,82 +162,55 @@ const StartupDeal = ({ step }: any) => {
         let options = ques?.options?.map((opt: any) => {
             return { label: opt?.statement, value: opt?.statement }
         });
-        let currentValue = ques?.options?.find((op: any) => op.selected)?.statement || "";
+        let currentValue = ques?.options?.find((op: any) => op.selected)?.statement || options[0]?.statement || "";
 
         return (
-            <section className="flex items-start justify-center flex-col mt-2 max-w-[420px] screen500:max-w-[300px]">
-                <h3 className="text-neutral-700 font-medium text-base w-[420px]">
+            <section className="flex items-start justify-center flex-col mt-2 max-w-[400px] screen500:max-w-[300px]">
+                <h3 className="text-neutral-700 font-medium text-base w-[400px]">
                     {ques?.statement}
                 </h3>
                 <section className="mb-8 w-full relative mt-3">
                     <div className="relative w-full" style={{ zIndex: 101 }}>
-                        {!loading && (
-                            <Selector disabled={false} value={currentValue} options={options}
-                                onChange={(v: any) => {
-                                    let opt = ques?.options?.find((op: any) => op.statement === v.value);
-                                    dispatch(saveDealSelection({ option: opt, question: ques, fields: dealData, lang: event, secIndex, step }))
-                                }}
-                                defaultValue={{ label: currentValue, value: currentValue } || options[0]} />
-                        )}
+                        <Selector disabled={false} value={currentValue} defaultValue={currentValue} options={options}
+                            onChange={(v: any) => {
+                                let opt = ques?.options?.find((op: any) => op.statement === v.value);
+                                dispatch(saveDealSelection({ option: opt, question: ques, fields: dealData, lang: event, secIndex, step }))
+                            }}
+                        />
                     </div>
                 </section>
             </section>
         );
     }
 
-    const mixOptionQuestion = (ques: any) => {
+    const switchInput = (ques: any, secIndex: number) => {
         return (
-            <React.Fragment>
-                <section className="flex items-start justify-center flex-col mt-10 max-w-[420px] screen500:max-w-[300px]">
-                    <h3 className="text-neutral-700 font-medium text-base w-[420px]">Valuation</h3>
-
-                    <div className="w-full relative mt-3 relative rounded-md h-10 border-[1px] border-neutral-300 overflow-hidden inline-flex items-center px-3">
-                        <input placeholder={`${currency === 0 ? "$" : "د.إ"} 0.00`} type="text" className="outline-none w-full h-full placeholder-neutral-500" />
-                        <button className="cursor-pointer  font-normal text-lg text-neutral-500" onClick={() => setCurrency(prev => { return prev === 0 ? 1 : 0 })}>{CURRENCIES[currency]}</button>
-                    </div>
-                </section>
-
-                <section className="flex items-start justify-center flex-col mt-10 max-w-[420px] screen500:max-w-[300px]">
-                    <h3 className="text-neutral-700 font-medium text-base w-[420px]">Type</h3>
-
-                    <div className="w-full relative mt-3" style={{ zIndex: 101 }}>
-                        <Selector disabled={false} placeholder="Pre Money" value={"Pre Money"} options={[]} onChange={(v: any) => { }} defaultValue={"Pre Money"} />
-                    </div>
-                </section>
-            </React.Fragment>
+            <section className="flex items-start justify-center flex-col mt-3 max-w-[400px] min-w-[400px] screen500:max-w-[300px]">
+                <div className="mb-6 inline-flex w-full items-center justify-between">
+                    <small className="text-neutral-700 text-lg font-medium">{ques?.statement}</small>
+                    <label className="relative inline-flex items-center cursor-pointer" onChange={(e) => dispatch(saveDealSelection({ option: !ques?.is_required, question: ques, fields: dealData, lang: event, secIndex, step }))}>
+                        <input type="checkbox" value="" className="sr-only peer" checked={ques?.is_required} />
+                        <div className="w-11 h-6 bg-gray-200 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-cyan-800"></div>
+                    </label>
+                </div>
+            </section>
         );
     };
 
-    const radioOptions = (ques: any) => {
+    const textAreaInput = (ques: any, secIndex: number) => {
         return (
-            <section className="flex items-start justify-center flex-col mt-10 max-w-[420px] min-w-[400px] screen500:max-w-[300px]">
-                <div className="mb-6 inline-flex w-full items-center justify-between">
-                    <small className="text-neutral-700 text-lg font-medium">Minimum Check Size</small>
-                    <label className="relative inline-flex items-center cursor-pointer">
-                        <input type="checkbox" value="" className="sr-only peer" checked={true} />
-                        <div className="w-11 h-6 bg-cyan-800 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-cyan-800"></div>
-                    </label>
+            <section className="flex items-start justify-center flex-col mt-3 max-w-[400px] min-w-[400px] screen500:max-w-[300px]">
+                <div className="mb-6 inline-flex flex-col w-full items-start justify-between">
+                    <label htmlFor={ques?.id} className="text-neutral-700 text-lg font-medium">{ques?.statement}</label>
+                    <textarea placeholder={ques?.statement} className="h-[100px] mt-2 resize-none shadow-sm appearance-none border border-neutral-300 rounded-md w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id={ques?.id} onInput={(e: any) => dispatch(saveDealSelection({ option: e.target.value, question: ques, fields: dealData, lang: event, secIndex, step }))}></textarea>
                 </div>
-
-                <div className="mb-6 relative rounded-md w-full h-10 border-[1px] border-neutral-300 overflow-hidden inline-flex items-center px-3">
-                    <input placeholder={`${currency === 0 ? "$" : "د.إ"} 0.00`} type="text" className="outline-none w-full h-full placeholder-neutral-500" />
-                </div>
-
-                <div className="mb-6 inline-flex w-full items-center justify-between">
-                    <small className="text-neutral-700 text-lg font-medium">Pro Rata</small>
-                    <label className="relative inline-flex items-center cursor-pointer">
-                        <input type="checkbox" value="" className="sr-only peer" checked={true} />
-                        <div className="w-11 h-6 bg-cyan-800 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-cyan-800"></div>
-                    </label>
-                </div>
-
-                <div className="mb-3 inline-flex w-full items-center justify-between">
-                    <small className="text-neutral-700 text-lg font-medium">Additional Rate</small>
-                    <label className="relative inline-flex items-center cursor-pointer">
-                        <input type="checkbox" value="" className="sr-only peer" checked={false} />
-                        <div className="w-11 h-6 bg-cyan-800 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-cyan-800"></div>
-                    </label>
-                </div>
+            </section>
+        );
+    };
+    const textFieldInput = (ques: any, secIndex: number) => {
+        return (
+            <section className="flex items-start justify-center flex-col mb-8 mt-3 max-w-[400px] min-w-[400px] screen500:max-w-[300px]">
+                <Input title={ques?.statement} className="bg-white w-full" placeholder={ques?.statement} id={ques?.id} onInput={(e: any) => dispatch(saveDealSelection({ option: e.target.value, question: ques, fields: dealData, lang: event, secIndex, step }))} />
             </section>
         );
     };
@@ -285,7 +259,15 @@ const StartupDeal = ({ step }: any) => {
         else if (ques?.field_type === Constants.DROPDOWN) {
             return dropdowns(ques, secIndex)
         }
-        else if (ques?.field_type === Constants.CHECK_BOX) { }
+        else if (ques?.field_type === Constants.SWITCH) {
+            return switchInput(ques, secIndex)
+        }
+        else if (ques?.field_type === Constants.TEXT_BOX) {
+            return textAreaInput(ques, secIndex)
+        }
+        else if (ques?.field_type === Constants.TEXT_FIELD) {
+            return textFieldInput(ques, secIndex)
+        }
     };
 
     const checkValidation = () => {
@@ -303,6 +285,9 @@ const StartupDeal = ({ step }: any) => {
                     let flag = ques.answer ? true : false;
                     flags[index].validations.push(flag);
                 }
+                if (ques.field_type === Constants.SWITCH) {
+                    flags[index].validations.push(ques.is_required);
+                }
             });
         });
 
@@ -315,10 +300,10 @@ const StartupDeal = ({ step }: any) => {
     }
     return (
         <React.Fragment>
-            <section className="w-10 inline-block align-middle">
+            <section className="w-10 inline-block align-top">
                 <Stepper totalSteps={totalSteps} currentStep={step} direction="col" />
             </section>
-            <section className="w-[calc(100%-3rem)] inline-block align-middle">
+            <section className="w-[calc(100%-3rem)] inline-block align-top">
                 <div className="w-full inline-flex items-center justify-cneter flex-col">
                     {loading ? (
                         <div className="absolute left-0 top-0 w-full h-full grid place-items-center" style={{ backgroundColor: "rgba(255, 255, 255, 1)", zIndex: 50 }} >
@@ -332,15 +317,13 @@ const StartupDeal = ({ step }: any) => {
                                 React.Children.toArray(
                                     dealData[step - 1][event]?.sections.map((section: any, index: number) => {
                                         return (
-                                            <section className="flex items-start flex-col mt-10 max-w-[420px] screen500:max-w-[300px]">
+                                            <section className="flex items-start flex-col max-w-[420px] screen500:max-w-[300px]">
                                                 <h3 className="text-neutral-700 font-bold text-2xl w-[420px]">
                                                     {section?.title}
                                                 </h3>
-                                                {
-                                                    React.Children.toArray(
-                                                        section?.fields?.map((ques: any, quesIndex: number) => renderQuestionType(ques, index, section))
-                                                    )
-                                                }
+                                                {section?.fields?.length ? (React.Children.toArray(
+                                                    section?.fields?.map((ques: any) => renderQuestionType(ques, index, section))
+                                                )) : (reviewUI())}
                                             </section>
                                         )
                                     })
