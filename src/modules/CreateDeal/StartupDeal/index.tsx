@@ -15,6 +15,7 @@ import { saveToken } from "../../../redux-toolkit/slicer/auth.slicer";
 import { RoutesEnums } from "../../../enums/routes.enum";
 import { numberFormatter } from "../../../utils/object.utils";
 import Input from "../../../shared/components/Input";
+
 const CURRENCIES = ["USD", "AED"];
 
 const StartupDeal = ({ step }: any) => {
@@ -28,8 +29,10 @@ const StartupDeal = ({ step }: any) => {
     const [loading, setLoading] = useState(false);
     const [currency, setCurrency] = useState(0);
     const [questions, setQuestions]: any = useState(false);
+    const [dependencies, setDependencies]: any = useState(null);
     const [open, setOpen]: any = useState(false);
-    const [totalSteps, setTotalSteps]: any = useState([])
+    const [restrictions, setRestrictions]: any = useState([]);
+    const [totalSteps, setTotalSteps]: any = useState({})
 
 
     useLayoutEffect(() => {
@@ -42,14 +45,68 @@ const StartupDeal = ({ step }: any) => {
             let { status, data } = await getDealQuestion({ type: DealType.STARTUP }, authToken);
             if (status === 200) {
                 console.log("Startup Deal: ", data?.status?.data?.steps[step - 1]);
+                // data?.status?.data?.steps?.forEach((step: any) => {
+                //     step[event]?.sections?.forEach((sec:any) => {
+                //         sec?.fields?.forEach((field:any) => {
+                //             if(field?.dependency?.length > 0) setDependencies(field?.dependency);
+                //         });
+                //     });
+                // });
+                setDependencies([
+                    {
+                        "condition": "equals",
+                        "value": "104",
+                        "dependent_type": "FieldAttribute",
+                        "dependent_id": 45,
+                        "operation": "show"
+                    },
+                    {
+                        "condition": "equals",
+                        "value": "104",
+                        "dependent_type": "FieldAttribute",
+                        "dependent_id": 46,
+                        "operation": "hide"
+                    },
+                    {
+                        "condition": "equals",
+                        "value": "104",
+                        "dependent_type": "Stepper",
+                        "dependent_id": 11,
+                        "operation": "hide"
+                    },
+                    {
+                        "condition": "equals",
+                        "value": "105",
+                        "dependent_type": "FieldAttribute",
+                        "dependent_id": 45,
+                        "operation": "hide"
+                    },
+                    {
+                        "condition": "equals",
+                        "value": "105",
+                        "dependent_type": "FieldAttribute",
+                        "dependent_id": 46,
+                        "operation": "show"
+                    },
+                    {
+                        "condition": "equals",
+                        "value": "105",
+                        "dependent_type": "Stepper",
+                        "dependent_id": 11,
+                        "operation": "show"
+                    }
+                ]);
+
                 setQuestions(data?.status?.data?.steps);
                 dispatch(saveQuestionnaire(data?.status?.data?.steps));
-                let all_steps = []
+                let all_steps = [];
                 for (let i = 0; i < data?.status?.data?.step_titles[event]?.length; i++) {
                     const step = data?.status?.data?.step_titles[event][i];
                     all_steps.push({ id: i + 1, text: step });
                 }
-                setTotalSteps(all_steps);
+                console.log("all_steps", all_steps);
+
+                setTotalSteps({ all: all_steps, copy: all_steps });
             }
 
         } catch (error: any) {
@@ -63,7 +120,7 @@ const StartupDeal = ({ step }: any) => {
     };
 
     const onSetNext = () => {
-        if (step <= totalSteps.length)
+        if (step <= totalSteps?.all.length)
             navigate(`/create-deal/${step + 1}`)
     };
     const onSetPrev = () => {
@@ -89,7 +146,44 @@ const StartupDeal = ({ step }: any) => {
                             React.Children.toArray(ques?.options.map((as: any) => {
                                 return (
                                     <li className={`h-[50px] w-[420px] p-4 grey-neutral-200 text-sm font-medium cursor-pointer border border-grey inline-flex items-center justify-start first:rounded-t-md last:rounded-b-md screen500:w-full ${as.selected ? "check-background" : "bg-white"}`}
-                                        onClick={() => dispatch(saveDealSelection({ option: as, question: ques, fields: dealData, lang: event, secIndex, step }))}>
+                                        onClick={() => {
+                                            dispatch(saveDealSelection({ option: as, question: ques, fields: dealData, lang: event, secIndex, step }))
+                                            let option: any[] = [];
+                                            dependencies?.find((dep: any) => {
+                                                if (String(dep.value) === String(as?.id)) {
+                                                    dep.option = as;
+                                                    option.push(dep);
+                                                }
+
+                                                questions?.forEach((q: any) => {
+                                                    option.forEach((rest: any) => {
+                                                        if (q?.id === rest?.dependent_id && rest?.dependent_type?.toLowerCase() === "stepper" && rest?.operation === "hide") {
+
+                                                            let step = totalSteps?.copy?.find((ts: any) => ts?.text === q[event]?.title);
+                                                            let steps = totalSteps?.copy.filter((stp: any) => stp?.text !== step?.text);
+                                                            console.log(steps, "STEP");
+                                                            setTotalSteps((prev: any) => {
+                                                                return {
+                                                                    copy: [...prev?.copy],
+                                                                    all: steps
+                                                                }
+                                                            })
+                                                        } else if (q?.id === rest?.dependent_id && rest?.dependent_type?.toLowerCase() === "stepper" && rest?.operation === "show") {
+                                                            console.log("prev?.copy", totalSteps?.copy);
+
+                                                            setTotalSteps((prev: any) => {
+                                                                return {
+                                                                    copy: prev?.copy,
+                                                                    all: prev?.copy
+                                                                }
+                                                            })
+                                                        }
+                                                    });
+                                                });
+
+                                            })
+                                            if (option.length) setRestrictions(option)
+                                        }}>
                                         <input onChange={(e) => { }} className="accent-cyan-800 relative float-left mx-2 h-3 w-3 rounded-full border-2 border-solid border-cyan-300 before:pointer-events-none before:absolute before:h-4 before:w-4 before:scale-0 before:rounded-full before:bg-transparent before:opacity-0 before:content-[''] after:absolute after:z-[1] after:block after:h-4 after:w-4 after:rounded-full after:content-[''] checked:border-primary checked:before:opacity-[0.16] checked:after:absolute checked:after:left-1/2 checked:after:top-1/2 checked:after:h-[0.625rem] checked:after:w-[0.625rem] checked:after:rounded-full checked:after:border-primary checked:after:bg-primary checked:after:content-[''] checked:after:[transform:translate(-50%,-50%)] hover:cursor-pointer hover:before:opacity-[0.04]"
                                             type="radio" checked={as.selected ? true : false} />
                                         <div className="text-sm font-medium text-cyan-900">{as?.statement}</div>
@@ -207,6 +301,7 @@ const StartupDeal = ({ step }: any) => {
             </section>
         );
     };
+
     const textFieldInput = (ques: any, secIndex: number) => {
         return (
             <section className="flex items-start justify-center flex-col mb-8 mt-3 max-w-[400px] min-w-[400px] screen500:max-w-[300px]">
@@ -247,26 +342,37 @@ const StartupDeal = ({ step }: any) => {
     };
 
     const renderQuestionType = (ques: any, secIndex: number, section: any) => {
-        if (ques?.field_type === Constants.MULTIPLE_CHOICE) {
-            return multipleChoice(ques, secIndex);
-        }
-        else if (ques?.field_type === Constants.NUMBER_INPUT) {
-            return numberInput(ques, secIndex);
-        }
-        else if (ques?.field_type === Constants.FILE) {
-            return attachments(ques, secIndex, section)
-        }
-        else if (ques?.field_type === Constants.DROPDOWN) {
-            return dropdowns(ques, secIndex)
-        }
-        else if (ques?.field_type === Constants.SWITCH) {
-            return switchInput(ques, secIndex)
-        }
-        else if (ques?.field_type === Constants.TEXT_BOX) {
-            return textAreaInput(ques, secIndex)
-        }
-        else if (ques?.field_type === Constants.TEXT_FIELD) {
-            return textFieldInput(ques, secIndex)
+        // restrictions?.some((res: any) => {
+        //     console.log("operation: ", res?.operation, "dependent_id: ", res.dependent_id, "ques?.id: ", ques?.id);
+        //     console.log(res?.operation === "show" && res.dependent_id == ques?.id);
+        //     console.log("----------------------------------------------------------");
+        //     console.log("Limitations: ", restrictions?.some((res: any) => res.dependent_id === ques?.id), res?.operation !== "show", restrictions.length > 0);
+        // })
+
+        if (restrictions?.some((res: any) => res.dependent_id === ques?.id && res?.operation !== "show") && restrictions.length > 0)
+            return "";
+        else {
+            if (ques?.field_type === Constants.MULTIPLE_CHOICE) {
+                return multipleChoice(ques, secIndex);
+            }
+            else if (ques?.field_type === Constants.NUMBER_INPUT) {
+                return numberInput(ques, secIndex);
+            }
+            else if (ques?.field_type === Constants.FILE) {
+                return attachments(ques, secIndex, section)
+            }
+            else if (ques?.field_type === Constants.DROPDOWN) {
+                return dropdowns(ques, secIndex)
+            }
+            else if (ques?.field_type === Constants.SWITCH) {
+                return switchInput(ques, secIndex)
+            }
+            else if (ques?.field_type === Constants.TEXT_BOX) {
+                return textAreaInput(ques, secIndex)
+            }
+            else if (ques?.field_type === Constants.TEXT_FIELD) {
+                return textFieldInput(ques, secIndex)
+            }
         }
     };
 
@@ -276,7 +382,12 @@ const StartupDeal = ({ step }: any) => {
 
         dealData[step - 1][event]?.sections.forEach((sec: any, index: number) => {
             flags.push({ section: sec.id, validations: [] });
-            sec.fields.forEach((ques: any) => {
+            let fields = sec.fields;
+            //             if(restrictions.length > 0) {
+            // // sec
+            //             }
+            // else fields = sec.fields
+            fields.forEach((ques: any) => {
                 if (ques?.field_type === Constants.MULTIPLE_CHOICE || ques?.field_type === Constants.DROPDOWN) {
                     let flag = ques.options?.some((opt: any) => opt.selected);
                     flags[index].validations.push(flag);
@@ -301,7 +412,7 @@ const StartupDeal = ({ step }: any) => {
     return (
         <React.Fragment>
             <section className="w-10 inline-block align-top">
-                <Stepper totalSteps={totalSteps} currentStep={step} direction="col" />
+                <Stepper totalSteps={totalSteps?.all} currentStep={step - 1} direction="col" />
             </section>
             <section className="w-[calc(100%-3rem)] inline-block align-top">
                 <div className="w-full inline-flex items-center justify-cneter flex-col">
@@ -322,7 +433,9 @@ const StartupDeal = ({ step }: any) => {
                                                     {section?.title}
                                                 </h3>
                                                 {section?.fields?.length ? (React.Children.toArray(
-                                                    section?.fields?.map((ques: any) => renderQuestionType(ques, index, section))
+                                                    section?.fields?.map((ques: any) => {
+                                                        return (renderQuestionType(ques, index, section))
+                                                    })
                                                 )) : (reviewUI())}
                                             </section>
                                         )
@@ -335,7 +448,7 @@ const StartupDeal = ({ step }: any) => {
                                         {language?.buttons?.back}
                                     </Button>
                                     <Button className="h-[38px] w-[140px]" disabled={!checkValidation()} htmlType="submit" loading={loading} onClick={onSetNext}>
-                                        {step < totalSteps?.length ? language?.buttons?.continue : language?.buttons?.proceed}
+                                        {step < totalSteps?.all?.length ? language?.buttons?.continue : language?.buttons?.proceed}
                                     </Button>
                                 </div>
                             </section>

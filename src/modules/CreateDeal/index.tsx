@@ -25,7 +25,7 @@ const CreateDeal = ({ }: any) => {
       <section>
         <Header
           custom={true}
-          data={{ leftMenu: language?.v3?.startup?.create_deal?.title, button: (<button onClick={() => navigate(-1)}> <CrossIcon stroke="#171717" className="w-6 h-6" /></button>) }}
+          data={{ leftMenu: language?.v3?.deal?.create_deal, button: (<button onClick={() => navigate(-1)}> <CrossIcon stroke="#171717" className="w-6 h-6" /></button>) }}
         />
       </section>
 
