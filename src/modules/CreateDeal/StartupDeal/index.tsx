@@ -9,7 +9,7 @@ import { saveDealSelection, saveQuestionnaire } from "../../../redux-toolkit/sli
 import { Constants } from "../../../enums/constants.enum";
 import Selector from "../../../shared/components/Selector";
 import FileUpload from "../../../shared/components/FileUpload";
-import { getDealQuestion } from "../../../apis/deal.api";
+import { getDealQuestion, postDealStep } from "../../../apis/deal.api";
 import { DealType } from "../../../enums/types.enum";
 import { saveToken } from "../../../redux-toolkit/slicer/auth.slicer";
 import { RoutesEnums } from "../../../enums/routes.enum";
@@ -28,11 +28,12 @@ const StartupDeal = ({ step }: any) => {
 
     const [loading, setLoading] = useState(false);
     const [currency, setCurrency] = useState(0);
-    const [questions, setQuestions]: any = useState(false);
+    const [questions, setQuestions]: any = useState(null);
     const [dependencies, setDependencies]: any = useState(null);
     const [open, setOpen]: any = useState(false);
     const [restrictions, setRestrictions]: any = useState([]);
     const [totalSteps, setTotalSteps]: any = useState({})
+    const [payloadId, setPayloadId]: any = useState()
 
 
     useLayoutEffect(() => {
@@ -43,7 +44,7 @@ const StartupDeal = ({ step }: any) => {
         try {
             setLoading(true);
             let { status, data } = await getDealQuestion({ type: DealType.STARTUP }, authToken);
-            if (status === 200) {
+            if (status === 200 && !questions) {
                 console.log("Startup Deal: ", data?.status?.data?.steps[step - 1]);
                 data?.status?.data?.steps?.forEach((step: any) => {
                     if (step?.dependencies?.length > 0) setDependencies(step.dependencies);
@@ -69,8 +70,48 @@ const StartupDeal = ({ step }: any) => {
         }
     };
 
-    const onSetNext = () => {
-        if (step <= totalSteps?.all.length) navigate(`/create-deal/${step + 1}`)
+    const onSetNext = async () => {
+        try {
+            let all_fields: any[] = [];
+            dealData[step - 1][event]?.sections?.forEach((section: any) => {
+                all_fields = all_fields.concat(section?.fields);
+            });
+
+            let fields: any[] = all_fields?.map((field: any) => {
+                let selected;
+                console.log("field", field);
+                if (field?.field_type === Constants.MULTIPLE_CHOICE || field?.field_type === Constants.DROPDOWN) {
+                    selected = field?.options?.find((opt: any) => opt.selected)?.id
+
+                }
+                if (field?.field_type === Constants.NUMBER_INPUT) {
+                    selected = field.answer
+                }
+                if (field.field_type === Constants.SWITCH) {
+                    selected = field?.is_required
+                }
+                return {
+                    id: field.id,
+                    value: selected
+                }
+            });
+
+            let payload: any = {
+                deal: {
+                    deal_type: "startup",
+                    step: questions[step - 1]?.id,
+                    fields
+                }
+            }
+            if (payloadId) payload.deal.id = payloadId;
+            let { status, data } = await postDealStep(payload, authToken);
+            if (status === 200) {
+                setPayloadId(data?.status?.data?.id)
+                if (step <= totalSteps?.all.length) navigate(`/create-deal/${step + 1}`);
+            }
+        } catch (error) {
+
+        }
     };
     const onSetPrev = () => {
         if (step > 1) navigate(`/create-deal/${step - 1}`)
@@ -146,7 +187,7 @@ const StartupDeal = ({ step }: any) => {
                             <button className="font-normal text-lg text-neutral-500">{CURRENCIES[currency]}</button>
                         </span>
                     </div>
-                    <ul className="inline-flex items-center gap-3 mt-3">
+                    <ul className="inline-flex items-center gap-1.5 mt-3">
                         {React.Children.toArray(
                             ques?.suggestions.map((suggestion: any) => (
                                 <li onClick={() => {
@@ -285,7 +326,7 @@ const StartupDeal = ({ step }: any) => {
             else if (ques?.field_type === Constants.DROPDOWN) return dropdowns(ques, secIndex)
             else if (ques?.field_type === Constants.SWITCH) return switchInput(ques, secIndex)
             else if (ques?.field_type === Constants.TEXT_BOX) return textAreaInput(ques, secIndex)
-            else if (ques?.field_type === Constants.TEXT_FIELD)  return textFieldInput(ques, secIndex)
+            else if (ques?.field_type === Constants.TEXT_FIELD) return textFieldInput(ques, secIndex)
         }
     };
 
@@ -310,11 +351,22 @@ const StartupDeal = ({ step }: any) => {
                 }
             });
         });
+        let isValid = false;
 
-        let isValid = flags.every((flag) => {
-            let validation = flag.validations.every((val: any) => val);
-            return validation
-        });
+        if (dealData[step - 1]?.dependencies?.length > 0) {
+            let dependantChecks = flags.map((flag) => {
+                let validation = flag.validations.filter((val: any) => val);
+                return validation;
+            });
+            isValid = dependantChecks[0].length > 1 ? true: false;
+        }
+
+        else {
+            isValid = flags.every((flag) => {
+                let validation = flag.validations.every((val: any) => val);
+                return validation
+            });
+        }
 
         return isValid;
     }
