@@ -46,7 +46,7 @@ const StartupDeal = ({ step }: any) => {
             if (status === 200) {
                 console.log("Startup Deal: ", data?.status?.data?.steps[step - 1]);
                 data?.status?.data?.steps?.forEach((step: any) => {
-                    if(step?.dependencies?.length > 0) setDependencies(step.dependencies);
+                    if (step?.dependencies?.length > 0) setDependencies(step.dependencies);
                 });
 
                 setQuestions(data?.status?.data?.steps);
@@ -70,12 +70,10 @@ const StartupDeal = ({ step }: any) => {
     };
 
     const onSetNext = () => {
-        if (step <= totalSteps?.all.length)
-            navigate(`/create-deal/${step + 1}`)
+        if (step <= totalSteps?.all.length) navigate(`/create-deal/${step + 1}`)
     };
     const onSetPrev = () => {
-        if (step > 1)
-            navigate(`/create-deal/${step - 1}`)
+        if (step > 1) navigate(`/create-deal/${step - 1}`)
     };
 
     const multipleChoice = (ques: any, secIndex: number) => {
@@ -107,21 +105,12 @@ const StartupDeal = ({ step }: any) => {
 
                                                             let step = totalSteps?.copy?.find((ts: any) => ts?.text === q[event]?.title);
                                                             let steps = totalSteps?.copy.filter((stp: any) => stp?.text !== step?.text);
-                                                            console.log(steps, "STEP");
                                                             setTotalSteps((prev: any) => {
-                                                                return {
-                                                                    copy: [...prev?.copy],
-                                                                    all: steps
-                                                                }
+                                                                return { copy: [...prev?.copy], all: steps }
                                                             })
                                                         } else if (q?.id === rest?.dependent_id && rest?.dependent_type?.toLowerCase() === "stepper" && rest?.operation === "show") {
-                                                            console.log("prev?.copy", totalSteps?.copy);
-
                                                             setTotalSteps((prev: any) => {
-                                                                return {
-                                                                    copy: prev?.copy,
-                                                                    all: prev?.copy
-                                                                }
+                                                                return { copy: prev?.copy, all: prev?.copy }
                                                             })
                                                         }
                                                     });
@@ -288,30 +277,15 @@ const StartupDeal = ({ step }: any) => {
     };
 
     const renderQuestionType = (ques: any, secIndex: number, section: any) => {
-        if (restrictions?.some((res: any) => res.dependent_id === ques?.id && res?.operation !== "show") && restrictions.length > 0)
-            return "";
+        if (restrictions?.some((res: any) => res.dependent_id === ques?.id && res?.operation !== "show") && restrictions.length > 0) return "";
         else {
-            if (ques?.field_type === Constants.MULTIPLE_CHOICE) {
-                return multipleChoice(ques, secIndex);
-            }
-            else if (ques?.field_type === Constants.NUMBER_INPUT) {
-                return numberInput(ques, secIndex);
-            }
-            else if (ques?.field_type === Constants.FILE) {
-                return attachments(ques, secIndex, section)
-            }
-            else if (ques?.field_type === Constants.DROPDOWN) {
-                return dropdowns(ques, secIndex)
-            }
-            else if (ques?.field_type === Constants.SWITCH) {
-                return switchInput(ques, secIndex)
-            }
-            else if (ques?.field_type === Constants.TEXT_BOX) {
-                return textAreaInput(ques, secIndex)
-            }
-            else if (ques?.field_type === Constants.TEXT_FIELD) {
-                return textFieldInput(ques, secIndex)
-            }
+            if (ques?.field_type === Constants.MULTIPLE_CHOICE) return multipleChoice(ques, secIndex);
+            else if (ques?.field_type === Constants.NUMBER_INPUT) return numberInput(ques, secIndex);
+            else if (ques?.field_type === Constants.FILE) return attachments(ques, secIndex, section)
+            else if (ques?.field_type === Constants.DROPDOWN) return dropdowns(ques, secIndex)
+            else if (ques?.field_type === Constants.SWITCH) return switchInput(ques, secIndex)
+            else if (ques?.field_type === Constants.TEXT_BOX) return textAreaInput(ques, secIndex)
+            else if (ques?.field_type === Constants.TEXT_FIELD)  return textFieldInput(ques, secIndex)
         }
     };
 
@@ -367,11 +341,7 @@ const StartupDeal = ({ step }: any) => {
                                                 <h3 className="text-neutral-700 font-bold text-2xl w-[420px]">
                                                     {section?.title}
                                                 </h3>
-                                                {section?.fields?.length ? (React.Children.toArray(
-                                                    section?.fields?.map((ques: any) => {
-                                                        return (renderQuestionType(ques, index, section))
-                                                    })
-                                                )) : (reviewUI())}
+                                                {section?.fields?.length ? (React.Children.toArray(section?.fields?.map((ques: any) => renderQuestionType(ques, index, section)))) : (reviewUI())}
                                             </section>
                                         )
                                     })
