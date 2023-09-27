@@ -45,57 +45,9 @@ const StartupDeal = ({ step }: any) => {
             let { status, data } = await getDealQuestion({ type: DealType.STARTUP }, authToken);
             if (status === 200) {
                 console.log("Startup Deal: ", data?.status?.data?.steps[step - 1]);
-                // data?.status?.data?.steps?.forEach((step: any) => {
-                //     step[event]?.sections?.forEach((sec:any) => {
-                //         sec?.fields?.forEach((field:any) => {
-                //             if(field?.dependency?.length > 0) setDependencies(field?.dependency);
-                //         });
-                //     });
-                // });
-                setDependencies([
-                    {
-                        "condition": "equals",
-                        "value": "104",
-                        "dependent_type": "FieldAttribute",
-                        "dependent_id": 45,
-                        "operation": "show"
-                    },
-                    {
-                        "condition": "equals",
-                        "value": "104",
-                        "dependent_type": "FieldAttribute",
-                        "dependent_id": 46,
-                        "operation": "hide"
-                    },
-                    {
-                        "condition": "equals",
-                        "value": "104",
-                        "dependent_type": "Stepper",
-                        "dependent_id": 11,
-                        "operation": "hide"
-                    },
-                    {
-                        "condition": "equals",
-                        "value": "105",
-                        "dependent_type": "FieldAttribute",
-                        "dependent_id": 45,
-                        "operation": "hide"
-                    },
-                    {
-                        "condition": "equals",
-                        "value": "105",
-                        "dependent_type": "FieldAttribute",
-                        "dependent_id": 46,
-                        "operation": "show"
-                    },
-                    {
-                        "condition": "equals",
-                        "value": "105",
-                        "dependent_type": "Stepper",
-                        "dependent_id": 11,
-                        "operation": "show"
-                    }
-                ]);
+                data?.status?.data?.steps?.forEach((step: any) => {
+                    if(step?.dependencies?.length > 0) setDependencies(step.dependencies);
+                });
 
                 setQuestions(data?.status?.data?.steps);
                 dispatch(saveQuestionnaire(data?.status?.data?.steps));
@@ -104,8 +56,6 @@ const StartupDeal = ({ step }: any) => {
                     const step = data?.status?.data?.step_titles[event][i];
                     all_steps.push({ id: i + 1, text: step });
                 }
-                console.log("all_steps", all_steps);
-
                 setTotalSteps({ all: all_steps, copy: all_steps });
             }
 
@@ -150,11 +100,7 @@ const StartupDeal = ({ step }: any) => {
                                             dispatch(saveDealSelection({ option: as, question: ques, fields: dealData, lang: event, secIndex, step }))
                                             let option: any[] = [];
                                             dependencies?.find((dep: any) => {
-                                                if (String(dep.value) === String(as?.id)) {
-                                                    dep.option = as;
-                                                    option.push(dep);
-                                                }
-
+                                                if (String(dep.value) === String(as?.id)) option.push(dep);
                                                 questions?.forEach((q: any) => {
                                                     option.forEach((rest: any) => {
                                                         if (q?.id === rest?.dependent_id && rest?.dependent_type?.toLowerCase() === "stepper" && rest?.operation === "hide") {
@@ -342,13 +288,6 @@ const StartupDeal = ({ step }: any) => {
     };
 
     const renderQuestionType = (ques: any, secIndex: number, section: any) => {
-        // restrictions?.some((res: any) => {
-        //     console.log("operation: ", res?.operation, "dependent_id: ", res.dependent_id, "ques?.id: ", ques?.id);
-        //     console.log(res?.operation === "show" && res.dependent_id == ques?.id);
-        //     console.log("----------------------------------------------------------");
-        //     console.log("Limitations: ", restrictions?.some((res: any) => res.dependent_id === ques?.id), res?.operation !== "show", restrictions.length > 0);
-        // })
-
         if (restrictions?.some((res: any) => res.dependent_id === ques?.id && res?.operation !== "show") && restrictions.length > 0)
             return "";
         else {
@@ -383,10 +322,6 @@ const StartupDeal = ({ step }: any) => {
         dealData[step - 1][event]?.sections.forEach((sec: any, index: number) => {
             flags.push({ section: sec.id, validations: [] });
             let fields = sec.fields;
-            //             if(restrictions.length > 0) {
-            // // sec
-            //             }
-            // else fields = sec.fields
             fields.forEach((ques: any) => {
                 if (ques?.field_type === Constants.MULTIPLE_CHOICE || ques?.field_type === Constants.DROPDOWN) {
                     let flag = ques.options?.some((opt: any) => opt.selected);
