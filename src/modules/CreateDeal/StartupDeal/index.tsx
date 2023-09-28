@@ -15,6 +15,9 @@ import { saveToken } from "../../../redux-toolkit/slicer/auth.slicer";
 import { RoutesEnums } from "../../../enums/routes.enum";
 import { numberFormatter } from "../../../utils/object.utils";
 import Input from "../../../shared/components/Input";
+import { saveDataHolder } from "../../../redux-toolkit/slicer/dataHolder.slicer";
+import { toast } from "react-toastify";
+import { toastUtil } from "../../../utils/toast.utils";
 
 const CURRENCIES = ["USD", "AED"];
 
@@ -25,6 +28,7 @@ const StartupDeal = ({ step }: any) => {
     const authToken: any = useSelector((state: RootState) => state.auth.value);
     const event: any = useSelector((state: RootState) => state.event.value);
     const dealData: any = useSelector((state: RootState) => state.questionnaire.value);
+    const dataHolder: any = useSelector((state: RootState) => state.dataHolder.value);
 
     const [loading, setLoading] = useState(false);
     const [currency, setCurrency] = useState(0);
@@ -33,7 +37,6 @@ const StartupDeal = ({ step }: any) => {
     const [open, setOpen]: any = useState(false);
     const [restrictions, setRestrictions]: any = useState([]);
     const [totalSteps, setTotalSteps]: any = useState({})
-    const [payloadId, setPayloadId]: any = useState()
 
 
     useLayoutEffect(() => {
@@ -79,7 +82,6 @@ const StartupDeal = ({ step }: any) => {
 
             let fields: any[] = all_fields?.map((field: any) => {
                 let selected;
-                console.log("field", field);
                 if (field?.field_type === Constants.MULTIPLE_CHOICE || field?.field_type === Constants.DROPDOWN) {
                     selected = field?.options?.find((opt: any) => opt.selected)?.id
 
@@ -103,14 +105,15 @@ const StartupDeal = ({ step }: any) => {
                     fields
                 }
             }
-            if (payloadId) payload.deal.id = payloadId;
+            if (dataHolder) payload.deal.id = dataHolder;
             let { status, data } = await postDealStep(payload, authToken);
             if (status === 200) {
-                setPayloadId(data?.status?.data?.id)
+                dispatch(saveDataHolder(data?.status?.data?.id));
                 if (step <= totalSteps?.all.length) navigate(`/create-deal/${step + 1}`);
             }
-        } catch (error) {
-
+        } catch (error:any) {
+            const message = error?.response?.data?.status?.message || language.promptMessages.errorGeneral;
+            toast.error(message, toastUtil);
         }
     };
     const onSetPrev = () => {
@@ -358,7 +361,7 @@ const StartupDeal = ({ step }: any) => {
                 let validation = flag.validations.filter((val: any) => val);
                 return validation;
             });
-            isValid = dependantChecks[0].length > 1 ? true: false;
+            isValid = dependantChecks[0].length > 1 ? true : false;
         }
 
         else {
@@ -389,11 +392,18 @@ const StartupDeal = ({ step }: any) => {
                                 React.Children.toArray(
                                     dealData[step - 1][event]?.sections.map((section: any, index: number) => {
                                         return (
-                                            <section className="flex items-start flex-col max-w-[420px] screen500:max-w-[300px]">
+                                            <section className="flex items-start flex-col max-w-[400px] screen500:max-w-[300px]">
                                                 <h3 className="text-neutral-700 font-bold text-2xl w-[420px]">
                                                     {section?.title}
                                                 </h3>
                                                 {section?.fields?.length ? (React.Children.toArray(section?.fields?.map((ques: any) => renderQuestionType(ques, index, section)))) : (reviewUI())}
+                                           
+                                                {(section?.add_more_label && index === dealData[step - 1][event]?.sections?.length - 1) && (
+                                                    <Button onClick={() => {
+                                                        // dealData[step - 1][event]?.sec
+                                                    }}
+                                                    className="w-[400px] screen500:w-[300px] bg-transparent border-2 border-cyan-800 !text-cyan-800 hover:!text-white">{section?.add_more_label}</Button>
+                                                )}
                                             </section>
                                         )
                                     })

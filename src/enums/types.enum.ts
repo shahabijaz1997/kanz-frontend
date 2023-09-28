@@ -26,5 +26,5 @@ export enum ApplicationStatus {
 
 export enum DealType {
     STARTUP = "startup_deal",
-    REALTOR = "realtor_deal",
+    REALTOR = "property_deal",
 }

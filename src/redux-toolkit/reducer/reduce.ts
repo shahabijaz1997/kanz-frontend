@@ -7,6 +7,7 @@ import questionnaireReducer from '../slicer/philosophy.slicer';
 import eventReducer from '../slicer/event.slicer';
 import attachmentsReducer from '../slicer/attachments.slicer';
 import orientaionReducer from '../slicer/orientation.slicer';
+import dataHolderReducer from '../slicer/dataHolder.slicer';
 
 const rootReducer = combineReducers({
   auth: authReducer,
@@ -17,6 +18,7 @@ const rootReducer = combineReducers({
   event: eventReducer,
   attachments: attachmentsReducer,
   orientation: orientaionReducer,
+  dataHolder: dataHolderReducer
 });
 
 export default rootReducer;

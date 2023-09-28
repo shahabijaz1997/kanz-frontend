@@ -6,5 +6,6 @@ export enum Constants {
     CHECK_BOX = "checkbox",
     NUMBER_INPUT = "number",
     DROPDOWN = "dropdown",
-    FILE = "file"
+    FILE = "file",
+    URL = "url"
 }

@@ -208,7 +208,7 @@ const RouterModule = () => {
           element={
             <Suspense fallback={<Loader />}>
               <CHECK_LOGGED_IN>
-                <GUARD_ROUTE role={KanzRoles.STARTUP || KanzRoles.REALTOR}> <CreateDeal /></GUARD_ROUTE>
+                 <CreateDeal />
               </CHECK_LOGGED_IN>
             </Suspense>
           } />

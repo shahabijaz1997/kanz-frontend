@@ -78,7 +78,7 @@ export const QuestionnaireSlice = createSlice({
             else opt.selected = false;
           });
         }
-        else if (currentQuestion.field_type === Constants.NUMBER_INPUT) {
+        else if (currentQuestion.field_type === Constants.NUMBER_INPUT || currentQuestion.field_type === Constants.TEXT_BOX || currentQuestion.field_type === Constants.TEXT_FIELD || currentQuestion.field_type === Constants.URL) {
           currentQuestion.answer = option
         }
         else if (currentQuestion.field_type === Constants.SWITCH) {
@@ -91,9 +91,24 @@ export const QuestionnaireSlice = createSlice({
         }
         state.value = existing;
       }
+    },
+    saveMoreFields: (state, action: PayloadAction<any>) => {
+      const { secIndex, lang, step, duplicate } = action.payload;
+      const existing = JSON.parse(JSON.stringify(state.value));
+
+
+      const currentStep = existing.find((item: any) => item.index === (step - 1));
+      const currentSection = currentStep[lang]?.sections[secIndex];
+
+      for (let i = 0; i < duplicate; i++) {
+        const element = currentSection?.fields[i];
+        currentSection?.fields.push({...element, duplicate: true});
+      }
+
+      state.value = existing;
     }
   },
 });
 
-export const { saveQuestionnaire, saveAnswer, saveDealSelection } = QuestionnaireSlice.actions;
+export const { saveQuestionnaire, saveAnswer, saveDealSelection, saveMoreFields } = QuestionnaireSlice.actions;
 export default QuestionnaireSlice.reducer;
