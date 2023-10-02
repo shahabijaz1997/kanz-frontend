@@ -82,26 +82,26 @@ const SyndicateStepper = ({ event, orientation, language, metadata, payload, fil
         }
     };
 
-    const industriesFilteredData : any = [];
+    const industriesFilteredData: any = [];
     if (searchResults?.industry?.length > 0 && payload?.industry) {
         searchResults?.industry?.filter((item: any) => {
             payload?.industry?.map((market: any) => {
-          if (market === item.id) {
-            industriesFilteredData.push(item);
-          }
+                if (market === item.id) {
+                    industriesFilteredData.push(item);
+                }
+            });
         });
-      });
     }
 
-    const regionsFilteredData : any = [];
+    const regionsFilteredData: any = [];
     if (searchResults?.region?.length > 0 && payload?.region) {
         searchResults?.region?.filter((item: any) => {
             payload?.region?.map((region: any) => {
-          if (region === item.id) {
-            regionsFilteredData.push(item);
-          }
+                if (region === item.id) {
+                    regionsFilteredData.push(item);
+                }
+            });
         });
-      });
     }
 
     return (
@@ -167,7 +167,7 @@ const SyndicateStepper = ({ event, orientation, language, metadata, payload, fil
                                         <small>{ind[event]?.name}</small>
                                         <CrossIcon onClick={() => {
                                             let payloadItems = industriesFilteredData?.filter((x: any) => x?.id !== ind?.id);
-                                            onSetPayload(payloadItems.map((item: any)=>item.id), "industry");
+                                            onSetPayload(payloadItems.map((item: any) => item.id), "industry");
                                         }} className="cursor-pointer h-5 w-5 ml-1" stroke={"#828282"} />
                                     </div>)
                                 )}
@@ -197,7 +197,7 @@ const SyndicateStepper = ({ event, orientation, language, metadata, payload, fil
                                         <small>{ind[event]?.name}</small>
                                         <CrossIcon onClick={() => {
                                             let payloadItems = regionsFilteredData?.filter((x: any) => x?.id !== ind?.id)
-                                            onSetPayload(payloadItems.map((item: any)=>item.id), "region");
+                                            onSetPayload(payloadItems.map((item: any) => item.id), "region");
                                         }} className="cursor-pointer h-5 w-5 ml-1" stroke={"#828282"} />
                                     </div>)
                                 )}
@@ -239,64 +239,64 @@ const SyndicateStepper = ({ event, orientation, language, metadata, payload, fil
                         <label htmlFor="tagline" className="text-neutral-700 text-sm font-medium">{language.syndicate.tagline}</label>
                         <input id="tagline" value={payload?.tagline} onChange={(e) => onSetPayload(e.target.value, "tagline")} placeholder={language.syndicate.tagline} className=" h-[42px] shadow-sm appearance-none border border-neutral-300 rounded-md w-full py-2 px-3 text-gray-500 leading-tight focus:outline-none focus:shadow-outline" type="text" />
                     </section>
-                     <div
-                key={1}
-                className={`mb-4 w-full select-none content-center ${payload.logo && typeof payload.logo === "string" ?'bg-cbc-grey-sec p-4 rounded-md' :''}`}
-              >
-                <div className="block text-neutral-700 text-base font-medium">
-                  <span className="inline-flex w-full items-center justify-between">
-                    <span className="inline-flex flex-col">
-                        
-                      <div>{language.syndicate.logo}</div>
-                      <div className="block">
-                      <small className="text-neutral-500 font-normal">{language.company.uploadCompLogo}</small>
+                    <div
+                        key={1}
+                        className={`mb-4 w-full select-none content-center ${payload.logo && typeof payload.logo === "string" ? 'bg-cbc-grey-sec p-4 rounded-md' : ''}`}
+                    >
+                        <div className="block text-neutral-700 text-base font-medium">
+                            <span className="inline-flex w-full items-center justify-between">
+                                <span className="inline-flex flex-col">
 
-                      <small className="relative font-normal text-cc-blue cursor-pointer" onMouseEnter={() => setShowHoverModal(true)} onMouseLeave={() => setShowHoverModal(false)}>
-                                &nbsp;<span>{language.common.example}</span>
-                                {showHoverModal && (
-                                    <HoverModal>
-                                        <section className="inline-flex flex-row items-center justify-evenly h-full">
-                                            <img src={SampleImage_2} alt={language.syndicate.logo} className="max-h-[90px]" />
-                                            <img src={SampleImage} alt={language.syndicate.logo} className="max-h-[140px]" />
-                                        </section>
-                                    </HoverModal>
+                                    <div>{language.syndicate.logo}</div>
+                                    <div className="block">
+                                        <small className="text-neutral-500 font-normal">{language.company.uploadCompLogo}</small>
+
+                                        <small className="relative font-normal text-cc-blue cursor-pointer" onMouseEnter={() => setShowHoverModal(true)} onMouseLeave={() => setShowHoverModal(false)}>
+                                            &nbsp;<span>{language.common.example}</span>
+                                            {showHoverModal && (
+                                                <HoverModal>
+                                                    <section className="inline-flex flex-row items-center justify-evenly h-full">
+                                                        <img src={SampleImage_2} alt={language.syndicate.logo} className="max-h-[90px]" />
+                                                        <img src={SampleImage} alt={language.syndicate.logo} className="max-h-[140px]" />
+                                                    </section>
+                                                </HoverModal>
+                                            )}
+                                        </small>
+                                    </div>
+                                </span>
+                                {payload.logo && typeof payload.logo === "string" && <EditIcon
+                                    stroke="#fff"
+                                    className="w-7 h-7 float-right cursor-pointer rounded-md p-1"
+                                    style={{
+                                        backgroundColor: "rgba(0, 0, 0, 0.078)",
+                                    }}
+                                    onClick={() => onSetPayload(null, "logo")}
+                                />}
+                            </span>
+                            <div className="content-center text-center mt-2  main-embed  h-[210px] overflow-hidden relative">
+                                {payload.logo && typeof payload.logo === "string" ? (
+                                    <img
+                                        alt="Logo"
+                                        src={payload.logo}
+                                        className="block w-[110%] h-[110%] overflow-hidden object-contain"
+                                    />
+                                ) : (
+                                    <FileUpload
+                                        uploadDirect={false}
+                                        id={"logo"}
+                                        title={"Logo"}
+                                        file={file}
+                                        setFile={setFile}
+                                        removeFile={removeFile}
+                                        setModalOpen={(e: any) => {
+                                            setModalOpen(e.open ? e.url : null);
+                                            e.type && setFileType(e.type);
+                                        }}
+                                    />
                                 )}
-                            </small>
                             </div>
-                    </span>
-                   {payload.logo && typeof payload.logo === "string" &&  <EditIcon
-                      stroke="#fff"
-                      className="w-7 h-7 float-right cursor-pointer rounded-md p-1"
-                      style={{
-                        backgroundColor: "rgba(0, 0, 0, 0.078)",
-                      }}
-                      onClick={() => onSetPayload(null, "logo")}
-                    />}
-                  </span>
-                  <div className="content-center text-center mt-2  main-embed  h-[210px] overflow-hidden relative">
-                    {payload.logo && typeof payload.logo === "string" ? (
-                      <img
-                        alt="Logo"
-                        src={payload.logo}
-                        className="block w-[110%] h-[110%] overflow-hidden object-contain"
-                      />
-                    ) : (
-                      <FileUpload
-                        uploadDirect={false}
-                        id={"logo"}
-                        title={"Logo"}
-                        file={file}
-                        setFile={setFile}
-                        removeFile={removeFile}
-                        setModalOpen={(e: any) => {
-                          setModalOpen(e.open ? e.url : null);
-                          e.type && setFileType(e.type);
-                        }}
-                      />
-                    )}
-                  </div>
-                </div>
-              </div>
+                        </div>
+                    </div>
                 </form>
             </section>
         )

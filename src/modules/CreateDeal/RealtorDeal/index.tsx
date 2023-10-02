@@ -1,4 +1,4 @@
-import React, { useLayoutEffect, useState } from "react";
+import React, { useEffect, useLayoutEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import Stepper from "../../../shared/components/Stepper";
@@ -7,7 +7,7 @@ import Spinner from "../../../shared/components/Spinner";
 import Button from "../../../shared/components/Button";
 import { getDealQuestion, postDealStep } from "../../../apis/deal.api";
 import { DealType } from "../../../enums/types.enum";
-import { saveDealSelection, saveMoreFields, saveQuestionnaire } from "../../../redux-toolkit/slicer/philosophy.slicer";
+import { onResetFields, saveDealSelection, saveMoreFields, saveQuestionnaire } from "../../../redux-toolkit/slicer/philosophy.slicer";
 import { saveToken } from "../../../redux-toolkit/slicer/auth.slicer";
 import { RoutesEnums } from "../../../enums/routes.enum";
 import { Constants } from "../../../enums/constants.enum";
@@ -15,9 +15,11 @@ import { saveDataHolder } from "../../../redux-toolkit/slicer/dataHolder.slicer"
 import { toastUtil } from "../../../utils/toast.utils";
 import { toast } from "react-toastify";
 import Selector from "../../../shared/components/Selector";
-import { numberFormatter } from "../../../utils/object.utils";
+import { isEmpty, numberFormatter } from "../../../utils/object.utils";
 import FileUpload from "../../../shared/components/FileUpload";
-import AddIcon from "../../../assets/icons/add.svg";
+import HoverModal from "../../../shared/components/HoverModal";
+import ExampleRealtor from "../../../assets/example_realtor.png";
+import BinIcon from "../../../ts-icons/binIcon.svg";
 
 const CURRENCIES = ["USD", "AED"];
 
@@ -25,21 +27,23 @@ const RealtorDeal = ({ step }: any) => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
-    const [open, setOpen]: any = useState(false);
-    const [loading, setLoading] = useState(false);
     const language: any = useSelector((state: RootState) => state.language.value);
     const event: any = useSelector((state: RootState) => state.event.value);
     const authToken: any = useSelector((state: RootState) => state.auth.value);
     const orientation: any = useSelector((state: RootState) => state.orientation.value);
     const dataHolder: any = useSelector((state: RootState) => state.dataHolder.value);
     const dealData: any = useSelector((state: RootState) => state.questionnaire.value);
-    const [modalOpen, setModalOpen] = useState(false);
+
+    const [multipleFieldsPayload, setMultipleFieldsPayload]: any = useState([]);
     const [restrictions, setRestrictions]: any = useState([]);
     const [currency, setCurrency] = useState(0);
-
+    const [showHoverModal, setShowHoverModal] = useState(null);
     const [questions, setQuestions]: any = useState(null);
     const [dependencies, setDependencies]: any = useState(null);
-    const [totalSteps, setTotalSteps]: any = useState(null)
+    const [totalSteps, setTotalSteps]: any = useState(null);
+    const [showCustomBox, setShowCustomBox]: any = useState(true);
+    const [open, setOpen]: any = useState(false);
+    const [loading, setLoading] = useState(false);
 
 
     useLayoutEffect(() => {
@@ -75,7 +79,6 @@ const RealtorDeal = ({ step }: any) => {
             setLoading(false);
         }
     };
-
 
     const onSetNext = async () => {
         try {
@@ -144,6 +147,7 @@ const RealtorDeal = ({ step }: any) => {
                                         onClick={() => {
                                             dispatch(saveDealSelection({ option: as, question: ques, fields: dealData, lang: event, secIndex, step }))
                                             let option: any[] = [];
+
                                             dependencies?.find((dep: any) => {
                                                 if (String(dep.value) === String(as?.id)) option.push(dep);
                                                 questions?.forEach((q: any) => {
@@ -152,13 +156,9 @@ const RealtorDeal = ({ step }: any) => {
 
                                                             let step = totalSteps?.copy?.find((ts: any) => ts?.text === q[event]?.title);
                                                             let steps = totalSteps?.copy.filter((stp: any) => stp?.text !== step?.text);
-                                                            setTotalSteps((prev: any) => {
-                                                                return { copy: [...prev?.copy], all: steps }
-                                                            })
+                                                            setTotalSteps((prev: any) => { return { copy: [...prev?.copy], all: steps } })
                                                         } else if (q?.id === rest?.dependent_id && rest?.dependent_type?.toLowerCase() === "stepper" && rest?.operation === "show") {
-                                                            setTotalSteps((prev: any) => {
-                                                                return { copy: prev?.copy, all: prev?.copy }
-                                                            })
+                                                            setTotalSteps((prev: any) => { return { copy: prev?.copy, all: prev?.copy } })
                                                         }
                                                     });
                                                 });
@@ -224,8 +224,15 @@ const RealtorDeal = ({ step }: any) => {
                 </h3>
                 <p className="text-neutral-500 font-normal text-sm">
                     <span>{language?.buttons?.upload} {React.Children.toArray(ques?.permitted_types?.map((type: any) => <span className="uppercase">{type}</span>))} {language?.drawer?.of} {ques?.statement}</span>&nbsp;
-                    <span className="text-cc-blue font-medium cursor-pointer" onClick={() => setOpen(true)} >
+                    <span className="relative text-cc-blue font-medium cursor-pointer" onMouseEnter={() => setShowHoverModal(ques.id)} onMouseLeave={() => setShowHoverModal(null)} >
                         {language.common.example}
+                        {showHoverModal === ques.id && (
+                            <HoverModal width="w-[150px]" height="h-[150px]">
+                                <section className="inline-flex flex-row items-center justify-evenly h-full">
+                                    <img src={ExampleRealtor} alt={language.syndicate.logo} className="max-h-[90px]" />
+                                </section>
+                            </HoverModal>
+                        )}
                     </span>
                 </p>
 
@@ -278,7 +285,7 @@ const RealtorDeal = ({ step }: any) => {
             <section className="flex items-start justify-center flex-col mt-3 w-full">
                 <div className="mb-6 inline-flex flex-col w-full items-start justify-between">
                     <label htmlFor={ques?.id} className="text-neutral-700 text-lg font-medium">{ques?.statement}</label>
-                    <textarea placeholder={ques?.statement} className="h-[100px] mt-2 resize-none shadow-sm appearance-none border border-neutral-300 rounded-md w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id={ques?.id} onInput={(e: any) => dispatch(saveDealSelection({ option: e.target.value, question: ques, fields: dealData, lang: event, secIndex, step }))}></textarea>
+                    <textarea placeholder={ques?.statement} className="h-[100px] resize-none shadow-sm appearance-none border border-neutral-300 rounded-md w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id={ques?.id} onInput={(e: any) => dispatch(saveDealSelection({ option: e.target.value, question: ques, fields: dealData, lang: event, secIndex, step }))}></textarea>
                 </div>
             </section>
         );
@@ -287,6 +294,7 @@ const RealtorDeal = ({ step }: any) => {
     const textFieldInput = (ques: any, secIndex: number) => {
         return (
             <section className="flex items-start justify-center flex-col mb-8 mt-3 w-full">
+                <label htmlFor={ques?.id} className="text-neutral-700 text-lg font-medium">{ques?.statement}</label>
                 <input title={ques?.statement} className="h-[42px] pr-10 shadow-sm appearance-none border rounded-md w-full py-2 px-3 text-gray-500 leading-tight transition-all bg-white w-full focus:outline-none" placeholder={ques?.statement} id={ques?.id} onChange={(e: any) => dispatch(saveDealSelection({ option: e.target.value, question: ques, fields: dealData, lang: event, secIndex, step }))} />
             </section>
         );
@@ -396,7 +404,18 @@ const RealtorDeal = ({ step }: any) => {
             });
         }
         return isValid;
-    }
+    };
+
+    const checkMultipleButtonDisabled = (section: any) => {
+        const flags = section?.fields?.every((field: any) => field?.answer);
+        return !showCustomBox ? false : !flags;
+    };
+
+    const checkCurrentBoxStatus = (fields: any) => {
+        const flags = fields?.every((field: any) => field?.answer);
+        return !showCustomBox ? false : !flags;
+    };
+
     return (
         <React.Fragment>
             <section className="w-10 inline-block align-top">
@@ -416,23 +435,71 @@ const RealtorDeal = ({ step }: any) => {
                                 React.Children.toArray(
                                     dealData[step - 1][event]?.sections.map((section: any, index: number) => {
                                         return (
-                                            <section className={`flex items-start flex-col mb-8 w-[400px] screen500:w-[300px] ${(index % 2 != 0) && "bg-cbc-check p-4 rounded-md"}`}>
-                                                <h3 className="text-neutral-700 font-bold text-2xl w-full">
-                                                    {section?.title}
-                                                </h3>
-                                                {section?.fields?.length ? (React.Children.toArray(section?.fields?.map((ques: any) => renderQuestionType(ques, index, section)))) : (reviewUI())}
+                                            section.is_multiple ? (
+                                                <React.Fragment>
+                                                    <h3 className="w-[400px] screen500:w-[300px] text-neutral-700 font-bold text-2xl mb-10">
+                                                        {section?.title}
+                                                    </h3>
 
-                                                {(section?.add_more_label && index === dealData[step - 1][event]?.sections?.length - 1) && (
-                                                    <Button onClick={() => {
-                                                        dispatch(saveMoreFields({ secIndex: index, lang: event, step, duplicate: 2 }))
-                                                    }}
-                                                        className="w-[400px] screen500:w-[300px] bg-transparent border-2 border-cyan-800 !text-cyan-800 hover:!text-white">{section?.add_more_label}</Button>
-                                                )}
+                                                    {multipleFieldsPayload?.length > 0 && (
+                                                        React.Children.toArray(
+                                                            multipleFieldsPayload?.map((sec: any) => {
+                                                                return (
+                                                                    <section className="bg-white border-[1px] border-neutral-300 rounded-md px-5 py-3 w-[400px] mb-6">
+                                                                        <div className="w-full inline-flex justify-end cursor-pointer" onClick={() => {
+                                                                            setMultipleFieldsPayload((prev: any) => {
+                                                                                const secs = prev.filter((pv: any) => pv.id !== sec.id);
+                                                                                return secs
+                                                                            })
+                                                                        }}><BinIcon stroke="#171717" /></div>
+                                                                        <div className="font-bold text-neutral-900 text-sm text-center mb-2">{sec.fields[0]}</div>
+                                                                        <small className="text-neutral-700 font-normal text-sm text-center block w-full">{sec.fields[1]}</small>
+                                                                    </section>
+                                                                )
+                                                            })
+                                                        )
+                                                    )}
+                                                    {showCustomBox && (
+                                                        <section className={`flex items-start flex-col mb-8 w-[400px] screen500:w-[300px] ${(index % 2 != 0 || section?.is_multiple) && "bg-cbc-check p-4 rounded-md"}`}>
+                                                            {section?.fields?.length ? (React.Children.toArray(section?.fields?.map((ques: any) => renderQuestionType(ques, index, section)))) : (reviewUI())}
 
-                                                {
 
-                                                }
-                                            </section>
+                                                            {!section?.display_cards && (
+                                                                <div className="w-full inline-flex justify-center items-center gap-2">
+                                                                    <Button className="w-[100px] border-2 border-cyan-800" onClick={() => setShowCustomBox(false)}>{language?.v3?.button?.cancel}</Button>
+                                                                    <Button disabled={checkCurrentBoxStatus(section?.fields)}
+                                                                        className="w-[100px] bg-transparent border-2 border-cyan-800 !text-cyan-800 hover:!text-white"
+                                                                        onClick={() => {
+                                                                            setShowCustomBox(false);
+                                                                            setMultipleFieldsPayload((prev: any) => {
+                                                                                if (prev.length === 0) return [{ id: 1, fields: [section?.fields[0].answer, section?.fields[1].answer] }]
+                                                                                else return [...prev, { id: prev?.at(-1).id + 1, fields: [section?.fields[0].answer, section?.fields[1].answer] }]
+                                                                            });
+                                                                            dispatch(onResetFields({ secIndex: section?.index, lang: event, step }))
+                                                                        }}>{language?.v3?.button?.add}</Button>
+                                                                </div>
+                                                            )}
+                                                        </section>
+                                                    )}
+                                                    {(section?.add_more_label && index === dealData[step - 1][event]?.sections?.length - 1) && (
+                                                        <section className="w-[400px]">
+                                                            <Button disabled={checkMultipleButtonDisabled(section)} onClick={() => {
+                                                                // showCustomBox && dispatch(saveMoreFields({ secIndex: index, lang: event, step, duplicate: 2 }))
+                                                                setShowCustomBox(true);
+                                                            }}
+                                                                className="w-full bg-transparent border-2 border-cyan-800 !text-cyan-800 hover:!text-white">{section?.add_more_label}</Button>
+                                                        </section>
+                                                    )}
+                                                </React.Fragment>
+                                            ) : (
+                                                <section className={`flex items-start flex-col mb-8 w-[400px] screen500:w-[300px] ${(index % 2 != 0 || section?.is_multiple) && "bg-cbc-check p-4 rounded-md"}`}>
+                                                    <h3 className="text-neutral-700 font-bold text-2xl w-full">
+                                                        {section?.title}
+                                                    </h3>
+                                                    {section?.fields?.length ? (React.Children.toArray(section?.fields?.map((ques: any) => renderQuestionType(ques, index, section)))) : (reviewUI())}
+                                                </section>
+
+                                            )
                                         )
                                     })
                                 )

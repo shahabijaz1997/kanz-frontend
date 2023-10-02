@@ -21,7 +21,7 @@ const CreateDeal = ({ }: any) => {
 }, [params]);
 
   return (
-    <main className="h-full max-h-full overflow-y-auto overflow-x-hidden">
+    <main className="h-full max-h-full overflow-y-auto overflow-x-hidden bg-cbc-auth">
       <section>
         <Header
           custom={true}

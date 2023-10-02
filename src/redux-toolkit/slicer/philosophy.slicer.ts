@@ -102,13 +102,24 @@ export const QuestionnaireSlice = createSlice({
 
       for (let i = 0; i < duplicate; i++) {
         const element = currentSection?.fields[i];
-        currentSection?.fields.push({...element, duplicate: true});
+        currentSection?.fields.push({ ...element, duplicate: true });
       }
 
+      state.value = existing;
+    },
+    onResetFields: (state, action: PayloadAction<any>) => {
+      const { secIndex, lang, step } = action.payload;
+      const existing = JSON.parse(JSON.stringify(state.value));
+
+      const currentStep = existing.find((item: any) => item.index === (step - 1));
+      const currentSection = currentStep[lang]?.sections[secIndex];
+      currentSection?.fields?.forEach((sec: any) => {
+        sec.answer = "";
+      })
       state.value = existing;
     }
   },
 });
 
-export const { saveQuestionnaire, saveAnswer, saveDealSelection, saveMoreFields } = QuestionnaireSlice.actions;
+export const { saveQuestionnaire, saveAnswer, saveDealSelection, saveMoreFields , onResetFields} = QuestionnaireSlice.actions;
 export default QuestionnaireSlice.reducer;
