@@ -7,7 +7,7 @@ import Spinner from "../../../shared/components/Spinner";
 import Button from "../../../shared/components/Button";
 import { getDealQuestion, postDealStep } from "../../../apis/deal.api";
 import { DealType } from "../../../enums/types.enum";
-import { onResetFields, saveDealSelection, saveMoreFields, saveQuestionnaire } from "../../../redux-toolkit/slicer/philosophy.slicer";
+import { onResetFields, saveDealSelection, saveQuestionnaire } from "../../../redux-toolkit/slicer/philosophy.slicer";
 import { saveToken } from "../../../redux-toolkit/slicer/auth.slicer";
 import { RoutesEnums } from "../../../enums/routes.enum";
 import { Constants } from "../../../enums/constants.enum";
@@ -15,7 +15,7 @@ import { saveDataHolder } from "../../../redux-toolkit/slicer/dataHolder.slicer"
 import { toastUtil } from "../../../utils/toast.utils";
 import { toast } from "react-toastify";
 import Selector from "../../../shared/components/Selector";
-import { isEmpty, numberFormatter } from "../../../utils/object.utils";
+import { numberFormatter } from "../../../utils/object.utils";
 import FileUpload from "../../../shared/components/FileUpload";
 import HoverModal from "../../../shared/components/HoverModal";
 import ExampleRealtor from "../../../assets/example_realtor.png";
@@ -53,13 +53,19 @@ const RealtorDeal = ({ step }: any) => {
     const getDealStepDetails = async () => {
         try {
             setLoading(true);
-            let { status, data } = await getDealQuestion({ type: DealType.REALTOR }, authToken);
+            const queryParams: any = { type: DealType.REALTOR };
+            if (dataHolder) queryParams.id = dataHolder;
+            let { status, data } = await getDealQuestion(queryParams, authToken);
             if (status === 200 && !questions) {
-                console.log("Realtor Deal: ", data?.status?.data?.steps[step - 1]);
+                // console.log("Realtor Deal: ", data?.status?.data?.steps[step - 1]);
                 data?.status?.data?.steps?.forEach((step: any) => {
                     if (step?.dependencies?.length > 0) setDependencies(step.dependencies);
                 });
-
+                data?.status?.data?.steps[step - 1][event]?.sections.forEach((sec: any) => {
+                    sec?.fields?.sort((a: any, b: any) => a.index - b.index);
+                });
+                console.log(data?.status?.data?.steps[step - 1][event]?.sections);
+                
                 setQuestions(data?.status?.data?.steps);
                 dispatch(saveQuestionnaire(data?.status?.data?.steps));
                 let all_steps = [];
@@ -94,7 +100,7 @@ const RealtorDeal = ({ step }: any) => {
 
                 }
                 if (field?.field_type === Constants.NUMBER_INPUT) {
-                    selected = field.answer
+                    selected = field.value
                 }
                 if (field.field_type === Constants.SWITCH) {
                     selected = field?.is_required
@@ -185,10 +191,9 @@ const RealtorDeal = ({ step }: any) => {
                 <h3 className="capitalize text-neutral-700 font-medium text-base w-[420px]">
                     {ques?.statement}
                 </h3>
-
                 <section className="mb-8 w-full relative mt-2">
                     <div className="relative bg-white rounded-md w-full h-10 border-[1px] border-neutral-300 overflow-hidden inline-flex items-center px-3">
-                        <input onInput={(e: any) => dispatch(saveDealSelection({ option: e.target.value, question: ques, fields: dealData, lang: event, secIndex, step }))} id={`num-${ques.id}`} placeholder={`${currency === 0 ? "$" : "د.إ"} 0.00`} type="text" className="outline-none w-full h-full placeholder-neutral-500" />
+                        <input value={ques?.value} onInput={(e: any) => dispatch(saveDealSelection({ option: e.target.value, question: ques, fields: dealData, lang: event, secIndex, step }))} id={`num-${ques.id}`} placeholder={`${currency === 0 ? "$" : "د.إ"} 0.00`} type="text" className="outline-none w-full h-full placeholder-neutral-500" />
                         <span className="cursor-pointer inline-flex items-center" onClick={() => setCurrency(prev => { return prev === 0 ? 1 : 0 })}>
                             <button className="font-normal text-lg text-neutral-500">{CURRENCIES[currency]}</button>
                         </span>
@@ -373,19 +378,33 @@ const RealtorDeal = ({ step }: any) => {
         dealData[step - 1][event]?.sections.forEach((sec: any, index: number) => {
             flags.push({ section: sec.id, validations: [] });
             let fields = sec.fields;
-            fields.forEach((ques: any) => {
-                if (ques?.field_type === Constants.MULTIPLE_CHOICE || ques?.field_type === Constants.DROPDOWN) {
+            fields.forEach((ques: any, quesIdx: number) => {
+                if (ques?.field_type === Constants.SWITCH) {
+                    flags[index].validations.push(true);
+                }
+                else if (ques?.field_type === Constants.MULTIPLE_CHOICE || ques?.field_type === Constants.DROPDOWN) {
                     let flag = ques.options?.some((opt: any) => opt.selected);
                     flags[index].validations.push(flag);
                 }
-                if (ques?.field_type === Constants.NUMBER_INPUT || ques.field_type === Constants.TEXT_BOX || ques.field_type === Constants.TEXT_FIELD || ques.field_type === Constants.URL) {
-                    let flag = ques.answer ? true : false;
+                else if (ques?.field_type === Constants.NUMBER_INPUT || ques.field_type === Constants.TEXT_BOX || ques.field_type === Constants.TEXT_FIELD || ques.field_type === Constants.URL) {
+                    let dependantQuesion = sec?.fields?.find((field: any) => field.id === ques?.dependent_id);
+                    let flag = false;
+                    if ((!dependantQuesion && ques.value) || (dependantQuesion && dependantQuesion?.is_required && ques.value) || (dependantQuesion && !dependantQuesion.is_required)) {
+                        flag = true;
+                    }
+                    else flag = false;
+                    if (quesIdx === 1) {
+                       console.log("flag", flag);
+                    }
                     flags[index].validations.push(flag);
                 }
-                if (ques.field_type === Constants.SWITCH) {
+                else if (ques.field_type === Constants.SWITCH) {
                     flags[index].validations.push(ques.is_required);
                 }
             });
+
+            console.log("flags", flags);
+            
         });
         let isValid = false;
 
@@ -403,16 +422,17 @@ const RealtorDeal = ({ step }: any) => {
                 return validation
             });
         }
+
         return isValid;
-    };
+    }
 
     const checkMultipleButtonDisabled = (section: any) => {
-        const flags = section?.fields?.every((field: any) => field?.answer);
+        const flags = section?.fields?.every((field: any) => field?.value);
         return !showCustomBox ? false : !flags;
     };
 
     const checkCurrentBoxStatus = (fields: any) => {
-        const flags = fields?.every((field: any) => field?.answer);
+        const flags = fields?.every((field: any) => field?.value);
         return !showCustomBox ? false : !flags;
     };
 
@@ -472,8 +492,8 @@ const RealtorDeal = ({ step }: any) => {
                                                                         onClick={() => {
                                                                             setShowCustomBox(false);
                                                                             setMultipleFieldsPayload((prev: any) => {
-                                                                                if (prev.length === 0) return [{ id: 1, fields: [section?.fields[0].answer, section?.fields[1].answer] }]
-                                                                                else return [...prev, { id: prev?.at(-1).id + 1, fields: [section?.fields[0].answer, section?.fields[1].answer] }]
+                                                                                if (prev.length === 0) return [{ id: 1, fields: [section?.fields[0].value, section?.fields[1].value] }]
+                                                                                else return [...prev, { id: prev?.at(-1).id + 1, fields: [section?.fields[0].value, section?.fields[1].value] }]
                                                                             });
                                                                             dispatch(onResetFields({ secIndex: section?.index, lang: event, step }))
                                                                         }}>{language?.v3?.button?.add}</Button>

@@ -14,7 +14,6 @@ import { DealType } from "../../../enums/types.enum";
 import { saveToken } from "../../../redux-toolkit/slicer/auth.slicer";
 import { RoutesEnums } from "../../../enums/routes.enum";
 import { numberFormatter } from "../../../utils/object.utils";
-import Input from "../../../shared/components/Input";
 import { saveDataHolder } from "../../../redux-toolkit/slicer/dataHolder.slicer";
 import { toast } from "react-toastify";
 import { toastUtil } from "../../../utils/toast.utils";
@@ -46,13 +45,18 @@ const StartupDeal = ({ step }: any) => {
     const getDealStepDetails = async () => {
         try {
             setLoading(true);
-            let { status, data } = await getDealQuestion({ type: DealType.STARTUP }, authToken);
+            const queryParams: any = { type: DealType.STARTUP };
+            if (dataHolder) queryParams.id = dataHolder;
+            let { status, data } = await getDealQuestion(queryParams, authToken);
             if (status === 200 && !questions) {
                 console.log("Startup Deal: ", data?.status?.data?.steps[step - 1]);
+
                 data?.status?.data?.steps?.forEach((step: any) => {
                     if (step?.dependencies?.length > 0) setDependencies(step.dependencies);
                 });
-
+                data?.status?.data?.steps[step - 1][event]?.sections.forEach((sec: any) => {
+                    sec?.fields?.sort((a: any, b: any) => a.index - b.index);
+                });
                 setQuestions(data?.status?.data?.steps);
                 dispatch(saveQuestionnaire(data?.status?.data?.steps));
                 let all_steps = [];
@@ -87,7 +91,7 @@ const StartupDeal = ({ step }: any) => {
 
                 }
                 if (field?.field_type === Constants.NUMBER_INPUT) {
-                    selected = field.answer
+                    selected = field.value
                 }
                 if (field.field_type === Constants.SWITCH) {
                     selected = field?.is_required
@@ -111,7 +115,7 @@ const StartupDeal = ({ step }: any) => {
                 dispatch(saveDataHolder(data?.status?.data?.id));
                 if (step <= totalSteps?.all.length) navigate(`/create-deal/${step + 1}`);
             }
-        } catch (error:any) {
+        } catch (error: any) {
             const message = error?.response?.data?.status?.message || language.promptMessages.errorGeneral;
             toast.error(message, toastUtil);
         }
@@ -176,16 +180,16 @@ const StartupDeal = ({ step }: any) => {
         );
     };
 
-    const numberInput = (ques: any, secIndex: number) => {
-        return (
-            <section className="flex items-start justify-center flex-col mt-3 max-w-[400px] screen500:max-w-[300px]">
-                <h3 className="text-neutral-700 font-medium text-base w-[420px]">
-                    {ques?.statement}
-                </h3>
+    const numberInput = (ques: any, secIndex: number, section: any) => {
+        let dependantQuesion = section?.fields?.find((field: any) => field.id === ques?.dependent_id);
 
-                <section className="mb-8 w-full relative mt-2">
+        if (!dependantQuesion || (dependantQuesion && dependantQuesion?.is_required)) return (
+            <section className="flex items-start justify-center flex-col mt-3 w-[400px] screen500:w-[300px]">
+                {!dependantQuesion && <h3 className="text-neutral-700 font-medium text-base w-[420px]">{ques?.statement}</h3>}
+
+                <section className="mb-8 w-full relative">
                     <div className="relative rounded-md w-full h-10 border-[1px] border-neutral-300 overflow-hidden inline-flex items-center px-3">
-                        <input onInput={(e: any) => dispatch(saveDealSelection({ option: e.target.value, question: ques, fields: dealData, lang: event, secIndex, step }))} id={`num-${ques.id}`} placeholder={`${currency === 0 ? "$" : "د.إ"} 0.00`} type="text" className="outline-none w-full h-full placeholder-neutral-500" />
+                        <input value={ques?.value} onInput={(e: any) => dispatch(saveDealSelection({ option: e.target.value, question: ques, fields: dealData, lang: event, secIndex, step }))} id={`num-${ques.id}`} placeholder={`${currency === 0 ? "$" : "د.إ"} 0.00`} type="text" className="outline-none w-full h-full placeholder-neutral-500" />
                         <span className="cursor-pointer inline-flex items-center" onClick={() => setCurrency(prev => { return prev === 0 ? 1 : 0 })}>
                             <button className="font-normal text-lg text-neutral-500">{CURRENCIES[currency]}</button>
                         </span>
@@ -202,8 +206,9 @@ const StartupDeal = ({ step }: any) => {
                         )}
                     </ul>
                 </section>
-            </section>
+            </section >
         );
+        else return <React.Fragment></React.Fragment>
     };
 
     const attachments = (ques: any, secIndex: number, section: any) => {
@@ -236,7 +241,6 @@ const StartupDeal = ({ step }: any) => {
             return { label: opt?.statement, value: opt?.statement }
         });
         let currentValue = ques?.options?.find((op: any) => op.selected)?.statement || options[0]?.statement || "";
-
         return (
             <section className="flex items-start justify-center flex-col mt-2 max-w-[400px] screen500:max-w-[300px]">
                 <h3 className="text-neutral-700 font-medium text-base w-[400px]">
@@ -244,7 +248,7 @@ const StartupDeal = ({ step }: any) => {
                 </h3>
                 <section className="mb-8 w-full relative mt-3">
                     <div className="relative w-full" style={{ zIndex: 101 }}>
-                        <Selector disabled={false} value={currentValue} defaultValue={currentValue} options={options}
+                        <Selector disabled={false} defaultValue={{ label: currentValue, value: currentValue }} options={options}
                             onChange={(v: any) => {
                                 let opt = ques?.options?.find((op: any) => op.statement === v.value);
                                 dispatch(saveDealSelection({ option: opt, question: ques, fields: dealData, lang: event, secIndex, step }))
@@ -270,23 +274,32 @@ const StartupDeal = ({ step }: any) => {
         );
     };
 
-    const textAreaInput = (ques: any, secIndex: number) => {
-        return (
-            <section className="flex items-start justify-center flex-col mt-3 max-w-[400px] min-w-[400px] screen500:max-w-[300px]">
-                <div className="mb-6 inline-flex flex-col w-full items-start justify-between">
-                    <label htmlFor={ques?.id} className="text-neutral-700 text-lg font-medium">{ques?.statement}</label>
-                    <textarea placeholder={ques?.statement} className="h-[100px] mt-2 resize-none shadow-sm appearance-none border border-neutral-300 rounded-md w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id={ques?.id} onInput={(e: any) => dispatch(saveDealSelection({ option: e.target.value, question: ques, fields: dealData, lang: event, secIndex, step }))}></textarea>
-                </div>
-            </section>
-        );
+    const textAreaInput = (ques: any, secIndex: number, section: any) => {
+        let dependantQuesion = section?.fields?.find((field: any) => field.id === ques?.dependent_id);
+
+        if (!dependantQuesion || (dependantQuesion && dependantQuesion?.is_required)) {
+            return (
+                <section className="flex items-start justify-center flex-col mt-3 max-w-[400px] min-w-[400px] screen500:max-w-[300px]">
+                    <div className="mb-6 inline-flex flex-col w-full items-start justify-between">
+                        {!dependantQuesion && <label htmlFor={ques?.id} className="text-neutral-700 text-lg font-medium">{ques?.statement}</label>}
+                        <textarea placeholder={ques?.statement} className="h-[100px] mt-2 resize-none shadow-sm appearance-none border border-neutral-300 rounded-md w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id={ques?.id} onInput={(e: any) => dispatch(saveDealSelection({ option: e.target.value, question: ques, fields: dealData, lang: event, secIndex, step }))}></textarea>
+                    </div>
+                </section>
+            );
+        } else return <React.Fragment></React.Fragment>
     };
 
-    const textFieldInput = (ques: any, secIndex: number) => {
-        return (
-            <section className="flex items-start justify-center flex-col mb-8 mt-3 max-w-[400px] min-w-[400px] screen500:max-w-[300px]">
-                <Input title={ques?.statement} className="bg-white w-full" placeholder={ques?.statement} id={ques?.id} onInput={(e: any) => dispatch(saveDealSelection({ option: e.target.value, question: ques, fields: dealData, lang: event, secIndex, step }))} />
-            </section>
-        );
+    const textFieldInput = (ques: any, secIndex: number, section: any) => {
+        let dependantQuesion = section?.fields?.find((field: any) => field.id === ques?.dependent_id);
+
+        if (!dependantQuesion || (dependantQuesion && dependantQuesion?.is_required)) {
+            return (
+                <section className="flex items-start justify-center flex-col mb-8 mt-3 w-full">
+                    {!dependantQuesion && <label htmlFor={ques?.id} className="text-neutral-700 text-lg font-medium">{ques?.statement}</label>}
+                    <input title={ques?.statement} className="h-[42px] pr-10 shadow-sm appearance-none border rounded-md w-full py-2 px-3 text-gray-500 leading-tight transition-all bg-white w-full focus:outline-none" placeholder={ques?.statement} id={ques?.id} onChange={(e: any) => dispatch(saveDealSelection({ option: e.target.value, question: ques, fields: dealData, lang: event, secIndex, step }))} />
+                </section>
+            );
+        } else return <React.Fragment></React.Fragment>
     };
 
     const reviewUI = () => {
@@ -324,12 +337,12 @@ const StartupDeal = ({ step }: any) => {
         if (restrictions?.some((res: any) => res.dependent_id === ques?.id && res?.operation !== "show") && restrictions.length > 0) return "";
         else {
             if (ques?.field_type === Constants.MULTIPLE_CHOICE) return multipleChoice(ques, secIndex);
-            else if (ques?.field_type === Constants.NUMBER_INPUT) return numberInput(ques, secIndex);
+            else if (ques?.field_type === Constants.NUMBER_INPUT) return numberInput(ques, secIndex, section);
             else if (ques?.field_type === Constants.FILE) return attachments(ques, secIndex, section)
             else if (ques?.field_type === Constants.DROPDOWN) return dropdowns(ques, secIndex)
             else if (ques?.field_type === Constants.SWITCH) return switchInput(ques, secIndex)
-            else if (ques?.field_type === Constants.TEXT_BOX) return textAreaInput(ques, secIndex)
-            else if (ques?.field_type === Constants.TEXT_FIELD) return textFieldInput(ques, secIndex)
+            else if (ques?.field_type === Constants.TEXT_BOX) return textAreaInput(ques, secIndex, section)
+            else if (ques?.field_type === Constants.TEXT_FIELD) return textFieldInput(ques, secIndex, section)
         }
     };
 
@@ -340,19 +353,33 @@ const StartupDeal = ({ step }: any) => {
         dealData[step - 1][event]?.sections.forEach((sec: any, index: number) => {
             flags.push({ section: sec.id, validations: [] });
             let fields = sec.fields;
-            fields.forEach((ques: any) => {
-                if (ques?.field_type === Constants.MULTIPLE_CHOICE || ques?.field_type === Constants.DROPDOWN) {
+            fields.forEach((ques: any, quesIdx: number) => {
+                if (ques?.field_type === Constants.SWITCH) {
+                    flags[index].validations.push(true);
+                }
+                else if (ques?.field_type === Constants.MULTIPLE_CHOICE || ques?.field_type === Constants.DROPDOWN) {
                     let flag = ques.options?.some((opt: any) => opt.selected);
                     flags[index].validations.push(flag);
                 }
-                if (ques?.field_type === Constants.NUMBER_INPUT) {
-                    let flag = ques.answer ? true : false;
+                else if (ques?.field_type === Constants.NUMBER_INPUT || ques.field_type === Constants.TEXT_BOX || ques.field_type === Constants.TEXT_FIELD || ques.field_type === Constants.URL) {
+                    let dependantQuesion = sec?.fields?.find((field: any) => field.id === ques?.dependent_id);
+                    let flag = false;
+                    if ((!dependantQuesion && ques.value) || (dependantQuesion && dependantQuesion?.is_required && ques.value) || (dependantQuesion && !dependantQuesion.is_required)) {
+                        flag = true;
+                    }
+                    else flag = false;
+                    if (quesIdx === 1) {
+                       console.log("flag", flag);
+                    }
                     flags[index].validations.push(flag);
                 }
-                if (ques.field_type === Constants.SWITCH) {
+                else if (ques.field_type === Constants.SWITCH) {
                     flags[index].validations.push(ques.is_required);
                 }
             });
+
+            console.log("flags", flags);
+            
         });
         let isValid = false;
 
@@ -397,12 +424,10 @@ const StartupDeal = ({ step }: any) => {
                                                     {section?.title}
                                                 </h3>
                                                 {section?.fields?.length ? (React.Children.toArray(section?.fields?.map((ques: any) => renderQuestionType(ques, index, section)))) : (reviewUI())}
-                                           
+
                                                 {(section?.add_more_label && index === dealData[step - 1][event]?.sections?.length - 1) && (
-                                                    <Button onClick={() => {
-                                                        // dealData[step - 1][event]?.sec
-                                                    }}
-                                                    className="w-[400px] screen500:w-[300px] bg-transparent border-2 border-cyan-800 !text-cyan-800 hover:!text-white">{section?.add_more_label}</Button>
+                                                    <Button onClick={() => { }}
+                                                        className="w-[400px] screen500:w-[300px] bg-transparent border-2 border-cyan-800 !text-cyan-800 hover:!text-white">{section?.add_more_label}</Button>
                                                 )}
                                             </section>
                                         )

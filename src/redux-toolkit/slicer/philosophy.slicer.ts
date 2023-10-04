@@ -32,7 +32,7 @@ export const QuestionnaireSlice = createSlice({
         });
         questionToUpdate[lang].options = updatedOptions;
       } else if (questionToUpdate) {
-        questionToUpdate.answer = textAnswer;
+        questionToUpdate.value = textAnswer;
       }
       state.value = existingQuestions;
     },
@@ -79,7 +79,7 @@ export const QuestionnaireSlice = createSlice({
           });
         }
         else if (currentQuestion.field_type === Constants.NUMBER_INPUT || currentQuestion.field_type === Constants.TEXT_BOX || currentQuestion.field_type === Constants.TEXT_FIELD || currentQuestion.field_type === Constants.URL) {
-          currentQuestion.answer = option
+          currentQuestion.value = option
         }
         else if (currentQuestion.field_type === Constants.SWITCH) {
           currentQuestion.is_required = !currentQuestion.is_required;
@@ -114,7 +114,7 @@ export const QuestionnaireSlice = createSlice({
       const currentStep = existing.find((item: any) => item.index === (step - 1));
       const currentSection = currentStep[lang]?.sections[secIndex];
       currentSection?.fields?.forEach((sec: any) => {
-        sec.answer = "";
+        sec.value = "";
       })
       state.value = existing;
     }

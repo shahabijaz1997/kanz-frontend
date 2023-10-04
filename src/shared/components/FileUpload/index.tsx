@@ -47,14 +47,14 @@ const FileUpload = ({ id, fid, file, setModalOpen, setFile, removeFile, title, u
         const _file = e.dataTransfer.files[0];
         if (file) return;
         if (!acceptPdf && validImages.includes(_file.type)) setFileInformation(_file);
-        else if (acceptPdf && validTypes.includes(_file.type)) setFileInformation(_file);
+        else if ((acceptPdf || onlyPDF) && validTypes.includes(_file.type)) setFileInformation(_file);
         else setAlertType({ type: PromptMessage.ERROR, message: language.promptMessages.invalidFormat });
     };
 
     const handleFileInput = (e: React.ChangeEvent<HTMLInputElement>) => {
         const file: any = e.target.files?.[0];
         if (!acceptPdf && validImages.includes(file.type)) setFileInformation(file);
-        else if (acceptPdf && validTypes.includes(file.type)) setFileInformation(file);
+        else if ((acceptPdf || onlyPDF) && validTypes.includes(file.type)) setFileInformation(file);
         else setAlertType({ type: PromptMessage.ERROR, message: language.promptMessages.invalidFormat });
         e.target.value = "";
     };
@@ -109,7 +109,7 @@ const FileUpload = ({ id, fid, file, setModalOpen, setFile, removeFile, title, u
                 fd.append("attachment[name]", title || file?.name);
                 fd.append("attachment[attachment_kind]", type);
                 fd.append(`attachment[file]`, file, fileData.name);
-                fd.append(`attachment[attachment_config_id]`, fid);
+                fd.append(`attachment[configurable_id]`, fid);
 
                 const { status, data } = await uploadAttachments(fd, authToken);
                 if (status === 200) {
@@ -124,6 +124,7 @@ const FileUpload = ({ id, fid, file, setModalOpen, setFile, removeFile, title, u
             const message = error?.response?.data?.status?.message || language.promptMessages.errorFileUpload;
             return setAlertType({ type: PromptMessage.ERROR, message });
         } finally {
+            setLoading(false);
         }
     };
 
