@@ -12,13 +12,15 @@ import FileUpload from "../../../shared/components/FileUpload";
 import { getDealQuestion, postDealStep } from "../../../apis/deal.api";
 import { DealType } from "../../../enums/types.enum";
 import { saveToken } from "../../../redux-toolkit/slicer/auth.slicer";
-import { RoutesEnums } from "../../../enums/routes.enum";
+import { RoutesEnums, StartupRoutes } from "../../../enums/routes.enum";
 import { numberFormatter } from "../../../utils/object.utils";
 import { saveDataHolder } from "../../../redux-toolkit/slicer/dataHolder.slicer";
 import { toast } from "react-toastify";
 import { toastUtil } from "../../../utils/toast.utils";
 import Modal from "../../../shared/components/Modal";
 import CrossIcon from "../../../ts-icons/crossIcon.svg";
+import { removeAttachment } from "../../../apis/attachment.api";
+import EditIcon from "../../../ts-icons/editIcon.svg";
 
 const CURRENCIES = ["USD", "AED"];
 
@@ -224,26 +226,48 @@ const StartupDeal = ({ step }: any) => {
 
     const attachments = (ques: any, secIndex: number, section: any) => {
         return (
-            <section className="flex items-start justify-center flex-col mt-3 mb-6 max-w-[400px] min-w-[400px] screen500:max-w-[300px]">
-                {ques?.index < 1 && (
-                    <h3 className="text-neutral-700 font-medium text-base w-[420px]">
-                        <span>{section?.description}</span>&nbsp;<span className="text-cc-blue font-medium cursor-pointer" onClick={() => setOpen(true)} >
-                            {language.philosophyGoals.whyToDo}
-                        </span>
-                    </h3>
-                )}
-                <h3 className="text-neutral-700 font-medium text-base w-[420px] mt-3">
-                    {ques?.statement}
-                </h3>
-                <p className="text-neutral-500 font-normal text-sm">
-                    <span>{language?.buttons?.upload} {React.Children.toArray(ques?.permitted_types?.map((type: any) => <span className="uppercase">{type}</span>))} {language?.drawer?.of} {ques?.statement}</span>&nbsp;
-                    <span className="text-cc-blue font-medium cursor-pointer" onClick={() => setOpen(true)} >
-                        {language.common.example}
-                    </span>
-                </p>
+            ques?.value?.id ? (
+                <div className="mb-4 w-full select-none content-center bg-cbc-grey-sec p-4 rounded-md">
+                    <div className="block text-neutral-700 text-base font-medium">
+                        <span className="inline-flex w-full items-center justify-between">
+                            <span className="inline-flex flex-col">
+                                <div>{ques?.statement}</div>
 
-                <FileUpload onlyPDF={`${ques?.size_constraints?.limit}${ques?.size_constraints?.unit}`} id={ques?.id} fid={ques?.id} file={{}} setModalOpen={() => { }} setFile={() => { }} removeFile={() => { }} title={ques?.statement} className="w-full" />
-            </section>
+                            </span>
+                            <EditIcon stroke="#fff" className="w-7 h-7 float-right cursor-pointer rounded-md p-1"
+                                style={{ backgroundColor: "rgba(0, 0, 0, 0.078)" }} onClick={() => removeFile(ques?.value?.id)} />
+                        </span>
+                        <div className="content-center text-center mt-2  main-embed  h-[200px] overflow-hidden relative">
+                            <embed src={ques?.value?.url} className="block w-[110%] h-[110%] overflow-hidden" />
+                        </div>
+                    </div>
+                </div>
+            ) : (
+
+                <section className="flex items-start justify-center flex-col mt-3 mb-6 max-w-[400px] min-w-[400px] screen500:max-w-[300px]">
+                    {ques?.index < 1 && (
+                        <h3 className="text-neutral-700 font-medium text-base w-[420px]">
+                            <span>{section?.description}</span>&nbsp;<span className="text-cc-blue font-medium cursor-pointer" onClick={() => setOpen(true)} >
+                                {language.philosophyGoals.whyToDo}
+                            </span>
+                        </h3>
+                    )
+                    }
+                    <h3 className="text-neutral-700 font-medium text-base w-[420px] mt-3">
+                        {ques?.statement}
+                    </h3>
+                    <p className="text-neutral-500 font-normal text-sm">
+                        <span>{language?.buttons?.upload} {React.Children.toArray(ques?.permitted_types?.map((type: any) => <span className="uppercase">{type}</span>))} {language?.drawer?.of} {ques?.statement}</span>&nbsp;
+                        <span className="text-cc-blue font-medium cursor-pointer" onClick={() => setOpen(true)} >
+                            {language.common.example}
+                        </span>
+                    </p>
+
+                    <FileUpload parentId={dataHolder} onlyPDF={`${ques?.size_constraints?.limit}${ques?.size_constraints?.unit}`} id={ques?.id} fid={ques?.id} file={ques?.value} setModalOpen={() => { }} setFile={(file: File, id: string, url: string, aid: string, size: string, dimensions: string, type: string, prodURL: string) => {
+                        dispatch(saveDealSelection({ option: { url: prodURL, id }, question: ques, fields: dealData, lang: event, secIndex, step }))
+                    }} title={ques?.statement} removeFile={() => removeFile(ques?.value?.id)} className="w-full" />
+                </section >
+            )
         );
     };
 
@@ -316,27 +340,27 @@ const StartupDeal = ({ step }: any) => {
     const reviewUI = () => {
         return (
             <section className="flex items-start justify-center flex-col mt-10 max-w-[420px] min-w-[400px] screen500:max-w-[300px]">
-                <div className="py-4 border-b-[1px] border-b-neutral-200 w-full">
+                <div className="py-4 border-b-[1px] border-b-neutral-200 w-full cursor-pointer" onClick={()=>navigate(`${StartupRoutes.CREATE_DEAL}/1`)}>
                     <h3 className="text-neutral-900 font-medium text-sm">Investment Round</h3>
                     <p className="text-neutral-500 font-normal text-sm">Angel Round</p>
                 </div>
-                <div className="py-4 border-b-[1px] border-b-neutral-200 w-full">
+                <div className="py-4 border-b-[1px] border-b-neutral-200 w-full cursor-pointer" onClick={()=>navigate(`${StartupRoutes.CREATE_DEAL}/2`)}>
                     <h3 className="text-neutral-900 font-medium text-sm">Investment Type</h3>
                     <p className="text-neutral-500 font-normal text-sm">Equity</p>
                 </div>
-                <div className="py-4 border-b-[1px] border-b-neutral-200 w-full">
+                <div className="py-4 border-b-[1px] border-b-neutral-200 w-full cursor-pointer" onClick={()=>navigate(`${StartupRoutes.CREATE_DEAL}/3`)}>
                     <h3 className="text-neutral-900 font-medium text-sm">Share Class</h3>
                     <p className="text-neutral-500 font-normal text-sm">Common</p>
                 </div>
-                <div className="py-4 border-b-[1px] border-b-neutral-200 w-full">
+                <div className="py-4 border-b-[1px] border-b-neutral-200 w-full cursor-pointer" onClick={()=>navigate(`${StartupRoutes.CREATE_DEAL}/4`)}>
                     <h3 className="text-neutral-900 font-medium text-sm">Deal Target</h3>
                     <p className="text-neutral-500 font-normal text-sm">$0.00</p>
                 </div>
-                <div className="py-4 border-b-[1px] border-b-neutral-200 w-full">
+                <div className="py-4 border-b-[1px] border-b-neutral-200 w-full cursor-pointer" onClick={()=>navigate(`${StartupRoutes.CREATE_DEAL}/5`)}>
                     <h3 className="text-neutral-900 font-medium text-sm">Valuation</h3>
                     <p className="text-neutral-500 font-normal text-sm">$10,000,000 (Pre-money)</p>
                 </div>
-                <div className="py-4 border-b-[1px] border-b-neutral-200 w-full">
+                <div className="py-4 border-b-[1px] border-b-neutral-200 w-full cursor-pointer" onClick={()=>navigate(`${StartupRoutes.CREATE_DEAL}/6`)}>
                     <h3 className="text-neutral-900 font-medium text-sm">Attachments</h3>
                     <p className="text-neutral-500 font-normal text-sm">PDF 2MB</p>
                 </div>
@@ -357,6 +381,26 @@ const StartupDeal = ({ step }: any) => {
         }
     };
 
+    const removeFile = async (file: any) => {
+        try {
+            setLoading(true);
+            let { status } = await removeAttachment(file.id || file, authToken);
+            if (status === 200) {
+
+            }
+        } catch (error: any) {
+            setLoading(false);
+            if (error.response && error.response.status === 401) {
+                dispatch(saveToken(""));
+                navigate(RoutesEnums.LOGIN, { state: "add-attachments" });
+            }
+            const message = error?.response?.data?.status?.message || error?.response?.data || language.promptMessages.errorGeneral;
+            toast.error(message, toastUtil);
+        } finally {
+            setLoading(false);
+        }
+    };
+
     const checkValidation = () => {
         if (!dealData || !dealData[step - 1] || !dealData[step - 1][event]?.sections.length) return false;
         let flags: any[] = []
@@ -372,6 +416,10 @@ const StartupDeal = ({ step }: any) => {
                     let flag = ques.options?.some((opt: any) => opt.selected);
                     flags[index].validations.push(flag);
                 }
+                else if (ques?.field_type === Constants.FILE) {
+                    let flag = (ques.value?.url || ques.value?.id) ? true : false;
+                    flags[index].validations.push(flag);
+                }
                 else if (ques?.field_type === Constants.NUMBER_INPUT || ques.field_type === Constants.TEXT_BOX || ques.field_type === Constants.TEXT_FIELD || ques.field_type === Constants.URL) {
                     let dependantQuesion = sec?.fields?.find((field: any) => field.id === ques?.dependent_id);
                     let flag = false;
@@ -379,18 +427,12 @@ const StartupDeal = ({ step }: any) => {
                         flag = true;
                     }
                     else flag = false;
-                    if (quesIdx === 1) {
-                        console.log("flag", flag);
-                    }
                     flags[index].validations.push(flag);
                 }
                 else if (ques.field_type === Constants.SWITCH) {
                     flags[index].validations.push(ques.is_required);
                 }
             });
-
-            console.log("flags", flags);
-
         });
         let isValid = false;
 
@@ -467,8 +509,8 @@ const StartupDeal = ({ step }: any) => {
                     </div>
 
                     <aside>
-                        <h2 className="font-bold text-xl text-center text-neutral-900">{language?.v3?.common?.disclaimer}</h2>
-                        <p className="text-sm font-normal text-center text-neutral-500 mt-8 mb-12">{language?.v3?.common?.disclaimer_desc}</p>
+                        <h2 className="font-bold text-xl text-center text-neutral-900">{language?.v3?.deal?.submitted_deal}</h2>
+                        <p className="text-sm font-normal text-center text-neutral-500 mt-8 mb-12">{language?.v3?.deal?.deal_status}: <strong>{language?.common?.submitted}</strong></p>
                     </aside>
                 </div>
             </Modal>

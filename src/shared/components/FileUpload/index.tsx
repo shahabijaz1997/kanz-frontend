@@ -15,7 +15,7 @@ import Spinner from "../Spinner";
 import { RoutesEnums } from "../../../enums/routes.enum";
 import AddVideo from "../../../ts-icons/addVideoIcon.svg";
 
-const FileUpload = ({ id, fid, file, setModalOpen, setFile, removeFile, title, uploadDirect = true, acceptPdf = false, className = "", video = false, onlyPDF = false }: any) => {
+const FileUpload = ({ parentId, id, fid, file, setModalOpen, setFile, removeFile, title, uploadDirect = true, acceptPdf = false, className = "", video = false, onlyPDF = false }: any) => {
     const language: any = useSelector((state: RootState) => state.language.value);
     const authToken: any = useSelector((state: RootState) => state.auth.value);
     const orientation: any = useSelector((state: RootState) => state.orientation.value);
@@ -86,9 +86,7 @@ const FileUpload = ({ id, fid, file, setModalOpen, setFile, removeFile, title, u
                             size: formatFileSize(size),
                             dimensions: `${width} x ${height} px`,
                         };
-                        if (!uploadDirect) {
-                            doUploadUtil(file, FileInfo, url, FileType.IMAGE, "1");
-                        }
+                        if (!uploadDirect) doUploadUtil(file, FileInfo, url, FileType.IMAGE, "1", "");
                     };
                 };
             } else {
@@ -98,9 +96,7 @@ const FileUpload = ({ id, fid, file, setModalOpen, setFile, removeFile, title, u
                 reader.onloadend = () => {
                     const { size }: any = file;
                     FileInfo = { size: formatFileSize(size) };
-                    if (!uploadDirect) {
-                        doUploadUtil(file, FileInfo, url, FileType.PDF, "1");
-                    }
+                    if (!uploadDirect) doUploadUtil(file, FileInfo, url, FileType.PDF, "1", "");
                 };
             }
             const fileData: any = await handleFileRead(file);
@@ -110,11 +106,14 @@ const FileUpload = ({ id, fid, file, setModalOpen, setFile, removeFile, title, u
                 fd.append("attachment[attachment_kind]", type);
                 fd.append(`attachment[file]`, file, fileData.name);
                 fd.append(`attachment[configurable_id]`, fid);
-
-                const { status, data } = await uploadAttachments(fd, authToken);
-                if (status === 200) {
-                    doUploadUtil(file, FileInfo, url, type, data?.status?.data?.attachment_id);
+                
+                if(parentId) {
+                    fd.append(`attachment[configurable_type]`, 'FieldAttribute');
+                    fd.append(`attachment[parent_type]`, 'Deal');
+                    fd.append(`attachment[parent_id]`, parentId);
                 }
+                const { status, data } = await uploadAttachments(fd, authToken);
+                if (status === 200) doUploadUtil(file, FileInfo, url, type, data?.status?.data?.attachment_id, data?.status?.data?.url);
             }
         } catch (error: any) {
             if (error.response && error.response.status === 401) {
@@ -128,10 +127,10 @@ const FileUpload = ({ id, fid, file, setModalOpen, setFile, removeFile, title, u
         }
     };
 
-    const doUploadUtil = (file: any, FileInfo: any, url: string, type: string, aid: string) => {
+    const doUploadUtil = (file: any, FileInfo: any, url: string, type: string, aid: string, prodURL: string) => {
         setFileInfo({ size: FileInfo?.size, dimensions: FileInfo?.dimensions });
         setAlertType({ type: PromptMessage.SUCCESS, message: language.promptMessages.fileUpload });
-        setFile(file, id, url, aid, FileInfo?.size, FileInfo?.dimensions, type);
+        setFile(file, id, url, aid, FileInfo?.size, FileInfo?.dimensions, type, prodURL);
         setSelectedFile({ file, url, attachment_id: aid, type, id });
 
         let timer = setTimeout(() => {
@@ -159,7 +158,7 @@ const FileUpload = ({ id, fid, file, setModalOpen, setFile, removeFile, title, u
                                 <BinIcon stroke="#171717" className="w-full h-full" />
                             </div>
                             <section className="h-[120px] w-[120px] bg-white inline-grid place-items-center shadow-cs-3 rounded-md overflow-hidden">
-                                {(selectedFile?.type === FileType.IMAGE) ? <img src={selectedFile?.url} alt={selectedFile?.file?.name} className="w-[80%] h-[90%]" /> : <embed src={selectedFile?.url} type="application/pdf" className="w-[100%] h-[90%]" />}
+                                {onlyPDF ? (<embed src={selectedFile?.url} type="application/pdf" className="w-[100%] h-[90%]" />) : (selectedFile?.type === FileType.IMAGE) ? <img src={selectedFile?.url} alt={selectedFile?.file?.name} className="w-[80%] h-[90%]" /> : <embed src={selectedFile?.url} type="application/pdf" className="w-[100%] h-[90%]" />}
                             </section>
 
                             <section className="px-3 h-[120px] inline-flex flex-col justify-between py-2">
@@ -187,7 +186,7 @@ const FileUpload = ({ id, fid, file, setModalOpen, setFile, removeFile, title, u
                                 </p>
                                 {(video && !onlyPDF) && <div className="text-neutral-500 text-sm font-normal">{language?.v3?.common?.vid_specs}</div>}
                                 {(!video && !onlyPDF) && <div className="text-neutral-500 text-sm font-normal">{(acceptPdf || onlyPDF) ? language?.common?.fileSpecs : language?.v2?.common?.imageSpecs} 10MB</div>}
-                                {onlyPDF && <div className="text-neutral-500 text-sm font-normal">{language?.common?.fileSpecsPDF} {onlyPDF}</div> }
+                                {onlyPDF && <div className="text-neutral-500 text-sm font-normal">{language?.common?.fileSpecsPDF} {onlyPDF}</div>}
                                 <input id={id} accept=".jpg,.png,.pdf" type="file" className="hidden" onChange={handleFileInput} />
                             </div>
                         )

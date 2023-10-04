@@ -656,7 +656,9 @@
             "add_links": "Add Links",
             "price": "Price",
             "exp_ret": "Expected Dividend Yield",
-            "exp_ann": "Expected Annual Appreciation"
+            "exp_ann": "Expected Annual Appreciation",
+            "submitted_deal": "Your deal has been submitted",
+            "deal_status": "Deal Status"
         },
         "common": {
             "search": "Search",

@@ -63,11 +63,7 @@ const UploadComp = (props: any) => {
       <div className="block text-neutral-700 text-base font-medium">
         <div>{title}</div>
         <small className="text-neutral-700 font-normal">{subTitle}</small>
-        <small
-          className="relative font-normal text-cc-blue cursor-pointer"
-          onMouseEnter={() => setSelectedId(id)}
-          onMouseLeave={() => setSelectedId(null)}
-        >
+        <small className="relative font-normal text-cc-blue cursor-pointer" onMouseEnter={() => setSelectedId(id)} onMouseLeave={() => setSelectedId(null)} >
           &nbsp;<span>{language?.common?.example}</span>
           {selectedId === id && (
             <HoverModal>

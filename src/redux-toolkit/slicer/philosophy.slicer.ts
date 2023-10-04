@@ -84,6 +84,9 @@ export const QuestionnaireSlice = createSlice({
         else if (currentQuestion.field_type === Constants.SWITCH) {
           currentQuestion.is_required = !currentQuestion.is_required;
         }
+        else if (currentQuestion.field_type === Constants.FILE) {
+          currentQuestion.value = option;
+        }
         else {
           currentQuestion?.options.map((opt: any) => {
             return { ...opt, selected: opt.id === option.id };
