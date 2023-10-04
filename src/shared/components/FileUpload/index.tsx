@@ -186,7 +186,7 @@ const FileUpload = ({ id, fid, file, setModalOpen, setFile, removeFile, title, u
                                     <small className="text-sm text-neutral-500">{language.buttons.orDragDrop}</small>
                                 </p>
                                 {(video && !onlyPDF) && <div className="text-neutral-500 text-sm font-normal">{language?.v3?.common?.vid_specs}</div>}
-                                {(!video && !onlyPDF) && <div className="text-neutral-500 text-sm font-normal">{acceptPdf ? language?.common?.fileSpecs : language?.v2?.common?.imageSpecs} 10MB</div>}
+                                {(!video && !onlyPDF) && <div className="text-neutral-500 text-sm font-normal">{(acceptPdf || onlyPDF) ? language?.common?.fileSpecs : language?.v2?.common?.imageSpecs} 10MB</div>}
                                 {onlyPDF && <div className="text-neutral-500 text-sm font-normal">{language?.common?.fileSpecsPDF} {onlyPDF}</div> }
                                 <input id={id} accept=".jpg,.png,.pdf" type="file" className="hidden" onChange={handleFileInput} />
                             </div>

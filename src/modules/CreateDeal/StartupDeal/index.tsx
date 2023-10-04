@@ -17,6 +17,8 @@ import { numberFormatter } from "../../../utils/object.utils";
 import { saveDataHolder } from "../../../redux-toolkit/slicer/dataHolder.slicer";
 import { toast } from "react-toastify";
 import { toastUtil } from "../../../utils/toast.utils";
+import Modal from "../../../shared/components/Modal";
+import CrossIcon from "../../../ts-icons/crossIcon.svg";
 
 const CURRENCIES = ["USD", "AED"];
 
@@ -36,7 +38,7 @@ const StartupDeal = ({ step }: any) => {
     const [open, setOpen]: any = useState(false);
     const [restrictions, setRestrictions]: any = useState([]);
     const [totalSteps, setTotalSteps]: any = useState({})
-
+    const [modalOpen, setModalOpen]: any = useState(false);
 
     useLayoutEffect(() => {
         getDealStepDetails();
@@ -114,17 +116,26 @@ const StartupDeal = ({ step }: any) => {
             if (status === 200) {
                 dispatch(saveDataHolder(data?.status?.data?.id));
                 if (step <= totalSteps?.all.length) navigate(`/create-deal/${step + 1}`);
+                else setModalOpen(true);
             }
         } catch (error: any) {
             const message = error?.response?.data?.status?.message || language.promptMessages.errorGeneral;
             toast.error(message, toastUtil);
         }
     };
+
     const onSetPrev = () => {
         if (step > 1) navigate(`/create-deal/${step - 1}`)
     };
 
-    const multipleChoice = (ques: any, secIndex: number) => {
+    const multipleChoice = (ques: any, secIndex: number, section: any) => {
+        let flag = false;
+        let dependant = dependencies?.find((dep: any) => dep?.dependent_id === ques?.id && dep?.operation === "hide");
+        if (dependant) {
+            let field = section?.fields?.find((q: any) => q.id === dependant.dependable_field);
+            if (!field?.options?.some((op: any) => op.selected)) flag = true;
+        }
+        if (flag) return <React.Fragment></React.Fragment>
         return (
             <section className="flex items-start justify-center flex-col mt-3 max-w-[400px] screen500:max-w-[300px]">
                 <h3 className="text-neutral-700 font-medium text-base w-[420px]">
@@ -336,7 +347,7 @@ const StartupDeal = ({ step }: any) => {
     const renderQuestionType = (ques: any, secIndex: number, section: any) => {
         if (restrictions?.some((res: any) => res.dependent_id === ques?.id && res?.operation !== "show") && restrictions.length > 0) return "";
         else {
-            if (ques?.field_type === Constants.MULTIPLE_CHOICE) return multipleChoice(ques, secIndex);
+            if (ques?.field_type === Constants.MULTIPLE_CHOICE) return multipleChoice(ques, secIndex, section);
             else if (ques?.field_type === Constants.NUMBER_INPUT) return numberInput(ques, secIndex, section);
             else if (ques?.field_type === Constants.FILE) return attachments(ques, secIndex, section)
             else if (ques?.field_type === Constants.DROPDOWN) return dropdowns(ques, secIndex)
@@ -369,7 +380,7 @@ const StartupDeal = ({ step }: any) => {
                     }
                     else flag = false;
                     if (quesIdx === 1) {
-                       console.log("flag", flag);
+                        console.log("flag", flag);
                     }
                     flags[index].validations.push(flag);
                 }
@@ -379,7 +390,7 @@ const StartupDeal = ({ step }: any) => {
             });
 
             console.log("flags", flags);
-            
+
         });
         let isValid = false;
 
@@ -448,6 +459,19 @@ const StartupDeal = ({ step }: any) => {
                     )}
                 </div>
             </section>
+
+            <Modal show={modalOpen}>
+                <div className="relative p-12 rounded-md shadow-cs-1 flex flex-col items-center w-full bg-white outline-none focus:outline-none screen800:px-3">
+                    <div className="rounded-md h-8 w-8 inline-grid place-items-center cursor-pointer absolute right-2 top-2">
+                        <CrossIcon stroke="#171717" className="w-6 h-6" onClick={() => setModalOpen(false)} />
+                    </div>
+
+                    <aside>
+                        <h2 className="font-bold text-xl text-center text-neutral-900">{language?.v3?.common?.disclaimer}</h2>
+                        <p className="text-sm font-normal text-center text-neutral-500 mt-8 mb-12">{language?.v3?.common?.disclaimer_desc}</p>
+                    </aside>
+                </div>
+            </Modal>
         </React.Fragment>
     )
 };
