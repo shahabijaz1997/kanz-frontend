@@ -1,4 +1,4 @@
-import React, { useEffect, useLayoutEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import Stepper from "../../../shared/components/Stepper";
@@ -47,9 +47,30 @@ const StartupDeal = ({ step }: any) => {
 
     useEffect(() => {
         getDealStepDetails();
-        console.log(step);
-        
     }, [step]);
+
+    const tieUpRestrictions = (as: any) => {
+        let option: any[] = [];
+        dependencies?.find((dep: any) => {
+            if (String(dep.value) === String(as?.id)) option.push(dep);
+            questions?.forEach((q: any) => {
+                option.forEach((rest: any) => {
+                    if (q?.id === rest?.dependent_id && rest?.dependent_type?.toLowerCase() === "stepper" && rest?.operation === "hide") {
+                        let step = totalSteps?.copy?.find((ts: any) => ts?.text === q[event]?.title);
+                        let steps = totalSteps?.copy.filter((stp: any) => stp?.text !== step?.text);
+                        setTotalSteps((prev: any) => {
+                            return { copy: [...prev?.copy], all: steps }
+                        })
+                    } else if (q?.id === rest?.dependent_id && rest?.dependent_type?.toLowerCase() === "stepper" && rest?.operation === "show") {
+                        setTotalSteps((prev: any) => {
+                            return { copy: prev?.copy, all: prev?.copy }
+                        })
+                    }
+                });
+            });
+        })
+        if (option.length) setRestrictions(option)
+    };
 
     const getDealStepDetails = async () => {
         try {
@@ -59,21 +80,55 @@ const StartupDeal = ({ step }: any) => {
             let { status, data } = await getDealQuestion(queryParams, authToken);
             if (status === 200) {
                 console.log("Startup Deal: ", data?.status?.data?.steps[step - 1]);
-
+                let _dependencies: any = [];
                 data?.status?.data?.steps?.forEach((step: any) => {
-                    if (step?.dependencies?.length > 0) setDependencies(step.dependencies);
+                    if (step?.dependencies?.length > 0) _dependencies = step.dependencies;
                 });
-                data?.status?.data?.steps[step - 1][event]?.sections.forEach((sec: any) => {
-                    sec?.fields?.sort((a: any, b: any) => a.index - b.index);
-                });
-                setQuestions(data?.status?.data?.steps);
-                dispatch(saveQuestionnaire(data?.status?.data?.steps));
-                let all_steps = [];
+
+
+                _dependencies.length > 0 && setDependencies(_dependencies)
+                let all_steps: any[] = [];
                 for (let i = 0; i < data?.status?.data?.step_titles[event]?.length; i++) {
                     const step = data?.status?.data?.step_titles[event][i];
                     all_steps.push({ id: i + 1, text: step });
                 }
-                setTotalSteps({ all: all_steps, copy: all_steps });
+
+                let options: any = [];
+                let stepper: any;
+                data?.status?.data?.steps[step - 1][event]?.sections.forEach((sec: any) => {
+                    sec?.fields?.sort((a: any, b: any) => a.index - b.index);
+                    let f = sec?.fields?.find((ques: any) => {
+                        return _dependencies?.find((dep: any) => dep?.dependable_field === ques?.id)
+                    })
+                    let opt = f?.options?.find((op: any) => op.selected);
+                    
+                    if (opt) {
+                        _dependencies?.find((dep: any) => {
+                            if (dep?.value === String(opt.id) && dep?.dependent_type !== "Stepper") options.push(dep);
+                            else if (dep?.dependent_type === "Stepper" && dep?.operation === "hide") {
+                                stepper = data?.status?.data?.steps?.find((stp: any) => stp?.id === dep?.dependent_id);
+                            }
+                        });
+                    }
+                });
+                if (stepper) {
+                    let step = all_steps?.find((ts: any) => ts?.text === stepper[event]?.title);
+                    let steps = all_steps?.filter((stp: any) => stp?.text !== step?.text);
+
+                    setTotalSteps((prev: any) => {
+                        return { copy: all_steps, all: steps }
+                    })
+                }
+                else {
+                    setTotalSteps((prev: any) => {
+                        return { copy: all_steps, all: all_steps }
+                    })
+                }
+
+                options?.length > 0 && setRestrictions(options)
+
+                setQuestions(data?.status?.data?.steps);
+                dispatch(saveQuestionnaire(data?.status?.data?.steps));
             }
 
         } catch (error: any) {
@@ -137,11 +192,14 @@ const StartupDeal = ({ step }: any) => {
 
     const multipleChoice = (ques: any, secIndex: number, section: any) => {
         let flag = false;
+
         let dependant = dependencies?.find((dep: any) => dep?.dependent_id === ques?.id && dep?.operation === "hide");
         if (dependant) {
             let field = section?.fields?.find((q: any) => q.id === dependant.dependable_field);
-            if (!field?.options?.some((op: any) => op.selected)) flag = true;
+            let option = field?.options?.find((op: any) => op.selected);
+            if (!option) flag = true;
         }
+
         if (flag) return <React.Fragment></React.Fragment>
         return (
             <section className="flex items-start justify-center flex-col mt-3 max-w-[400px] screen500:max-w-[300px]">
@@ -162,29 +220,8 @@ const StartupDeal = ({ step }: any) => {
                                     <li className={`h-[50px] w-[420px] p-4 grey-neutral-200 text-sm font-medium cursor-pointer border border-grey inline-flex items-center justify-start first:rounded-t-md last:rounded-b-md screen500:w-full ${as.selected ? "check-background" : "bg-white"}`}
                                         onClick={() => {
                                             dispatch(saveDealSelection({ option: as, question: ques, fields: dealData, lang: event, secIndex, step }))
-                                            let option: any[] = [];
-                                            dependencies?.find((dep: any) => {
-                                                if (String(dep.value) === String(as?.id)) option.push(dep);
-                                                questions?.forEach((q: any) => {
-                                                    option.forEach((rest: any) => {
-                                                        if (q?.id === rest?.dependent_id && rest?.dependent_type?.toLowerCase() === "stepper" && rest?.operation === "hide") {
-
-                                                            let step = totalSteps?.copy?.find((ts: any) => ts?.text === q[event]?.title);
-                                                            let steps = totalSteps?.copy.filter((stp: any) => stp?.text !== step?.text);
-                                                            setTotalSteps((prev: any) => {
-                                                                return { copy: [...prev?.copy], all: steps }
-                                                            })
-                                                        } else if (q?.id === rest?.dependent_id && rest?.dependent_type?.toLowerCase() === "stepper" && rest?.operation === "show") {
-                                                            setTotalSteps((prev: any) => {
-                                                                return { copy: prev?.copy, all: prev?.copy }
-                                                            })
-                                                        }
-                                                    });
-                                                });
-
-                                            })
-                                            if (option.length) setRestrictions(option)
-                                        }}>
+                                            tieUpRestrictions(as);
+                                        }} id={`rad-chk-${as?.id}`}>
                                         <input onChange={(e) => { }} className="accent-cyan-800 relative float-left mx-2 h-3 w-3 rounded-full border-2 border-solid border-cyan-300 before:pointer-events-none before:absolute before:h-4 before:w-4 before:scale-0 before:rounded-full before:bg-transparent before:opacity-0 before:content-[''] after:absolute after:z-[1] after:block after:h-4 after:w-4 after:rounded-full after:content-[''] checked:border-primary checked:before:opacity-[0.16] checked:after:absolute checked:after:left-1/2 checked:after:top-1/2 checked:after:h-[0.625rem] checked:after:w-[0.625rem] checked:after:rounded-full checked:after:border-primary checked:after:bg-primary checked:after:content-[''] checked:after:[transform:translate(-50%,-50%)] hover:cursor-pointer hover:before:opacity-[0.04]"
                                             type="radio" checked={as.selected ? true : false} />
                                         <div className="text-sm font-medium text-cyan-900">{as?.statement}</div>
@@ -264,15 +301,15 @@ const StartupDeal = ({ step }: any) => {
                     <p className="text-neutral-500 font-normal text-sm">
                         <span>{language?.buttons?.upload} {React.Children.toArray(ques?.permitted_types?.map((type: any) => <span className="uppercase">{type}</span>))} {language?.drawer?.of} {ques?.statement}</span>&nbsp;
                         <span className="relative text-cc-blue font-medium cursor-pointer" onMouseEnter={() => setShowHoverModal(ques.id)} onMouseLeave={() => setShowHoverModal(null)} >
-                        {language.common.example}
-                        {showHoverModal === ques.id && (
-                            <HoverModal width="w-[150px]" height="h-[150px]">
-                                <section className="inline-flex flex-row items-center justify-evenly h-full">
-                                    <img src={ExampleRealtor} alt={language.syndicate.logo} className="max-h-[90px]" />
-                                </section>
-                            </HoverModal>
-                        )}
-                    </span>
+                            {language.common.example}
+                            {showHoverModal === ques.id && (
+                                <HoverModal width="w-[150px]" height="h-[150px]">
+                                    <section className="inline-flex flex-row items-center justify-evenly h-full">
+                                        <img src={ExampleRealtor} alt={language.syndicate.logo} className="max-h-[90px]" />
+                                    </section>
+                                </HoverModal>
+                            )}
+                        </span>
                     </p>
 
                     <FileUpload parentId={dataHolder} onlyPDF={`${ques?.size_constraints?.limit}${ques?.size_constraints?.unit}`} id={ques?.id} fid={ques?.id} file={ques?.value} setModalOpen={() => { }} setFile={(file: File, id: string, url: string, aid: string, size: string, dimensions: string, type: string, prodURL: string) => {
@@ -352,27 +389,27 @@ const StartupDeal = ({ step }: any) => {
     const reviewUI = () => {
         return (
             <section className="flex items-start justify-center flex-col mt-10 max-w-[420px] min-w-[400px] screen500:max-w-[300px]">
-                <div className="py-4 border-b-[1px] border-b-neutral-200 w-full cursor-pointer" onClick={()=>navigate(`${StartupRoutes.CREATE_DEAL}/1`)}>
+                <div className="py-4 border-b-[1px] border-b-neutral-200 w-full cursor-pointer" onClick={() => navigate(`${StartupRoutes.CREATE_DEAL}/1`)}>
                     <h3 className="text-neutral-900 font-medium text-sm">Investment Round</h3>
                     <p className="text-neutral-500 font-normal text-sm">Angel Round</p>
                 </div>
-                <div className="py-4 border-b-[1px] border-b-neutral-200 w-full cursor-pointer" onClick={()=>navigate(`${StartupRoutes.CREATE_DEAL}/2`)}>
+                <div className="py-4 border-b-[1px] border-b-neutral-200 w-full cursor-pointer" onClick={() => navigate(`${StartupRoutes.CREATE_DEAL}/2`)}>
                     <h3 className="text-neutral-900 font-medium text-sm">Investment Type</h3>
                     <p className="text-neutral-500 font-normal text-sm">Equity</p>
                 </div>
-                <div className="py-4 border-b-[1px] border-b-neutral-200 w-full cursor-pointer" onClick={()=>navigate(`${StartupRoutes.CREATE_DEAL}/3`)}>
+                <div className="py-4 border-b-[1px] border-b-neutral-200 w-full cursor-pointer" onClick={() => navigate(`${StartupRoutes.CREATE_DEAL}/3`)}>
                     <h3 className="text-neutral-900 font-medium text-sm">Share Class</h3>
                     <p className="text-neutral-500 font-normal text-sm">Common</p>
                 </div>
-                <div className="py-4 border-b-[1px] border-b-neutral-200 w-full cursor-pointer" onClick={()=>navigate(`${StartupRoutes.CREATE_DEAL}/4`)}>
+                <div className="py-4 border-b-[1px] border-b-neutral-200 w-full cursor-pointer" onClick={() => navigate(`${StartupRoutes.CREATE_DEAL}/4`)}>
                     <h3 className="text-neutral-900 font-medium text-sm">Deal Target</h3>
                     <p className="text-neutral-500 font-normal text-sm">$0.00</p>
                 </div>
-                <div className="py-4 border-b-[1px] border-b-neutral-200 w-full cursor-pointer" onClick={()=>navigate(`${StartupRoutes.CREATE_DEAL}/5`)}>
+                <div className="py-4 border-b-[1px] border-b-neutral-200 w-full cursor-pointer" onClick={() => navigate(`${StartupRoutes.CREATE_DEAL}/5`)}>
                     <h3 className="text-neutral-900 font-medium text-sm">Valuation</h3>
                     <p className="text-neutral-500 font-normal text-sm">$10,000,000 (Pre-money)</p>
                 </div>
-                <div className="py-4 border-b-[1px] border-b-neutral-200 w-full cursor-pointer" onClick={()=>navigate(`${StartupRoutes.CREATE_DEAL}/6`)}>
+                <div className="py-4 border-b-[1px] border-b-neutral-200 w-full cursor-pointer" onClick={() => navigate(`${StartupRoutes.CREATE_DEAL}/6`)}>
                     <h3 className="text-neutral-900 font-medium text-sm">Attachments</h3>
                     <p className="text-neutral-500 font-normal text-sm">PDF 2MB</p>
                 </div>
