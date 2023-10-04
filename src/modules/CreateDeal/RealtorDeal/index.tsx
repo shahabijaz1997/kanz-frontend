@@ -51,7 +51,7 @@ const RealtorDeal = ({ step }: any) => {
     const [modalOpen, setModalOpen]: any = useState(false);
 
 
-    useLayoutEffect(() => {
+    useEffect(() => {
         getDealStepDetails();
     }, [step]);
 
@@ -253,9 +253,16 @@ const RealtorDeal = ({ step }: any) => {
                     </h3>
                     <p className="text-neutral-500 font-normal text-sm">
                         <span>{language?.buttons?.upload} {React.Children.toArray(ques?.permitted_types?.map((type: any) => <span className="uppercase">{type}</span>))} {language?.drawer?.of} {ques?.statement}</span>&nbsp;
-                        <span className="text-cc-blue font-medium cursor-pointer" onClick={() => setOpen(true)} >
-                            {language.common.example}
-                        </span>
+                        <span className="relative text-cc-blue font-medium cursor-pointer" onMouseEnter={() => setShowHoverModal(ques.id)} onMouseLeave={() => setShowHoverModal(null)} >
+                        {language.common.example}
+                        {showHoverModal === ques.id && (
+                            <HoverModal width="w-[150px]" height="h-[150px]">
+                                <section className="inline-flex flex-row items-center justify-evenly h-full">
+                                    <img src={ExampleRealtor} alt={language.syndicate.logo} className="max-h-[90px]" />
+                                </section>
+                            </HoverModal>
+                        )}
+                    </span>
                     </p>
 
                     <FileUpload parentId={dataHolder} onlyPDF={`${ques?.size_constraints?.limit}${ques?.size_constraints?.unit}`} id={ques?.id} fid={ques?.id} file={ques?.value} setModalOpen={() => { }} setFile={(file: File, id: string, url: string, aid: string, size: string, dimensions: string, type: string, prodURL: string) => {

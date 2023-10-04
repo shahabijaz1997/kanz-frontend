@@ -1,4 +1,4 @@
-import React, { useLayoutEffect, useState } from "react";
+import React, { useEffect, useLayoutEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import Stepper from "../../../shared/components/Stepper";
@@ -19,8 +19,10 @@ import { toast } from "react-toastify";
 import { toastUtil } from "../../../utils/toast.utils";
 import Modal from "../../../shared/components/Modal";
 import CrossIcon from "../../../ts-icons/crossIcon.svg";
+import ExampleRealtor from "../../../assets/example_realtor.png";
 import { removeAttachment } from "../../../apis/attachment.api";
 import EditIcon from "../../../ts-icons/editIcon.svg";
+import HoverModal from "../../../shared/components/HoverModal";
 
 const CURRENCIES = ["USD", "AED"];
 
@@ -41,9 +43,12 @@ const StartupDeal = ({ step }: any) => {
     const [restrictions, setRestrictions]: any = useState([]);
     const [totalSteps, setTotalSteps]: any = useState({})
     const [modalOpen, setModalOpen]: any = useState(false);
+    const [showHoverModal, setShowHoverModal] = useState(null);
 
-    useLayoutEffect(() => {
+    useEffect(() => {
         getDealStepDetails();
+        console.log(step);
+        
     }, [step]);
 
     const getDealStepDetails = async () => {
@@ -52,7 +57,7 @@ const StartupDeal = ({ step }: any) => {
             const queryParams: any = { type: DealType.STARTUP };
             if (dataHolder) queryParams.id = dataHolder;
             let { status, data } = await getDealQuestion(queryParams, authToken);
-            if (status === 200 && !questions) {
+            if (status === 200) {
                 console.log("Startup Deal: ", data?.status?.data?.steps[step - 1]);
 
                 data?.status?.data?.steps?.forEach((step: any) => {
@@ -117,7 +122,7 @@ const StartupDeal = ({ step }: any) => {
             let { status, data } = await postDealStep(payload, authToken);
             if (status === 200) {
                 dispatch(saveDataHolder(data?.status?.data?.id));
-                if (step <= totalSteps?.all.length) navigate(`/create-deal/${step + 1}`);
+                if (step < totalSteps?.all.length) navigate(`/create-deal/${step + 1}`);
                 else setModalOpen(true);
             }
         } catch (error: any) {
@@ -258,9 +263,16 @@ const StartupDeal = ({ step }: any) => {
                     </h3>
                     <p className="text-neutral-500 font-normal text-sm">
                         <span>{language?.buttons?.upload} {React.Children.toArray(ques?.permitted_types?.map((type: any) => <span className="uppercase">{type}</span>))} {language?.drawer?.of} {ques?.statement}</span>&nbsp;
-                        <span className="text-cc-blue font-medium cursor-pointer" onClick={() => setOpen(true)} >
-                            {language.common.example}
-                        </span>
+                        <span className="relative text-cc-blue font-medium cursor-pointer" onMouseEnter={() => setShowHoverModal(ques.id)} onMouseLeave={() => setShowHoverModal(null)} >
+                        {language.common.example}
+                        {showHoverModal === ques.id && (
+                            <HoverModal width="w-[150px]" height="h-[150px]">
+                                <section className="inline-flex flex-row items-center justify-evenly h-full">
+                                    <img src={ExampleRealtor} alt={language.syndicate.logo} className="max-h-[90px]" />
+                                </section>
+                            </HoverModal>
+                        )}
+                    </span>
                     </p>
 
                     <FileUpload parentId={dataHolder} onlyPDF={`${ques?.size_constraints?.limit}${ques?.size_constraints?.unit}`} id={ques?.id} fid={ques?.id} file={ques?.value} setModalOpen={() => { }} setFile={(file: File, id: string, url: string, aid: string, size: string, dimensions: string, type: string, prodURL: string) => {
