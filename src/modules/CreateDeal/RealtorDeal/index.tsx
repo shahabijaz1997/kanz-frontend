@@ -7,7 +7,7 @@ import Spinner from "../../../shared/components/Spinner";
 import Button from "../../../shared/components/Button";
 import { getDealQuestion, postDealStep } from "../../../apis/deal.api";
 import { DealType } from "../../../enums/types.enum";
-import { onResetFields, saveDealSelection, saveQuestionnaire } from "../../../redux-toolkit/slicer/philosophy.slicer";
+import { onResetFields, removeMoreFields, saveDealSelection, saveMoreFields, saveQuestionnaire } from "../../../redux-toolkit/slicer/philosophy.slicer";
 import { saveToken } from "../../../redux-toolkit/slicer/auth.slicer";
 import { RoutesEnums } from "../../../enums/routes.enum";
 import { Constants } from "../../../enums/constants.enum";
@@ -55,11 +55,6 @@ const RealtorDeal = ({ step }: any) => {
         getDealStepDetails();
     }, [step]);
 
-    useEffect(() => {
-        console.log(multipleFieldsPayload);
-
-    }, [multipleFieldsPayload]);
-
     const getDealStepDetails = async () => {
         try {
             setLoading(true);
@@ -82,6 +77,7 @@ const RealtorDeal = ({ step }: any) => {
                     all_steps.push({ id: i + 1, text: step });
                 }
                 setTotalSteps({ all: all_steps, copy: all_steps });
+                setMultipleFieldsPayload([])
             }
 
         } catch (error: any) {
@@ -102,12 +98,8 @@ const RealtorDeal = ({ step }: any) => {
                 all_fields = all_fields.concat(section?.fields);
             });
             if (multipleFieldsPayload?.length > 0) {
-                let index = 0
-                multipleFieldsPayload?.forEach((sec: any) => {
-                    sec?.fields.forEach((field: any) => {
-                        fields.push({ id: field.ques, value: field.value, index });
-                        index++;
-                    });
+                multipleFieldsPayload?.forEach((sec: any, index: number) => {
+                    sec?.fields.forEach((field: any) => fields.push({ id: field.ques, value: field.value, index }));
                 });
             }
 
@@ -235,6 +227,8 @@ const RealtorDeal = ({ step }: any) => {
     };
 
     const attachments = (ques: any, secIndex: number, section: any) => {
+        let onlyPDF = (ques?.permitted_types?.length === 1 && ques?.permitted_types?.includes("pdf")) && true;
+        let onlyideo = (ques?.permitted_types?.length === 1 && ques?.permitted_types?.includes("video")) && true;
         return (
             ques?.value?.id ? (
                 <div className="mb-4 w-full select-none content-center bg-cbc-grey-sec p-4 rounded-md">
@@ -280,7 +274,8 @@ const RealtorDeal = ({ step }: any) => {
                         </span>
                     </p>
 
-                    <FileUpload parentId={dataHolder} onlyPDF={`${ques?.size_constraints?.limit}${ques?.size_constraints?.unit}`} id={ques?.id} fid={ques?.id} file={ques?.value} setModalOpen={() => { }} setFile={(file: File, id: string, url: string, aid: string, size: string, dimensions: string, type: string, prodURL: string) => {
+                    <FileUpload parentId={dataHolder} onlyPDF={onlyPDF} onlyVideo={onlyideo} size={`${ques?.size_constraints?.limit}${ques?.size_constraints?.unit}`}
+                     id={ques?.id} fid={ques?.id} file={ques?.value} setModalOpen={() => { }} setFile={(file: File, id: string, url: string, aid: string, size: string, dimensions: string, type: string, prodURL: string) => {
                         dispatch(saveDealSelection({ option: { url: prodURL, id }, question: ques, fields: dealData, lang: event, secIndex, step }))
                     }} title={ques?.statement} removeFile={() => removeFile(ques?.value?.id)} className="w-full" />
                 </section >
@@ -369,22 +364,35 @@ const RealtorDeal = ({ step }: any) => {
 
     const URLInput = (ques: any, secIndex: number) => {
         return (
-            <section className="flex items-start justify-center flex-col mb-8 mt-3 w-full">
-                <div className="relative inline-flex w-full mb-3">
-                    <input type="disabled" value={"https://"}
-                        className={`text-neutral-500 text-base font-normal border-t border-b border-neutral-300 h-[42px] w-[70px] ${orientation === "rtl"
-                            ? "border-r rounded-br-md rounded-tr-md pr-2"
-                            : "border-l rounded-bl-md rounded-tl-md pl-2"
-                            }`}
-                    />
-                    <input placeholder="www.example.com"
-                        className={`h-[42px] shadow-sm appearance-none border border-neutral-300 w-full py-2 px-3 text-gray-500 leading-tight focus:outline-none focus:shadow-outline ${orientation === "rtl"
-                            ? " rounded-bl-md rounded-tl-md"
-                            : " rounded-br-md rounded-tr-md"
-                            }`} type="text" id={ques?.id} onChange={(e: any) => dispatch(saveDealSelection({ option: e.target.value, question: ques, fields: dealData, lang: event, secIndex, step }))}
-                    />
-                </div>
-            </section>
+            ques?.index > 0 ? (
+                <section className="flex items-start justify-center flex-col mb-1 mt-3 w-full">
+                    <div className="relative inline-flex w-full mb-3">
+                        <p placeholder="www.example.com"
+                            className={`h-[42px] shadow-sm appearance-none border border-neutral-300 w-full py-2 px-3 bg-white text-blue-500 leading-tight focus:outline-none focus:shadow-outline inline-flex justify-between items-center`} id={ques?.index}>
+                            <small className="text-sm;">{ques?.value}</small>
+                            <BinIcon stroke="#171717" className="cursor-pointer w-6 h-6" onClick={() => dispatch(removeMoreFields({ secIndex, lang: event, step, index: ques?.index }))} />
+                        </p>
+
+                    </div>
+                </section>
+            ) : (
+                <section className="flex items-start justify-center flex-col mb-1 mt-3 w-full">
+                    <div className="relative inline-flex w-full mb-3">
+                        <input type="disabled" value={"https://"}
+                            className={`text-neutral-500 text-base font-normal border-t border-b border-neutral-300 h-[42px] w-[70px] ${orientation === "rtl"
+                                ? "border-r rounded-br-md rounded-tr-md pr-2"
+                                : "border-l rounded-bl-md rounded-tl-md pl-2"
+                                }`}
+                        />
+                        <input placeholder="www.example.com"
+                            className={`h-[42px] shadow-sm appearance-none border border-neutral-300 w-full py-2 px-3 text-gray-500 leading-tight focus:outline-none focus:shadow-outline ${orientation === "rtl"
+                                ? " rounded-bl-md rounded-tl-md"
+                                : " rounded-br-md rounded-tr-md"
+                                }`} type="text" id={ques?.id} onChange={(e: any) => dispatch(saveDealSelection({ option: e.target.value, question: ques, fields: dealData, lang: event, secIndex, step }))}
+                        />
+                    </div>
+                </section>
+            )
         );
     };
 
@@ -544,8 +552,7 @@ const RealtorDeal = ({ step }: any) => {
                                                         <section className={`flex items-start flex-col mb-8 w-[400px] screen500:w-[300px] ${(index % 2 != 0 || section?.is_multiple) && "bg-cbc-check p-4 rounded-md"}`}>
                                                             {section?.fields?.length ? (React.Children.toArray(section?.fields?.map((ques: any) => renderQuestionType(ques, index, section)))) : (reviewUI())}
 
-
-                                                            {!section?.display_cards && (
+                                                            {section?.display_card && (
                                                                 <div className="w-full inline-flex justify-center items-center gap-2">
                                                                     <Button className="w-[100px] border-2 border-cyan-800" onClick={() => setShowCustomBox(false)}>{language?.v3?.button?.cancel}</Button>
                                                                     <Button disabled={checkCurrentBoxStatus(section?.fields)}
@@ -565,7 +572,7 @@ const RealtorDeal = ({ step }: any) => {
                                                     {(section?.add_more_label && index === dealData[step - 1][event]?.sections?.length - 1) && (
                                                         <section className="w-[400px]">
                                                             <Button disabled={checkMultipleButtonDisabled(section)} onClick={() => {
-                                                                // showCustomBox && dispatch(saveMoreFields({ secIndex: index, lang: event, step, duplicate: 2 }))
+                                                                !section?.display_card && dispatch(saveMoreFields({ secIndex: index, lang: event, step, duplicate: 1 }))
                                                                 setShowCustomBox(true);
                                                             }}
                                                                 className="w-full bg-transparent border-2 border-cyan-800 !text-cyan-800 hover:!text-white">{section?.add_more_label}</Button>

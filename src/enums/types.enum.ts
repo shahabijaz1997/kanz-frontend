@@ -11,6 +11,7 @@ export enum PromptMessage {
 
 export enum FileType {
     IMAGE = "image",
+    VIDEO = "video",
     PDF = "pdf"
 }
 

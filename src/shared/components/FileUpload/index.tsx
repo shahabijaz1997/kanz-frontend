@@ -8,14 +8,14 @@ import BinIcon from "../../../ts-icons/binIcon.svg";
 import PreviewIcon from "../../../ts-icons/previewIcon.svg";
 import FIleUploadAlert from "../FIleUploadAlert";
 import { FileType, PromptMessage } from "../../../enums/types.enum";
-import { fileSize, formatFileSize, validImages, validTypes } from "../../../utils/files.utils";
+import { fileSize, formatFileSize, validImages, validTypes, validVideos } from "../../../utils/files.utils";
 import { handleFileRead } from "../../../utils/files.utils";
 import { uploadAttachments } from "../../../apis/attachment.api";
 import Spinner from "../Spinner";
 import { RoutesEnums } from "../../../enums/routes.enum";
 import AddVideo from "../../../ts-icons/addVideoIcon.svg";
 
-const FileUpload = ({ parentId, id, fid, file, setModalOpen, setFile, removeFile, title, uploadDirect = true, acceptPdf = false, className = "", video = false, onlyPDF = false }: any) => {
+const FileUpload = ({ size, parentId, id, fid, file, setModalOpen, setFile, removeFile, title, uploadDirect = true, acceptPdf = false, className = "", video = false, onlyPDF = false, onlyVideo = false }: any) => {
     const language: any = useSelector((state: RootState) => state.language.value);
     const authToken: any = useSelector((state: RootState) => state.auth.value);
     const orientation: any = useSelector((state: RootState) => state.orientation.value);
@@ -47,6 +47,7 @@ const FileUpload = ({ parentId, id, fid, file, setModalOpen, setFile, removeFile
         const _file = e.dataTransfer.files[0];
         if (file) return;
         if (!acceptPdf && validImages.includes(_file.type)) setFileInformation(_file);
+        else if (onlyVideo && validVideos.includes(file.type)) setFileInformation(file);
         else if ((acceptPdf || onlyPDF) && validTypes.includes(_file.type)) setFileInformation(_file);
         else setAlertType({ type: PromptMessage.ERROR, message: language.promptMessages.invalidFormat });
     };
@@ -54,6 +55,7 @@ const FileUpload = ({ parentId, id, fid, file, setModalOpen, setFile, removeFile
     const handleFileInput = (e: React.ChangeEvent<HTMLInputElement>) => {
         const file: any = e.target.files?.[0];
         if (!acceptPdf && validImages.includes(file.type)) setFileInformation(file);
+        else if (onlyVideo && validVideos.includes(file.type)) setFileInformation(file);
         else if ((acceptPdf || onlyPDF) && validTypes.includes(file.type)) setFileInformation(file);
         else setAlertType({ type: PromptMessage.ERROR, message: language.promptMessages.invalidFormat });
         e.target.value = "";
@@ -71,8 +73,10 @@ const FileUpload = ({ parentId, id, fid, file, setModalOpen, setFile, removeFile
         try {
             setLoading(true);
             let FileInfo: any;
-
-            if (file.type.includes("image")) {
+            if (file.type.includes("video")) {
+                type = FileType.VIDEO;
+            }
+            else if (file.type.includes("image")) {
                 type = FileType.IMAGE;
                 const reader = new FileReader();
                 reader.readAsDataURL(file);
@@ -106,8 +110,8 @@ const FileUpload = ({ parentId, id, fid, file, setModalOpen, setFile, removeFile
                 fd.append("attachment[attachment_kind]", type);
                 fd.append(`attachment[file]`, file, fileData.name);
                 fd.append(`attachment[configurable_id]`, fid);
-                
-                if(parentId) {
+
+                if (parentId) {
                     fd.append(`attachment[configurable_type]`, 'FieldAttribute');
                     fd.append(`attachment[parent_type]`, 'Deal');
                     fd.append(`attachment[parent_id]`, parentId);
@@ -157,9 +161,16 @@ const FileUpload = ({ parentId, id, fid, file, setModalOpen, setFile, removeFile
                             }}>
                                 <BinIcon stroke="#171717" className="w-full h-full" />
                             </div>
-                            <section className="h-[120px] w-[120px] bg-white inline-grid place-items-center shadow-cs-3 rounded-md overflow-hidden">
-                                {onlyPDF ? (<embed src={selectedFile?.url} type="application/pdf" className="w-[100%] h-[90%]" />) : (selectedFile?.type === FileType.IMAGE) ? <img src={selectedFile?.url} alt={selectedFile?.file?.name} className="w-[80%] h-[90%]" /> : <embed src={selectedFile?.url} type="application/pdf" className="w-[100%] h-[90%]" />}
-                            </section>
+                            {onlyVideo && (
+                                <section className="h-[120px] w-[120px] bg-white inline-grid place-items-center shadow-cs-3 rounded-md overflow-hidden">
+                                    <video className="w-[100%] h-[90%]" controls><source src={selectedFile?.url}></source></video>
+                                </section>
+                            )}
+                            {!onlyVideo && (
+                                <section className="h-[120px] w-[120px] bg-white inline-grid place-items-center shadow-cs-3 rounded-md overflow-hidden">
+                                    {onlyPDF ? (<embed src={selectedFile?.url} type="application/pdf" className="w-[100%] h-[90%]" />) : (selectedFile?.type === FileType.IMAGE) ? <img src={selectedFile?.url} alt={selectedFile?.file?.name} className="w-[80%] h-[90%]" /> : <embed src={selectedFile?.url} type="application/pdf" className="w-[100%] h-[90%]" />}
+                                </section>
+                            )}
 
                             <section className="px-3 h-[120px] inline-flex flex-col justify-between py-2">
                                 <div>
@@ -186,8 +197,12 @@ const FileUpload = ({ parentId, id, fid, file, setModalOpen, setFile, removeFile
                                 </p>
                                 {(video && !onlyPDF) && <div className="text-neutral-500 text-sm font-normal">{language?.v3?.common?.vid_specs}</div>}
                                 {(!video && !onlyPDF) && <div className="text-neutral-500 text-sm font-normal">{(acceptPdf || onlyPDF) ? language?.common?.fileSpecs : language?.v2?.common?.imageSpecs} 10MB</div>}
-                                {onlyPDF && <div className="text-neutral-500 text-sm font-normal">{language?.common?.fileSpecsPDF} {onlyPDF}</div>}
-                                <input id={id} accept=".jpg,.png,.pdf" type="file" className="hidden" onChange={handleFileInput} />
+                                {size && <div className="text-neutral-500 text-sm font-normal">
+                                    {onlyPDF && "PDF"}
+                                    {onlyVideo && "Video"}
+                                    {language?.common?.fileSpecsPDF} 
+                                    {size}</div>}
+                                <input id={id} type="file" className="hidden" onChange={handleFileInput} />
                             </div>
                         )
                     )}

@@ -157,7 +157,7 @@
         "required_field": "This field is required.",
         "selectCurrency": "Currency",
         "fileSpecs": "PNG, JPG, PDF up to",
-        "fileSpecsPDF": "PDF up to"
+        "fileSpecsPDF": " up to"
     },
     "buttons": {
         "start": "Get Started",
