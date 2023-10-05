@@ -97,28 +97,39 @@ const RealtorDeal = ({ step }: any) => {
     const onSetNext = async () => {
         try {
             let all_fields: any[] = [];
+            let fields: any[] = [];
             dealData[step - 1][event]?.sections?.forEach((section: any) => {
                 all_fields = all_fields.concat(section?.fields);
             });
+            if (multipleFieldsPayload?.length > 0) {
+                let index = 0
+                multipleFieldsPayload?.forEach((sec: any) => {
+                    sec?.fields.forEach((field: any) => {
+                        fields.push({ id: field.ques, value: field.value, index });
+                        index++;
+                    });
+                });
+            }
 
-            let fields: any[] = all_fields?.map((field: any) => {
-                let selected;
-                if (field?.field_type === Constants.MULTIPLE_CHOICE || field?.field_type === Constants.DROPDOWN) {
-                    selected = field?.options?.find((opt: any) => opt.selected)?.id
+            else {
+                fields = all_fields?.map((field: any) => {
+                    let selected;
+                    if (field?.field_type === Constants.MULTIPLE_CHOICE || field?.field_type === Constants.DROPDOWN) {
+                        selected = field?.options?.find((opt: any) => opt.selected)?.id
 
-                }
-                if (field?.field_type === Constants.NUMBER_INPUT) {
-                    selected = field.value
-                }
-                if (field.field_type === Constants.SWITCH) {
-                    selected = field?.is_required
-                }
-                return {
-                    id: field.id,
-                    value: selected
-                }
-            });
-
+                    }
+                    if (field?.field_type === Constants.NUMBER_INPUT || field?.field_type === Constants.TEXT_BOX || field?.field_type === Constants.TEXT_FIELD) {
+                        selected = field.value
+                    }
+                    if (field.field_type === Constants.SWITCH) {
+                        selected = field?.is_required
+                    }
+                    return {
+                        id: field.id,
+                        value: selected
+                    }
+                });
+            }
             let payload: any = {
                 deal: {
                     deal_type: "startup",
@@ -137,6 +148,7 @@ const RealtorDeal = ({ step }: any) => {
             toast.error(message, toastUtil);
         }
     };
+
     const onSetPrev = () => {
         if (step > 1) navigate(`/create-deal/${step - 1}`)
     };
@@ -521,8 +533,8 @@ const RealtorDeal = ({ step }: any) => {
                                                                                 return secs
                                                                             })
                                                                         }}><BinIcon stroke="#171717" /></div>
-                                                                        <div className="font-bold text-neutral-900 text-sm text-center mb-2">{sec.fields[0]}</div>
-                                                                        <small className="text-neutral-700 font-normal text-sm text-center block w-full">{sec.fields[1]}</small>
+                                                                        <div className="font-bold text-neutral-900 text-sm text-center mb-2">{sec.fields[0]?.value}</div>
+                                                                        <small className="text-neutral-700 font-normal text-sm text-center block w-full">{sec.fields[1]?.value}</small>
                                                                     </section>
                                                                 )
                                                             })
@@ -541,8 +553,8 @@ const RealtorDeal = ({ step }: any) => {
                                                                         onClick={() => {
                                                                             setShowCustomBox(false);
                                                                             setMultipleFieldsPayload((prev: any) => {
-                                                                                if (prev.length === 0) return [{ id: 1, fields: [section?.fields[0].value, section?.fields[1].value] }]
-                                                                                else return [...prev, { id: prev?.at(-1).id + 1, fields: [section?.fields[0].value, section?.fields[1].value] }]
+                                                                                if (prev.length === 0) return [{ id: 1, fields: [{ ques: section?.fields[0].id, value: section?.fields[0].value }, { ques: section?.fields[1].id, value: section?.fields[1].value }] }]
+                                                                                else return [...prev, { id: prev?.at(-1).id + 1, fields: [{ ques: section?.fields[0].id, value: section?.fields[0].value }, { ques: section?.fields[1].id, value: section?.fields[1].value }] }]
                                                                             });
                                                                             dispatch(onResetFields({ secIndex: section?.index, lang: event, step }))
                                                                         }}>{language?.v3?.button?.add}</Button>

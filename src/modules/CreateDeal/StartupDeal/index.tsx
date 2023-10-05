@@ -154,7 +154,7 @@ const StartupDeal = ({ step }: any) => {
                     selected = field?.options?.find((opt: any) => opt.selected)?.id
 
                 }
-                if (field?.field_type === Constants.NUMBER_INPUT) {
+                if (field?.field_type === Constants.NUMBER_INPUT || field?.field_type === Constants.TEXT_BOX || field?.field_type === Constants.TEXT_FIELD) {
                     selected = field.value
                 }
                 if (field.field_type === Constants.SWITCH) {
