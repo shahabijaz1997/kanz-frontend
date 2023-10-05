@@ -55,22 +55,25 @@ const RealtorDeal = ({ step }: any) => {
         getDealStepDetails();
     }, [step]);
 
+    useEffect(() => {
+        console.log(multipleFieldsPayload);
+
+    }, [multipleFieldsPayload]);
+
     const getDealStepDetails = async () => {
         try {
             setLoading(true);
             const queryParams: any = { type: DealType.REALTOR };
-            if (dataHolder) queryParams.id = dataHolder;
+            // if (dataHolder) queryParams.id = dataHolder;
             let { status, data } = await getDealQuestion(queryParams, authToken);
             if (status === 200 && !questions) {
-                // console.log("Realtor Deal: ", data?.status?.data?.steps[step - 1]);
+                console.log("Realtor Deal: ", data?.status?.data?.steps[step - 1]);
                 data?.status?.data?.steps?.forEach((step: any) => {
                     if (step?.dependencies?.length > 0) setDependencies(step.dependencies);
                 });
                 data?.status?.data?.steps[step - 1][event]?.sections.forEach((sec: any) => {
                     sec?.fields?.sort((a: any, b: any) => a.index - b.index);
                 });
-                console.log(data?.status?.data?.steps[step - 1][event]?.sections);
-                
                 setQuestions(data?.status?.data?.steps);
                 dispatch(saveQuestionnaire(data?.status?.data?.steps));
                 let all_steps = [];
@@ -254,15 +257,15 @@ const RealtorDeal = ({ step }: any) => {
                     <p className="text-neutral-500 font-normal text-sm">
                         <span>{language?.buttons?.upload} {React.Children.toArray(ques?.permitted_types?.map((type: any) => <span className="uppercase">{type}</span>))} {language?.drawer?.of} {ques?.statement}</span>&nbsp;
                         <span className="relative text-cc-blue font-medium cursor-pointer" onMouseEnter={() => setShowHoverModal(ques.id)} onMouseLeave={() => setShowHoverModal(null)} >
-                        {language.common.example}
-                        {showHoverModal === ques.id && (
-                            <HoverModal width="w-[150px]" height="h-[150px]">
-                                <section className="inline-flex flex-row items-center justify-evenly h-full">
-                                    <img src={ExampleRealtor} alt={language.syndicate.logo} className="max-h-[90px]" />
-                                </section>
-                            </HoverModal>
-                        )}
-                    </span>
+                            {language.common.example}
+                            {showHoverModal === ques.id && (
+                                <HoverModal width="w-[150px]" height="h-[150px]">
+                                    <section className="inline-flex flex-row items-center justify-evenly h-full">
+                                        <img src={ExampleRealtor} alt={language.syndicate.logo} className="max-h-[90px]" />
+                                    </section>
+                                </HoverModal>
+                            )}
+                        </span>
                     </p>
 
                     <FileUpload parentId={dataHolder} onlyPDF={`${ques?.size_constraints?.limit}${ques?.size_constraints?.unit}`} id={ques?.id} fid={ques?.id} file={ques?.value} setModalOpen={() => { }} setFile={(file: File, id: string, url: string, aid: string, size: string, dimensions: string, type: string, prodURL: string) => {
@@ -272,7 +275,6 @@ const RealtorDeal = ({ step }: any) => {
             )
         );
     };
-
 
     const removeFile = async (file: any) => {
         try {
@@ -307,7 +309,7 @@ const RealtorDeal = ({ step }: any) => {
                 </h3>
                 <section className="mb-8 w-full relative mt-3">
                     <div className="relative w-full" style={{ zIndex: 101 }}>
-                        <Selector disabled={false} value={currentValue} defaultValue={currentValue} options={options}
+                        <Selector disabled={false} defaultValue={{ label: currentValue, value: currentValue }} options={options}
                             onChange={(v: any) => {
                                 let opt = ques?.options?.find((op: any) => op.statement === v.value);
                                 dispatch(saveDealSelection({ option: opt, question: ques, fields: dealData, lang: event, secIndex, step }))
@@ -435,7 +437,7 @@ const RealtorDeal = ({ step }: any) => {
                     flags[index].validations.push(flag);
                 }
                 else if (ques?.field_type === Constants.FILE) {
-                    let flag = (ques.value?.url || ques.value?.id) ? true: false;
+                    let flag = (ques.value?.url || ques.value?.id) ? true : false;
                     flags[index].validations.push(flag);
                 }
                 else if (ques?.field_type === Constants.NUMBER_INPUT || ques.field_type === Constants.TEXT_BOX || ques.field_type === Constants.TEXT_FIELD || ques.field_type === Constants.URL) {
@@ -451,9 +453,6 @@ const RealtorDeal = ({ step }: any) => {
                     flags[index].validations.push(ques.is_required);
                 }
             });
-
-            console.log("flags", flags);
-            
         });
         let isValid = false;
 
@@ -470,6 +469,7 @@ const RealtorDeal = ({ step }: any) => {
                 let validation = flag.validations.every((val: any) => val);
                 return validation
             });
+            if (multipleFieldsPayload?.length > 0) isValid = true;
         }
 
         return isValid;
@@ -573,7 +573,7 @@ const RealtorDeal = ({ step }: any) => {
                                     })
                                 )
                             )}
-                            <section className="flex items-start justify-center w-full flex-col mt-6 max-w-[400px] screen500:w-[300px]">
+                            <section className="flex items-start justify-center w-full flex-col mt-6 pb-10 max-w-[400px] screen500:w-[300px]">
                                 <div className="w-full inline-flex items-center justify-between mt-16">
                                     <Button className="h-[38px] w-[140px]" htmlType="button" type="outlined" onClick={onSetPrev} >
                                         {language?.buttons?.back}

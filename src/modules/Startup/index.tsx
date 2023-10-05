@@ -72,7 +72,24 @@ const Startup = ({ }: any) => {
                     <aside>
                         <h2 className="font-bold text-xl text-center text-neutral-900">{language?.v3?.common?.disclaimer}</h2>
                         <p className="text-sm font-normal text-center text-neutral-500 mt-8 mb-12">{language?.v3?.common?.disclaimer_desc}</p>
-                        <Button onClick={() => navigate(`${StartupRoutes.CREATE_DEAL}/1`)}>{language?.buttons?.continue}</Button>
+                        <div className="py-3 border-t-[1px] border-neutral0=-200 inline-flex justify-between w-full">
+                            <span>
+                                <h2 className="font-medium text-neutral-700 text-xl">Disclaimer 1</h2>
+                                <p className="font-normal text-neutral-500 text-sm">Description of Disclaimer</p>
+                            </span>
+                            <input type="checkbox" />
+                        </div>
+                        <div className="py-3 border-t-[1px] border-neutral0=-200 inline-flex justify-between w-full">
+                            <span>
+                                <h2 className="font-medium text-neutral-700 text-xl">Disclaimer 2</h2>
+                                <p className="font-normal text-neutral-500 text-sm">Description of Disclaimer</p>
+                            </span>
+                            <input type="checkbox" />
+                        </div>
+                        <div className="w-full inline-flex items-center justify-center gap-3 mt-10">
+                            <Button className="bg-transparent border-cyan-800 border-[1px] !text-cyan-800 w-[100px]" onClick={() => setModalOpen(false)}>{language?.v3?.button?.cancel}</Button>
+                            <Button className="w-[100px]" onClick={() => navigate(`${StartupRoutes.CREATE_DEAL}/1`)}>{language?.buttons?.continue}</Button>
+                        </div>
                     </aside>
                 </div>
             </Modal>
