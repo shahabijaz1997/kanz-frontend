@@ -13,6 +13,7 @@ import Modal from "../../shared/components/Modal";
 import CrossIcon from "../../ts-icons/crossIcon.svg";
 import DealTable from "../../shared/components/DealTable";
 import { saveDataHolder } from "../../redux-toolkit/slicer/dataHolder.slicer";
+import { getDeals } from "../../apis/deal.api";
 
 const columns = ['Name', 'Type', 'Status', 'Stage', 'Raised', 'Target'];
 const data: any = [];
@@ -21,14 +22,32 @@ const Startup = ({ }: any) => {
     const navigate = useNavigate();
     const dispatch = useDispatch();
     const language: any = useSelector((state: RootState) => state.language.value);
+    const authToken: any = useSelector((state: RootState) => state.auth.value);
     const [selectedTab, setSelectedTab] = useState();
     const [modalOpen, setModalOpen] = useState(false);
+    const [loading, setLoading] = useState(false);
     const [tabs] = useState([language?.v3?.startup?.overview?.all, language?.v3?.startup?.overview?.raising, language?.v3?.startup?.overview?.closed]);
 
     useEffect(() => {
-        dispatch(saveDataHolder(""))
+        dispatch(saveDataHolder(""));
+        getAllDeals();
     }, []);
-    
+
+    const getAllDeals = async () => {
+        try {
+            setLoading(true);
+            let {status, data} = await getDeals(authToken);
+            if(status === 200) {
+                console.log(data);
+                
+            }
+        } catch (error) {
+            
+        } finally {
+            setLoading(false);
+        }
+    };
+
     return (
         <main className="h-full max-h-full overflow-y-auto">
             <section>

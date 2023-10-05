@@ -12,6 +12,14 @@ export const getDealQuestion = (params: any, token: string) => {
     });
 };
 
+export const getDeals = (token: string) => {
+    return axios.get(`${ENV.API_URL}/${ENV.API_VERSION}/deals`, {
+        headers: {
+            Authorization: `Bearer ${token}`
+        }
+    });
+};
+
 export const postDealStep = (payload: any, token: string) => {
     return axios.post(`${ENV.API_URL}/${ENV.API_VERSION}/deals`, payload, {
         headers: {

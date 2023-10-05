@@ -221,17 +221,16 @@ const CreateDeal = ({ }: any) => {
     if (option.length) setRestrictions(option)
   };
 
-  const removeFile = async (file: any) => {
+  const removeFile = async (file: any, data: any) => {
     try {
       setLoading(true);
       let { status } = await removeAttachment(file.id || file, authToken);
-      if (status === 200) {
-
-      }
+      if (status === 200) dispatch(saveDealSelection(data));
     } catch (error: any) {
       setLoading(false);
       if (error.response && error.response.status === 401) {
         dispatch(saveToken(""));
+        dispatch(saveDealSelection(data));
         navigate(RoutesEnums.LOGIN, { state: "add-attachments" });
       }
       const message = error?.response?.data?.status?.message || error?.response?.data || language.promptMessages.errorGeneral;
@@ -331,7 +330,9 @@ const CreateDeal = ({ }: any) => {
 
               </span>
               <EditIcon stroke="#fff" className="w-7 h-7 float-right cursor-pointer rounded-md p-1"
-                style={{ backgroundColor: "rgba(0, 0, 0, 0.078)" }} onClick={() => removeFile(ques?.value?.id)} />
+                style={{ backgroundColor: "rgba(0, 0, 0, 0.078)" }} onClick={() => {
+                  removeFile(ques?.value?.id, { option: null, question: ques, fields: dealData, lang: event, secIndex, step })
+                }} />
             </span>
             <div className="content-center text-center mt-2  main-embed  h-[200px] overflow-hidden relative">
               <embed src={ques?.value?.url} className="block w-[110%] h-[110%] overflow-hidden" />
@@ -368,8 +369,8 @@ const CreateDeal = ({ }: any) => {
 
           <FileUpload parentId={dataHolder} onlyPDF={onlyPDF} onlyVideo={onlyideo} size={`${ques?.size_constraints?.limit}${ques?.size_constraints?.unit}`}
             id={ques?.id} fid={ques?.id} file={ques?.value} setModalOpen={() => { }} setFile={(file: File, id: string, url: string, aid: string, size: string, dimensions: string, type: string, prodURL: string) => {
-              dispatch(saveDealSelection({ option: { url: prodURL, id }, question: ques, fields: dealData, lang: event, secIndex, step }))
-            }} title={ques?.statement} removeFile={() => removeFile(ques?.value?.id)} className="w-full" />
+              dispatch(saveDealSelection({ option: { url: prodURL, id: aid }, question: ques, fields: dealData, lang: event, secIndex, step }))
+            }} title={ques?.statement} removeFile={() => removeFile(ques?.value?.id, { option: null, question: ques, fields: dealData, lang: event, secIndex, step })} className="w-full" />
         </section >
       )
     );
