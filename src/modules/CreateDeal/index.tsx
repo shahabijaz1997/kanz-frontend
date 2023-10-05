@@ -155,11 +155,14 @@ const CreateDeal = ({ }: any) => {
             selected = field?.options?.find((opt: any) => opt.selected)?.id
 
           }
-          if (field?.field_type === Constants.NUMBER_INPUT || field?.field_type === Constants.TEXT_BOX || field?.field_type === Constants.TEXT_FIELD) {
+          if (field?.field_type === Constants.NUMBER_INPUT || field?.field_type === Constants.TEXT_BOX || field?.field_type === Constants.TEXT_FIELD || field?.field_type === Constants.URL) {
             selected = field.value
           }
           if (field.field_type === Constants.SWITCH) {
             selected = field?.is_required
+          }
+          if (field.field_type === Constants.FILE) {
+            selected = field?.value?.id
           }
           return {
             id: field.id,
@@ -179,7 +182,10 @@ const CreateDeal = ({ }: any) => {
       if (status === 200) {
         dispatch(saveDataHolder(data?.status?.data?.id));
         if (step < totalSteps?.all.length) navigate(`/create-deal/${step + 1}`);
-        else setModalOpen(true);
+        else {
+          dispatch(saveDataHolder(""));
+          setModalOpen(true);
+        }
 
       }
     } catch (error: any) {
@@ -415,7 +421,7 @@ const CreateDeal = ({ }: any) => {
         <section className="flex items-start justify-center flex-col mt-3 w-full">
           <div className="mb-6 inline-flex flex-col w-full items-start justify-between">
             {!dependantQuesion && <label htmlFor={ques?.id} className="text-neutral-700 text-lg font-medium mb-3">{ques?.statement}</label>}
-            <textarea placeholder={ques?.statement} className="h-[100px] mt-2 resize-none shadow-sm appearance-none border border-neutral-300 rounded-md w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id={ques?.id} onInput={(e: any) => dispatch(saveDealSelection({ option: e.target.value, question: ques, fields: dealData, lang: event, secIndex, step }))}></textarea>
+            <textarea value={ques?.value} placeholder={ques?.statement} className="h-[100px] mt-2 resize-none shadow-sm appearance-none border border-neutral-300 rounded-md w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id={ques?.id} onInput={(e: any) => dispatch(saveDealSelection({ option: e.target.value, question: ques, fields: dealData, lang: event, secIndex, step }))}></textarea>
           </div>
         </section>
       );
@@ -429,7 +435,7 @@ const CreateDeal = ({ }: any) => {
       return (
         <section className="flex items-start justify-center flex-col mb-8 mt-3 w-full">
           {!dependantQuesion && <label htmlFor={ques?.id} className="text-neutral-700 text-lg font-medium mb-3">{ques?.statement}</label>}
-          <input title={ques?.statement} className="h-[42px] pr-10 shadow-sm appearance-none border rounded-md w-full py-2 px-3 text-gray-500 leading-tight transition-all bg-white w-full focus:outline-none" placeholder={ques?.statement} id={ques?.id} onChange={(e: any) => dispatch(saveDealSelection({ option: e.target.value, question: ques, fields: dealData, lang: event, secIndex, step }))} />
+          <input title={ques?.statement} className="h-[42px] pr-10 shadow-sm appearance-none border rounded-md w-full py-2 px-3 text-gray-500 leading-tight transition-all bg-white w-full focus:outline-none" placeholder={ques?.statement} id={ques?.id} onChange={(e: any) => dispatch(saveDealSelection({ option: e.target.value, question: ques, fields: dealData, lang: event, secIndex, step }))} value={ques?.value} />
         </section>
       );
     } else return <React.Fragment></React.Fragment>
@@ -574,7 +580,6 @@ const CreateDeal = ({ }: any) => {
       });
       if (multipleFieldsPayload?.length > 0) isValid = true;
     }
-
     return isValid;
   }
 

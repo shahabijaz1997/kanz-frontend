@@ -1,28 +1,34 @@
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { KanzRoles } from "../../enums/roles.enum";
 import Header from "../../shared/components/Header";
 import Sidebar from "../../shared/components/Sidebar";
 import { RootState } from "../../redux-toolkit/store/store";
 import SearchIcon from "../../ts-icons/searchIcon.svg";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Button from "../../shared/components/Button";
 import Table from "../../shared/components/Table";
 import { StartupRoutes } from "../../enums/routes.enum";
 import Modal from "../../shared/components/Modal";
 import CrossIcon from "../../ts-icons/crossIcon.svg";
 import DealTable from "../../shared/components/DealTable";
+import { saveDataHolder } from "../../redux-toolkit/slicer/dataHolder.slicer";
 
 const columns = ['Name', 'Type', 'Status', 'Stage', 'Raised', 'Target'];
 const data: any = [];
 
 const Startup = ({ }: any) => {
     const navigate = useNavigate();
+    const dispatch = useDispatch();
     const language: any = useSelector((state: RootState) => state.language.value);
     const [selectedTab, setSelectedTab] = useState();
     const [modalOpen, setModalOpen] = useState(false);
     const [tabs] = useState([language?.v3?.startup?.overview?.all, language?.v3?.startup?.overview?.raising, language?.v3?.startup?.overview?.closed]);
 
+    useEffect(() => {
+        dispatch(saveDataHolder(""))
+    }, []);
+    
     return (
         <main className="h-full max-h-full overflow-y-auto">
             <section>

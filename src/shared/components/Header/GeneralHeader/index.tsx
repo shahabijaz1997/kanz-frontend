@@ -14,6 +14,7 @@ import LanguageDrodownWrapper from "../../../views/LanguageDrodownWrapper";
 import { saveLogo } from "../../../../redux-toolkit/slicer/attachments.slicer";
 import { languageDropdownItems } from "../../../../utils/dropdown-items.utils";
 import { RoutesEnums } from "../../../../enums/routes.enum";
+import { saveDataHolder } from "../../../../redux-toolkit/slicer/dataHolder.slicer";
 
 const GeneralHeader = ({ responsive = false, showMenu = false, showLanguageDropdown = false }: any) => {
     const navigate = useNavigate();
@@ -40,6 +41,7 @@ const GeneralHeader = ({ responsive = false, showMenu = false, showLanguageDropd
             dispatch(saveUserData(""));
             dispatch(saveUserMetaData(""));
             dispatch(saveLogo(""));
+            dispatch(saveDataHolder(""));
         }
     };
 
