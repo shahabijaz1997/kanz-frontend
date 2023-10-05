@@ -66,74 +66,73 @@ const CreateDeal = ({ }: any) => {
   /* UI Actions */
   const getDealStepDetails = async () => {
     try {
-        setLoading(true);
-        const queryParams: any = { type: metadata.role === KanzRoles.STARTUP ? DealType.STARTUP : DealType.REALTOR };
-        // if (dataHolder) queryParams.id = dataHolder;
-        let { status, data } = await getDealQuestion(queryParams, authToken);
-        if (status === 200) {
-            console.log("Startup Deal: ", data?.status?.data?.steps[step - 1]);
-            let _dependencies: any = [];
-            data?.status?.data?.steps?.forEach((step: any) => {
-                if (step?.dependencies?.length > 0) _dependencies = step.dependencies;
-            });
+      setLoading(true);
+      const queryParams: any = { type: metadata.role === KanzRoles.STARTUP ? DealType.STARTUP : DealType.REALTOR };
+      if (dataHolder) queryParams.id = dataHolder;
+      let { status, data } = await getDealQuestion(queryParams, authToken);
+      if (status === 200) {
+        console.log("Startup Deal: ", data?.status?.data?.steps[step - 1]);
+        let _dependencies: any = [];
+        data?.status?.data?.steps?.forEach((step: any) => {
+          if (step?.dependencies?.length > 0) _dependencies = step.dependencies;
+        });
 
-
-            _dependencies.length > 0 && setDependencies(_dependencies)
-            let all_steps: any[] = [];
-            for (let i = 0; i < data?.status?.data?.step_titles[event]?.length; i++) {
-                const step = data?.status?.data?.step_titles[event][i];
-                all_steps.push({ id: i + 1, text: step });
-            }
-
-            let options: any = [];
-            let stepper: any;
-            
-            data?.status?.data?.steps[step - 1][event]?.sections.forEach((sec: any) => {
-                sec?.fields?.sort((a: any, b: any) => a.index - b.index);
-                let f = sec?.fields?.find((ques: any) => {
-                    return _dependencies?.find((dep: any) => dep?.dependable_field === ques?.id)
-                })
-                let opt = f?.options?.find((op: any) => op.selected);
-                
-                if (opt) {
-                    _dependencies?.find((dep: any) => {
-                        if (dep?.value === String(opt.id) && dep?.dependent_type !== "Stepper") options.push(dep);
-                        else if (dep?.dependent_type === "Stepper" && dep?.operation === "hide") {
-                            stepper = data?.status?.data?.steps?.find((stp: any) => stp?.id === dep?.dependent_id);
-                        }
-                    });
-                }
-            });
-            if (stepper) {
-                let step = all_steps?.find((ts: any) => ts?.text === stepper[event]?.title);
-                let steps = all_steps?.filter((stp: any) => stp?.text !== step?.text);
-
-                setTotalSteps((prev: any) => {
-                    return { copy: all_steps, all: steps }
-                })
-            }
-            else {
-                setTotalSteps((prev: any) => {
-                    return { copy: all_steps, all: all_steps }
-                })
-            }
-
-            options?.length > 0 && setRestrictions(options)
-
-            setQuestions(data?.status?.data?.steps);
-            dispatch(saveQuestionnaire(data?.status?.data?.steps));
-            setMultipleFieldsPayload([]);
+        _dependencies.length > 0 && setDependencies(_dependencies)
+        let all_steps: any[] = [];
+        for (let i = 0; i < data?.status?.data?.step_titles[event]?.length; i++) {
+          const step = data?.status?.data?.step_titles[event][i];
+          all_steps.push({ id: i + 1, text: step });
         }
+
+        let options: any = [];
+        let stepper: any;
+
+        data?.status?.data?.steps[step - 1][event]?.sections.forEach((sec: any) => {
+          sec?.fields?.sort((a: any, b: any) => a.index - b.index);
+          let f = sec?.fields?.find((ques: any) => {
+            return _dependencies?.find((dep: any) => dep?.dependable_field === ques?.id)
+          });
+          if (sec?.display_card && sec?.fields?.some((field: any) => field?.value)) {
+            let _multipleFieldsPayload: any[] = []
+            for (let i = 0; i < sec?.fields?.length / 2; i += 2) {
+              const field_1 = sec?.fields[i];
+              const field_2 = sec?.fields[i + 1];
+              _multipleFieldsPayload.push({ id: i, fields: [{ ques: field_1.id, value: field_1.value }, { ques: field_2.id, value: field_2.value }] })
+            }
+            setMultipleFieldsPayload(_multipleFieldsPayload);
+          }
+          else setMultipleFieldsPayload([]);
+          let opt = f?.options?.find((op: any) => op.selected);
+          if (opt) {
+            _dependencies?.find((dep: any) => {
+              if (dep?.value === String(opt.id) && dep?.dependent_type !== "Stepper") options.push(dep);
+              else if (dep?.dependent_type === "Stepper" && dep?.operation === "hide") {
+                stepper = data?.status?.data?.steps?.find((stp: any) => stp?.id === dep?.dependent_id);
+              }
+            });
+          }
+        });
+        if (stepper) {
+          let step = all_steps?.find((ts: any) => ts?.text === stepper[event]?.title);
+          let steps = all_steps?.filter((stp: any) => stp?.text !== step?.text);
+
+          setTotalSteps((prev: any) => { return { copy: all_steps, all: steps } })
+        }
+        else setTotalSteps((prev: any) => { return { copy: all_steps, all: all_steps } })
+        options?.length > 0 && setRestrictions(options)
+        setQuestions(data?.status?.data?.steps);
+        dispatch(saveQuestionnaire(data?.status?.data?.steps));
+      }
 
     } catch (error: any) {
-        if (error.response && error.response.status === 401) {
-            dispatch(saveToken(""));
-            navigate(RoutesEnums.LOGIN, { state: `create-deal/${step}` });
-        }
+      if (error.response && error.response.status === 401) {
+        dispatch(saveToken(""));
+        navigate(RoutesEnums.LOGIN, { state: `create-deal/${step}` });
+      }
     } finally {
-        setLoading(false);
+      setLoading(false);
     }
-};
+  };
 
   const onSetNext = async () => {
     try {
@@ -142,6 +141,7 @@ const CreateDeal = ({ }: any) => {
       dealData[step - 1][event]?.sections?.forEach((section: any) => {
         all_fields = all_fields.concat(section?.fields);
       });
+
       if (multipleFieldsPayload?.length > 0) {
         multipleFieldsPayload?.forEach((sec: any, index: number) => {
           sec?.fields.forEach((field: any) => fields.push({ id: field.ques, value: field.value, index }));
@@ -169,7 +169,7 @@ const CreateDeal = ({ }: any) => {
       }
       let payload: any = {
         deal: {
-          deal_type: "startup",
+          deal_type: metadata.role === KanzRoles.STARTUP ? "startup" : "property",
           step: questions[step - 1]?.id,
           fields
         }
@@ -178,7 +178,9 @@ const CreateDeal = ({ }: any) => {
       let { status, data } = await postDealStep(payload, authToken);
       if (status === 200) {
         dispatch(saveDataHolder(data?.status?.data?.id));
-        if (step <= totalSteps?.all.length) navigate(`/create-deal/${step + 1}`);
+        if (step < totalSteps?.all.length) navigate(`/create-deal/${step + 1}`);
+        else setModalOpen(true);
+
       }
     } catch (error: any) {
       const message = error?.response?.data?.status?.message || language.promptMessages.errorGeneral;
@@ -246,7 +248,7 @@ const CreateDeal = ({ }: any) => {
 
     if (flag) return <React.Fragment></React.Fragment>
     return (
-      <section className="flex items-start justify-center flex-col mt-3 max-w-[400px] screen500:max-w-[300px]">
+      <section className="flex items-start justify-center flex-col mt-3 w-full">
         <h3 className="text-neutral-700 font-medium text-base w-[420px]">
           {ques?.title}
         </h3>
@@ -332,7 +334,7 @@ const CreateDeal = ({ }: any) => {
         </div>
       ) : (
 
-        <section className="flex items-start justify-center flex-col mt-3 mb-6 max-w-[400px] min-w-[400px] screen500:max-w-[300px]">
+        <section className="flex items-start justify-center flex-col mt-3 mb-6 w-full">
           {ques?.index < 1 && (
             <h3 className="text-neutral-700 font-medium text-base w-[420px]">
               <span>{section?.description}</span>&nbsp;<span className="text-cc-blue font-medium cursor-pointer" onClick={() => setOpen(true)} >
@@ -344,8 +346,8 @@ const CreateDeal = ({ }: any) => {
           <h3 className="text-neutral-700 font-medium text-base w-[420px] mt-3">
             {ques?.statement}
           </h3>
-          <p className="text-neutral-500 font-normal text-sm">
-            <span>{language?.buttons?.upload} {React.Children.toArray(ques?.permitted_types?.map((type: any) => <span className="uppercase">{type}</span>))} {language?.drawer?.of} {ques?.statement}</span>&nbsp;
+          <p className="text-neutral-500 font-normal text-sm mb-2">
+            <span className="text-neutral-500">{language?.buttons?.upload} {React.Children.toArray(ques?.permitted_types?.map((type: any) => <span className="uppercase">{type}</span>))} {language?.drawer?.of} {ques?.statement}</span>&nbsp;
             <span className="relative text-cc-blue font-medium cursor-pointer" onMouseEnter={() => setShowHoverModal(ques.id)} onMouseLeave={() => setShowHoverModal(null)} >
               {language.common.example}
               {showHoverModal === ques.id && (
@@ -395,7 +397,7 @@ const CreateDeal = ({ }: any) => {
     return (
       <section className="flex items-start justify-center flex-col mt-3 w-full">
         <div className="mb-6 inline-flex w-full items-center justify-between">
-          <small className="text-neutral-700 text-lg font-medium">{ques?.statement}</small>
+          <small className="text-neutral-700 text-lg font-medium mb-3">{ques?.statement}</small>
           <label className="relative inline-flex items-center cursor-pointer" onChange={(e) => dispatch(saveDealSelection({ option: !ques?.is_required, question: ques, fields: dealData, lang: event, secIndex, step }))}>
             <input type="checkbox" value="" className="sr-only peer" checked={ques?.is_required} />
             <div className="w-11 h-6 bg-gray-200 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-cyan-800"></div>
@@ -412,7 +414,7 @@ const CreateDeal = ({ }: any) => {
       return (
         <section className="flex items-start justify-center flex-col mt-3 w-full">
           <div className="mb-6 inline-flex flex-col w-full items-start justify-between">
-            {!dependantQuesion && <label htmlFor={ques?.id} className="text-neutral-700 text-lg font-medium">{ques?.statement}</label>}
+            {!dependantQuesion && <label htmlFor={ques?.id} className="text-neutral-700 text-lg font-medium mb-3">{ques?.statement}</label>}
             <textarea placeholder={ques?.statement} className="h-[100px] mt-2 resize-none shadow-sm appearance-none border border-neutral-300 rounded-md w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id={ques?.id} onInput={(e: any) => dispatch(saveDealSelection({ option: e.target.value, question: ques, fields: dealData, lang: event, secIndex, step }))}></textarea>
           </div>
         </section>
@@ -426,7 +428,7 @@ const CreateDeal = ({ }: any) => {
     if (!dependantQuesion || (dependantQuesion && dependantQuesion?.is_required)) {
       return (
         <section className="flex items-start justify-center flex-col mb-8 mt-3 w-full">
-          {!dependantQuesion && <label htmlFor={ques?.id} className="text-neutral-700 text-lg font-medium">{ques?.statement}</label>}
+          {!dependantQuesion && <label htmlFor={ques?.id} className="text-neutral-700 text-lg font-medium mb-3">{ques?.statement}</label>}
           <input title={ques?.statement} className="h-[42px] pr-10 shadow-sm appearance-none border rounded-md w-full py-2 px-3 text-gray-500 leading-tight transition-all bg-white w-full focus:outline-none" placeholder={ques?.statement} id={ques?.id} onChange={(e: any) => dispatch(saveDealSelection({ option: e.target.value, question: ques, fields: dealData, lang: event, secIndex, step }))} />
         </section>
       );
@@ -435,26 +437,26 @@ const CreateDeal = ({ }: any) => {
 
   const reviewUI = () => {
     return (
-      <section className="flex items-start justify-center flex-col mt-10 max-w-[420px] min-w-[400px] screen500:max-w-[300px]">
+      <section className="flex items-start justify-center flex-col mt-10 max-w-[420px] min-w-[450px] screen500:max-w-[350px]">
         <div className="py-4 border-b-[1px] border-b-neutral-200 w-full cursor-pointer" onClick={() => navigate(`${StartupRoutes.CREATE_DEAL}/1`)}>
           <h3 className="text-neutral-900 font-medium text-sm">Investment Round</h3>
-          <p className="text-neutral-500 font-normal text-sm">Angel Round</p>
+          <p className="text-neutral-500 font-normal text-sm">Seed</p>
         </div>
         <div className="py-4 border-b-[1px] border-b-neutral-200 w-full cursor-pointer" onClick={() => navigate(`${StartupRoutes.CREATE_DEAL}/2`)}>
           <h3 className="text-neutral-900 font-medium text-sm">Investment Type</h3>
           <p className="text-neutral-500 font-normal text-sm">Equity</p>
         </div>
         <div className="py-4 border-b-[1px] border-b-neutral-200 w-full cursor-pointer" onClick={() => navigate(`${StartupRoutes.CREATE_DEAL}/3`)}>
-          <h3 className="text-neutral-900 font-medium text-sm">Share Class</h3>
-          <p className="text-neutral-500 font-normal text-sm">Common</p>
+          <h3 className="text-neutral-900 font-medium text-sm">Equity Type</h3>
+          <p className="text-neutral-500 font-normal text-sm">Preferred</p>
         </div>
         <div className="py-4 border-b-[1px] border-b-neutral-200 w-full cursor-pointer" onClick={() => navigate(`${StartupRoutes.CREATE_DEAL}/4`)}>
           <h3 className="text-neutral-900 font-medium text-sm">Deal Target</h3>
-          <p className="text-neutral-500 font-normal text-sm">$0.00</p>
+          <p className="text-neutral-500 font-normal text-sm">$ 2M</p>
         </div>
-        <div className="py-4 border-b-[1px] border-b-neutral-200 w-full cursor-pointer" onClick={() => navigate(`${StartupRoutes.CREATE_DEAL}/5`)}>
+        <div className="py-4 border-b-[1px] border-b-neutral-200 w-full cursor-pointer" onClick={() => navigate(`${StartupRoutes.CREATE_DEAL}/4`)}>
           <h3 className="text-neutral-900 font-medium text-sm">Valuation</h3>
-          <p className="text-neutral-500 font-normal text-sm">$10,000,000 (Pre-money)</p>
+          <p className="text-neutral-500 font-normal text-sm">$ 5M</p>
         </div>
         <div className="py-4 border-b-[1px] border-b-neutral-200 w-full cursor-pointer" onClick={() => navigate(`${StartupRoutes.CREATE_DEAL}/6`)}>
           <h3 className="text-neutral-900 font-medium text-sm">Attachments</h3>
@@ -477,7 +479,6 @@ const CreateDeal = ({ }: any) => {
                   <small className="text-sm;">{ques?.value}</small>
                   <BinIcon stroke="#171717" className="cursor-pointer w-6 h-6" onClick={() => dispatch(removeMoreFields({ secIndex, lang: event, step, index: ques?.index }))} />
                 </p>
-
               </div>
             </section>
           )
@@ -624,7 +625,7 @@ const CreateDeal = ({ }: any) => {
                               React.Children.toArray(
                                 multipleFieldsPayload?.map((sec: any) => {
                                   return (
-                                    <section className="bg-white border-[1px] border-neutral-300 rounded-md px-5 py-3 w-[400px] mb-6">
+                                    <section className="bg-white border-[1px] border-neutral-300 rounded-md px-5 py-3 w-[450px] mb-6">
                                       <div className="w-full inline-flex justify-end cursor-pointer" onClick={() => {
                                         setMultipleFieldsPayload((prev: any) => {
                                           const secs = prev.filter((pv: any) => pv.id !== sec.id);
@@ -640,7 +641,7 @@ const CreateDeal = ({ }: any) => {
                             )}
                             {showCustomBox && (
                               <section className={`flex items-start flex-col mb-8 w-[450px] screen500:w-[350px] ${(index % 2 != 0 || section?.is_multiple) && "bg-cbc-check p-4 rounded-md"}`}>
-                                {section?.fields?.length ? (React.Children.toArray(section?.fields?.map((ques: any) => renderQuestionType(ques, index, section)))) : (reviewUI())}
+                                {section?.fields?.length > 0 && (React.Children.toArray(section?.fields?.map((ques: any) => renderQuestionType(ques, index, section))))}
 
                                 {section?.display_card && (
                                   <div className="w-full inline-flex justify-center items-center gap-2">
@@ -660,7 +661,7 @@ const CreateDeal = ({ }: any) => {
                               </section>
                             )}
                             {(section?.add_more_label && index === dealData[step - 1][event]?.sections?.length - 1) && (
-                              <section className="w-[400px]">
+                              <section className="w-[450px]">
                                 <Button disabled={checkMultipleButtonDisabled(section)} onClick={() => {
                                   !section?.display_card && dispatch(saveMoreFields({ secIndex: index, lang: event, step, duplicate: 1 }))
                                   setShowCustomBox(true);
@@ -671,12 +672,9 @@ const CreateDeal = ({ }: any) => {
                           </React.Fragment>
                         ) : (
                           <section className={`flex items-start flex-col mb-8 w-[450px] screen500:w-[350px] ${(index % 2 != 0 || section?.is_multiple) && "bg-cbc-check p-4 rounded-md"}`}>
-                            <h3 className="text-neutral-700 font-bold text-2xl w-full">
-                              {section?.title}
-                            </h3>
+                            <h3 className="text-neutral-700 font-bold text-2xl w-full mb-6">{section?.title}</h3>
                             {section?.fields?.length ? (React.Children.toArray(section?.fields?.map((ques: any) => renderQuestionType(ques, index, section)))) : (reviewUI())}
                           </section>
-
                         )
                       )
                     })

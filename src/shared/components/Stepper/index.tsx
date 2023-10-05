@@ -14,7 +14,7 @@ const Stepper = ({ currentStep = 1, totalSteps = [{ id: 1 }, { id: 2 }, { id: 3 
         return (
             <span className="relative">
                 {circle}
-                {step?.text && <p className={`absolute uppercase text-xs font-bold text-cyan-800 ${direction === "row" ? "" : "top-1/2 translate-y-[-50%] left-[160%] w-[200px]"}`}>{step.text}</p>}
+                {step?.text && <p className={`absolute uppercase text-sm font-bold ${currentStep > step?.id && "text-neutral-900"} ${currentStep === step?.id && "text-cyan-800"} ${currentStep < step?.id && "text-neutral-500"} ${direction === "row" ? "" : "top-1/2 translate-y-[-50%] left-[160%] w-[200px]"}`}>{step.text}</p>}
             </span>
         )
     };
