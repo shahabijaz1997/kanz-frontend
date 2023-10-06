@@ -26,7 +26,6 @@ import BinIcon from "../../ts-icons/binIcon.svg";
 import Modal from "../../shared/components/Modal";
 import { removeAttachment } from "../../apis/attachment.api";
 import EditIcon from "../../ts-icons/editIcon.svg";
-// metadata.role === KanzRoles.STARTUP 
 const CURRENCIES = ["USD", "AED"];
 
 const CreateDeal = ({ }: any) => {
@@ -295,7 +294,12 @@ const CreateDeal = ({ }: any) => {
 
         <section className="mb-8 w-full relative">
           <div className="relative rounded-md w-full h-10 border-[1px] border-neutral-300 bg-white overflow-hidden inline-flex items-center px-3">
-            <input value={ques?.value} onInput={(e: any) => dispatch(saveDealSelection({ option: e.target.value, question: ques, fields: dealData, lang: event, secIndex, step }))} id={`num-${ques.id}`} placeholder={`${currency === 0 ? "$" : "د.إ"} 0.00`} type="text" className="outline-none w-full h-full placeholder-neutral-500" />
+            <input value={ques?.value} onInput={(e: any) => {
+              const enteredValue = e.target.value;
+              const numericValue = enteredValue.replace(/[^0-9.]|(\.(?=.*\.))/g, "");
+
+              dispatch(saveDealSelection({ option: numericValue, question: ques, fields: dealData, lang: event, secIndex, step }))
+            }} id={`num-${ques.id}`} placeholder={`${currency === 0 ? "$" : "د.إ"} 0.00`} type="text" className="outline-none w-full h-full placeholder-neutral-500" />
             <span className="cursor-pointer inline-flex items-center" onClick={() => setCurrency(prev => { return prev === 0 ? 1 : 0 })}>
               <button className="font-normal text-lg text-neutral-500">{CURRENCIES[currency]}</button>
             </span>

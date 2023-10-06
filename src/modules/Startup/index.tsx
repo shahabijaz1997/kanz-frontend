@@ -16,7 +16,6 @@ import { saveDataHolder } from "../../redux-toolkit/slicer/dataHolder.slicer";
 import { getDeals } from "../../apis/deal.api";
 
 const columns = ['Name', 'Type', 'Status', 'Stage', 'Raised', 'Target'];
-const data: any = [];
 
 const Startup = ({ }: any) => {
     const navigate = useNavigate();
@@ -27,6 +26,7 @@ const Startup = ({ }: any) => {
     const [modalOpen, setModalOpen] = useState(false);
     const [loading, setLoading] = useState(false);
     const [tabs] = useState([language?.v3?.startup?.overview?.all, language?.v3?.startup?.overview?.raising, language?.v3?.startup?.overview?.closed]);
+    const [deals, setDeals] = useState([]);
 
     useEffect(() => {
         dispatch(saveDataHolder(""));
@@ -36,13 +36,24 @@ const Startup = ({ }: any) => {
     const getAllDeals = async () => {
         try {
             setLoading(true);
-            let {status, data} = await getDeals(authToken);
-            if(status === 200) {
-                console.log(data);
-                
+            let { status, data } = await getDeals(authToken);
+            if (status === 200) {
+                let deals = data?.status?.data?.map((deal: any) => {
+                    return {
+                        id: deal?.id,
+                        Name: deal?.title || "N/A",
+                        Target: deal?.target,
+                        Stage: deal?.title || "N/A",
+                        Raised: deal?.round,
+                        Status: deal?.status,
+                        Type: deal?.instrument_type,
+                        Valuation: deal?.valuation
+                    }
+                });
+                setDeals(deals);
             }
         } catch (error) {
-            
+
         } finally {
             setLoading(false);
         }
@@ -83,7 +94,10 @@ const Startup = ({ }: any) => {
                     </section>
 
                     <section className="mt-10">
-                        <Table columns={columns} data={data} noDataNode={<Button onClick={() => setModalOpen(true)} className="absolute left-1/2 top-1/2 translate-x-[-50%] translate-y-[-50%]">{language?.v3?.button?.new_deal}</Button>} />
+                        <Table columns={columns} data={deals} onclick={(row: any) => {
+                            dispatch(saveDataHolder(row.id));
+                            navigate(`/create-deal/${row.id}`)
+                        }} noDataNode={<Button onClick={() => setModalOpen(true)} className="absolute left-1/2 top-1/2 translate-x-[-50%] translate-y-[-50%]">{language?.v3?.button?.new_deal}</Button>} />
                     </section>
                 </section>
             </aside>

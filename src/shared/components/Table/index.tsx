@@ -1,6 +1,6 @@
 import React from "react";
 
-const Table = ({ columns, data, noDataNode }: any) => {
+const Table = ({ columns, data, noDataNode, onclick }: any) => {
     return (
         <section className="rounded-lg shadow-cs-5 border-[1px] border-neutral-200 w-full">
             <table className="min-w-full overflow-hidden rounded-lg bg-white">
@@ -21,18 +21,29 @@ const Table = ({ columns, data, noDataNode }: any) => {
                         data?.length > 0 ? (
                             React.Children.toArray(
                                 data.map((row: any) => (
-                                    <tr>
+                                    <tr onClick={()=>onclick(row)} className="cursor-pointer">
                                         {columns.map((column: any, index: number) => (
-                                            <td className={`px-3 py-4 text-sm font-medium text-gray-800 whitespace-nowrap ${index === columns.length - 1 && `text-right`}
+                                            index === 0 ? (
+                                                <div className="inline-flex flex-col items-center">
+                                                    <td className={`px-3 pt-4 text-sm font-medium text-gray-800 whitespace-nowrap ${index === columns.length - 1 && `text-right`}
                                                 }`}>
-                                                {row[column]}
-                                            </td>
+                                                        {row[column]}
+
+                                                    </td>
+                                                    {index === 0 && <small className="text-neutral-500 font-normal">{row["Valuation"]}</small>}
+                                                </div>
+                                            ) : (
+                                                <td className={`px-3 py-4 text-sm font-medium text-gray-800 whitespace-nowrap ${index === columns.length - 1 && `text-right`}
+                                            }`}>
+                                                    {row[column]}
+
+                                                </td>
+                                            )
                                         ))}
                                     </tr>
                                 ))
                             )
                         ) : (noDataNode)
-
                     }
                 </tbody>
             </table>
