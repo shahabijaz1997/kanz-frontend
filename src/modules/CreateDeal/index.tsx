@@ -91,6 +91,7 @@ const CreateDeal = ({ }: any) => {
           let f = sec?.fields?.find((ques: any) => {
             return _dependencies?.find((dep: any) => dep?.dependable_field === ques?.id)
           });
+
           if (sec?.display_card && sec?.fields?.some((field: any) => field?.value)) {
             let _multipleFieldsPayload: any[] = []
             for (let i = 0; i < sec?.fields?.length / 2; i += 2) {
@@ -121,6 +122,8 @@ const CreateDeal = ({ }: any) => {
         options?.length > 0 && setRestrictions(options)
         setQuestions(data?.status?.data?.steps);
         dispatch(saveQuestionnaire(data?.status?.data?.steps));
+        setShowCustomBox(true);
+
       }
 
     } catch (error: any) {
@@ -227,9 +230,9 @@ const CreateDeal = ({ }: any) => {
       if (status === 200) dispatch(saveDealSelection(data));
     } catch (error: any) {
       setLoading(false);
+      dispatch(saveDealSelection(data));
       if (error.response && error.response.status === 401) {
         dispatch(saveToken(""));
-        dispatch(saveDealSelection(data));
         navigate(RoutesEnums.LOGIN, { state: "add-attachments" });
       }
       const message = error?.response?.data?.status?.message || error?.response?.data || language.promptMessages.errorGeneral;
@@ -269,7 +272,7 @@ const CreateDeal = ({ }: any) => {
                 return (
                   <li className={`h-[50px] w-[420px] p-4 grey-neutral-200 text-sm font-medium cursor-pointer border border-grey inline-flex items-center justify-start first:rounded-t-md last:rounded-b-md screen500:w-full ${as.selected ? "check-background" : "bg-white"}`}
                     onClick={() => {
-                      dispatch(saveDealSelection({ option: as, question: ques, fields: dealData, lang: event, secIndex, step }))
+                      dispatch(saveDealSelection({ option: as, question: ques, fields: dealData, lang: event, secIndex, step: dealData[step - 1] }))
                       tieUpRestrictions(as);
                     }} id={`rad-chk-${as?.id}`}>
                     <input onChange={(e) => { }} className="accent-cyan-800 relative float-left mx-2 h-3 w-3 rounded-full border-2 border-solid border-cyan-300 before:pointer-events-none before:absolute before:h-4 before:w-4 before:scale-0 before:rounded-full before:bg-transparent before:opacity-0 before:content-[''] after:absolute after:z-[1] after:block after:h-4 after:w-4 after:rounded-full after:content-[''] checked:border-primary checked:before:opacity-[0.16] checked:after:absolute checked:after:left-1/2 checked:after:top-1/2 checked:after:h-[0.625rem] checked:after:w-[0.625rem] checked:after:rounded-full checked:after:border-primary checked:after:bg-primary checked:after:content-[''] checked:after:[transform:translate(-50%,-50%)] hover:cursor-pointer hover:before:opacity-[0.04]"
@@ -298,19 +301,19 @@ const CreateDeal = ({ }: any) => {
               const enteredValue = e.target.value;
               const numericValue = enteredValue.replace(/[^0-9.]|(\.(?=.*\.))/g, "");
 
-              dispatch(saveDealSelection({ option: numericValue, question: ques, fields: dealData, lang: event, secIndex, step }))
+              dispatch(saveDealSelection({ option: numericValue, question: ques, fields: dealData, lang: event, secIndex, step: dealData[step - 1] }))
             }} id={`num-${ques.id}`} placeholder={`${currency === 0 ? "$" : "د.إ"} 0.00`} type="text" className="outline-none w-full h-full placeholder-neutral-500" />
             <span className="cursor-pointer inline-flex items-center" onClick={() => setCurrency(prev => { return prev === 0 ? 1 : 0 })}>
               <button className="font-normal text-lg text-neutral-500">{CURRENCIES[currency]}</button>
             </span>
           </div>
-          <ul className="inline-flex items-center gap-1.5 mt-3">
+          <ul className="inline-flex items-center gap-5 mt-3">
             {React.Children.toArray(
               ques?.suggestions.map((suggestion: any) => (
                 <li onClick={() => {
                   let elem: HTMLInputElement | any = document.getElementById(`num-${ques.id}`);
                   elem.value = suggestion;
-                  dispatch(saveDealSelection({ option: suggestion, question: ques, fields: dealData, lang: event, secIndex, step }));
+                  dispatch(saveDealSelection({ option: suggestion, question: ques, fields: dealData, lang: event, secIndex, step: dealData[step - 1] }));
                 }} className="cursor-pointer py-2 px-3 h-9 w-24 bg-cbc-grey-sec rounded-md text-center text-sm font-normal text-neutral-900">{currency === 0 ? "$" : "د.إ"} {numberFormatter(Number(suggestion))}</li>
               ))
             )}
@@ -335,7 +338,7 @@ const CreateDeal = ({ }: any) => {
               </span>
               <EditIcon stroke="#fff" className="w-7 h-7 float-right cursor-pointer rounded-md p-1"
                 style={{ backgroundColor: "rgba(0, 0, 0, 0.078)" }} onClick={() => {
-                  removeFile(ques?.value?.id, { option: null, question: ques, fields: dealData, lang: event, secIndex, step })
+                  removeFile(ques?.value?.id, { option: null, question: ques, fields: dealData, lang: event, secIndex, step: dealData[step - 1] })
                 }} />
             </span>
             <div className="content-center text-center mt-2  main-embed  h-[200px] overflow-hidden relative">
@@ -373,8 +376,8 @@ const CreateDeal = ({ }: any) => {
 
           <FileUpload parentId={dataHolder} onlyPDF={onlyPDF} onlyVideo={onlyideo} size={`${ques?.size_constraints?.limit}${ques?.size_constraints?.unit}`}
             id={ques?.id} fid={ques?.id} file={ques?.value} setModalOpen={() => { }} setFile={(file: File, id: string, url: string, aid: string, size: string, dimensions: string, type: string, prodURL: string) => {
-              dispatch(saveDealSelection({ option: { url: prodURL, id: aid }, question: ques, fields: dealData, lang: event, secIndex, step }))
-            }} title={ques?.statement} removeFile={() => removeFile(ques?.value?.id, { option: null, question: ques, fields: dealData, lang: event, secIndex, step })} className="w-full" />
+              dispatch(saveDealSelection({ option: { url: prodURL, id: aid }, question: ques, fields: dealData, lang: event, secIndex, step: dealData[step - 1] }))
+            }} title={ques?.statement} removeFile={() => removeFile(ques?.value?.id, { option: null, question: ques, fields: dealData, lang: event, secIndex, step: dealData[step - 1] })} className="w-full" />
         </section >
       )
     );
@@ -395,7 +398,7 @@ const CreateDeal = ({ }: any) => {
             <Selector disabled={false} defaultValue={{ label: currentValue, value: currentValue }} options={options}
               onChange={(v: any) => {
                 let opt = ques?.options?.find((op: any) => op.statement === v.value);
-                dispatch(saveDealSelection({ option: opt, question: ques, fields: dealData, lang: event, secIndex, step }))
+                dispatch(saveDealSelection({ option: opt, question: ques, fields: dealData, lang: event, secIndex, step: dealData[step - 1] }))
               }}
             />
           </div>
@@ -409,7 +412,7 @@ const CreateDeal = ({ }: any) => {
       <section className="flex items-start justify-center flex-col mt-3 w-full">
         <div className="mb-6 inline-flex w-full items-center justify-between">
           <small className="text-neutral-700 text-lg font-medium mb-3">{ques?.statement}</small>
-          <label className="relative inline-flex items-center cursor-pointer" onChange={(e) => dispatch(saveDealSelection({ option: !ques?.is_required, question: ques, fields: dealData, lang: event, secIndex, step }))}>
+          <label className="relative inline-flex items-center cursor-pointer" onChange={(e) => dispatch(saveDealSelection({ option: !ques?.is_required, question: ques, fields: dealData, lang: event, secIndex, step: dealData[step - 1] }))}>
             <input type="checkbox" value="" className="sr-only peer" checked={ques?.is_required} />
             <div className="w-11 h-6 bg-gray-200 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-cyan-800"></div>
           </label>
@@ -426,7 +429,7 @@ const CreateDeal = ({ }: any) => {
         <section className="flex items-start justify-center flex-col mt-3 w-full">
           <div className="mb-6 inline-flex flex-col w-full items-start justify-between">
             {!dependantQuesion && <label htmlFor={ques?.id} className="text-neutral-700 text-lg font-medium mb-3">{ques?.statement}</label>}
-            <textarea value={ques?.value} placeholder={ques?.statement} className="h-[100px] mt-2 resize-none shadow-sm appearance-none border border-neutral-300 rounded-md w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id={ques?.id} onInput={(e: any) => dispatch(saveDealSelection({ option: e.target.value, question: ques, fields: dealData, lang: event, secIndex, step }))}></textarea>
+            <textarea value={ques?.value} placeholder={ques?.statement} className="h-[100px] mt-2 resize-none shadow-sm appearance-none border border-neutral-300 rounded-md w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id={ques?.id} onInput={(e: any) => dispatch(saveDealSelection({ option: e.target.value, question: ques, fields: dealData, lang: event, secIndex, step: dealData[step - 1] }))}></textarea>
           </div>
         </section>
       );
@@ -440,7 +443,7 @@ const CreateDeal = ({ }: any) => {
       return (
         <section className="flex items-start justify-center flex-col mb-8 mt-3 w-full">
           {!dependantQuesion && <label htmlFor={ques?.id} className="text-neutral-700 text-lg font-medium mb-3">{ques?.statement}</label>}
-          <input title={ques?.statement} className="h-[42px] pr-10 shadow-sm appearance-none border rounded-md w-full py-2 px-3 text-gray-500 leading-tight transition-all bg-white w-full focus:outline-none" placeholder={ques?.statement} id={ques?.id} onChange={(e: any) => dispatch(saveDealSelection({ option: e.target.value, question: ques, fields: dealData, lang: event, secIndex, step }))} value={ques?.value} />
+          <input title={ques?.statement} className="h-[42px] pr-10 shadow-sm appearance-none border rounded-md w-full py-2 px-3 text-gray-500 leading-tight transition-all bg-white w-full focus:outline-none" placeholder={ques?.statement} id={ques?.id} onChange={(e: any) => dispatch(saveDealSelection({ option: e.target.value, question: ques, fields: dealData, lang: event, secIndex, step: dealData[step - 1] }))} value={ques?.value} />
         </section>
       );
     } else return <React.Fragment></React.Fragment>
@@ -508,11 +511,11 @@ const CreateDeal = ({ }: any) => {
                 : "border-l rounded-bl-md rounded-tl-md pl-2"
                 }`}
             />
-            <input placeholder="www.example.com"
+            <input placeholder="www.example.com" value={ques?.value}
               className={`h-[42px] shadow-sm appearance-none border border-neutral-300 w-full py-2 px-3 text-gray-500 leading-tight focus:outline-none focus:shadow-outline ${orientation === "rtl"
                 ? " rounded-bl-md rounded-tl-md"
                 : " rounded-br-md rounded-tr-md"
-                }`} type="text" id={ques?.id} onChange={(e: any) => dispatch(saveDealSelection({ option: e.target.value, question: ques, fields: dealData, lang: event, secIndex, step }))}
+                }`} type="text" id={ques?.id} onChange={(e: any) => dispatch(saveDealSelection({ option: e.target.value, question: ques, fields: dealData, lang: event, secIndex, step: dealData[step - 1] }))}
             />
           </div>
         </section>
@@ -532,6 +535,7 @@ const CreateDeal = ({ }: any) => {
       else if (ques?.field_type === Constants.TEXT_BOX) return textAreaInput(ques, secIndex, section)
       else if (ques?.field_type === Constants.TEXT_FIELD) return textFieldInput(ques, secIndex, section)
       else if (ques?.field_type === Constants.URL) return URLInput(ques, secIndex, section)
+      else return reviewUI()
     }
   };
 
@@ -630,7 +634,6 @@ const CreateDeal = ({ }: any) => {
                             <h3 className="w-[450px] screen500:w-[350px] text-neutral-700 font-bold text-2xl mb-10">
                               {section?.title}
                             </h3>
-
                             {multipleFieldsPayload?.length > 0 && (
                               React.Children.toArray(
                                 multipleFieldsPayload?.map((sec: any) => {
@@ -683,7 +686,7 @@ const CreateDeal = ({ }: any) => {
                         ) : (
                           <section className={`flex items-start flex-col mb-8 w-[450px] screen500:w-[350px] ${(index % 2 != 0 || section?.is_multiple) && "bg-cbc-check p-4 rounded-md"}`}>
                             <h3 className="text-neutral-700 font-bold text-2xl w-full mb-6">{section?.title}</h3>
-                            {section?.fields?.length ? (React.Children.toArray(section?.fields?.map((ques: any) => renderQuestionType(ques, index, section)))) : (reviewUI())}
+                            {section?.fields?.length ? (React.Children.toArray(section?.fields?.map((ques: any) => renderQuestionType(ques, index, section)))) : reviewUI()}
                           </section>
                         )
                       )

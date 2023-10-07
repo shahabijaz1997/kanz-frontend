@@ -39,6 +39,7 @@ export const QuestionnaireSlice = createSlice({
     saveDealSelection: (state, action: PayloadAction<any>) => {
       const { option, question, questions, lang, secIndex, step } = action.payload;
       const existing = JSON.parse(JSON.stringify(state.value));
+      console.log({ existing, step });
 
       if (isEmpty(existing)) {
         question?.options.map((opt: any) => {
@@ -64,7 +65,7 @@ export const QuestionnaireSlice = createSlice({
           ]
       }
       else {
-        const currentStep = existing.find((item: any) => item.index === (step - 1));
+        const currentStep = existing.find((item: any) => item.id === step.id);
         const currentSection = currentStep[lang]?.sections[secIndex];
         const currentQuestion = currentSection.fields.find((ques: any) => ques.id === question.id);
         if (currentQuestion.field_type === Constants.CHECK_BOX) {
@@ -99,7 +100,7 @@ export const QuestionnaireSlice = createSlice({
       const { secIndex, lang, step, duplicate } = action.payload;
       const existing = JSON.parse(JSON.stringify(state.value));
 
-      const currentStep = existing.find((item: any) => item.index === (step - 1));
+      const currentStep = existing.find((item: any) => item.id === step.id);
       const currentSection = currentStep[lang]?.sections[secIndex];
 
       for (let i = 0; i < duplicate; i++) {
@@ -115,7 +116,7 @@ export const QuestionnaireSlice = createSlice({
       const { secIndex, lang, step, index } = action.payload;
       const existing = JSON.parse(JSON.stringify(state.value));
 
-      const currentStep = existing.find((item: any) => item.index === (step - 1));
+      const currentStep = existing.find((item: any) => item.id === step.id);
       const currentSection = currentStep[lang]?.sections[secIndex];
       currentSection.fields = currentSection?.fields.filter((field: any) => field.index !== index);
       state.value = existing;
@@ -124,7 +125,7 @@ export const QuestionnaireSlice = createSlice({
       const { secIndex, lang, step } = action.payload;
       const existing = JSON.parse(JSON.stringify(state.value));
 
-      const currentStep = existing.find((item: any) => item.index === (step - 1));
+      const currentStep = existing.find((item: any) => item.id === step.id);
       const currentSection = currentStep[lang]?.sections[secIndex];
       currentSection?.fields?.forEach((sec: any) => {
         sec.value = "";

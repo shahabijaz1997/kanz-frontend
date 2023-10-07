@@ -124,6 +124,8 @@ const FileUpload = ({ size, parentId, id, fid, file, setModalOpen, setFile, remo
                 dispatch(saveToken(""));
                 navigate(RoutesEnums.LOGIN, { state: 'add-attachments' });
             }
+            console.log(error);
+            
             const message = error?.response?.data?.status?.message || language.promptMessages.errorFileUpload;
             return setAlertType({ type: PromptMessage.ERROR, message });
         } finally {
