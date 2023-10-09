@@ -24,6 +24,8 @@ const Startup = ({ }: any) => {
     const dispatch = useDispatch();
     const language: any = useSelector((state: RootState) => state.language.value);
     const authToken: any = useSelector((state: RootState) => state.auth.value);
+
+    const [pagination, setPagination] = useState({ items_per_page: 5, total_items: [], current_page: 1, total_pages: 0 });
     const [selectedTab, setSelectedTab] = useState();
     const [modalOpen, setModalOpen] = useState(false);
     const [loading, setLoading] = useState(false);
@@ -49,8 +51,12 @@ const Startup = ({ }: any) => {
                         Round: deal?.round,
                         Status: deal?.status,
                         Type: deal?.instrument_type,
+                        State: deal?.current_state,
                         Valuation: `$${numberFormatter(Number(deal?.valuation))} ${language?.v3?.deal?.valuation}`
                     }
+                });
+                setPagination(prev => {
+                    return { ...prev, total_items: deals.length, current_page: 1, total_pages: Math.ceil(deals.length / prev.items_per_page), data: deals?.slice(0, prev.items_per_page) }
                 });
                 setDeals(deals);
             }
@@ -58,6 +64,27 @@ const Startup = ({ }: any) => {
 
         } finally {
             setLoading(false);
+        }
+    };
+
+    const paginate = (type: string) => {
+        if (type === "next" && pagination.current_page < pagination.total_pages) {
+            setPagination((prev: any) => {
+                const nextPage = prev.current_page + 1;
+                const startIndex = (nextPage - 1) * prev.items_per_page;
+                const endIndex = startIndex + prev.items_per_page;
+                const data = deals.slice(startIndex, endIndex);
+                return { ...prev, current_page: nextPage, data };
+            });
+        } else if (type === "previous" && pagination.current_page > 1) {
+            setPagination((prev: any) => {
+                const prevPage = prev.current_page - 1;
+                const startIndex = (prevPage - 1) * prev.items_per_page;
+                const endIndex = startIndex + prev.items_per_page;
+                const data = deals.slice(startIndex, endIndex);
+
+                return { ...prev, current_page: prevPage, data };
+            });
         }
     };
 
@@ -102,9 +129,9 @@ const Startup = ({ }: any) => {
                         </section>
 
                         <section className="mt-10">
-                            <Table columns={columns} data={deals} onclick={(row: any) => {
+                            <Table columns={columns} pagination={pagination} paginate={paginate} onclick={(row: any) => {
                                 dispatch(saveDataHolder(row.id));
-                                navigate(`/create-deal/1`);
+                                navigate(`/create-deal/${row?.State?.current_step + 1}`);
                             }} noDataNode={<Button onClick={() => setModalOpen(true)} className="absolute left-1/2 top-1/2 translate-x-[-50%] translate-y-[-50%]">{language?.v3?.button?.new_deal}</Button>} />
                         </section>
                     </React.Fragment>
