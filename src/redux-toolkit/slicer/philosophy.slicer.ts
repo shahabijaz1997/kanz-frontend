@@ -39,7 +39,6 @@ export const QuestionnaireSlice = createSlice({
     saveDealSelection: (state, action: PayloadAction<any>) => {
       const { option, question, questions, lang, secIndex, step } = action.payload;
       const existing = JSON.parse(JSON.stringify(state.value));
-      console.log({ existing, step });
 
       if (isEmpty(existing)) {
         question?.options.map((opt: any) => {
@@ -69,9 +68,7 @@ export const QuestionnaireSlice = createSlice({
         const currentSection = currentStep[lang]?.sections[secIndex];
         const currentQuestion = currentSection.fields.find((ques: any) => ques.id === question.id);
         if (currentQuestion.field_type === Constants.CHECK_BOX) {
-          currentQuestion?.options.forEach((opt: any) => {
-            if (opt.id === option.id) opt.selected = !option.selected;
-          });
+          currentQuestion.value = !currentQuestion.value;
         }
         else if (currentQuestion.field_type === Constants.MULTIPLE_CHOICE || currentQuestion.field_type === Constants.DROPDOWN) {
           currentQuestion?.options.map((opt: any) => {

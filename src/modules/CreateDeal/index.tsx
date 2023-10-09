@@ -12,7 +12,7 @@ import Stepper from "../../shared/components/Stepper";
 import Spinner from "../../shared/components/Spinner";
 import Button from "../../shared/components/Button";
 import { saveToken } from "../../redux-toolkit/slicer/auth.slicer";
-import { RoutesEnums, StartupRoutes } from "../../enums/routes.enum";
+import { RoutesEnums } from "../../enums/routes.enum";
 import { Constants } from "../../enums/constants.enum";
 import { saveDataHolder } from "../../redux-toolkit/slicer/dataHolder.slicer";
 import { toastUtil } from "../../utils/toast.utils";
@@ -26,6 +26,7 @@ import BinIcon from "../../ts-icons/binIcon.svg";
 import Modal from "../../shared/components/Modal";
 import { removeAttachment } from "../../apis/attachment.api";
 import EditIcon from "../../ts-icons/editIcon.svg";
+import ReviewDeal from "./ReviewDeal";
 const CURRENCIES = ["USD", "AED"];
 
 const CreateDeal = () => {
@@ -68,9 +69,9 @@ const CreateDeal = () => {
       setLoading(true);
       const queryParams: any = { type: metadata.role === KanzRoles.STARTUP ? DealType.STARTUP : DealType.REALTOR };
       if (dataHolder) queryParams.id = dataHolder;
+
       let { status, data } = await getDealQuestion(queryParams, authToken);
       if (status === 200) {
-        console.log("Startup Deal: ", data?.status?.data?.steps[step - 1]);
         let _dependencies: any = [];
         data?.status?.data?.steps?.forEach((step: any) => {
           if (step?.dependencies?.length > 0) _dependencies = step.dependencies;
@@ -165,6 +166,9 @@ const CreateDeal = () => {
           }
           if (field.field_type === Constants.FILE) {
             selected = field?.value?.id
+          }
+          if (field.field_type === Constants.CHECK_BOX) {
+            selected = field?.value;
           }
           return {
             id: field.id,
@@ -414,6 +418,22 @@ const CreateDeal = () => {
     );
   }
 
+  const termUI = (ques: any, secIndex: number) => {
+
+    return (
+      <section className="flex items-start justify-center flex-col mt-2 w-full">
+        <section className="mb-8 w-full relative mt-3">
+          <div dangerouslySetInnerHTML={{ __html: ques?.description }}></div>
+        </section>
+
+        <section className="w-full inline-flex items-center gap-2 rounded-md border border-grey w-[420px] p-4 check-background cursor-pointer" onClick={() => dispatch(saveDealSelection({ option: !ques?.value, question: ques, fields: dealData, lang: event, secIndex, step: dealData[step - 1] }))}>
+          <input type="checkbox" className="accent-cyan-800 h-3 w-3 cursor-pointer" checked={ques?.value} />
+          <small className="text-neutral-700 text-lg font-medium">{ques?.statement}</small>
+        </section>
+      </section>
+    );
+  }
+
   const switchInput = (ques: any, secIndex: number) => {
     return (
       <section className="flex items-start justify-center flex-col mt-3 w-full">
@@ -450,41 +470,10 @@ const CreateDeal = () => {
       return (
         <section className="flex items-start justify-center flex-col mb-8 mt-3 w-full">
           {!dependantQuesion && <label htmlFor={ques?.id} className="text-neutral-700 text-lg font-medium mb-3">{ques?.statement}</label>}
-          <input title={ques?.statement} className="h-[42px] pr-10 shadow-sm appearance-none border rounded-md w-full py-2 px-3 text-gray-500 leading-tight transition-all bg-white w-full focus:outline-none" placeholder={ques?.statement} id={ques?.id} onChange={(e: any) => dispatch(saveDealSelection({ option: e.target.value, question: ques, fields: dealData, lang: event, secIndex, step: dealData[step - 1] }))} value={ques?.value} />
+          <input title={ques?.statement} className="h-[42px] pr-10 shadow-sm appearance-none border rounded-md w-full py-2 px-3 text-gray-700 leading-tight transition-all bg-white w-full focus:outline-none" placeholder={ques?.statement} id={ques?.id} onChange={(e: any) => dispatch(saveDealSelection({ option: e.target.value, question: ques, fields: dealData, lang: event, secIndex, step: dealData[step - 1] }))} value={ques?.value} />
         </section>
       );
     } else return <React.Fragment></React.Fragment>
-  };
-
-  const reviewUI = () => {
-    return (
-      <section className="flex items-start justify-center flex-col mt-10 max-w-[420px] min-w-[450px] screen500:max-w-[350px]">
-        <div className="py-4 border-b-[1px] border-b-neutral-200 w-full cursor-pointer" onClick={() => navigate(`${StartupRoutes.CREATE_DEAL}/1`)}>
-          <h3 className="text-neutral-900 font-medium text-sm">Investment Round</h3>
-          <p className="text-neutral-500 font-normal text-sm">Seed</p>
-        </div>
-        <div className="py-4 border-b-[1px] border-b-neutral-200 w-full cursor-pointer" onClick={() => navigate(`${StartupRoutes.CREATE_DEAL}/2`)}>
-          <h3 className="text-neutral-900 font-medium text-sm">Investment Type</h3>
-          <p className="text-neutral-500 font-normal text-sm">Equity</p>
-        </div>
-        <div className="py-4 border-b-[1px] border-b-neutral-200 w-full cursor-pointer" onClick={() => navigate(`${StartupRoutes.CREATE_DEAL}/3`)}>
-          <h3 className="text-neutral-900 font-medium text-sm">Equity Type</h3>
-          <p className="text-neutral-500 font-normal text-sm">Preferred</p>
-        </div>
-        <div className="py-4 border-b-[1px] border-b-neutral-200 w-full cursor-pointer" onClick={() => navigate(`${StartupRoutes.CREATE_DEAL}/4`)}>
-          <h3 className="text-neutral-900 font-medium text-sm">Deal Target</h3>
-          <p className="text-neutral-500 font-normal text-sm">$ 2M</p>
-        </div>
-        <div className="py-4 border-b-[1px] border-b-neutral-200 w-full cursor-pointer" onClick={() => navigate(`${StartupRoutes.CREATE_DEAL}/4`)}>
-          <h3 className="text-neutral-900 font-medium text-sm">Valuation</h3>
-          <p className="text-neutral-500 font-normal text-sm">$ 5M</p>
-        </div>
-        <div className="py-4 border-b-[1px] border-b-neutral-200 w-full cursor-pointer" onClick={() => navigate(`${StartupRoutes.CREATE_DEAL}/6`)}>
-          <h3 className="text-neutral-900 font-medium text-sm">Attachments</h3>
-          <p className="text-neutral-500 font-normal text-sm">PDF 2MB</p>
-        </div>
-      </section>
-    )
   };
 
   const URLInput = (ques: any, secIndex: number, section: any) => {
@@ -542,12 +531,13 @@ const CreateDeal = () => {
       else if (ques?.field_type === Constants.TEXT_BOX) return textAreaInput(ques, secIndex, section)
       else if (ques?.field_type === Constants.TEXT_FIELD) return textFieldInput(ques, secIndex, section)
       else if (ques?.field_type === Constants.URL) return URLInput(ques, secIndex, section)
-      else return reviewUI()
+      else if (ques?.field_type === Constants.CHECK_BOX) return termUI(ques, secIndex)
+      else return <ReviewDeal language={language} dealId={dataHolder} metadata={metadata} authToken={authToken} navigate={navigate} />
     }
   };
 
   const checkValidation = () => {
-    if (!dealData || !dealData[step - 1] || !dealData[step - 1][event]?.sections.length) return false;
+    if (!dealData || !dealData[step - 1] || !dealData[step - 1][event]?.sections.length) return true;
     let flags: any[] = []
 
     dealData[step - 1][event]?.sections.forEach((sec: any, index: number) => {
@@ -576,6 +566,9 @@ const CreateDeal = () => {
         }
         else if (ques.field_type === Constants.SWITCH) {
           flags[index].validations.push(ques.is_required);
+        }
+        else if (ques.field_type === Constants.CHECK_BOX) {
+          flags[index].validations.push(ques.value);
         }
       });
     });
@@ -631,7 +624,7 @@ const CreateDeal = () => {
             ) : (
               <React.Fragment>
                 {!dealData || !dealData[step - 1] || !dealData[step - 1][event]?.sections.length ? (
-                  <p>{language?.v3?.common?.noData}</p>
+                  <ReviewDeal language={language} navigate={navigate} dealId={dataHolder} metadata={metadata} authToken={authToken} />
                 ) : (
                   React.Children.toArray(
                     dealData[step - 1][event]?.sections.map((section: any, index: number) => {
@@ -693,7 +686,7 @@ const CreateDeal = () => {
                         ) : (
                           <section className={`flex items-start flex-col mb-8 w-[450px] screen500:w-[350px] ${(index % 2 != 0 || section?.is_multiple) && "bg-cbc-check p-4 rounded-md"}`}>
                             <h3 className="text-neutral-700 font-bold text-2xl w-full mb-6">{section?.title}</h3>
-                            {section?.fields?.length ? (React.Children.toArray(section?.fields?.map((ques: any) => renderQuestionType(ques, index, section)))) : reviewUI()}
+                            {section?.fields?.length ? (React.Children.toArray(section?.fields?.map((ques: any) => renderQuestionType(ques, index, section)))) : <ReviewDeal dealId={dataHolder} language={language} metadata={metadata} authToken={authToken} navigate={navigate} />}
                           </section>
                         )
                       )
