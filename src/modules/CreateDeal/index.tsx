@@ -28,7 +28,7 @@ import { removeAttachment } from "../../apis/attachment.api";
 import EditIcon from "../../ts-icons/editIcon.svg";
 const CURRENCIES = ["USD", "AED"];
 
-const CreateDeal = ({ }: any) => {
+const CreateDeal = () => {
   const navigate = useNavigate();
   const params = useParams();
   const dispatch = useDispatch();
