@@ -156,7 +156,8 @@
         "submitted": "Under Review",
         "required_field": "This field is required.",
         "selectCurrency": "Currency",
-        "fileSpecs": "PNG, JPG, PDF up to"
+        "fileSpecs": "PNG, JPG, PDF up to",
+        "fileSpecsPDF": " up to"
     },
     "buttons": {
         "start": "Get Started",
@@ -628,29 +629,10 @@
                 "data_rooms": "Data Rooms",
                 "market_insights": "Market Insights",
                 "contacts": "Contacts"
-            },
-            "create_deal": {
-                "title": "Create Deal",
-                "stage": "stage",
-                "instrument": "Instrument",
-                "round_size": "Round Size",
-                "attachments": "Attachments",
-                "terms": "Terms",
-                "additional_detail": "Additional Details",
-                "review": "Review"
-            }
-        },
-        "realtor": {
-            "create_deal": {
-                "details": "Details",
-                "attachments": "Attachments",
-                "selling_price": "Selling Price",
-                "terms": "Terms",
-                "expected_return": "Expected Return",
-                "review": "Review"
             }
         },
         "deal": {
+            "create_deal": "Create Deal",
             "status": "Deal Status",
             "submitted": "Your deal has been Submitted!",
             "re_opened": "Your deal has been Re Opened!",
@@ -674,7 +656,10 @@
             "add_links": "Add Links",
             "price": "Price",
             "exp_ret": "Expected Dividend Yield",
-            "exp_ann": "Expected Annual Appreciation"
+            "exp_ann": "Expected Annual Appreciation",
+            "submitted_deal": "Your deal has been submitted",
+            "deal_status": "Deal Status",
+            "valuation": "Valuation"
         },
         "common": {
             "search": "Search",
@@ -691,6 +676,7 @@
             "invite": "Invite",
             "new": "New",
             "cancel": "Cancel",
+            "add": "Add",
             "add_new_link": "Add New Link"
         }
     }

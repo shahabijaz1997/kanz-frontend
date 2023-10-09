@@ -11,6 +11,7 @@ export enum PromptMessage {
 
 export enum FileType {
     IMAGE = "image",
+    VIDEO = "video",
     PDF = "pdf"
 }
 
@@ -22,4 +23,9 @@ export enum ApplicationStatus {
     REOPENED = "reopened",
     VERIFIED = "verified",
     REJECTED = "rejected",
+}
+
+export enum DealType {
+    STARTUP = "startup_deal",
+    REALTOR = "property_deal",
 }

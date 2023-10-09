@@ -47,15 +47,12 @@ const Realtors = (props: any) => {
   const getRealtorDetails = async () => {
     try {
       setLoading(true);
-      let { status, data } = await getRealtorInformation(1,authToken);
+      let { status, data } = await getRealtorInformation(1, authToken);
       if (status === 200) {
         dispatch(saveUserMetaData(data?.status?.data));
       }
     } catch (error: any) {
-      const message =
-        error?.response?.data?.status?.message ||
-        error?.response?.data ||
-        language.promptMessages.errorGeneral;
+      const message = error?.response?.data?.status?.message || error?.response?.data || language.promptMessages.errorGeneral;
       toast.error(message, toastUtil);
       if (error.response && error.response.status === 401) {
         dispatch(saveToken(""));
@@ -79,10 +76,10 @@ const Realtors = (props: any) => {
     setLoad(false);
     if ((user.status !== ApplicationStatus.OPENED && user.status !== ApplicationStatus.REOPENED)) return navigate(RoutesEnums.WELCOME);
   }, [metadata]);
-    
-  useEffect(()=>{
+
+  useEffect(() => {
     getRealtorDetails();
-  },[])
+  }, [])
 
   useLayoutEffect(() => {
     if (user.type !== KanzRoles.REALTOR) navigate(RoutesEnums.WELCOME);
@@ -205,8 +202,9 @@ const Realtors = (props: any) => {
                       <input value={payload?.noOfProperty} onChange={(e) => {
                         const enteredValue = e.target.value;
                         const numericValue = enteredValue.replace(/[^0-9]/g, "");
-                        onSetPayload(numericValue, "noOfProperty")}
-                        } placeholder={language.common.NoOfProperty} className=" h-[42px] shadow-sm appearance-none border border-neutral-300 rounded-md w-full py-2 px-3 text-gray-500 leading-tight focus:outline-none focus:shadow-outline" type="text" />
+                        onSetPayload(numericValue, "noOfProperty")
+                      }
+                      } placeholder={language.common.NoOfProperty} className=" h-[42px] shadow-sm appearance-none border border-neutral-300 rounded-md w-full py-2 px-3 text-gray-500 leading-tight focus:outline-none focus:shadow-outline" type="text" />
                     </div>
                   </section>
                 </div>

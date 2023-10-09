@@ -42,9 +42,7 @@ const EmailVerification = ({ }: any) => {
       const { status, data } = await resendConfirmToken({ user: { email } }, authToken);
       if (status === 200) toast.success(data.status.message, toastUtil);
     } catch (error: any) {
-      const message =
-        error?.response?.data?.status?.message ||
-        language.promptMessages.errorGeneral;
+      const message = error?.response?.data?.status?.message || language.promptMessages.errorGeneral;
       toast.dismiss();
       toast.error(message, toastUtil);
     } finally {

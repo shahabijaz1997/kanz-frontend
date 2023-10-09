@@ -1,26 +1,96 @@
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { KanzRoles } from "../../enums/roles.enum";
 import Header from "../../shared/components/Header";
 import Sidebar from "../../shared/components/Sidebar";
 import { RootState } from "../../redux-toolkit/store/store";
 import SearchIcon from "../../ts-icons/searchIcon.svg";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Button from "../../shared/components/Button";
 import Table from "../../shared/components/Table";
 import { StartupRoutes } from "../../enums/routes.enum";
 import Modal from "../../shared/components/Modal";
 import CrossIcon from "../../ts-icons/crossIcon.svg";
+import { saveDataHolder } from "../../redux-toolkit/slicer/dataHolder.slicer";
+import { getDeals } from "../../apis/deal.api";
+import { numberFormatter } from "../../utils/object.utils";
+import Spinner from "../../shared/components/Spinner";
 
-const columns = ['Name', 'Type', 'Status', 'Stage', 'Raised', 'Target'];
-const data: any = [];
+const columns = ['Property Name', 'Size', 'Status', 'Features', 'Selling Price', 'Rental Amount'];
 
 const Realtor = ({ }: any) => {
     const navigate = useNavigate();
+    const dispatch = useDispatch();
     const language: any = useSelector((state: RootState) => state.language.value);
+    const authToken: any = useSelector((state: RootState) => state.auth.value);
+
+    const [pagination, setPagination] = useState({ items_per_page: 5, total_items: [], current_page: 1, total_pages: 0 });
     const [selectedTab, setSelectedTab] = useState();
     const [modalOpen, setModalOpen] = useState(false);
+    const [loading, setLoading] = useState(false);
     const [tabs] = useState([language?.v3?.startup?.overview?.all, language?.v3?.startup?.overview?.raising, language?.v3?.startup?.overview?.closed]);
+    const [deals, setDeals] = useState([]);
+
+    useEffect(() => {
+        dispatch(saveDataHolder(""))
+    }, []);
+
+    useEffect(() => {
+        dispatch(saveDataHolder(""));
+        getAllDeals();
+    }, []);
+
+    const getAllDeals = async () => {
+        try {
+            setLoading(true);
+            let { status, data } = await getDeals(authToken);
+            if (status === 200) {
+                let deals = data?.status?.data?.map((deal: any) => {
+                    let features = deal?.features?.map((f: any) => f?.title || f?.description)?.join(",")
+                    return {
+                        id: deal?.id,
+                        "Property Name": deal?.building_name || "N/A",
+                        Size: `$${deal?.size} sqft`,
+                        Features: features || "N/A",
+                        "Selling Price": `$${numberFormatter(Number(deal?.target))}`,
+                        Status: deal?.status,
+                        "Rental Amount": `$${numberFormatter(Number(deal?.rental_amount))}`,
+                        State: deal?.current_state,
+                    }
+                });
+
+                setPagination(prev => {
+                    return { ...prev, total_items: deals.length, current_page: 1, total_pages: Math.ceil(deals.length / prev.items_per_page), data: deals?.slice(0, prev.items_per_page) }
+                });
+                setDeals(deals);
+            }
+        } catch (error) {
+
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const paginate = (type: string) => {
+        if (type === "next" && pagination.current_page < pagination.total_pages) {
+            setPagination((prev: any) => {
+                const nextPage = prev.current_page + 1;
+                const startIndex = (nextPage - 1) * prev.items_per_page;
+                const endIndex = startIndex + prev.items_per_page;
+                const data = deals.slice(startIndex, endIndex);
+                return { ...prev, current_page: nextPage, data };
+            });
+        } else if (type === "previous" && pagination.current_page > 1) {
+            setPagination((prev: any) => {
+                const prevPage = prev.current_page - 1;
+                const startIndex = (prevPage - 1) * prev.items_per_page;
+                const endIndex = startIndex + prev.items_per_page;
+                const data = deals.slice(startIndex, endIndex);
+
+                return { ...prev, current_page: prevPage, data };
+            });
+        }
+    };
 
     return (
         <main className="h-full max-h-full overflow-y-auto">
@@ -29,28 +99,38 @@ const Realtor = ({ }: any) => {
             </section>
             <aside className="w-full h-full flex items-start justify-start">
                 <Sidebar type={KanzRoles.REALTOR} />
-                <section className="bg-cbc-auth h-full p-[5rem]" style={{ width: "calc(100% - 250px)" }}>
-                    <section className="inline-flex justify-between items-center w-full">
-                        <div className="w-full">
-                            <h1 className="text-black font-medium text-2xl mb-2">{language?.v3?.startup?.overview?.heading}</h1>
-
-                            <span className="w-full flex items-center gap-5">
-                                <div className="rounded-md shadow-cs-6 bg-white border-[1px] border-gray-200 h-9 overflow-hidden max-w-[310px] inline-flex items-center px-2">
-                                    <SearchIcon />
-                                    <input type="search" className="h-full w-full outline-none pl-2 text-sm font-normal text-gray-400" placeholder={language?.v3?.common?.search} />
-                                </div>
-
-                                <ul className="inline-flex items-center">
-                                    {React.Children.toArray(tabs.map(tab => <li onClick={() => setSelectedTab(tab)} className={`py-2 px-3 font-medium cursor-pointer rounded-md transition-all ${selectedTab === tab ? "text-neutral-900 bg-neutral-100" : "text-gray-500"} `}>{tab} &nbsp;(0)</li>))}
-                                </ul>
-                            </span>
+                <section className="bg-cbc-auth h-full p-[5rem] relative" style={{ width: "calc(100% - 250px)" }}>
+                    {loading && (
+                        <div className="absolute left-0 top-0 w-full h-full grid place-items-center" style={{ backgroundColor: "rgba(0, 0, 0, 0.078)" }}>
+                            <Spinner />
                         </div>
-                        <Button onClick={() => setModalOpen(true)} className="w-[170px]">{language?.v3?.button?.new_deal}</Button>
-                    </section>
+                    )}
+                    <React.Fragment>
+                        <section className="inline-flex justify-between items-center w-full">
+                            <div className="w-full">
+                                <h1 className="text-black font-medium text-2xl mb-2">{language?.v3?.startup?.overview?.heading}</h1>
 
-                    <section className="mt-10">
-                        <Table columns={columns} data={data} noDataNode={<Button onClick={() => setModalOpen(true)} className="absolute left-1/2 top-1/2 translate-x-[-50%] translate-y-[-50%]">{language?.v3?.button?.new_deal}</Button>} />
-                    </section>
+                                <span className="w-full flex items-center gap-5">
+                                    <div className="rounded-md shadow-cs-6 bg-white border-[1px] border-gray-200 h-9 overflow-hidden max-w-[310px] inline-flex items-center px-2">
+                                        <SearchIcon />
+                                        <input type="search" className="h-full w-full outline-none pl-2 text-sm font-normal text-gray-400" placeholder={language?.v3?.common?.search} />
+                                    </div>
+
+                                    <ul className="inline-flex items-center">
+                                        {React.Children.toArray(tabs.map(tab => <li onClick={() => setSelectedTab(tab)} className={`py-2 px-3 font-medium cursor-pointer rounded-md transition-all ${selectedTab === tab ? "text-neutral-900 bg-neutral-100" : "text-gray-500"} `}>{tab} &nbsp;(0)</li>))}
+                                    </ul>
+                                </span>
+                            </div>
+                            <Button onClick={() => setModalOpen(true)} className="w-[170px]">{language?.v3?.button?.new_deal}</Button>
+                        </section>
+
+                        <section className="mt-10">
+                            <Table columns={columns} pagination={pagination} paginate={paginate} onclick={(row: any) => {
+                                dispatch(saveDataHolder(row.id));
+                                navigate(`/create-deal/${row?.State?.current_step + 1}`);
+                            }} noDataNode={<Button onClick={() => setModalOpen(true)} className="absolute left-1/2 top-1/2 translate-x-[-50%] translate-y-[-50%]">{language?.v3?.button?.new_deal}</Button>} />
+                        </section>
+                    </React.Fragment>
                 </section>
             </aside>
 
@@ -66,6 +146,13 @@ const Realtor = ({ }: any) => {
                         <div className="py-3 border-t-[1px] border-neutral0=-200 inline-flex justify-between w-full">
                             <span>
                                 <h2 className="font-medium text-neutral-700 text-xl">Disclaimer 1</h2>
+                                <p className="font-normal text-neutral-500 text-sm">Description of Disclaimer</p>
+                            </span>
+                            <input type="checkbox" />
+                        </div>
+                        <div className="py-3 border-t-[1px] border-neutral0=-200 inline-flex justify-between w-full">
+                            <span>
+                                <h2 className="font-medium text-neutral-700 text-xl">Disclaimer 2</h2>
                                 <p className="font-normal text-neutral-500 text-sm">Description of Disclaimer</p>
                             </span>
                             <input type="checkbox" />

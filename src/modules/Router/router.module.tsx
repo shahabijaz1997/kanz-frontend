@@ -191,77 +191,69 @@ const RouterModule = () => {
         <Route path={`${RoutesEnums.STARTUP_DASHBOARD}`}
           element={
             <Suspense fallback={<Loader />}>
-              {/* <CHECK_LOGGED_IN>
-                <GUARD_ROUTE role={KanzRoles.STARTUP}><StartupDashboard guard={authToken} /></GUARD_ROUTE>
-              </CHECK_LOGGED_IN> */}
-              <StartupDashboard />
+              <CHECK_LOGGED_IN>
+                <GUARD_ROUTE role={KanzRoles.STARTUP}><StartupDashboard /></GUARD_ROUTE>
+              </CHECK_LOGGED_IN>
             </Suspense>
           } />
         <Route path={`${RoutesEnums.REALTOR_DASHBOARD}`}
           element={
             <Suspense fallback={<Loader />}>
-              {/* <CHECK_LOGGED_IN>
-                <GUARD_ROUTE role={KanzRoles.STARTUP}><StartupDashboard guard={authToken} /></GUARD_ROUTE>
-              </CHECK_LOGGED_IN> */}
-              <RealtorDashboard />
+              <CHECK_LOGGED_IN>
+                <GUARD_ROUTE role={KanzRoles.REALTOR}><RealtorDashboard /></GUARD_ROUTE>
+              </CHECK_LOGGED_IN>
             </Suspense>
           } />
         <Route path={`${StartupRoutes.CREATE_DEAL}/:id`}
           element={
             <Suspense fallback={<Loader />}>
-              {/* <CHECK_LOGGED_IN>
-                <GUARD_ROUTE role={KanzRoles.STARTUP}><StartupDashboard guard={authToken} /></GUARD_ROUTE>
-              </CHECK_LOGGED_IN> */}
-              <CreateDeal />
+              <CHECK_LOGGED_IN>
+                 <CreateDeal />
+              </CHECK_LOGGED_IN>
             </Suspense>
           } />
 
         <Route path={`${StartupRoutes.DEAL_DETAIL}/:id`}
           element={
             <Suspense fallback={<Loader />}>
-              {/* <CHECK_LOGGED_IN>
-                <GUARD_ROUTE role={KanzRoles.STARTUP}><StartupDashboard guard={authToken} /></GUARD_ROUTE>
-              </CHECK_LOGGED_IN> */}
-              <DealDetail />
+              <CHECK_LOGGED_IN>
+                <GUARD_ROUTE role={KanzRoles.STARTUP}><DealDetail /></GUARD_ROUTE>
+              </CHECK_LOGGED_IN>
             </Suspense>
           } />
         
         <Route path={`${StartupRoutes.INVESTOR_UPDATES}`}
           element={
             <Suspense fallback={<Loader />}>
-              {/* <CHECK_LOGGED_IN>
-                <GUARD_ROUTE role={KanzRoles.STARTUP}><StartupDashboard guard={authToken} /></GUARD_ROUTE>
-              </CHECK_LOGGED_IN> */}
-              <InvestorUpdates />
+              <CHECK_LOGGED_IN>
+                <GUARD_ROUTE role={KanzRoles.STARTUP}><InvestorUpdates /></GUARD_ROUTE>
+              </CHECK_LOGGED_IN>
             </Suspense>
           } />
         
         <Route path={`${StartupRoutes.DATA_ROOMS}`}
           element={
             <Suspense fallback={<Loader />}>
-              {/* <CHECK_LOGGED_IN>
-                <GUARD_ROUTE role={KanzRoles.STARTUP}><StartupDashboard guard={authToken} /></GUARD_ROUTE>
-              </CHECK_LOGGED_IN> */}
-              <DataRooms />
+              <CHECK_LOGGED_IN>
+                <GUARD_ROUTE role={KanzRoles.STARTUP}><DataRooms /></GUARD_ROUTE>
+              </CHECK_LOGGED_IN>
             </Suspense>
           } />
         
         <Route path={`${StartupRoutes.CONTACTS}`}
           element={
             <Suspense fallback={<Loader />}>
-              {/* <CHECK_LOGGED_IN>
-                <GUARD_ROUTE role={KanzRoles.STARTUP}><StartupDashboard guard={authToken} /></GUARD_ROUTE>
-              </CHECK_LOGGED_IN> */}
-              <Contacts />
+              <CHECK_LOGGED_IN>
+                <GUARD_ROUTE role={KanzRoles.STARTUP}><Contacts /></GUARD_ROUTE>
+              </CHECK_LOGGED_IN>
             </Suspense>
           } />
         <Route path={`${StartupRoutes.MARKET_INSIGHTS}`}
           element={
             <Suspense fallback={<Loader />}>
-              {/* <CHECK_LOGGED_IN>
-                <GUARD_ROUTE role={KanzRoles.STARTUP}><StartupDashboard guard={authToken} /></GUARD_ROUTE>
-              </CHECK_LOGGED_IN> */}
-              <MarketInsights />
+              <CHECK_LOGGED_IN>
+                <GUARD_ROUTE role={KanzRoles.STARTUP}><MarketInsights /></GUARD_ROUTE>
+              </CHECK_LOGGED_IN>
             </Suspense>
           } />
 

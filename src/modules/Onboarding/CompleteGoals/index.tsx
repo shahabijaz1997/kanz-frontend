@@ -64,13 +64,13 @@ const CompleteGoals = ({ }: any) => {
     }
   };
 
-  useEffect(()=>{
-    if(metadata.profile){
-     const _selectedAccreditation  = metadata.profile[event].accreditation.options.find((option:any)=>option.selected);
-     setSelectedAccreditation(_selectedAccreditation);
+  useEffect(() => {
+    if (metadata.profile) {
+      const _selectedAccreditation = metadata.profile[event].accreditation.options.find((option: any) => option.selected);
+      setSelectedAccreditation(_selectedAccreditation);
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  },[metadata.profile])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [metadata.profile])
 
   return (
     <main className="h-full max-h-full cbc-auth overflow-y-auto overflow-x-hidden">
@@ -78,10 +78,7 @@ const CompleteGoals = ({ }: any) => {
         <Header />
       </section>
       {loading && (
-        <div
-          className="absolute left-0 top-0 w-full h-full grid place-items-center"
-          style={{ backgroundColor: "rgba(0, 0, 0, 0.078)" }}
-        >
+        <div className="absolute left-0 top-0 w-full h-full grid place-items-center" style={{ backgroundColor: "rgba(0, 0, 0, 0.078)" }}>
           <Spinner />
         </div>
       )}

@@ -1,7 +1,11 @@
 export enum Constants {
+    MULTIPLE_CHOICE = "multiple_choice",
+    SWITCH = "switch",
+    TEXT_BOX = "text_box",
+    TEXT_FIELD = "text_field",
     CHECK_BOX = "checkbox",
-    TEXT_BOX = "text",
-    OPTIONS = "options",
-    MIX_OPTIONS = "mix_options",
-    ATTACHMENTS = "attachments",
+    NUMBER_INPUT = "number",
+    DROPDOWN = "dropdown",
+    FILE = "file",
+    URL = "url"
 }
