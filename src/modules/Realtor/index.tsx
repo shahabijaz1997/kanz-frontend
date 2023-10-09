@@ -16,7 +16,7 @@ import { getDeals } from "../../apis/deal.api";
 import { numberFormatter } from "../../utils/object.utils";
 import Spinner from "../../shared/components/Spinner";
 
-const columns = ['Title', 'Type', 'Status', 'Stage', 'Round', 'Target'];
+const columns = ['Property Name', 'Size', 'Status', 'Features', 'Selling Price', 'Rental Amount'];
 
 const Realtor = ({ }: any) => {
     const navigate = useNavigate();
@@ -46,15 +46,16 @@ const Realtor = ({ }: any) => {
             let { status, data } = await getDeals(authToken);
             if (status === 200) {
                 let deals = data?.status?.data?.map((deal: any) => {
+                    let features = deal?.features?.map((f: any) => f?.title || f?.description)?.join(",")
                     return {
                         id: deal?.id,
-                        Title: deal?.title || "N/A",
-                        Target: `$${numberFormatter(Number(deal?.target))}`,
-                        Stage: deal?.title || "N/A",
-                        Round: deal?.round,
+                        "Property Name": deal?.building_name || "N/A",
+                        Size: `$${deal?.size} sqft`,
+                        Features: features || "N/A",
+                        "Selling Price": `$${numberFormatter(Number(deal?.target))}`,
                         Status: deal?.status,
-                        Type: deal?.instrument_type,
-                        Valuation: `$${numberFormatter(Number(deal?.valuation))} ${language?.v3?.deal?.valuation}`
+                        "Rental Amount": `$${numberFormatter(Number(deal?.rental_amount))}`,
+                        State: deal?.current_state,
                     }
                 });
 
@@ -102,7 +103,7 @@ const Realtor = ({ }: any) => {
                     {loading && (
                         <div className="absolute left-0 top-0 w-full h-full grid place-items-center" style={{ backgroundColor: "rgba(0, 0, 0, 0.078)" }}>
                             <Spinner />
-                        </div> 
+                        </div>
                     )}
                     <React.Fragment>
                         <section className="inline-flex justify-between items-center w-full">
@@ -124,7 +125,10 @@ const Realtor = ({ }: any) => {
                         </section>
 
                         <section className="mt-10">
-                            <Table columns={columns} pagination={pagination} noDataNode={<Button onClick={() => setModalOpen(true)} className="absolute left-1/2 top-1/2 translate-x-[-50%] translate-y-[-50%]">{language?.v3?.button?.new_deal}</Button>} />
+                            <Table columns={columns} pagination={pagination} paginate={paginate} onclick={(row: any) => {
+                                dispatch(saveDataHolder(row.id));
+                                navigate(`/create-deal/${row?.State?.current_step + 1}`);
+                            }} noDataNode={<Button onClick={() => setModalOpen(true)} className="absolute left-1/2 top-1/2 translate-x-[-50%] translate-y-[-50%]">{language?.v3?.button?.new_deal}</Button>} />
                         </section>
                     </React.Fragment>
                 </section>

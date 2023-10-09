@@ -41,7 +41,7 @@ const Table = ({ columns, data, noDataNode, onclick, pagination, paginate }: any
                                         {columns.map((column: any, index: number) => (
                                             index === 0 ? (
                                                 <div className="inline-flex flex-col items-center pl-2">
-                                                    <td className={`px-3 pt-2 text-sm font-medium text-gray-800 whitespace-nowrap ${index === columns.length - 1 && `text-right`}
+                                                    <td className={`px-3 h-10 text-sm font-medium text-gray-800 whitespace-nowrap max-w-[150px] truncate inline-flex items-center ${index === columns.length - 1 && `text-right`}
                                                 }`}>
                                                         {row[column]}
 
@@ -49,7 +49,7 @@ const Table = ({ columns, data, noDataNode, onclick, pagination, paginate }: any
                                                     {index === 0 && <small className="text-neutral-500 font-normal">{row["Valuation"]}</small>}
                                                 </div>
                                             ) : (
-                                                <td className={`px-3 py-4 text-sm font-medium text-gray-800 whitespace-nowrap ${index === columns.length - 1 && `text-right`} }`}>
+                                                <td className={`px-3 h-10 text-sm font-medium text-gray-800 whitespace-nowrap max-w-[150px] truncate ${index === columns.length - 1 && `text-right`} }`}>
                                                     {column === "Status" ? <div className="capitalize bg-green-100 rounded-xl text-center py-[2px] w-[80px] text-green-800">{row[column]}</div> : row[column]}
                                                 </td>
                                             )

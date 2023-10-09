@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
 import { RootState } from "../../redux-toolkit/store/store";
-import { getDealQuestion, postDealStep } from "../../apis/deal.api";
+import { getDealQuestion, postDealStep, submitDeal } from "../../apis/deal.api";
 import { DealType } from "../../enums/types.enum";
 import { onResetFields, removeMoreFields, saveDealSelection, saveMoreFields, saveQuestionnaire } from "../../redux-toolkit/slicer/philosophy.slicer";
 import Header from "../../shared/components/Header";
@@ -180,7 +180,13 @@ const CreateDeal = () => {
         }
       }
       if (dataHolder) payload.deal.id = dataHolder;
-      let { status, data } = await postDealStep(payload, authToken);
+      let submission;
+      if (step >= totalSteps?.all.length)
+        submission = await submitDeal({ type: metadata.role === KanzRoles.STARTUP ? DealType.STARTUP : DealType.REALTOR, id: payload.deal.id }, authToken);
+      else
+        submission = await postDealStep(payload, authToken);
+      let { status, data } = submission;
+
       if (status === 200) {
         dispatch(saveDataHolder(data?.status?.data?.id));
         if (step < totalSteps?.all.length) navigate(`/create-deal/${step + 1}`);
@@ -668,7 +674,7 @@ const CreateDeal = () => {
                                           if (prev.length === 0) return [{ id: 1, fields: [{ ques: section?.fields[0].id, value: section?.fields[0].value }, { ques: section?.fields[1].id, value: section?.fields[1].value }] }]
                                           else return [...prev, { id: prev?.at(-1).id + 1, fields: [{ ques: section?.fields[0].id, value: section?.fields[0].value }, { ques: section?.fields[1].id, value: section?.fields[1].value }] }]
                                         });
-                                        dispatch(onResetFields({ secIndex: section?.index, lang: event, step }))
+                                        dispatch(onResetFields({ secIndex: section?.index, lang: event, step: dealData[step - 1] }))
                                       }}>{language?.v3?.button?.add}</Button>
                                   </div>
                                 )}
@@ -712,7 +718,10 @@ const CreateDeal = () => {
         <Modal show={modalOpen}>
           <div className="relative p-12 rounded-md shadow-cs-1 flex flex-col items-center w-full bg-white outline-none focus:outline-none screen800:px-3">
             <div className="rounded-md h-8 w-8 inline-grid place-items-center cursor-pointer absolute right-2 top-2">
-              <CrossIcon stroke="#171717" className="w-6 h-6" onClick={() => setModalOpen(false)} />
+              <CrossIcon stroke="#171717" className="w-6 h-6" onClick={() => {
+                setModalOpen(false);
+                navigate(`/${metadata?.role?.toLowerCase()}`);
+              }} />
             </div>
 
             <aside>
