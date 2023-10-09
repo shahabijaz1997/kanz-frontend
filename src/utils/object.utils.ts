@@ -17,8 +17,9 @@ export const filterObjectsByTrueValue = (objectsArray: any, key: any) => {
 }
 
 export const numberFormatter = (number: number) => {
-    if (number >= 1000000000) return (number / 1000000000).toFixed(2) + "b";
-    else if (number >= 1000000) return (number / 1000000).toFixed(2) + "m";
-    else if (number >= 1000) return (number / 1000).toFixed(2) + "k";
+    if(isNaN(number)) return 0;
+    if (number >= 1000000000) return (number / 1000000000).toFixed(1) + "B";
+    else if (number >= 1000000) return (number / 1000000).toFixed(1) + "M";
+    else if (number >= 1000) return (number / 1000).toFixed(1) + "K";
     else return number.toString();
 }

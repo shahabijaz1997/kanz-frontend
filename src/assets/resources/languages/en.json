@@ -658,7 +658,8 @@
             "exp_ret": "Expected Dividend Yield",
             "exp_ann": "Expected Annual Appreciation",
             "submitted_deal": "Your deal has been submitted",
-            "deal_status": "Deal Status"
+            "deal_status": "Deal Status",
+            "valuation": "Valuation"
         },
         "common": {
             "search": "Search",

@@ -197,7 +197,8 @@ const CreateDeal = ({ }: any) => {
   };
 
   const onSetPrev = () => {
-    if (step > 1) navigate(`/create-deal/${step - 1}`)
+    if (step > 1) navigate(`/create-deal/${step - 1}`);
+    else navigate(`/${metadata?.role?.toLowerCase()}`)
   };
 
   const tieUpRestrictions = (as: any) => {

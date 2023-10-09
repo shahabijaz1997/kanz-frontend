@@ -1,3 +1,4 @@
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { KanzRoles } from "../../enums/roles.enum";
@@ -5,7 +6,7 @@ import Header from "../../shared/components/Header";
 import Sidebar from "../../shared/components/Sidebar";
 import { RootState } from "../../redux-toolkit/store/store";
 import SearchIcon from "../../ts-icons/searchIcon.svg";
-import React, { useEffect, useState } from "react";
+import Spinner from "../../shared/components/Spinner";
 import Button from "../../shared/components/Button";
 import Table from "../../shared/components/Table";
 import { StartupRoutes } from "../../enums/routes.enum";
@@ -14,8 +15,9 @@ import CrossIcon from "../../ts-icons/crossIcon.svg";
 import DealTable from "../../shared/components/DealTable";
 import { saveDataHolder } from "../../redux-toolkit/slicer/dataHolder.slicer";
 import { getDeals } from "../../apis/deal.api";
+import { numberFormatter } from "../../utils/object.utils";
 
-const columns = ['Name', 'Type', 'Status', 'Stage', 'Raised', 'Target'];
+const columns = ['Title', 'Type', 'Status', 'Stage', 'Round', 'Target'];
 
 const Startup = ({ }: any) => {
     const navigate = useNavigate();
@@ -41,13 +43,13 @@ const Startup = ({ }: any) => {
                 let deals = data?.status?.data?.map((deal: any) => {
                     return {
                         id: deal?.id,
-                        Name: deal?.title || "N/A",
-                        Target: deal?.target,
+                        Title: deal?.title || "N/A",
+                        Target: `$${numberFormatter(Number(deal?.target))}`,
                         Stage: deal?.title || "N/A",
-                        Raised: deal?.round,
+                        Round: deal?.round,
                         Status: deal?.status,
                         Type: deal?.instrument_type,
-                        Valuation: deal?.valuation
+                        Valuation: `$${numberFormatter(Number(deal?.valuation))} ${language?.v3?.deal?.valuation}`
                     }
                 });
                 setDeals(deals);
@@ -66,6 +68,9 @@ const Startup = ({ }: any) => {
             </section>
             <aside className="w-full h-full flex items-start justify-start">
                 <Sidebar type={KanzRoles.STARTUP} />
+                <div className="absolute left-0 top-0 w-full h-full grid place-items-center" style={{ backgroundColor: "rgba(0, 0, 0, 0.078)" }}>
+                    <Spinner />
+                </div>
                 <section className="bg-cbc-auth h-full p-[5rem]" style={{ width: "calc(100% - 250px)" }}>
                     <section className="inline-flex justify-between items-center w-full">
                         <h1 className="text-black font-medium text-2xl mb-2">{language?.v3?.startup?.overview?.heading_2}</h1>
@@ -96,7 +101,7 @@ const Startup = ({ }: any) => {
                     <section className="mt-10">
                         <Table columns={columns} data={deals} onclick={(row: any) => {
                             dispatch(saveDataHolder(row.id));
-                            navigate(`/create-deal/${row.id}`)
+                            navigate(`/create-deal/1`);
                         }} noDataNode={<Button onClick={() => setModalOpen(true)} className="absolute left-1/2 top-1/2 translate-x-[-50%] translate-y-[-50%]">{language?.v3?.button?.new_deal}</Button>} />
                     </section>
                 </section>
