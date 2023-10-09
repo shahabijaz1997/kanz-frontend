@@ -192,7 +192,8 @@ const RouterModule = () => {
           element={
             <Suspense fallback={<Loader />}>
               <CHECK_LOGGED_IN>
-                <GUARD_ROUTE role={KanzRoles.STARTUP}><StartupDashboard /></GUARD_ROUTE>
+                {/* <GUARD_ROUTE role={KanzRoles.STARTUP}><StartupDashboard /></GUARD_ROUTE> */}
+                <StartupDashboard />
               </CHECK_LOGGED_IN>
             </Suspense>
           } />
@@ -200,7 +201,8 @@ const RouterModule = () => {
           element={
             <Suspense fallback={<Loader />}>
               <CHECK_LOGGED_IN>
-                <GUARD_ROUTE role={KanzRoles.REALTOR}><RealtorDashboard /></GUARD_ROUTE>
+                {/* <GUARD_ROUTE role={KanzRoles.REALTOR}><RealtorDashboard /></GUARD_ROUTE> */}
+                <RealtorDashboard />
               </CHECK_LOGGED_IN>
             </Suspense>
           } />
@@ -208,7 +210,7 @@ const RouterModule = () => {
           element={
             <Suspense fallback={<Loader />}>
               <CHECK_LOGGED_IN>
-                 <CreateDeal />
+                <CreateDeal />
               </CHECK_LOGGED_IN>
             </Suspense>
           } />
@@ -221,7 +223,7 @@ const RouterModule = () => {
               </CHECK_LOGGED_IN>
             </Suspense>
           } />
-        
+
         <Route path={`${StartupRoutes.INVESTOR_UPDATES}`}
           element={
             <Suspense fallback={<Loader />}>
@@ -230,7 +232,7 @@ const RouterModule = () => {
               </CHECK_LOGGED_IN>
             </Suspense>
           } />
-        
+
         <Route path={`${StartupRoutes.DATA_ROOMS}`}
           element={
             <Suspense fallback={<Loader />}>
@@ -239,7 +241,7 @@ const RouterModule = () => {
               </CHECK_LOGGED_IN>
             </Suspense>
           } />
-        
+
         <Route path={`${StartupRoutes.CONTACTS}`}
           element={
             <Suspense fallback={<Loader />}>
