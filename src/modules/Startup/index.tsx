@@ -176,7 +176,7 @@ const Startup = ({ }: any) => {
                             <input type="checkbox" checked={dummyDisclaimers.d2} />
                         </div>
                         <div className="w-full inline-flex items-center justify-center gap-3 mt-10">
-                            <Button className="bg-transparent border-cyan-800 border-[1px] !text-cyan-800 w-[100px]" onClick={() => setModalOpen(false)}>{language?.v3?.button?.cancel}</Button>
+                            <Button className="w-[100px] bg-transparent border-cyan-800 border-[1px]" type={"outlined"} onClick={() => setModalOpen(false)}>{language?.v3?.button?.cancel}</Button>
                             <Button className="w-[100px]" disabled={!dummyDisclaimers.d1 || !dummyDisclaimers.d2} onClick={() => navigate(`${StartupRoutes.CREATE_DEAL}/1`)}>{language?.buttons?.continue}</Button>
                         </div>
                     </aside>
