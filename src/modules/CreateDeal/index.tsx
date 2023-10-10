@@ -399,28 +399,32 @@ const CreateDeal = () => {
     );
   };
 
-  const dropdowns = (ques: any, secIndex: number) => {
-    let options = ques?.options?.map((opt: any) => {
-      return { label: opt?.statement, value: opt?.statement }
-    });
-    let currentValue = ques?.options?.find((op: any) => op.selected)?.statement || options[0]?.statement || "";
-    return (
-      <section className="flex items-start justify-center flex-col mt-2 w-full">
-        <h3 className="text-neutral-700 font-medium text-base w-full">
-          {ques?.statement}
-        </h3>
-        <section className="mb-8 w-full relative mt-3">
-          <div className="relative w-full" style={{ zIndex: 101 }}>
-            <Selector disabled={false} defaultValue={{ label: currentValue, value: currentValue }} options={options}
-              onChange={(v: any) => {
-                let opt = ques?.options?.find((op: any) => op.statement === v.value);
-                dispatch(saveDealSelection({ option: opt, question: ques, fields: dealData, lang: event, secIndex, step: dealData[step - 1] }))
-              }}
-            />
-          </div>
+  const dropdowns = (ques: any, secIndex: number, section: any) => {
+    let dependantQuesion = section?.fields?.find((field: any) => field.id === ques?.dependent_id);
+
+    if (!dependantQuesion || (dependantQuesion && dependantQuesion?.value)) {
+      let options = ques?.options?.map((opt: any) => {
+        return { label: opt?.statement, value: opt?.statement }
+      });
+      let currentValue = ques?.options?.find((op: any) => op.selected)?.statement || options[0]?.statement || "";
+      return (
+        <section className="flex items-start justify-center flex-col mt-2 w-full">
+          <h3 className="text-neutral-700 font-medium text-base w-full capitalize">
+            {ques?.statement}
+          </h3>
+          <section className="mb-8 w-full relative mt-3">
+            <div className="relative w-full" style={{ zIndex: 101 }}>
+              <Selector disabled={false} defaultValue={{ label: currentValue, value: currentValue }} options={options}
+                onChange={(v: any) => {
+                  let opt = ques?.options?.find((op: any) => op.statement === v.value);
+                  dispatch(saveDealSelection({ option: opt, question: ques, fields: dealData, lang: event, secIndex, step: dealData[step - 1] }))
+                }}
+              />
+            </div>
+          </section>
         </section>
-      </section>
-    );
+      );
+    } else return <React.Fragment></React.Fragment>
   }
 
   const termUI = (ques: any, secIndex: number) => {
@@ -445,8 +449,12 @@ const CreateDeal = () => {
           <small className="text-neutral-700 text-lg font-medium mb-3">{ques?.statement}</small>
           <label className="relative inline-flex items-center cursor-pointer" onChange={(e) => {
             dispatch(saveDealSelection({ option: !ques?.value, question: ques, fields: dealData, lang: event, secIndex, step: dealData[step - 1] }))
-            let dependantQuesion = section?.fields?.find((field: any) => field.dependent_id === ques?.id);
-            if (dependantQuesion && !ques?.value) dispatch(saveDealSelection({ option: "", question: dependantQuesion, fields: dealData, lang: event, secIndex, step: dealData[step - 1] }))
+            let dependantQuesions: any[] = section?.fields?.filter((field: any) => field.dependent_id === ques?.id);
+            if (dependantQuesions.length && !ques?.value) {
+              dependantQuesions.forEach(dep => {
+                dispatch(saveDealSelection({ option: "", question: dep, fields: dealData, lang: event, secIndex, step: dealData[step - 1] }))
+              })
+            }
           }}>
             <input type="checkbox" value="" className="sr-only peer" checked={ques?.value} />
             <div className="w-11 h-6 bg-gray-200 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-cyan-800"></div>
@@ -536,7 +544,7 @@ const CreateDeal = () => {
       if (ques?.field_type === Constants.MULTIPLE_CHOICE) return multipleChoice(ques, secIndex, section);
       else if (ques?.field_type === Constants.NUMBER_INPUT) return numberInput(ques, secIndex, section);
       else if (ques?.field_type === Constants.FILE) return attachments(ques, secIndex, section)
-      else if (ques?.field_type === Constants.DROPDOWN) return dropdowns(ques, secIndex)
+      else if (ques?.field_type === Constants.DROPDOWN) return dropdowns(ques, secIndex, section)
       else if (ques?.field_type === Constants.SWITCH) return switchInput(ques, secIndex, section)
       else if (ques?.field_type === Constants.TEXT_BOX) return textAreaInput(ques, secIndex, section)
       else if (ques?.field_type === Constants.TEXT_FIELD) return textFieldInput(ques, secIndex, section)
