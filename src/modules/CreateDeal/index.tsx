@@ -27,6 +27,7 @@ import Modal from "../../shared/components/Modal";
 import { removeAttachment } from "../../apis/attachment.api";
 import EditIcon from "../../ts-icons/editIcon.svg";
 import ReviewDeal from "./ReviewDeal";
+import Drawer from "../../shared/components/Drawer";
 const CURRENCIES = ["USD", "AED"];
 
 const CreateDeal = () => {
@@ -256,7 +257,9 @@ const CreateDeal = () => {
   /* UI Components */
   const multipleChoice = (ques: any, secIndex: number, section: any) => {
     let flag = false;
-    let dependant = dependencies?.find((dep: any) => dep?.dependent_id === ques?.id && dep?.operation === "hide" && dep?.dependent_type !== "Stepper");
+    let dependant = dependencies?.find((dep: any) => dep?.dependent_id === ques?.id && dep?.operation === "hide" && dep.dependent_type !== "Stepper");
+    console.log("Dependant: ", dependant);
+
     if (dependant) {
       let field = section?.fields?.find((q: any) => q.id === dependant.dependable_field);
       let option = field?.options?.find((op: any) => op.selected);
@@ -722,6 +725,16 @@ const CreateDeal = () => {
             </aside>
           </div>
         </Modal>
+
+        <Drawer isOpen={open} setIsOpen={(val: boolean) => setOpen(val)}>
+          <header className="font-bold text-xl">
+            <h2>{language?.v2?.risk?.sub_head_1}</h2>
+            <h4 className="text-sm my-3">{language?.v2?.risk?.sub_head_2}</h4>
+          </header>
+          <p className="text-neutral-700 font-normal text-sm text-justify">
+            Lorem, ipsum dolor sit amet consectetur adipisicing elit. Molestias tempore libero odio eius, eum blanditiis quod nulla voluptate inventore reiciendis dolores aperiam? Esse sed blanditiis qui a error officia necessitatibus dolor eius quam magni, atque recusandae, consequatur beatae, maiores odit. Laborum dicta animi maxime provident quidem assumenda praesentium nihil temporibus?
+          </p>
+        </Drawer>
       </aside>
     </main>
   )
