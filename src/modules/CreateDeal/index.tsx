@@ -55,14 +55,10 @@ const CreateDeal = () => {
   const [loading, setLoading] = useState(false);
   const [modalOpen, setModalOpen]: any = useState(false);
 
-
   useEffect(() => {
     setStep(Number(params?.id) || 1);
-  }, [params]);
-
-  useEffect(() => {
     getDealStepDetails();
-  }, [step]);
+  }, [params, step]);
 
   /* UI Actions */
   const getDealStepDetails = async () => {
@@ -125,7 +121,6 @@ const CreateDeal = () => {
         setQuestions(data?.status?.data?.steps);
         dispatch(saveQuestionnaire(data?.status?.data?.steps));
         setShowCustomBox(true);
-
       }
 
     } catch (error: any) {
@@ -258,14 +253,12 @@ const CreateDeal = () => {
   const multipleChoice = (ques: any, secIndex: number, section: any) => {
     let flag = false;
     let dependant = dependencies?.find((dep: any) => dep?.dependent_id === ques?.id && dep?.operation === "hide" && dep.dependent_type !== "Stepper");
-    console.log("Dependant: ", dependant);
 
     if (dependant) {
       let field = section?.fields?.find((q: any) => q.id === dependant.dependable_field);
       let option = field?.options?.find((op: any) => op.selected);
       if (!option) flag = true;
     }
-
     if (flag) return <React.Fragment></React.Fragment>
     return (
       <section className="flex items-start justify-center flex-col mt-3 w-full">
@@ -421,7 +414,6 @@ const CreateDeal = () => {
   }
 
   const termUI = (ques: any, secIndex: number) => {
-
     return (
       <section className="flex items-start justify-center flex-col mt-2 w-full">
         <section className="mb-8 w-full relative mt-3">

@@ -7,9 +7,9 @@ const Table = ({ columns, data, noDataNode, onclick, pagination, paginate }: any
         for (let i = 1; i <= pagination?.total_pages; i++) pages.push(i);
         return (
             React.Children.toArray(
-                pages?.map(page => {
+                pages?.map((page, index) => {
                     return (
-                        <li className="not-last:mr-1">
+                        <li className={`${index !== (pages.length - 1) ? "mr-1" : "mr-0"}`}>
                             <a className={`${page === pagination?.current_page ? "bg-cyan-900 text-white" : "bg-transparent text-cyan-800"} transition-all block rounded border-[1px] border-cyan-800 px-3 py-1.5 text-sm font-medium`} href="#!">{page}</a>
                         </li>
                     )
@@ -32,7 +32,7 @@ const Table = ({ columns, data, noDataNode, onclick, pagination, paginate }: any
                         )}
                     </tr>
                 </thead>
-                <tbody className={`relative divide-y divide-gray-200 ${pagination?.data?.length === 0 && "h-[13rem]"}`}>
+                <tbody className={`relative divide-y divide-gray-200 ${(!pagination?.data || !pagination?.data?.length) && "h-[13rem]"}`}>
                     {
                         pagination?.data?.length > 0 ? (
                             React.Children.toArray(
