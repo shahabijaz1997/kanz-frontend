@@ -18,9 +18,11 @@ const ReviewDeal = ({ navigate, dealId, authToken, metadata, language }: any) =>
             setLoading(true);
             const queryParams: any = { type: metadata.role === KanzRoles.STARTUP ? DealType.STARTUP : DealType.REALTOR };
             let { status, data } = await onReviewDeal(dealId, queryParams, authToken);
-            if (status === 200)
-                setData(data?.status?.data?.steps);
-
+            if (status === 200){ 
+                let stepsArray = data?.status?.data?.steps;
+                stepsArray.pop()
+                setData(stepsArray);
+            }
         } catch (error) {
             console.log(error);
         }

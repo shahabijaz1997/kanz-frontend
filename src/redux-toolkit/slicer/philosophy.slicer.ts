@@ -80,7 +80,7 @@ export const QuestionnaireSlice = createSlice({
           currentQuestion.value = option
         }
         else if (currentQuestion.field_type === Constants.SWITCH) {
-          currentQuestion.is_required = !currentQuestion.is_required;
+          currentQuestion.value = !currentQuestion.value;
         }
         else if (currentQuestion.field_type === Constants.FILE) {
           currentQuestion.value = option;
@@ -128,9 +128,21 @@ export const QuestionnaireSlice = createSlice({
         sec.value = "";
       })
       state.value = existing;
+    },
+    onResetOptions: (state, action: PayloadAction<any>) => {
+      const { secIndex, lang, step, question } = action.payload;
+      const existing = JSON.parse(JSON.stringify(state.value));
+
+      const currentStep = existing.find((item: any) => item.id === step.id);
+      const currentSection = currentStep[lang]?.sections[secIndex];
+      let currentQuestion = currentSection?.fields?.find((ques: any) => ques?.id === question?.id);
+      currentQuestion?.options?.forEach((opt:any) => {
+        opt.selected = false;
+      });
+      state.value = existing;
     }
   },
 });
 
-export const { saveQuestionnaire, saveAnswer, saveDealSelection, saveMoreFields, onResetFields, removeMoreFields } = QuestionnaireSlice.actions;
+export const { saveQuestionnaire, saveAnswer, saveDealSelection, saveMoreFields, onResetFields, removeMoreFields, onResetOptions } = QuestionnaireSlice.actions;
 export default QuestionnaireSlice.reducer;

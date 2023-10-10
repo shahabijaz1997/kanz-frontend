@@ -4,7 +4,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { RootState } from "../../redux-toolkit/store/store";
 import { getDealQuestion, postDealStep, submitDeal } from "../../apis/deal.api";
 import { DealType } from "../../enums/types.enum";
-import { onResetFields, removeMoreFields, saveDealSelection, saveMoreFields, saveQuestionnaire } from "../../redux-toolkit/slicer/philosophy.slicer";
+import { onResetFields, onResetOptions, removeMoreFields, saveDealSelection, saveMoreFields, saveQuestionnaire } from "../../redux-toolkit/slicer/philosophy.slicer";
 import Header from "../../shared/components/Header";
 import CrossIcon from "../../ts-icons/crossIcon.svg";
 import { KanzRoles } from "../../enums/roles.enum";
@@ -135,6 +135,7 @@ const CreateDeal = () => {
 
   const onSetNext = async () => {
     try {
+      setLoading(true);
       let all_fields: any[] = [];
       let fields: any[] = [];
       dealData[step - 1][event]?.sections?.forEach((section: any) => {
@@ -158,7 +159,7 @@ const CreateDeal = () => {
             selected = field.value
           }
           if (field.field_type === Constants.SWITCH) {
-            selected = field?.is_required
+            selected = field?.value
           }
           if (field.field_type === Constants.FILE) {
             selected = field?.value?.id
@@ -199,6 +200,8 @@ const CreateDeal = () => {
     } catch (error: any) {
       const message = error?.response?.data?.status?.message || language.promptMessages.errorGeneral;
       toast.error(message, toastUtil);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -278,7 +281,14 @@ const CreateDeal = () => {
                 return (
                   <li className={`h-[50px] w-[420px] p-4 grey-neutral-200 text-sm font-medium cursor-pointer border border-grey inline-flex items-center justify-start first:rounded-t-md last:rounded-b-md screen500:w-full ${as.selected ? "check-background" : "bg-white"}`}
                     onClick={() => {
-                      dispatch(saveDealSelection({ option: as, question: ques, fields: dealData, lang: event, secIndex, step: dealData[step - 1] }))
+                      dispatch(saveDealSelection({ option: as, question: ques, fields: dealData, lang: event, secIndex, step: dealData[step - 1] }));
+                      if (dependencies.find((dep: any) => dep?.dependable_field === ques.id)) {
+                        let section = dealData[step - 1][event]?.sections.find((sec: any) => sec.index === secIndex);
+                        let fields = section?.fields?.filter((f: any) => f.id !== ques.id);
+                        fields.forEach((f: any) => {
+                          dispatch(onResetOptions({ question: f, fields: dealData, lang: event, secIndex, step: dealData[step - 1] }));
+                        })
+                      }
                       tieUpRestrictions(as);
                     }} id={`rad-chk-${as?.id}`}>
                     <input onChange={(e) => { }} className="accent-cyan-800 relative float-left mx-2 h-3 w-3 rounded-full border-2 border-solid border-cyan-300 before:pointer-events-none before:absolute before:h-4 before:w-4 before:scale-0 before:rounded-full before:bg-transparent before:opacity-0 before:content-[''] after:absolute after:z-[1] after:block after:h-4 after:w-4 after:rounded-full after:content-[''] checked:border-primary checked:before:opacity-[0.16] checked:after:absolute checked:after:left-1/2 checked:after:top-1/2 checked:after:h-[0.625rem] checked:after:w-[0.625rem] checked:after:rounded-full checked:after:border-primary checked:after:bg-primary checked:after:content-[''] checked:after:[transform:translate(-50%,-50%)] hover:cursor-pointer hover:before:opacity-[0.04]"
@@ -297,7 +307,7 @@ const CreateDeal = () => {
   const numberInput = (ques: any, secIndex: number, section: any) => {
     let dependantQuesion = section?.fields?.find((field: any) => field.id === ques?.dependent_id);
 
-    if (!dependantQuesion || (dependantQuesion && dependantQuesion?.is_required)) return (
+    if (!dependantQuesion || (dependantQuesion && dependantQuesion?.value)) return (
       <section className="flex items-start justify-center flex-col mt-3 w-full">
         {!dependantQuesion && <h3 className="text-neutral-700 font-medium text-base w-[420px]">{ques?.statement}</h3>}
 
@@ -389,28 +399,32 @@ const CreateDeal = () => {
     );
   };
 
-  const dropdowns = (ques: any, secIndex: number) => {
-    let options = ques?.options?.map((opt: any) => {
-      return { label: opt?.statement, value: opt?.statement }
-    });
-    let currentValue = ques?.options?.find((op: any) => op.selected)?.statement || options[0]?.statement || "";
-    return (
-      <section className="flex items-start justify-center flex-col mt-2 w-full">
-        <h3 className="text-neutral-700 font-medium text-base w-full">
-          {ques?.statement}
-        </h3>
-        <section className="mb-8 w-full relative mt-3">
-          <div className="relative w-full" style={{ zIndex: 101 }}>
-            <Selector disabled={false} defaultValue={{ label: currentValue, value: currentValue }} options={options}
-              onChange={(v: any) => {
-                let opt = ques?.options?.find((op: any) => op.statement === v.value);
-                dispatch(saveDealSelection({ option: opt, question: ques, fields: dealData, lang: event, secIndex, step: dealData[step - 1] }))
-              }}
-            />
-          </div>
+  const dropdowns = (ques: any, secIndex: number, section: any) => {
+    let dependantQuesion = section?.fields?.find((field: any) => field.id === ques?.dependent_id);
+
+    if (!dependantQuesion || (dependantQuesion && dependantQuesion?.value)) {
+      let options = ques?.options?.map((opt: any) => {
+        return { label: opt?.statement, value: opt?.statement }
+      });
+      let currentValue = ques?.options?.find((op: any) => op.selected)?.statement || options[0]?.statement || "";
+      return (
+        <section className="flex items-start justify-center flex-col mt-2 w-full">
+          <h3 className="text-neutral-700 font-medium text-base w-full capitalize">
+            {ques?.statement}
+          </h3>
+          <section className="mb-8 w-full relative mt-3">
+            <div className="relative w-full" style={{ zIndex: 101 }}>
+              <Selector disabled={false} defaultValue={{ label: currentValue, value: currentValue }} options={options}
+                onChange={(v: any) => {
+                  let opt = ques?.options?.find((op: any) => op.statement === v.value);
+                  dispatch(saveDealSelection({ option: opt, question: ques, fields: dealData, lang: event, secIndex, step: dealData[step - 1] }))
+                }}
+              />
+            </div>
+          </section>
         </section>
-      </section>
-    );
+      );
+    } else return <React.Fragment></React.Fragment>
   }
 
   const termUI = (ques: any, secIndex: number) => {
@@ -428,13 +442,21 @@ const CreateDeal = () => {
     );
   }
 
-  const switchInput = (ques: any, secIndex: number) => {
+  const switchInput = (ques: any, secIndex: number, section: any) => {
     return (
       <section className="flex items-start justify-center flex-col mt-3 w-full">
         <div className="mb-6 inline-flex w-full items-center justify-between">
           <small className="text-neutral-700 text-lg font-medium mb-3">{ques?.statement}</small>
-          <label className="relative inline-flex items-center cursor-pointer" onChange={(e) => dispatch(saveDealSelection({ option: !ques?.is_required, question: ques, fields: dealData, lang: event, secIndex, step: dealData[step - 1] }))}>
-            <input type="checkbox" value="" className="sr-only peer" checked={ques?.is_required} />
+          <label className="relative inline-flex items-center cursor-pointer" onChange={(e) => {
+            dispatch(saveDealSelection({ option: !ques?.value, question: ques, fields: dealData, lang: event, secIndex, step: dealData[step - 1] }))
+            let dependantQuesions: any[] = section?.fields?.filter((field: any) => field.dependent_id === ques?.id);
+            if (dependantQuesions.length && !ques?.value) {
+              dependantQuesions.forEach(dep => {
+                dispatch(saveDealSelection({ option: "", question: dep, fields: dealData, lang: event, secIndex, step: dealData[step - 1] }))
+              })
+            }
+          }}>
+            <input type="checkbox" value="" className="sr-only peer" checked={ques?.value} />
             <div className="w-11 h-6 bg-gray-200 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-cyan-800"></div>
           </label>
         </div>
@@ -445,7 +467,7 @@ const CreateDeal = () => {
   const textAreaInput = (ques: any, secIndex: number, section: any) => {
     let dependantQuesion = section?.fields?.find((field: any) => field.id === ques?.dependent_id);
 
-    if (!dependantQuesion || (dependantQuesion && dependantQuesion?.is_required)) {
+    if (!dependantQuesion || (dependantQuesion && dependantQuesion?.value)) {
       return (
         <section className="flex items-start justify-center flex-col mt-3 w-full">
           <div className="mb-6 inline-flex flex-col w-full items-start justify-between">
@@ -454,13 +476,15 @@ const CreateDeal = () => {
           </div>
         </section>
       );
-    } else return <React.Fragment></React.Fragment>
+    } else {
+      return <React.Fragment></React.Fragment>
+    }
   };
 
   const textFieldInput = (ques: any, secIndex: number, section: any) => {
     let dependantQuesion = section?.fields?.find((field: any) => field.id === ques?.dependent_id);
 
-    if (!dependantQuesion || (dependantQuesion && dependantQuesion?.is_required)) {
+    if (!dependantQuesion || (dependantQuesion && dependantQuesion?.value)) {
       return (
         <section className="flex items-start justify-center flex-col mb-8 mt-3 w-full">
           {!dependantQuesion && <label htmlFor={ques?.id} className="text-neutral-700 text-lg font-medium mb-3">{ques?.statement}</label>}
@@ -520,8 +544,8 @@ const CreateDeal = () => {
       if (ques?.field_type === Constants.MULTIPLE_CHOICE) return multipleChoice(ques, secIndex, section);
       else if (ques?.field_type === Constants.NUMBER_INPUT) return numberInput(ques, secIndex, section);
       else if (ques?.field_type === Constants.FILE) return attachments(ques, secIndex, section)
-      else if (ques?.field_type === Constants.DROPDOWN) return dropdowns(ques, secIndex)
-      else if (ques?.field_type === Constants.SWITCH) return switchInput(ques, secIndex)
+      else if (ques?.field_type === Constants.DROPDOWN) return dropdowns(ques, secIndex, section)
+      else if (ques?.field_type === Constants.SWITCH) return switchInput(ques, secIndex, section)
       else if (ques?.field_type === Constants.TEXT_BOX) return textAreaInput(ques, secIndex, section)
       else if (ques?.field_type === Constants.TEXT_FIELD) return textFieldInput(ques, secIndex, section)
       else if (ques?.field_type === Constants.URL) return URLInput(ques, secIndex, section)
@@ -537,9 +561,12 @@ const CreateDeal = () => {
     dealData[step - 1][event]?.sections.forEach((sec: any, index: number) => {
       flags.push({ section: sec.id, validations: [] });
       let fields = sec.fields;
-      fields.forEach((ques: any, quesIdx: number) => {
+      fields.forEach((ques: any) => {
         if (ques?.field_type === Constants.SWITCH) {
-          flags[index].validations.push(true);
+          let flag = false;
+          if (ques?.is_required && ques?.value) flag = true;
+          else if (!ques?.is_required) flag = true;
+          flags[index].validations.push(flag);
         }
         else if (ques?.field_type === Constants.MULTIPLE_CHOICE || ques?.field_type === Constants.DROPDOWN) {
           let flag = ques.options?.some((opt: any) => opt.selected);
@@ -552,14 +579,14 @@ const CreateDeal = () => {
         else if (ques?.field_type === Constants.NUMBER_INPUT || ques.field_type === Constants.TEXT_BOX || ques.field_type === Constants.TEXT_FIELD || ques.field_type === Constants.URL) {
           let dependantQuesion = sec?.fields?.find((field: any) => field.id === ques?.dependent_id);
           let flag = false;
-          if ((!dependantQuesion && ques.value) || (dependantQuesion && dependantQuesion?.is_required && ques.value) || (dependantQuesion && !dependantQuesion.is_required)) {
+          if ((!dependantQuesion && ques.value) || (dependantQuesion && dependantQuesion?.value && ques.value) || (dependantQuesion && !dependantQuesion.value)) {
             flag = true;
           }
           else flag = false;
           flags[index].validations.push(flag);
         }
         else if (ques.field_type === Constants.SWITCH) {
-          flags[index].validations.push(ques.is_required);
+          flags[index].validations.push(ques.value);
         }
         else if (ques.field_type === Constants.CHECK_BOX) {
           flags[index].validations.push(ques.value);

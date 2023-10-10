@@ -36,13 +36,7 @@ const StartupHome = ({ loading, language }: any) => {
           <h3 className="text-base font-normal text-neutral-700 screen500:text-[12px]">
             {language?.v2?.startup?.home_sub}
           </h3>
-          <Button
-            className="mt-6 h-[38px]"
-            disabled={loading}
-            htmlType="submit"
-            loading={loading}
-            onClick={onPress}
-          >
+          <Button className="mt-6 h-[38px]" disabled={loading} htmlType="submit" loading={loading} onClick={onPress}>
             {language?.buttons?.start}
           </Button>
         </React.Fragment>
@@ -63,13 +57,7 @@ const StartupHome = ({ loading, language }: any) => {
             {language?.onboarding?.appStatus}:{" "}
             <strong>{language.common.inprogress}</strong>
           </h3>
-          <Button
-            className="mt-6 h-[38px]"
-            disabled={loading}
-            htmlType="submit"
-            loading={loading}
-            onClick={onPress}
-          >
+          <Button className="mt-6 h-[38px]" disabled={loading} htmlType="submit" loading={loading} onClick={onPress}>
             {language?.buttons?.continue}
           </Button>
         </React.Fragment>
@@ -93,24 +81,20 @@ const StartupHome = ({ loading, language }: any) => {
       return (
         <React.Fragment>
           <h2 className="text-2xl font-bold text-neutral-900 mb-4 screen500:text-[20px]">
-            {language?.v2?.common?.has_been}
-            {language.v2.common[user.status]}
+            {language?.v2?.common?.has_been} {language.v2.common[user.status]}
           </h2>
           <h3 className="text-base font-normal text-neutral-700 screen500:text-[12px]">
-            {language?.onboarding?.appStatus}:{" "}
-            <strong>{language.v2.common[user.status]}</strong>
+            {language?.onboarding?.appStatus}:{" "} <strong>{language.v2.common[user.status]}</strong>
           </h3>
+
           {user.status === ApplicationStatus.REOPENED && (
-            <Button
-              className="mt-[30px] h-[38px] w-[143px]"
-              disabled={loading}
-              htmlType="submit"
-              loading={loading}
-              onClick={onPress}
-            >
+            <Button className="mt-[30px] h-[38px] w-[143px]" disabled={loading} htmlType="submit" loading={loading} onClick={onPress}>
               {language?.buttons?.continue}
             </Button>
           )}
+          {user.status === ApplicationStatus.APPROVED && <Button className="mt-[30px] h-[38px] w-[143px]" disabled={loading} htmlType="submit" loading={loading} onClick={() => navigate(RoutesEnums.STARTUP_DASHBOARD)} >
+            {language?.buttons?.gotoDashboard}
+          </Button>}
         </React.Fragment>
       );
     }
