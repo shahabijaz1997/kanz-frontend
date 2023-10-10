@@ -18,7 +18,7 @@ const ReviewDeal = ({ navigate, dealId, authToken, metadata, language }: any) =>
             setLoading(true);
             const queryParams: any = { type: metadata.role === KanzRoles.STARTUP ? DealType.STARTUP : DealType.REALTOR };
             let { status, data } = await onReviewDeal(dealId, queryParams, authToken);
-            if (status === 200){ 
+            if (status === 200) {
                 let stepsArray = data?.status?.data?.steps;
                 stepsArray.pop()
                 setData(stepsArray);
@@ -52,9 +52,9 @@ const ReviewDeal = ({ navigate, dealId, authToken, metadata, language }: any) =>
                 <section className="flex items-start justify-center flex-col mt-10 max-w-[420px] min-w-[450px] screen500:max-w-[350px]">
                     {
                         data && React.Children.toArray(
-                            data?.map((step: any) => {
+                            data?.map((step: any, index: number) => {
                                 return (
-                                    <div className="py-4 w-full cursor-pointer" onClick={() => navigate(`${StartupRoutes.CREATE_DEAL}/1`)}>
+                                    <div className="py-4 w-full cursor-pointer" onClick={() => navigate(`${StartupRoutes.CREATE_DEAL}/${index + 1}`)}>
                                         <h2 className="text-cc-black font-semibold text-2xl capitalize">{step?.title}</h2>
                                         {React.Children.toArray(
                                             step.fields[0]?.map((field: any) => {

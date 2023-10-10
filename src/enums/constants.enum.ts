@@ -9,3 +9,10 @@ export enum Constants {
     FILE = "file",
     URL = "url"
 }
+
+export enum InputType {
+    CURRENCY = "currency",
+    PERCENT = "percent",
+    SQFT = "sqft",
+    NUMBER = "numeric"
+}
