@@ -83,6 +83,10 @@ const RealtorHome = ({ loading, language }: any) => {
                     {user.status === ApplicationStatus.REOPENED && <Button className="mt-[30px] h-[38px] w-[143px]" disabled={loading} htmlType="submit" loading={loading} onClick={() => navigate(RoutesEnums.REALTOR_DETAILS)} >
                         {language?.buttons?.continue}
                     </Button>}
+                    
+                    {user.status === ApplicationStatus.APPROVED && <Button className="mt-[30px] h-[38px] w-[143px]" disabled={loading} htmlType="submit" loading={loading} onClick={() => navigate(RoutesEnums.REALTOR_DASHBOARD)} >
+                        {language?.buttons?.gotoDashboard}
+                    </Button>}
                 </React.Fragment>
             );
         }
