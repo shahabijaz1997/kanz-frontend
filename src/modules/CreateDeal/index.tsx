@@ -435,12 +435,16 @@ const CreateDeal = () => {
     );
   }
 
-  const switchInput = (ques: any, secIndex: number) => {
+  const switchInput = (ques: any, secIndex: number, section: any) => {
     return (
       <section className="flex items-start justify-center flex-col mt-3 w-full">
         <div className="mb-6 inline-flex w-full items-center justify-between">
           <small className="text-neutral-700 text-lg font-medium mb-3">{ques?.statement}</small>
-          <label className="relative inline-flex items-center cursor-pointer" onChange={(e) => dispatch(saveDealSelection({ option: !ques?.is_required, question: ques, fields: dealData, lang: event, secIndex, step: dealData[step - 1] }))}>
+          <label className="relative inline-flex items-center cursor-pointer" onChange={(e) => {
+            dispatch(saveDealSelection({ option: !ques?.is_required, question: ques, fields: dealData, lang: event, secIndex, step: dealData[step - 1] }))
+            let dependantQuesion = section?.fields?.find((field: any) => field.dependent_id === ques?.id);
+            if (dependantQuesion && !ques?.is_required) dispatch(saveDealSelection({ option: "", question: dependantQuesion, fields: dealData, lang: event, secIndex, step: dealData[step - 1] }))
+          }}>
             <input type="checkbox" value="" className="sr-only peer" checked={ques?.is_required} />
             <div className="w-11 h-6 bg-gray-200 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-cyan-800"></div>
           </label>
@@ -461,7 +465,9 @@ const CreateDeal = () => {
           </div>
         </section>
       );
-    } else return <React.Fragment></React.Fragment>
+    } else {
+      return <React.Fragment></React.Fragment>
+    }
   };
 
   const textFieldInput = (ques: any, secIndex: number, section: any) => {
@@ -528,7 +534,7 @@ const CreateDeal = () => {
       else if (ques?.field_type === Constants.NUMBER_INPUT) return numberInput(ques, secIndex, section);
       else if (ques?.field_type === Constants.FILE) return attachments(ques, secIndex, section)
       else if (ques?.field_type === Constants.DROPDOWN) return dropdowns(ques, secIndex)
-      else if (ques?.field_type === Constants.SWITCH) return switchInput(ques, secIndex)
+      else if (ques?.field_type === Constants.SWITCH) return switchInput(ques, secIndex, section)
       else if (ques?.field_type === Constants.TEXT_BOX) return textAreaInput(ques, secIndex, section)
       else if (ques?.field_type === Constants.TEXT_FIELD) return textFieldInput(ques, secIndex, section)
       else if (ques?.field_type === Constants.URL) return URLInput(ques, secIndex, section)
