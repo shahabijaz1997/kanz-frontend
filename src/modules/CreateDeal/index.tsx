@@ -4,7 +4,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { RootState } from "../../redux-toolkit/store/store";
 import { getDealQuestion, postDealStep, submitDeal } from "../../apis/deal.api";
 import { DealType } from "../../enums/types.enum";
-import { onResetFields, removeMoreFields, saveDealSelection, saveMoreFields, saveQuestionnaire } from "../../redux-toolkit/slicer/philosophy.slicer";
+import { onResetFields, onResetOptions, removeMoreFields, saveDealSelection, saveMoreFields, saveQuestionnaire } from "../../redux-toolkit/slicer/philosophy.slicer";
 import Header from "../../shared/components/Header";
 import CrossIcon from "../../ts-icons/crossIcon.svg";
 import { KanzRoles } from "../../enums/roles.enum";
@@ -278,7 +278,14 @@ const CreateDeal = () => {
                 return (
                   <li className={`h-[50px] w-[420px] p-4 grey-neutral-200 text-sm font-medium cursor-pointer border border-grey inline-flex items-center justify-start first:rounded-t-md last:rounded-b-md screen500:w-full ${as.selected ? "check-background" : "bg-white"}`}
                     onClick={() => {
-                      dispatch(saveDealSelection({ option: as, question: ques, fields: dealData, lang: event, secIndex, step: dealData[step - 1] }))
+                      dispatch(saveDealSelection({ option: as, question: ques, fields: dealData, lang: event, secIndex, step: dealData[step - 1] }));
+                      if (dependencies.find((dep: any) => dep?.dependable_field === ques.id)) {
+                        let section = dealData[step - 1][event]?.sections.find((sec: any) => sec.index === secIndex);
+                        let fields = section?.fields?.filter((f: any) => f.id !== ques.id);
+                        fields.forEach((f: any) => {
+                          dispatch(onResetOptions({ question: f, fields: dealData, lang: event, secIndex, step: dealData[step - 1] }));
+                        })
+                      }
                       tieUpRestrictions(as);
                     }} id={`rad-chk-${as?.id}`}>
                     <input onChange={(e) => { }} className="accent-cyan-800 relative float-left mx-2 h-3 w-3 rounded-full border-2 border-solid border-cyan-300 before:pointer-events-none before:absolute before:h-4 before:w-4 before:scale-0 before:rounded-full before:bg-transparent before:opacity-0 before:content-[''] after:absolute after:z-[1] after:block after:h-4 after:w-4 after:rounded-full after:content-[''] checked:border-primary checked:before:opacity-[0.16] checked:after:absolute checked:after:left-1/2 checked:after:top-1/2 checked:after:h-[0.625rem] checked:after:w-[0.625rem] checked:after:rounded-full checked:after:border-primary checked:after:bg-primary checked:after:content-[''] checked:after:[transform:translate(-50%,-50%)] hover:cursor-pointer hover:before:opacity-[0.04]"
