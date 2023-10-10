@@ -45,11 +45,10 @@ export const onReviewDeal = (dealId: number,params: any, token: string) => {
     });
 };
 
-export const submitDeal = (params: any, token: string) => {
-    return axios.get(`${ENV.API_URL}/${ENV.API_VERSION}/settings/stepper`, {
+export const submitDeal = (dealId: number, token: string) => {
+    return axios.post(`${ENV.API_URL}/${ENV.API_VERSION}/deals/${dealId}/submit`, {}, {
         headers: {
             Authorization: `Bearer ${token}`
-        },
-        params
+        }
     });
 };

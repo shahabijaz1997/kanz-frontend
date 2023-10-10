@@ -66,6 +66,13 @@ const GUARD_ROUTE = (props: PropsWithChildren | any) => {
   return <Navigate to={RoutesEnums.WELCOME} replace />;
 };
 
+const GUARD_SUBMITTED_ROUTE = (props: PropsWithChildren | any) => {
+  const { children } = props;
+  const user: any = useSelector((state: RootState) => state.user.value);
+  if ((user && (user.type === props.role || props.role === KanzRoles.ALL) && user.status === ApplicationStatus.VERIFIED)) return <React.Fragment>{children}</React.Fragment>;
+  return <Navigate to={RoutesEnums.WELCOME} replace />;
+};
+
 const RouterModule = () => {
   const dispatch = useDispatch();
   const authToken: any = useSelector((state: RootState) => state.auth.value);
@@ -192,7 +199,7 @@ const RouterModule = () => {
           element={
             <Suspense fallback={<Loader />}>
               <CHECK_LOGGED_IN>
-                {/* <GUARD_ROUTE role={KanzRoles.STARTUP}><StartupDashboard /></GUARD_ROUTE> */}
+                <GUARD_ROUTE role={KanzRoles.STARTUP}><StartupDashboard /></GUARD_ROUTE>
                 <StartupDashboard />
               </CHECK_LOGGED_IN>
             </Suspense>

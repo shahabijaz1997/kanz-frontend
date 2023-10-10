@@ -186,7 +186,7 @@ const CreateDeal = () => {
       if (dataHolder) payload.deal.id = dataHolder;
       let submission;
       if (step >= totalSteps?.all.length)
-        submission = await submitDeal({ type: metadata.role === KanzRoles.STARTUP ? DealType.STARTUP : DealType.REALTOR, id: payload.deal.id }, authToken);
+        submission = await submitDeal(dataHolder, authToken);
       else
         submission = await postDealStep(payload, authToken);
       let { status, data } = submission;
@@ -256,8 +256,7 @@ const CreateDeal = () => {
   /* UI Components */
   const multipleChoice = (ques: any, secIndex: number, section: any) => {
     let flag = false;
-
-    let dependant = dependencies?.find((dep: any) => dep?.dependent_id === ques?.id && dep?.operation === "hide");
+    let dependant = dependencies?.find((dep: any) => dep?.dependent_id === ques?.id && dep?.operation === "hide" && dep?.dependent_type !== "Stepper");
     if (dependant) {
       let field = section?.fields?.find((q: any) => q.id === dependant.dependable_field);
       let option = field?.options?.find((op: any) => op.selected);
