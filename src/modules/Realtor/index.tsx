@@ -30,6 +30,7 @@ const Realtor = ({ }: any) => {
     const [loading, setLoading] = useState(false);
     const [tabs] = useState([language?.v3?.startup?.overview?.all, language?.v3?.startup?.overview?.raising, language?.v3?.startup?.overview?.closed]);
     const [deals, setDeals] = useState([]);
+    const [dummyDisclaimers, setDummyDisclaimers] = useState({ "d1": false, "d2": false });
 
     useEffect(() => {
         dispatch(saveDataHolder(""))
@@ -140,27 +141,34 @@ const Realtor = ({ }: any) => {
                     <div className="rounded-md h-8 w-8 inline-grid place-items-center cursor-pointer absolute right-2 top-2">
                         <CrossIcon stroke="#171717" className="w-6 h-6" onClick={() => setModalOpen(false)} />
                     </div>
-
                     <aside>
                         <h2 className="font-bold text-xl text-center text-neutral-900">{language?.v3?.common?.disclaimer}</h2>
                         <p className="text-sm font-normal text-center text-neutral-500 mt-8 mb-12">{language?.v3?.common?.disclaimer_desc}</p>
-                        <div className="py-3 border-t-[1px] border-neutral0=-200 inline-flex justify-between w-full">
+                        <div className="py-3 border-t-[1px] border-neutral0=-200 inline-flex justify-between w-full" onClick={() => {
+                            setDummyDisclaimers(prev => {
+                                return { ...prev, d1: !prev.d1 }
+                            })
+                        }}>
                             <span>
                                 <h2 className="font-medium text-neutral-700 text-xl">Disclaimer 1</h2>
                                 <p className="font-normal text-neutral-500 text-sm">Description of Disclaimer</p>
                             </span>
-                            <input type="checkbox" />
+                            <input type="checkbox" checked={dummyDisclaimers?.d1} />
                         </div>
-                        <div className="py-3 border-t-[1px] border-neutral0=-200 inline-flex justify-between w-full">
+                        <div className="py-3 border-t-[1px] border-neutral0=-200 inline-flex justify-between w-full" onClick={() => {
+                            setDummyDisclaimers(prev => {
+                                return { ...prev, d2: !prev.d2 }
+                            })
+                        }}>
                             <span>
                                 <h2 className="font-medium text-neutral-700 text-xl">Disclaimer 2</h2>
                                 <p className="font-normal text-neutral-500 text-sm">Description of Disclaimer</p>
                             </span>
-                            <input type="checkbox" />
+                            <input type="checkbox" checked={dummyDisclaimers.d2} />
                         </div>
                         <div className="w-full inline-flex items-center justify-center gap-3 mt-10">
                             <Button className="bg-transparent border-cyan-800 border-[1px] !text-cyan-800 w-[100px]" onClick={() => setModalOpen(false)}>{language?.v3?.button?.cancel}</Button>
-                            <Button className="w-[100px]" onClick={() => navigate(`${StartupRoutes.CREATE_DEAL}/1`)}>{language?.buttons?.continue}</Button>
+                            <Button className="w-[100px]" disabled={!dummyDisclaimers.d1 || !dummyDisclaimers.d2} onClick={() => navigate(`${StartupRoutes.CREATE_DEAL}/1`)}>{language?.buttons?.continue}</Button>
                         </div>
                     </aside>
                 </div>

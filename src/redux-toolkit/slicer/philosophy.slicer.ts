@@ -73,17 +73,14 @@ export const QuestionnaireSlice = createSlice({
         else if (currentQuestion.field_type === Constants.MULTIPLE_CHOICE || currentQuestion.field_type === Constants.DROPDOWN) {
           currentQuestion?.options.map((opt: any) => {
             if (opt.id === option.id) opt.selected = true;
-            else{
-              console.log("op", opt);
-              opt.selected = false;
-            }
+            else opt.selected = false;
           });
         }
         else if (currentQuestion.field_type === Constants.NUMBER_INPUT || currentQuestion.field_type === Constants.TEXT_BOX || currentQuestion.field_type === Constants.TEXT_FIELD || currentQuestion.field_type === Constants.URL) {
           currentQuestion.value = option
         }
         else if (currentQuestion.field_type === Constants.SWITCH) {
-          currentQuestion.is_required = !currentQuestion.is_required;
+          currentQuestion.value = !currentQuestion.value;
         }
         else if (currentQuestion.field_type === Constants.FILE) {
           currentQuestion.value = option;

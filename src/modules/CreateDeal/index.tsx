@@ -135,6 +135,7 @@ const CreateDeal = () => {
 
   const onSetNext = async () => {
     try {
+      setLoading(true);
       let all_fields: any[] = [];
       let fields: any[] = [];
       dealData[step - 1][event]?.sections?.forEach((section: any) => {
@@ -158,7 +159,7 @@ const CreateDeal = () => {
             selected = field.value
           }
           if (field.field_type === Constants.SWITCH) {
-            selected = field?.is_required
+            selected = field?.value
           }
           if (field.field_type === Constants.FILE) {
             selected = field?.value?.id
@@ -199,6 +200,8 @@ const CreateDeal = () => {
     } catch (error: any) {
       const message = error?.response?.data?.status?.message || language.promptMessages.errorGeneral;
       toast.error(message, toastUtil);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -304,7 +307,7 @@ const CreateDeal = () => {
   const numberInput = (ques: any, secIndex: number, section: any) => {
     let dependantQuesion = section?.fields?.find((field: any) => field.id === ques?.dependent_id);
 
-    if (!dependantQuesion || (dependantQuesion && dependantQuesion?.is_required)) return (
+    if (!dependantQuesion || (dependantQuesion && dependantQuesion?.value)) return (
       <section className="flex items-start justify-center flex-col mt-3 w-full">
         {!dependantQuesion && <h3 className="text-neutral-700 font-medium text-base w-[420px]">{ques?.statement}</h3>}
 
@@ -441,11 +444,11 @@ const CreateDeal = () => {
         <div className="mb-6 inline-flex w-full items-center justify-between">
           <small className="text-neutral-700 text-lg font-medium mb-3">{ques?.statement}</small>
           <label className="relative inline-flex items-center cursor-pointer" onChange={(e) => {
-            dispatch(saveDealSelection({ option: !ques?.is_required, question: ques, fields: dealData, lang: event, secIndex, step: dealData[step - 1] }))
+            dispatch(saveDealSelection({ option: !ques?.value, question: ques, fields: dealData, lang: event, secIndex, step: dealData[step - 1] }))
             let dependantQuesion = section?.fields?.find((field: any) => field.dependent_id === ques?.id);
-            if (dependantQuesion && !ques?.is_required) dispatch(saveDealSelection({ option: "", question: dependantQuesion, fields: dealData, lang: event, secIndex, step: dealData[step - 1] }))
+            if (dependantQuesion && !ques?.value) dispatch(saveDealSelection({ option: "", question: dependantQuesion, fields: dealData, lang: event, secIndex, step: dealData[step - 1] }))
           }}>
-            <input type="checkbox" value="" className="sr-only peer" checked={ques?.is_required} />
+            <input type="checkbox" value="" className="sr-only peer" checked={ques?.value} />
             <div className="w-11 h-6 bg-gray-200 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-cyan-800"></div>
           </label>
         </div>
@@ -456,7 +459,7 @@ const CreateDeal = () => {
   const textAreaInput = (ques: any, secIndex: number, section: any) => {
     let dependantQuesion = section?.fields?.find((field: any) => field.id === ques?.dependent_id);
 
-    if (!dependantQuesion || (dependantQuesion && dependantQuesion?.is_required)) {
+    if (!dependantQuesion || (dependantQuesion && dependantQuesion?.value)) {
       return (
         <section className="flex items-start justify-center flex-col mt-3 w-full">
           <div className="mb-6 inline-flex flex-col w-full items-start justify-between">
@@ -473,7 +476,7 @@ const CreateDeal = () => {
   const textFieldInput = (ques: any, secIndex: number, section: any) => {
     let dependantQuesion = section?.fields?.find((field: any) => field.id === ques?.dependent_id);
 
-    if (!dependantQuesion || (dependantQuesion && dependantQuesion?.is_required)) {
+    if (!dependantQuesion || (dependantQuesion && dependantQuesion?.value)) {
       return (
         <section className="flex items-start justify-center flex-col mb-8 mt-3 w-full">
           {!dependantQuesion && <label htmlFor={ques?.id} className="text-neutral-700 text-lg font-medium mb-3">{ques?.statement}</label>}
@@ -550,9 +553,12 @@ const CreateDeal = () => {
     dealData[step - 1][event]?.sections.forEach((sec: any, index: number) => {
       flags.push({ section: sec.id, validations: [] });
       let fields = sec.fields;
-      fields.forEach((ques: any, quesIdx: number) => {
+      fields.forEach((ques: any) => {
         if (ques?.field_type === Constants.SWITCH) {
-          flags[index].validations.push(true);
+          let flag = false;
+          if (ques?.is_required && ques?.value) flag = true;
+          else if (!ques?.is_required) flag = true;
+          flags[index].validations.push(flag);
         }
         else if (ques?.field_type === Constants.MULTIPLE_CHOICE || ques?.field_type === Constants.DROPDOWN) {
           let flag = ques.options?.some((opt: any) => opt.selected);
@@ -565,14 +571,14 @@ const CreateDeal = () => {
         else if (ques?.field_type === Constants.NUMBER_INPUT || ques.field_type === Constants.TEXT_BOX || ques.field_type === Constants.TEXT_FIELD || ques.field_type === Constants.URL) {
           let dependantQuesion = sec?.fields?.find((field: any) => field.id === ques?.dependent_id);
           let flag = false;
-          if ((!dependantQuesion && ques.value) || (dependantQuesion && dependantQuesion?.is_required && ques.value) || (dependantQuesion && !dependantQuesion.is_required)) {
+          if ((!dependantQuesion && ques.value) || (dependantQuesion && dependantQuesion?.value && ques.value) || (dependantQuesion && !dependantQuesion.value)) {
             flag = true;
           }
           else flag = false;
           flags[index].validations.push(flag);
         }
         else if (ques.field_type === Constants.SWITCH) {
-          flags[index].validations.push(ques.is_required);
+          flags[index].validations.push(ques.value);
         }
         else if (ques.field_type === Constants.CHECK_BOX) {
           flags[index].validations.push(ques.value);
