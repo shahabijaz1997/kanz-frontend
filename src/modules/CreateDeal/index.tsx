@@ -483,11 +483,11 @@ const CreateDeal = () => {
 
   const textFieldInput = (ques: any, secIndex: number, section: any) => {
     let dependantQuesion = section?.fields?.find((field: any) => field.id === ques?.dependent_id);
-
-    if (!dependantQuesion || (dependantQuesion && dependantQuesion?.value)) {
+    
+    if ((!dependantQuesion || (dependantQuesion && (dependantQuesion?.field_type === Constants.TEXT_BOX || dependantQuesion?.value)))) {
       return (
         <section className="flex items-start justify-center flex-col mb-8 mt-3 w-full">
-          {!dependantQuesion && <label htmlFor={ques?.id} className="text-neutral-700 text-lg font-medium mb-3">{ques?.statement}</label>}
+          {(!dependantQuesion || (dependantQuesion && dependantQuesion?.field_type === Constants.TEXT_BOX)) && <label htmlFor={ques?.id} className="text-neutral-700 text-lg font-medium mb-3">{ques?.statement}</label>}
           <input title={ques?.statement} className="h-[42px] pr-10 shadow-sm appearance-none border rounded-md w-full py-2 px-3 text-gray-700 leading-tight transition-all bg-white w-full focus:outline-none" placeholder={ques?.statement} id={ques?.id} onChange={(e: any) => dispatch(saveDealSelection({ option: e.target.value, question: ques, fields: dealData, lang: event, secIndex, step: dealData[step - 1] }))} value={ques?.value} />
         </section>
       );
