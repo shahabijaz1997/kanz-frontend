@@ -99,6 +99,14 @@ const CreateDeal = () => {
             }
             setMultipleFieldsPayload(_multipleFieldsPayload);
           }
+          if (sec?.is_multiple && sec?.fields?.some((field: any) => field?.value)) {
+            let _multipleFieldsPayload: any[] = []
+            for (let i = 0; i < sec?.fields?.length; i++) {
+              const field = sec?.fields[i]
+              _multipleFieldsPayload.push(field);
+            }
+            setMultipleFieldsPayload(_multipleFieldsPayload);
+          }
           else setMultipleFieldsPayload([]);
           let opt = f?.options?.find((op: any) => op.selected);
           if (opt) {
@@ -306,11 +314,15 @@ const CreateDeal = () => {
 
   const numberInput = (ques: any, secIndex: number, section: any) => {
     let dependantQuesion = section?.fields?.find((field: any) => field.id === ques?.dependent_id);
-    let placeholder = "";
+    let placeholder = "", symbol = "";
     if (ques?.input_type === InputType.CURRENCY) placeholder = currency === 0 ? "$ 0.00" : "0.00 د.إ";
     else if (ques?.input_type === InputType.SQFT) placeholder = language?.v3?.common?.sqft;
     else if (ques?.input_type === InputType.PERCENT) placeholder = language?.v3?.common?.percent;
     else placeholder = ques?.placeholder || ques?.statement;
+
+    if (ques?.input_type === InputType.CURRENCY) symbol = currency === 0 ? "$" : "د.إ";
+    else if (ques?.input_type === InputType.SQFT) symbol = "SQFT";
+    else if (ques?.input_type === InputType.PERCENT) symbol = "%";
 
     if (!dependantQuesion || (dependantQuesion && dependantQuesion?.value)) return (
       <section className="flex items-start justify-center flex-col mt-3 w-full">
@@ -344,7 +356,7 @@ const CreateDeal = () => {
                   let elem: HTMLInputElement | any = document.getElementById(`num-${ques.id}`);
                   elem.value = suggestion;
                   dispatch(saveDealSelection({ option: suggestion, question: ques, fields: dealData, lang: event, secIndex, step: dealData[step - 1] }));
-                }} className="cursor-pointer py-2 px-3 h-9 w-24 bg-cbc-grey-sec rounded-md text-center text-sm font-normal text-neutral-900">{currency === 0 ? "$" : "د.إ"} {numberFormatter(Number(suggestion))}</li>
+                }} className="cursor-pointer py-2 px-3 h-9 w-24 bg-cbc-grey-sec rounded-md text-center text-sm font-normal text-neutral-900">{numberFormatter(Number(suggestion))}&nbsp;{symbol}</li>
               ))
             )}
           </ul>
@@ -518,8 +530,14 @@ const CreateDeal = () => {
               <div className="relative inline-flex w-full mb-3">
                 <p placeholder="www.example.com"
                   className={`h-[42px] shadow-sm appearance-none border border-neutral-300 w-full py-2 px-3 bg-white text-blue-500 leading-tight focus:outline-none focus:shadow-outline inline-flex justify-between items-center`} id={ques?.index}>
-                  <small className="text-sm;">{ques?.value}</small>
-                  <BinIcon stroke="#171717" className="cursor-pointer w-6 h-6" onClick={() => dispatch(removeMoreFields({ secIndex, lang: event, step, index: ques?.index }))} />
+                  <small className="text-sm;">{mp?.value}</small>
+                  <BinIcon stroke="#171717" className="cursor-pointer w-6 h-6" onClick={() => {
+                    setMultipleFieldsPayload((prev: any) => {
+                      let fields = prev.filter((f: any) => f.id !== mp.id);
+                      return [...fields];
+                    })
+                    dispatch(removeMoreFields({ question: mp, secIndex, lang: event, step: dealData[step - 1], index: ques?.index }))
+                  }} />
                 </p>
               </div>
             </section>
@@ -664,12 +682,12 @@ const CreateDeal = () => {
                   React.Children.toArray(
                     dealData[step - 1][event]?.sections.map((section: any, index: number) => {
                       return (
-                        section.is_multiple ? (
+                        (section.is_multiple || section?.display_card) ? (
                           <React.Fragment>
                             <h3 className="w-[450px] screen500:w-[350px] text-neutral-700 font-bold text-2xl mb-10">
                               {section?.title}
                             </h3>
-                            {multipleFieldsPayload?.length > 0 && (
+                            {(multipleFieldsPayload?.length > 0 && section?.display_card) && (
                               React.Children.toArray(
                                 multipleFieldsPayload?.map((sec: any) => {
                                   return (
@@ -680,7 +698,7 @@ const CreateDeal = () => {
                                           return secs
                                         })
                                       }}><BinIcon stroke="#171717" /></div>
-                                      <div className="font-bold text-neutral-900 text-sm text-center mb-2">{sec.fields[0]?.value}</div>
+                                      <div className="font-bold text-neutral-900 text-sm text-center mb-2">{sec?.fields[0]?.value}</div>
                                       <small className="text-neutral-700 font-normal text-sm text-center block w-full">{sec.fields[1]?.value}</small>
                                     </section>
                                   )
@@ -694,8 +712,7 @@ const CreateDeal = () => {
                                 {section?.display_card && (
                                   <div className="w-full inline-flex justify-center items-center gap-2">
                                     <Button className="w-[100px] border-2 border-cyan-800" onClick={() => setShowCustomBox(false)}>{language?.v3?.button?.cancel}</Button>
-                                    <Button disabled={checkCurrentBoxStatus(section?.fields)}
-                                      className="w-[100px] bg-transparent border-2 border-cyan-800 !text-cyan-800 hover:!text-white"
+                                    <Button disabled={checkCurrentBoxStatus(section?.fields)} className="w-[100px] bg-transparent border-2 border-cyan-800 !text-cyan-800 hover:!text-white"
                                       onClick={() => {
                                         setShowCustomBox(false);
                                         setMultipleFieldsPayload((prev: any) => {
@@ -708,10 +725,11 @@ const CreateDeal = () => {
                                 )}
                               </section>
                             )}
-                            {(section?.add_more_label && index === dealData[step - 1][event]?.sections?.length - 1) && (
+                            {/* {(section?.add_more_label && index === dealData[step - 1][event]?.sections?.length - 1) && ( */}
+                            {(section?.add_more_label) && (
                               <section className="w-[450px]">
                                 <Button disabled={checkMultipleButtonDisabled(section)} onClick={() => {
-                                  !section?.display_card && dispatch(saveMoreFields({ secIndex: index, lang: event, step, duplicate: 1 }))
+                                  !section?.display_card && dispatch(saveMoreFields({ secIndex: index, lang: event, step: dealData[step - 1], duplicate: 1 }))
                                   setShowCustomBox(true);
                                 }}
                                   className="w-full bg-transparent border-2 border-cyan-800 !text-cyan-800 hover:!text-white">{section?.add_more_label}</Button>
@@ -721,7 +739,7 @@ const CreateDeal = () => {
                         ) : (
                           <section className={`flex items-start flex-col mb-8 w-[450px] screen500:w-[350px] ${(index % 2 != 0 || section?.is_multiple) && "bg-cbc-check p-4 rounded-md"}`}>
                             <h3 className="text-neutral-700 font-bold text-2xl w-full mb-6">{section?.title}</h3>
-                            {section?.fields?.length ? (React.Children.toArray(section?.fields?.map((ques: any) => renderQuestionType(ques, index, section)))) : <ReviewDeal dealId={dataHolder} language={language} metadata={metadata} authToken={authToken} navigate={navigate} />}
+                            {section?.fields?.length > 0 && (React.Children.toArray(section?.fields?.map((ques: any) => renderQuestionType(ques, index, section))))}
                           </section>
                         )
                       )
