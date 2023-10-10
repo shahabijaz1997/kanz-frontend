@@ -13,7 +13,7 @@ import Spinner from "../../shared/components/Spinner";
 import Button from "../../shared/components/Button";
 import { saveToken } from "../../redux-toolkit/slicer/auth.slicer";
 import { RoutesEnums } from "../../enums/routes.enum";
-import { Constants } from "../../enums/constants.enum";
+import { Constants, InputType } from "../../enums/constants.enum";
 import { saveDataHolder } from "../../redux-toolkit/slicer/dataHolder.slicer";
 import { toastUtil } from "../../utils/toast.utils";
 import { toast } from "react-toastify";
@@ -306,6 +306,11 @@ const CreateDeal = () => {
 
   const numberInput = (ques: any, secIndex: number, section: any) => {
     let dependantQuesion = section?.fields?.find((field: any) => field.id === ques?.dependent_id);
+    let placeholder = "";
+    if (ques?.input_type === InputType.CURRENCY) placeholder = currency === 0 ? "$ 0.00" : "0.00 د.إ";
+    else if (ques?.input_type === InputType.SQFT) placeholder = language?.v3?.common?.sqft;
+    else if (ques?.input_type === InputType.PERCENT) placeholder = language?.v3?.common?.percent;
+    else placeholder = ques?.placeholder || ques?.statement;
 
     if (!dependantQuesion || (dependantQuesion && dependantQuesion?.value)) return (
       <section className="flex items-start justify-center flex-col mt-3 w-full">
@@ -316,12 +321,21 @@ const CreateDeal = () => {
             <input value={ques?.value} onInput={(e: any) => {
               const enteredValue = e.target.value;
               const numericValue = enteredValue.replace(/[^0-9.]|(\.(?=.*\.))/g, "");
+              if (ques?.input_type === InputType.PERCENT && Number(e.target.value)) return;
 
               dispatch(saveDealSelection({ option: numericValue, question: ques, fields: dealData, lang: event, secIndex, step: dealData[step - 1] }))
-            }} id={`num-${ques.id}`} placeholder={`${currency === 0 ? "$" : "د.إ"} 0.00`} type="text" className="outline-none w-full h-full placeholder-neutral-500" />
-            <span className="cursor-pointer inline-flex items-center" onClick={() => setCurrency(prev => { return prev === 0 ? 1 : 0 })}>
+            }} id={`num-${ques.id}`}
+              placeholder={placeholder}
+              type="text" className="outline-none w-full h-full placeholder-neutral-500" />
+            {ques?.input_type === InputType.CURRENCY && <span className="cursor-pointer inline-flex items-center" onClick={() => setCurrency(prev => { return prev === 0 ? 1 : 0 })}>
               <button className="font-normal text-lg text-neutral-500">{CURRENCIES[currency]}</button>
-            </span>
+            </span>}
+            {ques?.input_type === InputType.SQFT && <span className="cursor-pointer inline-flex items-center">
+              <button className="font-normal text-lg text-neutral-500">SQFT</button>
+            </span>}
+            {ques?.input_type === InputType.PERCENT && <span className="cursor-pointer inline-flex items-center">
+              <button className="font-normal text-lg text-neutral-500">%</button>
+            </span>}
           </div>
           <ul className="inline-flex items-center gap-5 mt-3">
             {React.Children.toArray(
@@ -483,7 +497,7 @@ const CreateDeal = () => {
 
   const textFieldInput = (ques: any, secIndex: number, section: any) => {
     let dependantQuesion = section?.fields?.find((field: any) => field.id === ques?.dependent_id);
-    
+
     if ((!dependantQuesion || (dependantQuesion && (dependantQuesion?.field_type === Constants.TEXT_BOX || dependantQuesion?.value)))) {
       return (
         <section className="flex items-start justify-center flex-col mb-8 mt-3 w-full">
