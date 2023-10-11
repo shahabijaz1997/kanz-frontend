@@ -18,7 +18,7 @@ import { saveDataHolder } from "../../redux-toolkit/slicer/dataHolder.slicer";
 import { toastUtil } from "../../utils/toast.utils";
 import { toast } from "react-toastify";
 import Selector from "../../shared/components/Selector";
-import { numberFormatter } from "../../utils/object.utils";
+import { numberFormatter, uniqueArray } from "../../utils/object.utils";
 import FileUpload from "../../shared/components/FileUpload";
 import HoverModal from "../../shared/components/HoverModal";
 import ExampleRealtor from "../../assets/example_realtor.png";
@@ -92,12 +92,13 @@ const CreateDeal = () => {
 
           if (sec?.display_card && sec?.fields?.some((field: any) => field?.value)) {
             let _multipleFieldsPayload: any[] = []
-            for (let i = 0; i < sec?.fields?.length / 2; i += 2) {
-              const field_1 = sec?.fields[i];
-              const field_2 = sec?.fields[i + 1];
-              _multipleFieldsPayload.push({ id: i, fields: [{ ques: field_1.id, value: field_1.value }, { ques: field_2.id, value: field_2.value }] })
+            for (let i = 0; i < sec?.fields?.length; i++) {
+              const fields = sec?.fields?.filter((fd: any) => fd.index === 0);
+              _multipleFieldsPayload.push({ id: i, fields });
             }
-            setMultipleFieldsPayload(_multipleFieldsPayload);
+            let uniques = uniqueArray(_multipleFieldsPayload);
+            setMultipleFieldsPayload(uniques);
+           sec.fields = [sec.fields.at(-1),sec.fields[0]]
           }
           else if (!sec?.display_card && sec?.is_multiple && sec?.fields?.some((field: any) => field?.value))
             dispatch(saveMoreFields({ secIndex: sec?.index, lang: event, step: dealData[step - 1], duplicate: sec?.fields?.length }))
@@ -118,6 +119,7 @@ const CreateDeal = () => {
 
           setTotalSteps((prev: any) => { return { copy: all_steps, all: steps } })
         }
+
         else setTotalSteps((prev: any) => { return { copy: all_steps, all: all_steps } })
         options?.length > 0 && setRestrictions(options)
         setQuestions(data?.status?.data?.steps);
@@ -736,7 +738,7 @@ const CreateDeal = () => {
                                   }
                                   section?.display_card && setShowCustomBox(true);
                                 }}
-                                  className="w-full bg-transparent border-2 border-cyan-800 !text-cyan-800 hover:!text-white">{section?.add_more_label}</Button>
+                                  className="w-full bg-white border-2 border-cyan-800 !text-cyan-800 hover:!text-white">{section?.add_more_label}</Button>
                               </section>
                             )}
                           </React.Fragment>
