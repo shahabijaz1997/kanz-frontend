@@ -327,9 +327,10 @@ const CreateDeal = () => {
         <section className="mb-8 w-full relative">
           <div className="relative rounded-md w-full h-10 border-[1px] border-neutral-300 bg-white overflow-hidden inline-flex items-center px-3">
             <input value={ques?.value} onInput={(e: any) => {
+              let regex = /[^0-9.]|(\.(?=.*\.))/g
               const enteredValue = e.target.value;
               const numericValue = enteredValue.replace(/[^0-9.]|(\.(?=.*\.))/g, "");
-              if (ques?.input_type === InputType.PERCENT && Number(e.target.value)) return;
+              if (ques?.input_type === InputType.PERCENT && Number(e.target.value) > 100) return;
 
               dispatch(saveDealSelection({ option: numericValue, question: ques, fields: dealData, lang: event, secIndex, step: dealData[step - 1] }))
             }} id={`num-${ques.id}`}
@@ -696,7 +697,7 @@ const CreateDeal = () => {
                                 )}
                               </section>
                             )}
-                            {multipleFieldsPayload && multipleFieldsPayload?.length > 0 && section?.is_multiple && (
+                            {(multipleFieldsPayload && multipleFieldsPayload?.length > 0 && section?.is_multiple && !section?.display_card) && (
                               <section className={`flex items-start flex-col mb-8 w-[450px] screen500:w-[350px] bg-cbc-check p-4 rounded-md -mt-16`}>
                                 {
                                   React.Children.toArray(
