@@ -552,7 +552,7 @@ const CreateDeal = () => {
       else if (ques?.field_type === Constants.TEXT_FIELD) return textFieldInput(ques, secIndex, section)
       else if (ques?.field_type === Constants.URL) return URLInput(ques, secIndex, section)
       else if (ques?.field_type === Constants.CHECK_BOX) return termUI(ques, secIndex)
-      else return <ReviewDeal language={language} dealId={dataHolder} metadata={metadata} authToken={authToken} navigate={navigate} />
+      else return <ReviewDeal language={language} dealId={dataHolder} metadata={metadata} authToken={authToken} navigate={navigate} showDeal={step === totalSteps?.all.length} />
     }
   };
 
@@ -647,7 +647,7 @@ const CreateDeal = () => {
             ) : (
               <React.Fragment>
                 {!dealData || !dealData[step - 1] || !dealData[step - 1][event]?.sections.length ? (
-                  <ReviewDeal language={language} navigate={navigate} dealId={dataHolder} metadata={metadata} authToken={authToken} />
+                  <ReviewDeal language={language} navigate={navigate} dealId={dataHolder} metadata={metadata} authToken={authToken} showDeal={step === totalSteps?.all.length} />
                 ) : (
                   React.Children.toArray(
                     dealData[step - 1][event]?.sections.map((section: any, index: number) => {
@@ -745,7 +745,7 @@ const CreateDeal = () => {
                         ) : (
                           <section className={`flex items-start flex-col mb-8 w-[450px] screen500:w-[350px] ${(index % 2 != 0 || section?.is_multiple) && "bg-cbc-check p-4 rounded-md"}`}>
                             <h3 className="text-neutral-700 font-bold text-2xl w-full mb-6">{section?.title}</h3>
-                            {section?.fields?.length > 0 ? (React.Children.toArray(section?.fields?.map((ques: any) => renderQuestionType(ques, index, section)))) : <ReviewDeal language={language} dealId={dataHolder} metadata={metadata} authToken={authToken} navigate={navigate} />}
+                            {section?.fields?.length > 0 ? (React.Children.toArray(section?.fields?.map((ques: any) => renderQuestionType(ques, index, section)))) : <ReviewDeal language={language} dealId={dataHolder} metadata={metadata} authToken={authToken} navigate={navigate} showDeal={step === totalSteps?.all.length} />}
                           </section>
                         )
                       )
