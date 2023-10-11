@@ -696,7 +696,7 @@ const CreateDeal = () => {
                                 )}
                               </section>
                             )}
-                            {multipleFieldsPayload && multipleFieldsPayload?.length > 0 && section?.is_multiple && (
+                            {(multipleFieldsPayload && multipleFieldsPayload?.length > 0 && section?.is_multiple && !section?.display_card) && (
                               <section className={`flex items-start flex-col mb-8 w-[450px] screen500:w-[350px] bg-cbc-check p-4 rounded-md -mt-16`}>
                                 {
                                   React.Children.toArray(
