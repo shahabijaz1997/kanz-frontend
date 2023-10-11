@@ -104,13 +104,11 @@ export const QuestionnaireSlice = createSlice({
         const element = currentSection?.fields[i];
         currentSection?.fields.push({ ...element, duplicate: true, index: element.index + 1 });
       }
-
       currentSection.fields = currentSection?.fields?.sort((a: any, b: any) => b.index - a.index)
-
       state.value = existing;
     },
     removeMoreFields: (state, action: PayloadAction<any>) => {
-      const { secIndex, lang, step, index, question } = action.payload;
+      const { secIndex, lang, step, question } = action.payload;
       const existing = JSON.parse(JSON.stringify(state.value));
 
       const currentStep = existing.find((item: any) => item.id === step.id);
