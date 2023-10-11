@@ -33,9 +33,9 @@ const ReviewDeal = ({ navigate, dealId, authToken, metadata, language }: any) =>
 
     const showUI = (field: any) => {
         return (
-            <div className="py-4 border-b-[1px] border-b-neutral-200 w-full cursor-pointer inline-flex w-full justify-between" onClick={() => navigate(`${StartupRoutes.CREATE_DEAL}/1`)}>
+            <div className="pb-3 w-full cursor-pointer inline-flex w-full justify-between" onClick={() => navigate(`${StartupRoutes.CREATE_DEAL}/1`)}>
                 <h3 className="text-neutral-900 font-medium text-sm">{field?.statement}</h3>
-                {typeof field?.value === "string" && <p className="capitalize text-neutral-500 font-normal text-sm">{field?.value}</p>}
+                {(typeof field?.value === "string" || typeof field?.value === "number") && <p className="capitalize text-neutral-500 font-normal text-sm">{field?.value}</p>}
                 {typeof field?.value === "boolean" && <p className="capitalize text-neutral-500 font-normal text-sm">{field?.value ? language?.buttons?.yes : language?.buttons?.no}</p>}
                 {typeof field?.value === "object" && <p className="capitalize text-neutral-500 font-normal text-sm">{field?.value ? language?.buttons?.yes : language?.buttons?.no}</p>}
             </div>
@@ -54,10 +54,10 @@ const ReviewDeal = ({ navigate, dealId, authToken, metadata, language }: any) =>
                         data && React.Children.toArray(
                             data?.map((step: any, index: number) => {
                                 return (
-                                    <div className="py-4 w-full cursor-pointer" onClick={() => navigate(`${StartupRoutes.CREATE_DEAL}/${index + 1}`)}>
-                                        <h2 className="text-cc-black font-semibold text-2xl capitalize">{step?.title}</h2>
+                                    <div className="py-4 w-full cursor-pointer border-b-[1px] border-b-neutral-200" onClick={() => navigate(`${StartupRoutes.CREATE_DEAL}/${index + 1}`)}>
+                                        <h2 className="text-cc-black font-semibold text-2xl capitalize mb-3">{step?.title}</h2>
                                         {React.Children.toArray(
-                                            step.fields[0]?.map((field: any) => {
+                                            step.fields?.map((field: any) => {
                                                 return (
                                                     showUI(field)
                                                 )
