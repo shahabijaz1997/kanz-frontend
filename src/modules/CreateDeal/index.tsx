@@ -99,16 +99,8 @@ const CreateDeal = () => {
             }
             setMultipleFieldsPayload(_multipleFieldsPayload);
           }
-          else if (!sec?.display_card && sec?.is_multiple && sec?.fields?.some((field: any) => field?.value)) {
-            console.log(12345678);
-
-            let _multipleFieldsPayload: any[] = []
-            for (let i = 0; i < sec?.fields?.length; i++) {
-              const field = sec?.fields[i]
-              _multipleFieldsPayload.push(field);
-            }
-            setMultipleFieldsPayload(_multipleFieldsPayload);
-          }
+          else if (!sec?.display_card && sec?.is_multiple && sec?.fields?.some((field: any) => field?.value))
+            dispatch(saveMoreFields({ secIndex: sec?.index, lang: event, step: dealData[step - 1], duplicate: sec?.fields?.length }))
           else setMultipleFieldsPayload([]);
           let opt = f?.options?.find((op: any) => op.selected);
           if (opt) {
@@ -154,7 +146,8 @@ const CreateDeal = () => {
 
       if (multipleFieldsPayload?.length > 0) {
         multipleFieldsPayload?.forEach((sec: any, index: number) => {
-          sec?.fields.forEach((field: any) => fields.push({ id: field.ques, value: field.value, index }));
+          if (sec?.fields) sec?.fields.forEach((field: any) => fields.push({ id: field.ques, value: field.value, index }));
+          else fields.push({ id: sec.id, value: sec?.value })
         });
       }
 
@@ -496,11 +489,11 @@ const CreateDeal = () => {
   const textAreaInput = (ques: any, secIndex: number, section: any) => {
     let dependantQuesion = section?.fields?.find((field: any) => field.id === ques?.dependent_id);
 
-    if (!dependantQuesion || (dependantQuesion && dependantQuesion?.value)) {
+    if ((!dependantQuesion || (dependantQuesion && (dependantQuesion?.field_type === Constants.TEXT_FIELD || dependantQuesion?.value)))) {
       return (
         <section className="flex items-start justify-center flex-col mt-3 w-full">
           <div className="mb-6 inline-flex flex-col w-full items-start justify-between">
-            {!dependantQuesion && <label htmlFor={ques?.id} className="text-neutral-700 text-lg font-medium mb-3">{ques?.statement}</label>}
+            {(!dependantQuesion || (dependantQuesion && dependantQuesion?.field_type === Constants.TEXT_FIELD)) && <label htmlFor={ques?.id} className="text-neutral-700 text-lg font-medium mb-3">{ques?.statement}</label>}
             <textarea value={ques?.value} placeholder={ques?.statement} className="h-[100px] mt-2 resize-none shadow-sm appearance-none border border-neutral-300 rounded-md w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id={ques?.id} onInput={(e: any) => dispatch(saveDealSelection({ option: e.target.value, question: ques, fields: dealData, lang: event, secIndex, step: dealData[step - 1] }))}></textarea>
           </div>
         </section>
@@ -513,10 +506,10 @@ const CreateDeal = () => {
   const textFieldInput = (ques: any, secIndex: number, section: any) => {
     let dependantQuesion = section?.fields?.find((field: any) => field.id === ques?.dependent_id);
 
-    if ((!dependantQuesion || (dependantQuesion && (dependantQuesion?.field_type === Constants.TEXT_BOX || dependantQuesion?.value)))) {
+    if (!dependantQuesion || (dependantQuesion && dependantQuesion?.value)) {
       return (
         <section className="flex items-start justify-center flex-col mb-8 mt-3 w-full">
-          {(!dependantQuesion || (dependantQuesion && dependantQuesion?.field_type === Constants.TEXT_BOX)) && <label htmlFor={ques?.id} className="text-neutral-700 text-lg font-medium mb-3">{ques?.statement}</label>}
+          {!dependantQuesion && <label htmlFor={ques?.id} className="text-neutral-700 text-lg font-medium mb-3">{ques?.statement}</label>}
           <input title={ques?.statement} className="h-[42px] pr-10 shadow-sm appearance-none border rounded-md w-full py-2 px-3 text-gray-700 leading-tight transition-all bg-white w-full focus:outline-none" placeholder={ques?.statement} id={ques?.id} onChange={(e: any) => dispatch(saveDealSelection({ option: e.target.value, question: ques, fields: dealData, lang: event, secIndex, step: dealData[step - 1] }))} value={ques?.value} />
         </section>
       );
@@ -524,52 +517,23 @@ const CreateDeal = () => {
   };
 
   const URLInput = (ques: any, secIndex: number, section: any) => {
-    let elems: any = [];
-    if (section?.add_more_label && multipleFieldsPayload?.length > 0) {
-      React.Children.toArray(
-        elems = multipleFieldsPayload?.map((mp: any) => {
-          return (
-            <section className="flex items-start justify-center flex-col mb-1 mt-3 w-full">
-              <div className="relative inline-flex w-full mb-3">
-                <p placeholder="www.example.com"
-                  className={`h-[42px] shadow-sm appearance-none border border-neutral-300 w-full py-2 px-3 bg-white text-blue-500 leading-tight focus:outline-none focus:shadow-outline inline-flex justify-between items-center`} id={ques?.index}>
-                  <small className="text-sm;">{mp?.value}</small>
-                  <BinIcon stroke="#171717" className="cursor-pointer w-6 h-6" onClick={() => {
-                    setMultipleFieldsPayload((prev: any) => {
-                      let fields = prev.filter((f: any) => f.id !== mp.id);
-                      return [...fields];
-                    })
-                    dispatch(removeMoreFields({ question: mp, secIndex, lang: event, step: dealData[step - 1], index: ques?.index }))
-                  }} />
-                </p>
-              </div>
-            </section>
-          )
-        })
-      )
-    }
-
     return (
-      <React.Fragment>
-        {elems}
-        <section className="flex items-start justify-center flex-col mb-1 mt-3 w-full">
-          <div className="relative inline-flex w-full mb-3">
-            <input type="disabled" value={"https://"}
-              className={`text-neutral-500 text-base font-normal border-t border-b border-neutral-300 h-[42px] w-[70px] ${orientation === "rtl"
-                ? "border-r rounded-br-md rounded-tr-md pr-2"
-                : "border-l rounded-bl-md rounded-tl-md pl-2"
-                }`}
-            />
-            <input placeholder="www.example.com" value={ques?.value}
-              className={`h-[42px] shadow-sm appearance-none border border-neutral-300 w-full py-2 px-3 text-gray-500 leading-tight focus:outline-none focus:shadow-outline ${orientation === "rtl"
-                ? " rounded-bl-md rounded-tl-md"
-                : " rounded-br-md rounded-tr-md"
-                }`} type="text" id={ques?.id} onChange={(e: any) => dispatch(saveDealSelection({ option: e.target.value, question: ques, fields: dealData, lang: event, secIndex, step: dealData[step - 1] }))}
-            />
-          </div>
-        </section>
-      </React.Fragment>
-
+      <section className="flex items-start justify-center flex-col mb-1 mt-3 w-full">
+        <div className="relative inline-flex w-full mb-3">
+          <input type="disabled" value={"https://"}
+            className={`text-neutral-500 text-base font-normal border-t border-b border-neutral-300 h-[42px] w-[70px] ${orientation === "rtl"
+              ? "border-r rounded-br-md rounded-tr-md pr-2"
+              : "border-l rounded-bl-md rounded-tl-md pl-2"
+              }`}
+          />
+          <input placeholder="www.example.com" value={ques?.value}
+            className={`h-[42px] shadow-sm appearance-none border border-neutral-300 w-full py-2 px-3 text-gray-500 leading-tight focus:outline-none focus:shadow-outline ${orientation === "rtl"
+              ? " rounded-bl-md rounded-tl-md"
+              : " rounded-br-md rounded-tr-md"
+              }`} type="text" id={ques?.id} onChange={(e: any) => dispatch(saveDealSelection({ option: e.target.value, question: ques, fields: dealData, lang: event, secIndex, step: dealData[step - 1] }))}
+          />
+        </div>
+      </section>
     );
   };
 
@@ -732,12 +696,44 @@ const CreateDeal = () => {
                                 )}
                               </section>
                             )}
+                            {multipleFieldsPayload && multipleFieldsPayload?.length > 0 && section?.is_multiple && (
+                              <section className={`flex items-start flex-col mb-8 w-[450px] screen500:w-[350px] bg-cbc-check p-4 rounded-md -mt-16`}>
+                                {
+                                  React.Children.toArray(
+                                    multipleFieldsPayload?.map((mp: any) => {
+                                      return (
+                                        <section className="flex items-start justify-center flex-col mb-1 mt-3 w-[420px]">
+                                          <div className="relative inline-flex w-full mb-3">
+                                            <p placeholder="www.example.com"
+                                              className={`h-[42px] rounded-md shadow-sm appearance-none border border-neutral-300 w-full py-2 px-3 bg-white text-blue-500 leading-tight focus:outline-none focus:shadow-outline inline-flex justify-between items-center`}>
+                                              <small className="text-sm;">{mp?.value}</small>
+                                              <BinIcon stroke="#171717" className="cursor-pointer w-6 h-6" onClick={() => {
+                                                setMultipleFieldsPayload((prev: any) => {
+                                                  let fields = prev.filter((f: any) => f.id !== mp.id);
+                                                  return [...fields];
+                                                })
+                                              }} />
+                                            </p>
+                                          </div>
+                                        </section>
+                                      )
+                                    })
+                                  )
+                                }
+                              </section>
+                            )}
                             {/* {(section?.add_more_label && index === dealData[step - 1][event]?.sections?.length - 1) && ( */}
                             {(section?.add_more_label) && (
                               <section className="w-[450px]">
                                 <Button disabled={checkMultipleButtonDisabled(section)} onClick={() => {
-                                  !section?.display_card && dispatch(saveMoreFields({ secIndex: index, lang: event, step: dealData[step - 1], duplicate: 1 }))
-                                  setShowCustomBox(true);
+                                  if (!section?.display_card) {
+                                    const element = dealData[step - 1][event]?.sections[index]?.fields?.at(-1);
+                                    setMultipleFieldsPayload((prev: any) => {
+                                      return [...prev, element]
+                                    })
+                                    // dispatch(saveMoreFields({ secIndex: index, lang: event, step: dealData[step - 1], duplicate: 1 }));
+                                  }
+                                  section?.display_card && setShowCustomBox(true);
                                 }}
                                   className="w-full bg-transparent border-2 border-cyan-800 !text-cyan-800 hover:!text-white">{section?.add_more_label}</Button>
                               </section>
