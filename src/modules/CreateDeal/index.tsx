@@ -99,7 +99,9 @@ const CreateDeal = () => {
             }
             setMultipleFieldsPayload(_multipleFieldsPayload);
           }
-          if (sec?.is_multiple && sec?.fields?.some((field: any) => field?.value)) {
+          else if (!sec?.display_card && sec?.is_multiple && sec?.fields?.some((field: any) => field?.value)) {
+            console.log(12345678);
+
             let _multipleFieldsPayload: any[] = []
             for (let i = 0; i < sec?.fields?.length; i++) {
               const field = sec?.fields[i]
@@ -209,6 +211,7 @@ const CreateDeal = () => {
       const message = error?.response?.data?.status?.message || language.promptMessages.errorGeneral;
       toast.error(message, toastUtil);
     } finally {
+      setMultipleFieldsPayload([])
       setLoading(false);
     }
   };
@@ -687,7 +690,7 @@ const CreateDeal = () => {
                             <h3 className="w-[450px] screen500:w-[350px] text-neutral-700 font-bold text-2xl mb-10">
                               {section?.title}
                             </h3>
-                            {(multipleFieldsPayload?.length > 0 && section?.display_card) && (
+                            {(multipleFieldsPayload && multipleFieldsPayload?.length > 0 && section?.display_card) && (
                               React.Children.toArray(
                                 multipleFieldsPayload?.map((sec: any) => {
                                   return (
@@ -698,8 +701,12 @@ const CreateDeal = () => {
                                           return secs
                                         })
                                       }}><BinIcon stroke="#171717" /></div>
-                                      <div className="font-bold text-neutral-900 text-sm text-center mb-2">{sec?.fields[0]?.value}</div>
-                                      <small className="text-neutral-700 font-normal text-sm text-center block w-full">{sec.fields[1]?.value}</small>
+                                      {sec?.fields && (
+                                        <React.Fragment>
+                                          <div className="font-bold text-neutral-900 text-sm text-center mb-2">{sec?.fields[0]?.value}</div>
+                                          <small className="text-neutral-700 font-normal text-sm text-center block w-full">{sec.fields[1]?.value}</small>
+                                        </React.Fragment>
+                                      )}
                                     </section>
                                   )
                                 })
