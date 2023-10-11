@@ -739,7 +739,7 @@ const CreateDeal = () => {
                         ) : (
                           <section className={`flex items-start flex-col mb-8 w-[450px] screen500:w-[350px] ${(index % 2 != 0 || section?.is_multiple) && "bg-cbc-check p-4 rounded-md"}`}>
                             <h3 className="text-neutral-700 font-bold text-2xl w-full mb-6">{section?.title}</h3>
-                            {section?.fields?.length > 0 && (React.Children.toArray(section?.fields?.map((ques: any) => renderQuestionType(ques, index, section))))}
+                            {section?.fields?.length > 0 ? (React.Children.toArray(section?.fields?.map((ques: any) => renderQuestionType(ques, index, section)))) : <ReviewDeal language={language} dealId={dataHolder} metadata={metadata} authToken={authToken} navigate={navigate} />}
                           </section>
                         )
                       )
