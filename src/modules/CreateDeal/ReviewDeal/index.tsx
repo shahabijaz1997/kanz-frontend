@@ -5,12 +5,12 @@ import { KanzRoles } from "../../../enums/roles.enum";
 import { DealType } from "../../../enums/types.enum";
 import Spinner from "../../../shared/components/Spinner";
 
-const ReviewDeal = ({ navigate, dealId, authToken, metadata, language }: any) => {
+const ReviewDeal = ({ navigate, dealId, authToken, metadata, language, showDeal }: any) => {
     const [loading, setLoading] = useState(false);
     const [data, setData]: any = useState();
 
     useEffect(() => {
-        getReviewDetail()
+        showDeal && getReviewDetail()
     }, []);
 
     const getReviewDetail = async () => {
