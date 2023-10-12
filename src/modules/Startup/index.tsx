@@ -149,7 +149,7 @@ const Startup = ({ }: any) => {
                 </section>
             </aside>
 
-            <Modal show={modalOpen ? true : false}>
+            <Modal show={modalOpen ? true : false} className={"w-[700px] screen1024:w-[300px]"}>
                 {modalOpen === "1" ? (
                     <div className="relative p-12 rounded-md shadow-cs-1 flex flex-col items-center w-full bg-white outline-none focus:outline-none screen800:px-3">
                         <div className="rounded-md h-8 w-8 inline-grid place-items-center cursor-pointer absolute right-2 top-2">
