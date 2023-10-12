@@ -671,7 +671,9 @@
             "i_agree_desc": "I agree with all the above mentioned terms",
             "disclaimer_desc": "Lorem ipsum dolor sit amet consectetur, adipisicing elit. Repudiandae quidem libero impedit voluptatum quasi delectus, fuga in aliquid deserunt exercitationem explicabo asperiores, dolorem veritatis maiores, illo vitae officiis sapiente? Est?",
             "percent": "Percent",
-            "sqft": "Square Feet"
+            "sqft": "Square Feet",
+            "submitted_title": "Your Deal has been submitted",
+            "submitted_message": "Please wait while our customer support officer review your submitted deal"
         },
         "button": {
             "new_deal": "Create New Deal",
@@ -679,7 +681,8 @@
             "new": "New",
             "cancel": "Cancel",
             "add": "Add",
-            "add_new_link": "Add New Link"
+            "add_new_link": "Add New Link",
+            "close": "Close"
         }
     }
 }
