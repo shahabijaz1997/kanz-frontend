@@ -87,7 +87,7 @@ const CreateDeal = () => {
           let f = sec?.fields?.find((ques: any) => {
             return _dependencies?.find((dep: any) => dep?.dependable_field === ques?.id)
           });
-
+          // Check Unique Selling Points
           if (sec?.display_card && sec?.fields?.some((field: any) => field?.value)) {
             let _multipleFieldsPayload: any[] = []
             for (let i = 0; i < sec?.fields?.length; i++) {
@@ -100,8 +100,12 @@ const CreateDeal = () => {
             sec.fields = [sec.fields.at(-1), sec.fields[0]];
             setShowCustomBox(false);
           }
-          else if (!sec?.display_card && sec?.is_multiple && sec?.fields?.some((field: any) => field?.value)){
-            dispatch(saveMoreFields({ secIndex: sec?.index, lang: event, step: dealData[step - 1], duplicate: sec?.fields?.length }))
+          // Check External Links
+          else if (!sec?.display_card && sec?.is_multiple && sec?.fields?.some((field: any) => field?.value)) {
+            let elems = [];
+            for (let i = 0; i < sec?.fields?.length; i++)
+              elems.push(sec.fields[i]);
+              setMultipleFieldsPayload(elems)
             setShowCustomBox(true);
           }
           else setMultipleFieldsPayload([]);
@@ -143,7 +147,7 @@ const CreateDeal = () => {
 
   const onSetNext = async () => {
     try {
-     
+
       let all_fields: any[] = [];
       let fields: any[] = [];
       dealData[step - 1][event]?.sections?.forEach((section: any) => {
@@ -722,7 +726,7 @@ const CreateDeal = () => {
                                     const element = dealData[step - 1][event]?.sections[index]?.fields?.at(-1);
                                     setMultipleFieldsPayload((prev: any) => {
                                       return [...prev, element]
-                                    })
+                                    });
                                     // dispatch(saveMoreFields({ secIndex: index, lang: event, step: dealData[step - 1], duplicate: 1 }));
                                   }
                                   else dispatch(onResetFields({ secIndex: section?.index, lang: event, step: dealData[step - 1] }));
