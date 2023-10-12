@@ -70,7 +70,7 @@ const CreateDeal = () => {
       let { status, data } = await getDealQuestion(queryParams, authToken);
       if (status === 200) {
         console.log(1);
-        
+
         let _dependencies: any = [];
         data?.status?.data?.steps?.forEach((step: any) => {
           if (step?.dependencies?.length > 0) _dependencies = step.dependencies;
@@ -102,7 +102,7 @@ const CreateDeal = () => {
             }
             let uniques = uniqueArray(_multipleFieldsPayload);
             setMultipleFieldsPayload(uniques);
-           sec.fields = [sec.fields.at(-1),sec.fields[0]]
+            sec.fields = [sec.fields.at(-1), sec.fields[0]]
           }
           else if (!sec?.display_card && sec?.is_multiple && sec?.fields?.some((field: any) => field?.value))
             dispatch(saveMoreFields({ secIndex: sec?.index, lang: event, step: dealData[step - 1], duplicate: sec?.fields?.length }))
@@ -111,13 +111,13 @@ const CreateDeal = () => {
           if (opt) {
             _dependencies?.find((dep: any) => {
               if (dep?.value === String(opt.id) && dep?.dependent_type !== "Stepper") options.push(dep);
-              else if (dep?.dependent_type === "Stepper" && dep?.operation === "hide") {
-                stepper = data?.status?.data?.steps?.find((stp: any) => stp?.id === dep?.dependent_id);
-              }
+              // else if (dep?.dependent_type === "Stepper" && dep?.operation === "hide") {
+              //   stepper = data?.status?.data?.steps?.find((stp: any) => stp?.id === dep?.dependent_id);
+              // }
             });
           }
         });
-console.log(4);
+        console.log(4);
 
         if (stepper) {
           let step = all_steps?.find((ts: any) => ts?.text === stepper[event]?.title);
@@ -125,12 +125,12 @@ console.log(4);
 
           setTotalSteps((prev: any) => { return { copy: all_steps, all: steps } })
         }
-        
+
         else setTotalSteps((prev: any) => { return { copy: all_steps, all: all_steps } })
         console.log(5);
         options?.length > 0 && setRestrictions(options);
         console.log("DATA: ", data?.status?.data?.steps);
-        
+
         setQuestions(data?.status?.data?.steps);
         dispatch(saveQuestionnaire(data?.status?.data?.steps));
         setShowCustomBox(true);
@@ -148,7 +148,8 @@ console.log(4);
 
   const onSetNext = async () => {
     try {
-      setLoading(true);
+      if (step < totalSteps?.all.length)
+        setLoading(true);
       let all_fields: any[] = [];
       let fields: any[] = [];
       dealData[step - 1][event]?.sections?.forEach((section: any) => {
@@ -165,21 +166,11 @@ console.log(4);
       else {
         fields = all_fields?.map((field: any) => {
           let selected;
-          if (field?.field_type === Constants.MULTIPLE_CHOICE || field?.field_type === Constants.DROPDOWN) {
-            selected = field?.options?.find((opt: any) => opt.selected)?.id
-          }
-          if (field?.field_type === Constants.NUMBER_INPUT || field?.field_type === Constants.TEXT_BOX || field?.field_type === Constants.TEXT_FIELD || field?.field_type === Constants.URL) {
-            selected = field.value
-          }
-          if (field.field_type === Constants.SWITCH) {
-            selected = field?.value
-          }
-          if (field.field_type === Constants.FILE) {
-            selected = field?.value?.id
-          }
-          if (field.field_type === Constants.CHECK_BOX) {
-            selected = field?.value;
-          }
+          if (field?.field_type === Constants.MULTIPLE_CHOICE || field?.field_type === Constants.DROPDOWN) selected = field?.options?.find((opt: any) => opt.selected)?.id
+          if (field?.field_type === Constants.NUMBER_INPUT || field?.field_type === Constants.TEXT_BOX || field?.field_type === Constants.TEXT_FIELD || field?.field_type === Constants.URL) selected = field.value
+          if (field.field_type === Constants.SWITCH) selected = field?.value
+          if (field.field_type === Constants.FILE) selected = field?.value?.id
+          if (field.field_type === Constants.CHECK_BOX) selected = field?.value;
           return {
             id: field.id,
             value: selected
@@ -195,10 +186,9 @@ console.log(4);
       }
       if (dataHolder) payload.deal.id = dataHolder;
       let submission;
-      if (step >= totalSteps?.all.length)
-        submission = await submitDeal(dataHolder, authToken);
-      else
-        submission = await postDealStep(payload, authToken);
+      if (step >= totalSteps?.all.length) submission = await submitDeal(dataHolder, authToken);
+      else submission = await postDealStep(payload, authToken);
+
       let { status, data } = submission;
 
       if (status === 200) {
@@ -208,7 +198,6 @@ console.log(4);
           dispatch(saveDataHolder(""));
           setModalOpen(true);
         }
-
       }
     } catch (error: any) {
       const message = error?.response?.data?.status?.message || language.promptMessages.errorGeneral;
@@ -230,17 +219,17 @@ console.log(4);
       if (String(dep.value) === String(as?.id)) option.push(dep);
       questions?.forEach((q: any) => {
         option.forEach((rest: any) => {
-          if (q?.id === rest?.dependent_id && rest?.dependent_type?.toLowerCase() === "stepper" && rest?.operation === "hide") {
-            let step = totalSteps?.copy?.find((ts: any) => ts?.text === q[event]?.title);
-            let steps = totalSteps?.copy.filter((stp: any) => stp?.text !== step?.text);
-            setTotalSteps((prev: any) => {
-              return { copy: [...prev?.copy], all: steps }
-            })
-          } else if (q?.id === rest?.dependent_id && rest?.dependent_type?.toLowerCase() === "stepper" && rest?.operation === "show") {
-            setTotalSteps((prev: any) => {
-              return { copy: prev?.copy, all: prev?.copy }
-            })
-          }
+          // if (q?.id === rest?.dependent_id && rest?.dependent_type?.toLowerCase() === "stepper" && rest?.operation === "hide") {
+          //   let step = totalSteps?.copy?.find((ts: any) => ts?.text === q[event]?.title);
+          //   let steps = totalSteps?.copy.filter((stp: any) => stp?.text !== step?.text);
+          //   setTotalSteps((prev: any) => {
+          //     return { copy: [...prev?.copy], all: steps }
+          //   })
+          // } else if (q?.id === rest?.dependent_id && rest?.dependent_type?.toLowerCase() === "stepper" && rest?.operation === "show") {
+          //   setTotalSteps((prev: any) => {
+          //     return { copy: prev?.copy, all: prev?.copy }
+          //   })
+          // }
         });
       });
     })
@@ -442,9 +431,7 @@ console.log(4);
       let currentValue = ques?.options?.find((op: any) => op.selected)?.statement || options[0]?.statement || "";
       return (
         <section className="flex items-start justify-center flex-col mt-2 w-full">
-          <h3 className="text-neutral-700 font-medium text-base w-full capitalize">
-            {ques?.statement}
-          </h3>
+          {!dependantQuesion && <h3 className="text-neutral-700 font-medium text-base w-full capitalize">{ques?.statement}</h3>}
           <section className="mb-8 w-full relative mt-3">
             <div className="relative w-full" style={{ zIndex: 101 }}>
               <Selector disabled={false} defaultValue={{ label: currentValue, value: currentValue }} options={options}
@@ -775,7 +762,7 @@ console.log(4);
           </div>
         </section>
 
-        <Modal show={modalOpen}>
+        <Modal show={modalOpen} className={"w-[500px] screen1024:w-[300px]"}>
           <div className="relative p-12 rounded-md shadow-cs-1 flex flex-col items-center w-full bg-white outline-none focus:outline-none screen800:px-3">
             <div className="rounded-md h-8 w-8 inline-grid place-items-center cursor-pointer absolute right-2 top-2">
               <CrossIcon stroke="#171717" className="w-6 h-6" onClick={() => {
@@ -786,7 +773,7 @@ console.log(4);
 
             <aside>
               <h2 className="font-bold text-xl text-center text-neutral-900">{language?.v3?.deal?.submitted_deal}</h2>
-              <p className="text-sm font-normal text-center text-neutral-500 mt-8 mb-12">{language?.v3?.deal?.deal_status}: <strong>{language?.common?.submitted}</strong></p>
+              <p className="text-sm font-normal text-center text-neutral-500 mt-4 mb-4">{language?.v3?.deal?.deal_status}: <strong>{language?.common?.submitted}</strong></p>
             </aside>
           </div>
         </Modal>
