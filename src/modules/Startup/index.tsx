@@ -153,7 +153,7 @@ const Startup = ({ }: any) => {
                     <aside>
                         <h2 className="font-bold text-xl text-center text-neutral-900">{language?.v3?.common?.disclaimer}</h2>
                         <p className="text-sm font-normal text-center text-neutral-500 mt-8 mb-12">{language?.v3?.common?.disclaimer_desc}</p>
-                        <div className="py-3 border-t-[1px] border-neutral0=-200 inline-flex justify-between w-full" onClick={() => {
+                        <div className="py-3 border-t-[1px] border-neutral-200 inline-flex justify-between w-full cursor-pointer" onClick={() => {
                             setDummyDisclaimers(prev => {
                                 return { ...prev, d1: !prev.d1 }
                             })
@@ -164,7 +164,7 @@ const Startup = ({ }: any) => {
                             </span>
                             <input type="checkbox" checked={dummyDisclaimers?.d1} />
                         </div>
-                        <div className="py-3 border-t-[1px] border-neutral0=-200 inline-flex justify-between w-full" onClick={() => {
+                        <div className="py-3 border-t-[1px] border-neutral-200 inline-flex justify-between w-full cursor-pointer" onClick={() => {
                             setDummyDisclaimers(prev => {
                                 return { ...prev, d2: !prev.d2 }
                             })

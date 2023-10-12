@@ -403,9 +403,9 @@ const CreateDeal = () => {
             <span className="relative text-cc-blue font-medium cursor-pointer" onMouseEnter={() => setShowHoverModal(ques.id)} onMouseLeave={() => setShowHoverModal(null)} >
               {language.common.example}
               {showHoverModal === ques.id && (
-                <HoverModal width="w-[190px]" height="h-[190px]">
+                <HoverModal width="w-[170px]" height="h-[170px]">
                   <section className="inline-flex flex-row items-center justify-evenly h-full">
-                    <img src={ExampleRealtor} alt={language.syndicate.logo} className="max-h-[150px]" />
+                    <img src={ExampleRealtor} alt={language.syndicate.logo} className="h-[100px]" />
                   </section>
                 </HoverModal>
               )}
