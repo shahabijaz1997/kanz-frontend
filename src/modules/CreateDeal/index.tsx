@@ -105,10 +105,13 @@ const CreateDeal = () => {
             let elems = [];
             for (let i = 0; i < sec?.fields?.length; i++)
               elems.push(sec.fields[i]);
-              setMultipleFieldsPayload(elems)
+            setMultipleFieldsPayload(elems)
             setShowCustomBox(true);
           }
-          else setMultipleFieldsPayload([]);
+          else {
+            setShowCustomBox(true);
+            setMultipleFieldsPayload([]);
+          }
           let opt = f?.options?.find((op: any) => op.selected);
           if (opt) {
             _dependencies?.find((dep: any) => {
@@ -411,7 +414,7 @@ const CreateDeal = () => {
           </p>
 
           <FileUpload parentId={dataHolder} onlyPDF={onlyPDF} onlyVideo={onlyideo} size={`${ques?.size_constraints?.limit}${ques?.size_constraints?.unit}`}
-            id={ques?.id} fid={ques?.id} file={ques?.value} setModalOpen={() => { }} setFile={(file: File, id: string, url: string, aid: string, size: string, dimensions: string, type: string, prodURL: string) => {
+            id={`at-${ques?.id}`} fid={ques?.id} file={ques?.value} setModalOpen={() => { }} setFile={(file: File, id: string, url: string, aid: string, size: string, dimensions: string, type: string, prodURL: string) => {
               dispatch(saveDealSelection({ option: { url: prodURL, id: aid }, question: ques, fields: dealData, lang: event, secIndex, step: dealData[step - 1] }))
             }} title={ques?.statement} removeFile={() => removeFile(ques?.value?.id, { option: null, question: ques, fields: dealData, lang: event, secIndex, step: dealData[step - 1] })} className="w-full" />
         </section >

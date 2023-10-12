@@ -133,7 +133,6 @@ const Realtor = ({ }: any) => {
                                     if (row?.Status !== ApplicationStatus.SUBMITTED) {
                                         dispatch(saveDataHolder(row.id));
                                         navigate(`/create-deal/${row?.State?.current_step + 1}`);
-
                                     }
                                     else setModalOpen("2");
                                 }} noDataNode={<Button onClick={() => setModalOpen("1")} className="absolute left-1/2 top-1/2 translate-x-[-50%] translate-y-[-50%]">{language?.v3?.button?.new_deal}</Button>} />
@@ -143,7 +142,7 @@ const Realtor = ({ }: any) => {
                 </section>
             </aside>
 
-            <Modal show={modalOpen ? true : false}>
+            <Modal show={modalOpen ? true : false} className={"w-[700px] screen1024:w-[300px]"}>
                 {modalOpen === "1" ? (
                     <div className="relative p-12 rounded-md shadow-cs-1 flex flex-col items-center w-full bg-white outline-none focus:outline-none screen800:px-3">
                         <div className="rounded-md h-8 w-8 inline-grid place-items-center cursor-pointer absolute right-2 top-2">
