@@ -108,13 +108,17 @@ export const QuestionnaireSlice = createSlice({
       state.value = existing;
     },
     removeMoreFields: (state, action: PayloadAction<any>) => {
-      const { secIndex, lang, step, question } = action.payload;
+      const { secIndex, lang, step } = action.payload;
       const existing = JSON.parse(JSON.stringify(state.value));
+console.log(existing);
 
       const currentStep = existing.find((item: any) => item.id === step.id);
-      const currentSection = currentStep[lang]?.sections[secIndex];
-      currentSection.fields = currentSection?.fields.filter((field: any) => field.id !== question?.id);
-      if (currentSection?.fields?.length === 0) currentSection.fields = [{ ...question, value: "" }];
+      // const currentSection = currentStep[lang]?.sections[secIndex];
+      // console.log("currentSection", currentSection);
+      
+      // for (let i = 0; i < currentSection.fields.length; i++)
+      //   currentSection.fields.pop()
+
       state.value = existing;
     },
     onResetFields: (state, action: PayloadAction<any>) => {

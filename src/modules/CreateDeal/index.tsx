@@ -4,7 +4,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { RootState } from "../../redux-toolkit/store/store";
 import { getDealQuestion, postDealStep, submitDeal } from "../../apis/deal.api";
 import { DealType } from "../../enums/types.enum";
-import { onResetFields, onResetOptions, saveDealSelection, saveMoreFields, saveQuestionnaire } from "../../redux-toolkit/slicer/philosophy.slicer";
+import { onResetFields, onResetOptions, removeMoreFields, saveDealSelection, saveMoreFields, saveQuestionnaire } from "../../redux-toolkit/slicer/philosophy.slicer";
 import Header from "../../shared/components/Header";
 import CrossIcon from "../../ts-icons/crossIcon.svg";
 import { KanzRoles } from "../../enums/roles.enum";
@@ -103,10 +103,15 @@ const CreateDeal = () => {
           // Check External Links
           else if (!sec?.display_card && sec?.is_multiple && sec?.fields?.some((field: any) => field?.value)) {
             let elems = [];
-            for (let i = 0; i < sec?.fields?.length; i++)
-              elems.push(sec.fields[i]);
+            for (let i = 0; i < sec?.fields?.length; i++) elems.push(sec.fields[i]);
+
             setMultipleFieldsPayload(elems);
             setShowCustomBox(true);
+            let sect: any = data?.status?.data?.steps[step - 1][event]?.sections?.find((s: any) => s.index === sec?.index);
+
+            if (sect?.fields?.length > 1) {
+              for (let i = 1; i < sect?.fields.length; i++) sect?.fields.pop();
+            }
           }
           else {
             setShowCustomBox(true);
@@ -116,9 +121,6 @@ const CreateDeal = () => {
           if (opt) {
             _dependencies?.find((dep: any) => {
               if (dep?.value === String(opt.id) && dep?.dependent_type !== "Stepper") options.push(dep);
-              // else if (dep?.dependent_type === "Stepper" && dep?.operation === "hide") {
-              //   stepper = data?.status?.data?.steps?.find((stp: any) => stp?.id === dep?.dependent_id);
-              // }
             });
           }
         });
@@ -255,6 +257,11 @@ const CreateDeal = () => {
     }
   };
 
+  const comaFormattedNumber = (value: string) => {
+    if (!value) return value;
+    return String(value).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+  };
+
   /* UI Components */
   const multipleChoice = (ques: any, secIndex: number, section: any) => {
     let flag = false;
@@ -325,13 +332,12 @@ const CreateDeal = () => {
 
         <section className="mb-8 w-full relative">
           <div className="relative rounded-md w-full h-10 border-[1px] border-neutral-300 bg-white overflow-hidden inline-flex items-center px-3">
-            <input value={ques?.value} onInput={(e: any) => {
+            <input value={comaFormattedNumber(ques?.value)} onInput={(e: any) => {
               const enteredValue = e.target.value;
               const numericValue = enteredValue.replace(/[^0-9.]|(\.(?=.*\.))/g, "");
-              const formattedNumber = numericValue.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
               if (ques?.input_type === InputType.PERCENT && Number(e.target.value) > 100) return;
 
-              dispatch(saveDealSelection({ option: formattedNumber, question: ques, fields: dealData, lang: event, secIndex, step: dealData[step - 1] }))
+              dispatch(saveDealSelection({ option: numericValue, question: ques, fields: dealData, lang: event, secIndex, step: dealData[step - 1] }))
             }} id={`num-${ques.id}`}
               placeholder={placeholder}
               type="text" className="outline-none w-full h-full placeholder-neutral-500" />
@@ -350,9 +356,8 @@ const CreateDeal = () => {
               ques?.suggestions.map((suggestion: any) => (
                 <li onClick={() => {
                   let elem: HTMLInputElement | any = document.getElementById(`num-${ques.id}`);
-                  const formattedNumber = String(suggestion).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
-                  elem.value = formattedNumber;
-                  dispatch(saveDealSelection({ option: formattedNumber, question: ques, fields: dealData, lang: event, secIndex, step: dealData[step - 1] }));
+                  elem.value = String(suggestion);
+                  dispatch(saveDealSelection({ option: String(suggestion), question: ques, fields: dealData, lang: event, secIndex, step: dealData[step - 1] }));
                 }} className="cursor-pointer py-2 px-3 h-9 w-24 bg-cbc-grey-sec rounded-md text-center text-sm font-normal text-neutral-900">{numberFormatter(Number(suggestion))}&nbsp;{symbol}</li>
               ))
             )}
@@ -386,7 +391,7 @@ const CreateDeal = () => {
                 <video className="w-[100%] h-[90%]" controls>
                   <source src={ques?.value?.url} type="video/webm" />
                 </video>
-              ) : <embed src={ques?.value?.url} className="block w-[110%] h-[110%] overflow-hidden" />}
+              ) : (<embed src={ques?.value?.url} className="block w-[110%] h-[110%] overflow-hidden" />)}
             </div>
           </div>
         </div>
@@ -713,7 +718,7 @@ const CreateDeal = () => {
                                               <small className="text-sm;">{mp?.value}</small>
                                               <BinIcon stroke="#171717" className="cursor-pointer w-6 h-6" onClick={() => {
                                                 setMultipleFieldsPayload((prev: any) => {
-                                                  let fields = prev.filter((f: any) => f.id !== mp.id);
+                                                  let fields = prev.filter((f: any) => f.value !== mp.value);
                                                   return [...fields];
                                                 })
                                               }} />
@@ -726,16 +731,14 @@ const CreateDeal = () => {
                                 }
                               </section>
                             )}
-                            {/* {(section?.add_more_label && index === dealData[step - 1][event]?.sections?.length - 1) && ( */}
                             {(section?.add_more_label) && (
                               <section className="w-[450px]">
                                 <Button disabled={checkMultipleButtonDisabled(section)} onClick={() => {
                                   if (!section?.display_card) {
                                     const element = dealData[step - 1][event]?.sections[index]?.fields?.at(-1);
-                                    setMultipleFieldsPayload((prev: any) => {
-                                      return [...prev, element]
-                                    });
-                                    // dispatch(saveMoreFields({ secIndex: index, lang: event, step: dealData[step - 1], duplicate: 1 }));
+                                    if (!multipleFieldsPayload?.some((elem: string) => elem === element))
+                                      setMultipleFieldsPayload((prev: any) => { return [...prev, element] });
+                                      dispatch(saveDealSelection({ option: "", question: section?.fields[0], fields: dealData, lang: event, secIndex: index, step: dealData[step - 1] }))
                                   }
                                   else dispatch(onResetFields({ secIndex: section?.index, lang: event, step: dealData[step - 1] }));
                                   section?.display_card && setShowCustomBox(true);
