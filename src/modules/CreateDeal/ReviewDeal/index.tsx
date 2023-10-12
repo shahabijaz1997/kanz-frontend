@@ -4,6 +4,7 @@ import { onReviewDeal } from "../../../apis/deal.api";
 import { KanzRoles } from "../../../enums/roles.enum";
 import { DealType } from "../../../enums/types.enum";
 import Spinner from "../../../shared/components/Spinner";
+import { uniqueArray } from "../../../utils/object.utils";
 
 const ReviewDeal = ({ navigate, dealId, authToken, metadata, language, showDeal }: any) => {
     const [loading, setLoading] = useState(false);
@@ -42,6 +43,45 @@ const ReviewDeal = ({ navigate, dealId, authToken, metadata, language, showDeal 
         )
     }
 
+    const showUSP = (field: any) => {
+        return (
+            <div className="pb-3 w-full cursor-pointer inline-flex flex-col" onClick={() => navigate(`${StartupRoutes.CREATE_DEAL}/1`)}>
+                <h3 className="text-neutral-900 font-medium text-sm">{field?.statement}</h3>
+                <p className="capitalize text-neutral-500 font-normal text-sm">{field?.value}</p>
+            </div>
+        )
+    }
+
+    const showLoopSelection = (step: any) => {
+        if (typeof step?.fields[0]?.index === "number") {
+            let payload: any[] = []
+            for (let i = 0; i < step?.fields?.length; i++) {
+                const fields = step?.fields?.filter((fd: any) => fd.index === i);
+                payload.push({ id: i, fields });
+            }
+
+            let uniques = uniqueArray(payload);
+            uniques = uniques?.filter(uq => uq?.fields?.length > 0);
+            return React.Children.toArray(
+                uniques?.map((nz: any) => {
+                    return (
+                        <div className="pb-3 w-full cursor-pointer inline-flex flex-col" onClick={() => navigate(`${StartupRoutes.CREATE_DEAL}/1`)}>
+                            <h3 className="text-neutral-900 font-medium text-sm">{nz?.fields[1]?.value}</h3>
+                            <p className="capitalize text-neutral-500 font-normal text-sm">{nz?.fields[0]?.value}</p>
+                        </div>
+                    )
+                })
+            )
+        }
+        else return (React.Children.toArray(
+            step.fields?.map((field: any) => {
+                return (
+                    showUI(field)
+                )
+            })
+        ))
+    }
+
     return (
         <React.Fragment>
             {loading ? (
@@ -56,13 +96,7 @@ const ReviewDeal = ({ navigate, dealId, authToken, metadata, language, showDeal 
                                 return (
                                     <div className="py-4 w-full cursor-pointer border-b-[1px] border-b-neutral-200" onClick={() => navigate(`${StartupRoutes.CREATE_DEAL}/${index + 1}`)}>
                                         <h2 className="text-cc-black font-semibold text-2xl capitalize mb-3">{step?.title}</h2>
-                                        {React.Children.toArray(
-                                            step.fields?.map((field: any) => {
-                                                return (
-                                                    showUI(field)
-                                                )
-                                            })
-                                        )}
+                                        {showLoopSelection(step)}
                                     </div>
                                 )
                             })

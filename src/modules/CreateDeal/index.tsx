@@ -69,14 +69,10 @@ const CreateDeal = () => {
 
       let { status, data } = await getDealQuestion(queryParams, authToken);
       if (status === 200) {
-        console.log(1);
-
         let _dependencies: any = [];
         data?.status?.data?.steps?.forEach((step: any) => {
           if (step?.dependencies?.length > 0) _dependencies = step.dependencies;
         });
-        console.log(2);
-
         _dependencies.length > 0 && setDependencies(_dependencies)
         let all_steps: any[] = [];
         for (let i = 0; i < data?.status?.data?.step_titles[event]?.length; i++) {
@@ -86,8 +82,6 @@ const CreateDeal = () => {
 
         let options: any = [];
         let stepper: any;
-        console.log(3);
-
         data?.status?.data?.steps[step - 1][event]?.sections.forEach((sec: any) => {
           sec?.fields?.sort((a: any, b: any) => a.index - b.index);
           let f = sec?.fields?.find((ques: any) => {
@@ -97,15 +91,19 @@ const CreateDeal = () => {
           if (sec?.display_card && sec?.fields?.some((field: any) => field?.value)) {
             let _multipleFieldsPayload: any[] = []
             for (let i = 0; i < sec?.fields?.length; i++) {
-              const fields = sec?.fields?.filter((fd: any) => fd.index === 0);
+              const fields = sec?.fields?.filter((fd: any) => fd.index === i);
               _multipleFieldsPayload.push({ id: i, fields });
             }
             let uniques = uniqueArray(_multipleFieldsPayload);
-            setMultipleFieldsPayload(uniques);
-            sec.fields = [sec.fields.at(-1), sec.fields[0]]
+            let nonZero = uniques.filter((ua: any) => ua?.fields?.length > 0)
+            setMultipleFieldsPayload(nonZero);
+            sec.fields = [sec.fields.at(-1), sec.fields[0]];
+            setShowCustomBox(false);
           }
-          else if (!sec?.display_card && sec?.is_multiple && sec?.fields?.some((field: any) => field?.value))
+          else if (!sec?.display_card && sec?.is_multiple && sec?.fields?.some((field: any) => field?.value)){
             dispatch(saveMoreFields({ secIndex: sec?.index, lang: event, step: dealData[step - 1], duplicate: sec?.fields?.length }))
+            setShowCustomBox(true);
+          }
           else setMultipleFieldsPayload([]);
           let opt = f?.options?.find((op: any) => op.selected);
           if (opt) {
@@ -117,8 +115,6 @@ const CreateDeal = () => {
             });
           }
         });
-        console.log(4);
-
         if (stepper) {
           let step = all_steps?.find((ts: any) => ts?.text === stepper[event]?.title);
           let steps = all_steps?.filter((stp: any) => stp?.text !== step?.text);
@@ -127,13 +123,9 @@ const CreateDeal = () => {
         }
 
         else setTotalSteps((prev: any) => { return { copy: all_steps, all: all_steps } })
-        console.log(5);
         options?.length > 0 && setRestrictions(options);
-        console.log("DATA: ", data?.status?.data?.steps);
-
         setQuestions(data?.status?.data?.steps);
         dispatch(saveQuestionnaire(data?.status?.data?.steps));
-        setShowCustomBox(true);
       }
 
     } catch (error: any) {
@@ -142,14 +134,16 @@ const CreateDeal = () => {
         navigate(RoutesEnums.LOGIN, { state: `create-deal/${step}` });
       }
     } finally {
-      setLoading(false);
+      let timer = setTimeout(() => {
+        clearTimeout(timer);
+        setLoading(false);
+      }, 500)
     }
   };
 
   const onSetNext = async () => {
     try {
-      if (step < totalSteps?.all.length)
-        setLoading(true);
+     
       let all_fields: any[] = [];
       let fields: any[] = [];
       dealData[step - 1][event]?.sections?.forEach((section: any) => {
@@ -204,7 +198,6 @@ const CreateDeal = () => {
       toast.error(message, toastUtil);
     } finally {
       setMultipleFieldsPayload([])
-      setLoading(false);
     }
   };
 
@@ -328,7 +321,7 @@ const CreateDeal = () => {
             <input value={ques?.value} onInput={(e: any) => {
               const enteredValue = e.target.value;
               const numericValue = enteredValue.replace(/[^0-9.]|(\.(?=.*\.))/g, "");
-              const formattedNumber = numericValue.replace(/\B(?=(\d{3})+(?!\d))/g, ','); // Add commas
+              const formattedNumber = numericValue.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
               if (ques?.input_type === InputType.PERCENT && Number(e.target.value) > 100) return;
 
               dispatch(saveDealSelection({ option: formattedNumber, question: ques, fields: dealData, lang: event, secIndex, step: dealData[step - 1] }))
@@ -350,8 +343,9 @@ const CreateDeal = () => {
               ques?.suggestions.map((suggestion: any) => (
                 <li onClick={() => {
                   let elem: HTMLInputElement | any = document.getElementById(`num-${ques.id}`);
-                  elem.value = suggestion;
-                  dispatch(saveDealSelection({ option: suggestion, question: ques, fields: dealData, lang: event, secIndex, step: dealData[step - 1] }));
+                  const formattedNumber = String(suggestion).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+                  elem.value = formattedNumber;
+                  dispatch(saveDealSelection({ option: formattedNumber, question: ques, fields: dealData, lang: event, secIndex, step: dealData[step - 1] }));
                 }} className="cursor-pointer py-2 px-3 h-9 w-24 bg-cbc-grey-sec rounded-md text-center text-sm font-normal text-neutral-900">{numberFormatter(Number(suggestion))}&nbsp;{symbol}</li>
               ))
             )}
@@ -432,7 +426,7 @@ const CreateDeal = () => {
       return (
         <section className="flex items-start justify-center flex-col mt-2 w-full">
           {!dependantQuesion && <h3 className="text-neutral-700 font-medium text-base w-full capitalize">{ques?.statement}</h3>}
-          <section className="mb-8 w-full relative mt-3">
+          <section className="mb-5 w-full relative mt-1">
             <div className="relative w-full" style={{ zIndex: 101 }}>
               <Selector disabled={false} defaultValue={{ label: currentValue, value: currentValue }} options={options}
                 onChange={(v: any) => {
@@ -450,7 +444,7 @@ const CreateDeal = () => {
   const termUI = (ques: any, secIndex: number) => {
     return (
       <section className="flex items-start justify-center flex-col mt-2 w-full">
-        <section className="mb-8 w-full relative mt-3">
+        <section className="mb-5 w-full relative mt-1">
           <div dangerouslySetInnerHTML={{ __html: ques?.description }}></div>
         </section>
 
@@ -465,8 +459,8 @@ const CreateDeal = () => {
   const switchInput = (ques: any, secIndex: number, section: any) => {
     return (
       <section className="flex items-start justify-center flex-col mt-3 w-full">
-        <div className="mb-6 inline-flex w-full items-center justify-between">
-          <small className="text-neutral-700 text-lg font-medium mb-3">{ques?.statement}</small>
+        <div className="mb-3 inline-flex w-full items-center justify-between">
+          <small className="text-neutral-700 text-lg font-medium mb-1">{ques?.statement}</small>
           <label className="relative inline-flex items-center cursor-pointer" onChange={(e) => {
             dispatch(saveDealSelection({ option: !ques?.value, question: ques, fields: dealData, lang: event, secIndex, step: dealData[step - 1] }))
             let dependantQuesions: any[] = section?.fields?.filter((field: any) => field.dependent_id === ques?.id);
@@ -491,7 +485,7 @@ const CreateDeal = () => {
       return (
         <section className="flex items-start justify-center flex-col mt-3 w-full">
           <div className="mb-6 inline-flex flex-col w-full items-start justify-between">
-            {(!dependantQuesion || (dependantQuesion && dependantQuesion?.field_type === Constants.TEXT_FIELD)) && <label htmlFor={ques?.id} className="text-neutral-700 text-lg font-medium mb-3">{ques?.statement}</label>}
+            {(!dependantQuesion || (dependantQuesion && dependantQuesion?.field_type === Constants.TEXT_FIELD)) && <label htmlFor={ques?.id} className="text-neutral-700 text-lg font-medium mb-1">{ques?.statement}</label>}
             <textarea value={ques?.value} placeholder={ques?.statement} className="h-[100px] mt-2 resize-none shadow-sm appearance-none border border-neutral-300 rounded-md w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id={ques?.id} onInput={(e: any) => dispatch(saveDealSelection({ option: e.target.value, question: ques, fields: dealData, lang: event, secIndex, step: dealData[step - 1] }))}></textarea>
           </div>
         </section>
@@ -507,7 +501,7 @@ const CreateDeal = () => {
     if (!dependantQuesion || (dependantQuesion && dependantQuesion?.value)) {
       return (
         <section className="flex items-start justify-center flex-col mb-8 mt-3 w-full">
-          {!dependantQuesion && <label htmlFor={ques?.id} className="text-neutral-700 text-lg font-medium mb-3">{ques?.statement}</label>}
+          {!dependantQuesion && <label htmlFor={ques?.id} className="text-neutral-700 text-lg font-medium mb-1">{ques?.statement}</label>}
           <input title={ques?.statement} className="h-[42px] pr-10 shadow-sm appearance-none border rounded-md w-full py-2 px-3 text-gray-700 leading-tight transition-all bg-white w-full focus:outline-none" placeholder={ques?.statement} id={ques?.id} onChange={(e: any) => dispatch(saveDealSelection({ option: e.target.value, question: ques, fields: dealData, lang: event, secIndex, step: dealData[step - 1] }))} value={ques?.value} />
         </section>
       );
@@ -731,6 +725,7 @@ const CreateDeal = () => {
                                     })
                                     // dispatch(saveMoreFields({ secIndex: index, lang: event, step: dealData[step - 1], duplicate: 1 }));
                                   }
+                                  else dispatch(onResetFields({ secIndex: section?.index, lang: event, step: dealData[step - 1] }));
                                   section?.display_card && setShowCustomBox(true);
                                 }}
                                   className="w-full bg-white border-2 border-cyan-800 !text-cyan-800 hover:!text-white">{section?.add_more_label}</Button>

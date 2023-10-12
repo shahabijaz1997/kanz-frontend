@@ -128,9 +128,10 @@ const Realtor = ({ }: any) => {
 
                             <section className="mt-10">
                                 <Table columns={columns} pagination={pagination} paginate={paginate} onclick={(row: any) => {
-                                    dispatch(saveDataHolder(row.id));
-                                    if (row?.status !== ApplicationStatus.SUBMITTED)
+                                    if (row?.Status !== ApplicationStatus.SUBMITTED) {
+                                        dispatch(saveDataHolder(row.id));
                                         navigate(`/create-deal/${row?.State?.current_step + 1}`);
+                                    }
                                     else setModalOpen("2");
                                 }} noDataNode={<Button onClick={() => setModalOpen("1")} className="absolute left-1/2 top-1/2 translate-x-[-50%] translate-y-[-50%]">{language?.v3?.button?.new_deal}</Button>} />
                             </section>
@@ -180,10 +181,8 @@ const Realtor = ({ }: any) => {
                     <aside>
                         <div className="relative p-12 rounded-md shadow-cs-1 flex flex-col items-center w-full bg-white outline-none focus:outline-none screen800:px-3">
                             <h2 className="font-bold text-xl text-center text-neutral-900">{language?.v3?.common?.submitted_title}</h2>
-                            <p className="text-sm font-normal text-center text-neutral-500 mt-8 mb-12">{language?.v3?.common?.submitted_message}</p>
-                        </div>
-                        <div className="w-full inline-flex items-center justify-center gap-3 mt-10">
-                            <Button className="w-[100px]" onClick={() => setModalOpen(null)}>{language?.v3?.buttons?.cancel}</Button>
+                            <p className="text-sm font-normal text-center text-neutral-500 mt-8 mb-7">{language?.v3?.common?.submitted_message}</p>
+                            <Button className="w-[100px]" onClick={() => setModalOpen(null)}>{language?.v3?.button?.close}</Button>
                         </div>
                     </aside>
                 )}
