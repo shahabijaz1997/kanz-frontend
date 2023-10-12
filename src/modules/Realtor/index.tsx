@@ -132,10 +132,10 @@ const Realtor = ({ }: any) => {
                                 <Table columns={columns} pagination={pagination} paginate={paginate} onclick={(row: any) => {
                                     if (row?.Status !== ApplicationStatus.SUBMITTED) {
                                         dispatch(saveDataHolder(row.id));
-                                        if ((row?.State?.current_step + 1) === row?.Steps)
-                                            navigate(`/create-deal/${row?.State?.current_step}`);
+                                        if ((row?.State?.current_step + 1) === row?.Steps?.length)
+                                            navigate(`/create-deal/${row?.State?.current_step + 2}`);
                                         else
-                                            navigate(`/create-deal/${row?.State?.current_step + 1}`);
+                                            navigate(`/create-deal/${row?.State?.current_step + 2}`);
                                     }
                                     else setModalOpen("2");
                                 }} noDataNode={<Button onClick={() => setModalOpen("1")} className="absolute left-1/2 top-1/2 translate-x-[-50%] translate-y-[-50%]">{language?.v3?.button?.new_deal}</Button>} />
