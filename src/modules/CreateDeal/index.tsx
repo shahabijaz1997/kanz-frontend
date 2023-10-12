@@ -326,12 +326,12 @@ const CreateDeal = () => {
         <section className="mb-8 w-full relative">
           <div className="relative rounded-md w-full h-10 border-[1px] border-neutral-300 bg-white overflow-hidden inline-flex items-center px-3">
             <input value={ques?.value} onInput={(e: any) => {
-              let regex = /[^0-9.]|(\.(?=.*\.))/g
               const enteredValue = e.target.value;
               const numericValue = enteredValue.replace(/[^0-9.]|(\.(?=.*\.))/g, "");
+              const formattedNumber = numericValue.replace(/\B(?=(\d{3})+(?!\d))/g, ','); // Add commas
               if (ques?.input_type === InputType.PERCENT && Number(e.target.value) > 100) return;
 
-              dispatch(saveDealSelection({ option: numericValue, question: ques, fields: dealData, lang: event, secIndex, step: dealData[step - 1] }))
+              dispatch(saveDealSelection({ option: formattedNumber, question: ques, fields: dealData, lang: event, secIndex, step: dealData[step - 1] }))
             }} id={`num-${ques.id}`}
               placeholder={placeholder}
               type="text" className="outline-none w-full h-full placeholder-neutral-500" />
@@ -403,9 +403,9 @@ const CreateDeal = () => {
             <span className="relative text-cc-blue font-medium cursor-pointer" onMouseEnter={() => setShowHoverModal(ques.id)} onMouseLeave={() => setShowHoverModal(null)} >
               {language.common.example}
               {showHoverModal === ques.id && (
-                <HoverModal width="w-[150px]" height="h-[150px]">
+                <HoverModal width="w-[190px]" height="h-[190px]">
                   <section className="inline-flex flex-row items-center justify-evenly h-full">
-                    <img src={ExampleRealtor} alt={language.syndicate.logo} className="max-h-[90px]" />
+                    <img src={ExampleRealtor} alt={language.syndicate.logo} className="max-h-[150px]" />
                   </section>
                 </HoverModal>
               )}
