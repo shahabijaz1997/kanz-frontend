@@ -4,7 +4,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { RootState } from "../../redux-toolkit/store/store";
 import { getDealQuestion, postDealStep, submitDeal } from "../../apis/deal.api";
 import { DealType } from "../../enums/types.enum";
-import { onResetFields, onResetOptions, removeMoreFields, saveDealSelection, saveMoreFields, saveQuestionnaire } from "../../redux-toolkit/slicer/philosophy.slicer";
+import { onResetFields, onResetOptions, saveDealSelection, saveMoreFields, saveQuestionnaire } from "../../redux-toolkit/slicer/philosophy.slicer";
 import Header from "../../shared/components/Header";
 import CrossIcon from "../../ts-icons/crossIcon.svg";
 import { KanzRoles } from "../../enums/roles.enum";
@@ -69,10 +69,13 @@ const CreateDeal = () => {
 
       let { status, data } = await getDealQuestion(queryParams, authToken);
       if (status === 200) {
+        console.log(1);
+        
         let _dependencies: any = [];
         data?.status?.data?.steps?.forEach((step: any) => {
           if (step?.dependencies?.length > 0) _dependencies = step.dependencies;
         });
+        console.log(2);
 
         _dependencies.length > 0 && setDependencies(_dependencies)
         let all_steps: any[] = [];
@@ -83,6 +86,7 @@ const CreateDeal = () => {
 
         let options: any = [];
         let stepper: any;
+        console.log(3);
 
         data?.status?.data?.steps[step - 1][event]?.sections.forEach((sec: any) => {
           sec?.fields?.sort((a: any, b: any) => a.index - b.index);
@@ -113,15 +117,20 @@ const CreateDeal = () => {
             });
           }
         });
+console.log(4);
+
         if (stepper) {
           let step = all_steps?.find((ts: any) => ts?.text === stepper[event]?.title);
           let steps = all_steps?.filter((stp: any) => stp?.text !== step?.text);
 
           setTotalSteps((prev: any) => { return { copy: all_steps, all: steps } })
         }
-
+        
         else setTotalSteps((prev: any) => { return { copy: all_steps, all: all_steps } })
-        options?.length > 0 && setRestrictions(options)
+        console.log(5);
+        options?.length > 0 && setRestrictions(options);
+        console.log("DATA: ", data?.status?.data?.steps);
+        
         setQuestions(data?.status?.data?.steps);
         dispatch(saveQuestionnaire(data?.status?.data?.steps));
         setShowCustomBox(true);
@@ -149,7 +158,7 @@ const CreateDeal = () => {
       if (multipleFieldsPayload?.length > 0) {
         multipleFieldsPayload?.forEach((sec: any, index: number) => {
           if (sec?.fields) sec?.fields.forEach((field: any) => fields.push({ id: field.ques, value: field.value, index }));
-          else fields.push({ id: sec.id, value: sec?.value })
+          else fields.push({ id: sec.id, value: sec?.value, index })
         });
       }
 
@@ -158,7 +167,6 @@ const CreateDeal = () => {
           let selected;
           if (field?.field_type === Constants.MULTIPLE_CHOICE || field?.field_type === Constants.DROPDOWN) {
             selected = field?.options?.find((opt: any) => opt.selected)?.id
-
           }
           if (field?.field_type === Constants.NUMBER_INPUT || field?.field_type === Constants.TEXT_BOX || field?.field_type === Constants.TEXT_FIELD || field?.field_type === Constants.URL) {
             selected = field.value

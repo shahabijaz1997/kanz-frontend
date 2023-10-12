@@ -51,7 +51,7 @@ const Realtor = ({ }: any) => {
                     return {
                         id: deal?.id,
                         "Property Name": deal?.building_name || "N/A",
-                        Size: `$${deal?.size} sqft`,
+                        Size: `${deal?.size} sqft`,
                         Features: features || "N/A",
                         "Selling Price": `$${numberFormatter(Number(deal?.target))}`,
                         Status: deal?.status,
