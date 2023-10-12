@@ -31,6 +31,10 @@ jobs:
           api_location: "" # Api source code path - optional
           output_location: "build" # Built app content directory - optional
           ###### End of Repository/Build Configurations ######
+        env:
+          REACT_APP_ENV: STAGING
+          REACT_APP_LINKEDIN_API_KEY: 78e3u46jrqg1rq
+          REACT_APP_GOOGLE_API_KEY: 20076641404-8jarp92hvugp1f79kjct3a207rhe6ioe.apps.googleusercontent.com
 
   close_pull_request_job:
     if: github.event_name == 'pull_request' && github.event.action == 'closed'
