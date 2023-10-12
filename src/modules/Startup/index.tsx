@@ -29,7 +29,7 @@ const Startup = ({ }: any) => {
 
     const [pagination, setPagination] = useState({ items_per_page: 5, total_items: [], current_page: 1, total_pages: 0 });
     const [selectedTab, setSelectedTab] = useState();
-    const [modalOpen, setModalOpen]:any = useState(null);
+    const [modalOpen, setModalOpen]: any = useState(null);
     const [loading, setLoading] = useState(false);
     const [tabs] = useState([language?.v3?.startup?.overview?.all, language?.v3?.startup?.overview?.raising, language?.v3?.startup?.overview?.closed]);
     const [deals, setDeals] = useState([]);
@@ -136,16 +136,13 @@ const Startup = ({ }: any) => {
                             </section>
 
                             <section className="mt-10">
-                                <Table columns={columns} pagination={pagination} paginate={paginate}  onclick={(row: any) => {
+                                <Table columns={columns} pagination={pagination} paginate={paginate} onclick={(row: any) => {
                                     if (row?.Status !== ApplicationStatus.SUBMITTED) {
                                         dispatch(saveDataHolder(row.id));
-                                        if ((row?.State?.current_step + 1) === row?.Steps)
-                                            navigate(`/create-deal/${row?.State?.current_step}`);
-                                        else
-                                            navigate(`/create-deal/${row?.State?.current_step + 1}`);
+                                        navigate(`/create-deal/${row?.State?.current_step + 1}`);
                                     }
                                     else setModalOpen("2");
-                                }}noDataNode={<Button onClick={() => setModalOpen("1")} className="absolute left-1/2 top-1/2 translate-x-[-50%] translate-y-[-50%]">{language?.v3?.button?.new_deal}</Button>} />
+                                }} noDataNode={<Button onClick={() => setModalOpen("1")} className="absolute left-1/2 top-1/2 translate-x-[-50%] translate-y-[-50%]">{language?.v3?.button?.new_deal}</Button>} />
                             </section>
                         </React.Fragment>
                     )}
