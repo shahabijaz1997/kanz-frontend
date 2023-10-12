@@ -105,7 +105,7 @@ const CreateDeal = () => {
             let elems = [];
             for (let i = 0; i < sec?.fields?.length; i++)
               elems.push(sec.fields[i]);
-            setMultipleFieldsPayload(elems)
+            setMultipleFieldsPayload(elems);
             setShowCustomBox(true);
           }
           else {
@@ -365,7 +365,8 @@ const CreateDeal = () => {
 
   const attachments = (ques: any, secIndex: number, section: any) => {
     let onlyPDF = (ques?.permitted_types?.length === 1 && ques?.permitted_types?.includes("pdf")) && true;
-    let onlyideo = (ques?.permitted_types?.length === 1 && ques?.permitted_types?.includes("video")) && true;
+    let onlvideo: any = (ques?.permitted_types?.length === 1 && ques?.permitted_types?.includes("video")) && true;
+
     return (
       ques?.value?.id ? (
         <div className="mb-4 w-full select-none content-center bg-cbc-grey-sec p-4 rounded-md">
@@ -381,7 +382,11 @@ const CreateDeal = () => {
                 }} />
             </span>
             <div className="content-center text-center mt-2  main-embed  h-[200px] overflow-hidden relative">
-              <embed src={ques?.value?.url} className="block w-[110%] h-[110%] overflow-hidden" />
+              {onlvideo ? (
+                <video className="w-[100%] h-[90%]" controls>
+                  <source src={ques?.value?.url} type="video/webm" />
+                </video>
+              ) : <embed src={ques?.value?.url} className="block w-[110%] h-[110%] overflow-hidden" />}
             </div>
           </div>
         </div>
@@ -413,7 +418,7 @@ const CreateDeal = () => {
             </span>
           </p>
 
-          <FileUpload parentId={dataHolder} onlyPDF={onlyPDF} onlyVideo={onlyideo} size={`${ques?.size_constraints?.limit}${ques?.size_constraints?.unit}`}
+          <FileUpload parentId={dataHolder} onlyPDF={onlyPDF} onlyVideo={onlvideo} size={`${ques?.size_constraints?.limit}${ques?.size_constraints?.unit}`}
             id={`at-${ques?.id}`} fid={ques?.id} file={ques?.value} setModalOpen={() => { }} setFile={(file: File, id: string, url: string, aid: string, size: string, dimensions: string, type: string, prodURL: string) => {
               dispatch(saveDealSelection({ option: { url: prodURL, id: aid }, question: ques, fields: dealData, lang: event, secIndex, step: dealData[step - 1] }))
             }} title={ques?.statement} removeFile={() => removeFile(ques?.value?.id, { option: null, question: ques, fields: dealData, lang: event, secIndex, step: dealData[step - 1] })} className="w-full" />

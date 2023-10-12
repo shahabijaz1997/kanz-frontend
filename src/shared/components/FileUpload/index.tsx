@@ -41,10 +41,11 @@ const FileUpload = ({ size, parentId, id, fid, file, setModalOpen, setFile, remo
         setDragOver(false);
     };
 
-    const handleDrop = (e: React.DragEvent<HTMLDivElement>) => {
+    const handleDrop = (e: React.DragEvent<HTMLDivElement> | any) => {
         e.preventDefault();
         setDragOver(false);
         const _file = e.dataTransfer.files[0];
+
         if (file) return;
         if (!acceptPdf && validImages.includes(_file.type)) setFileInformation(_file);
         else if (onlyVideo && validVideos.includes(file.type)) setFileInformation(file);
@@ -125,7 +126,7 @@ const FileUpload = ({ size, parentId, id, fid, file, setModalOpen, setFile, remo
                 navigate(RoutesEnums.LOGIN, { state: 'add-attachments' });
             }
             console.log(error);
-            
+
             const message = error?.response?.data?.status?.message || language.promptMessages.errorFileUpload;
             return setAlertType({ type: PromptMessage.ERROR, message });
         } finally {
@@ -165,7 +166,9 @@ const FileUpload = ({ size, parentId, id, fid, file, setModalOpen, setFile, remo
                             </div>
                             {onlyVideo && (
                                 <section className="h-[120px] w-[120px] bg-white inline-grid place-items-center shadow-cs-3 rounded-md overflow-hidden">
-                                    <video className="w-[100%] h-[90%]" controls><source src={selectedFile?.url}></source></video>
+                                    <video className="w-[100%] h-[90%]" controls>
+                                        <source src={selectedFile?.url} type="video/webm" />
+                                    </video>
                                 </section>
                             )}
                             {!onlyVideo && (
@@ -202,7 +205,7 @@ const FileUpload = ({ size, parentId, id, fid, file, setModalOpen, setFile, remo
                                 {size && <div className="text-neutral-500 text-sm font-normal">
                                     {onlyPDF && "PDF"}
                                     {onlyVideo && "Video"}
-                                    {language?.common?.fileSpecsPDF} 
+                                    {language?.common?.fileSpecsPDF}
                                     {size}</div>}
                                 <input id={id} type="file" className="hidden" onChange={handleFileInput} />
                             </div>
