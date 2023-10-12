@@ -47,6 +47,7 @@ const Realtor = ({ }: any) => {
             setLoading(true);
             let { status, data } = await getDeals(authToken);
             if (status === 200) {
+
                 let deals = data?.status?.data?.map((deal: any) => {
                     let features = deal?.features?.map((f: any) => f?.title || f?.description)?.join(",")
                     return {
@@ -58,6 +59,7 @@ const Realtor = ({ }: any) => {
                         Status: deal?.status,
                         "Rental Amount": `$${numberFormatter(Number(deal?.rental_amount))}`,
                         State: deal?.current_state,
+                        Steps: deal?.current_state?.steps
                     }
                 });
 
@@ -130,7 +132,10 @@ const Realtor = ({ }: any) => {
                                 <Table columns={columns} pagination={pagination} paginate={paginate} onclick={(row: any) => {
                                     if (row?.Status !== ApplicationStatus.SUBMITTED) {
                                         dispatch(saveDataHolder(row.id));
-                                        navigate(`/create-deal/${row?.State?.current_step + 1}`);
+                                        if ((row?.State?.current_step + 1) === row?.Steps)
+                                            navigate(`/create-deal/${row?.State?.current_step}`);
+                                        else
+                                            navigate(`/create-deal/${row?.State?.current_step + 1}`);
                                     }
                                     else setModalOpen("2");
                                 }} noDataNode={<Button onClick={() => setModalOpen("1")} className="absolute left-1/2 top-1/2 translate-x-[-50%] translate-y-[-50%]">{language?.v3?.button?.new_deal}</Button>} />

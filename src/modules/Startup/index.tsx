@@ -17,6 +17,7 @@ import { saveDataHolder } from "../../redux-toolkit/slicer/dataHolder.slicer";
 import { getDeals } from "../../apis/deal.api";
 import { numberFormatter } from "../../utils/object.utils";
 import { saveToken } from "../../redux-toolkit/slicer/auth.slicer";
+import { ApplicationStatus } from "../../enums/types.enum";
 
 const columns = ['Title', 'Type', 'Status', 'Stage', 'Round', 'Target'];
 
@@ -28,7 +29,7 @@ const Startup = ({ }: any) => {
 
     const [pagination, setPagination] = useState({ items_per_page: 5, total_items: [], current_page: 1, total_pages: 0 });
     const [selectedTab, setSelectedTab] = useState();
-    const [modalOpen, setModalOpen] = useState(false);
+    const [modalOpen, setModalOpen]:any = useState(null);
     const [loading, setLoading] = useState(false);
     const [tabs] = useState([language?.v3?.startup?.overview?.all, language?.v3?.startup?.overview?.raising, language?.v3?.startup?.overview?.closed]);
     const [deals, setDeals] = useState([]);
@@ -54,7 +55,8 @@ const Startup = ({ }: any) => {
                         Status: deal?.status,
                         Type: deal?.instrument_type,
                         State: deal?.current_state,
-                        Valuation: `$${numberFormatter(Number(deal?.valuation))} ${language?.v3?.deal?.valuation}`
+                        Valuation: `$${numberFormatter(Number(deal?.valuation))} ${language?.v3?.deal?.valuation}`,
+                        Steps: deal?.current_state?.steps
                     }
                 });
                 setPagination(prev => {
@@ -130,57 +132,72 @@ const Startup = ({ }: any) => {
                                         </ul>
                                     </span>
                                 </div>
-                                <Button onClick={() => setModalOpen(true)} className="w-[170px]">{language?.v3?.button?.new_deal}</Button>
+                                <Button onClick={() => setModalOpen("1")} className="w-[170px]">{language?.v3?.button?.new_deal}</Button>
                             </section>
 
                             <section className="mt-10">
-                                <Table columns={columns} pagination={pagination} paginate={paginate} onclick={(row: any) => {
-                                    dispatch(saveDataHolder(row.id));
-                                    navigate(`/create-deal/${row?.State?.current_step + 1}`);
-                                }} noDataNode={<Button onClick={() => setModalOpen(true)} className="absolute left-1/2 top-1/2 translate-x-[-50%] translate-y-[-50%]">{language?.v3?.button?.new_deal}</Button>} />
+                                <Table columns={columns} pagination={pagination} paginate={paginate}  onclick={(row: any) => {
+                                    if (row?.Status !== ApplicationStatus.SUBMITTED) {
+                                        dispatch(saveDataHolder(row.id));
+                                        if ((row?.State?.current_step + 1) === row?.Steps)
+                                            navigate(`/create-deal/${row?.State?.current_step}`);
+                                        else
+                                            navigate(`/create-deal/${row?.State?.current_step + 1}`);
+                                    }
+                                    else setModalOpen("2");
+                                }}noDataNode={<Button onClick={() => setModalOpen("1")} className="absolute left-1/2 top-1/2 translate-x-[-50%] translate-y-[-50%]">{language?.v3?.button?.new_deal}</Button>} />
                             </section>
                         </React.Fragment>
                     )}
                 </section>
             </aside>
 
-            <Modal show={modalOpen}>
-                <div className="relative p-12 rounded-md shadow-cs-1 flex flex-col items-center w-full bg-white outline-none focus:outline-none screen800:px-3">
-                    <div className="rounded-md h-8 w-8 inline-grid place-items-center cursor-pointer absolute right-2 top-2">
-                        <CrossIcon stroke="#171717" className="w-6 h-6" onClick={() => setModalOpen(false)} />
+            <Modal show={modalOpen ? true : false}>
+                {modalOpen === "1" ? (
+                    <div className="relative p-12 rounded-md shadow-cs-1 flex flex-col items-center w-full bg-white outline-none focus:outline-none screen800:px-3">
+                        <div className="rounded-md h-8 w-8 inline-grid place-items-center cursor-pointer absolute right-2 top-2">
+                            <CrossIcon stroke="#171717" className="w-6 h-6" onClick={() => setModalOpen(null)} />
+                        </div>
+                        <aside>
+                            <h2 className="font-bold text-xl text-center text-neutral-900">{language?.v3?.common?.disclaimer}</h2>
+                            <p className="text-sm font-normal text-center text-neutral-500 mt-8 mb-12">{language?.v3?.common?.disclaimer_desc}</p>
+                            <div className="py-3 border-t-[1px] border-neutral0=-200 inline-flex justify-between w-full cursor-pointer" onClick={() => {
+                                setDummyDisclaimers(prev => {
+                                    return { ...prev, d1: !prev.d1 }
+                                })
+                            }}>
+                                <span>
+                                    <h2 className="font-medium text-neutral-700 text-xl">Disclaimer 1</h2>
+                                    <p className="font-normal text-neutral-500 text-sm">Description of Disclaimer</p>
+                                </span>
+                                <input type="checkbox" checked={dummyDisclaimers?.d1} />
+                            </div>
+                            <div className="py-3 border-t-[1px] border-neutral0=-200 inline-flex justify-between w-full cursor-pointer" onClick={() => {
+                                setDummyDisclaimers(prev => {
+                                    return { ...prev, d2: !prev.d2 }
+                                })
+                            }}>
+                                <span>
+                                    <h2 className="font-medium text-neutral-700 text-xl">Disclaimer 2</h2>
+                                    <p className="font-normal text-neutral-500 text-sm">Description of Disclaimer</p>
+                                </span>
+                                <input type="checkbox" checked={dummyDisclaimers.d2} />
+                            </div>
+                            <div className="w-full inline-flex items-center justify-center gap-3 mt-10">
+                                <Button className="w-[100px] bg-transparent border-cyan-800 border-[1px]" type={"outlined"} onClick={() => setModalOpen(null)}>{language?.v3?.button?.cancel}</Button>
+                                <Button className="w-[100px]" disabled={!dummyDisclaimers.d1 || !dummyDisclaimers.d2} onClick={() => navigate(`${StartupRoutes.CREATE_DEAL}/1`)}>{language?.buttons?.continue}</Button>
+                            </div>
+                        </aside>
                     </div>
-
+                ) : (
                     <aside>
-                        <h2 className="font-bold text-xl text-center text-neutral-900">{language?.v3?.common?.disclaimer}</h2>
-                        <p className="text-sm font-normal text-center text-neutral-500 mt-8 mb-12">{language?.v3?.common?.disclaimer_desc}</p>
-                        <div className="py-3 border-t-[1px] border-neutral-200 inline-flex justify-between w-full cursor-pointer" onClick={() => {
-                            setDummyDisclaimers(prev => {
-                                return { ...prev, d1: !prev.d1 }
-                            })
-                        }}>
-                            <span>
-                                <h2 className="font-medium text-neutral-700 text-xl">Disclaimer 1</h2>
-                                <p className="font-normal text-neutral-500 text-sm">Description of Disclaimer</p>
-                            </span>
-                            <input type="checkbox" checked={dummyDisclaimers?.d1} />
-                        </div>
-                        <div className="py-3 border-t-[1px] border-neutral-200 inline-flex justify-between w-full cursor-pointer" onClick={() => {
-                            setDummyDisclaimers(prev => {
-                                return { ...prev, d2: !prev.d2 }
-                            })
-                        }}>
-                            <span>
-                                <h2 className="font-medium text-neutral-700 text-xl">Disclaimer 2</h2>
-                                <p className="font-normal text-neutral-500 text-sm">Description of Disclaimer</p>
-                            </span>
-                            <input type="checkbox" checked={dummyDisclaimers.d2} />
-                        </div>
-                        <div className="w-full inline-flex items-center justify-center gap-3 mt-10">
-                            <Button className="w-[100px] bg-transparent border-cyan-800 border-[1px]" type={"outlined"} onClick={() => setModalOpen(false)}>{language?.v3?.button?.cancel}</Button>
-                            <Button className="w-[100px]" disabled={!dummyDisclaimers.d1 || !dummyDisclaimers.d2} onClick={() => navigate(`${StartupRoutes.CREATE_DEAL}/1`)}>{language?.buttons?.continue}</Button>
+                        <div className="relative p-12 rounded-md shadow-cs-1 flex flex-col items-center w-full bg-white outline-none focus:outline-none screen800:px-3">
+                            <h2 className="font-bold text-xl text-center text-neutral-900">{language?.v3?.common?.submitted_title}</h2>
+                            <p className="text-sm font-normal text-center text-neutral-500 mt-8 mb-7">{language?.v3?.common?.submitted_message}</p>
+                            <Button className="w-[100px]" onClick={() => setModalOpen(null)}>{language?.v3?.button?.close}</Button>
                         </div>
                     </aside>
-                </div>
+                )}
             </Modal>
         </main>
     );
