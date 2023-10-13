@@ -91,8 +91,8 @@ const CreateDeal = () => {
           if (sec?.display_card && sec?.fields?.some((field: any) => field?.value)) {
             let _multipleFieldsPayload: any[] = []
             for (let i = 0; i < sec?.fields?.length; i++) {
-              const fields = sec?.fields?.filter((fd: any) => fd.index === i);
-              _multipleFieldsPayload.push({ id: i, fields });
+              const fields: [] = sec?.fields?.filter((fd: any) => fd.index === i);
+              _multipleFieldsPayload.push({ id: i, fields: fields.reverse() });
             }
             let uniques = uniqueArray(_multipleFieldsPayload);
             let nonZero = uniques.filter((ua: any) => ua?.fields?.length > 0)
@@ -111,6 +111,7 @@ const CreateDeal = () => {
 
             if (sect?.fields?.length > 1) {
               for (let i = 0; i < sect?.fields.length; i++) sect?.fields.pop();
+              sect.fields[0].value = "";
             }
           }
           else {
@@ -581,7 +582,12 @@ const CreateDeal = () => {
           flags[index].validations.push(flag);
         }
         else if (ques?.field_type === Constants.MULTIPLE_CHOICE || ques?.field_type === Constants.DROPDOWN) {
-          let flag = ques.options?.some((opt: any) => opt.selected);
+          let dependantQuesion = sec?.fields?.find((field: any) => field.id === ques?.dependent_id);
+          let flag = false;
+          let isSome = ques.options?.some((opt: any) => opt.selected);
+          if ((!dependantQuesion && isSome) || (dependantQuesion && dependantQuesion?.value && isSome) || (dependantQuesion && !dependantQuesion.value))
+            flag = true;
+          else flag = false;
           flags[index].validations.push(flag);
         }
         else if (ques?.field_type === Constants.FILE) {
@@ -667,6 +673,7 @@ const CreateDeal = () => {
                             <h3 className="w-[450px] screen500:w-[350px] text-neutral-700 font-bold text-2xl mb-10">
                               {section?.title}
                             </h3>
+                            {/* For Custom Cards */}
                             {(multipleFieldsPayload && multipleFieldsPayload?.length > 0 && section?.display_card) && (
                               React.Children.toArray(
                                 multipleFieldsPayload?.map((sec: any) => {
@@ -689,6 +696,8 @@ const CreateDeal = () => {
                                 })
                               )
                             )}
+
+                            {/* For non custom cards */}
                             {showCustomBox && (
                               <section className={`flex items-start flex-col mb-8 w-[450px] screen500:w-[350px] ${(index % 2 != 0 || section?.is_multiple) && "bg-cbc-check p-4 rounded-md"}`}>
                                 {section?.fields?.length > 0 && (React.Children.toArray(section?.fields?.map((ques: any) => renderQuestionType(ques, index, section))))}
