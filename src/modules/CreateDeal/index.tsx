@@ -159,8 +159,6 @@ const CreateDeal = () => {
       dealData[step - 1][event]?.sections?.forEach((section: any) => {
         all_fields = all_fields.concat(section?.fields);
       });
-      console.log("del", deleted);
-
       if (multipleFieldsPayload?.length > 0 || deleted.length > 0) {
         let concatList = multipleFieldsPayload.concat(deleted);
         concatList?.forEach((sec: any, index: number) => {
