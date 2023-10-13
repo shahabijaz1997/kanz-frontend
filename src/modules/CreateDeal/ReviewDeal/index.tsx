@@ -35,7 +35,7 @@ const ReviewDeal = ({ navigate, dealId, authToken, metadata, language, showDeal 
     const showUI = (field: any) => {
         return (
             <div className="pb-3 w-full cursor-pointer inline-flex w-full justify-between" onClick={() => navigate(`${StartupRoutes.CREATE_DEAL}/1`)}>
-                <h3 className="text-neutral-900 font-medium text-sm">{field?.statement}</h3>
+                <h3 className="capitalize text-neutral-900 font-medium text-sm">{field?.statement}</h3>
                 {(typeof field?.value === "string" || typeof field?.value === "number") && <p className="capitalize text-neutral-500 font-normal text-sm">{field?.value}</p>}
                 {typeof field?.value === "boolean" && <p className="capitalize text-neutral-500 font-normal text-sm">{field?.value ? language?.buttons?.yes : language?.buttons?.no}</p>}
                 {typeof field?.value === "object" && <p className="capitalize text-neutral-500 font-normal text-sm">{field?.value ? language?.buttons?.yes : language?.buttons?.no}</p>}
@@ -58,7 +58,7 @@ const ReviewDeal = ({ navigate, dealId, authToken, metadata, language, showDeal 
                 uniques?.map((nz: any) => {
                     return (
                         <div className="pb-3 w-full cursor-pointer inline-flex flex-col" onClick={() => navigate(`${StartupRoutes.CREATE_DEAL}/1`)}>
-                            <h3 className="text-neutral-900 font-medium text-sm capitalize">{nz?.fields[1]?.value}</h3>
+                            <h3 className="capitalize text-neutral-900 font-medium text-sm">{nz?.fields[1]?.value}</h3>
                             <p className="capitalize text-neutral-500 font-normal text-sm">{nz?.fields[0]?.value}</p>
                         </div>
                     )
