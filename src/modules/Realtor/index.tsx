@@ -43,6 +43,12 @@ const Realtor = ({ }: any) => {
         getAllDeals();
     }, []);
 
+    const comaFormattedNumber = (value: string) => {
+        if (!value) return value;
+        return String(value).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+      };
+    
+
     const getAllDeals = async () => {
         try {
             setLoading(true);
@@ -54,7 +60,7 @@ const Realtor = ({ }: any) => {
                     return {
                         id: deal?.id,
                         "Property Name": deal?.building_name || "N/A",
-                        Size: `${deal?.size} sqft`,
+                        Size: `${comaFormattedNumber(deal?.size)} sqft`,
                         Features: features || "N/A",
                         "Selling Price": `$${numberFormatter(Number(deal?.target))}`,
                         Status: deal?.status,
