@@ -31,7 +31,8 @@ const Realtor = ({ }: any) => {
     const [loading, setLoading] = useState(false);
     const [tabs] = useState([language?.v3?.startup?.overview?.all, language?.v3?.startup?.overview?.raising, language?.v3?.startup?.overview?.closed]);
     const [deals, setDeals] = useState([]);
-    const [dummyDisclaimers, setDummyDisclaimers] = useState({ "d1": false, "d2": false });
+    const [dummyDisclaimers, setDummyDisclaimers] = useState({ "d1": false, "d2": false, "d3": false });
+    const [disclaimersToggler, setDisclaimersToggler] = useState({ "d1": false, "d2": false, "d3": false });
 
     useEffect(() => {
         dispatch(saveDataHolder(""))
@@ -149,33 +150,86 @@ const Realtor = ({ }: any) => {
                             <CrossIcon stroke="#171717" className="w-6 h-6" onClick={() => setModalOpen(null)} />
                         </div>
                         <aside>
-                            <h2 className="font-bold text-xl text-center text-neutral-900">{language?.v3?.common?.disclaimer}</h2>
-                            <p className="text-sm font-normal text-center text-neutral-500 mt-8 mb-12">{language?.v3?.common?.disclaimer_desc}</p>
-                            <div className="py-3 border-t-[1px] border-neutral0=-200 inline-flex justify-between w-full cursor-pointer" onClick={() => {
-                                setDummyDisclaimers(prev => {
-                                    return { ...prev, d1: !prev.d1 }
-                                })
-                            }}>
+                            <h2 className="font-bold text-xl text-center text-neutral-900">{language?.v3?.startup?.disc_tit}</h2>
+                            <p className="text-sm font-normal text-center text-neutral-500 mt-8 mb-12">{language?.v3?.startup?.disc_desc}</p>
+                            <div className="py-3 border-t-[1px] border-neutral-200 inline-flex items-start flex-col w-full cursor-pointer">
                                 <span>
-                                    <h2 className="font-medium text-neutral-700 text-xl">Disclaimer 1</h2>
-                                    <p className="font-normal text-neutral-500 text-sm">Description of Disclaimer</p>
+                                    <h2 className="font-medium text-neutral-700 text-xl">{language?.v3?.startup?.d1}</h2>
+                                    {disclaimersToggler.d1 ? (
+                                        <React.Fragment>
+                                            <p className="font-normal text-neutral-500 text-sm" dangerouslySetInnerHTML={{ __html: language?.v3?.startup?.d_s_1 }}></p>
+                                            <p className="font-normal text-neutral-500 text-sm" dangerouslySetInnerHTML={{ __html: language?.v3?.startup?.d_s_2 }}></p>
+                                            <p className="font-normal text-neutral-500 text-sm" dangerouslySetInnerHTML={{ __html: language?.v3?.startup?.d_s_3 }}></p>
+                                            {React.Children.toArray(
+                                                language?.v3?.startup?.d_s_arr_1?.map((item: any) => <p className="font-normal text-neutral-500 text-sm" dangerouslySetInnerHTML={{ __html: item }}></p>)
+                                            )}
+                                            <p className="font-normal text-neutral-500 text-sm" dangerouslySetInnerHTML={{ __html: language?.v3?.startup?.d_s_4 }}></p>
+                                            <p className="font-normal text-neutral-500 text-sm" dangerouslySetInnerHTML={{ __html: language?.v3?.startup?.d_s_5 }}></p>
+                                            <button className="cursor-pointer text-sm text-blue-500" onClick={() => setDisclaimersToggler(prev => { return { d1: false, d2: false, d3: false } })}>{language?.v3?.button?.seeLess}</button>
+                                        
+                                        </React.Fragment>
+                                    ) : (
+                                        <React.Fragment>
+                                            <p className="font-normal text-neutral-500 text-sm" dangerouslySetInnerHTML={{ __html: language?.v3?.startup?.d_s_1?.slice(0, 200) + "..." }}></p>
+                                            <button className="cursor-pointer text-sm text-blue-500" onClick={() => setDisclaimersToggler(prev => { return { d1: !prev.d1, d2: false, d3: false } })}>{language?.v3?.button?.seeMore}</button>
+                                        </React.Fragment>
+                                    )}
                                 </span>
-                                <input type="checkbox" checked={dummyDisclaimers?.d1} />
+                                <div className="w-full inline-flex justify-between mt-4 cursor-pointer" onClick={() => { setDummyDisclaimers(prev => { return { ...prev, d1: !prev.d1 } }) }}>
+                                    <p className="font-normal text-neutral-700 text-sm">{language?.v3?.common?.accept}</p>
+                                    <input type="checkbox" checked={dummyDisclaimers.d1} />
+                                </div>
                             </div>
-                            <div className="py-3 border-t-[1px] border-neutral0=-200 inline-flex justify-between w-full cursor-pointer" onClick={() => {
-                                setDummyDisclaimers(prev => {
-                                    return { ...prev, d2: !prev.d2 }
-                                })
-                            }}>
+                            <div className="py-3 border-t-[1px] border-neutral-200 inline-flex items-start flex-col w-full cursor-pointer">
                                 <span>
-                                    <h2 className="font-medium text-neutral-700 text-xl">Disclaimer 2</h2>
-                                    <p className="font-normal text-neutral-500 text-sm">Description of Disclaimer</p>
+                                    <h2 className="font-medium text-neutral-700 text-xl" dangerouslySetInnerHTML={{ __html: language?.v3?.startup?.d2 }}></h2>
+                                    {disclaimersToggler.d2 ? (
+                                        <React.Fragment>
+                                            <p className="font-normal text-neutral-500 text-sm" dangerouslySetInnerHTML={{ __html: language?.v3?.startup?.d2_s_1 }}></p>
+                                            <p className="font-normal text-neutral-500 text-sm" dangerouslySetInnerHTML={{ __html: language?.v3?.startup?.d2_s_2 }}></p>
+                                            {React.Children.toArray(
+                                                language?.v3?.startup?.d2_arr_1?.map((item: any) => <p className="font-normal text-neutral-500 text-sm" dangerouslySetInnerHTML={{ __html: item }}></p>)
+                                            )}
+                                            <p className="font-normal text-neutral-500 text-sm" dangerouslySetInnerHTML={{ __html: language?.v3?.startup?.d2_s_3 }}></p>
+                                            <button className="cursor-pointer text-sm text-blue-500" onClick={() => setDisclaimersToggler(prev => { return { d1: false, d2: false, d3: false } })}>{language?.v3?.button?.seeLess}</button>
+                                        </React.Fragment>
+                                    ) : (
+                                        <React.Fragment>
+                                            <p className="font-normal text-neutral-500 text-sm" dangerouslySetInnerHTML={{ __html: language?.v3?.startup?.d2_s_1?.slice(0, 200) + "..." }}></p>
+                                            <button className="cursor-pointer text-sm text-blue-500" onClick={() => setDisclaimersToggler(prev => { return { d1: false, d2: !prev.d2, d3: false } })}>{language?.v3?.button?.seeMore}</button>
+                                        </React.Fragment>
+                                    )}
                                 </span>
-                                <input type="checkbox" checked={dummyDisclaimers.d2} />
+                                <div className="w-full inline-flex justify-between mt-4 cursor-pointer" onClick={() => { setDummyDisclaimers(prev => { return { ...prev, d2: !prev.d2 } }) }}>
+                                    <p className="font-normal text-neutral-700 text-sm">{language?.v3?.common?.accept}</p>
+                                    <input type="checkbox" checked={dummyDisclaimers.d2} />
+                                </div>
+                            </div>
+                            <div className="py-3 border-t-[1px] border-neutral-200 inline-flex items-start flex-col w-full cursor-pointer">
+                                <span>
+                                    <h2 className="font-medium text-neutral-700 text-xl" dangerouslySetInnerHTML={{ __html: language?.v3?.startup?.d3 }}></h2>
+                                    {disclaimersToggler.d3 ? (
+                                        <React.Fragment>
+                                            <p className="font-normal text-neutral-500 text-sm" dangerouslySetInnerHTML={{ __html: language?.v3?.startup?.d3_s_1 }}></p>
+                                            <p className="font-normal text-neutral-500 text-sm" dangerouslySetInnerHTML={{ __html: language?.v3?.startup?.d3_s_2 }}></p>
+                                            <button className="cursor-pointer text-sm text-blue-500" onClick={() => setDisclaimersToggler(prev => { return { d1: false, d2: false, d3: false } })}>{language?.v3?.button?.seeLess}</button>
+
+                                        </React.Fragment>
+                                    ) : (
+                                        <React.Fragment>
+                                            <p className="font-normal text-neutral-500 text-sm" dangerouslySetInnerHTML={{ __html: language?.v3?.startup?.d3_s_1?.slice(0, 200) + "..." }}></p>
+                                            <button className="cursor-pointer text-sm text-blue-500" onClick={() => setDisclaimersToggler(prev => { return { d1: false, d2: false, d3: !prev.d3 } })}>{language?.v3?.button?.seeMore}</button>
+                                        </React.Fragment>
+                                    )}
+                                </span>
+                                <div className="w-full inline-flex justify-between mt-4 cursor-pointer" onClick={() => { setDummyDisclaimers(prev => { return { ...prev, d3: !prev.d3 } }) }}>
+                                    <p className="font-normal text-neutral-700 text-sm">{language?.v3?.common?.accept}</p>
+                                    <input type="checkbox" checked={dummyDisclaimers.d3} />
+                                </div>
                             </div>
                             <div className="w-full inline-flex items-center justify-center gap-3 mt-10">
                                 <Button className="w-[100px] bg-transparent border-cyan-800 border-[1px]" type={"outlined"} onClick={() => setModalOpen(null)}>{language?.v3?.button?.cancel}</Button>
-                                <Button className="w-[100px]" disabled={!dummyDisclaimers.d1 || !dummyDisclaimers.d2} onClick={() => navigate(`${StartupRoutes.CREATE_DEAL}/1`)}>{language?.buttons?.continue}</Button>
+                                <Button className="w-[100px]" disabled={!dummyDisclaimers.d1 || !dummyDisclaimers.d2 || !dummyDisclaimers.d3} onClick={() => navigate(`${StartupRoutes.CREATE_DEAL}/1`)}>{language?.buttons?.continue}</Button>
                             </div>
                         </aside>
                     </div>
