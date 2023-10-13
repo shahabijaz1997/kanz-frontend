@@ -413,7 +413,8 @@ const CreateDeal = () => {
             {ques?.statement}
           </h3>
           <p className="text-neutral-500 font-normal text-sm mb-2">
-            <span className="text-neutral-500">{language?.buttons?.upload} {React.Children.toArray(ques?.permitted_types?.map((type: any) => <span className="uppercase">{type}</span>))} {language?.drawer?.of} {ques?.statement}</span>&nbsp;
+            {/* <span className="text-neutral-500">{language?.buttons?.upload} {React.Children.toArray(ques?.permitted_types?.map((type: any) => <span className="uppercase">{type}&nbsp;</span>))} {language?.drawer?.of} {ques?.statement}</span>&nbsp; */}
+            <span className="text-neutral-500">{ques?.label}</span>&nbsp;
             <span className="relative text-cc-blue font-medium cursor-pointer" onMouseEnter={() => setShowHoverModal(ques.id)} onMouseLeave={() => setShowHoverModal(null)} >
               {language.common.example}
               {showHoverModal === ques.id && (
