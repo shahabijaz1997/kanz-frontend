@@ -610,7 +610,76 @@
         }
     },
     "v3": {
+        "property": {
+            "disc_tit": "LEGAL DISCLAIMER AND TERMS OF USE",
+            "disc_desc": "The following terms supplement Kanz general terms and conditions and collectively govern your use of the KANZ web platform",
+            "d1": "TERMS OF SERVICE",
+            "d_s_1": "<em>Read the following terms of service carefully</em> <br /><br /><strong>i. Introduction</strong><br /> Capital (“Kanz”) is a financial technology company regulated by Dubai Financial Services Authority (“DSFA”) in the Dubai International Financial Centre (“DIFC”)<br /> <br />. Kanz holds a Category # license with a Retail Client Endorsement to: i) provide general information about investments (including property investments), fundraising, innovation, and entrepreneurship; ii) facilitate communication between property sellers and investors; and iii) give property sellers access to a database of investors, via the Kanz web platform.<br /> <br />By using Kanz as a property seller, you are authorising the web platform to provide you with general information, relevant content via social media, and online tools to list your properties and communicate with potential investors.<br /> <br />Kanz will serve as a neutral intermediary, facilitating the exchange of information and closing of deals between property sellers and investors.<br /><br />As a property owner, consultant, or developer, you must comply with all the duties and regulations governing this sector in your city/country. Any property disputes should be directed to the relevant government agencies, courts, and legal professionals.",
+            "d_s_2": "<br /><br /><strong>ii. Property Deals</strong><br /> When you list your properties on Kanz, you enter into separate legal agreements with investors and with Kanz. The following rules apply:",
+            "d_s_arr": [
+                "Information concerning your property should comply with all applicable laws and, rules and regulations.",
+                "Kanz does not guarantee success or any specific amounts of funding or the number of investors that will own a stake in your property.",
+                "We do not undertake the duty to investigate and moderate statements made by you regarding any of your properties.",
+                "Kanz may request more information about your properties, including but not limited to, documentation and evidence related to claims, timelines, maintenance, compliance with safety standards and approvals by the municipality.",
+                "We may request you to substantiate any claims, including but not limited to property size and structure, amenities, timelines for transfer of ownership, with verifiable evidence. If you are unable to uphold claims, Kanz may terminate your account, make a request to partner bank for withholding funds, or take other actions to enforce its rights under this agreement and applicable laws.",
+                "Kanz may remove your content or cancel deals if they violate our terms of use. However, we do take these actions lightly, and will investigate matters before removing any content or terminating any account.",
+                "Kanz may employ third parties to assess your documents and your deal.",
+                "Failure to provide any of the requested information within 14 business days, or a longer time approved by Kanz in writing, shall be deemed a material breach of your agreement with Kanz.",
+                "In case of any delays or obstacles in fulfilling your duties related to the campaign, you must immediately notify your investors.",
+                "You will receive personally identifiable information of investors interested in your property. This does not authorize use or disclosure of the information for other purposes such as marketing, without separate, verifiable consent obtained independently from KANZ and the investor. You will maintain and share (if required) records of all such verifiable consent.",
+                "While Kanz provides a platform for the creation of property deals and interaction with other users, we may or may not screen your content.",
+                "Kanz does not endorse any content shared by property sellers.",
+                "You are solely responsible for the content and performance of your deals, even if you engage our help. Kanz may offer additional services, but any such services will be subject to a separate agreement between you and Kanz."
+            ],
+            "d_s_3": "<br /><br /><strong>iii. Platform Fee</strong><br /> Property sellers are charged a platform fee of x% of the sale price.",
+            "d_s_4": "<br /><br /><strong>iv. Data Sharing and Protection</strong><br /> Kanz collects personal and business data from property sellers to facilitate crowdfunding. Information related to seller(s) identity and property, such as name, phone number, email address, type of property, location, and other details, is shared with investors. Your shared information is processed in accordance with DSFA’s data protection laws and regulations. We have taken technical and organizational security measures to protect your shared information from loss, destruction, manipulation, and unauthorized access. You are also required to maintain records of your data processing activities and, manage and report any data security incidents. For more information, email us on <a href='#'>property@kanz.capital</a>",
+            "d2_s_1": "FINANCIAL DISCLAIMER",
+            "d2_s_2": "<em>Read the following terms of service carefully</em> <br /><br />Kanz is not a bank and hence not authorised to hold your properties, other assets, or money. Kanz also does not provide any financial or credit assistance. Therefore, client money rules do not apply to the business currently undertaken by Kanz.<br /> <br />Information available on Kanz should not be construed as financial advice or recommendation to pitch to a particular investor. None of the information on Kanz takes your objectives or financial situation into consideration. <br /> <br />Before acting on any information, please review it in the context of your property’s value and your needs. If you need advice, please contact a licensed property investment advisor. <br /> <br />You will need to review the specific details and terms of any offers made by investors, before proceeding with any agreements and transfer of ownership.<br /><br/>As a Kanz user, you commit to ensuring that no breach of any laws, regulations, code of practice or guidelines, occurs in connection with your crowdfunding activities. Kanz cannot be held liable for any loss or damage whatsoever.",
+            "d2_arr": [
+                "Unless expressly stated otherwise, the information on Kanz:<br/><br/>",
+                "<li>Does not constitute an offer to enter a legally binding contract with Kanz; and</li>",
+                "<li>Does not form part of the terms and conditions set by individual investors.</li>"
+            ],
+            "d2_s_3": "<br /><br />Kanz does not provide any warranty for any information provided by investors within its network and assumes no liability in this regard.<br /><br />For more information, email us on <a href='#'>property@kanz.capital</a>",
+            "d3": "EDUCATION DISCLAIMER",
+            "d3_s_1": "<em>Read the following terms of service carefully</em> <br /><br />The content, information, opinions, and viewpoints contained in any educational materials (news, blogs/articles, photos, and videos) are those of the authors or contributors of such materials. While the Kanz team takes great care to screen the credentials of the contributors and make every attempt to review the contents, KANZ MAKES NO WARRANTY, EXPRESSED OR IMPLIED, as to the completeness or accuracy of the content contained in the educational materials or on its web platform.<br /><br />Property sellers can use these materials at their own risk, and Kanz shall not be responsible for any errors, omissions, or inaccuracies in these materials, whether arising through negligence, oversight, or otherwise. Reliance on any information appearing on this platform is strictly at your own risk.<br /><br />The education material contained herein is meant to promote the general understanding and dialog on topics related to finance, investment (including property investments), innovation and entrepreneurship, and is provided by professionals and influencers.<br /><br />",
+            "d3_s_2": "Such information is not meant or intended to serve as a substitute for professional training, experience, judgment, or advice from a licensed property consultant.<br /><br />The information contributed by external contributors and third-party websites is provided “AS IS” and is believed to be accurate at the time of its publishing, but it is solely your responsibility to evaluate the accuracy of any information found on the site.<br /><br />For more information, email us on <a href='#'>property@kanz.capital</a>"
+        },
         "startup": {
+            "disc_tit": "LEGAL DISCLAIMER AND TERMS OF USE",
+            "disc_desc": "The following terms supplement Kanz general terms and conditions and collectively govern your use of the KANZ web platform",
+            "d1": "TERMS OF SERVICE",
+            "d_s_1": "<em>Read the following terms of service carefully</em> <br /><br /><strong>i. Introduction</strong><br /> Capital (“Kanz”) is a financial technology company regulated by Dubai Financial Services Authority (“DSFA”) in the Dubai International Financial Centre (“DIFC”)<br /> <br />. Kanz holds a Category # license with a Retail Client Endorsement to: i) provide general information about investing, fundraising, innovation and entrepreneurship; ii) facilitate communication between startups and investors/fund managers; and iii) give startups access to a database of investors and funds.<br /><br /> By using Kanz as a startup, you are authorising the web platform to provide you with general information, financial content via social media, and online tools to create fundraising campaigns and communicate with potential investors.",
+            "d_s_2": "As a business, you need to comply with all the duties and regulations of the authority your startup is registered with and of the city/country you are based in. Any consumer complaints should be directed to your regulatory authority or economic department, as per local laws.",
+            "d_s_3": "<br /><strong>ii. Fundraising Campaigns</strong> <br /> When you create a fundraising campaign on Kanz, your startup enters into separate legal agreements with investors and with Kanz. The following rules apply:",
+            "d_s_arr_1": [
+                "<li>All information concerning your startup, campaigns, the use of funds and equity management should comply with all applicable laws and rules and regulations.</li>",
+                "<li>Kanz does not guarantee success or any specific results from the campaign.</li>",
+                "<li>We do not undertake the duty to investigate and moderate statements made by your startup.</li>",
+                "<li>Kanz may request information about your campaign, including but not limited to, documentation and evidence related to claims, timelines, prototypes, suppliers, and equity management.</li>",
+                "<li>We may request you to substantiate any claims, including but not limited to product/service features and capabilities, the stage of product development, and timelines for delivery with verifiable evidence.</li>",
+                "<li>If you are unable to uphold claims, Kanz may suspend your campaign, terminate your account, make a request to partner bank to withhold funds, or take other actions to enforce its rights under this agreement and applicable laws.</li>",
+                "<li>Kanz may remove your content or cancel campaigns if they violate our terms of use. However, we do not take these actions lightly, and will investigate matters before removing any content or terminating an account.</li>",
+                "<li>Kanz may employ third parties to assess your documents and your campaign.</li>",
+                "<li>Failure to provide any of the requested information within 14 business days, or a longer time approved by Kanz in writing, shall be deemed a material breach of your agreement with Kanz.</li>",
+                "<li>In case of any delays or obstacles in fulfilling your duties related to the campaign, you must immediately notify your investors and fund managers.</li>",
+                "<li>When you fundraise, you may receive personally identifiable information of investors/fund managers. This does not authorize use or disclosure of the information for other purposes such as marketing, without separate, verifiable consent obtained independently from KANZ and the investor/fund manager. You will maintain and share (if required) records of all such verifiable consent.</li>",
+                "<li>We do not endorse any content shared by startups. While Kanz provides a platform for the creation of fundraising campaigns and interaction with other users, we may not screen your content.</li>",
+                "<li>You are responsible for your campaigns, even if you engage our help. Kanz may offer additional services, but any such services will be subject to a separate agreement between you and Kanz.</li>"
+            ],
+            "d_s_4": "<br/> <strong>iii. Platform Fee</strong><br /> Startups are charged a platform fee of x% of the fundraising amount. Online payments are secured.",
+            "d_s_5": "<br /><strong>iv. Data Sharing and Protection</strong><br /> Kanz collects personal and business data from startup founders to facilitate fundraising. Information related to founder(s) identity and startup, such as name, phone number, email address, startup name, innovation, and other details, will be shared with investors and fund managers. <br />Your shared information is processed in accordance with DSFA’s data protection laws and regulations. <br />We have taken technical and organizational security measures to protect your shared information from loss, destruction, manipulation, and unauthorized access. <br />You are also required to maintain records of your data processing activities and, manage and report any data security incidents. <br />For more information, email us on <a href=''>startups@kanz.capital</a>",
+            "d2": "FINANCIAL DISCLAIMER",
+            "d2_s_1": "<em>Read the following financial disclaimer carefully</em><br /><br />Kanz is not a bank and hence not authorised to hold your assets or money. Kanz also does not provide any financial or credit assistance. Therefore, client money rules do not apply to the business currently undertaken by Kanz.<br /> Information available on Kanz should not be construed as financial advice or recommendation for a particular investor and/or fund. None of the information on Kanz takes your startup’s objectives or financial situation into consideration. <br />Before acting on any information, please review it in the context of your company’s situation and needs. If you need financial advice, please contact a licensed financial or investment advisor. <br />For any fundraising deals, you will need to review the specific details and terms provided directly by individual investors or fund managers, before proceeding with any agreements or transactions.<br />",
+            "d2_s_2": "As a Kanz user, you commit to ensuring that no breach of any laws, regulations, code of practice or guidelines, occurs in connection with your fundraising activities. Kanz cannot be held liable for any loss or damage whatsoever.<br />Unless expressly stated otherwise, the information on Kanz:",
+            "d2_arr_1": [
+                "<li>Does not constitute an offer to enter a legally binding contract with Kanz; and</li>",
+                "<li>Does not form part of the terms and conditions set by individual investors or fund managers.</li>"
+            ],
+            "d2_s_3": "Kanz does not provide any warranty for any information provided by investors or fund managers within its network and assumes no liability in this regard.<br /> For more information, email us on <a href='#'>startups@kanz.capital</a>",
+            "d3": "EDUCATION DISCLAIMER",
+            "d3_s_1": "<em>Read the following education disclaimer carefully</em><br /><br />The content, information, opinions, and viewpoints contained in any educational materials (news stories, blogs, articles, photos, graphics, and videos) are those of the authors or contributors of such materials. While the Kanz team takes great care to screen the credentials of the contributors and make every attempt to review the contents, KANZ MAKES NO WARRANTY, EXPRESSED OR IMPLIED, as to the completeness or accuracy of the content contained in the educational materials or on its web platform.",
+            "d3_s_2": "Startups can use these materials at their own risk, and Kanz shall not be responsible for any errors, omissions, or inaccuracies in these materials, whether arising through negligence, oversight, or otherwise. Reliance on any information appearing on this platform is strictly at your own risk.<br />The education material contained herein is meant to promote the general understanding and dialog on topics related to finance, investment, and entrepreneurship, and is provided by professionals and influencers.<br />Such information is not meant or intended to serve as a substitute for professional trainings, experience, judgment, or advice from a licensed business consultant.<br />The information contributed by external contributors and third-party websites is provided “AS IS” and is believed to be accurate at the time of its publishing, but it is solely your responsibility toevaluate the accuracy of any information found on the site.<br />.For more information, email us on <a href='#'>startups@kanz.capital</a>",
             "overview": {
                 "heading": "Deals",
                 "heading_2": "Overview",
@@ -632,7 +701,7 @@
             }
         },
         "deal": {
-            "create_deal": "Create Deal",
+            "create_deal": "Create Fundraising Campaign",
             "status": "Deal Status",
             "submitted": "Your deal has been Submitted!",
             "re_opened": "Your deal has been Re Opened!",
@@ -648,8 +717,8 @@
             "features": "Features",
             "beds": "Bedrooms",
             "kitchen": "Kitchen",
-            "washroom":"Washroom",
-            "parking":"Parking",
+            "washroom": "Washroom",
+            "parking": "Parking",
             "swim": "Swimming pool",
             "por": "Property on a rent?",
             "upload_docs": "Upload the necessary documents",
@@ -673,7 +742,8 @@
             "percent": "Percent",
             "sqft": "Square Feet",
             "submitted_title": "Your Deal has been submitted",
-            "submitted_message": "Please wait while our customer support officer review your submitted deal"
+            "submitted_message": "Please wait while our customer support officer review your submitted deal",
+            "accept": "I agree"
         },
         "button": {
             "new_deal": "Create New Deal",
@@ -682,7 +752,9 @@
             "cancel": "Cancel",
             "add": "Add",
             "add_new_link": "Add New Link",
-            "close": "Close"
+            "close": "Close",
+            "seeMore": "See More",
+            "seeLess": "See Less"
         }
     }
 }

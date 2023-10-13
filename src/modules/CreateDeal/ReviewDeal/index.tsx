@@ -43,14 +43,6 @@ const ReviewDeal = ({ navigate, dealId, authToken, metadata, language, showDeal 
         )
     }
 
-    const showUSP = (field: any) => {
-        return (
-            <div className="pb-3 w-full cursor-pointer inline-flex flex-col" onClick={() => navigate(`${StartupRoutes.CREATE_DEAL}/1`)}>
-                <h3 className="text-neutral-900 font-medium text-sm">{field?.statement}</h3>
-                <p className="capitalize text-neutral-500 font-normal text-sm">{field?.value}</p>
-            </div>
-        )
-    }
 
     const showLoopSelection = (step: any) => {
         if (typeof step?.fields[0]?.index === "number") {
@@ -66,7 +58,7 @@ const ReviewDeal = ({ navigate, dealId, authToken, metadata, language, showDeal 
                 uniques?.map((nz: any) => {
                     return (
                         <div className="pb-3 w-full cursor-pointer inline-flex flex-col" onClick={() => navigate(`${StartupRoutes.CREATE_DEAL}/1`)}>
-                            <h3 className="text-neutral-900 font-medium text-sm">{nz?.fields[1]?.value}</h3>
+                            <h3 className="text-neutral-900 font-medium text-sm capitalize">{nz?.fields[1]?.value}</h3>
                             <p className="capitalize text-neutral-500 font-normal text-sm">{nz?.fields[0]?.value}</p>
                         </div>
                     )
