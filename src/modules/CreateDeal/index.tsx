@@ -275,7 +275,7 @@ const CreateDeal = () => {
     if (flag) return <React.Fragment></React.Fragment>
     return (
       <section className="flex items-start justify-center flex-col mt-3 w-full">
-        <h3 className="text-neutral-700 font-medium text-base w-[420px]">
+        <h3 className="text-neutral-700 font-medium text-base w-[450px]">
           {ques?.title}
         </h3>
         <p className="text-neutral-500 font-normal text-sm">
@@ -289,7 +289,7 @@ const CreateDeal = () => {
             {ques?.options &&
               React.Children.toArray(ques?.options.map((as: any) => {
                 return (
-                  <li className={`h-[70px] w-[420px] px-4 grey-neutral-200 text-sm font-medium cursor-pointer border border-grey inline-flex items-center justify-start first:rounded-t-md last:rounded-b-md screen500:w-full ${as.selected ? "check-background" : "bg-white"}`}
+                  <li className={`h-[70px] w-[450px] px-4 grey-neutral-200 text-sm font-medium cursor-pointer border border-grey inline-flex items-center justify-start first:rounded-t-md last:rounded-b-md screen500:w-full ${as.selected ? "check-background" : "bg-white"}`}
                     onClick={() => {
                       dispatch(saveDealSelection({ option: as, question: ques, fields: dealData, lang: event, secIndex, step: dealData[step - 1] }));
                       if (dependencies.find((dep: any) => dep?.dependable_field === ques.id)) {
@@ -331,7 +331,7 @@ const CreateDeal = () => {
 
     if (!dependantQuesion || (dependantQuesion && dependantQuesion?.value)) return (
       <section className="flex items-start justify-center flex-col mt-3 w-full">
-        {!dependantQuesion && <h3 className="text-neutral-700 font-medium text-base w-[420px]">{ques?.statement}</h3>}
+        {!dependantQuesion && <h3 className="text-neutral-700 font-medium text-base w-[450px]">{ques?.statement}</h3>}
 
         <section className="mb-8 w-full relative">
           <div className="relative rounded-md w-full h-10 border-[1px] border-neutral-300 bg-white overflow-hidden inline-flex items-center px-3">
@@ -354,7 +354,7 @@ const CreateDeal = () => {
               <button className="font-normal text-lg text-neutral-500">%</button>
             </span>}
           </div>
-          <ul className="inline-flex items-center gap-5 mt-3">
+          <ul className="inline-flex items-center gap-6 mt-3">
             {React.Children.toArray(
               ques?.suggestions.map((suggestion: any) => (
                 <li onClick={() => {
@@ -402,14 +402,14 @@ const CreateDeal = () => {
 
         <section className="flex items-start justify-center flex-col mt-3 mb-6 w-full">
           {ques?.index < 1 && (
-            <h3 className="text-neutral-700 font-medium text-base w-[420px]">
+            <h3 className="text-neutral-700 font-medium text-base w-[450px]">
               <span>{section?.description}</span>&nbsp;<span className="text-cc-blue font-medium cursor-pointer" onClick={() => setOpen(true)} >
                 {language.philosophyGoals.whyToDo}
               </span>
             </h3>
           )
           }
-          <h3 className="text-neutral-700 font-medium text-base w-[420px] mt-3">
+          <h3 className="text-neutral-700 font-medium text-base w-[450px] mt-3">
             {ques?.statement}
           </h3>
           <p className="text-neutral-500 font-normal text-sm mb-2">
@@ -468,7 +468,7 @@ const CreateDeal = () => {
           <div dangerouslySetInnerHTML={{ __html: ques?.description }}></div>
         </section>
 
-        <section className="w-full inline-flex items-center gap-2 rounded-md border border-grey w-[420px] p-4 check-background cursor-pointer" onClick={() => dispatch(saveDealSelection({ option: !ques?.value, question: ques, fields: dealData, lang: event, secIndex, step: dealData[step - 1] }))}>
+        <section className="w-full inline-flex items-center gap-2 rounded-md border border-grey w-[450px] p-4 check-background cursor-pointer" onClick={() => dispatch(saveDealSelection({ option: !ques?.value, question: ques, fields: dealData, lang: event, secIndex, step: dealData[step - 1] }))}>
           <input type="checkbox" className="accent-cyan-800 h-3 w-3 cursor-pointer" checked={ques?.value} />
           <small className="text-neutral-700 text-lg font-medium">{ques?.statement}</small>
         </section>
@@ -714,7 +714,7 @@ const CreateDeal = () => {
                                   React.Children.toArray(
                                     multipleFieldsPayload?.map((mp: any) => {
                                       return (
-                                        <section className="flex items-start justify-center flex-col mb-1 mt-3 w-[420px]">
+                                        <section className="flex items-start justify-center flex-col mb-1 mt-3 w-[450px]">
                                           <div className="relative inline-flex w-full mb-3">
                                             <p placeholder="www.example.com"
                                               className={`h-[42px] rounded-md shadow-sm appearance-none border border-neutral-300 w-full py-2 px-3 bg-white text-blue-500 leading-tight focus:outline-none focus:shadow-outline inline-flex justify-between items-center`}>
