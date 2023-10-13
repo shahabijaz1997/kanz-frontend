@@ -162,7 +162,12 @@ const CreateDeal = () => {
 
       if (multipleFieldsPayload?.length > 0) {
         multipleFieldsPayload?.forEach((sec: any, index: number) => {
-          if (sec?.fields) sec?.fields.forEach((field: any) => fields.push({ id: field.ques, value: field.value, index }));
+          if (sec?.fields) {
+            sec?.fields.forEach((field: any) => {
+              if(field?.id) fields.push({ id: field.id, value: field.value, index })
+              else fields.push({ id: field.ques, value: field.value, index })
+            });
+          }
           else fields.push({ id: sec.id, value: sec?.value, index })
         });
       }
@@ -709,8 +714,8 @@ const CreateDeal = () => {
                                       onClick={() => {
                                         setShowCustomBox(false);
                                         setMultipleFieldsPayload((prev: any) => {
-                                          if (prev.length === 0) return [{ id: 1, fields: [{ ques: section?.fields[0].id, value: section?.fields[0].value }, { ques: section?.fields[1].id, value: section?.fields[1].value }] }]
-                                          else return [...prev, { id: prev?.at(-1).id + 1, fields: [{ ques: section?.fields[0].id, value: section?.fields[0].value }, { ques: section?.fields[1].id, value: section?.fields[1].value }] }]
+                                          if (prev.length === 0) return [{ id: 1, fields: [{ ques: section?.fields[0].id, value: section?.fields[0].value}, { ques: section?.fields[1].id, value: section?.fields[1].value }] }]
+                                          else return [...prev, { id: prev?.at(-1).id + 1, fields: [{ ques: section?.fields[0].id, value: section?.fields[0].value}, { ques: section?.fields[1].id, value: section?.fields[1].value }] }]
                                         });
                                         dispatch(onResetFields({ secIndex: section?.index, lang: event, step: dealData[step - 1] }))
                                       }}>{language?.v3?.button?.add}</Button>
