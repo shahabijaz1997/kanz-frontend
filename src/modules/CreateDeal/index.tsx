@@ -111,7 +111,7 @@ const CreateDeal = () => {
             let sect: any = data?.status?.data?.steps[step - 1][event]?.sections?.find((s: any) => s.index === sec?.index);
 
             if (sect?.fields?.length > 1) {
-              for (let i = 0; i < sect?.fields.length; i++) sect?.fields.pop();
+              for (let i = 0; i <= sect?.fields.length; i++) sect?.fields.pop();
             }
           }
           else {
