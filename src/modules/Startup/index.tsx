@@ -189,7 +189,7 @@ const Startup = ({ }: any) => {
                             </div>
                             <div className="py-3 border-t-[1px] border-neutral-200 inline-flex items-start flex-col w-full cursor-pointer">
                                 <span>
-                                    <h2 className="font-medium text-neutral-700 text-xl" dangerouslySetInnerHTML={{ __html: language?.v3?.startup?.d2 }}></h2>
+                                    <h2 className="font-medium text-neutral-700 text-xl">{language?.v3?.startup?.d2}</h2>
                                     {disclaimersToggler.d2 ? (
                                         <React.Fragment>
                                             <p className="font-normal text-neutral-500 text-sm" dangerouslySetInnerHTML={{ __html: language?.v3?.startup?.d2_s_1 }}></p>
@@ -214,7 +214,7 @@ const Startup = ({ }: any) => {
                             </div>
                             <div className="py-3 border-t-[1px] border-neutral-200 inline-flex items-start flex-col w-full cursor-pointer">
                                 <span>
-                                    <h2 className="font-medium text-neutral-700 text-xl" dangerouslySetInnerHTML={{ __html: language?.v3?.startup?.d3 }}></h2>
+                                    <h2 className="font-medium text-neutral-700 text-xl">{language?.v3?.startup?.d3}</h2>
                                     {disclaimersToggler.d3 ? (
                                         <React.Fragment>
                                             <p className="font-normal text-neutral-500 text-sm" dangerouslySetInnerHTML={{ __html: language?.v3?.startup?.d3_s_1 }}></p>

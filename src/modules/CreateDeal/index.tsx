@@ -45,6 +45,7 @@ const CreateDeal = () => {
   const [step, setStep]: any = useState(Number(params?.id));
   const [multipleFieldsPayload, setMultipleFieldsPayload]: any = useState([]);
   const [restrictions, setRestrictions]: any = useState([]);
+  const [deleted, setDeleted]: any = useState([]);
   const [currency, setCurrency] = useState(0);
   const [showHoverModal, setShowHoverModal] = useState(null);
   const [questions, setQuestions]: any = useState(null);
@@ -111,7 +112,6 @@ const CreateDeal = () => {
 
             if (sect?.fields?.length > 1) {
               for (let i = 0; i < sect?.fields.length; i++) sect?.fields.pop();
-              sect.fields[0].value = "";
             }
           }
           else {
@@ -159,11 +159,16 @@ const CreateDeal = () => {
       dealData[step - 1][event]?.sections?.forEach((section: any) => {
         all_fields = all_fields.concat(section?.fields);
       });
-
-      if (multipleFieldsPayload?.length > 0) {
-        multipleFieldsPayload?.forEach((sec: any, index: number) => {
-          if (sec?.fields) sec?.fields.forEach((field: any) => fields.push({ id: field.ques, value: field.value, index }));
-          else fields.push({ id: sec.id, value: sec?.value, index })
+      if (multipleFieldsPayload?.length > 0 || deleted.length > 0) {
+        let concatList = multipleFieldsPayload.concat(deleted);
+        concatList?.forEach((sec: any, index: number) => {
+          if (sec?.fields) {
+            sec?.fields.forEach((field: any) => {
+              if (field?.id) fields.push({ id: field.id, value: field.value, index, deleted: sec?.deleted });
+              else fields.push({ id: field.ques, value: field.value, index, deleted: sec?.deleted });
+            });
+          }
+          else fields.push({ id: sec.id, value: sec?.value, index, deleted: sec?.deleted })
         });
       }
 
@@ -207,7 +212,8 @@ const CreateDeal = () => {
       const message = error?.response?.data?.status?.message || language.promptMessages.errorGeneral;
       toast.error(message, toastUtil);
     } finally {
-      setMultipleFieldsPayload([])
+      setMultipleFieldsPayload([]);
+      setDeleted([]);
     }
   };
 
@@ -220,21 +226,6 @@ const CreateDeal = () => {
     let option: any[] = [];
     dependencies?.find((dep: any) => {
       if (String(dep.value) === String(as?.id)) option.push(dep);
-      questions?.forEach((q: any) => {
-        option.forEach((rest: any) => {
-          // if (q?.id === rest?.dependent_id && rest?.dependent_type?.toLowerCase() === "stepper" && rest?.operation === "hide") {
-          //   let step = totalSteps?.copy?.find((ts: any) => ts?.text === q[event]?.title);
-          //   let steps = totalSteps?.copy.filter((stp: any) => stp?.text !== step?.text);
-          //   setTotalSteps((prev: any) => {
-          //     return { copy: [...prev?.copy], all: steps }
-          //   })
-          // } else if (q?.id === rest?.dependent_id && rest?.dependent_type?.toLowerCase() === "stepper" && rest?.operation === "show") {
-          //   setTotalSteps((prev: any) => {
-          //     return { copy: prev?.copy, all: prev?.copy }
-          //   })
-          // }
-        });
-      });
     })
     if (option.length) setRestrictions(option)
   };
@@ -428,10 +419,18 @@ const CreateDeal = () => {
             </span>
           </p>
 
-          <FileUpload parentId={dataHolder} onlyPDF={onlyPDF} onlyVideo={onlvideo} size={`${ques?.size_constraints?.limit}${ques?.size_constraints?.unit}`}
-            id={`at-${ques?.id}`} fid={ques?.id} file={ques?.value} setModalOpen={() => { }} setFile={(file: File, id: string, url: string, aid: string, size: string, dimensions: string, type: string, prodURL: string) => {
-              dispatch(saveDealSelection({ option: { url: prodURL, id: aid }, question: ques, fields: dealData, lang: event, secIndex, step: dealData[step - 1] }))
-            }} title={ques?.statement} removeFile={() => removeFile(ques?.value?.id, { option: null, question: ques, fields: dealData, lang: event, secIndex, step: dealData[step - 1] })} className="w-full" />
+          <FileUpload
+            parentId={dataHolder}
+            acceptPdf={true}
+            onlyVideo={onlvideo} size={`${ques?.size_constraints?.limit}${ques?.size_constraints?.unit}`}
+            id={`at-${ques?.id}`}
+            fid={ques?.id}
+            file={ques?.value}
+            setModalOpen={() => { }} setFile={(file: File, id: string, url: string, aid: string, size: string, dimensions: string, type: string, prodURL: string) => {
+              dispatch(saveDealSelection({ option: { url: prodURL, id: aid, localUrl: url }, question: ques, fields: dealData, lang: event, secIndex, step: dealData[step - 1] }))
+            }}
+            title={ques?.statement}
+            removeFile={() => removeFile(ques?.value?.id, { option: null, question: ques, fields: dealData, lang: event, secIndex, step: dealData[step - 1] })} className="w-full" />
         </section >
       )
     );
@@ -682,7 +681,10 @@ const CreateDeal = () => {
                                       <div className="w-full inline-flex justify-end cursor-pointer" onClick={() => {
                                         setMultipleFieldsPayload((prev: any) => {
                                           const secs = prev.filter((pv: any) => pv.id !== sec.id);
-                                          return secs
+                                          return secs;
+                                        });
+                                        setDeleted((prev: any) => {
+                                          return [...prev, { ...sec, deleted: true }];
                                         })
                                       }}><BinIcon stroke="#171717" /></div>
                                       {sec?.fields && (
@@ -733,6 +735,9 @@ const CreateDeal = () => {
                                                 setMultipleFieldsPayload((prev: any) => {
                                                   let fields = prev.filter((f: any) => f.value !== mp.value);
                                                   return [...fields];
+                                                });
+                                                setDeleted((prev: any) => {
+                                                  return [...prev, { ...mp, deleted: true }]
                                                 })
                                               }} />
                                             </p>

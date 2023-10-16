@@ -43,6 +43,12 @@ const Realtor = ({ }: any) => {
         getAllDeals();
     }, []);
 
+    const comaFormattedNumber = (value: string) => {
+        if (!value) return value;
+        return String(value).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+      };
+    
+
     const getAllDeals = async () => {
         try {
             setLoading(true);
@@ -54,7 +60,7 @@ const Realtor = ({ }: any) => {
                     return {
                         id: deal?.id,
                         "Property Name": deal?.building_name || "N/A",
-                        Size: `${deal?.size} sqft`,
+                        Size: `${comaFormattedNumber(deal?.size)} sqft`,
                         Features: features || "N/A",
                         "Selling Price": `$${numberFormatter(Number(deal?.target))}`,
                         Status: deal?.status,
@@ -185,7 +191,6 @@ const Realtor = ({ }: any) => {
                                     {disclaimersToggler.d2 ? (
                                         <React.Fragment>
                                             <p className="font-normal text-neutral-500 text-sm" dangerouslySetInnerHTML={{ __html: language?.v3?.property?.d2_s_1 }}></p>
-                                            <p className="font-normal text-neutral-500 text-sm" dangerouslySetInnerHTML={{ __html: language?.v3?.property?.d2_s_2 }}></p>
                                             {React.Children.toArray(
                                                 language?.v3?.property?.d2_arr?.map((item: any) => <p className="font-normal text-neutral-500 text-sm" dangerouslySetInnerHTML={{ __html: item }}></p>)
                                             )}
@@ -206,7 +211,7 @@ const Realtor = ({ }: any) => {
                             </div>
                             <div className="py-3 border-t-[1px] border-neutral-200 inline-flex items-start flex-col w-full cursor-pointer">
                                 <span>
-                                    <h2 className="font-medium text-neutral-700 text-xl" dangerouslySetInnerHTML={{ __html: language?.v3?.property?.d3 }}></h2>
+                                    <h2 className="font-medium text-neutral-700 text-xl">{language?.v3?.property?.d3}</h2>
                                     {disclaimersToggler.d3 ? (
                                         <React.Fragment>
                                             <p className="font-normal text-neutral-500 text-sm" dangerouslySetInnerHTML={{ __html: language?.v3?.property?.d3_s_1 }}></p>
