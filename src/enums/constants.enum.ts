@@ -7,7 +7,8 @@ export enum Constants {
     NUMBER_INPUT = "number",
     DROPDOWN = "dropdown",
     FILE = "file",
-    URL = "url"
+    URL = "url",
+    DATE = "date"
 }
 
 export enum InputType {

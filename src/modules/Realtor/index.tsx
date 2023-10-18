@@ -46,8 +46,8 @@ const Realtor = ({ }: any) => {
     const comaFormattedNumber = (value: string) => {
         if (!value) return value;
         return String(value).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
-      };
-    
+    };
+
 
     const getAllDeals = async () => {
         try {
@@ -139,7 +139,7 @@ const Realtor = ({ }: any) => {
                                 <Table columns={columns} pagination={pagination} paginate={paginate} onclick={(row: any) => {
                                     if (row?.Status !== ApplicationStatus.SUBMITTED) {
                                         dispatch(saveDataHolder(row.id));
-                                        navigate(`/create-deal/${row?.State?.current_step + 1}`);
+                                        navigate(`/create-deal/${row?.State?.current_step + 2}`);
                                     }
                                     else setModalOpen("2");
                                 }} noDataNode={<Button onClick={() => setModalOpen("1")} className="absolute left-1/2 top-1/2 translate-x-[-50%] translate-y-[-50%]">{language?.v3?.button?.new_deal}</Button>} />
@@ -171,7 +171,7 @@ const Realtor = ({ }: any) => {
                                             <p className="font-normal text-neutral-500 text-sm" dangerouslySetInnerHTML={{ __html: language?.v3?.property?.d_s_3 }}></p>
                                             <p className="font-normal text-neutral-500 text-sm" dangerouslySetInnerHTML={{ __html: language?.v3?.property?.d_s_4 }}></p>
                                             <button className="cursor-pointer text-sm text-blue-500" onClick={() => setDisclaimersToggler(prev => { return { d1: false, d2: false, d3: false } })}>{language?.v3?.button?.seeLess}</button>
-                                        
+
                                         </React.Fragment>
                                     ) : (
                                         <React.Fragment>

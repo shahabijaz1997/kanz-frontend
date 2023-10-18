@@ -397,7 +397,7 @@ const CreateDeal = () => {
                     <source src={ques?.value?.url} type="video/webm" />
                   </video>
                 ) : (
-                  ques?.value?.attachment_kind !== FileType.PDF ? <img alt={"Attachment url missing"} src={ques?.value?.url} className="block w-[110%] h-[110%] overflow-hidden object-contain" />: <embed src={ques?.value?.url} className="block w-[110%] h-[110%] overflow-hidden" />
+                  ques?.value?.attachment_kind !== FileType.PDF ? <img alt={"Attachment url missing"} src={ques?.value?.url} className="block w-[110%] h-[110%] overflow-hidden object-contain" /> : <embed src={ques?.value?.url} className="block w-[110%] h-[110%] overflow-hidden" />
                 )}
               </div>
             </div>
@@ -542,6 +542,19 @@ const CreateDeal = () => {
     } else return <React.Fragment></React.Fragment>
   };
 
+  const dateUI = (ques: any, secIndex: number, section: any) => {
+    let dependantQuesion = section?.fields?.find((field: any) => field.id === ques?.dependent_id);
+
+    if (!dependantQuesion || (dependantQuesion && dependantQuesion?.value)) {
+      return (
+        <section className="flex items-start justify-center flex-col mb-8 mt-3 w-full">
+          {!dependantQuesion && <label htmlFor={ques?.id} className="capitalize text-neutral-700 text-lg font-medium mb-1">{ques?.statement}</label>}
+          <input type="date" title={ques?.statement} className="h-[42px] pr-10 shadow-sm appearance-none border rounded-md w-full py-2 px-3 text-gray-700 leading-tight transition-all bg-white w-full focus:outline-none" placeholder={ques?.statement} id={ques?.id} onChange={(e: any) => dispatch(saveDealSelection({ option: e.target.value, question: ques, fields: dealData, lang: event, secIndex, step: dealData[step - 1] }))} value={ques?.value} />
+        </section>
+      );
+    } else return <React.Fragment></React.Fragment>
+  }
+
   const URLInput = (ques: any, secIndex: number, section: any) => {
     return (
       <section className="flex items-start justify-center flex-col mb-1 mt-3 w-full">
@@ -575,6 +588,7 @@ const CreateDeal = () => {
       else if (ques?.field_type === Constants.TEXT_FIELD) return textFieldInput(ques, secIndex, section)
       else if (ques?.field_type === Constants.URL) return URLInput(ques, secIndex, section)
       else if (ques?.field_type === Constants.CHECK_BOX) return termUI(ques, secIndex)
+      else if (ques?.field_type === Constants.DATE) return dateUI(ques, secIndex, section)
       else return <ReviewDeal language={language} dealId={dataHolder} metadata={metadata} authToken={authToken} navigate={navigate} showDeal={step === totalSteps?.all.length} />
     }
   };
@@ -606,7 +620,7 @@ const CreateDeal = () => {
           let flag = ques.value?.id ? true : false;
           flags[index].validations.push(flag);
         }
-        else if (ques?.field_type === Constants.NUMBER_INPUT || ques.field_type === Constants.TEXT_BOX || ques.field_type === Constants.TEXT_FIELD || ques.field_type === Constants.URL) {
+        else if (ques?.field_type === Constants.NUMBER_INPUT || ques.field_type === Constants.TEXT_BOX || ques.field_type === Constants.TEXT_FIELD || ques.field_type === Constants.URL || ques.field_type === Constants.DATE) {
           let dependantQuesion = sec?.fields?.find((field: any) => field.id === ques?.dependent_id);
           let flag = false;
           if ((!dependantQuesion && ques.value) || (dependantQuesion && dependantQuesion?.value && ques.value) || (dependantQuesion && !dependantQuesion.value)) {
@@ -614,7 +628,6 @@ const CreateDeal = () => {
           }
           else flag = false;
           if (ques.field_type === Constants.URL && multipleFieldsPayload.length === 0) flag = false;
-          else flag = false;
           flags[index].validations.push(flag);
         }
         else if (ques.field_type === Constants.SWITCH) {
@@ -660,6 +673,8 @@ const CreateDeal = () => {
         return validation
       });
     }
+    console.log("flags", flags);
+    
     return isValid;
   }
 
