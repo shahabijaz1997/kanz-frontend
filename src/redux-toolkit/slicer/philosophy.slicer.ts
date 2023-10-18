@@ -76,7 +76,7 @@ export const QuestionnaireSlice = createSlice({
             else opt.selected = false;
           });
         }
-        else if (currentQuestion.field_type === Constants.NUMBER_INPUT || currentQuestion.field_type === Constants.TEXT_BOX || currentQuestion.field_type === Constants.TEXT_FIELD || currentQuestion.field_type === Constants.URL) {
+        else if (currentQuestion.field_type === Constants.NUMBER_INPUT || currentQuestion.field_type === Constants.TEXT_BOX || currentQuestion.field_type === Constants.TEXT_FIELD || currentQuestion.field_type === Constants.URL || currentQuestion.field_type === Constants.DATE) {
           currentQuestion.value = option
         }
         else if (currentQuestion.field_type === Constants.SWITCH) {
@@ -107,20 +107,6 @@ export const QuestionnaireSlice = createSlice({
       currentSection.fields = currentSection?.fields?.sort((a: any, b: any) => b.index - a.index)
       state.value = existing;
     },
-    removeMoreFields: (state, action: PayloadAction<any>) => {
-      const { secIndex, lang, step } = action.payload;
-      const existing = JSON.parse(JSON.stringify(state.value));
-console.log(existing);
-
-      const currentStep = existing.find((item: any) => item.id === step.id);
-      // const currentSection = currentStep[lang]?.sections[secIndex];
-      // console.log("currentSection", currentSection);
-      
-      // for (let i = 0; i < currentSection.fields.length; i++)
-      //   currentSection.fields.pop()
-
-      state.value = existing;
-    },
     onResetFields: (state, action: PayloadAction<any>) => {
       const { secIndex, lang, step } = action.payload;
       const existing = JSON.parse(JSON.stringify(state.value));
@@ -147,5 +133,5 @@ console.log(existing);
   },
 });
 
-export const { saveQuestionnaire, saveAnswer, saveDealSelection, saveMoreFields, onResetFields, removeMoreFields, onResetOptions } = QuestionnaireSlice.actions;
+export const { saveQuestionnaire, saveAnswer, saveDealSelection, saveMoreFields, onResetFields, onResetOptions } = QuestionnaireSlice.actions;
 export default QuestionnaireSlice.reducer;
