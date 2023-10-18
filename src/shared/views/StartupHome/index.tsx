@@ -88,11 +88,11 @@ const StartupHome = ({ loading, language }: any) => {
           </h3>
 
           {user.status === ApplicationStatus.REOPENED && (
-            <Button className="mt-[30px] h-[38px] w-[143px]" disabled={loading} htmlType="submit" loading={loading} onClick={onPress}>
+            <Button className="mt-[30px] h-[38px] min-w-[160px]" disabled={loading} htmlType="submit" loading={loading} onClick={onPress}>
               {language?.buttons?.continue}
             </Button>
           )}
-          {user.status === ApplicationStatus.APPROVED && <Button className="mt-[30px] h-[38px] w-[143px]" disabled={loading} htmlType="submit" loading={loading} onClick={() => navigate(RoutesEnums.STARTUP_DASHBOARD)} >
+          {user.status === ApplicationStatus.APPROVED && <Button className="mt-[30px] h-[38px] min-w-[160px]" disabled={loading} htmlType="submit" loading={loading} onClick={() => navigate(RoutesEnums.STARTUP_DASHBOARD)} >
             {language?.buttons?.gotoDashboard}
           </Button>}
         </React.Fragment>

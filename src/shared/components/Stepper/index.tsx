@@ -14,7 +14,7 @@ const Stepper = ({ currentStep = 1, totalSteps = [{ id: 1 }, { id: 2 }, { id: 3 
         return (
             <span className="relative">
                 {circle}
-                {step?.text && <p className={`absolute uppercase text-sm font-bold ${currentStep > step?.id && "text-neutral-900"} ${currentStep === step?.id && "text-cyan-800"} ${currentStep < step?.id && "text-neutral-500"} ${direction === "row" ? "" : "top-1/2 translate-y-[-50%] left-[160%] w-[200px]"}`}>{step.text}</p>}
+                {step?.text && <p className={`absolute uppercase text-sm font-bold ${currentStep > step?.id && "text-neutral-900"} ${currentStep === step?.id && "text-cyan-800"} ${currentStep < step?.id && "text-neutral-500"} ${direction === "row" ? "" : orientation === "rtl" ? "top-1/2 translate-y-[-50%] right-[160%] w-[200px]" : "top-1/2 translate-y-[-50%] left-[160%] w-[200px]"}`}>{step.text}</p>}
             </span>
         )
     };
@@ -24,13 +24,13 @@ const Stepper = ({ currentStep = 1, totalSteps = [{ id: 1 }, { id: 2 }, { id: 3 
             {React.Children.toArray(totalSteps?.map((step: any) => (
                 <div className={`relative flex items-center ${currentStep === step?.id ? "text-green-500" : "text-gray-400"} 
                     ${step?.id > 1 && orientation !== "rtl" && (direction === "row" ? "ml-20 screen500:ml-7" : "mt-16 screen500:mt-7")}
-                    ${step?.id > 1 && orientation === "rtl" && (direction === "row" ? "mr-20 screen500:ml-7" : "screen500:ml-7")}
+                    ${step?.id > 1 && orientation === "rtl" && (direction === "row" ? "mr-20 screen500:ml-7" : "mt-16 screen500:mt-7")}
                     `}>
                     {renderCircle(step)}
                     {step?.id < totalSteps?.at(-1)?.id && (
                         direction === "row" ? (
-                            <div className={`h-0.5  ${currentStep >= step?.id ? "bg-cyan-800" : "bg-neutral-200"} w-20 absolute top-3.5 ${orientation !== "rtl" ? "left-4.5 left-[100%]" : "right-4.5 right-[100%]"} screen500:w-7`} />) : (
-                            <div className={`h-16 w-0.5 absolute left-3.5 ${currentStep >= step?.id ? "bg-cyan-800" : "bg-neutral-200"} ${orientation !== "rtl" ? "top-[100%]" : "right-4.5 right-[100%]"} screen500:w-7`} />
+                            <div className={`h-0.5  ${currentStep >= step?.id ? "bg-cyan-800" : "bg-neutral-200"} w-20 absolute top-3.5 left-4.5 left-[100%] screen500:w-7`} />) : (
+                            <div className={`h-16 w-0.5 absolute left-3.5 ${currentStep >= step?.id ? "bg-cyan-800" : "bg-neutral-200"} top-[100%] screen500:w-7`} />
                         )
                     )}
                 </div>

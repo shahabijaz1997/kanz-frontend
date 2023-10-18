@@ -77,11 +77,11 @@ const CreateDeal = () => {
         });
         _dependencies.length > 0 && setDependencies(_dependencies)
         let all_steps: any[] = [];
+        
         for (let i = 0; i < data?.status?.data?.step_titles[event]?.length; i++) {
           const step = data?.status?.data?.step_titles[event][i];
           all_steps.push({ id: i + 1, text: step });
         }
-
         let options: any = [];
         let stepper: any;
         data?.status?.data?.steps[step - 1][event]?.sections.forEach((sec: any) => {
