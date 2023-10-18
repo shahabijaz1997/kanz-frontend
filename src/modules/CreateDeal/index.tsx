@@ -429,19 +429,18 @@ const CreateDeal = () => {
               )}
             </span>
           </p>
-
           <FileUpload
             parentId={dataHolder}
             acceptPdf={true}
             onlyVideo={onlvideo}
-            size={`${ques?.size_constraints?.limit}${ques?.size_constraints?.unit}`}
             id={ques?.id}
             fid={ques?.id}
             file={ques?.value?.url ? { url: ques?.value?.url, id: ques?.id, fid: ques?.value?.id, type: ques?.value?.type, size: ques?.value?.size, dimensions: ques?.value?.dimensions, file: ques?.value?.file } : {}}
             setModalOpen={() => {
               setModalOpen({ type: ques?.value?.type, url: ques?.value?.url })
-            }} setFile={(file: File, id: string, url: string, aid: string, size: string, dimensions: string, type: string, prodURL: string) => {
-              dispatch(saveDealSelection({ option: { file, url: prodURL, id: aid, localUrl: url, type, size, dimensions }, question: ques, fields: dealData, lang: event, secIndex, step: dealData[step - 1] }))
+            }}
+            setFile={(file: File, id: string, url: string, aid: string, size: string, dimensions: string, type: string, prodURL: string) => {
+              dispatch(saveDealSelection({ option: { file: { size: file.size, name: file.name, type: file?.type }, url: prodURL, id: aid, localUrl: url, type, size, dimensions }, question: ques, fields: dealData, lang: event, secIndex, step: dealData[step - 1] }))
             }}
             title={ques?.statement}
             removeFile={() => removeFile(ques?.value?.id, { option: null, question: ques, fields: dealData, lang: event, secIndex, step: dealData[step - 1] })} className="w-full" />
@@ -688,8 +687,6 @@ const CreateDeal = () => {
         return validation
       });
     }
-    console.log("flags", flags);
-
     return isValid;
   }
 

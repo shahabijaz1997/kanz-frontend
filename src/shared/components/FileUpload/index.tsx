@@ -15,7 +15,7 @@ import Spinner from "../Spinner";
 import { RoutesEnums } from "../../../enums/routes.enum";
 import AddVideo from "../../../ts-icons/addVideoIcon.svg";
 
-const FileUpload = ({ size, parentId, id, fid, file, setModalOpen, setFile, removeFile, title, uploadDirect = true, acceptPdf = false, className = "", video = false, onlyVideo = false }: any) => {
+const FileUpload = ({ parentId, id, fid, file, setModalOpen, setFile, removeFile, title, uploadDirect = true, acceptPdf = false, className = "", video = false, onlyVideo = false }: any) => {
     const language: any = useSelector((state: RootState) => state.language.value);
     const authToken: any = useSelector((state: RootState) => state.auth.value);
     const orientation: any = useSelector((state: RootState) => state.orientation.value);
@@ -31,7 +31,6 @@ const FileUpload = ({ size, parentId, id, fid, file, setModalOpen, setFile, remo
         e.preventDefault();
         setDragOver(true);
     };
-
     useEffect(() => {
         if (file) {
             setSelectedFile(file);
