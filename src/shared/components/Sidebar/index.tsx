@@ -10,6 +10,7 @@ const Sidebar = ({ type }: any) => {
     const navigate = useNavigate();
     const { pathname } = useLocation();
     const language: any = useSelector((state: RootState) => state.language.value);
+    const orientation: any = useSelector((state: RootState) => state.orientation.value);
     
     const DASHBOARD_ITEMS = [
         { id: 1, title: language?.v3?.startup?.sidebar?.overview, route: `/${type.toLowerCase()}` },
@@ -61,7 +62,7 @@ const Sidebar = ({ type }: any) => {
     return (
         sidebarData && (
             <aside className="w-[250px] bg-white h-full pt-[5rem]">
-                <div className="inline-flex items-center gap-2 pb-6 pl-[2rem]">
+                <div className={`inline-flex items-center gap-2 pb-6 ${orientation === "rtl" ? "pr-[2rem]": "pl-[2rem]"}`}>
                     <span>{sidebarData?.icon}</span>
                     <h2 className="text-black font-medium text-sm">{sidebarData?.title}</h2>
                 </div>
@@ -73,7 +74,7 @@ const Sidebar = ({ type }: any) => {
                                     setSelected(item);
                                     navigate(item?.route)
                                 }}
-                                    className={`pl-[2rem] py-3 text-sm font-medium text-neutral-600 cursor-pointer transition-all hover:bg-sidebar-item-hover hover:border-l-sidebar-item-hover border-l-4 border-white ${selected?.id === item.id && "bg-sidebar-item-hover border-l-4 border-l-cyan-800 hover:!border-l-cyan-800"}`}>{item?.title}</li>
+                                    className={`${orientation === "rtl" ? "pr-[2rem]": "pl-[2rem]"} py-3 text-sm font-medium text-neutral-600 cursor-pointer transition-all hover:bg-sidebar-item-hover hover:border-l-sidebar-item-hover border-l-4 border-white ${selected?.id === item.id && "bg-sidebar-item-hover border-l-4 border-l-cyan-800 hover:!border-l-cyan-800"}`}>{item?.title}</li>
                             )
                         })
                     )}

@@ -51,7 +51,7 @@ const InvestorHome = ({ loading, language }: any) => {
                     <h3 className="text-base font-normal text-neutral-700 screen500:text-[12px]">
                         {language?.v2?.investor?.home_sub}
                     </h3>
-                    <Button className="mt-[60px] h-[38px] w-[143px]" disabled={loading} htmlType="submit" loading={loading} onClick={onPress} >
+                    <Button className="mt-[60px] h-[38px] min-w-[160px]" disabled={loading} htmlType="submit" loading={loading} onClick={onPress} >
                         {language?.buttons?.start}
                     </Button>
                 </React.Fragment>
@@ -68,7 +68,7 @@ const InvestorHome = ({ loading, language }: any) => {
                     <h3 className="text-base font-normal text-neutral-700 screen500:text-[12px] mt-2">
                         {language?.onboarding?.appStatus}: <strong>{language.common.inprogress}</strong>
                     </h3>
-                    <Button className="mt-[60px] h-[38px] w-[143px]" disabled={loading} htmlType="submit" loading={loading} onClick={onPress} >
+                    <Button className="mt-[60px] h-[38px] min-w-[160px]" disabled={loading} htmlType="submit" loading={loading} onClick={onPress} >
                         {language?.buttons?.continue}
                     </Button>
                 </React.Fragment>
@@ -93,7 +93,7 @@ const InvestorHome = ({ loading, language }: any) => {
                     <h3 className="text-base font-normal text-neutral-700 screen500:text-[12px]">
                         {language?.onboarding?.appStatus}: <strong>{language.v2.common[user.status]}</strong>
                     </h3>
-                    {user.status === ApplicationStatus.REOPENED && <Button className="mt-[30px] h-[38px] w-[143px]" disabled={loading} htmlType="submit" loading={loading} onClick={onPress} >
+                    {user.status === ApplicationStatus.REOPENED && <Button className="mt-[30px] h-[38px] min-w-[160px]" disabled={loading} htmlType="submit" loading={loading} onClick={onPress} >
                         {language?.buttons?.continue}
                     </Button>}
                 </React.Fragment>

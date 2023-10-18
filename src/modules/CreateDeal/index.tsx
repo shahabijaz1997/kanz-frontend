@@ -28,6 +28,7 @@ import { removeAttachment } from "../../apis/attachment.api";
 import EditIcon from "../../ts-icons/editIcon.svg";
 import ReviewDeal from "./ReviewDeal";
 import Drawer from "../../shared/components/Drawer";
+import CalendarIcon from "../../ts-icons/calendarIcon.svg";
 const CURRENCIES = ["USD", "AED"];
 
 const CreateDeal = () => {
@@ -76,11 +77,11 @@ const CreateDeal = () => {
         });
         _dependencies.length > 0 && setDependencies(_dependencies)
         let all_steps: any[] = [];
+        
         for (let i = 0; i < data?.status?.data?.step_titles[event]?.length; i++) {
           const step = data?.status?.data?.step_titles[event][i];
           all_steps.push({ id: i + 1, text: step });
         }
-
         let options: any = [];
         let stepper: any;
         data?.status?.data?.steps[step - 1][event]?.sections.forEach((sec: any) => {
@@ -176,7 +177,7 @@ const CreateDeal = () => {
         fields = all_fields?.map((field: any) => {
           let selected;
           if (field?.field_type === Constants.MULTIPLE_CHOICE || field?.field_type === Constants.DROPDOWN) selected = field?.options?.find((opt: any) => opt.selected)?.id
-          if (field?.field_type === Constants.NUMBER_INPUT || field?.field_type === Constants.TEXT_BOX || field?.field_type === Constants.TEXT_FIELD || field?.field_type === Constants.URL) selected = field.value
+          if (field?.field_type === Constants.NUMBER_INPUT || field?.field_type === Constants.TEXT_BOX || field?.field_type === Constants.TEXT_FIELD || field?.field_type === Constants.URL || field?.field_type === Constants.DATE) selected = field.value
           if (field.field_type === Constants.SWITCH) selected = field?.value
           if (field.field_type === Constants.FILE) selected = field?.value?.id
           if (field.field_type === Constants.CHECK_BOX) selected = field?.value;
@@ -428,19 +429,18 @@ const CreateDeal = () => {
               )}
             </span>
           </p>
-
           <FileUpload
             parentId={dataHolder}
             acceptPdf={true}
             onlyVideo={onlvideo}
-            size={`${ques?.size_constraints?.limit}${ques?.size_constraints?.unit}`}
             id={ques?.id}
             fid={ques?.id}
             file={ques?.value?.url ? { url: ques?.value?.url, id: ques?.id, fid: ques?.value?.id, type: ques?.value?.type, size: ques?.value?.size, dimensions: ques?.value?.dimensions, file: ques?.value?.file } : {}}
             setModalOpen={() => {
               setModalOpen({ type: ques?.value?.type, url: ques?.value?.url })
-            }} setFile={(file: File, id: string, url: string, aid: string, size: string, dimensions: string, type: string, prodURL: string) => {
-              dispatch(saveDealSelection({ option: { file, url: prodURL, id: aid, localUrl: url, type, size, dimensions }, question: ques, fields: dealData, lang: event, secIndex, step: dealData[step - 1] }))
+            }}
+            setFile={(file: File, id: string, url: string, aid: string, size: string, dimensions: string, type: string, prodURL: string) => {
+              dispatch(saveDealSelection({ option: { file: { size: file.size, name: file.name, type: file?.type }, url: prodURL, id: aid, localUrl: url, type, size, dimensions }, question: ques, fields: dealData, lang: event, secIndex, step: dealData[step - 1] }))
             }}
             title={ques?.statement}
             removeFile={() => removeFile(ques?.value?.id, { option: null, question: ques, fields: dealData, lang: event, secIndex, step: dealData[step - 1] })} className="w-full" />
@@ -544,12 +544,26 @@ const CreateDeal = () => {
 
   const dateUI = (ques: any, secIndex: number, section: any) => {
     let dependantQuesion = section?.fields?.find((field: any) => field.id === ques?.dependent_id);
-
     if (!dependantQuesion || (dependantQuesion && dependantQuesion?.value)) {
+      let min = new Date();
       return (
         <section className="flex items-start justify-center flex-col mb-8 mt-3 w-full">
           {!dependantQuesion && <label htmlFor={ques?.id} className="capitalize text-neutral-700 text-lg font-medium mb-1">{ques?.statement}</label>}
-          <input type="date" title={ques?.statement} className="h-[42px] pr-10 shadow-sm appearance-none border rounded-md w-full py-2 px-3 text-gray-700 leading-tight transition-all bg-white w-full focus:outline-none" placeholder={ques?.statement} id={ques?.id} onChange={(e: any) => dispatch(saveDealSelection({ option: e.target.value, question: ques, fields: dealData, lang: event, secIndex, step: dealData[step - 1] }))} value={ques?.value} />
+          <span className="relative w-full">
+            <input type="date" title={ques?.statement} className="appearance-none h-[42px] pl-2 shadow-sm appearance-none border rounded-md w-full py-2 px-3 text-gray-700 leading-tight transition-all bg-white w-full focus:outline-none"
+              placeholder={ques?.statement}
+              id={`date-${ques?.id}`}
+              onChange={(e: any) => dispatch(saveDealSelection({ option: e.target.value, question: ques, fields: dealData, lang: event, secIndex, step: dealData[step - 1] }))}
+              value={ques?.value?.split("T")[0]}
+              min={min.toISOString().split("T")[0]}
+            />
+            <div className="absolute top-1/2 translate-y-[-50%] bg-white h-10 w-10 inline-flex items-center justify-center right-2 cursor-pointer" onClick={() => {
+              let elem: any = document.getElementById(`date-${ques?.id}`);
+              elem?.showPicker();
+            }}>
+              <CalendarIcon />
+            </div>
+          </span>
         </section>
       );
     } else return <React.Fragment></React.Fragment>
@@ -673,8 +687,6 @@ const CreateDeal = () => {
         return validation
       });
     }
-    console.log("flags", flags);
-    
     return isValid;
   }
 
