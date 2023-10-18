@@ -103,8 +103,6 @@ const CreateDeal = () => {
           }
           // Check External Links
           else if (!sec?.display_card && sec?.is_multiple && sec?.fields?.some((field: any) => field?.value)) {
-            console.log(12345);
-
             let elems = [];
             for (let i = 0; i < sec?.fields?.length; i++) elems.push(sec.fields[i]);
 
@@ -371,27 +369,40 @@ const CreateDeal = () => {
 
     return (
       ques?.value?.id && !ques?.value?.type ? (
-        <div className="mb-4 w-full select-none content-center bg-cbc-grey-sec p-4 rounded-md">
-          <div className="block text-neutral-700 text-base font-medium">
-            <span className="inline-flex w-full items-center justify-between">
-              <span className="inline-flex flex-col">
-                <div>{ques?.statement}</div>
-
+        <section className="mb-6 w-full">
+          {ques?.index < 1 && (
+            <h3 className="text-neutral-700 font-medium text-base">
+              <span>{section?.description}</span>&nbsp;<span className="text-cc-blue font-medium cursor-pointer" onClick={() => setOpen(true)} >
+                {language.philosophyGoals.whyToDo}
               </span>
-              <EditIcon stroke="#fff" className="w-7 h-7 float-right cursor-pointer rounded-md p-1"
-                style={{ backgroundColor: "rgba(0, 0, 0, 0.078)" }} onClick={() => {
-                  removeFile(ques?.value?.id, { option: null, question: ques, fields: dealData, lang: event, secIndex, step: dealData[step - 1] })
-                }} />
-            </span>
-            <div className="content-center text-center mt-2  main-embed  h-[200px] overflow-hidden relative">
-              {onlvideo ? (
-                <video className="w-[100%] h-[90%]" controls>
-                  <source src={ques?.value?.url} type="video/webm" />
-                </video>
-              ) : (<embed src={ques?.value?.url} className="block w-[110%] h-[110%] overflow-hidden" />)}
+            </h3>
+          )}
+          <div className="content-center bg-cbc-grey-sec p-4 rounded-md">
+            <div className="block text-neutral-700 text-base font-medium">
+              <span className="inline-flex w-full items-center justify-between">
+                <span className="inline-flex flex-col">
+                  <div>{ques?.statement}</div>
+                  <p className="text-neutral-500 font-normal text-sm mb-2">
+                    <span className="text-neutral-500">{ques?.label}</span>&nbsp;
+                  </p>
+                </span>
+                <EditIcon stroke="#fff" className="w-7 h-7 float-right cursor-pointer rounded-md p-1"
+                  style={{ backgroundColor: "rgba(0, 0, 0, 0.078)" }} onClick={() => {
+                    removeFile(ques?.value?.id, { option: null, question: ques, fields: dealData, lang: event, secIndex, step: dealData[step - 1] })
+                  }} />
+              </span>
+              <div className="content-center text-center mt-2  main-embed  h-[200px] overflow-hidden relative">
+                {onlvideo ? (
+                  <video className="w-[100%] h-[90%]" controls>
+                    <source src={ques?.value?.url} type="video/webm" />
+                  </video>
+                ) : (
+                  ques?.value?.attachment_kind !== FileType.PDF ? <img alt={"Attachment url missing"} src={ques?.value?.url} className="block w-[110%] h-[110%] overflow-hidden object-contain" />: <embed src={ques?.value?.url} className="block w-[110%] h-[110%] overflow-hidden" />
+                )}
+              </div>
             </div>
           </div>
-        </div>
+        </section>
       ) : (
         <section className="flex items-start justify-center flex-col mt-3 mb-6 w-full">
           {ques?.index < 1 && (
@@ -400,13 +411,11 @@ const CreateDeal = () => {
                 {language.philosophyGoals.whyToDo}
               </span>
             </h3>
-          )
-          }
+          )}
           <h3 className="text-neutral-700 font-medium text-base w-[450px] mt-3">
             {ques?.statement}
           </h3>
           <p className="text-neutral-500 font-normal text-sm mb-2">
-            {/* <span className="text-neutral-500">{language?.buttons?.upload} {React.Children.toArray(ques?.permitted_types?.map((type: any) => <span className="uppercase">{type}&nbsp;</span>))} {language?.drawer?.of} {ques?.statement}</span>&nbsp; */}
             <span className="text-neutral-500">{ques?.label}</span>&nbsp;
             <span className="relative text-cc-blue font-medium cursor-pointer" onMouseEnter={() => setShowHoverModal(ques.id)} onMouseLeave={() => setShowHoverModal(null)} >
               {language.common.example}
@@ -575,7 +584,7 @@ const CreateDeal = () => {
     let flags: any[] = []
 
     dealData[step - 1][event]?.sections.forEach((sec: any, index: number) => {
-      flags.push({ section: sec.id, validations: [] });
+      flags.push({ section: sec.index, validations: [] });
       let fields = sec.fields;
       fields.forEach((ques: any) => {
         if (ques?.field_type === Constants.SWITCH) {
@@ -594,7 +603,7 @@ const CreateDeal = () => {
           flags[index].validations.push(flag);
         }
         else if (ques?.field_type === Constants.FILE) {
-          let flag = (ques.value?.url || ques.value?.id) ? true : false;
+          let flag = ques.value?.id ? true : false;
           flags[index].validations.push(flag);
         }
         else if (ques?.field_type === Constants.NUMBER_INPUT || ques.field_type === Constants.TEXT_BOX || ques.field_type === Constants.TEXT_FIELD || ques.field_type === Constants.URL) {
@@ -603,6 +612,8 @@ const CreateDeal = () => {
           if ((!dependantQuesion && ques.value) || (dependantQuesion && dependantQuesion?.value && ques.value) || (dependantQuesion && !dependantQuesion.value)) {
             flag = true;
           }
+          else flag = false;
+          if (ques.field_type === Constants.URL && multipleFieldsPayload.length === 0) flag = false;
           else flag = false;
           flags[index].validations.push(flag);
         }
@@ -625,11 +636,29 @@ const CreateDeal = () => {
     }
 
     else {
+      if (multipleFieldsPayload?.length > 0) {
+        let newVals: any = [];
+        let ms: any;
+
+        multipleFieldsPayload.forEach((field: any) => {
+          if (field.fields) ms = dealData[step - 1][event]?.sections[0]
+          else {
+            ms = dealData[step - 1][event]?.sections.find((sec: any) => {
+              if (sec?.fields.find((f: any) => f.id === field.id)) return true;
+            });
+          }
+
+          if (field.field_type !== Constants.URL || (field.field_type === Constants.URL && field.value)) newVals.push(true);
+        });
+        let found = flags.find(sec => sec?.section === ms?.index);
+        if (found) found.validations = newVals
+
+
+      }
       isValid = flags.every((flag) => {
         let validation = flag.validations.every((val: any) => val);
         return validation
       });
-      if (multipleFieldsPayload?.length > 0) isValid = true;
     }
     return isValid;
   }
