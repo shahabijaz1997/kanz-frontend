@@ -182,7 +182,7 @@ const Realtor = ({ }: any) => {
                                 </span>
                                 <div className="w-full inline-flex justify-between mt-4 cursor-pointer" onClick={() => { setDummyDisclaimers(prev => { return { ...prev, d1: !prev.d1 } }) }}>
                                     <p className="font-normal text-neutral-700 text-sm">{language?.v3?.common?.accept}</p>
-                                    <input type="checkbox" checked={dummyDisclaimers.d1} className="accent-cyan-800" />
+                                    <input type="checkbox" checked={dummyDisclaimers.d1} className="accent-cyan-800 cursor-pointer" />
                                 </div>
                             </div>
                             <div className="py-3 border-t-[1px] border-neutral-200 inline-flex items-start flex-col w-full cursor-pointer">
@@ -206,7 +206,7 @@ const Realtor = ({ }: any) => {
                                 </span>
                                 <div className="w-full inline-flex justify-between mt-4 cursor-pointer" onClick={() => { setDummyDisclaimers(prev => { return { ...prev, d2: !prev.d2 } }) }}>
                                     <p className="font-normal text-neutral-700 text-sm">{language?.v3?.common?.accept}</p>
-                                    <input type="checkbox" checked={dummyDisclaimers.d2} className="accent-cyan-800" />
+                                    <input type="checkbox" checked={dummyDisclaimers.d2} className="accent-cyan-800 cursor-pointer" />
                                 </div>
                             </div>
                             <div className="py-3 border-t-[1px] border-neutral-200 inline-flex items-start flex-col w-full cursor-pointer">
@@ -228,7 +228,7 @@ const Realtor = ({ }: any) => {
                                 </span>
                                 <div className="w-full inline-flex justify-between mt-4 cursor-pointer" onClick={() => { setDummyDisclaimers(prev => { return { ...prev, d3: !prev.d3 } }) }}>
                                     <p className="font-normal text-neutral-700 text-sm">{language?.v3?.common?.accept}</p>
-                                    <input type="checkbox" checked={dummyDisclaimers.d3} className="accent-cyan-800" />
+                                    <input type="checkbox" checked={dummyDisclaimers.d3} className="accent-cyan-800 cursor-pointer" />
                                 </div>
                             </div>
                             <div className="w-full inline-flex items-center justify-center gap-3 mt-10">
