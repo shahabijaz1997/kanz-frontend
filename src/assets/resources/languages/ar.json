@@ -729,6 +729,20 @@
             "deal_status": "حالة الصفقة",
             "valuation": "تقييم"
         },
+        "table": {
+            "title": "عنوان",
+            "type": "يكتب",
+            "status": "حالة",
+            "stage": "منصة",
+            "round": "دائري",
+            "target": "هدف",
+            "valuation": "تقييم",
+            "propertyName": "اسم الخاصية", 
+            "size": "مقاس", 
+            "features": "سمات", 
+            "sellingPrice": "سعر البيع", 
+            "rentalAmount": "مبلغ الإيجار"
+        },
         "common": {
             "search": "يبحث",
             "disclaimer": "تنصل",

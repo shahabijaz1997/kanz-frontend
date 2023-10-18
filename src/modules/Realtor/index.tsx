@@ -17,14 +17,14 @@ import { numberFormatter } from "../../utils/object.utils";
 import Spinner from "../../shared/components/Spinner";
 import { ApplicationStatus } from "../../enums/types.enum";
 
-const columns = ['Property Name', 'Size', 'Status', 'Features', 'Selling Price', 'Rental Amount'];
 
 const Realtor = ({ }: any) => {
     const navigate = useNavigate();
     const dispatch = useDispatch();
     const language: any = useSelector((state: RootState) => state.language.value);
     const authToken: any = useSelector((state: RootState) => state.auth.value);
-
+    
+    const columns = [language?.v3?.table?.propertyName, language?.v3?.table?.size, language?.v3?.table?.status, language?.v3?.table?.features, language?.v3?.table?.sellingPrice, language?.v3?.table?.rentalAmount];
     const [pagination, setPagination] = useState({ items_per_page: 5, total_items: [], current_page: 1, total_pages: 0 });
     const [selectedTab, setSelectedTab] = useState();
     const [modalOpen, setModalOpen]: any = useState(null);
@@ -59,12 +59,12 @@ const Realtor = ({ }: any) => {
                     let features = deal?.features?.map((f: any) => f?.title || f?.description)?.join(",")
                     return {
                         id: deal?.id,
-                        "Property Name": deal?.building_name || "N/A",
-                        Size: `${comaFormattedNumber(deal?.size)} sqft`,
-                        Features: features || "N/A",
-                        "Selling Price": `$${numberFormatter(Number(deal?.target))}`,
-                        Status: deal?.status,
-                        "Rental Amount": `$${numberFormatter(Number(deal?.rental_amount))}`,
+                        [language?.v3?.table?.propertyName]: deal?.building_name || "N/A",
+                        [language?.v3?.table?.size]: `${comaFormattedNumber(deal?.size)} sqft`,
+                        [language?.v3?.table?.features]: features || "N/A",
+                        [language?.v3?.table?.sellingPrice]: `$${numberFormatter(Number(deal?.target))}`,
+                        [language?.v3?.table?.status]: deal?.status,
+                        [language?.v3?.table?.rentalAmount]: `$${numberFormatter(Number(deal?.rental_amount))}`,
                         State: deal?.current_state,
                         Steps: deal?.current_state?.steps
                     }

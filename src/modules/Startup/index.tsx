@@ -19,14 +19,15 @@ import { numberFormatter } from "../../utils/object.utils";
 import { saveToken } from "../../redux-toolkit/slicer/auth.slicer";
 import { ApplicationStatus } from "../../enums/types.enum";
 
-const columns = ['Title', 'Type', 'Status', 'Stage', 'Round', 'Target'];
 
 const Startup = ({ }: any) => {
     const navigate = useNavigate();
     const dispatch = useDispatch();
+
     const language: any = useSelector((state: RootState) => state.language.value);
     const authToken: any = useSelector((state: RootState) => state.auth.value);
 
+    const columns = [language?.v3?.table?.title, language?.v3?.table?.type, language?.v3?.table?.status, language?.v3?.table?.stage, language?.v3?.table?.round, language?.v3?.table?.target];
     const [pagination, setPagination] = useState({ items_per_page: 5, total_items: [], current_page: 1, total_pages: 0 });
     const [selectedTab, setSelectedTab] = useState();
     const [modalOpen, setModalOpen]: any = useState(null);
@@ -49,14 +50,14 @@ const Startup = ({ }: any) => {
                 let deals = data?.status?.data?.map((deal: any) => {
                     return {
                         id: deal?.id,
-                        Title: deal?.title || "N/A",
-                        Target: `$${numberFormatter(Number(deal?.target))}`,
-                        Stage: deal?.title || "N/A",
-                        Round: deal?.round,
-                        Status: deal?.status,
-                        Type: deal?.instrument_type,
+                        [language?.v3?.table?.title]: deal?.title || "N/A",
+                        [language?.v3?.table?.target]: `$${numberFormatter(Number(deal?.target))}`,
+                        [language?.v3?.table?.stage]: deal?.title || "N/A",
+                        [language?.v3?.table?.round]: deal?.round,
+                        [language?.v3?.table?.status]: deal?.status,
+                        [language?.v3?.table?.type]: deal?.instrument_type,
                         State: deal?.current_state,
-                        Valuation: `$${numberFormatter(Number(deal?.valuation))} ${language?.v3?.deal?.valuation}`,
+                        [language?.v3?.table?.valuation]: `$${numberFormatter(Number(deal?.valuation))} ${language?.v3?.deal?.valuation}`,
                         Steps: deal?.current_state?.steps
                     }
                 });
@@ -173,7 +174,7 @@ const Startup = ({ }: any) => {
                                             <p className="font-normal text-neutral-500 text-sm" dangerouslySetInnerHTML={{ __html: language?.v3?.startup?.d_s_4 }}></p>
                                             <p className="font-normal text-neutral-500 text-sm" dangerouslySetInnerHTML={{ __html: language?.v3?.startup?.d_s_5 }}></p>
                                             <button className="cursor-pointer text-sm text-blue-500" onClick={() => setDisclaimersToggler(prev => { return { d1: false, d2: false, d3: false } })}>{language?.v3?.button?.seeLess}</button>
-                                        
+
                                         </React.Fragment>
                                     ) : (
                                         <React.Fragment>

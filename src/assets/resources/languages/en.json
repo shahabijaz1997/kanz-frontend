@@ -730,6 +730,20 @@
             "deal_status": "Deal Status",
             "valuation": "Valuation"
         },
+        "table": {
+            "title": "Title",
+            "type": "Type",
+            "status": "Status",
+            "stage": "Stage",
+            "round": "Round",
+            "target": "Target",
+            "valuation": "Valuation",
+            "propertyName": "Property Name", 
+            "size": "Size", 
+            "features": "Features", 
+            "sellingPrice": "Selling Price", 
+            "rentalAmount": "Rental Amount"
+        },
         "common": {
             "search": "Search",
             "disclaimer": "Disclaimer",
