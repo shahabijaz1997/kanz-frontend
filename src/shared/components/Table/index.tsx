@@ -1,6 +1,9 @@
 import React from "react";
+import { useSelector } from "react-redux";
+import { RootState } from "../../../redux-toolkit/store/store";
 
 const Table = ({ columns, data, noDataNode, onclick, pagination, paginate }: any) => {
+    const orientation: any = useSelector((state: RootState) => state.orientation.value);
 
     const renderPaginationUI = () => {
         let pages: number[] = [];
@@ -25,7 +28,7 @@ const Table = ({ columns, data, noDataNode, onclick, pagination, paginate }: any
                     <tr>
                         {React.Children.toArray(
                             columns.map((column: any, index: number) => (
-                                <th scope="col" className={`px-3 py-3 text-xs font-bold text-left text-neutral-500 uppercase ${index === columns.length - 1 && `text-right`} }`}>
+                                <th scope="col" className={`px-3 py-3 text-xs font-bold text-neutral-500 uppercase ${(index === columns.length - 1) ? `${orientation !== "rtl" ? "text-right" : "text-left"}` : `${orientation !== "rtl" ? "text-left" : "text-right"}`} }`}>
                                     {column}
                                 </th>
                             ))
