@@ -3,7 +3,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
 import { RootState } from "../../redux-toolkit/store/store";
 import { getDealQuestion, postDealStep, submitDeal } from "../../apis/deal.api";
-import { DealType } from "../../enums/types.enum";
+import { DealType, FileType } from "../../enums/types.enum";
 import { onResetFields, onResetOptions, saveDealSelection, saveQuestionnaire } from "../../redux-toolkit/slicer/philosophy.slicer";
 import Header from "../../shared/components/Header";
 import CrossIcon from "../../ts-icons/crossIcon.svg";
@@ -54,7 +54,7 @@ const CreateDeal = () => {
   const [showCustomBox, setShowCustomBox]: any = useState(true);
   const [open, setOpen]: any = useState(false);
   const [loading, setLoading] = useState(false);
-  const [modalOpen, setModalOpen]: any = useState(false);
+  const [modalOpen, setModalOpen]: any = useState(null);
 
   useEffect(() => {
     setStep(Number(params?.id) || 1);
@@ -368,30 +368,42 @@ const CreateDeal = () => {
     let onlvideo: any = (ques?.permitted_types?.length === 1 && ques?.permitted_types?.includes("video")) && true;
 
     return (
-      ques?.value?.id ? (
-        <div className="mb-4 w-full select-none content-center bg-cbc-grey-sec p-4 rounded-md">
-          <div className="block text-neutral-700 text-base font-medium">
-            <span className="inline-flex w-full items-center justify-between">
-              <span className="inline-flex flex-col">
-                <div>{ques?.statement}</div>
-
+      ques?.value?.id && !ques?.value?.type ? (
+        <section className="mb-6 w-full">
+          {ques?.index < 1 && (
+            <h3 className="text-neutral-700 font-medium text-base">
+              <span>{section?.description}</span>&nbsp;<span className="text-cc-blue font-medium cursor-pointer" onClick={() => setOpen(true)} >
+                {language.philosophyGoals.whyToDo}
               </span>
-              <EditIcon stroke="#fff" className="w-7 h-7 float-right cursor-pointer rounded-md p-1"
-                style={{ backgroundColor: "rgba(0, 0, 0, 0.078)" }} onClick={() => {
-                  removeFile(ques?.value?.id, { option: null, question: ques, fields: dealData, lang: event, secIndex, step: dealData[step - 1] })
-                }} />
-            </span>
-            <div className="content-center text-center mt-2  main-embed  h-[200px] overflow-hidden relative">
-              {onlvideo ? (
-                <video className="w-[100%] h-[90%]" controls>
-                  <source src={ques?.value?.url} type="video/webm" />
-                </video>
-              ) : (<embed src={ques?.value?.url} className="block w-[110%] h-[110%] overflow-hidden" />)}
+            </h3>
+          )}
+          <div className="content-center bg-cbc-grey-sec p-4 rounded-md">
+            <div className="block text-neutral-700 text-base font-medium">
+              <span className="inline-flex w-full items-center justify-between">
+                <span className="inline-flex flex-col">
+                  <div>{ques?.statement}</div>
+                  <p className="text-neutral-500 font-normal text-sm mb-2">
+                    <span className="text-neutral-500">{ques?.label}</span>&nbsp;
+                  </p>
+                </span>
+                <EditIcon stroke="#fff" className="w-7 h-7 float-right cursor-pointer rounded-md p-1"
+                  style={{ backgroundColor: "rgba(0, 0, 0, 0.078)" }} onClick={() => {
+                    removeFile(ques?.value?.id, { option: null, question: ques, fields: dealData, lang: event, secIndex, step: dealData[step - 1] })
+                  }} />
+              </span>
+              <div className="content-center text-center mt-2  main-embed  h-[200px] overflow-hidden relative">
+                {onlvideo ? (
+                  <video className="w-[100%] h-[90%]" controls>
+                    <source src={ques?.value?.url} type="video/webm" />
+                  </video>
+                ) : (
+                  ques?.value?.attachment_kind !== FileType.PDF ? <img alt={"Attachment url missing"} src={ques?.value?.url} className="block w-[110%] h-[110%] overflow-hidden object-contain" />: <embed src={ques?.value?.url} className="block w-[110%] h-[110%] overflow-hidden" />
+                )}
+              </div>
             </div>
           </div>
-        </div>
+        </section>
       ) : (
-
         <section className="flex items-start justify-center flex-col mt-3 mb-6 w-full">
           {ques?.index < 1 && (
             <h3 className="text-neutral-700 font-medium text-base w-[450px]">
@@ -399,13 +411,11 @@ const CreateDeal = () => {
                 {language.philosophyGoals.whyToDo}
               </span>
             </h3>
-          )
-          }
+          )}
           <h3 className="text-neutral-700 font-medium text-base w-[450px] mt-3">
             {ques?.statement}
           </h3>
           <p className="text-neutral-500 font-normal text-sm mb-2">
-            {/* <span className="text-neutral-500">{language?.buttons?.upload} {React.Children.toArray(ques?.permitted_types?.map((type: any) => <span className="uppercase">{type}&nbsp;</span>))} {language?.drawer?.of} {ques?.statement}</span>&nbsp; */}
             <span className="text-neutral-500">{ques?.label}</span>&nbsp;
             <span className="relative text-cc-blue font-medium cursor-pointer" onMouseEnter={() => setShowHoverModal(ques.id)} onMouseLeave={() => setShowHoverModal(null)} >
               {language.common.example}
@@ -422,12 +432,15 @@ const CreateDeal = () => {
           <FileUpload
             parentId={dataHolder}
             acceptPdf={true}
-            onlyVideo={onlvideo} size={`${ques?.size_constraints?.limit}${ques?.size_constraints?.unit}`}
-            id={`at-${ques?.id}`}
+            onlyVideo={onlvideo}
+            size={`${ques?.size_constraints?.limit}${ques?.size_constraints?.unit}`}
+            id={ques?.id}
             fid={ques?.id}
-            file={ques?.value}
-            setModalOpen={() => { }} setFile={(file: File, id: string, url: string, aid: string, size: string, dimensions: string, type: string, prodURL: string) => {
-              dispatch(saveDealSelection({ option: { url: prodURL, id: aid, localUrl: url }, question: ques, fields: dealData, lang: event, secIndex, step: dealData[step - 1] }))
+            file={ques?.value?.url ? { url: ques?.value?.url, id: ques?.id, fid: ques?.value?.id, type: ques?.value?.type, size: ques?.value?.size, dimensions: ques?.value?.dimensions, file: ques?.value?.file } : {}}
+            setModalOpen={() => {
+              setModalOpen({ type: ques?.value?.type, url: ques?.value?.url })
+            }} setFile={(file: File, id: string, url: string, aid: string, size: string, dimensions: string, type: string, prodURL: string) => {
+              dispatch(saveDealSelection({ option: { file, url: prodURL, id: aid, localUrl: url, type, size, dimensions }, question: ques, fields: dealData, lang: event, secIndex, step: dealData[step - 1] }))
             }}
             title={ques?.statement}
             removeFile={() => removeFile(ques?.value?.id, { option: null, question: ques, fields: dealData, lang: event, secIndex, step: dealData[step - 1] })} className="w-full" />
@@ -571,7 +584,7 @@ const CreateDeal = () => {
     let flags: any[] = []
 
     dealData[step - 1][event]?.sections.forEach((sec: any, index: number) => {
-      flags.push({ section: sec.id, validations: [] });
+      flags.push({ section: sec.index, validations: [] });
       let fields = sec.fields;
       fields.forEach((ques: any) => {
         if (ques?.field_type === Constants.SWITCH) {
@@ -590,7 +603,7 @@ const CreateDeal = () => {
           flags[index].validations.push(flag);
         }
         else if (ques?.field_type === Constants.FILE) {
-          let flag = (ques.value?.url || ques.value?.id) ? true : false;
+          let flag = ques.value?.id ? true : false;
           flags[index].validations.push(flag);
         }
         else if (ques?.field_type === Constants.NUMBER_INPUT || ques.field_type === Constants.TEXT_BOX || ques.field_type === Constants.TEXT_FIELD || ques.field_type === Constants.URL) {
@@ -599,6 +612,8 @@ const CreateDeal = () => {
           if ((!dependantQuesion && ques.value) || (dependantQuesion && dependantQuesion?.value && ques.value) || (dependantQuesion && !dependantQuesion.value)) {
             flag = true;
           }
+          else flag = false;
+          if (ques.field_type === Constants.URL && multipleFieldsPayload.length === 0) flag = false;
           else flag = false;
           flags[index].validations.push(flag);
         }
@@ -621,11 +636,29 @@ const CreateDeal = () => {
     }
 
     else {
+      if (multipleFieldsPayload?.length > 0) {
+        let newVals: any = [];
+        let ms: any;
+
+        multipleFieldsPayload.forEach((field: any) => {
+          if (field.fields) ms = dealData[step - 1][event]?.sections[0]
+          else {
+            ms = dealData[step - 1][event]?.sections.find((sec: any) => {
+              if (sec?.fields.find((f: any) => f.id === field.id)) return true;
+            });
+          }
+
+          if (field.field_type !== Constants.URL || (field.field_type === Constants.URL && field.value)) newVals.push(true);
+        });
+        let found = flags.find(sec => sec?.section === ms?.index);
+        if (found) found.validations = newVals
+
+
+      }
       isValid = flags.every((flag) => {
         let validation = flag.validations.every((val: any) => val);
         return validation
       });
-      if (multipleFieldsPayload?.length > 0) isValid = true;
     }
     return isValid;
   }
@@ -791,19 +824,32 @@ const CreateDeal = () => {
         </section>
 
         <Modal show={modalOpen} className={"w-[500px] screen1024:w-[300px]"}>
-          <div className="relative p-12 rounded-md shadow-cs-1 flex flex-col items-center w-full bg-white outline-none focus:outline-none screen800:px-3">
-            <div className="rounded-md h-8 w-8 inline-grid place-items-center cursor-pointer absolute right-2 top-2">
-              <CrossIcon stroke="#171717" className="w-6 h-6" onClick={() => {
-                setModalOpen(false);
-                navigate(`/${metadata?.role?.toLowerCase()}`);
-              }} />
-            </div>
+          {modalOpen?.type ? (
+            <React.Fragment>
+              <div className="rounded-md h-8 w-8 inline-grid place-items-center cursor-pointer absolute right-2 top-2" style={{ backgroundColor: "rgba(0, 0, 0, 0.078" }}>
+                <CrossIcon stroke="#fff" className="w-6 h-6" onClick={() => setModalOpen(null)} />
+              </div>
+              {modalOpen?.type === FileType.IMAGE ? (
+                <img src={modalOpen?.url} alt="Img" className="max-h-[100%]" />
+              ) : (
+                <embed src={modalOpen?.url} type="application/pdf" className="w-[100%] h-[90%]" />
+              )}
+            </React.Fragment>
+          ) : (
+            <div className="relative p-12 rounded-md shadow-cs-1 flex flex-col items-center w-full bg-white outline-none focus:outline-none screen800:px-3">
+              <div className="rounded-md h-8 w-8 inline-grid place-items-center cursor-pointer absolute right-2 top-2">
+                <CrossIcon stroke="#171717" className="w-6 h-6" onClick={() => {
+                  setModalOpen(false);
+                  navigate(`/${metadata?.role?.toLowerCase()}`);
+                }} />
+              </div>
 
-            <aside>
-              <h2 className="font-bold text-xl text-center text-neutral-900">{language?.v3?.deal?.submitted_deal}</h2>
-              <p className="text-sm font-normal text-center text-neutral-500 mt-4 mb-4">{language?.v3?.deal?.deal_status}: <strong>{language?.common?.submitted}</strong></p>
-            </aside>
-          </div>
+              <aside>
+                <h2 className="font-bold text-xl text-center text-neutral-900">{language?.v3?.deal?.submitted_deal}</h2>
+                <p className="text-sm font-normal text-center text-neutral-500 mt-4 mb-4">{language?.v3?.deal?.deal_status}: <strong>{language?.common?.submitted}</strong></p>
+              </aside>
+            </div>
+          )}
         </Modal>
 
         <Drawer isOpen={open} setIsOpen={(val: boolean) => setOpen(val)}>

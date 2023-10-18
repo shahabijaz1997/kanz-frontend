@@ -15,7 +15,7 @@ import Spinner from "../Spinner";
 import { RoutesEnums } from "../../../enums/routes.enum";
 import AddVideo from "../../../ts-icons/addVideoIcon.svg";
 
-const FileUpload = ({ size, parentId, id, fid, file, setModalOpen, setFile, removeFile, title, uploadDirect = true, acceptPdf = false, className = "", video = false, onlyPDF = false, onlyVideo = false }: any) => {
+const FileUpload = ({ size, parentId, id, fid, file, setModalOpen, setFile, removeFile, title, uploadDirect = true, acceptPdf = false, className = "", video = false, onlyVideo = false }: any) => {
     const language: any = useSelector((state: RootState) => state.language.value);
     const authToken: any = useSelector((state: RootState) => state.auth.value);
     const orientation: any = useSelector((state: RootState) => state.orientation.value);
@@ -23,7 +23,8 @@ const FileUpload = ({ size, parentId, id, fid, file, setModalOpen, setFile, remo
     const navigate = useNavigate();
     const [dragOver, setDragOver] = useState(false);
     const [selectedFile, setSelectedFile]: any = useState<File | null>(file);
-    const [fileInfo, setFileInfo]: any = useState({ size: file?.file?.size, dimensions: file?.file?.dimensions });
+    
+    const [fileInfo, setFileInfo]: any = useState({ size: file?.file?.size || selectedFile?.size, dimensions: file?.file?.dimensions || selectedFile?.dimensions });
     const [alertTye, setAlertType]: any = useState({});
     const [loading, setLoading]: any = useState(false);
     const handleDragOver = (e: React.DragEvent<HTMLDivElement>) => {
@@ -49,7 +50,7 @@ const FileUpload = ({ size, parentId, id, fid, file, setModalOpen, setFile, remo
         if (file) return;
         if (!acceptPdf && validImages.includes(_file.type)) setFileInformation(_file);
         else if (onlyVideo && validVideos.includes(file.type)) setFileInformation(file);
-        else if ((acceptPdf || onlyPDF) && validTypes.includes(_file.type)) setFileInformation(_file);
+        else if (acceptPdf && validTypes.includes(_file.type)) setFileInformation(_file);
         else setAlertType({ type: PromptMessage.ERROR, message: language.promptMessages.invalidFormat });
     };
 
@@ -57,7 +58,7 @@ const FileUpload = ({ size, parentId, id, fid, file, setModalOpen, setFile, remo
         const file: any = e.target.files?.[0];
         if (!acceptPdf && validImages.includes(file.type)) setFileInformation(file);
         else if (onlyVideo && validVideos.includes(file.type)) setFileInformation(file);
-        else if ((acceptPdf || onlyPDF) && validTypes.includes(file.type)) setFileInformation(file);
+        else if (acceptPdf && validTypes.includes(file.type)) setFileInformation(file);
         else setAlertType({ type: PromptMessage.ERROR, message: language.promptMessages.invalidFormat });
         e.target.value = "";
     };
@@ -74,9 +75,7 @@ const FileUpload = ({ size, parentId, id, fid, file, setModalOpen, setFile, remo
         try {
             setLoading(true);
             let FileInfo: any;
-            if (file.type.includes("video")) {
-                type = FileType.VIDEO;
-            }
+            if (file.type.includes("video")) type = FileType.VIDEO;
             else if (file.type.includes("image")) {
                 type = FileType.IMAGE;
                 const reader = new FileReader();
@@ -88,7 +87,7 @@ const FileUpload = ({ size, parentId, id, fid, file, setModalOpen, setFile, remo
                         const { size }: any = file;
                         const { naturalWidth: width, naturalHeight: height } = img;
                         FileInfo = {
-                            size: formatFileSize(size),
+                            size,
                             dimensions: `${width} x ${height} px`,
                         };
                         if (!uploadDirect) doUploadUtil(file, FileInfo, url, FileType.IMAGE, "1", "");
@@ -100,7 +99,7 @@ const FileUpload = ({ size, parentId, id, fid, file, setModalOpen, setFile, remo
                 reader.readAsDataURL(file);
                 reader.onloadend = () => {
                     const { size }: any = file;
-                    FileInfo = { size: formatFileSize(size) };
+                    FileInfo = { size };
                     if (!uploadDirect) doUploadUtil(file, FileInfo, url, FileType.PDF, "1", "");
                 };
             }
@@ -173,14 +172,14 @@ const FileUpload = ({ size, parentId, id, fid, file, setModalOpen, setFile, remo
                             )}
                             {!onlyVideo && (
                                 <section className="h-[120px] w-[120px] bg-white inline-grid place-items-center shadow-cs-3 rounded-md overflow-hidden">
-                                    {onlyPDF ? (<embed src={selectedFile?.url} type="application/pdf" className="w-[100%] h-[90%]" />) : (selectedFile?.type === FileType.IMAGE) ? <img src={selectedFile?.url} alt={selectedFile?.file?.name} className="w-[80%] h-[90%]" /> : <embed src={selectedFile?.url} type="application/pdf" className="w-[100%] h-[90%]" />}
+                                   {(selectedFile?.type === FileType.IMAGE) ? <img src={selectedFile?.url} alt={selectedFile?.file?.name} className="w-[80%] h-[90%]" /> : <embed src={selectedFile?.url} type="application/pdf" className="w-[100%] h-[90%]" />}
                                 </section>
                             )}
 
                             <section className="px-3 h-[120px] inline-flex flex-col justify-between py-2">
                                 <div>
                                     <h2 className="text-neutral-900 font-medium text-base truncate mb-3 max-w-[200px]">{selectedFile?.file?.name}</h2>
-                                    <h4 className="text-neutral-700 font-medium text-sm truncate max-w-[200px]" style={{ direction: "ltr" }}>{fileInfo?.size}&nbsp;{fileInfo?.dimensions}</h4>
+                                    <h4 className="text-neutral-700 font-medium text-sm truncate max-w-[200px]" style={{ direction: "ltr" }}>{formatFileSize(fileInfo?.size)}&nbsp;{fileInfo?.dimensions}</h4>
                                 </div>
                                 <div className="rounded-lg w-20 h-6 inline-flex items-center flex-row justify-center gap-2 bg-white cursor-pointer" onClick={() => setModalOpen({ url: selectedFile.url, open: true, type: selectedFile.type })}>
                                     <PreviewIcon stroke="#404040" />
@@ -200,13 +199,9 @@ const FileUpload = ({ size, parentId, id, fid, file, setModalOpen, setFile, remo
                                     <small className="text-sm text-cc-blue">{language.buttons.uploadFile}</small>&nbsp;
                                     <small className="text-sm text-neutral-500">{language.buttons.orDragDrop}</small>
                                 </p>
-                                {(video && !onlyPDF) && <div className="text-neutral-500 text-sm font-normal">{language?.v3?.common?.vid_specs}</div>}
-                                {(!video && !onlyPDF) && <div className="text-neutral-500 text-sm font-normal">{(acceptPdf || onlyPDF) ? language?.common?.fileSpecs : language?.v2?.common?.imageSpecs} 10MB</div>}
-                                {size && <div className="text-neutral-500 text-sm font-normal">
-                                    {onlyPDF && "PDF"}
-                                    {onlyVideo && "Video"}
-                                    {language?.common?.fileSpecsPDF}
-                                    {size}</div>}
+                                {(video) && <div className="text-neutral-500 text-sm font-normal">{language?.v3?.common?.vid_specs}</div>}
+                                {(!video) && <div className="text-neutral-500 text-sm font-normal">{acceptPdf ? language?.common?.fileSpecs : language?.v2?.common?.imageSpecs} 10MB</div>}
+                              
                                 <input id={id} type="file" className="hidden" onChange={handleFileInput} />
                             </div>
                         )
