@@ -107,7 +107,7 @@ const SyndicateHome = ({ loading, language }: any) => {
                   </Button>
                     )}
                     
-                    {user.status === ApplicationStatus.APPROVED && <Button className="mt-[30px] h-[38px] min-w-[160px]" disabled={loading} htmlType="submit" loading={loading} onClick={() => navigate(RoutesEnums.REALTOR_DASHBOARD)} >
+                    {user.status === ApplicationStatus.APPROVED && <Button className="mt-[30px] h-[38px] min-w-[160px]" disabled={loading} htmlType="submit" loading={loading} onClick={() => navigate(RoutesEnums.SYNDICATE_DASHBOARD)} >
                         {language?.buttons?.gotoDashboard}
                     </Button>}
               </React.Fragment>
