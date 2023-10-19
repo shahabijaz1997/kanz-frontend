@@ -74,7 +74,7 @@ const GUARD_ROUTE = (props: PropsWithChildren | any) => {
 const GUARD_SUBMITTED_ROUTE = (props: PropsWithChildren | any) => {
   const { children } = props;
   const user: any = useSelector((state: RootState) => state.user.value);
-  if ((user && (user.type === props.role || props.role === KanzRoles.ALL) && user.status === ApplicationStatus.VERIFIED)) return <React.Fragment>{children}</React.Fragment>;
+  if ((user && props.role.includes(user.type) && user.status === ApplicationStatus.APPROVED)) return <React.Fragment>{children}</React.Fragment>;
   return <Navigate to={RoutesEnums.WELCOME} replace />;
 };
 
@@ -213,8 +213,7 @@ const RouterModule = () => {
           element={
             <Suspense fallback={<Loader />}>
               <CHECK_LOGGED_IN>
-                {/* <GUARD_ROUTE role={KanzRoles.STARTUP}><StartupDashboard /></GUARD_ROUTE> */}
-                <StartupDashboard />
+                <GUARD_SUBMITTED_ROUTE role={[KanzRoles.STARTUP]}><StartupDashboard /></GUARD_SUBMITTED_ROUTE>
               </CHECK_LOGGED_IN>
             </Suspense>
           } />
@@ -222,8 +221,7 @@ const RouterModule = () => {
           element={
             <Suspense fallback={<Loader />}>
               <CHECK_LOGGED_IN>
-                {/* <GUARD_ROUTE role={KanzRoles.REALTOR}><RealtorDashboard /></GUARD_ROUTE> */}
-                <RealtorDashboard />
+                <GUARD_SUBMITTED_ROUTE role={[KanzRoles.REALTOR]}><RealtorDashboard /></GUARD_SUBMITTED_ROUTE>
               </CHECK_LOGGED_IN>
             </Suspense>
           } />
@@ -231,8 +229,7 @@ const RouterModule = () => {
           element={
             <Suspense fallback={<Loader />}>
               <CHECK_LOGGED_IN>
-                {/* <GUARD_ROUTE role={KanzRoles.REALTOR}><RealtorDashboard /></GUARD_ROUTE> */}
-                <SyndicateDashboard />
+              <GUARD_SUBMITTED_ROUTE role={[KanzRoles.REALTOR]}><SyndicateDashboard /></GUARD_SUBMITTED_ROUTE>
               </CHECK_LOGGED_IN>
             </Suspense>
           } />
