@@ -17,10 +17,10 @@ const DealViewDetails = ({ dealDetail }: any) => {
                             <h3 className="text-neutral-900 font-medium text-sm">{language?.v3?.table?.title}</h3>
                             <p className="text-neutral-900 font-normal text-sm capitalize">{dealDetail?.title || language?.v3?.common?.not_added}</p>
                         </div>
-                        {dealDetail?.description && <div className="py-4 border-b-[1px] border-b-neutral-200 w-full inline-flex items-center justify-between">
-                            <h3 className="text-neutral-900 font-medium text-sm">{language?.v3?.table?.description}</h3>
+                         <div className="py-4 border-b-[1px] border-b-neutral-200 w-full inline-flex items-center justify-between">
+                            <h3 className="text-neutral-900 font-medium text-sm">{language?.v3?.deal?.description}</h3>
                             <p className="text-neutral-900 font-normal text-sm capitalize">{dealDetail?.description || language?.v3?.common?.not_added}</p>
-                        </div>}
+                        </div>
                         <div className="py-4 border-b-[1px] border-b-neutral-200 w-full inline-flex items-center justify-between">
                             <h3 className="text-neutral-900 font-medium text-sm">{language?.v3?.deal?.instrument_type}</h3>
                             <p className="text-neutral-900 font-normal text-sm capitalize">{dealDetail?.instrument_type || language?.v3?.common?.not_added}</p>
