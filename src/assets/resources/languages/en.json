@@ -772,7 +772,8 @@
             "sqft": "Square Feet",
             "submitted_title": "Your Deal has been submitted",
             "submitted_message": "Please wait while our customer support officer review your submitted deal",
-            "accept": "I agree"
+            "accept": "I agree",
+            "not_added": "N/A"
         },
         "button": {
             "new_deal": "Create New Deal",

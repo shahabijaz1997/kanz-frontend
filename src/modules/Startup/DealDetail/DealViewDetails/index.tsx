@@ -13,21 +13,21 @@ const DealViewDetails = ({ dealDetail }: any) => {
             {
                 dealDetail && (
                     <section className="flex items-start justify-center flex-col w-9/12 min-h-[250px]">
-                        {dealDetail?.title && <div className="py-4 border-b-[1px] border-b-neutral-200 w-full inline-flex items-center justify-between">
+                        <div className="py-4 border-b-[1px] border-b-neutral-200 w-full inline-flex items-center justify-between">
                             <h3 className="text-neutral-900 font-medium text-sm">{language?.v3?.table?.title}</h3>
-                            <p className="text-neutral-900 font-normal text-sm capitalize">{dealDetail?.title}</p>
-                        </div>}
+                            <p className="text-neutral-900 font-normal text-sm capitalize">{dealDetail?.title || language?.v3?.common?.not_added}</p>
+                        </div>
                         {dealDetail?.description && <div className="py-4 border-b-[1px] border-b-neutral-200 w-full inline-flex items-center justify-between">
                             <h3 className="text-neutral-900 font-medium text-sm">{language?.v3?.table?.description}</h3>
-                            <p className="text-neutral-900 font-normal text-sm capitalize">{dealDetail?.description}</p>
+                            <p className="text-neutral-900 font-normal text-sm capitalize">{dealDetail?.description || language?.v3?.common?.not_added}</p>
                         </div>}
                         <div className="py-4 border-b-[1px] border-b-neutral-200 w-full inline-flex items-center justify-between">
                             <h3 className="text-neutral-900 font-medium text-sm">{language?.v3?.deal?.instrument_type}</h3>
-                            <p className="text-neutral-900 font-normal text-sm capitalize">{dealDetail?.instrument_type}</p>
+                            <p className="text-neutral-900 font-normal text-sm capitalize">{dealDetail?.instrument_type || language?.v3?.common?.not_added}</p>
                         </div>
                         <div className="py-4 border-b-[1px] border-b-neutral-200 w-full inline-flex items-center justify-between">
                             <h3 className="text-neutral-900 font-medium text-sm">{language?.v3?.table?.stage}</h3>
-                            <p className="text-neutral-900 font-normal text-sm capitalize">{dealDetail?.stage}</p>
+                            <p className="text-neutral-900 font-normal text-sm capitalize">{dealDetail?.stage || language?.v3?.common?.not_added}</p>
                         </div>
                         <div className="py-4 border-b-[1px] border-b-neutral-200 w-full inline-flex items-center justify-between">
                             <h3 className="text-neutral-900 font-medium text-sm">{language?.v3?.table?.valuation}</h3>
@@ -39,19 +39,19 @@ const DealViewDetails = ({ dealDetail }: any) => {
                         </div>
                         <div className="py-4 border-b-[1px] border-b-neutral-200 w-full inline-flex items-center justify-between">
                             <h3 className="text-neutral-900 font-medium text-sm">{language?.v3?.table?.sellingPrice}</h3>
-                            <p className="text-neutral-900 font-normal text-sm capitalize">{numberFormatter(dealDetail?.selling_price)}</p>
+                            <p className="text-neutral-900 font-normal text-sm capitalize">{numberFormatter(dealDetail?.selling_price) || language?.v3?.common?.not_added}</p>
                         </div>
                         <div className="py-4 border-b-[1px] border-b-neutral-200 w-full inline-flex items-center justify-between">
                             <h3 className="text-neutral-900 font-medium text-sm">{language?.v3?.table?.status}</h3>
-                            <p className="text-neutral-900 font-normal text-sm capitalize">{dealDetail?.status}</p>
+                            <p className="text-neutral-900 font-normal text-sm capitalize">{dealDetail?.status || language?.v3?.common?.not_added}</p>
                         </div>
                         <div className="py-4 border-b-[1px] border-b-neutral-200 w-full inline-flex items-center justify-between">
                             <h3 className="text-neutral-900 font-medium text-sm">{language?.v3?.deal?.start_at}</h3>
-                            <p className="text-neutral-900 font-normal text-sm capitalize">{formatDate(dealDetail?.start_at)}</p>
+                            <p className="text-neutral-900 font-normal text-sm capitalize">{formatDate(dealDetail?.start_at) || language?.v3?.common?.not_added}</p>
                         </div>
                         <div className="py-4 border-b-[1px] border-b-neutral-200 w-full inline-flex items-center justify-between">
                             <h3 className="text-neutral-900 font-medium text-sm">{language?.v3?.deal?.end_at}</h3>
-                            <p className="text-neutral-900 font-normal text-sm capitalize">{formatDate(dealDetail?.end_at)}</p>
+                            <p className="text-neutral-900 font-normal text-sm capitalize">{formatDate(dealDetail?.end_at) || language?.v3?.common?.not_added}</p>
                         </div>
                     </section>
                 )
