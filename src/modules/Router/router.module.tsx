@@ -242,11 +242,11 @@ const RouterModule = () => {
             </Suspense>
           } />
 
-        <Route path={`${StartupRoutes.DEAL_DETAIL}/:id`}
+        <Route path={`${RoutesEnums.DEAL_DETAIL}/:id`}
           element={
             <Suspense fallback={<Loader />}>
               <CHECK_LOGGED_IN>
-                <GUARD_ROUTE role={KanzRoles.STARTUP}><DealDetail /></GUARD_ROUTE>
+                <GUARD_SUBMITTED_ROUTE role={[KanzRoles.STARTUP, KanzRoles.REALTOR]}><DealDetail /></GUARD_SUBMITTED_ROUTE>
               </CHECK_LOGGED_IN>
             </Suspense>
           } />

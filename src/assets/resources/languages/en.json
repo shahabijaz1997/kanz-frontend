@@ -691,7 +691,6 @@
                 "committed": "Committed",
                 "investors": "Investors",
                 "rounds": "Rounds"
-                
             },
             "sidebar": {
                 "sidebar_title": "Deal Model",
@@ -733,7 +732,16 @@
             "submitted_deal": "Your deal has been submitted",
             "deal_status": "Deal Status",
             "valuation": "Valuation",
-            "deal_approval": "Deal Approval"
+            "deal_approval": "Deal Approval",
+            "equity_type": "Equity Type",
+            "safe_type": "Equity Type",
+            "instrument_type": "Instrument Type",
+            "start_at": "Starts At",
+            "end_at": "Ends At",
+            "investors": "Investors",
+            "raised": "Raised",
+            "description": "Description",
+            "attachments": "Attachments"
         },
         "table": {
             "title": "Title",
@@ -743,10 +751,10 @@
             "round": "Round",
             "target": "Target",
             "valuation": "Valuation",
-            "propertyName": "Property Name", 
-            "size": "Size", 
-            "features": "Features", 
-            "sellingPrice": "Selling Price", 
+            "propertyName": "Property Name",
+            "size": "Size",
+            "features": "Features",
+            "sellingPrice": "Selling Price",
             "rentalAmount": "Rental Amount",
             "end_date": "End Date",
             "action": "Action"

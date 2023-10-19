@@ -18,7 +18,7 @@ import { saveDataHolder } from "../../redux-toolkit/slicer/dataHolder.slicer";
 import { toastUtil } from "../../utils/toast.utils";
 import { toast } from "react-toastify";
 import Selector from "../../shared/components/Selector";
-import { numberFormatter, uniqueArray } from "../../utils/object.utils";
+import { comaFormattedNumber, numberFormatter, uniqueArray } from "../../utils/object.utils";
 import FileUpload from "../../shared/components/FileUpload";
 import HoverModal from "../../shared/components/HoverModal";
 import ExampleRealtor from "../../assets/example_realtor.png";
@@ -248,11 +248,6 @@ const CreateDeal = () => {
     } finally {
       setLoading(false);
     }
-  };
-
-  const comaFormattedNumber = (value: string) => {
-    if (!value) return value;
-    return String(value).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
   };
 
   /* UI Components */

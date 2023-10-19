@@ -81,12 +81,12 @@ const ReviewDeal = ({ navigate, dealId, authToken, metadata, language, showDeal 
                     <Spinner />
                 </div>
             ) : (
-                <section className="flex items-start justify-center flex-col mt-10 max-w-[420px] min-w-[450px] screen500:max-w-[350px]">
+                <section className="flex items-start justify-center flex-col mt-2 max-w-full screen500:max-w-[350px]">
                     {
                         data && React.Children.toArray(
                             data?.map((step: any, index: number) => {
                                 return (
-                                    <div className="py-4 w-full cursor-pointer border-b-[1px] border-b-neutral-200" onClick={() => navigate(`${StartupRoutes.CREATE_DEAL}/${index + 1}`)}>
+                                    <div className={`w-full cursor-pointer border-b-[1px] border-b-neutral-200 ${index !== 0 ? "py-4" : "pb-4"}`} onClick={() => navigate(`${StartupRoutes.CREATE_DEAL}/${index + 1}`)}>
                                         <h2 className="text-cc-black font-semibold text-2xl capitalize mb-3">{step?.title}</h2>
                                         {showLoopSelection(step)}
                                     </div>

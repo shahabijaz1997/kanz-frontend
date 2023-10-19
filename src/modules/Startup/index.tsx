@@ -27,7 +27,7 @@ const Startup = ({ }: any) => {
     const language: any = useSelector((state: RootState) => state.language.value);
     const authToken: any = useSelector((state: RootState) => state.auth.value);
 
-    const columns = [language?.v3?.table?.title, language?.v3?.table?.type, language?.v3?.table?.status, language?.v3?.table?.stage, language?.v3?.table?.round, language?.v3?.table?.target];
+    const columns = [language?.v3?.table?.title, language?.v3?.table?.type, language?.v3?.table?.status, language?.v3?.table?.stage, language?.v3?.table?.round, language?.v3?.table?.target, language?.v3?.table?.action];
     const [pagination, setPagination] = useState({ items_per_page: 5, total_items: [], current_page: 1, total_pages: 0 });
     const [selectedTab, setSelectedTab] = useState();
     const [modalOpen, setModalOpen]: any = useState(null);
@@ -58,7 +58,8 @@ const Startup = ({ }: any) => {
                         [language?.v3?.table?.type]: deal?.instrument_type,
                         State: deal?.current_state,
                         [language?.v3?.table?.valuation]: `$${numberFormatter(Number(deal?.valuation))} ${language?.v3?.deal?.valuation}`,
-                        Steps: deal?.current_state?.steps
+                        Steps: deal?.current_state?.steps,
+                        // [language?.v3?.table?.action]: 
                     }
                 });
                 setPagination(prev => {
@@ -142,8 +143,10 @@ const Startup = ({ }: any) => {
                                     if (row?.Status !== ApplicationStatus.SUBMITTED) {
                                         dispatch(saveDataHolder(row.id));
                                         navigate(`/create-deal/${row?.State?.current_step + 2}`);
+                                        return;
                                     }
-                                    else setModalOpen("2");
+                                    navigate(`${RoutesEnums.DEAL_DETAIL}/${row.id}`, { state: KanzRoles.STARTUP })
+                                    // else setModalOpen("2");
                                 }} noDataNode={<Button onClick={() => setModalOpen("1")} className="absolute left-1/2 top-1/2 translate-x-[-50%] translate-y-[-50%]">{language?.v3?.button?.new_deal}</Button>} />
                             </section>
                         </React.Fragment>
