@@ -13,7 +13,7 @@ import Modal from "../../shared/components/Modal";
 import CrossIcon from "../../ts-icons/crossIcon.svg";
 import { saveDataHolder } from "../../redux-toolkit/slicer/dataHolder.slicer";
 import { getDeals } from "../../apis/deal.api";
-import { numberFormatter } from "../../utils/object.utils";
+import { comaFormattedNumber, numberFormatter } from "../../utils/object.utils";
 import Spinner from "../../shared/components/Spinner";
 import { ApplicationStatus } from "../../enums/types.enum";
 
@@ -42,12 +42,6 @@ const SyndicateDashboard = ({ }: any) => {
         dispatch(saveDataHolder(""));
         getAllDeals();
     }, []);
-
-    const comaFormattedNumber = (value: string) => {
-        if (!value) return value;
-        return String(value).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
-    };
-
 
     const getAllDeals = async () => {
         try {
