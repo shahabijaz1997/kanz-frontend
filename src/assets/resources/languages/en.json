@@ -683,6 +683,7 @@
             "overview": {
                 "heading": "Deals",
                 "heading_2": "Overview",
+                "heading_3": "Startup Investment",
                 "all": "All",
                 "raising": "Raising",
                 "closed": "Closed",
@@ -690,6 +691,7 @@
                 "committed": "Committed",
                 "investors": "Investors",
                 "rounds": "Rounds"
+                
             },
             "sidebar": {
                 "sidebar_title": "Deal Model",
@@ -697,7 +699,9 @@
                 "investor_updates": "Investor Updates",
                 "data_rooms": "Data Rooms",
                 "market_insights": "Market Insights",
-                "contacts": "Contacts"
+                "contacts": "Contacts",
+                "deal_approval": "Deal Approval",
+                "investment": "Investment"
             }
         },
         "deal": {
@@ -728,7 +732,8 @@
             "exp_ann": "Expected Annual Appreciation",
             "submitted_deal": "Your deal has been submitted",
             "deal_status": "Deal Status",
-            "valuation": "Valuation"
+            "valuation": "Valuation",
+            "deal_approval": "Deal Approval"
         },
         "table": {
             "title": "Title",
@@ -742,7 +747,9 @@
             "size": "Size", 
             "features": "Features", 
             "sellingPrice": "Selling Price", 
-            "rentalAmount": "Rental Amount"
+            "rentalAmount": "Rental Amount",
+            "end_date": "End Date",
+            "action": "Action"
         },
         "common": {
             "search": "Search",

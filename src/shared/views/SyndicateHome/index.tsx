@@ -69,7 +69,7 @@ const SyndicateHome = ({ loading, language }: any) => {
                 </React.Fragment>
             );
         }
-        else if (user.status == ApplicationStatus.SUBMITTED) {
+        else if (user.status === ApplicationStatus.SUBMITTED) {
             return (
                 <React.Fragment>
                     <h2 className="text-2xl font-bold text-neutral-900 mb-4 screen500:text-[20px]">
@@ -105,7 +105,11 @@ const SyndicateHome = ({ loading, language }: any) => {
                   >
                     {language?.buttons?.continue}
                   </Button>
-                )}
+                    )}
+                    
+                    {user.status === ApplicationStatus.APPROVED && <Button className="mt-[30px] h-[38px] min-w-[160px]" disabled={loading} htmlType="submit" loading={loading} onClick={() => navigate(RoutesEnums.REALTOR_DASHBOARD)} >
+                        {language?.buttons?.gotoDashboard}
+                    </Button>}
               </React.Fragment>
             );
         }

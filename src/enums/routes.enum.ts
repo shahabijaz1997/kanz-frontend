@@ -15,7 +15,10 @@ export enum RoutesEnums {
     PRIVACY_POLICY="/privacy-policy",
     TERMS_CONDITIONS="/terms-and-conditions",
     STARTUP_DASHBOARD="/startup",
-    REALTOR_DASHBOARD="/realtor",
+    REALTOR_DASHBOARD = "/realtor",
+    SYNDICATE_DASHBOARD = "/syndicate",
+    DEAL_APPROVAL= '/deal-approval',
+    STARTUP_INVESTMENTS= '/startup-investments'
 }
 
 export enum StartupRoutes {
