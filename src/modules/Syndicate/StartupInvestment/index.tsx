@@ -121,7 +121,7 @@ const StartupInvestment = ({ }: any) => {
                 <Header />
             </section>
             <aside className="w-full h-full flex items-start justify-start">
-                <Sidebar type={KanzRoles.STARTUP} />
+                <Sidebar type={KanzRoles.SYNDICATE} />
                 <section className="bg-cbc-auth h-full p-[5rem] relative" style={{ width: "calc(100% - 250px)" }}>
                     {loading ? (
                         <div className="absolute left-0 top-0 w-full h-full grid place-items-center">

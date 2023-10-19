@@ -24,7 +24,9 @@ const Sidebar = ({ type }: any) => {
     useLayoutEffect(() => {
         renderRoleBasedSidebar();
     }, [type]);
-
+console.log('====================================');
+console.log(type);
+console.log('====================================');
     const renderRoleBasedSidebar = () => {
         let route;
         switch (type) {
@@ -44,7 +46,7 @@ const Sidebar = ({ type }: any) => {
                 break;
             case KanzRoles.SYNDICATE:
                 setSidebarData({
-                    title: language?.v3?.startup?.sidebar?.sidebar_title, items: [...DASHBOARD_ITEMS, { id: 6, title: language?.v3?.startup?.sidebar?.deal_approval, route: RoutesEnums.DEAL_APPROVAL }]
+                    title: language?.v3?.startup?.sidebar?.sidebar_title, items: [...DASHBOARD_ITEMS, { id: 6, title: language?.v3?.startup?.sidebar?.deal_approval, route: RoutesEnums.DEAL_APPROVAL }, { id: 7, title: language?.v3?.startup?.sidebar?.startup_investment, route: RoutesEnums.STARTUP_INVESTMENTS }]
                 });
                 break;
             case KanzRoles.INVESTOR:
@@ -57,6 +59,7 @@ const Sidebar = ({ type }: any) => {
                 break;
         }
     };
+    console.log(sidebarData);
 
     return (
         sidebarData && (

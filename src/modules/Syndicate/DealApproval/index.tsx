@@ -16,7 +16,6 @@ import { saveDataHolder } from "../../../redux-toolkit/slicer/dataHolder.slicer"
 import { getDeals } from "../../../apis/deal.api";
 import { numberFormatter } from "../../../utils/object.utils";
 import { saveToken } from "../../../redux-toolkit/slicer/auth.slicer";
-import { ApplicationStatus } from "../../../enums/types.enum";
 
 
 const DealApproval = ({ }: any) => {
@@ -54,13 +53,10 @@ const DealApproval = ({ }: any) => {
                         [language?.v3?.table?.stage]: deal?.title || "N/A",
                         [language?.v3?.table?.round]: deal?.round,
                         [language?.v3?.table?.status]: deal?.status,
-                        [language?.v3?.table?.type]: deal?.instrument_type,
-                        State: deal?.current_state,
-                        [language?.v3?.table?.valuation]: `$${numberFormatter(Number(deal?.valuation))} ${language?.v3?.deal?.valuation}`,
-                        Steps: deal?.current_state?.steps,
-                        Actions: <Button className='bg-black' onClick={() => {
+                        [language?.v3?.table?.type]: deal?.deal_type,
+                        Action: <Button divStyle='flex items-center justify-end mr-2' type='outlined' className='!rounded-full border-2 border-black border-solid !px-8 !text-black' onClick={() => {
                             handleApprove(deal?.id)
-                        }}>Approve</Button>
+                        }}>View</Button>
                         
                     }
                 });
@@ -148,12 +144,11 @@ const DealApproval = ({ }: any) => {
                             </section>
 
                             <section className="mt-10">
-                                <Table columns={columns} pagination={pagination} paginate={paginate} onclick={(row: any) => {
-                                    if (row?.Status !== ApplicationStatus.SUBMITTED) {
-                                        dispatch(saveDataHolder(row.id));
-                                        navigate(`/create-deal/${row?.State?.current_step + 2}`);
-                                    }
-                                    else setModalOpen("2");
+                                <Table tdclassName="px-3 h-10 text-sm font-medium text-gray-800 whitespace-nowrap max-w-[150px] truncate inline-flex items-center py-10"  columns={columns} pagination={pagination} paginate={paginate} onclick={(row: any) => {
+                                        setModalOpen("2")
+                                        //dispatch(saveDataHolder(row.id));
+                                        //navigate(`/view-deal/${row?.id}`);
+                                
                                 }} noDataNode={<span className="absolute left-1/2 top-1/2 translate-x-[-50%] translate-y-[-50%]">No Data</span>} />
                             </section>
                         </React.Fragment>
