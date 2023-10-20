@@ -1,5 +1,4 @@
 import React from "react";
-import { useLocation } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { RootState } from "../../../../redux-toolkit/store/store";
 import ApprovedSVG from "../../../../assets/svg/approved.svg";
@@ -7,10 +6,9 @@ import { comaFormattedNumber, formatDate, numberFormatter } from "../../../../ut
 import { KanzRoles } from "../../../../enums/roles.enum";
 
 
-const DealViewDetails = ({ dealDetail }: any) => {
+const DealViewDetails = ({ dealDetail, state }: any) => {
     const language: any = useSelector((state: RootState) => state.language.value);
     const dummy = [{ id: 1, title: "Customer Representative", completed: true, ongoing: false }, { id: 2, title: "Compliance Officer", completed: false, ongoing: true }, { id: 3, title: "Approved", completed: false, ongoing: false }];
-    const { state } = useLocation();
 
     const getRoleBasedUI = () => {
         if (state === KanzRoles.STARTUP) return (

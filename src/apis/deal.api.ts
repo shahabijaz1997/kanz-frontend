@@ -28,6 +28,14 @@ export const getDealDetail = (dealId: number, token: string) => {
     });
 };
 
+export const getDealDocuments = (dealId: number, token: string) => {
+    return axios.get(`${ENV.API_URL}/${ENV.API_VERSION}/deals/${dealId}/documents`, {
+        headers: {
+            Authorization: `Bearer ${token}`
+        }
+    });
+};
+
 export const postDealStep = (payload: any, token: string) => {
     return axios.post(`${ENV.API_URL}/${ENV.API_VERSION}/deals`, payload, {
         headers: {

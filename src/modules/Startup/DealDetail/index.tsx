@@ -1,5 +1,6 @@
 import React, { useLayoutEffect, useState } from "react";
 import { useSelector } from "react-redux";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { KanzRoles } from "../../../enums/roles.enum";
 import { RootState } from "../../../redux-toolkit/store/store";
 import Header from "../../../shared/components/Header";
@@ -14,13 +15,14 @@ import DealViewDetails from "./DealViewDetails";
 import DocumentDetails from "./DocumentDetails";
 import NoteDetails from "./NoteDetails";
 import ActivityDetails from "./ActivityDetails";
-import { useNavigate, useParams } from "react-router-dom";
 import Spinner from "../../../shared/components/Spinner";
-import { getDealDetail } from "../../../apis/deal.api";
+import { getDealDetail, getDealDocuments } from "../../../apis/deal.api";
 
 const DealDetail = ({ }: any) => {
     const params = useParams();
     const navigate = useNavigate();
+    const { state } = useLocation();
+
     const { id }: any = params;
     const language: any = useSelector((state: RootState) => state.language.value);
     const authToken: any = useSelector((state: RootState) => state.auth.value);
@@ -29,16 +31,31 @@ const DealDetail = ({ }: any) => {
     const [selected, setSelected]: any = useState(tabs[0]);
     const [loading, setLoading]: any = useState(false);
     const [dealDetail, setDealDetail] = useState(null);
+    const [dealDocs, setDealDocs] = useState(null);
 
     useLayoutEffect(() => {
-        onGetDealDetail();
-    }, [id]);
+        if (selected.id === 1)
+            onGetDealDetail();
+        else if (selected.id === 3)
+            onGetDealFiles();
+    }, [selected]);
 
     const onGetDealDetail = async () => {
         try {
             setLoading(true);
             let { status, data } = await getDealDetail(id, authToken);
-            if(status === 200) setDealDetail(data?.status?.data);
+            if (status === 200) setDealDetail(data?.status?.data);
+        } catch (error) {
+
+        } finally {
+            setLoading(false);
+        }
+    };
+    const onGetDealFiles = async () => {
+        try {
+            setLoading(true);
+            let { status, data } = await getDealDocuments(id, authToken);
+            if (status === 200) setDealDocs(data?.status?.data);
         } catch (error) {
 
         } finally {
@@ -87,9 +104,9 @@ const DealDetail = ({ }: any) => {
                             </div>
                         </section>
 
-                        {selected?.id === 1 && <DealViewDetails id={id} dealDetail={dealDetail} navigate={navigate} />}
+                        {selected?.id === 1 && <DealViewDetails id={id} state={state} dealDetail={dealDetail} navigate={navigate} />}
                         {selected?.id === 2 && <DealInvestors />}
-                        {selected?.id === 3 && <DocumentDetails />}
+                        {selected?.id === 3 && <DocumentDetails dealDocs={dealDocs} />}
                         {selected?.id === 4 && <NoteDetails />}
                         {selected?.id === 5 && <ActivityDetails />}
                     </section>
