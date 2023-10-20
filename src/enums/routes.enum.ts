@@ -20,6 +20,7 @@ export enum RoutesEnums {
     DEAL_APPROVAL= '/deal-approval',
     STARTUP_INVESTMENTS= '/startup-investments',
     DEAL_DETAIL= "/view-deal",
+    SYNDICATE_DEAL_DETAIL= "/view-deal-syndicate",
 }
 
 export enum StartupRoutes {

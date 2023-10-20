@@ -34,15 +34,15 @@ const AddAttachments = lazy(() => import("../Onboarding/AddAttachments"));
 const StartupDashboard = lazy(() => import("../Startup"));
 const RealtorDashboard = lazy(() => import("../Realtor"));
 const CreateDeal = lazy(() => import("../CreateDeal"));
-const DealDetail = lazy(() => import("../Startup/DealDetail"));
-const DealApproval = lazy(()=> import('../Syndicate/DealApproval') )
+const DealDetail = lazy(() => import("../DealDetail"));
+const DealApproval = lazy(()=> import('../Syndicate/DealApproval'));
 const InvestorUpdates = lazy(() => import("../InvestorUpdates"));
 const DataRooms = lazy(() => import("../DataRooms"));
 const Contacts = lazy(() => import("../Contacts"));
 const MarketInsights = lazy(() => import("../MarketInsights"));
-const StartupInvestment = lazy(() => import('../Syndicate/StartupInvestment'))
-const SyndicateDashboard = lazy(()=> import('../Syndicate'))
-
+const StartupInvestment = lazy(() => import('../Syndicate/StartupInvestment'));
+const SyndicateDashboard = lazy(()=> import('../Syndicate'));
+const SyndicateDealOverview = lazy(()=> import('../SyndicateDealOverview'));
 
 /* ---### Static ###--- */
 const PrivacyPolicy = lazy(() => import("../Policies/PrivacyPolicy"));
@@ -251,8 +251,15 @@ const RouterModule = () => {
             </Suspense>
           } />
         
-
-
+        <Route path={`${RoutesEnums.SYNDICATE_DEAL_DETAIL}/:id`}
+          element={
+            <Suspense fallback={<Loader />}>
+              <CHECK_LOGGED_IN>
+                <GUARD_SUBMITTED_ROUTE role={[KanzRoles.SYNDICATE]}><SyndicateDealOverview /></GUARD_SUBMITTED_ROUTE>
+              </CHECK_LOGGED_IN>
+            </Suspense>
+          } />
+        
         
         {/*
         {.......##...............######..##....##.##....##.########..####..######.....###....########.########....########...#######..##.....##.########.########..######.....................##

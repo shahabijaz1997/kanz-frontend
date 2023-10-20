@@ -1,11 +1,11 @@
 import React, { useState } from "react";
 import { useSelector } from "react-redux";
-import { RootState } from "../../../../redux-toolkit/store/store";
-import FileSVG from "../../../../assets/svg/file.svg";
-import PreviewIcon from "../../../../ts-icons/previewIcon.svg";
-import Modal from "../../../../shared/components/Modal";
-import CrossIcon from "../../../../ts-icons/crossIcon.svg";
-import { FileType } from "../../../../enums/types.enum";
+import { RootState } from "../../../redux-toolkit/store/store";
+import FileSVG from "../../../assets/svg/file.svg";
+import PreviewIcon from "../../../ts-icons/previewIcon.svg";
+import Modal from "../../../shared/components/Modal";
+import CrossIcon from "../../../ts-icons/crossIcon.svg";
+import { FileType } from "../../../enums/types.enum";
 
 const DocumentDetails = ({ dealDocs }: any) => {
     const language: any = useSelector((state: RootState) => state.language.value);

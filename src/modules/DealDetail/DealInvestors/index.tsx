@@ -1,5 +1,5 @@
 import { useSelector } from "react-redux";
-import { RootState } from "../../../../redux-toolkit/store/store";
+import { RootState } from "../../../redux-toolkit/store/store";
 
 const DealInvestors = () => {
     const language: any = useSelector((state: RootState) => state.language.value);
