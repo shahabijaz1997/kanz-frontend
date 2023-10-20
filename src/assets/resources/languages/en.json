@@ -743,7 +743,9 @@
             "raised": "Raised",
             "description": "Description",
             "attachments": "Attachments",
-            "committed": "Committed"
+            "committed": "Committed",
+            "angel_round": "Angel Round",
+            "deal_detail": "Deal Details"
         },
         "table": {
             "title": "Title",
@@ -775,7 +777,8 @@
             "submitted_title": "Your Deal has been submitted",
             "submitted_message": "Please wait while our customer support officer review your submitted deal",
             "accept": "I agree",
-            "not_added": "N/A"
+            "not_added": "N/A",
+            "investments": "Investments"
         },
         "button": {
             "new_deal": "Create New Deal",

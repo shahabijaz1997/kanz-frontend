@@ -82,15 +82,19 @@ const DealDetail = ({ }: any) => {
                         </span>
 
                         <section className="inline-flex justify-between items-center w-full mb-4">
-                            <h1 className="text-black font-medium text-2xl">Angel Round</h1>
+                            <h1 className="text-black font-medium text-2xl">{state === KanzRoles.STARTUP ? language?.v3?.deal?.angel_round : language?.v3?.deal?.deal_detail}</h1>
                             <span className="inline-flex items-center gap-2">
                                 <Button onClick={() => { }} className="w-[80px]">{language?.v3?.button?.invite}</Button>
                                 <div className="bg-white rounded-md border-neutral-300 border-[1px] inline-flex items-center justify-center"><CustomDropdown className="px-5 py-3" mainNode={<MenuIcon />} /></div>
                             </span>
                         </section>
-                        <section className="mt-1 mb-16">
-                            <DealTable />
-                        </section>
+                        {
+                            state !== KanzRoles.REALTOR && (
+                                <section className="mt-1 mb-16">
+                                    <DealTable />
+                                </section>
+                            )
+                        }
 
                         <section>
                             <ul className="flex border-neutral-200 border-b-[1px]">
