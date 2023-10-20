@@ -1,22 +1,22 @@
 import React, { useLayoutEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
-import { KanzRoles } from "../../../enums/roles.enum";
-import { RootState } from "../../../redux-toolkit/store/store";
-import Header from "../../../shared/components/Header";
-import Sidebar from "../../../shared/components/Sidebar";
-import Chevrond from "../../../ts-icons/chevrond.svg";
-import Button from "../../../shared/components/Button";
-import CustomDropdown from "../../../shared/components/CustomDropdown";
-import MenuIcon from "../../../ts-icons/menuIcon.svg";
+import { KanzRoles } from "../../enums/roles.enum";
+import { RootState } from "../../redux-toolkit/store/store";
+import Header from "../../shared/components/Header";
+import Sidebar from "../../shared/components/Sidebar";
+import Chevrond from "../../ts-icons/chevrond.svg";
+import Button from "../../shared/components/Button";
+import CustomDropdown from "../../shared/components/CustomDropdown";
+import MenuIcon from "../../ts-icons/menuIcon.svg";
 import DealInvestors from "./DealInvestors";
-import DealTable from "../../../shared/components/DealTable";
+import DealTable from "../../shared/components/DealTable";
 import DealViewDetails from "./DealViewDetails";
 import DocumentDetails from "./DocumentDetails";
 import NoteDetails from "./NoteDetails";
 import ActivityDetails from "./ActivityDetails";
-import Spinner from "../../../shared/components/Spinner";
-import { getDealDetail, getDealDocuments } from "../../../apis/deal.api";
+import Spinner from "../../shared/components/Spinner";
+import { getDealDetail, getDealDocuments } from "../../apis/deal.api";
 
 const DealDetail = ({ }: any) => {
     const params = useParams();
