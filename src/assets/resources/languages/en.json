@@ -724,6 +724,7 @@
             "parking": "Parking",
             "swim": "Swimming pool",
             "por": "Property on a rent?",
+            "por_2": "Property on rent",
             "upload_docs": "Upload the necessary documents",
             "add_links": "Add Links",
             "price": "Price",
@@ -741,7 +742,8 @@
             "investors": "Investors",
             "raised": "Raised",
             "description": "Description",
-            "attachments": "Attachments"
+            "attachments": "Attachments",
+            "committed": "Committed"
         },
         "table": {
             "title": "Title",

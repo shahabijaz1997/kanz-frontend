@@ -24,7 +24,7 @@ const Realtor = ({ }: any) => {
     const dispatch = useDispatch();
     const language: any = useSelector((state: RootState) => state.language.value);
     const authToken: any = useSelector((state: RootState) => state.auth.value);
-    
+
     const columns = [language?.v3?.table?.propertyName, language?.v3?.table?.size, language?.v3?.table?.status, language?.v3?.table?.features, language?.v3?.table?.sellingPrice, language?.v3?.table?.rentalAmount, language?.v3?.table?.action];
     const [pagination, setPagination] = useState({ items_per_page: 10, total_items: [], current_page: 1, total_pages: 0 });
     const [selectedTab, setSelectedTab] = useState();
@@ -65,7 +65,7 @@ const Realtor = ({ }: any) => {
                         [language?.v3?.table?.action]: <div onClick={(e) => {
                             e.preventDefault();
                             e.stopPropagation();
-                            navigate(`${RoutesEnums.DEAL_DETAIL}/${deal?.id}`, { state: KanzRoles.STARTUP })
+                            navigate(`${RoutesEnums.DEAL_DETAIL}/${deal?.id}`, { state: KanzRoles.REALTOR })
                         }}
                             className="bg-neutral-100 inline-flex items-center justify-center w-[30px] h-[30px] rounded-full transition-all hover:bg-cbc-transparent">
                             <Chevrond className="rotate-[-90deg] w-6 h-6" stroke={"#737373"} />
