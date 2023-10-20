@@ -29,15 +29,20 @@ const RealtorsOnboarding = lazy(() => import("../Onboarding/RealtorsFlow"));
 const SyndicateOnboarding = lazy(() => import("../Onboarding/SyndicateFlow"));
 const AddAttachments = lazy(() => import("../Onboarding/AddAttachments"));
 
+
 /* ---### Post Onboarding ###--- */
 const StartupDashboard = lazy(() => import("../Startup"));
 const RealtorDashboard = lazy(() => import("../Realtor"));
 const CreateDeal = lazy(() => import("../CreateDeal"));
 const DealDetail = lazy(() => import("../Startup/DealDetail"));
+const DealApproval = lazy(()=> import('../Syndicate/DealApproval') )
 const InvestorUpdates = lazy(() => import("../InvestorUpdates"));
 const DataRooms = lazy(() => import("../DataRooms"));
 const Contacts = lazy(() => import("../Contacts"));
 const MarketInsights = lazy(() => import("../MarketInsights"));
+const StartupInvestment = lazy(() => import('../Syndicate/StartupInvestment'))
+const SyndicateDashboard = lazy(()=> import('../Syndicate'))
+
 
 /* ---### Static ###--- */
 const PrivacyPolicy = lazy(() => import("../Policies/PrivacyPolicy"));
@@ -69,7 +74,7 @@ const GUARD_ROUTE = (props: PropsWithChildren | any) => {
 const GUARD_SUBMITTED_ROUTE = (props: PropsWithChildren | any) => {
   const { children } = props;
   const user: any = useSelector((state: RootState) => state.user.value);
-  if ((user && (user.type === props.role || props.role === KanzRoles.ALL) && user.status === ApplicationStatus.VERIFIED)) return <React.Fragment>{children}</React.Fragment>;
+  if ((user && props.role.includes(user.type) && user.status === ApplicationStatus.APPROVED)) return <React.Fragment>{children}</React.Fragment>;
   return <Navigate to={RoutesEnums.WELCOME} replace />;
 };
 
@@ -108,7 +113,15 @@ const RouterModule = () => {
       <Routes>
         <Route path="/" element={<Suspense fallback={<Loader />}><Home guard={authToken} /></Suspense>} />
 
-        {/* Onboarding Routes */}
+        {/*
+        {.......##...............#######..##....##.########...#######.....###....########..########..####.##....##..######......########...#######..##.....##.########.########..######.....................##
+        {......##...##...##.....##.....##.###...##.##.....##.##.....##...##.##...##.....##.##.....##..##..###...##.##....##.....##.....##.##.....##.##.....##....##....##.......##....##.....##...##.......##.
+        {.....##.....##.##......##.....##.####..##.##.....##.##.....##..##...##..##.....##.##.....##..##..####..##.##...........##.....##.##.....##.##.....##....##....##.......##............##.##.......##..
+        {....##....#########....##.....##.##.##.##.########..##.....##.##.....##.########..##.....##..##..##.##.##.##...####....########..##.....##.##.....##....##....######....######.....#########....##...
+        {...##.......##.##......##.....##.##..####.##.....##.##.....##.#########.##...##...##.....##..##..##..####.##....##.....##...##...##.....##.##.....##....##....##.............##......##.##.....##....
+        {..##.......##...##.....##.....##.##...###.##.....##.##.....##.##.....##.##....##..##.....##..##..##...###.##....##.....##....##..##.....##.##.....##....##....##.......##....##.....##...##...##.....
+        {.##.....................#######..##....##.########...#######..##.....##.##.....##.########..####.##....##..######......##.....##..#######...#######.....##....########..######...............##......
+        {*/}
         <Route path={RoutesEnums.INVESTOR_DETAILS}
           element={
             <Suspense fallback={<Loader />}>
@@ -171,6 +184,7 @@ const RouterModule = () => {
               </CHECK_LOGGED_IN>
             </Suspense>
           } />
+       
 
         {/* Authentication Routes */}
         <Route path={`${RoutesEnums.STARTUP_DETAILS}/:id`}
@@ -199,8 +213,7 @@ const RouterModule = () => {
           element={
             <Suspense fallback={<Loader />}>
               <CHECK_LOGGED_IN>
-                {/* <GUARD_ROUTE role={KanzRoles.STARTUP}><StartupDashboard /></GUARD_ROUTE> */}
-                <StartupDashboard />
+                <GUARD_SUBMITTED_ROUTE role={[KanzRoles.STARTUP]}><StartupDashboard /></GUARD_SUBMITTED_ROUTE>
               </CHECK_LOGGED_IN>
             </Suspense>
           } />
@@ -208,8 +221,15 @@ const RouterModule = () => {
           element={
             <Suspense fallback={<Loader />}>
               <CHECK_LOGGED_IN>
-                {/* <GUARD_ROUTE role={KanzRoles.REALTOR}><RealtorDashboard /></GUARD_ROUTE> */}
-                <RealtorDashboard />
+                <GUARD_SUBMITTED_ROUTE role={[KanzRoles.REALTOR]}><RealtorDashboard /></GUARD_SUBMITTED_ROUTE>
+              </CHECK_LOGGED_IN>
+            </Suspense>
+          } />
+        <Route path={`${RoutesEnums.SYNDICATE_DASHBOARD}`}
+          element={
+            <Suspense fallback={<Loader />}>
+              <CHECK_LOGGED_IN>
+              <GUARD_SUBMITTED_ROUTE role={[KanzRoles.SYNDICATE]}><SyndicateDashboard /></GUARD_SUBMITTED_ROUTE>
               </CHECK_LOGGED_IN>
             </Suspense>
           } />
@@ -222,14 +242,58 @@ const RouterModule = () => {
             </Suspense>
           } />
 
-        <Route path={`${StartupRoutes.DEAL_DETAIL}/:id`}
+        <Route path={`${RoutesEnums.DEAL_DETAIL}/:id`}
           element={
             <Suspense fallback={<Loader />}>
               <CHECK_LOGGED_IN>
-                <GUARD_ROUTE role={KanzRoles.STARTUP}><DealDetail /></GUARD_ROUTE>
+                <GUARD_SUBMITTED_ROUTE role={[KanzRoles.STARTUP, KanzRoles.REALTOR]}><DealDetail /></GUARD_SUBMITTED_ROUTE>
               </CHECK_LOGGED_IN>
             </Suspense>
           } />
+        
+
+
+        
+        {/*
+        {.......##...............######..##....##.##....##.########..####..######.....###....########.########....########...#######..##.....##.########.########..######.....................##
+        {......##...##...##.....##....##..##..##..###...##.##.....##..##..##....##...##.##......##....##..........##.....##.##.....##.##.....##....##....##.......##....##.....##...##.......##.
+        {.....##.....##.##......##.........####...####..##.##.....##..##..##........##...##.....##....##..........##.....##.##.....##.##.....##....##....##.......##............##.##.......##..
+        {....##....#########.....######.....##....##.##.##.##.....##..##..##.......##.....##....##....######......########..##.....##.##.....##....##....######....######.....#########....##...
+        {...##.......##.##............##....##....##..####.##.....##..##..##.......#########....##....##..........##...##...##.....##.##.....##....##....##.............##......##.##.....##....
+        {..##.......##...##.....##....##....##....##...###.##.....##..##..##....##.##.....##....##....##..........##....##..##.....##.##.....##....##....##.......##....##.....##...##...##.....
+        {.##.....................######.....##....##....##.########..####..######..##.....##....##....########....##.....##..#######...#######.....##....########..######...............##......
+        {*/}
+        
+
+
+        <Route path={RoutesEnums.DEAL_APPROVAL}
+          element={
+            <Suspense fallback={<Loader />}>
+              <CHECK_LOGGED_IN>
+                <GUARD_ROUTE role={KanzRoles.ALL}><DealApproval guard={authToken} /></GUARD_ROUTE>
+              </CHECK_LOGGED_IN>
+            </Suspense>
+          } />
+        
+        <Route path={RoutesEnums.STARTUP_INVESTMENTS}
+          element={
+            <Suspense fallback={<Loader />}>
+              <CHECK_LOGGED_IN>
+                <GUARD_ROUTE role={KanzRoles.ALL}><StartupInvestment guard={authToken} /></GUARD_ROUTE>
+              </CHECK_LOGGED_IN>
+            </Suspense>
+          } />
+        
+
+        {/*
+        {.......##..............................................................................................................................................................................................................##
+        {......##...##...##......................................................................................................................................................................................##...##.......##.
+        {.....##.....##.##........................................................................................................................................................................................##.##.......##..
+        {....##....#########.#######.#######.#######.#######.#######.#######.#######.#######.#######.#######.#######.#######.#######.#######.#######.#######.#######.#######.#######.#######.#######.#######....#########....##...
+        {...##.......##.##........................................................................................................................................................................................##.##.....##....
+        {..##.......##...##......................................................................................................................................................................................##...##...##.....
+        {.##..............................................................................................................................................................................................................##......
+        {*/ }
 
         <Route path={`${StartupRoutes.INVESTOR_UPDATES}`}
           element={

@@ -1,35 +1,33 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { KanzRoles } from "../../enums/roles.enum";
-import Header from "../../shared/components/Header";
-import Sidebar from "../../shared/components/Sidebar";
-import { RootState } from "../../redux-toolkit/store/store";
-import SearchIcon from "../../ts-icons/searchIcon.svg";
-import Spinner from "../../shared/components/Spinner";
-import Button from "../../shared/components/Button";
-import Table from "../../shared/components/Table";
-import { RoutesEnums, StartupRoutes } from "../../enums/routes.enum";
-import Modal from "../../shared/components/Modal";
-import CrossIcon from "../../ts-icons/crossIcon.svg";
-import DealTable from "../../shared/components/DealTable";
-import { saveDataHolder } from "../../redux-toolkit/slicer/dataHolder.slicer";
-import { getDeals } from "../../apis/deal.api";
-import { numberFormatter } from "../../utils/object.utils";
-import { saveToken } from "../../redux-toolkit/slicer/auth.slicer";
-import { ApplicationStatus } from "../../enums/types.enum";
-import Chevrond from "../../ts-icons/chevrond.svg";
+import { KanzRoles } from "../../../enums/roles.enum";
+import Header from "../../../shared/components/Header";
+import Sidebar from "../../../shared/components/Sidebar";
+import { RootState } from "../../../redux-toolkit/store/store";
+import SearchIcon from "../../../ts-icons/searchIcon.svg";
+import Spinner from "../../../shared/components/Spinner";
+import Button from "../../../shared/components/Button";
+import Table from "../../../shared/components/Table";
+import { RoutesEnums, StartupRoutes } from "../../../enums/routes.enum";
+import Modal from "../../../shared/components/Modal";
+import CrossIcon from "../../../ts-icons/crossIcon.svg";
+import { saveDataHolder } from "../../../redux-toolkit/slicer/dataHolder.slicer";
+import { getDeals } from "../../../apis/deal.api";
+import { numberFormatter } from "../../../utils/object.utils";
+import { saveToken } from "../../../redux-toolkit/slicer/auth.slicer";
+import { ApplicationStatus } from "../../../enums/types.enum";
 
 
-const Startup = ({ }: any) => {
+const StartupInvestment = ({ }: any) => {
     const navigate = useNavigate();
     const dispatch = useDispatch();
 
     const language: any = useSelector((state: RootState) => state.language.value);
     const authToken: any = useSelector((state: RootState) => state.auth.value);
 
-    const columns = [language?.v3?.table?.title, language?.v3?.table?.type, language?.v3?.table?.status, language?.v3?.table?.stage, language?.v3?.table?.round, language?.v3?.table?.target, language?.v3?.table?.action];
-    const [pagination, setPagination] = useState({ items_per_page: 10, total_items: [], current_page: 1, total_pages: 0 });
+    const columns = [language?.v3?.table?.title, language?.v3?.table?.type, language?.v3?.table?.status, language?.v3?.table?.end_date, language?.v3?.table?.target,language?.v3?.table?.action];
+    const [pagination, setPagination] = useState({ items_per_page: 5, total_items: [], current_page: 1, total_pages: 0 });
     const [selectedTab, setSelectedTab] = useState();
     const [modalOpen, setModalOpen]: any = useState(null);
     const [loading, setLoading] = useState(false);
@@ -60,16 +58,27 @@ const Startup = ({ }: any) => {
                         State: deal?.current_state,
                         [language?.v3?.table?.valuation]: `$${numberFormatter(Number(deal?.valuation))} ${language?.v3?.deal?.valuation}`,
                         Steps: deal?.current_state?.steps,
-                        [language?.v3?.table?.action]: <div onClick={(e) => {
-                            e.preventDefault();
-                            e.stopPropagation();
-                            navigate(`${RoutesEnums.DEAL_DETAIL}/${deal?.id}`, { state: KanzRoles.STARTUP })
-                        }}
-                            className="bg-neutral-100 inline-flex items-center justify-center w-[30px] h-[30px] rounded-full transition-all hover:bg-cbc-transparent">
-                            <Chevrond className="rotate-[-90deg] w-6 h-6" stroke={"#737373"} />
-                        </div>
+                        Actions: <Button className='bg-black' onClick={() => {
+                            handleApprove(deal?.id)
+                        }}>Approve</Button>
+                        
                     }
                 });
+
+                const handleApprove = function(dealId:any) {
+                
+                    setDeals((prev: any) => {
+                        const updatedDeals = prev.map((deal: any) => {
+                            if (deal?.id === dealId) {
+                                return { ...deal, Status: 'Approved' };
+                            }
+                            return deal;
+                        });
+                        return updatedDeals;
+                    }
+                        
+            )}
+
                 setPagination(prev => {
                     return { ...prev, total_items: deals.length, current_page: 1, total_pages: Math.ceil(deals.length / prev.items_per_page), data: deals?.slice(0, prev.items_per_page) }
                 });
@@ -121,21 +130,14 @@ const Startup = ({ }: any) => {
                     ) : (
                         <React.Fragment>
                             <section className="inline-flex justify-between items-center w-full">
-                                <h1 className="text-black font-medium text-2xl mb-2">{language?.v3?.startup?.overview?.heading_2}</h1>
+                                <h1 className="text-black font-medium text-2xl mb-2">{language?.v3?.startup?.overview?.heading_3}</h1>
                             </section>
-
-                            <section className="mt-10 mb-16">
-                                <DealTable />
-                            </section>
-
                             <section className="inline-flex justify-between items-center w-full">
                                 <div className="w-full">
-                                    <h1 className="text-black font-medium text-2xl mb-2">{language?.v3?.startup?.overview?.heading}</h1>
-
                                     <span className="w-full flex items-center gap-5">
                                         <div className="rounded-md shadow-cs-6 bg-white border-[1px] border-gray-200 h-9 overflow-hidden max-w-[310px] inline-flex items-center px-2">
                                             <SearchIcon />
-                                            <input type="search" className="h-full w-full outline-none pl-2 text-sm font-normal text-gray-400" placeholder={language?.v3?.common?.search} />
+                                            <input type="search" className="h-full w-full outline-none pl-2 px-24 text-sm font-normal text-gray-400" placeholder={language?.v3?.common?.search} />
                                         </div>
 
                                         <ul className="inline-flex items-center">
@@ -143,7 +145,6 @@ const Startup = ({ }: any) => {
                                         </ul>
                                     </span>
                                 </div>
-                                <Button onClick={() => setModalOpen("1")} className="w-[170px]">{language?.v3?.button?.new_deal}</Button>
                             </section>
 
                             <section className="mt-10">
@@ -151,11 +152,9 @@ const Startup = ({ }: any) => {
                                     if (row?.Status !== ApplicationStatus.SUBMITTED) {
                                         dispatch(saveDataHolder(row.id));
                                         navigate(`/create-deal/${row?.State?.current_step + 2}`);
-                                        return;
                                     }
-
                                     else setModalOpen("2");
-                                }} noDataNode={<Button onClick={() => setModalOpen("1")} className="absolute left-1/2 top-1/2 translate-x-[-50%] translate-y-[-50%]">{language?.v3?.button?.new_deal}</Button>} />
+                                }} noDataNode={<span className="absolute left-1/2 top-1/2 translate-x-[-50%] translate-y-[-50%]">No Data</span>} />
                             </section>
                         </React.Fragment>
                     )}
@@ -265,4 +264,4 @@ const Startup = ({ }: any) => {
         </main>
     );
 };
-export default Startup;
+export default StartupInvestment;

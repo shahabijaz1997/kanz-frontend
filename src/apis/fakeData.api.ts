@@ -113,6 +113,23 @@ const regions = [
     { id: 6, name: "Oceania" },
     { id: 7, name: "Antarctica" }
 ];
+const fakeTaxi = [
+    { id: 1, title: "Campaign Poster", category: "Startup", status: "Raising", end_date: "08/26/2023", raised:"$10,000", target: "$50,000", action: "Approve" },
+    { id: 2, title: "Studio in SLS residences", category: "Real estate", status: "Raising", end_date: "08/26/2023", raised:"$10,000", target: "$50,000", action: "Approve" },
+    { id: 3, title: "Campaign Poster", category: "Startup", status: "Raising", end_date: "08/26/2023", raised:"$10,000", target: "$50,000", action: "Approve" },
+    { id: 4, title: "Campaign Poster", category: "Startup", status: "Raising", end_date: "08/26/2023", raised:"$10,000", target: "$50,000", action: "Approve" },
+    { id: 5, title: "Studio in SLS residences", category: "Real estate", status: "Raising", end_date: "08/26/2023", raised:"$10,000", target: "$50,000", action: "Approve" },
+    { id: 6, title: "Studio in SLS residences", category: "Real estate", status: "Raising", end_date: "08/26/2023", raised:"$10,000", target: "$50,000", action: "Approve" },
+    { id: 7, title: "Campaign Poster", category: "Real estate", status: "Raising", end_date: "08/26/2023", raised:"$10,000", target: "$50,000", action: "Approve" }
+];
+
+export const getAllFakeTaxis = () => {
+    return new Promise<{ status: number, data: { fakeTaxi: any[] } }>((resolve, reject) => {
+        setTimeout(() => {
+            resolve({ status: 200, data: { fakeTaxi } });
+        }, 100);
+    });
+};
 
 export const getAllIndustries = () => {
     return new Promise((resolve, reject) => {

@@ -3,21 +3,20 @@ import { useSelector } from "react-redux";
 import { RootState } from "../../../redux-toolkit/store/store";
 import { useLocation, useNavigate } from "react-router-dom";
 import { KanzRoles } from "../../../enums/roles.enum";
-import { StartupRoutes } from "../../../enums/routes.enum";
+import { RoutesEnums, StartupRoutes } from "../../../enums/routes.enum";
 import BagIcon from "../../../ts-icons/bagIcon.svg";
 
 const Sidebar = ({ type }: any) => {
     const navigate = useNavigate();
     const { pathname } = useLocation();
     const language: any = useSelector((state: RootState) => state.language.value);
-    const orientation: any = useSelector((state: RootState) => state.orientation.value);
-    
+    const orientation: any = useSelector((state: RootState) => state.orientation.value);    
     const DASHBOARD_ITEMS = [
         { id: 1, title: language?.v3?.startup?.sidebar?.overview, route: `/${type.toLowerCase()}` },
         { id: 2, title: language?.v3?.startup?.sidebar?.investor_updates, route: StartupRoutes.INVESTOR_UPDATES },
         { id: 3, title: language?.v3?.startup?.sidebar?.data_rooms, route: StartupRoutes.DATA_ROOMS },
         { id: 4, title: language?.v3?.startup?.sidebar?.market_insights, route: StartupRoutes.MARKET_INSIGHTS },
-        { id: 5, title: language?.v3?.startup?.sidebar?.contacts, route: StartupRoutes.CONTACTS },
+        { id: 5, title: language?.v3?.startup?.sidebar?.contacts, route: StartupRoutes.CONTACTS }
     ]
     const [sidebarData, setSidebarData]: any = useState();
     const [selected, setSelected]: any = useState();
@@ -45,7 +44,7 @@ const Sidebar = ({ type }: any) => {
                 break;
             case KanzRoles.SYNDICATE:
                 setSidebarData({
-                    title: language?.v3?.startup?.sidebar?.sidebar_title, items: []
+                    title: language?.v3?.startup?.sidebar?.sidebar_title, items: [...DASHBOARD_ITEMS, { id: 6, title: language?.v3?.startup?.sidebar?.deal_approval, route: RoutesEnums.DEAL_APPROVAL }]
                 });
                 break;
             case KanzRoles.INVESTOR:
@@ -62,7 +61,7 @@ const Sidebar = ({ type }: any) => {
     return (
         sidebarData && (
             <aside className="w-[250px] bg-white h-full pt-[5rem]">
-                <div className={`inline-flex items-center gap-2 pb-6 ${orientation === "rtl" ? "pr-[2rem]": "pl-[2rem]"}`}>
+               <div className={`inline-flex items-center gap-2 pb-6 ${orientation === "rtl" ? "pr-[2rem]": "pl-[2rem]"}`}>
                     <span>{sidebarData?.icon}</span>
                     <h2 className="text-black font-medium text-sm">{sidebarData?.title}</h2>
                 </div>
