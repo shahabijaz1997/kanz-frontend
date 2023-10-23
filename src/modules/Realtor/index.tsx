@@ -8,7 +8,7 @@ import SearchIcon from "../../ts-icons/searchIcon.svg";
 import React, { useEffect, useState } from "react";
 import Button from "../../shared/components/Button";
 import Table from "../../shared/components/Table";
-import { StartupRoutes } from "../../enums/routes.enum";
+import { RoutesEnums, StartupRoutes } from "../../enums/routes.enum";
 import Modal from "../../shared/components/Modal";
 import CrossIcon from "../../ts-icons/crossIcon.svg";
 import { saveDataHolder } from "../../redux-toolkit/slicer/dataHolder.slicer";
@@ -16,6 +16,7 @@ import { getDeals } from "../../apis/deal.api";
 import { numberFormatter } from "../../utils/object.utils";
 import Spinner from "../../shared/components/Spinner";
 import { ApplicationStatus } from "../../enums/types.enum";
+import Chevrond from "../../ts-icons/chevrond.svg";
 
 
 const Realtor = ({ }: any) => {
@@ -76,9 +77,6 @@ const Realtor = ({ }: any) => {
                             className="bg-neutral-100 inline-flex items-center justify-center w-[30px] h-[30px] rounded-full transition-all hover:bg-cbc-transparent">
                             <Chevrond className="rotate-[-90deg] w-6 h-6" stroke={"#737373"} />
                         </div>
-
-                        Steps: deal?.current_state?.steps
-
                     }
                 });
 
