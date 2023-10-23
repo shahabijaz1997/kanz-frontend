@@ -684,6 +684,7 @@
                 "heading": "Deals",
                 "heading_2": "Overview",
                 "heading_3": "Startup Investment",
+                "heading_4":" Syndicate Requests",
                 "all": "All",
                 "raising": "Raising",
                 "closed": "Closed",
@@ -700,7 +701,8 @@
                 "market_insights": "Market Insights",
                 "contacts": "Contacts",
                 "deal_approval": "Deal Approval",
-                "investment": "Investment"
+                "startup_investment": " Startups Investment",
+                "syndicate_requests": " Syndicate Requests"
             }
         },
         "deal": {
@@ -733,19 +735,8 @@
             "submitted_deal": "Your deal has been submitted",
             "deal_status": "Deal Status",
             "valuation": "Valuation",
-            "deal_approval": "Deal Approval",
-            "equity_type": "Equity Type",
-            "safe_type": "Equity Type",
-            "instrument_type": "Instrument Type",
-            "start_at": "Starts At",
-            "end_at": "Ends At",
-            "investors": "Investors",
-            "raised": "Raised",
-            "description": "Description",
-            "attachments": "Attachments",
-            "committed": "Committed",
-            "angel_round": "Angel Round",
-            "deal_detail": "Deal Details"
+            "deal_approval": "Deal Approval"
+            
         },
         "table": {
             "title": "Title",
@@ -777,8 +768,7 @@
             "submitted_title": "Your Deal has been submitted",
             "submitted_message": "Please wait while our customer support officer review your submitted deal",
             "accept": "I agree",
-            "not_added": "N/A",
-            "investments": "Investments"
+            "not_added": "N/A"
         },
         "button": {
             "new_deal": "Create New Deal",
@@ -790,6 +780,14 @@
             "close": "Close",
             "seeMore": "See More",
             "seeLess": "See Less"
+        },
+        "syndicate":{
+            "table":{
+                "title": "Syndicate",
+                "dealflow":"Deal Flow",
+                "raising_ventures": "Raising Ventures Fund",
+                "action": "Action"
+            }
         }
     }
 }

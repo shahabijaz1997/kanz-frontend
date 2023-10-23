@@ -19,8 +19,9 @@ export enum RoutesEnums {
     SYNDICATE_DASHBOARD = "/syndicate",
     DEAL_APPROVAL= '/deal-approval',
     STARTUP_INVESTMENTS= '/startup-investments',
-    DEAL_DETAIL= "/view-deal",
+    DEAL_DETAIL = "/view-deal",
     SYNDICATE_DEAL_DETAIL= "/view-deal-syndicate",
+   DEAL_SYNDICATE_REQUESTS= '/deal-syndicate-requests'
 }
 
 export enum StartupRoutes {

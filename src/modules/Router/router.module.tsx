@@ -35,7 +35,8 @@ const StartupDashboard = lazy(() => import("../Startup"));
 const RealtorDashboard = lazy(() => import("../Realtor"));
 const CreateDeal = lazy(() => import("../CreateDeal"));
 const DealDetail = lazy(() => import("../DealDetail"));
-const DealApproval = lazy(()=> import('../Syndicate/DealApproval'));
+const DealApproval = lazy(() => import('../Syndicate/DealApproval'))
+const SyndicateRequest =lazy (()=> import('../Realtor/SyndicateRequest'))
 const InvestorUpdates = lazy(() => import("../InvestorUpdates"));
 const DataRooms = lazy(() => import("../DataRooms"));
 const Contacts = lazy(() => import("../Contacts"));
@@ -273,20 +274,31 @@ const RouterModule = () => {
         
 
 
+     
+        
         <Route path={RoutesEnums.DEAL_APPROVAL}
           element={
             <Suspense fallback={<Loader />}>
               <CHECK_LOGGED_IN>
-                <GUARD_ROUTE role={KanzRoles.ALL}><DealApproval guard={authToken} /></GUARD_ROUTE>
+                <GUARD_SUBMITTED_ROUTE role={[KanzRoles.SYNDICATE]}><DealApproval guard={authToken} /></GUARD_SUBMITTED_ROUTE>
               </CHECK_LOGGED_IN>
             </Suspense>
           } />
         
+        {/* This is meant for Deal Creator make changes in below route accordingly */}
+        <Route path={RoutesEnums.DEAL_SYNDICATE_REQUESTS}
+          element={
+            <Suspense fallback={<Loader />}>
+              <CHECK_LOGGED_IN>
+                <GUARD_SUBMITTED_ROUTE role={[KanzRoles.SYNDICATE]}><SyndicateRequest guard={authToken} /></GUARD_SUBMITTED_ROUTE>   
+              </CHECK_LOGGED_IN>
+            </Suspense>
+          } />
         <Route path={RoutesEnums.STARTUP_INVESTMENTS}
           element={
             <Suspense fallback={<Loader />}>
               <CHECK_LOGGED_IN>
-                <GUARD_ROUTE role={KanzRoles.ALL}><StartupInvestment guard={authToken} /></GUARD_ROUTE>
+                <GUARD_SUBMITTED_ROUTE role={KanzRoles.SYNDICATE}><StartupInvestment guard={authToken} /></GUARD_SUBMITTED_ROUTE>
               </CHECK_LOGGED_IN>
             </Suspense>
           } />

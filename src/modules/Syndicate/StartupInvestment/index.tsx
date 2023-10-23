@@ -55,12 +55,10 @@ const StartupInvestment = ({ }: any) => {
                         [language?.v3?.table?.round]: deal?.round,
                         [language?.v3?.table?.status]: deal?.status,
                         [language?.v3?.table?.type]: deal?.instrument_type,
-                        State: deal?.current_state,
-                        [language?.v3?.table?.valuation]: `$${numberFormatter(Number(deal?.valuation))} ${language?.v3?.deal?.valuation}`,
-                        Steps: deal?.current_state?.steps,
-                        Actions: <Button className='bg-black' onClick={() => {
+                        Stage: deal?.current_stage,
+                        Action: <Button divStyle='items-center justify-end' type='outlined' className='!p-3 !py-1 !rounded-full' onClick={() => {
                             handleApprove(deal?.id)
-                        }}>Approve</Button>
+                        }}>{'M'}</Button>
                         
                     }
                 });
@@ -121,7 +119,7 @@ const StartupInvestment = ({ }: any) => {
                 <Header />
             </section>
             <aside className="w-full h-full flex items-start justify-start">
-                <Sidebar type={KanzRoles.STARTUP} />
+                <Sidebar type={KanzRoles.SYNDICATE} />
                 <section className="bg-cbc-auth h-full p-[5rem] relative" style={{ width: "calc(100% - 250px)" }}>
                     {loading ? (
                         <div className="absolute left-0 top-0 w-full h-full grid place-items-center">
