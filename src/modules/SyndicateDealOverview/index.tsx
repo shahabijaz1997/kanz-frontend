@@ -1,4 +1,4 @@
-import React, { useLayoutEffect, useState } from "react";
+import { useState } from "react";
 import { useSelector } from "react-redux";
 import { useLocation, useNavigate } from "react-router-dom";
 import DocViewer, { PDFRenderer, PNGRenderer } from "react-doc-viewer";
@@ -11,6 +11,7 @@ import Button from "../../shared/components/Button";
 import Spinner from "../../shared/components/Spinner";
 import ArrowIcon from "../../ts-icons/arrowIcon.svg";
 import DownloadIcon from "../../ts-icons/downloadIcon.svg";
+import Modal from "../../shared/components/Modal";
 
 const SyndicateDealOverview = ({ }: any) => {
     const navigate = useNavigate();
@@ -61,7 +62,7 @@ const SyndicateDealOverview = ({ }: any) => {
                         <section className="w-[10%]"></section>
                         <section className="w-[30%]">
                             <div className="w-full inline-flex justify-end gap-4">
-                                <Button type="outlined">Request Changes</Button>
+                                <Button type="outlined" onClick={() => setModalOpen(true)}>Request Changes</Button>
                                 <Button>Interested</Button>
                             </div>
 
@@ -101,6 +102,19 @@ const SyndicateDealOverview = ({ }: any) => {
                     </section>
                 )}
             </aside>
+
+            <Modal show={modalOpen ? true : false} className="w-full">
+                <div className="rounded-md inline-grid place-items-center cursor-pointer absolute top-1/2 left-1/2 translate-x-[-50%] translate-y-[-50%]" style={{ backgroundColor: "rgba(0, 0, 0, 0.078" }}>
+                    <aside className="bg-white w-[400px] rounded-md px-4 py-3">
+                       <header className="bg-cbc-grey-sec"></header>
+
+                        <footer className="w-full inline-flex justify-end gap-3">
+                            <Button className="w-[80px]" onClick={() => { }}>{language?.buttons?.yes}</Button>
+                            <Button className="bg-transparent border-cyan-800 border-2 w-[80px] !text-cyan-800 hover:bg-transparent" onClick={() => setModalOpen(false)}>{language?.buttons?.no}</Button>
+                        </footer>
+                    </aside>
+                </div>
+            </Modal>
         </main>
     );
 };
