@@ -543,8 +543,8 @@ const CreateDeal = () => {
     if (!dependantQuesion || (dependantQuesion && dependantQuesion?.value)) {
       let min = new Date();
       let dte = ques?.value;
-      const parts = ques?.value.split('/');
-      if (parts.length === 3) {
+      const parts = ques?.value?.split('/');
+      if (parts && parts?.length === 3) {
         const day = parts[0];
         const month = parts[1];
         const year = parts[2];
