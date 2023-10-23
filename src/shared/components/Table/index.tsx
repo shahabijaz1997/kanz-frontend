@@ -2,7 +2,7 @@ import React from "react";
 import { useSelector } from "react-redux";
 import { RootState } from "../../../redux-toolkit/store/store";
 
-const Table = ({ columns, data, noDataNode, onclick, pagination, paginate, trColclassName="",trRowclassName="cursor-pointer transition-all hover:bg-cbc-transparent", tdclassName=""  }: any) => {
+const Table = ({ columns, data, noDataNode, onclick, pagination, paginate }: any) => {
     const orientation: any = useSelector((state: RootState) => state.orientation.value);
 
     const renderPaginationUI = () => {
@@ -25,7 +25,7 @@ const Table = ({ columns, data, noDataNode, onclick, pagination, paginate, trCol
         <section className="rounded-lg shadow-cs-5 border-[1px] border-neutral-200 w-full">
             <table className="min-w-full overflow-hidden rounded-lg bg-white">
                 <thead className="bg-neutral-50">
-                    <tr  className={`${trColclassName || ''}`}>
+                    <tr>
                         {React.Children.toArray(
                             columns.map((column: any, index: number) => (
                                 <th scope="col" className={`px-3 py-3 text-xs font-bold text-neutral-500 uppercase ${(index === columns.length - 1) ? `${orientation !== "rtl" ? "text-right" : "text-left"}` : `${orientation !== "rtl" ? "text-left" : "text-right"}`} }`}>
@@ -34,31 +34,29 @@ const Table = ({ columns, data, noDataNode, onclick, pagination, paginate, trCol
                             ))
                         )}
                     </tr>
-                   
-                    
                 </thead>
                 <tbody className={`relative divide-y divide-gray-200 ${(!pagination?.data || !pagination?.data?.length) && "h-[13rem]"}`}>
                     {
                         pagination?.data?.length > 0 ? (
                             React.Children.toArray(
                                 pagination?.data.map((row: any) => (
-                                    <tr onClick={() => onclick(row)}  className={`${trRowclassName}`}>
-                                        {columns.map((column: any, index: number) => (
-                                            index === 0 ? (
-                                                <div className="inline-flex flex-col items-center pl-2">
-                                                    <td  className={`${tdclassName || `px-3 h-10 text-sm font-medium text-gray-800 whitespace-nowrap max-w-[150px] truncate inline-flex items-center ${index === columns.length - 1 && `text-right`}
-                                                }`}`}>
-                                                        {row[column]}
-
+                                    <tr onClick={() => onclick(row)} className="cursor-pointer transition-all hover:bg-cbc-transparent">
+                                        {React.Children.toArray(
+                                            columns.map((column: any, index: number) => (
+                                                index === 0 ? (
+                                                    <td className={`px-3 h-10 text-sm font-medium text-gray-800 whitespace-nowrap max-w-[150px] truncate inline-flex items-center ${index === columns.length - 1 && `text-right`} }`}>
+                                                        <aside className="inline-flex flex-col items-center pl-2">
+                                                            {row[column]}
+                                                        </aside>
+                                                        {index === 0 && <small className="text-neutral-500 font-normal">{row["Valuation"]}</small>}
                                                     </td>
-                                                    {index === 0 && <small className="text-neutral-500 font-normal">{row["Valuation"]}</small>}
-                                                </div>
-                                            ) : (
-                                                <td className={`px-3 h-10 text-sm font-medium text-gray-800 whitespace-nowrap max-w-[150px] truncate ${index === columns.length - 1 && `text-right`} }`}>
-                                                    {column === "Status" ? <div className="capitalize bg-green-100 rounded-xl text-center py-[2px] w-[80px] text-green-800">{row[column]}</div> : row[column]}
-                                                </td>
-                                            )
-                                        ))}
+                                                ) : (
+                                                    <td className={`px-3 h-10 text-sm font-medium text-gray-800 whitespace-nowrap max-w-[150px] truncate ${index === columns.length - 1 && `text-right`} }`}>
+                                                        {column === "Status" ? <aside className="capitalize bg-green-100 rounded-xl text-center py-[2px] w-[80px] text-green-800">{row[column]}</aside> : row[column]}
+                                                    </td>
+                                                )
+                                            ))
+                                        )}
                                     </tr>
                                 ))
                             )

@@ -691,7 +691,6 @@
                 "committed": "Committed",
                 "investors": "Investors",
                 "rounds": "Rounds"
-                
             },
             "sidebar": {
                 "sidebar_title": "Deal Model",
@@ -725,6 +724,7 @@
             "parking": "Parking",
             "swim": "Swimming pool",
             "por": "Property on a rent?",
+            "por_2": "Property on rent",
             "upload_docs": "Upload the necessary documents",
             "add_links": "Add Links",
             "price": "Price",
@@ -733,7 +733,17 @@
             "submitted_deal": "Your deal has been submitted",
             "deal_status": "Deal Status",
             "valuation": "Valuation",
-            "deal_approval": "Deal Approval"
+            "deal_approval": "Deal Approval",
+            "equity_type": "Equity Type",
+            "safe_type": "Equity Type",
+            "instrument_type": "Instrument Type",
+            "start_at": "Starts At",
+            "end_at": "Ends At",
+            "investors": "Investors",
+            "raised": "Raised",
+            "description": "Description",
+            "attachments": "Attachments",
+            "committed": "Committed"
         },
         "table": {
             "title": "Title",
@@ -743,10 +753,10 @@
             "round": "Round",
             "target": "Target",
             "valuation": "Valuation",
-            "propertyName": "Property Name", 
-            "size": "Size", 
-            "features": "Features", 
-            "sellingPrice": "Selling Price", 
+            "propertyName": "Property Name",
+            "size": "Size",
+            "features": "Features",
+            "sellingPrice": "Selling Price",
             "rentalAmount": "Rental Amount",
             "end_date": "End Date",
             "action": "Action"
@@ -764,7 +774,8 @@
             "sqft": "Square Feet",
             "submitted_title": "Your Deal has been submitted",
             "submitted_message": "Please wait while our customer support officer review your submitted deal",
-            "accept": "I agree"
+            "accept": "I agree",
+            "not_added": "N/A"
         },
         "button": {
             "new_deal": "Create New Deal",

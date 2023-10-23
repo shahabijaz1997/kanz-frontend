@@ -18,7 +18,8 @@ export enum RoutesEnums {
     REALTOR_DASHBOARD = "/realtor",
     SYNDICATE_DASHBOARD = "/syndicate",
     DEAL_APPROVAL= '/deal-approval',
-    STARTUP_INVESTMENTS= '/startup-investments'
+    STARTUP_INVESTMENTS= '/startup-investments',
+    DEAL_DETAIL= "/view-deal",
 }
 
 export enum StartupRoutes {
@@ -28,5 +29,4 @@ export enum StartupRoutes {
     MARKET_INSIGHTS= "/market-insights",
     CONTACTS= "/contacts",
     CREATE_DEAL= "/create-deal",
-    DEAL_DETAIL= "/view-deal",
 }

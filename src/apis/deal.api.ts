@@ -21,7 +21,15 @@ export const getDeals = (token: string) => {
 };
 
 export const getDealDetail = (dealId: number, token: string) => {
-    return axios.get(`${ENV.API_URL}/${ENV.API_VERSION}/deals/${dealId}`, {
+    return axios.get(`${ENV.API_URL}/${ENV.API_VERSION}/deals/${dealId}/overview`, {
+        headers: {
+            Authorization: `Bearer ${token}`
+        }
+    });
+};
+
+export const getDealDocuments = (dealId: number, token: string) => {
+    return axios.get(`${ENV.API_URL}/${ENV.API_VERSION}/deals/${dealId}/documents`, {
         headers: {
             Authorization: `Bearer ${token}`
         }
@@ -36,7 +44,7 @@ export const postDealStep = (payload: any, token: string) => {
     });
 };
 
-export const onReviewDeal = (dealId: number,params: any, token: string) => {
+export const onReviewDeal = (dealId: number, params: any, token: string) => {
     return axios.get(`${ENV.API_URL}/${ENV.API_VERSION}/deals/${dealId}/review`, {
         headers: {
             Authorization: `Bearer ${token}`
