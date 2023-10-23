@@ -103,17 +103,19 @@ const CreateDeal = () => {
             sec.fields = [sec.fields.at(-1), sec.fields[0]];
             setShowCustomBox(false);
           }
+
           // Check External Links
           else if (!sec?.display_card && sec?.is_multiple && sec?.fields?.some((field: any) => field?.value)) {
             let elems = [];
             for (let i = 0; i < sec?.fields?.length; i++) elems.push(sec.fields[i]);
-
             setMultipleFieldsPayload(elems);
             setShowCustomBox(true);
             let sect: any = data?.status?.data?.steps[step - 1][event]?.sections?.find((s: any) => s.index === sec?.index);
 
             if (sect?.fields?.length > 1) {
-              for (let i = 0; i <= sect?.fields.length; i++) sect?.fields.pop();
+              let thatObj = {...sect.fields[0]};
+              thatObj.value = ""
+              sect.fields = [thatObj]
             }
           }
           else {
@@ -306,7 +308,7 @@ const CreateDeal = () => {
     );
   };
 
-  const numberInput = (ques: any, secIndex: number, section: any) => {
+  const numberInputUI = (ques: any, secIndex: number, section: any) => {
     let dependantQuesion = section?.fields?.find((field: any) => field.id === ques?.dependent_id);
     let placeholder = "", symbol = "";
     if (ques?.input_type === InputType.CURRENCY) placeholder = currency === 0 ? "$ 0.00" : "0.00 د.إ";
@@ -360,7 +362,7 @@ const CreateDeal = () => {
     else return <React.Fragment></React.Fragment>
   };
 
-  const attachments = (ques: any, secIndex: number, section: any) => {
+  const attachmentsUI = (ques: any, secIndex: number, section: any) => {
     let onlyPDF = (ques?.permitted_types?.length === 1 && ques?.permitted_types?.includes("pdf")) && true;
     let onlvideo: any = (ques?.permitted_types?.length === 1 && ques?.permitted_types?.includes("video")) && true;
 
@@ -394,7 +396,7 @@ const CreateDeal = () => {
                     <source src={ques?.value?.url} type="video/webm" />
                   </video>
                 ) : (
-                  ques?.value?.attachment_kind !== FileType.PDF ? <img alt={"Attachment url missing"} src={ques?.value?.url} className="block w-[110%] h-[110%] overflow-hidden object-contain" /> : <embed src={ques?.value?.url} className="block w-[110%] h-[110%] overflow-hidden" />
+                  ques?.value?.kind !== FileType.PDF ? <img alt={"Attachment url missing"} src={ques?.value?.url} className="block w-[110%] h-[110%] overflow-hidden object-contain" /> : <embed src={ques?.value?.url} className="block w-[100%] h-[100%] overflow-hidden" />
                 )}
               </div>
             </div>
@@ -445,7 +447,7 @@ const CreateDeal = () => {
     );
   };
 
-  const dropdowns = (ques: any, secIndex: number, section: any) => {
+  const dropdownsUI = (ques: any, secIndex: number, section: any) => {
     let dependantQuesion = section?.fields?.find((field: any) => field.id === ques?.dependent_id);
 
     if (!dependantQuesion || (dependantQuesion && dependantQuesion?.value)) {
@@ -486,7 +488,7 @@ const CreateDeal = () => {
     );
   }
 
-  const switchInput = (ques: any, secIndex: number, section: any) => {
+  const switchInputUI = (ques: any, secIndex: number, section: any) => {
     return (
       <section className="flex items-start justify-center flex-col mt-3 w-full">
         <div className="mb-3 inline-flex w-full items-center justify-between">
@@ -494,9 +496,9 @@ const CreateDeal = () => {
           <label className="relative inline-flex items-center cursor-pointer" onChange={(e) => {
             dispatch(saveDealSelection({ option: !ques?.value, question: ques, fields: dealData, lang: event, secIndex, step: dealData[step - 1] }))
             let dependantQuesions: any[] = section?.fields?.filter((field: any) => field.dependent_id === ques?.id);
-            if (dependantQuesions.length && !ques?.value) {
+            if (dependantQuesions.length && ques?.value) {
               dependantQuesions.forEach(dep => {
-                dispatch(saveDealSelection({ option: "", question: dep, fields: dealData, lang: event, secIndex, step: dealData[step - 1] }))
+                dispatch(saveDealSelection({ option: null, question: dep, fields: dealData, lang: event, secIndex, step: dealData[step - 1] }))
               })
             }
           }}>
@@ -508,7 +510,7 @@ const CreateDeal = () => {
     );
   };
 
-  const textAreaInput = (ques: any, secIndex: number, section: any) => {
+  const textAreaInputUI = (ques: any, secIndex: number, section: any) => {
     let dependantQuesion = section?.fields?.find((field: any) => field.id === ques?.dependent_id);
 
     if ((!dependantQuesion || (dependantQuesion && (dependantQuesion?.field_type === Constants.TEXT_FIELD || dependantQuesion?.value)))) {
@@ -525,7 +527,7 @@ const CreateDeal = () => {
     }
   };
 
-  const textFieldInput = (ques: any, secIndex: number, section: any) => {
+  const textFieldInputUI = (ques: any, secIndex: number, section: any) => {
     let dependantQuesion = section?.fields?.find((field: any) => field.id === ques?.dependent_id);
 
     if (!dependantQuesion || (dependantQuesion && dependantQuesion?.value)) {
@@ -600,12 +602,12 @@ const CreateDeal = () => {
     if (restrictions?.some((res: any) => res.dependent_id === ques?.id && res?.operation !== "show") && restrictions.length > 0) return "";
     else {
       if (ques?.field_type === Constants.MULTIPLE_CHOICE) return multipleChoice(ques, secIndex, section);
-      else if (ques?.field_type === Constants.NUMBER_INPUT) return numberInput(ques, secIndex, section);
-      else if (ques?.field_type === Constants.FILE) return attachments(ques, secIndex, section)
-      else if (ques?.field_type === Constants.DROPDOWN) return dropdowns(ques, secIndex, section)
-      else if (ques?.field_type === Constants.SWITCH) return switchInput(ques, secIndex, section)
-      else if (ques?.field_type === Constants.TEXT_BOX) return textAreaInput(ques, secIndex, section)
-      else if (ques?.field_type === Constants.TEXT_FIELD) return textFieldInput(ques, secIndex, section)
+      else if (ques?.field_type === Constants.NUMBER_INPUT) return numberInputUI(ques, secIndex, section);
+      else if (ques?.field_type === Constants.FILE) return attachmentsUI(ques, secIndex, section)
+      else if (ques?.field_type === Constants.DROPDOWN) return dropdownsUI(ques, secIndex, section)
+      else if (ques?.field_type === Constants.SWITCH) return switchInputUI(ques, secIndex, section)
+      else if (ques?.field_type === Constants.TEXT_BOX) return textAreaInputUI(ques, secIndex, section)
+      else if (ques?.field_type === Constants.TEXT_FIELD) return textFieldInputUI(ques, secIndex, section)
       else if (ques?.field_type === Constants.URL) return URLInput(ques, secIndex, section)
       else if (ques?.field_type === Constants.CHECK_BOX) return termUI(ques, secIndex)
       else if (ques?.field_type === Constants.DATE) return dateUI(ques, secIndex, section)
