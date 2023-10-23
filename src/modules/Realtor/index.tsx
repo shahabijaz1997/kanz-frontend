@@ -66,7 +66,19 @@ const Realtor = ({ }: any) => {
                         [language?.v3?.table?.status]: deal?.status,
                         [language?.v3?.table?.rentalAmount]: `$${numberFormatter(Number(deal?.rental_amount))}`,
                         State: deal?.current_state,
+
+                        Steps: deal?.current_state?.steps,
+                        [language?.v3?.table?.action]: <div onClick={(e) => {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            navigate(`${RoutesEnums.DEAL_DETAIL}/${deal?.id}`, { state: KanzRoles.REALTOR })
+                        }}
+                            className="bg-neutral-100 inline-flex items-center justify-center w-[30px] h-[30px] rounded-full transition-all hover:bg-cbc-transparent">
+                            <Chevrond className="rotate-[-90deg] w-6 h-6" stroke={"#737373"} />
+                        </div>
+
                         Steps: deal?.current_state?.steps
+
                     }
                 });
 
