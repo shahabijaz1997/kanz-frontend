@@ -16,7 +16,6 @@ import { saveDataHolder } from "../../../redux-toolkit/slicer/dataHolder.slicer"
 import { getDeals } from "../../../apis/deal.api";
 import { numberFormatter } from "../../../utils/object.utils";
 import { saveToken } from "../../../redux-toolkit/slicer/auth.slicer";
-import { ApplicationStatus } from "../../../enums/types.enum";
 
 
 const DealApproval = ({ }: any) => {
@@ -54,13 +53,13 @@ const DealApproval = ({ }: any) => {
                         [language?.v3?.table?.stage]: deal?.title || "N/A",
                         [language?.v3?.table?.round]: deal?.round,
                         [language?.v3?.table?.status]: deal?.status,
-                        [language?.v3?.table?.type]: deal?.instrument_type,
-                        State: deal?.current_state,
-                        [language?.v3?.table?.valuation]: `$${numberFormatter(Number(deal?.valuation))} ${language?.v3?.deal?.valuation}`,
-                        Steps: deal?.current_state?.steps,
-                        Actions: <Button className='bg-black' onClick={() => {
-                            handleApprove(deal?.id)
-                        }}>Approve</Button>
+                        [language?.v3?.table?.type]: deal?.deal_type,
+                        Action: <Button divStyle='items-center justify-end' type='outlined' className='!p-3 !py-1 !rounded-full' onClick={(row: any) => {
+                            setModalOpen("2")
+                            //dispatch(saveDataHolder(row.id));
+                            //navigate(`/view-deal/${row?.id}`);
+                    
+                    }}>{'>'}</Button>
                         
                     }
                 });
@@ -121,7 +120,7 @@ const DealApproval = ({ }: any) => {
                 <Header />
             </section>
             <aside className="w-full h-full flex items-start justify-start">
-                <Sidebar type={KanzRoles.STARTUP} />
+                <Sidebar type={KanzRoles.SYNDICATE} />
                 <section className="bg-cbc-auth h-full p-[5rem] relative" style={{ width: "calc(100% - 250px)" }}>
                     {loading ? (
                         <div className="absolute left-0 top-0 w-full h-full grid place-items-center">
@@ -148,12 +147,11 @@ const DealApproval = ({ }: any) => {
                             </section>
 
                             <section className="mt-10">
-                                <Table columns={columns} pagination={pagination} paginate={paginate} onclick={(row: any) => {
-                                    if (row?.Status !== ApplicationStatus.SUBMITTED) {
-                                        dispatch(saveDataHolder(row.id));
-                                        navigate(`/create-deal/${row?.State?.current_step + 2}`);
-                                    }
-                                    else setModalOpen("2");
+                                <Table tdclassName="px-3 h-10 text-sm font-medium text-gray-800 whitespace-nowrap max-w-[150px] truncate inline-flex items-center py-10"  columns={columns} pagination={pagination} paginate={paginate} onclick={(row: any) => {
+                                        setModalOpen("2")
+                                        //dispatch(saveDataHolder(row.id));
+                                        //navigate(`/view-deal/${row?.id}`);
+                                
                                 }} noDataNode={<span className="absolute left-1/2 top-1/2 translate-x-[-50%] translate-y-[-50%]">No Data</span>} />
                             </section>
                         </React.Fragment>
