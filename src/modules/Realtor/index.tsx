@@ -17,6 +17,7 @@ import { numberFormatter } from "../../utils/object.utils";
 import Spinner from "../../shared/components/Spinner";
 import { ApplicationStatus } from "../../enums/types.enum";
 import Chevrond from "../../ts-icons/chevrond.svg";
+import EditIcon from "../../ts-icons/editIcon.svg";
 
 
 const Realtor = ({ }: any) => {
@@ -24,9 +25,9 @@ const Realtor = ({ }: any) => {
     const dispatch = useDispatch();
     const language: any = useSelector((state: RootState) => state.language.value);
     const authToken: any = useSelector((state: RootState) => state.auth.value);
-    
+
     const columns = [language?.v3?.table?.propertyName, language?.v3?.table?.size, language?.v3?.table?.status, language?.v3?.table?.features, language?.v3?.table?.sellingPrice, language?.v3?.table?.rentalAmount, language?.v3?.table?.action];
-const [pagination, setPagination] = useState({ items_per_page: 10, total_items: [], current_page: 1, total_pages: 0 });
+    const [pagination, setPagination] = useState({ items_per_page: 10, total_items: [], current_page: 1, total_pages: 0 });
     const [selectedTab, setSelectedTab] = useState();
     const [modalOpen, setModalOpen]: any = useState(null);
     const [loading, setLoading] = useState(false);
@@ -69,14 +70,27 @@ const [pagination, setPagination] = useState({ items_per_page: 10, total_items: 
                         State: deal?.current_state,
 
                         Steps: deal?.current_state?.steps,
-                        [language?.v3?.table?.action]: <div onClick={(e) => {
-                            e.preventDefault();
-                            e.stopPropagation();
-                            navigate(`${RoutesEnums.DEAL_DETAIL}/${deal?.id}`, { state: KanzRoles.REALTOR })
-                        }}
-                            className="bg-neutral-100 inline-flex items-center justify-center w-[30px] h-[30px] rounded-full transition-all hover:bg-cbc-transparent">
-                            <Chevrond className="rotate-[-90deg] w-6 h-6" stroke={"#737373"} />
-                        </div>
+                        [language?.v3?.table?.action]: <React.Fragment>
+                            {
+                                (deal?.status === ApplicationStatus.DRAFT || deal?.status === ApplicationStatus.REOPENED) && <div onClick={(e) => {
+                                    e.preventDefault();
+                                    e.stopPropagation();
+                                    dispatch(saveDataHolder(deal.id));
+                                    deal?.status === ApplicationStatus.REOPENED ? navigate(`/create-deal/${deal?.current_state?.current_step + 1}`): navigate(`/create-deal/${deal?.current_state?.current_step + 2}`);
+                                }}
+                                    className="bg-neutral-100 inline-flex items-center justify-center w-[26px] h-[26px] p-1 rounded-full transition-all hover:bg-cbc-transparent">
+                                    <EditIcon className="w-6 h-6" stroke={"#737373"} />
+                                </div>
+                            }
+                            <div onClick={(e) => {
+                                e.preventDefault();
+                                e.stopPropagation();
+                                navigate(`${RoutesEnums.DEAL_DETAIL}/${deal?.id}`, { state: KanzRoles.REALTOR })
+                            }}
+                                className="ml-2 bg-neutral-100 inline-flex items-center justify-center w-[26px] h-[26px] rounded-full transition-all hover:bg-cbc-transparent">
+                                <Chevrond className="rotate-[-90deg] w-6 h-6" stroke={"#737373"} />
+                            </div>
+                        </React.Fragment>
                     }
                 });
 
@@ -147,10 +161,7 @@ const [pagination, setPagination] = useState({ items_per_page: 10, total_items: 
 
                             <section className="mt-10">
                                 <Table columns={columns} pagination={pagination} paginate={paginate} onclick={(row: any) => {
-                                    if (row?.Status !== ApplicationStatus.SUBMITTED) {
-                                        dispatch(saveDataHolder(row.id));
-                                        navigate(`/create-deal/${row?.State?.current_step + 2}`);
-                                    }
+                                    if (row?.Status !== ApplicationStatus.SUBMITTED) navigate(`${RoutesEnums.DEAL_DETAIL}/${row?.id}`, { state: KanzRoles.REALTOR })
                                     else setModalOpen("2");
                                 }} noDataNode={<Button onClick={() => setModalOpen("1")} className="absolute left-1/2 top-1/2 translate-x-[-50%] translate-y-[-50%]">{language?.v3?.button?.new_deal}</Button>} />
                             </section>

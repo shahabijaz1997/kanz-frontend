@@ -21,6 +21,7 @@ export enum ApplicationStatus {
     SUBMITTED = "submitted",
     OPENED = "opened",
     REOPENED = "reopened",
+    DRAFT = "draft",
     VERIFIED = "verified",
     REJECTED = "rejected",
 }
