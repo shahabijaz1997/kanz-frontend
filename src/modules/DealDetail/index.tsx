@@ -1,22 +1,22 @@
 import React, { useLayoutEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
-import { KanzRoles } from "../../../enums/roles.enum";
-import { RootState } from "../../../redux-toolkit/store/store";
-import Header from "../../../shared/components/Header";
-import Sidebar from "../../../shared/components/Sidebar";
-import Chevrond from "../../../ts-icons/chevrond.svg";
-import Button from "../../../shared/components/Button";
-import CustomDropdown from "../../../shared/components/CustomDropdown";
-import MenuIcon from "../../../ts-icons/menuIcon.svg";
+import { KanzRoles } from "../../enums/roles.enum";
+import { RootState } from "../../redux-toolkit/store/store";
+import Header from "../../shared/components/Header";
+import Sidebar from "../../shared/components/Sidebar";
+import Chevrond from "../../ts-icons/chevrond.svg";
+import Button from "../../shared/components/Button";
+import CustomDropdown from "../../shared/components/CustomDropdown";
+import MenuIcon from "../../ts-icons/menuIcon.svg";
 import DealInvestors from "./DealInvestors";
-import DealTable from "../../../shared/components/DealTable";
+import DealTable from "../../shared/components/DealTable";
 import DealViewDetails from "./DealViewDetails";
 import DocumentDetails from "./DocumentDetails";
 import NoteDetails from "./NoteDetails";
 import ActivityDetails from "./ActivityDetails";
-import Spinner from "../../../shared/components/Spinner";
-import { getDealDetail, getDealDocuments } from "../../../apis/deal.api";
+import Spinner from "../../shared/components/Spinner";
+import { getDealDetail, getDealDocuments } from "../../apis/deal.api";
 
 const DealDetail = ({ }: any) => {
     const params = useParams();
@@ -82,15 +82,19 @@ const DealDetail = ({ }: any) => {
                         </span>
 
                         <section className="inline-flex justify-between items-center w-full mb-4">
-                            <h1 className="text-black font-medium text-2xl">Angel Round</h1>
+                            <h1 className="text-black font-medium text-2xl">{state === KanzRoles.STARTUP ? language?.v3?.deal?.angel_round : language?.v3?.deal?.deal_detail}</h1>
                             <span className="inline-flex items-center gap-2">
                                 <Button onClick={() => { }} className="w-[80px]">{language?.v3?.button?.invite}</Button>
                                 <div className="bg-white rounded-md border-neutral-300 border-[1px] inline-flex items-center justify-center"><CustomDropdown className="px-5 py-3" mainNode={<MenuIcon />} /></div>
                             </span>
                         </section>
-                        <section className="mt-1 mb-16">
-                            <DealTable />
-                        </section>
+                        {
+                            state !== KanzRoles.REALTOR && (
+                                <section className="mt-1 mb-16">
+                                    <DealTable />
+                                </section>
+                            )
+                        }
 
                         <section>
                             <ul className="flex border-neutral-200 border-b-[1px]">

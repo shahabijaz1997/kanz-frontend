@@ -1,7 +1,7 @@
 import { useSelector } from "react-redux";
-import { RootState } from "../../../../redux-toolkit/store/store";
+import { RootState } from "../../../redux-toolkit/store/store";
 
-const ActivityDetails = () => {
+const NoteDetails = () => {
     const language: any = useSelector((state: RootState) => state.language.value);
 
     return (
@@ -10,4 +10,4 @@ const ActivityDetails = () => {
         </div>
     );
 };
-export default ActivityDetails;
+export default NoteDetails;

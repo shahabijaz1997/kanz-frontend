@@ -1,9 +1,9 @@
 import React from "react";
 import { useSelector } from "react-redux";
-import { RootState } from "../../../../redux-toolkit/store/store";
-import ApprovedSVG from "../../../../assets/svg/approved.svg";
-import { comaFormattedNumber, formatDate, numberFormatter } from "../../../../utils/object.utils";
-import { KanzRoles } from "../../../../enums/roles.enum";
+import { RootState } from "../../../redux-toolkit/store/store";
+import ApprovedSVG from "../../../assets/svg/approved.svg";
+import { comaFormattedNumber, formatDate, numberFormatter } from "../../../utils/object.utils";
+import { KanzRoles } from "../../../enums/roles.enum";
 
 
 const DealViewDetails = ({ dealDetail, state }: any) => {

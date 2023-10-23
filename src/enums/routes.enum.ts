@@ -19,11 +19,9 @@ export enum RoutesEnums {
     SYNDICATE_DASHBOARD = "/syndicate",
     DEAL_APPROVAL= '/deal-approval',
     STARTUP_INVESTMENTS= '/startup-investments',
-<<<<<<< Updated upstream
-    DEAL_DETAIL= "/view-deal",
-=======
-    DEAL_SYNDICATE_REQUESTS= '/deal-syndicate-requests'
->>>>>>> Stashed changes
+    DEAL_DETAIL = "/view-deal",
+    SYNDICATE_DEAL_DETAIL= "/view-deal-syndicate",
+   DEAL_SYNDICATE_REQUESTS= '/deal-syndicate-requests'
 }
 
 export enum StartupRoutes {

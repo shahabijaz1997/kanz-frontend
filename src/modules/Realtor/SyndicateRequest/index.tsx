@@ -26,7 +26,7 @@ const SyndicateRequest = ({ }: any) => {
     const language: any = useSelector((state: RootState) => state.language.value);
     const authToken: any = useSelector((state: RootState) => state.auth.value);
 
-    const columns = [language?.v3?.table?.title, language?.v3?.table?.type, language?.v3?.table?.status, language?.v3?.table?.end_date, language?.v3?.table?.target,language?.v3?.table?.action];
+    const columns = [language?.v3?.syndicate?.table?.title, language?.v3?.syndicate?.table?.dealflow, language?.v3?.syndicate?.table?.raising_ventures, language?.v3?.syndicate?.table?.action];
     const [pagination, setPagination] = useState({ items_per_page: 5, total_items: [], current_page: 1, total_pages: 0 });
     const [selectedTab, setSelectedTab] = useState();
     const [modalOpen, setModalOpen]: any = useState(null);
@@ -38,7 +38,7 @@ const SyndicateRequest = ({ }: any) => {
 
     useEffect(() => {
         dispatch(saveDataHolder(""));
-        getAllDeals();
+        getAllDeals(authToken);
     }, []);
 
     const getAllDeals = async (dealId:any) => {
@@ -49,7 +49,7 @@ const SyndicateRequest = ({ }: any) => {
                 let deals = data?.status?.data?.map((deal: any) => {
                     return {
                         id: deal?.id,
-                        [language?.v3?.table?.title]: deal?.title || "N/A",
+                        [language?.v3?.table?.title]: <div><img src='/' alt='none'>{deal?.title}</img></div>,
                         [language?.v3?.table?.target]: `$${numberFormatter(Number(deal?.target))}`,
                         [language?.v3?.table?.stage]: deal?.title || "N/A",
                         [language?.v3?.table?.round]: deal?.round,

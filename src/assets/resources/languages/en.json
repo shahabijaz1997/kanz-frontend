@@ -735,22 +735,8 @@
             "submitted_deal": "Your deal has been submitted",
             "deal_status": "Deal Status",
             "valuation": "Valuation",
-<<<<<<< Updated upstream
-            "deal_approval": "Deal Approval",
-            "equity_type": "Equity Type",
-            "safe_type": "Equity Type",
-            "instrument_type": "Instrument Type",
-            "start_at": "Starts At",
-            "end_at": "Ends At",
-            "investors": "Investors",
-            "raised": "Raised",
-            "description": "Description",
-            "attachments": "Attachments",
-            "committed": "Committed"
-=======
             "deal_approval": "Deal Approval"
             
->>>>>>> Stashed changes
         },
         "table": {
             "title": "Title",
@@ -794,6 +780,14 @@
             "close": "Close",
             "seeMore": "See More",
             "seeLess": "See Less"
+        },
+        "syndicate":{
+            "table":{
+                "title": "Syndicate",
+                "dealflow":"Deal Flow",
+                "raising_ventures": "Raising Ventures Fund",
+                "action": "Action"
+            }
         }
     }
 }

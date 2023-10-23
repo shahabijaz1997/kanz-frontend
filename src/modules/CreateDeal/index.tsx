@@ -29,6 +29,7 @@ import EditIcon from "../../ts-icons/editIcon.svg";
 import ReviewDeal from "./ReviewDeal";
 import Drawer from "../../shared/components/Drawer";
 import CalendarIcon from "../../ts-icons/calendarIcon.svg";
+import { isValidUrl } from "../../utils/regex.utils";
 const CURRENCIES = ["USD", "AED"];
 
 const CreateDeal = () => {
@@ -77,7 +78,7 @@ const CreateDeal = () => {
         });
         _dependencies.length > 0 && setDependencies(_dependencies)
         let all_steps: any[] = [];
-        
+
         for (let i = 0; i < data?.status?.data?.step_titles[event]?.length; i++) {
           const step = data?.status?.data?.step_titles[event][i];
           all_steps.push({ id: i + 1, text: step });
@@ -541,7 +542,17 @@ const CreateDeal = () => {
     let dependantQuesion = section?.fields?.find((field: any) => field.id === ques?.dependent_id);
     if (!dependantQuesion || (dependantQuesion && dependantQuesion?.value)) {
       let min = new Date();
+      let dte = ques?.value;
+      const parts = ques?.value.split('/');
+      if (parts.length === 3) {
+        const day = parts[0];
+        const month = parts[1];
+        const year = parts[2];
+        dte = `${year}-${month}-${day}`;
+      }
+
       return (
+
         <section className="flex items-start justify-center flex-col mb-8 mt-3 w-full">
           {!dependantQuesion && <label htmlFor={ques?.id} className="capitalize text-neutral-700 text-lg font-medium mb-1">{ques?.statement}</label>}
           <span className="relative w-full">
@@ -549,7 +560,7 @@ const CreateDeal = () => {
               placeholder={ques?.statement}
               id={`date-${ques?.id}`}
               onChange={(e: any) => dispatch(saveDealSelection({ option: e.target.value, question: ques, fields: dealData, lang: event, secIndex, step: dealData[step - 1] }))}
-              value={ques?.value?.split("T")[0]}
+              value={dte}
               min={min.toISOString().split("T")[0]}
             />
             <div className="absolute top-1/2 translate-y-[-50%] bg-white h-10 w-10 inline-flex items-center justify-center right-2 cursor-pointer" onClick={() => {
@@ -809,7 +820,8 @@ const CreateDeal = () => {
                                 <Button disabled={checkMultipleButtonDisabled(section)} onClick={() => {
                                   if (!section?.display_card) {
                                     const element = dealData[step - 1][event]?.sections[index]?.fields?.at(-1);
-                                    if (!multipleFieldsPayload?.some((elem: string) => elem === element))
+                                    if (!isValidUrl(element.value)) return toast.warning(language.promptMessages.pleaseEnterUrl, toastUtil);
+                                    if (!multipleFieldsPayload?.some((elem: any) => elem?.value === element.value))
                                       setMultipleFieldsPayload((prev: any) => { return [...prev, element] });
                                     dispatch(saveDealSelection({ option: "", question: section?.fields[0], fields: dealData, lang: event, secIndex: index, step: dealData[step - 1] }))
                                   }
