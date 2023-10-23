@@ -735,7 +735,21 @@
             "submitted_deal": "Your deal has been submitted",
             "deal_status": "Deal Status",
             "valuation": "Valuation",
-            "deal_approval": "Deal Approval"
+            "deal_approval": "Deal Approval",
+            "description": "Description",
+            "attachments": "Attachments",
+            "committed": "Committed",
+            "angel_round": "Angel Round",
+            "deal_detail": "Deal Details",
+            "start_at": "Starts At",
+            "end_at": "Ends At",
+            "investors": "Investors",
+            "raised": "Raised",
+            "safe_type": "Equity Type",
+            "instrument_type": "Instrument Type",
+            "equity_type": "Equity Type",
+            "expected_dividend_yield": "Expected Dividend Yield",
+            "expected_annual_return": "Expected Annual Return"
             
         },
         "table": {
