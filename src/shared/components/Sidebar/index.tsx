@@ -46,7 +46,7 @@ console.log('====================================');
                 break;
             case KanzRoles.SYNDICATE:
                 setSidebarData({
-                    title: language?.v3?.startup?.sidebar?.sidebar_title, items: [...DASHBOARD_ITEMS, { id: 6, title: language?.v3?.startup?.sidebar?.deal_approval, route: RoutesEnums.DEAL_APPROVAL }, { id: 7, title: language?.v3?.startup?.sidebar?.startup_investment, route: RoutesEnums.STARTUP_INVESTMENTS }]
+                    title: language?.v3?.startup?.sidebar?.sidebar_title, items: [...DASHBOARD_ITEMS, { id: 6, title: language?.v3?.startup?.sidebar?.deal_approval, route: RoutesEnums.DEAL_APPROVAL }, { id: 7, title: language?.v3?.startup?.sidebar?.startup_investment, route: RoutesEnums.STARTUP_INVESTMENTS },{ id: 8, title: language?.v3?.startup?.sidebar?.syndicate_requests, route: RoutesEnums.DEAL_SYNDICATE_REQUESTS }]
                 });
                 break;
             case KanzRoles.INVESTOR:

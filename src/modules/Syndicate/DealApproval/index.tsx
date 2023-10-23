@@ -54,9 +54,12 @@ const DealApproval = ({ }: any) => {
                         [language?.v3?.table?.round]: deal?.round,
                         [language?.v3?.table?.status]: deal?.status,
                         [language?.v3?.table?.type]: deal?.deal_type,
-                        Action: <Button divStyle='flex items-center justify-end mr-2' type='outlined' className='!rounded-full border-2 border-black border-solid !px-8 !text-black' onClick={() => {
-                            handleApprove(deal?.id)
-                        }}>View</Button>
+                        Action: <Button divStyle='items-center justify-end' type='outlined' className='!p-3 !py-1 !rounded-full' onClick={(row: any) => {
+                            setModalOpen("2")
+                            //dispatch(saveDataHolder(row.id));
+                            //navigate(`/view-deal/${row?.id}`);
+                    
+                    }}>{'>'}</Button>
                         
                     }
                 });
@@ -117,7 +120,7 @@ const DealApproval = ({ }: any) => {
                 <Header />
             </section>
             <aside className="w-full h-full flex items-start justify-start">
-                <Sidebar type={KanzRoles.STARTUP} />
+                <Sidebar type={KanzRoles.SYNDICATE} />
                 <section className="bg-cbc-auth h-full p-[5rem] relative" style={{ width: "calc(100% - 250px)" }}>
                     {loading ? (
                         <div className="absolute left-0 top-0 w-full h-full grid place-items-center">

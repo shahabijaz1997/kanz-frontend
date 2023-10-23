@@ -41,7 +41,7 @@ const Realtor = ({ }: any) => {
 
     useEffect(() => {
         dispatch(saveDataHolder(""));
-        getAllDeals();
+        getAllDeals(authToken);
     }, []);
 
     const getAllDeals = async () => {

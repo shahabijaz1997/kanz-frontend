@@ -684,6 +684,7 @@
                 "heading": "Deals",
                 "heading_2": "Overview",
                 "heading_3": "Startup Investment",
+                "heading_4":" Syndicate Requests",
                 "all": "All",
                 "raising": "Raising",
                 "closed": "Closed",
@@ -700,7 +701,8 @@
                 "market_insights": "Market Insights",
                 "contacts": "Contacts",
                 "deal_approval": "Deal Approval",
-                "startup_investment": " Startups Investment"
+                "startup_investment": " Startups Investment",
+                "syndicate_requests": " Syndicate Requests"
             }
         },
         "deal": {
@@ -733,6 +735,7 @@
             "submitted_deal": "Your deal has been submitted",
             "deal_status": "Deal Status",
             "valuation": "Valuation",
+<<<<<<< Updated upstream
             "deal_approval": "Deal Approval",
             "equity_type": "Equity Type",
             "safe_type": "Equity Type",
@@ -744,6 +747,10 @@
             "description": "Description",
             "attachments": "Attachments",
             "committed": "Committed"
+=======
+            "deal_approval": "Deal Approval"
+            
+>>>>>>> Stashed changes
         },
         "table": {
             "title": "Title",

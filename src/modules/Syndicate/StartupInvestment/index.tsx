@@ -55,12 +55,10 @@ const StartupInvestment = ({ }: any) => {
                         [language?.v3?.table?.round]: deal?.round,
                         [language?.v3?.table?.status]: deal?.status,
                         [language?.v3?.table?.type]: deal?.instrument_type,
-                        State: deal?.current_state,
-                        [language?.v3?.table?.valuation]: `$${numberFormatter(Number(deal?.valuation))} ${language?.v3?.deal?.valuation}`,
-                        Steps: deal?.current_state?.steps,
-                        Actions: <Button className='bg-black' onClick={() => {
+                        Stage: deal?.current_stage,
+                        Action: <Button divStyle='items-center justify-end' type='outlined' className='!p-3 !py-1 !rounded-full' onClick={() => {
                             handleApprove(deal?.id)
-                        }}>Approve</Button>
+                        }}>{'M'}</Button>
                         
                     }
                 });

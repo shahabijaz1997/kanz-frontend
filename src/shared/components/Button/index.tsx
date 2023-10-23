@@ -3,7 +3,7 @@ import React from "react";
 type ButtonProps = {
   type?: "primary" | "secondary" | "danger" | "outlined" | "ghost"; // Button type
   size?: "small" | "medium" | "large"; // Button size
-  onClick?: () => void; // Click event handler
+  onClick?: (t:any) => void; // Click event handler
   disabled?: boolean; // Disable the button
   loading?: boolean; // Show loading state
   htmlType?: "button" | "submit" | "reset"; // HTML button type
