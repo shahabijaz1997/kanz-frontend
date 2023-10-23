@@ -93,17 +93,25 @@ const DealViewDetails = ({ dealDetail, state }: any) => {
                     <h3 className="text-neutral-900 font-medium text-sm">{language?.v3?.table?.status}</h3>
                     <p className="text-neutral-900 font-normal text-sm capitalize">{dealDetail?.status || language?.v3?.common?.not_added}</p>
                 </div>
+                <div className="py-4 border-b-[1px] border-b-neutral-200 w-full inline-flex items-center justify-between">
+                    <h3 className="text-neutral-900 font-medium text-sm">{language?.v3?.deal?.expected_annual_return}</h3>
+                    <p className="text-neutral-900 font-normal text-sm capitalize">{dealDetail?.expected_annual_return + "%" || language?.v3?.common?.not_added}</p>
+                </div>
+                <div className="py-4 border-b-[1px] border-b-neutral-200 w-full inline-flex items-center justify-between">
+                    <h3 className="text-neutral-900 font-medium text-sm">{language?.v3?.deal?.expected_dividend_yield}</h3>
+                    <p className="text-neutral-900 font-normal text-sm capitalize">{dealDetail?.expected_dividend_yield + "%" || language?.v3?.common?.not_added}</p>
+                </div>
                 <div className="pt-6 w-full inline-flex items-start justify-between flex-col">
                     <h3 className="text-neutral-900 font-medium text-xl">{language?.v3?.table?.features}</h3>
                     <aside className="mt-5 w-full">
-                        <div className="py-4 border-b-[1px] border-b-neutral-200 w-full inline-flex items-center justify-between">
+                        {dealDetail?.features?.bedrooms && <div className="py-4 border-b-[1px] border-b-neutral-200 w-full inline-flex items-center justify-between">
                             <h3 className="text-neutral-900 font-medium text-sm">{language?.v3?.deal?.beds}</h3>
                             <p className="text-neutral-900 font-normal text-sm capitalize">{dealDetail?.features?.bedrooms}</p>
-                        </div>
-                        <div className="py-4 border-b-[1px] border-b-neutral-200 w-full inline-flex items-center justify-between">
+                        </div>}
+                        {dealDetail?.features?.kitchen && <div className="py-4 border-b-[1px] border-b-neutral-200 w-full inline-flex items-center justify-between">
                             <h3 className="text-neutral-900 font-medium text-sm">{language?.v3?.deal?.kitchen}</h3>
                             <p className="text-neutral-900 font-normal text-sm capitalize">{dealDetail?.features?.kitchen}</p>
-                        </div>
+                        </div>}
                         {dealDetail?.features?.washroom && <div className="py-4 border-b-[1px] border-b-neutral-200 w-full inline-flex items-center justify-between">
                             <h3 className="text-neutral-900 font-medium text-sm">{language?.v3?.deal?.washroom}</h3>
                             <p className="text-neutral-900 font-normal text-sm capitalize">{dealDetail?.features?.washroom}</p>
