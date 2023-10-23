@@ -27,7 +27,7 @@ const Button: React.FC<ButtonProps> = ({
   className = "",
   children,
   style,
-  divStyle="flex items-center justify-center",
+  divStyle="flex items-center justify-center w-full",
   ...props
 }) => {
   // Map button type to Tailwind CSS className
