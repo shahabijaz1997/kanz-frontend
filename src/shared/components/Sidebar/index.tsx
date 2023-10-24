@@ -24,9 +24,7 @@ const Sidebar = ({ type }: any) => {
     useLayoutEffect(() => {
         renderRoleBasedSidebar();
     }, [type]);
-console.log('====================================');
-console.log(type);
-console.log('====================================');
+
     const renderRoleBasedSidebar = () => {
         let route;
         switch (type) {
@@ -59,8 +57,6 @@ console.log('====================================');
                 break;
         }
     };
-    console.log(sidebarData);
-
     return (
         sidebarData && (
             <aside className="w-[250px] bg-white h-full pt-[5rem]">
