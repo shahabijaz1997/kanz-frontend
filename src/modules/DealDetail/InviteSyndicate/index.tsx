@@ -9,6 +9,7 @@ import { saveToken } from "../../../redux-toolkit/slicer/auth.slicer";
 import { RoutesEnums } from "../../../enums/routes.enum";
 import SearchIcon from "../../../ts-icons/searchIcon.svg";
 import { KanzRoles } from '../../../enums/roles.enum';
+import { toastUtil } from "../../../utils/toast.utils";
 import { toast } from 'react-toastify';
 
 
@@ -26,7 +27,7 @@ const UserListingPopup = ({type}: any) => {
   function copyToClipboard() {
     const clipboard = navigator.clipboard;
     clipboard.writeText(window.location.href);
-    toast.success(`${language?.v3?.button?.copy_link_success}`)  
+    toast.success(`${language?.v3?.button?.copy_link_success}`, toastUtil)  
   
   }
 
