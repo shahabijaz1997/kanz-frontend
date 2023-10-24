@@ -89,7 +89,7 @@ const DealDetail = ({ }: any) => {
                             <div className="inline-flex items-center gap-2">
                                     <div className='relative z-10' >
                                     <Button onClick={() => setShowInviteSyndicate(!showInviteSyndicate)}  className="w-[80px]">{language?.v3?.button?.invite}</Button>
-                                    {showInviteSyndicate && <UserListingPopup type={KanzRoles.SYNDICATE} />}
+                                    {showInviteSyndicate && <UserListingPopup dealId={id} type={KanzRoles.SYNDICATE} />}
                                     </div>
                                     
                                 <div className="bg-white rounded-md border-neutral-300 border-[1px] inline-flex items-center justify-center"><CustomDropdown className="px-5 py-3" mainNode={<MenuIcon />} /></div>

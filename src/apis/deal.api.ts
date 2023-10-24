@@ -61,6 +61,13 @@ export const postDealStep = (payload: any, token: string) => {
         }
     });
 };
+export const postInviteSyn = (payload:any, dealId: any, token: string) => {
+    return axios.post(`${ENV.API_URL}/${ENV.API_VERSION}/deals/${dealId}/invites`, payload, {
+        headers: {
+            Authorization: `Bearer ${token}`
+        }
+    });
+};
 
 export const onReviewDeal = (dealId: number, params: any, token: string) => {
     return axios.get(`${ENV.API_URL}/${ENV.API_VERSION}/deals/${dealId}/review`, {

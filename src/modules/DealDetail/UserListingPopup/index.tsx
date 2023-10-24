@@ -5,10 +5,12 @@ import Button from "../../../shared/components/Button";
 import { RootState } from "../../../redux-toolkit/store/store";
 import { saveDataHolder } from "../../../redux-toolkit/slicer/dataHolder.slicer";
 import { getAllSyndicates } from "../../../apis/syndicate.api";
+import {postInviteSyn} from "../../../apis/deal.api"
 import { saveToken } from "../../../redux-toolkit/slicer/auth.slicer";
 import { RoutesEnums } from "../../../enums/routes.enum";
 import SearchIcon from "../../../ts-icons/searchIcon.svg";
 import { KanzRoles } from '../../../enums/roles.enum';
+import { toastUtil } from "../../../utils/toast.utils";
 import { toast } from 'react-toastify';
 
 
@@ -21,12 +23,12 @@ interface Syndicate {
 
 
 
-const UserListingPopup = ({type}: any) => {
+const UserListingPopup = ({dealId,type}: any) => {
 
   function copyToClipboard() {
     const clipboard = navigator.clipboard;
     clipboard.writeText(window.location.href);
-    toast.success(`${language?.v3?.button?.copy_link_success}`)  
+    toast.success(`${language?.v3?.button?.copy_link_success}`, toastUtil)  
   
   }
 
@@ -63,7 +65,14 @@ const UserListingPopup = ({type}: any) => {
               type="outlined"
               
               className="!p-3 !py-1 !rounded-full"
-              onClick={() => {
+                    onClick={() => {
+                        postInviteSyn({
+                            "message": "You have been invited",
+                            "invitee_id": 117    
+                        },
+                            dealId,
+                        authToken
+                        )
                
               }}
             >
@@ -74,12 +83,8 @@ const UserListingPopup = ({type}: any) => {
           ),
         }));
           
-        /*  */console.log(syndicates)
           setSyndicates(syndicates);
-        /*   console.log('====================================');
-          console.log(syndicates);
-        console.log('====================================');
-        console.log(window.location.href) */
+      
       }
     } catch (error: any) {
       if (error.response && error.response.status === 401) {
@@ -92,7 +97,7 @@ const UserListingPopup = ({type}: any) => {
   };
 
   return (
-      <section className="absolute p-5 bg-white border-[1px] border-neutral-200 rounded-md max-w-[400px] right-0 top-[100%]">
+      <section className="absolute p-5 bg-white border-[1px] border-neutral-200 rounded-md w-[400px] right-0 top-[100%]">
            <div className="rounded-md shadow-cs-6 bg-white border-[1px] border-gray-200 h-9 overflow-hidden w-full inline-flex items-center px-2">
            <SearchIcon />
             <input type="search" className="h-full w-full outline-none pl-2 pr-[6.5rem] text-sm font-normal text-gray-400" placeholder={language?.v3?.common?.search} />
