@@ -36,7 +36,7 @@ export const getDealDocuments = (dealId: number, token: string) => {
     });
 };
 export const getDealSyndicates = (dealId: number, token: string) => {
-    return axios.get(`${ENV.API_URL}/${ENV.API_VERSION}/deals/${dealId}`, {
+    return axios.get(`${ENV.API_URL}/${ENV.API_VERSION}/deals/${dealId}/invites`, {
         headers: {
             Authorization: `Bearer ${token}`
         }
