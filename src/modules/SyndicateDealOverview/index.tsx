@@ -1,4 +1,4 @@
-import { ChangeEvent, useState } from "react";
+import { useState } from "react";
 import { useSelector } from "react-redux";
 import { useLocation, useNavigate } from "react-router-dom";
 import DocViewer, { PDFRenderer, PNGRenderer } from "react-doc-viewer";
@@ -35,7 +35,7 @@ const SyndicateDealOverview = ({ }: any) => {
                 <Header />
             </section>
             <aside className="w-full h-full flex items-start justify-start">
-                <Sidebar type={KanzRoles.STARTUP} />
+                <Sidebar type={KanzRoles.SYNDICATE} />
                 {loading ? (
                     <div className="absolute left-0 top-0 w-full h-full grid place-items-center" style={{ backgroundColor: "rgba(255, 255, 255, 1)", zIndex: 50 }} >
                         <Spinner />

@@ -28,23 +28,21 @@ const SyndicateRequest = ({ }: any) => {
 
     const columns = [language?.v3?.syndicate?.table?.title, language?.v3?.syndicate?.table?.dealflow, language?.v3?.syndicate?.table?.raising_ventures, language?.v3?.syndicate?.table?.action];
     const [pagination, setPagination] = useState({ items_per_page: 5, total_items: [], current_page: 1, total_pages: 0 });
-    const [selectedTab, setSelectedTab] = useState();
     const [modalOpen, setModalOpen]: any = useState(null);
     const [loading, setLoading] = useState(false);
-    const [tabs] = useState([language?.v3?.startup?.overview?.all, language?.v3?.startup?.overview?.raising, language?.v3?.startup?.overview?.closed]);
     const [deals, setDeals] = useState([]);
     const [dummyDisclaimers, setDummyDisclaimers] = useState({ "d1": false, "d2": false, "d3": false });
     const [disclaimersToggler, setDisclaimersToggler] = useState({ "d1": false, "d2": false, "d3": false });
 
     useEffect(() => {
         dispatch(saveDataHolder(""));
-        getAllDeals(authToken);
+        getAllDeals();
     }, []);
 
-    const getAllDeals = async (dealId:any) => {
+    const getAllDeals = async () => {
         try {
             setLoading(true);
-            let { status, data } = await getDealSyndicates(dealId,authToken);
+            let { status, data } = await getDealSyndicates(1,authToken);
             if (status === 200) {
                 let deals = data?.status?.data?.map((deal: any) => {
                     return {
