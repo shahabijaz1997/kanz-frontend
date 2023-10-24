@@ -65,28 +65,19 @@ const UserListingPopup = ({dealId,type}: any) => {
               type="outlined"
               
               className="!p-3 !py-1 !rounded-full"
-                    onClick={() => {
-                        postInviteSyn({
-                            "message": "You have been invited",
-                            "invitee_id": 117    
-                        },
-                            dealId,
-                        authToken
-                        )
-               
-              }}
+                    onClick={() => onInviteSyndicate(syndicate?.id)}
             >
               Invite
             </Button>
             
             
           ),
-        }));
-          
+        })); 
           setSyndicates(syndicates);
       
       }
     } catch (error: any) {
+ 
       if (error.response && error.response.status === 401) {
         dispatch(saveToken(""));
         navigate(RoutesEnums.LOGIN, { state: RoutesEnums.STARTUP_DASHBOARD });
@@ -94,7 +85,29 @@ const UserListingPopup = ({dealId,type}: any) => {
     } finally {
       setLoading(false);
     }
-  };
+    };
+    
+    const onInviteSyndicate = async(id:any) => {
+        try {
+            await postInviteSyn({
+                "message": "You have been invited",
+                "invitee_id": id
+            },
+                dealId,
+            authToken
+            )
+        } catch (error:any) {
+            
+        if (error.response && error.response.status === 400)
+        {
+            toast.warn("Already Invited",toastUtil)
+      }    
+      if (error.response && error.response.status === 401) {
+        dispatch(saveToken(""));
+        navigate(RoutesEnums.LOGIN, { state: RoutesEnums.STARTUP_DASHBOARD });
+      }
+        }
+    }
 
   return (
       <section className="absolute p-5 bg-white border-[1px] border-neutral-200 rounded-md w-[400px] right-0 top-[100%]">
@@ -122,4 +135,18 @@ const UserListingPopup = ({dealId,type}: any) => {
 
 export default UserListingPopup;
 
+/* 
+onClick={() => {
 
+    let  inviteResponse =  postInviteSyn({
+         "message": "You have been invited",
+         "invitee_id": syndicate?.id
+     },
+         dealId,
+     authToken
+     )
+let { status, data } = inviteResponse;
+if(status)       
+     
+
+}} */
