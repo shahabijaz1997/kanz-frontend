@@ -47,7 +47,7 @@ const Realtors = (props: any) => {
   const getRealtorDetails = async () => {
     try {
       setLoading(true);
-      let { status, data } = await getRealtorInformation(1, authToken);
+      let { status, data } = await getRealtorInformation(user.id, authToken);
       if (status === 200) {
         dispatch(saveUserMetaData(data?.status?.data));
       }

@@ -58,11 +58,11 @@ const Welcome = ({ }: any) => {
             if (user.type === KanzRoles.INVESTOR)
                 results = await getInvestor(authToken);
             else if (user.type === KanzRoles.SYNDICATE)
-                results = await getSyndicateInformation(1, authToken);
+                results = await getSyndicateInformation(user.id, authToken);
             else if (user.type === KanzRoles.STARTUP)
-                results = await getCompanyInformation(1, authToken);
+                results = await getCompanyInformation(user.id, authToken);
             else if (user.type === KanzRoles.REALTOR)
-                results = await getRealtorInformation(1, authToken);
+                results = await getRealtorInformation(user.id, authToken);
             let { status, data } = results;
             if (status === 200) {
                 dispatch(saveUserMetaData(data?.status?.data));

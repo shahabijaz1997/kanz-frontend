@@ -81,7 +81,7 @@ const SyndicateFlow = ({ }: any) => {
   const getSyndicateDetails = async () => {
     setLoad(true);
     try {
-      let { status, data } = await getSyndicateInformation(1, authToken);
+      let { status, data } = await getSyndicateInformation(user.id, authToken);
       if (status === 200) {
         dispatch(saveUserMetaData(data?.status?.data));
         if (data?.status?.data?.profile) bootstrapPayload(data?.status?.data);

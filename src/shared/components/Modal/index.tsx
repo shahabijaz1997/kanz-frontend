@@ -6,7 +6,7 @@ const Modal = ({ show, children, className }: any) => {
         <React.Fragment>
             {show && (
                 <React.Fragment>
-                    <div className={`justify-center items-center flex overflow-x-hidden overflow-y-auto fixed inset-0 z-[200] outline-none focus:outline-none`}>
+                    <div className={`justify-center items-center flex overflow-x-hidden overflow-y-auto fixed inset-0 z-[200] outline-none focus:outline-none no-scrollbar`}>
                         <div className={`relative my-6 mx-auto max-w-3xl inline-grid place-items-center h-full ${className}`}>
                             {/*content*/}
                             {children}
