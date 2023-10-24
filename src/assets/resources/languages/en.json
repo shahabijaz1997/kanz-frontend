@@ -701,8 +701,10 @@
                 "market_insights": "Market Insights",
                 "contacts": "Contacts",
                 "deal_approval": "Deal Approval",
-                "startup_investment": " Startups Investment",
-                "syndicate_requests": " Syndicate Requests"
+                "startup_investment": "Startups Investment",
+                "syndicate_requests": "Syndicate Requests",
+                "dashboard": "Dashboard",
+                "investments": "Investments"
             }
         },
         "deal": {
@@ -782,7 +784,8 @@
             "submitted_title": "Your Deal has been submitted",
             "submitted_message": "Please wait while our customer support officer review your submitted deal",
             "accept": "I agree",
-            "not_added": "N/A"
+            "not_added": "N/A",
+            "investments": "Investments"
         },
         "button": {
             "new_deal": "Create New Deal",
