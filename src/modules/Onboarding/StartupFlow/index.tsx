@@ -74,7 +74,7 @@ const StartupFlow = ({ }: any) => {
   const getStartupDetails = async () => {
     try {
       setLoad(true);
-      let { status, data } = await getCompanyInformation(1, authToken);
+      let { status, data } = await getCompanyInformation(user.id, authToken);
       if (status === 200) {
         dispatch(saveUserMetaData(data?.status?.data));
       }
