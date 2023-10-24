@@ -75,12 +75,8 @@ const UserListingPopup = ({type}: any) => {
           ),
         }));
           
-        /*  */console.log(syndicates)
           setSyndicates(syndicates);
-        /*   console.log('====================================');
-          console.log(syndicates);
-        console.log('====================================');
-        console.log(window.location.href) */
+      
       }
     } catch (error: any) {
       if (error.response && error.response.status === 401) {
@@ -93,7 +89,7 @@ const UserListingPopup = ({type}: any) => {
   };
 
   return (
-      <section className="absolute p-5 bg-white border-[1px] border-neutral-200 rounded-md max-w-[400px] right-0 top-[100%]">
+      <section className="absolute p-5 bg-white border-[1px] border-neutral-200 rounded-md w-[400px] right-0 top-[100%]">
            <div className="rounded-md shadow-cs-6 bg-white border-[1px] border-gray-200 h-9 overflow-hidden w-full inline-flex items-center px-2">
            <SearchIcon />
             <input type="search" className="h-full w-full outline-none pl-2 pr-[6.5rem] text-sm font-normal text-gray-400" placeholder={language?.v3?.common?.search} />
