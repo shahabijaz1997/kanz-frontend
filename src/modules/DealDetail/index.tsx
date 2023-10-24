@@ -17,6 +17,7 @@ import NoteDetails from "./NoteDetails";
 import ActivityDetails from "./ActivityDetails";
 import Spinner from "../../shared/components/Spinner";
 import { getDealDetail, getDealDocuments } from "../../apis/deal.api";
+import InvitedSyndicates from "./InvitedSyndicates";
 
 const DealDetail = ({ }: any) => {
     const params = useParams();
@@ -26,7 +27,7 @@ const DealDetail = ({ }: any) => {
     const { id }: any = params;
     const language: any = useSelector((state: RootState) => state.language.value);
     const authToken: any = useSelector((state: RootState) => state.auth.value);
-    const tabs = [{ id: 1, title: "Details" }, { id: 2, title: "Investors" }, { id: 3, title: "Documents" }, { id: 4, title: "Existing SAFE/Note Holders" }, { id: 5, title: "Activity" }];
+    const tabs = [{ id: 1, title: "Details" }, { id: 2, title: "Investors" }, { id: 3, title: "Documents" }, { id: 4, title: "Existing SAFE/Note Holders" }, { id: 5, title: "Activity" }, { id: 6, title: "Invited Syndicates" }];
 
     const [selected, setSelected]: any = useState(tabs[0]);
     const [loading, setLoading]: any = useState(false);
@@ -113,6 +114,7 @@ const DealDetail = ({ }: any) => {
                         {selected?.id === 3 && <DocumentDetails dealDocs={dealDocs} />}
                         {selected?.id === 4 && <NoteDetails />}
                         {selected?.id === 5 && <ActivityDetails />}
+                        {selected?.id === 6 && <InvitedSyndicates id={id} />}
                     </section>
                 )}
             </aside>
