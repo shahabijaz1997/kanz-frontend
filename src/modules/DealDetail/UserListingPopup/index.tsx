@@ -5,6 +5,7 @@ import Button from "../../../shared/components/Button";
 import { RootState } from "../../../redux-toolkit/store/store";
 import { saveDataHolder } from "../../../redux-toolkit/slicer/dataHolder.slicer";
 import { getAllSyndicates } from "../../../apis/syndicate.api";
+import {postInviteSyn} from "../../../apis/deal.api"
 import { saveToken } from "../../../redux-toolkit/slicer/auth.slicer";
 import { RoutesEnums } from "../../../enums/routes.enum";
 import SearchIcon from "../../../ts-icons/searchIcon.svg";
@@ -22,7 +23,7 @@ interface Syndicate {
 
 
 
-const UserListingPopup = ({type}: any) => {
+const UserListingPopup = ({dealId,type}: any) => {
 
   function copyToClipboard() {
     const clipboard = navigator.clipboard;
@@ -64,7 +65,14 @@ const UserListingPopup = ({type}: any) => {
               type="outlined"
               
               className="!p-3 !py-1 !rounded-full"
-              onClick={() => {
+                    onClick={() => {
+                        postInviteSyn({
+                            "message": "You have been invited",
+                            "invitee_id": 117    
+                        },
+                            dealId,
+                        authToken
+                        )
                
               }}
             >
