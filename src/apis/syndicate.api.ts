@@ -18,6 +18,13 @@ export const getAllSyndicates = (token: string) => {
         }
     });
 };
+export const getInvitedSyndicates = (userId:any, token: string) => {
+    return axios.get(`${ENV.API_URL}/${ENV.API_VERSION}/users/${userId}/invites`, {
+        headers: {
+            Authorization: `Bearer ${token}`
+        }
+    });
+};
 
 export const getSyndicateInformation = (stepId: number, token: string) => {
     return axios.get(`${ENV.API_URL}/${ENV.API_VERSION}/syndicates/${stepId}`, {

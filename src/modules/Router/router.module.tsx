@@ -290,7 +290,7 @@ const RouterModule = () => {
           element={
             <Suspense fallback={<Loader />}>
               <CHECK_LOGGED_IN>
-                <GUARD_SUBMITTED_ROUTE role={[KanzRoles.SYNDICATE]}><SyndicateRequest guard={authToken} /></GUARD_SUBMITTED_ROUTE>   
+                <GUARD_SUBMITTED_ROUTE role={[KanzRoles.STARTUP]}><SyndicateRequest guard={authToken} /></GUARD_SUBMITTED_ROUTE>   
               </CHECK_LOGGED_IN>
             </Suspense>
           } />

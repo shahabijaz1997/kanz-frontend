@@ -14,6 +14,7 @@ import Modal from "../../../shared/components/Modal";
 import CrossIcon from "../../../ts-icons/crossIcon.svg";
 import { saveDataHolder } from "../../../redux-toolkit/slicer/dataHolder.slicer";
 import { getDealSyndicates } from "../../../apis/deal.api";
+import {getInvitedSyndicates} from "../../../apis/syndicate.api"
 import { numberFormatter } from "../../../utils/object.utils";
 import { saveToken } from "../../../redux-toolkit/slicer/auth.slicer";
 import { ApplicationStatus } from "../../../enums/types.enum";
@@ -25,12 +26,13 @@ const SyndicateRequest = ({ }: any) => {
 
     const language: any = useSelector((state: RootState) => state.language.value);
     const authToken: any = useSelector((state: RootState) => state.auth.value);
+    const user: any = useSelector((state: RootState) => state.user.value);
 
     const columns = [language?.v3?.syndicate?.table?.title, language?.v3?.syndicate?.table?.dealflow, language?.v3?.syndicate?.table?.raising_ventures, language?.v3?.syndicate?.table?.action];
     const [pagination, setPagination] = useState({ items_per_page: 5, total_items: [], current_page: 1, total_pages: 0 });
     const [modalOpen, setModalOpen]: any = useState(null);
     const [loading, setLoading] = useState(false);
-    const [deals, setDeals] = useState([]);
+    const [syndicates, setDeals] = useState([]);
     const [dummyDisclaimers, setDummyDisclaimers] = useState({ "d1": false, "d2": false, "d3": false });
     const [disclaimersToggler, setDisclaimersToggler] = useState({ "d1": false, "d2": false, "d3": false });
 
@@ -42,12 +44,12 @@ const SyndicateRequest = ({ }: any) => {
     const getAllDeals = async () => {
         try {
             setLoading(true);
-            let { status, data } = await getDealSyndicates(1,authToken);
+            let { status, data } = await getInvitedSyndicates(user.id,authToken);
             if (status === 200) {
-                let deals = data?.status?.data?.map((deal: any) => {
+                let syndicates = data?.status?.data?.map((deal: any) => {
                     return {
                         id: deal?.id,
-                        [language?.v3?.table?.title]: <div><img src='/' alt='none'>{deal?.title}</img></div>,
+                        [language?.v3?.syndicate?.table?.title]: deal?.invitee?.name,
                         [language?.v3?.table?.target]: `$${numberFormatter(Number(deal?.target))}`,
                         [language?.v3?.table?.stage]: deal?.title || "N/A",
                         [language?.v3?.table?.round]: deal?.round,
@@ -76,9 +78,9 @@ const SyndicateRequest = ({ }: any) => {
             )}
 
                 setPagination(prev => {
-                    return { ...prev, total_items: deals.length, current_page: 1, total_pages: Math.ceil(deals.length / prev.items_per_page), data: deals?.slice(0, prev.items_per_page) }
+                    return { ...prev, total_items: syndicates.length, current_page: 1, total_pages: Math.ceil(syndicates.length / prev.items_per_page), data: syndicates?.slice(0, prev.items_per_page) }
                 });
-                setDeals(deals);
+                setDeals(syndicates);
             }
         } catch (error: any) {
             if (error.response && error.response.status === 401) {
@@ -96,7 +98,7 @@ const SyndicateRequest = ({ }: any) => {
                 const nextPage = prev.current_page + 1;
                 const startIndex = (nextPage - 1) * prev.items_per_page;
                 const endIndex = startIndex + prev.items_per_page;
-                const data = deals.slice(startIndex, endIndex);
+                const data = syndicates.slice(startIndex, endIndex);
                 return { ...prev, current_page: nextPage, data };
             });
         } else if (type === "previous" && pagination.current_page > 1) {
@@ -104,7 +106,7 @@ const SyndicateRequest = ({ }: any) => {
                 const prevPage = prev.current_page - 1;
                 const startIndex = (prevPage - 1) * prev.items_per_page;
                 const endIndex = startIndex + prev.items_per_page;
-                const data = deals.slice(startIndex, endIndex);
+                const data = syndicates.slice(startIndex, endIndex);
 
                 return { ...prev, current_page: prevPage, data };
             });
@@ -117,7 +119,7 @@ const SyndicateRequest = ({ }: any) => {
                 <Header />
             </section>
             <aside className="w-full h-full flex items-start justify-start">
-                <Sidebar type={KanzRoles.SYNDICATE} />
+                <Sidebar type={KanzRoles.STARTUP} />
                 <section className="bg-cbc-auth h-full p-[5rem] relative" style={{ width: "calc(100% - 250px)" }}>
                     {loading ? (
                         <div className="absolute left-0 top-0 w-full h-full grid place-items-center">

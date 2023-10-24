@@ -12,40 +12,29 @@ import SearchIcon from "../../../ts-icons/searchIcon.svg";
 import { KanzRoles } from '../../../enums/roles.enum';
 import { toastUtil } from "../../../utils/toast.utils";
 import { toast } from 'react-toastify';
-
-
 interface Syndicate {
   id: number;
   title: React.ReactNode;
   handle: string;
   action: React.ReactNode;
 }
-
-
-
 const UserListingPopup = ({dealId,type}: any) => {
-
   function copyToClipboard() {
     const clipboard = navigator.clipboard;
     clipboard.writeText(window.location.href);
     toast.success(`${language?.v3?.button?.copy_link_success}`, toastUtil)  
   
   }
-
-
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const language: any = useSelector((state: RootState) => state.language.value);
   const authToken: any = useSelector((state: RootState) => state.auth.value);
-
   const [loading, setLoading] = useState<boolean>(false);
   const [syndicates, setSyndicates] = useState<Syndicate[]>([]);
-
   useEffect(() => {
     dispatch(saveDataHolder(""));
     getAllUserListings();
   }, [type]);
-
   const getAllUserListings = async () => {
     try {
       setLoading(true);
@@ -68,13 +57,10 @@ const UserListingPopup = ({dealId,type}: any) => {
                     onClick={() => onInviteSyndicate(syndicate?.id)}
             >
               Invite
-            </Button>
-            
-            
+            </Button>      
           ),
         })); 
           setSyndicates(syndicates);
-      
       }
     } catch (error: any) {
  
@@ -95,7 +81,8 @@ const UserListingPopup = ({dealId,type}: any) => {
             },
                 dealId,
             authToken
-            )
+          )
+          toast.success("Invite Sent", toastUtil)
         } catch (error:any) {
             
         if (error.response && error.response.status === 400)
@@ -108,7 +95,6 @@ const UserListingPopup = ({dealId,type}: any) => {
       }
         }
     }
-
   return (
       <section className="absolute p-5 bg-white border-[1px] border-neutral-200 rounded-md w-[400px] right-0 top-[100%]">
            <div className="rounded-md shadow-cs-6 bg-white border-[1px] border-gray-200 h-9 overflow-hidden w-full inline-flex items-center px-2">
@@ -126,27 +112,9 @@ const UserListingPopup = ({dealId,type}: any) => {
       <span>
         
       <Button type='outlined' onClick={() => {copyToClipboard()}}  className="w-full">{language?.v3?.button?.invite_link}</Button>
-
       </span>
       
     </section>
   );
 };
-
 export default UserListingPopup;
-
-/* 
-onClick={() => {
-
-    let  inviteResponse =  postInviteSyn({
-         "message": "You have been invited",
-         "invitee_id": syndicate?.id
-     },
-         dealId,
-     authToken
-     )
-let { status, data } = inviteResponse;
-if(status)       
-     
-
-}} */

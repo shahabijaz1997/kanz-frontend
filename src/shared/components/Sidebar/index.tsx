@@ -30,7 +30,8 @@ const Sidebar = ({ type }: any) => {
         switch (type) {
             case KanzRoles.STARTUP:
                 setSidebarData({
-                    title: language?.v3?.startup?.sidebar?.sidebar_title, icon: <BagIcon />, items: DASHBOARD_ITEMS
+                    title: language?.v3?.startup?.sidebar?.sidebar_title, icon: <BagIcon />, items: [
+                        { id: 1, title: language?.v3?.startup?.sidebar?.syndicate_requests, route: RoutesEnums.DEAL_SYNDICATE_REQUESTS }]
                 });
                 route = DASHBOARD_ITEMS.find(it => it.route === pathname);
                 setSelected(route);
