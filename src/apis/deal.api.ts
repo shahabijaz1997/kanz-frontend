@@ -20,6 +20,17 @@ export const getDeals = (token: string) => {
     });
 };
 
+
+export const getInvitedDeals = (inviteeId: any, token: string) => {
+    console.log(getInvitedDeals)
+    return axios.get(`${ENV.API_URL}/${ENV.API_VERSION}/invitees/${inviteeId}/invites`, {
+        headers: {
+            Authorization: `Bearer ${token}`
+        }
+    });
+}
+
+
 export const getDealDetail = (dealId: number, token: string) => {
     return axios.get(`${ENV.API_URL}/${ENV.API_VERSION}/deals/${dealId}/overview`, {
         headers: {
@@ -36,7 +47,7 @@ export const getDealDocuments = (dealId: number, token: string) => {
     });
 };
 export const getDealSyndicates = (dealId: number, token: string) => {
-    return axios.get(`${ENV.API_URL}/${ENV.API_VERSION}/deals/${dealId}`, {
+    return axios.get(`${ENV.API_URL}/${ENV.API_VERSION}/deals/${dealId}/invites`, {
         headers: {
             Authorization: `Bearer ${token}`
         }

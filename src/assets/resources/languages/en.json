@@ -701,8 +701,10 @@
                 "market_insights": "Market Insights",
                 "contacts": "Contacts",
                 "deal_approval": "Deal Approval",
-                "startup_investment": " Startups Investment",
-                "syndicate_requests": " Syndicate Requests"
+                "startup_investment": "Startups Investment",
+                "syndicate_requests": "Syndicate Requests",
+                "dashboard": "Dashboard",
+                "investments": "Investments"
             }
         },
         "deal": {
@@ -735,7 +737,21 @@
             "submitted_deal": "Your deal has been submitted",
             "deal_status": "Deal Status",
             "valuation": "Valuation",
-            "deal_approval": "Deal Approval"
+            "deal_approval": "Deal Approval",
+            "description": "Description",
+            "attachments": "Attachments",
+            "committed": "Committed",
+            "angel_round": "Angel Round",
+            "deal_detail": "Deal Details",
+            "start_at": "Starts At",
+            "end_at": "Ends At",
+            "investors": "Investors",
+            "raised": "Raised",
+            "safe_type": "Equity Type",
+            "instrument_type": "Instrument Type",
+            "equity_type": "Equity Type",
+            "expected_dividend_yield": "Expected Dividend Yield",
+            "expected_annual_return": "Expected Annual Return"
             
         },
         "table": {
@@ -768,15 +784,18 @@
             "submitted_title": "Your Deal has been submitted",
             "submitted_message": "Please wait while our customer support officer review your submitted deal",
             "accept": "I agree",
-            "not_added": "N/A"
+            "not_added": "N/A",
+            "investments": "Investments"
         },
         "button": {
             "new_deal": "Create New Deal",
             "invite": "Invite",
+            "invite_link": "Copy Invite Link",
             "new": "New",
             "cancel": "Cancel",
             "add": "Add",
             "add_new_link": "Add New Link",
+            "copy_link_success": "Link has been copied",
             "close": "Close",
             "seeMore": "See More",
             "seeLess": "See Less"
@@ -787,7 +806,18 @@
                 "dealflow":"Deal Flow",
                 "raising_ventures": "Raising Ventures Fund",
                 "action": "Action"
+            },
+            "deals":{
+                "table":{
+                    "title": "Title",
+                    "category": "Category",
+                    "status":"Status",
+                    "end_date":"End Date",
+                    "target":"Target"
             }
         }
+    }
+
+    
     }
 }

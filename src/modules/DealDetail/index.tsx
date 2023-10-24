@@ -17,6 +17,8 @@ import NoteDetails from "./NoteDetails";
 import ActivityDetails from "./ActivityDetails";
 import Spinner from "../../shared/components/Spinner";
 import { getDealDetail, getDealDocuments } from "../../apis/deal.api";
+import InvitedSyndicates from "./InvitedSyndicates";
+import UserListingPopup from './UserListingPopup';
 
 const DealDetail = ({ }: any) => {
     const params = useParams();
@@ -26,12 +28,13 @@ const DealDetail = ({ }: any) => {
     const { id }: any = params;
     const language: any = useSelector((state: RootState) => state.language.value);
     const authToken: any = useSelector((state: RootState) => state.auth.value);
-    const tabs = [{ id: 1, title: "Details" }, { id: 2, title: "Investors" }, { id: 3, title: "Documents" }, { id: 4, title: "Existing SAFE/Note Holders" }, { id: 5, title: "Activity" }];
+    const tabs = [{ id: 1, title: "Details" }, { id: 2, title: "Investors" }, { id: 3, title: "Documents" }, { id: 4, title: "Existing SAFE/Note Holders" }, { id: 5, title: "Activity" }, { id: 6, title: "Invited Syndicates" }];
 
     const [selected, setSelected]: any = useState(tabs[0]);
     const [loading, setLoading]: any = useState(false);
     const [dealDetail, setDealDetail] = useState(null);
     const [dealDocs, setDealDocs] = useState(null);
+    const [showInviteSyndicate, setShowInviteSyndicate] = useState(false);
 
     useLayoutEffect(() => {
         if (selected.id === 1)
@@ -83,10 +86,14 @@ const DealDetail = ({ }: any) => {
 
                         <section className="inline-flex justify-between items-center w-full mb-4">
                             <h1 className="text-black font-medium text-2xl">{state === KanzRoles.STARTUP ? language?.v3?.deal?.angel_round : language?.v3?.deal?.deal_detail}</h1>
-                            <span className="inline-flex items-center gap-2">
-                                <Button onClick={() => { }} className="w-[80px]">{language?.v3?.button?.invite}</Button>
+                            <div className="inline-flex items-center gap-2">
+                                    <div className='relative z-10' >
+                                    <Button onClick={() => setShowInviteSyndicate(!showInviteSyndicate)}  className="w-[80px]">{language?.v3?.button?.invite}</Button>
+                                    {showInviteSyndicate && <UserListingPopup type={KanzRoles.SYNDICATE} />}
+                                    </div>
+                                    
                                 <div className="bg-white rounded-md border-neutral-300 border-[1px] inline-flex items-center justify-center"><CustomDropdown className="px-5 py-3" mainNode={<MenuIcon />} /></div>
-                            </span>
+                            </div>
                         </section>
                         {
                             state !== KanzRoles.REALTOR && (
@@ -113,6 +120,7 @@ const DealDetail = ({ }: any) => {
                         {selected?.id === 3 && <DocumentDetails dealDocs={dealDocs} />}
                         {selected?.id === 4 && <NoteDetails />}
                         {selected?.id === 5 && <ActivityDetails />}
+                        {selected?.id === 6 && <InvitedSyndicates id={id} />}
                     </section>
                 )}
             </aside>
