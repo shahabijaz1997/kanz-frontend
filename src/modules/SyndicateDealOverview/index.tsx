@@ -120,7 +120,7 @@ const SyndicateDealOverview = ({ }: any) => {
                             </div>
 
                             {/* If PDF */}
-                            <section className="w-full h-[500px] rounded-[8px] overflow-hidden border-[1px] border-neutral-200 bg-cbc-grey-sec p-4">
+                            {/* <section className="w-full h-[500px] rounded-[8px] overflow-hidden border-[1px] border-neutral-200 bg-cbc-grey-sec p-4">
                                 <div className="bg-white w-full h-16 inline-flex items-center px-4 border-b-[1px] border-b-neutral-200">
                                     <Chevrond onClick={() => { }} className={`mr-3 h-8 w-8 rotate-90 ${docs.length > 1 ? "cursor-pointer" : "cursor-not-allowed"}`} stroke="#404040" />
 
@@ -131,10 +131,10 @@ const SyndicateDealOverview = ({ }: any) => {
 
                                 </div>
                                 <embed src={selectedDocs} className="w-full h-full" />
-                            </section>
+                            </section> */}
 
                             {/* If Image */}
-                            {/* <section className="h-[500px] rounded-[8px] overflow-hidden border-[1px] border-neutral-200">
+                            <section className="h-[500px] rounded-[8px] overflow-hidden border-[1px] border-neutral-200">
                                 <div className="bg-white w-full h-16 inline-flex items-center px-4 border-b-[1px] border-b-neutral-200">
                                     <Zoomin onClick={zoomin} className="cursor-pointer mr-3" />
 
@@ -153,7 +153,7 @@ const SyndicateDealOverview = ({ }: any) => {
                                 <aside className="w-full overflow-y-auto bg-cbc-grey-sec p-4" style={{ height: "calc(100% - 60px)" }}>
                                     <img src="https://i.insider.com/638a2fb0edf6e10018e876f8?width=700&format=jpeg&auto=webp" id="deal-image" alt="" className="bg-white mx-auto" style={{ maxWidth: "unset" }} />
                                 </aside>
-                            </section> */}
+                            </section>
 
                             <div className="inline-flex justify-between w-full my-10">
                                 <h1 className="text-black font-medium text-2xl">Risk & Disclaimers</h1>
@@ -170,14 +170,14 @@ const SyndicateDealOverview = ({ }: any) => {
                         <section className="w-[30%]">
                             {/* Show/Hide based on some conditions */}
 
-                            {/* <div className="w-full inline-flex justify-end gap-4">
+                            <div className="w-full inline-flex justify-end gap-4">
                                 <Button type="outlined" onClick={() => setModalOpen(true)}>Request Changes</Button>
                                 <Button>Interested</Button>
-                            </div> */}
-
+                            </div>
+{/* 
                             <div className="w-full inline-flex justify-end gap-4">
                                 <Button suffix={<Chevrond stroke="#fff" />} >Share Deal</Button>
-                            </div>
+                            </div> */}
 
                             <aside className="border-[1px] border-neutral-200 rounded-md w-full p-3 mt-5">
                                 {/* Show/Hide based on some conditions */}
