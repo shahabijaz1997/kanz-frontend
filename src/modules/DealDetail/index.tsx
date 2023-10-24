@@ -17,9 +17,8 @@ import NoteDetails from "./NoteDetails";
 import ActivityDetails from "./ActivityDetails";
 import Spinner from "../../shared/components/Spinner";
 import { getDealDetail, getDealDocuments } from "../../apis/deal.api";
-import InvitedSyndicates from "./UserListingPopup";
-import InviteSyndicate from './InviteSyndicate';
-import UserListingPopup from './InviteSyndicate';
+import InvitedSyndicates from "./InvitedSyndicates";
+import UserListingPopup from './UserListingPopup';
 
 const DealDetail = ({ }: any) => {
     const params = useParams();
