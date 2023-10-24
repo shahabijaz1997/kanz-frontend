@@ -787,10 +787,12 @@
         "button": {
             "new_deal": "Create New Deal",
             "invite": "Invite",
+            "invite_link": "Copy Invite Link",
             "new": "New",
             "cancel": "Cancel",
             "add": "Add",
             "add_new_link": "Add New Link",
+            "copy_link_success": "Link has been copied",
             "close": "Close",
             "seeMore": "See More",
             "seeLess": "See Less"
