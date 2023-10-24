@@ -801,7 +801,18 @@
                 "dealflow":"Deal Flow",
                 "raising_ventures": "Raising Ventures Fund",
                 "action": "Action"
+            },
+            "deals":{
+                "table":{
+                    "title": "Title",
+                    "category": "Category",
+                    "status":"Status",
+                    "end_date":"End Date",
+                    "target":"Target"
             }
         }
+    }
+
+    
     }
 }

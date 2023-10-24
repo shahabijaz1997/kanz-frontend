@@ -12,8 +12,8 @@ import { RoutesEnums, StartupRoutes } from "../../../enums/routes.enum";
 import Modal from "../../../shared/components/Modal";
 import CrossIcon from "../../../ts-icons/crossIcon.svg";
 import { saveDataHolder } from "../../../redux-toolkit/slicer/dataHolder.slicer";
-import { getDeals } from "../../../apis/deal.api";
-import { numberFormatter } from "../../../utils/object.utils";
+import { getDeals, getInvitedDeals } from "../../../apis/deal.api";
+import { comaFormattedNumber, numberFormatter } from "../../../utils/object.utils";
 import Spinner from "../../../shared/components/Spinner";
 import { ApplicationStatus } from "../../../enums/types.enum";
 import Chevrond from "../../../ts-icons/chevrond.svg";
@@ -24,8 +24,9 @@ const DealApproval = ({ }: any) => {
     const dispatch = useDispatch();
     const language: any = useSelector((state: RootState) => state.language.value);
     const authToken: any = useSelector((state: RootState) => state.auth.value);
+    const user: any = useSelector((state: RootState) => state.user.value);
     
-    const columns = [language?.v3?.table?.propertyName, language?.v3?.table?.size, language?.v3?.table?.status, language?.v3?.table?.features, language?.v3?.table?.sellingPrice, language?.v3?.table?.rentalAmount, language?.v3?.table?.action];
+    const columns = [language?.v3?.syndicate?.deals?.table?.title, language?.v3?.syndicate?.deals?.table?.category, language?.v3?.syndicate?.deals?.table?.status, language?.v3?.syndicate?.deals?.table?.end_date, language?.v3?.syndicate?.deals?.table?.target, language?.v3?.table?.action];
 const [pagination, setPagination] = useState({ items_per_page: 10, total_items: [], current_page: 1, total_pages: 0 });
     const [selectedTab, setSelectedTab] = useState();
     const [modalOpen, setModalOpen]: any = useState(null);
@@ -35,38 +36,29 @@ const [pagination, setPagination] = useState({ items_per_page: 10, total_items: 
     const [dummyDisclaimers, setDummyDisclaimers] = useState({ "d1": false, "d2": false, "d3": false });
     const [disclaimersToggler, setDisclaimersToggler] = useState({ "d1": false, "d2": false, "d3": false });
 
-    useEffect(() => {
-        dispatch(saveDataHolder(""))
-    }, []);
+    
 
     useEffect(() => {
         dispatch(saveDataHolder(""));
         getAllDeals();
-    }, []);
-
-    const comaFormattedNumber = (value: string) => {
-        if (!value) return value;
-        return String(value).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
-    };
+    },[]);
 
 
     const getAllDeals = async () => {
         try {
             setLoading(true);
-            let { status, data } = await getDeals(authToken);
+            let { status, data } = await getInvitedDeals(user.id,authToken);
             if (status === 200) {
 
                 let deals = data?.status?.data?.map((deal: any) => {
                     let features = deal?.features?.map((f: any) => f?.title || f?.description)?.join(",")
                     return {
                         id: deal?.id,
-                        [language?.v3?.table?.propertyName]: deal?.building_name || "N/A",
-                        [language?.v3?.table?.size]: `${comaFormattedNumber(deal?.size)} sqft`,
-                        [language?.v3?.table?.features]: features || "N/A",
-                        [language?.v3?.table?.sellingPrice]: `$${numberFormatter(Number(deal?.target))}`,
-                        [language?.v3?.table?.status]: deal?.status,
-                        [language?.v3?.table?.rentalAmount]: `$${numberFormatter(Number(deal?.rental_amount))}`,
-                        State: deal?.current_state,
+                        [language?.v3?.syndicate?.deals?.table?.title]: deal?.deal?.title || "N/A",
+                        [language?.v3?.syndicate?.deals?.table?.category]: <span className='capitalize'>{deal?.deal?.type}</span> ,
+                        [language?.v3?.syndicate?.deals?.table?.status]: deal?.status || "N/A",
+                        [language?.v3?.syndicate?.deals?.table?.end_date]: deal?.deal?.end_at || " N/A",
+                        [language?.v3?.syndicate?.deals?.table?.target]:  `$${numberFormatter(Number(deal?.deal?.target))}`,
 
                         Steps: deal?.current_state?.steps,
                         [language?.v3?.table?.action]: <div onClick={(e) => {
@@ -129,12 +121,12 @@ const [pagination, setPagination] = useState({ items_per_page: 10, total_items: 
                         <React.Fragment>
                             <section className="inline-flex justify-between items-center w-full">
                                 <div className="w-full">
-                                    <h1 className="text-black font-medium text-2xl mb-2">{language?.v3?.startup?.overview?.heading}</h1>
+                                    <h1 className="text-black font-medium text-2xl mb-2">{language?.v3?.startup?.sidebar?.deal_approval}</h1>
 
                                     <span className="w-full flex items-center gap-5">
                                         <div className="rounded-md shadow-cs-6 bg-white border-[1px] border-gray-200 h-9 overflow-hidden max-w-[310px] inline-flex items-center px-2">
                                             <SearchIcon />
-                                            <input type="search" className="h-full w-full outline-none pl-2 text-sm font-normal text-gray-400" placeholder={language?.v3?.common?.search} />
+                                            <input type="search" className="h-full w-full outline-none pl-2 pr-[6.5rem] text-sm font-normal text-gray-400" placeholder={language?.v3?.common?.search} />
                                         </div>
 
                                         <ul className="inline-flex items-center">
@@ -142,17 +134,11 @@ const [pagination, setPagination] = useState({ items_per_page: 10, total_items: 
                                         </ul>
                                     </span>
                                 </div>
-                                <Button onClick={() => setModalOpen("1")} className="w-[170px]">{language?.v3?.button?.new_deal}</Button>
+                                
                             </section>
 
                             <section className="mt-10">
-                                <Table columns={columns} pagination={pagination} paginate={paginate} onclick={(row: any) => {
-                                    if (row?.Status !== ApplicationStatus.SUBMITTED) {
-                                        dispatch(saveDataHolder(row.id));
-                                        navigate(`/create-deal/${row?.State?.current_step + 2}`);
-                                    }
-                                    else setModalOpen("2");
-                                }} noDataNode={<Button onClick={() => setModalOpen("1")} className="absolute left-1/2 top-1/2 translate-x-[-50%] translate-y-[-50%]">{language?.v3?.button?.new_deal}</Button>} />
+                                <Table columns={columns} pagination={pagination} onClick={()=>{console.log("Row Clicked")}} paginate={paginate} noDataNode={<Button onClick={() => setModalOpen("1")} className="absolute left-1/2 top-1/2 translate-x-[-50%] translate-y-[-50%]">{language?.v3?.button?.new_deal}</Button>} />
                             </section>
                         </React.Fragment>
                     )}

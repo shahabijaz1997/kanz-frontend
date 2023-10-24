@@ -20,6 +20,17 @@ export const getDeals = (token: string) => {
     });
 };
 
+
+export const getInvitedDeals = (inviteeId: any, token: string) => {
+    console.log(getInvitedDeals)
+    return axios.get(`${ENV.API_URL}/${ENV.API_VERSION}/invitees/${inviteeId}/invites`, {
+        headers: {
+            Authorization: `Bearer ${token}`
+        }
+    });
+}
+
+
 export const getDealDetail = (dealId: number, token: string) => {
     return axios.get(`${ENV.API_URL}/${ENV.API_VERSION}/deals/${dealId}/overview`, {
         headers: {
