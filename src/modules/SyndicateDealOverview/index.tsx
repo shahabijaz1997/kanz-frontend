@@ -17,6 +17,12 @@ import Zoomin from "../../ts-icons/zoominIcon.svg";
 import Zoomout from "../../ts-icons/ZoomoutIcon.svg";
 import CurrencySVG from "../../assets/svg/currency.svg";
 import { comaFormattedNumber, numberFormatter } from "../../utils/object.utils";
+import { fileSize, handleFileRead } from "../../utils/files.utils";
+import { FileType } from "../../enums/types.enum";
+import FileSVG from "../../assets/svg/file.svg";
+import PreviewIcon from "../../ts-icons/previewIcon.svg";
+import BinIcon from "../../ts-icons/binIcon.svg";
+
 const CURRENCIES = ["USD", "AED"];
 
 
@@ -28,13 +34,54 @@ const SyndicateDealOverview = ({ }: any) => {
 
     const [currency, setCurrency] = useState(0);
     const [docs, setDocs]: any = useState([]);
+    const [files, setFiles]: any = useState([]);
     const [selectedDocs, setSelectedDocs] = useState("https://kanz-attachments-production.s3.amazonaws.com/Deal/112/vrqospdccgf9rknczrsbh18g5hp8?response-content-disposition=inline%3B%20filename%3D%22Clean%20Architecture_%20A%20Craftsman%253Fs%20Guide%20to%20Software%20Structure%20and%20Design-Pearson%20Education%20%25282018%2529%255B7615523%255D.pdf%22%3B%20filename%2A%3DUTF-8%27%27Clean%2520Architecture_%2520A%2520Craftsman%25E2%2580%2599s%2520Guide%2520to%2520Software%2520Structure%2520and%2520Design-Pearson%2520Education%2520%25282018%2529%255B7615523%255D.pdf&response-content-type=application%2Fpdf&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAUZ3BKAW2TBYTKAHD%2F20231024%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20231024T100232Z&X-Amz-Expires=300&X-Amz-SignedHeaders=host&X-Amz-Signature=9c883506c82beee982b98cd1560339cd5698bad9b2ccf69ae6af578fdd9edb7d");
     const [loading, setLoading]: any = useState(false);
     const [modalOpen, setModalOpen]: any = useState(null);
     const [changes, setChanges]: any = useState({ comment: "", action: "", document: null });
 
-    const handleFileUpload = (e: any) => {
+    const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const file: any = e.target.files?.[0];
+        setFileInformation(file);
+        e.target.value = "";
     };
+
+    const setFileInformation = async (file: File) => {
+        let size = fileSize(file.size, "mb");
+        let type;
+
+        setLoading(true);
+        if (file.type.includes("video")) type = FileType.VIDEO;
+        else if (file.type.includes("image")) {
+            type = FileType.IMAGE;
+            const reader = new FileReader();
+            reader.readAsDataURL(file);
+            reader.onload = () => {
+                const img: any = new Image();
+                img.src = reader.result;
+            };
+        } else {
+            type = FileType.PDF;
+            const reader = new FileReader();
+            reader.readAsDataURL(file);
+        }
+        const fileData: any = await handleFileRead(file);
+        
+        doUploadUtil(fileData, size, type);
+        setLoading(false);
+    };
+
+    const doUploadUtil = (file: any, size: any, type: string) => {
+        setFiles((prev: any) => {
+            return [...prev, { file, size, type, id: prev.length + 1 }]
+        })
+
+        let timer = setTimeout(() => {
+            setLoading(false);
+            clearTimeout(timer);
+        }, 1000);
+    }
+
 
     const numberInputUI = () => {
         let placeholder = currency === 0 ? "$ 0.00" : "0.00 د.إ";
@@ -62,15 +109,16 @@ const SyndicateDealOverview = ({ }: any) => {
 
 
     const zoomin = () => {
-        var imgElem: any = document.getElementById("deal-image");
-        var currWidth = imgElem.clientWidth;
+        let imgElem: any = document.getElementById("deal-image");
+        let currWidth = imgElem.clientWidth;
         imgElem.style.width = (currWidth + 50) + "px";
     }
 
     const zoomout = () => {
-        var imgElem: any = document.getElementById("deal-image");
-        var currWidth = imgElem.clientWidth;
-        imgElem.style.width = (currWidth - 50) + "px";
+        let imgElem: any = document.getElementById("deal-image");
+        let currWidth = imgElem.clientWidth;
+        if (currWidth > 150)
+            imgElem.style.width = (currWidth - 50) + "px";
     }
 
     useLayoutEffect(() => {
@@ -174,14 +222,18 @@ const SyndicateDealOverview = ({ }: any) => {
                                 <Button type="outlined" onClick={() => setModalOpen(true)}>Request Changes</Button>
                                 <Button>Interested</Button>
                             </div>
-{/* 
-                            <div className="w-full inline-flex justify-end gap-4">
-                                <Button suffix={<Chevrond stroke="#fff" />} >Share Deal</Button>
+
+                            {/* <div className="w-full inline-flex justify-end gap-4">
+                                <Button suffix={<Chevrond stroke="#fff" />} onClick={() => setShowInviteSyndicate(!showInviteSyndicate)}>Share Deal</Button>
+                                <div className="relative z-10">
+                                    {showInviteSyndicate && <UserListingPopup type={KanzRoles.SYNDICATE} />}
+                                </div>
                             </div> */}
+
 
                             <aside className="border-[1px] border-neutral-200 rounded-md w-full p-3 mt-5">
                                 {/* Show/Hide based on some conditions */}
-                                <div>
+                                {/* <div>
                                     <h1 className="text-black font-medium text-xl">Invest</h1>
                                     <p className="text-sm text-neutral-500 font-medium">Minimum is $2500 invest by Oct 2023</p>
                                     {numberInputUI()}
@@ -189,7 +241,7 @@ const SyndicateDealOverview = ({ }: any) => {
                                         <Button divStyle="flex items-center justify-center w-full" className="w-full !py-1">Invest</Button>
                                         <Button divStyle="flex items-center justify-center w-full" className="w-full !py-1" type="outlined">Ignore</Button>
                                     </div>
-                                </div>
+                                </div> */}
 
                                 <h2 className="text-neutral-700 text-xl font-medium">Investment Details</h2>
                                 <small className="text-neutral-500 text-sm font-normal">Minimum is $2500  Invest by Oct 2</small>
@@ -263,50 +315,46 @@ const SyndicateDealOverview = ({ }: any) => {
                                     className=" h-[100px] mt-1 shadow-sm appearance-none border border-neutral-300 rounded-md w-full py-2 px-3 text-gray-500 leading-tight focus:outline-none focus:shadow-outline"
                                 ></textarea>
                             </div>
-                            <div className="mb-8">
-                                <label htmlFor="" className="text-neutral-900 font-medium text-sm block">Action</label>
 
-                                <div className="flex flex-row mt-1">
-                                    <li className={`pr-4 text-sm font-medium cursor-pointer inline-flex items-center justify-start first:rounded-t-md last:rounded-b-md screen500:w-full`}
-                                        onClick={() => {
-                                            setChanges((prev: any) => {
-                                                return { ...prev, action: "request_changes" }
-                                            })
-                                        }}>
-                                        <input onChange={(e) => { }} className="accent-cyan-800 relative float-left mr-2 h-3 w-3 rounded-full border-2 border-solid border-cyan-300 before:pointer-events-none before:absolute before:h-4 before:w-4 before:scale-0 before:rounded-full before:bg-transparent before:opacity-0 before:content-[''] after:absolute after:z-[1] after:block after:h-4 after:w-4 after:rounded-full after:content-[''] checked:border-primary checked:before:opacity-[0.16] checked:after:absolute checked:after:left-1/2 checked:after:top-1/2 checked:after:h-[0.625rem] checked:after:w-[0.625rem] checked:after:rounded-full checked:after:border-primary checked:after:bg-primary checked:after:content-[''] checked:after:[transform:translate(-50%,-50%)] hover:cursor-pointer hover:before:opacity-[0.04]"
-                                            type="radio" checked={changes.action === "request_changes" ? true : false} />
-                                        <div className="text-sm font-medium text-neutral-700">Request Change</div>
-                                    </li>
-
-                                    <li className={`pr-4 text-sm font-medium cursor-pointer inline-flex items-center justify-start first:rounded-t-md last:rounded-b-md screen500:w-full`}
-                                        onClick={() => {
-                                            setChanges((prev: any) => {
-                                                return { ...prev, action: "verify" }
-                                            })
-                                        }}>
-                                        <input onChange={(e) => { }} className="accent-cyan-800 relative float-left mr-2 h-3 w-3 rounded-full border-2 border-solid border-cyan-300 before:pointer-events-none before:absolute before:h-4 before:w-4 before:scale-0 before:rounded-full before:bg-transparent before:opacity-0 before:content-[''] after:absolute after:z-[1] after:block after:h-4 after:w-4 after:rounded-full after:content-[''] checked:border-primary checked:before:opacity-[0.16] checked:after:absolute checked:after:left-1/2 checked:after:top-1/2 checked:after:h-[0.625rem] checked:after:w-[0.625rem] checked:after:rounded-full checked:after:border-primary checked:after:bg-primary checked:after:content-[''] checked:after:[transform:translate(-50%,-50%)] hover:cursor-pointer hover:before:opacity-[0.04]"
-                                            type="radio" checked={changes.action === "verify" ? true : false} />
-                                        <div className="text-sm font-medium text-neutral-700">Verify</div>
-                                    </li>
-                                </div>
+                            <div className="mb-3 w-full">
+                                <span className="w-full">
+                                    <button className="bg-cbc-grey-sec rounded-lg inline-flex justify-center gap-2 px-4 py-2 w-full" onClick={() => {
+                                        let elem: any = document.getElementById("doc_deal_uploader");
+                                        elem.click()
+                                    }}>
+                                        <UploadIcon />
+                                        <small className="text-cyan-800 text-sm font-medium">Upload a Document</small>
+                                    </button>
+                                    <input type="file" className="hidden" id="doc_deal_uploader" multiple={true} onChange={handleFileUpload} />
+                                </span>
                             </div>
-
-                            <div className="mb-6">
-                                <div className="flex flex-row">
-                                    <label htmlFor="doc-uploader">
-                                        <button className="bg-cbc-grey-sec rounded-lg inline-flex items-center gap-2 px-4 py-3">
-                                            <UploadIcon />
-                                            <small className="text-cyan-800 text-sm font-medium">Upload a Document</small>
-                                        </button>
-                                        <input type="file" className="hidden" id="doc-uploader" onChange={handleFileUpload} />
-                                    </label>
-                                </div>
+                            <div className="mb-3 w-full">
+                                {React.Children.toArray(
+                                    files?.map((doc:any) => {
+                                        return(
+                                            <section className="rounded-md bg-cbc-grey-sec px-1 py-2 inline-flex items-center justify-between border-[1px] border-neutral-200 w-full">
+                                            <span className="inline-flex items-center">
+                                                <div className="rounded-[7px] bg-white shadow shadow-cs-3 w-14 h-14 inline-grid place-items-center">
+                                                    <img src={FileSVG} alt="File" />
+                                                </div>
+                                                <span className="inline-flex flex-col items-start ml-3">
+                                                    <h2 className="text-sm font-medium text-neutral-900 max-w-[150px] truncate" title={doc?.file?.name}>{doc?.file?.name}</h2>
+                                                </span>
+                                            </span>
+                
+                                               <small>{doc?.size} MB</small>
+                                            <div className="rounded-lg w-8 h-8 inline-flex items-center flex-row justify-center gap-2 bg-white cursor-pointer" onClick={() => setModalOpen({ url: doc.url, open: true, type: doc?.attachment_kind })}>
+                                                <BinIcon stroke="#404040" />
+                                            </div>
+                                        </section>
+                                        )
+                                    })
+                                )}
                             </div>
                         </section>
 
                         <footer className="w-full inline-flex justify-between gap-3 py-2 px-3 w-full">
-                            <Button className="bg-transparent border-cyan-800 border-2 w-full !text-cyan-800 hover:bg-transparent" onClick={() => setModalOpen(false)}>Cancel</Button>
-                            <Button className="w-full" onClick={() => { }}>Submit</Button>
+                            <Button className="w-full !py-1" divStyle="flex items-center justify-center w-full" onClick={() => { }}>Submit</Button>
                         </footer>
                     </aside>
                 </div>

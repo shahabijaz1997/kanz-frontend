@@ -11,7 +11,6 @@ import SearchIcon from "../../../ts-icons/searchIcon.svg";
 import { KanzRoles } from '../../../enums/roles.enum';
 import { toast } from 'react-toastify';
 
-
 interface Syndicate {
   id: number;
   title: React.ReactNode;
@@ -19,18 +18,7 @@ interface Syndicate {
   action: React.ReactNode;
 }
 
-
-
-const UserListingPopup = ({type}: any) => {
-
-  function copyToClipboard() {
-    const clipboard = navigator.clipboard;
-    clipboard.writeText(window.location.href);
-    toast.success(`${language?.v3?.button?.copy_link_success}`)  
-  
-  }
-
-
+const UserListingPopup = ({ type }: any) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const language: any = useSelector((state: RootState) => state.language.value);
@@ -44,10 +32,17 @@ const UserListingPopup = ({type}: any) => {
     getAllUserListings();
   }, [type]);
 
+  const copyToClipboard = () => {
+    const clipboard = navigator.clipboard;
+    clipboard.writeText(window.location.href);
+    toast.success(`${language?.v3?.button?.copy_link_success}`)
+
+  }
+
   const getAllUserListings = async () => {
     try {
       setLoading(true);
-      let results:any;
+      let results: any;
       if (type === KanzRoles.SYNDICATE)
         results = await getAllSyndicates(authToken);
       let { status, data } = results;
@@ -57,25 +52,23 @@ const UserListingPopup = ({type}: any) => {
           id: syndicate?.id,
           title: syndicate?.name,
           handle: syndicate?.handle || "N/A",
-            action: (
-              <Button
+          action: (
+            <Button
               divStyle="items-center justify-end max-w-fit"
               type="outlined"
-              
+
               className="!p-3 !py-1 !rounded-full"
               onClick={() => {
-               
+
               }}
             >
               Invite
             </Button>
-            
-            
           ),
         }));
-          
+
         /*  */console.log(syndicates)
-          setSyndicates(syndicates);
+        setSyndicates(syndicates);
         /*   console.log('====================================');
           console.log(syndicates);
         console.log('====================================');
@@ -92,25 +85,21 @@ const UserListingPopup = ({type}: any) => {
   };
 
   return (
-      <section className="absolute p-5 bg-white border-[1px] border-neutral-200 rounded-md max-w-[400px] right-0 top-[100%]">
-           <div className="rounded-md shadow-cs-6 bg-white border-[1px] border-gray-200 h-9 overflow-hidden w-full inline-flex items-center px-2">
-           <SearchIcon />
-            <input type="search" className="h-full w-full outline-none pl-2 pr-[6.5rem] text-sm font-normal text-gray-400" placeholder={language?.v3?.common?.search} />
-             </div>
-            {React.Children.toArray(
-          syndicates.map((syndicate: Syndicate) => (
-              <div className='py-4 border-b-[1px] border-b-neutral-200 w-full inline-flex items-center justify-between'>
-                  <p>{syndicate.title}</p>
-              {syndicate.action}            
-            </div>
-          ))
-      )}
-      <span>
-        
-      <Button type='outlined' onClick={() => {copyToClipboard()}}  className="w-full">{language?.v3?.button?.invite_link}</Button>
+    <section className="absolute p-5 bg-white border-[1px] border-neutral-200 rounded-md w-[400px] right-0 top-[100%]">
+      <div className="rounded-md shadow-cs-6 bg-white border-[1px] border-gray-200 h-9 overflow-hidden w-full inline-flex items-center px-2 mb-5">
+        <SearchIcon />
+        <input type="search" className="h-full w-full outline-none pl-2 pr-[6.5rem] text-sm font-normal text-gray-400" placeholder={language?.v3?.common?.search} />
+      </div>
 
-      </span>
-      
+      {React.Children.toArray(
+        syndicates.map((syndicate: Syndicate) => (
+          <div className='py-4 border-b-[1px] border-b-neutral-200 w-full inline-flex items-center justify-between'>
+            <p>{syndicate.title}</p>
+            {syndicate.action}
+          </div>
+        ))
+      )}
+      <Button type='outlined' onClick={() => { copyToClipboard() }} className="w-full mt-5">{language?.v3?.button?.invite_link}</Button>
     </section>
   );
 };
