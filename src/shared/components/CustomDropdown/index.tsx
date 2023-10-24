@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 
-const CustomDropdown = ({ mainNode, options = ["Item"], className = "", onClick }: any) => {
+const CustomDropdown = ({ mainNode, options = ["Item","Test1","Test2","Test3"], className = "", onClick }: any) => {
     const ref: any = useRef();
     const [isOpen, setOpen] = useState(false);
 
