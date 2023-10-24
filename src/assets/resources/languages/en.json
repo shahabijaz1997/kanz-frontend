@@ -701,8 +701,10 @@
                 "market_insights": "Market Insights",
                 "contacts": "Contacts",
                 "deal_approval": "Deal Approval",
-                "startup_investment": " Startups Investment",
-                "syndicate_requests": " Syndicate Requests"
+                "startup_investment": "Startups Investment",
+                "syndicate_requests": "Syndicate Requests",
+                "dashboard": "Dashboard",
+                "investments": "Investments"
             }
         },
         "deal": {
