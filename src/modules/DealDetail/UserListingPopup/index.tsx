@@ -78,7 +78,7 @@ const UserListingPopup = ({dealId,type}: any) => {
       }
     } catch (error: any) {
  
-      if (error.response && error.response.status === 401) {
+      if (KanzRoles.SYNDICATE && error.response && error.response.status === 401) {
         dispatch(saveToken(""));
         navigate(RoutesEnums.LOGIN, { state: RoutesEnums.STARTUP_DASHBOARD });
       }
