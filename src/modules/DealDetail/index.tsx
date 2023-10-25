@@ -54,6 +54,7 @@ const DealDetail = ({ }: any) => {
             setLoading(false);
         }
     };
+    
     const onGetDealFiles = async () => {
         try {
             setLoading(true);

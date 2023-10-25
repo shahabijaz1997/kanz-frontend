@@ -1,6 +1,6 @@
 import React, { useLayoutEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { KanzRoles } from "../../enums/roles.enum";
 import { RootState } from "../../redux-toolkit/store/store";
 import Header from "../../shared/components/Header";
@@ -16,27 +16,29 @@ import UploadIcon from "../../ts-icons/uploadIcon.svg";
 import Zoomin from "../../ts-icons/zoominIcon.svg";
 import Zoomout from "../../ts-icons/ZoomoutIcon.svg";
 import CurrencySVG from "../../assets/svg/currency.svg";
-import { comaFormattedNumber, numberFormatter } from "../../utils/object.utils";
+import { comaFormattedNumber, formatDate, numberFormatter } from "../../utils/object.utils";
 import { fileSize, handleFileRead } from "../../utils/files.utils";
-import { FileType } from "../../enums/types.enum";
+import { DealStatus, FileType } from "../../enums/types.enum";
 import FileSVG from "../../assets/svg/file.svg";
-import PreviewIcon from "../../ts-icons/previewIcon.svg";
 import BinIcon from "../../ts-icons/binIcon.svg";
+import { addCommentOnDeal, getDealDetail } from "../../apis/deal.api";
+import { uploadAttachments } from "../../apis/attachment.api";
 
 const CURRENCIES = ["USD", "AED"];
 
 
 const SyndicateDealOverview = ({ }: any) => {
     const navigate = useNavigate();
-    const { state } = useLocation();
+    const { id } = useParams();
     const language: any = useSelector((state: RootState) => state.language.value);
     const authToken: any = useSelector((state: RootState) => state.auth.value);
 
     const [currency, setCurrency] = useState(0);
-    const [docs, setDocs]: any = useState([]);
+    const [deal, setdeal]: any = useState([]);
+    const [selectedDocs, setSelectedDocs]: any = useState(null);
     const [files, setFiles]: any = useState([]);
-    const [selectedDocs, setSelectedDocs] = useState("https://kanz-attachments-production.s3.amazonaws.com/Deal/112/vrqospdccgf9rknczrsbh18g5hp8?response-content-disposition=inline%3B%20filename%3D%22Clean%20Architecture_%20A%20Craftsman%253Fs%20Guide%20to%20Software%20Structure%20and%20Design-Pearson%20Education%20%25282018%2529%255B7615523%255D.pdf%22%3B%20filename%2A%3DUTF-8%27%27Clean%2520Architecture_%2520A%2520Craftsman%25E2%2580%2599s%2520Guide%2520to%2520Software%2520Structure%2520and%2520Design-Pearson%2520Education%2520%25282018%2529%255B7615523%255D.pdf&response-content-type=application%2Fpdf&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAUZ3BKAW2TBYTKAHD%2F20231024%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20231024T100232Z&X-Amz-Expires=300&X-Amz-SignedHeaders=host&X-Amz-Signature=9c883506c82beee982b98cd1560339cd5698bad9b2ccf69ae6af578fdd9edb7d");
     const [loading, setLoading]: any = useState(false);
+    const [fileLoading, setFileLoading]: any = useState(false);
     const [modalOpen, setModalOpen]: any = useState(null);
     const [changes, setChanges]: any = useState({ comment: "", action: "", document: null });
 
@@ -65,9 +67,8 @@ const SyndicateDealOverview = ({ }: any) => {
             const reader = new FileReader();
             reader.readAsDataURL(file);
         }
-        const fileData: any = await handleFileRead(file);
-        
-        doUploadUtil(fileData, size, type);
+
+        doUploadUtil(file, size, type);
         setLoading(false);
     };
 
@@ -81,7 +82,6 @@ const SyndicateDealOverview = ({ }: any) => {
             clearTimeout(timer);
         }, 1000);
     }
-
 
     const numberInputUI = () => {
         let placeholder = currency === 0 ? "$ 0.00" : "0.00 د.إ";
@@ -107,27 +107,31 @@ const SyndicateDealOverview = ({ }: any) => {
         )
     };
 
-
     const zoomin = () => {
-        let imgElem: any = document.getElementById("deal-image");
+        let imgElem: any = document.getElementById("deal-file");
         let currWidth = imgElem.clientWidth;
         imgElem.style.width = (currWidth + 50) + "px";
     }
 
     const zoomout = () => {
-        let imgElem: any = document.getElementById("deal-image");
+        let imgElem: any = document.getElementById("deal-file");
         let currWidth = imgElem.clientWidth;
         if (currWidth > 150)
             imgElem.style.width = (currWidth - 50) + "px";
     }
 
     useLayoutEffect(() => {
-        onGetDealDetails();
-    }, []);
+        onGetdeal();
+    }, [id]);
 
-    const onGetDealDetails = async () => {
+    const onGetdeal = async () => {
         try {
             setLoading(true);
+            let { status, data } = await getDealDetail(Number(id), authToken);
+            if (status === 200) {
+                setdeal(data?.status?.data);
+                setSelectedDocs(data?.status?.data?.docs[0]);
+            }
         } catch (error) {
 
         } finally {
@@ -135,12 +139,133 @@ const SyndicateDealOverview = ({ }: any) => {
         }
     };
 
+    const onAddCommentOnDeal = async () => {
+        console.log(files);
+
+        try {
+            // setLoading(true);
+            let allFiles = files.map((file: any) => file.file);
+
+            let payload = {
+                message: changes.comment,
+                invite_id: deal?.invite?.id,
+                attachments: allFiles
+            }
+            let { status, data } = await addCommentOnDeal(Number(id), authToken, payload);
+            if (status === 200) {
+                setdeal(data?.status?.data);
+                setSelectedDocs(data?.status?.data?.docs[0]);
+            }
+        } catch (error) {
+            console.log(error);
+        } finally {
+            setLoading(false);
+            setChanges({ comment: "", action: "", document: null });
+        }
+    };
+
+    const getRoleBasedUI = () => {
+        return (
+            <React.Fragment>
+                {deal?.instrument_type && <div className="w-full inline-flex justify-between items-center border-b-[1px] border-b-neutral-200 my-3">
+                    <h3 className="text-neutral-900 font-medium text-sm">{language?.v3?.deal?.instrument_type}</h3>
+                    <p className="text-neutral-900 font-normal text-sm capitalize">{deal?.instrument_type || language?.v3?.common?.not_added}</p>
+                </div>}
+                {deal?.stage && <div className="w-full inline-flex justify-between items-center border-b-[1px] border-b-neutral-200 my-3">
+                    <h3 className="text-neutral-900 font-medium text-sm">{language?.v3?.table?.stage}</h3>
+                    <p className="text-neutral-900 font-normal text-sm capitalize">{deal?.stage || language?.v3?.common?.not_added}</p>
+                </div>}
+                {deal?.valuation && <div className="w-full inline-flex justify-between items-center border-b-[1px] border-b-neutral-200 my-3">
+                    <h3 className="text-neutral-900 font-medium text-sm">{language?.v3?.table?.valuation}</h3>
+                    <p className="text-neutral-900 font-normal text-sm capitalize">${comaFormattedNumber(deal?.valuation)} ({deal?.equity_type})</p>
+                </div>}
+                {deal?.selling_price && <div className="w-full inline-flex justify-between items-center border-b-[1px] border-b-neutral-200 my-3">
+                    <h3 className="text-neutral-900 font-medium text-sm">{language?.v3?.table?.sellingPrice}</h3>
+                    <p className="text-neutral-900 font-normal text-sm capitalize">{numberFormatter(deal?.selling_price) || language?.v3?.common?.not_added}</p>
+                </div>}
+                {deal?.status && <div className="w-full inline-flex justify-between items-center border-b-[1px] border-b-neutral-200 my-3">
+                    <h3 className="text-neutral-900 font-medium text-sm">{language?.v3?.table?.status}</h3>
+                    <p className="text-neutral-900 font-normal text-sm capitalize">{deal?.status || language?.v3?.common?.not_added}</p>
+                </div>}
+                {deal?.start_at && <div className="w-full inline-flex justify-between items-center border-b-[1px] border-b-neutral-200 my-3">
+                    <h3 className="text-neutral-900 font-medium text-sm">{language?.v3?.deal?.start_at}</h3>
+                    <p className="text-neutral-900 font-normal text-sm capitalize">{formatDate(deal?.start_at) || language?.v3?.common?.not_added}</p>
+                </div>}
+                {deal?.end_at && <div className="w-full inline-flex justify-between items-center border-b-[1px] border-b-neutral-200 my-3">
+                    <h3 className="text-neutral-900 font-medium text-sm">{language?.v3?.deal?.end_at}</h3>
+                    <p className="text-neutral-900 font-normal text-sm capitalize">{formatDate(deal?.end_at) || language?.v3?.common?.not_added}</p>
+                </div>}
+                {deal?.committed > 0 && <div className="w-full inline-flex justify-between items-center border-b-[1px] border-b-neutral-200 my-3">
+                    <h3 className="text-neutral-900 font-medium text-sm">{language?.v3?.deal?.committed}</h3>
+                    <p className="text-neutral-900 font-normal text-sm capitalize">{numberFormatter(deal?.committed)}</p>
+                </div>}
+                {deal?.location && <div className="w-full inline-flex justify-between items-center border-b-[1px] border-b-neutral-200 my-3">
+                    <h3 className="text-neutral-900 font-medium text-sm">{language?.v3?.deal?.location}</h3>
+                    <p className="text-neutral-900 font-normal text-sm capitalize">{deal?.location}</p>
+                </div>}
+                {deal?.raised > 0 && <div className="w-full inline-flex justify-between items-center border-b-[1px] border-b-neutral-200 my-3">
+                    <h3 className="text-neutral-900 font-medium text-sm">{language?.v3?.deal?.raised}</h3>
+                    <p className="text-neutral-900 font-normal text-sm capitalize">${numberFormatter(deal?.raised)}</p>
+                </div>}
+                {deal?.size && <div className="w-full inline-flex justify-between items-center border-b-[1px] border-b-neutral-200 my-3">
+                    <h3 className="text-neutral-900 font-medium text-sm">{language?.v3?.table?.size}</h3>
+                    <p className="text-neutral-900 font-normal text-sm capitalize">{comaFormattedNumber(deal?.size)} sqft</p>
+                </div>}
+                {deal?.expected_annual_return && <div className="w-full inline-flex justify-between items-center border-b-[1px] border-b-neutral-200 my-3">
+                    <h3 className="text-neutral-900 font-medium text-sm">{language?.v3?.deal?.expected_annual_return}</h3>
+                    <p className="text-neutral-900 font-normal text-sm capitalize">{deal?.expected_annual_return + "%" || language?.v3?.common?.not_added}</p>
+                </div>}
+                {deal?.expected_dividend_yield && <div className="w-full inline-flex justify-between items-center border-b-[1px] border-b-neutral-200 my-3">
+                    <h3 className="text-neutral-900 font-medium text-sm">{language?.v3?.deal?.expected_dividend_yield}</h3>
+                    <p className="text-neutral-900 font-normal text-sm capitalize">{deal?.expected_dividend_yield + "%" || language?.v3?.common?.not_added}</p>
+                </div>}
+                {deal?.features?.bedrooms && <div className="w-full inline-flex justify-between items-center border-b-[1px] border-b-neutral-200 my-3">
+                    <h3 className="text-neutral-900 font-medium text-sm">{language?.v3?.deal?.beds}</h3>
+                    <p className="text-neutral-900 font-normal text-sm capitalize">{deal?.features?.bedrooms}</p>
+                </div>}
+                {deal?.features?.kitchen && <div className="w-full inline-flex justify-between items-center border-b-[1px] border-b-neutral-200 my-3">
+                    <h3 className="text-neutral-900 font-medium text-sm">{language?.v3?.deal?.kitchen}</h3>
+                    <p className="text-neutral-900 font-normal text-sm capitalize">{deal?.features?.kitchen}</p>
+                </div>}
+                {deal?.features?.washroom && <div className="w-full inline-flex justify-between items-center border-b-[1px] border-b-neutral-200 my-3">
+                    <h3 className="text-neutral-900 font-medium text-sm">{language?.v3?.deal?.washroom}</h3>
+                    <p className="text-neutral-900 font-normal text-sm capitalize">{deal?.features?.washroom}</p>
+                </div>}
+                {deal?.features?.parking && <div className="w-full inline-flex justify-between items-center border-b-[1px] border-b-neutral-200 my-3">
+                    <h3 className="text-neutral-900 font-medium text-sm">{language?.v3?.deal?.parking}</h3>
+                    <p className="text-neutral-900 font-normal text-sm capitalize">{deal?.features?.parking}</p>
+                </div>}
+                {deal?.features?.swimming_pool && <div className="w-full inline-flex justify-between items-center border-b-[1px] border-b-neutral-200 my-3">
+                    <h3 className="text-neutral-900 font-medium text-sm">{language?.v3?.deal?.swim}</h3>
+                    <p className="text-neutral-900 font-normal text-sm capitalize">{deal?.features?.swimming_pool}</p>
+                </div>}
+                {deal?.features?.rental_amount && <div className="w-full inline-flex justify-between items-center border-b-[1px] border-b-neutral-200 my-3">
+                    <h3 className="text-neutral-900 font-medium text-sm">{language?.v3?.deal?.por_2}</h3>
+                    <p className="text-neutral-900 font-normal text-sm capitalize">${numberFormatter(deal?.features?.rental_amount)} ({deal?.features?.rental_period})</p>
+                </div>}
+            </React.Fragment>
+        )
+    };
+
+    const onTo = (type: string) => {
+        setFileLoading(true);
+        let idx: number = deal?.docs?.findIndex((f: any) => f.id === selectedDocs?.id)
+        if (type === "++" && idx < (deal?.docs?.length - 1)) setSelectedDocs(deal?.docs[idx + 1]);
+        else if (type === "--" && idx > 0) setSelectedDocs(deal?.docs[idx - 1]);
+
+        let timer = setTimeout(() => {
+            clearTimeout(timer);
+            setFileLoading(false)
+        }, 500);
+
+    };
+
     return (
         <main className="h-full max-h-full overflow-y-auto">
             <section>
                 <Header />
             </section>
-            <aside className="w-full h-full flex items-start justify-start">
+            <aside className="w-full h-full flex items-start justify-start pb-10">
                 <Sidebar type={KanzRoles.SYNDICATE} />
                 {loading ? (
                     <div className="absolute left-0 top-0 w-full h-full grid place-items-center" style={{ backgroundColor: "rgba(255, 255, 255, 1)", zIndex: 50 }} >
@@ -156,59 +281,71 @@ const SyndicateDealOverview = ({ }: any) => {
                             </div>
 
                             <div className="w-full inline-flex flex-col pb-8 items-start gap-2 cursor-pointer" onClick={() => navigate(-1)}>
-                                <h1 className="text-black font-medium text-xl">Startup Title</h1>
-                                <p className="text-sm text-neutral-500 font-medium">I am here</p>
+                                <h1 className="text-black font-medium text-xl">{deal?.title}</h1>
+                                <p className="text-sm text-neutral-500 font-medium">{deal?.description}</p>
                             </div>
 
                             <div className="inline-flex justify-between w-full mb-4" onClick={() => {
-                                window.open("https://i.insider.com/638a2fb0edf6e10018e876f8?width=700&format=jpeg&auto=webp", "_blank");
+                                window.open(selectedDocs?.url, "_blank");
                             }}>
-                                <h1 className="text-black font-medium text-2xl">Deck</h1>
-                                <Button type="outlined">Open in New Tab</Button>
+                                <h1 className="text-black font-medium text-2xl">{selectedDocs?.name}</h1>
+                                <Button type="outlined">{language?.v3?.button?.new_tab}</Button>
                             </div>
 
-                            {/* If PDF */}
-                            {/* <section className="w-full h-[500px] rounded-[8px] overflow-hidden border-[1px] border-neutral-200 bg-cbc-grey-sec p-4">
-                                <div className="bg-white w-full h-16 inline-flex items-center px-4 border-b-[1px] border-b-neutral-200">
-                                    <Chevrond onClick={() => { }} className={`mr-3 h-8 w-8 rotate-90 ${docs.length > 1 ? "cursor-pointer" : "cursor-not-allowed"}`} stroke="#404040" />
+                            {/* If Image or PDF */}
+                            {selectedDocs?.attachment_kind === FileType.IMAGE ? (
+                                <section className="h-[500px] rounded-[8px] overflow-hidden border-[1px] border-neutral-200 relative">
+                                    <div className="bg-white w-full h-16 inline-flex items-center px-4 border-b-[1px] border-b-neutral-200">
+                                        <Zoomin onClick={zoomin} className="cursor-pointer mr-3" />
 
-                                    <hr className="w-[1px] h-full bg-neutral-200" />
-                                    <Chevrond onClick={() => { }} className={`mx-3 h-8 w-8 rotate-[-90deg] ${docs.length > 1 ? "cursor-pointer" : "cursor-not-allowed"}`} stroke="#404040" />
+                                        <hr className="w-[1px] h-full bg-neutral-200" />
+                                        <Zoomout onClick={zoomout} className="cursor-pointer mx-3" />
 
-                                    <hr className="w-[1px] h-full bg-neutral-200" />
+                                        <hr className="w-[1px] h-full bg-neutral-200" />
+                                        <Chevrond onClick={() => onTo("--")} className={`mx-3 h-8 w-8 rotate-90 ${deal?.docs?.length > 1 ? "cursor-pointer" : "cursor-not-allowed"}`} stroke="#404040" />
 
-                                </div>
-                                <embed src={selectedDocs} className="w-full h-full" />
-                            </section> */}
+                                        <hr className="w-[1px] h-full bg-neutral-200" />
+                                        <Chevrond onClick={() => onTo("++")} className={`mx-3 h-8 w-8 rotate-[-90deg] ${deal?.docs?.length > 1 ? "cursor-pointer" : "cursor-not-allowed"}`} stroke="#404040" />
 
-                            {/* If Image */}
-                            <section className="h-[500px] rounded-[8px] overflow-hidden border-[1px] border-neutral-200">
-                                <div className="bg-white w-full h-16 inline-flex items-center px-4 border-b-[1px] border-b-neutral-200">
-                                    <Zoomin onClick={zoomin} className="cursor-pointer mr-3" />
+                                        <hr className="w-[1px] h-full bg-neutral-200" />
+                                    </div>
+                                    <aside className="w-full overflow-y-auto bg-cbc-grey-sec p-4" style={{ height: "calc(100% - 60px)" }}>
+                                        {fileLoading ? (
+                                            <div className="absolute left-0 top-0 w-full h-full grid place-items-center" style={{ backgroundColor: "rgba(255, 255, 255, 1)", zIndex: 50 }} >
+                                                <Spinner />
+                                            </div>
+                                        ) : (
+                                            <img src={selectedDocs?.url} alt={selectedDocs?.name} id="deal-file" className="bg-white mx-auto" style={{ maxWidth: "unset" }} />
+                                        )}
+                                    </aside>
+                                </section>
+                            ) : (
+                                <section className="w-full h-[500px] rounded-[8px] overflow-hidden border-[1px] border-neutral-200 bg-cbc-grey-sec p-4 relative">
+                                    <div className="bg-white w-full h-16 inline-flex items-center px-4 border-b-[1px] border-b-neutral-200">
+                                        <Chevrond onClick={() => onTo("--")} className={`mr-3 h-8 w-8 rotate-90 ${deal?.docs?.length > 1 ? "cursor-pointer" : "cursor-not-allowed"}`} stroke="#404040" />
 
-                                    <hr className="w-[1px] h-full bg-neutral-200" />
-                                    <Zoomout onClick={zoomout} className="cursor-pointer mx-3" />
+                                        <hr className="w-[1px] h-full bg-neutral-200" />
+                                        <Chevrond onClick={() => onTo("++")} className={`mx-3 h-8 w-8 rotate-[-90deg] ${deal?.docs?.length > 1 ? "cursor-pointer" : "cursor-not-allowed"}`} stroke="#404040" />
 
-                                    <hr className="w-[1px] h-full bg-neutral-200" />
-                                    <Chevrond onClick={() => { }} className={`mx-3 h-8 w-8 rotate-90 ${docs.length > 1 ? "cursor-pointer" : "cursor-not-allowed"}`} stroke="#404040" />
+                                        <hr className="w-[1px] h-full bg-neutral-200" />
 
-                                    <hr className="w-[1px] h-full bg-neutral-200" />
-                                    <Chevrond onClick={() => { }} className={`mx-3 h-8 w-8 rotate-[-90deg] ${docs.length > 1 ? "cursor-pointer" : "cursor-not-allowed"}`} stroke="#404040" />
-
-                                    <hr className="w-[1px] h-full bg-neutral-200" />
-
-                                </div>
-                                <aside className="w-full overflow-y-auto bg-cbc-grey-sec p-4" style={{ height: "calc(100% - 60px)" }}>
-                                    <img src="https://i.insider.com/638a2fb0edf6e10018e876f8?width=700&format=jpeg&auto=webp" id="deal-image" alt="" className="bg-white mx-auto" style={{ maxWidth: "unset" }} />
-                                </aside>
-                            </section>
+                                    </div>
+                                    {fileLoading ? (
+                                        <div className="absolute left-0 top-0 w-full h-full grid place-items-center" style={{ backgroundColor: "rgba(255, 255, 255, 1)", zIndex: 50 }} >
+                                            <Spinner />
+                                        </div>
+                                    ) : (
+                                        <embed src={selectedDocs?.url} className="w-full h-full" id="deal-file" />
+                                    )}
+                                </section>
+                            )}
 
                             <div className="inline-flex justify-between w-full my-10">
-                                <h1 className="text-black font-medium text-2xl">Risk & Disclaimers</h1>
+                                <h1 className="text-black font-medium text-2xl">{language?.v3?.common?.risk_disc}</h1>
                                 <p className="text-sm font-medium"></p>
                             </div>
 
-                            <Button className="w-full">Approve</Button>
+                            <Button className="w-full">{language?.v3?.button?.app}</Button>
                         </section>
 
                         {/* Invisible Section */}
@@ -217,12 +354,16 @@ const SyndicateDealOverview = ({ }: any) => {
                         {/* Section Right */}
                         <section className="w-[30%]">
                             {/* Show/Hide based on some conditions */}
-
                             <div className="w-full inline-flex justify-end gap-4">
-                                <Button type="outlined" onClick={() => setModalOpen(true)}>Request Changes</Button>
-                                <Button>Interested</Button>
+                                <Button type="outlined" onClick={() => setModalOpen(true)}>{language?.v3?.button?.req_change}</Button>
+                                <Button>{language?.v3?.button?.interested}</Button>
                             </div>
 
+                            {/* {(deal?.invite && deal?.invite?.status !== DealStatus.ACCEPTED) && <div className="w-full inline-flex justify-end gap-4">
+                                <Button type="outlined" onClick={() => setModalOpen(true)}>{language?.v3?.button?.req_change}</Button>
+                                <Button>{language?.v3?.button?.interested}</Button>
+                            </div>
+                            } */}
                             {/* <div className="w-full inline-flex justify-end gap-4">
                                 <Button suffix={<Chevrond stroke="#fff" />} onClick={() => setShowInviteSyndicate(!showInviteSyndicate)}>Share Deal</Button>
                                 <div className="relative z-10">
@@ -243,18 +384,10 @@ const SyndicateDealOverview = ({ }: any) => {
                                     </div>
                                 </div> */}
 
-                                <h2 className="text-neutral-700 text-xl font-medium">Investment Details</h2>
-                                <small className="text-neutral-500 text-sm font-normal">Minimum is $2500  Invest by Oct 2</small>
+                                <h2 className="text-neutral-700 text-xl font-medium">{language?.v3?.common?.invest_details}</h2>
+                                <small className="text-neutral-500 text-sm font-normal">{language?.v3?.common?.end_on} {formatDate(deal?.end_at)}</small>
 
-                                <span className="w-full inline-flex justify-between items-center border-b-[1px] border-b-neutral-200 py-3 mt-8">
-                                    <h3>Instrument Type</h3>
-                                    <small>Equity</small>
-                                </span>
-
-                                <span className="w-full inline-flex justify-between items-center border-b-[1px] border-b-neutral-200 mt-6">
-                                    <h3>Instrument Type</h3>
-                                    <small>Equity</small>
-                                </span>
+                                {getRoleBasedUI()}
                             </aside>
 
                             <aside className="border-[1px] border-neutral-200 rounded-md w-full p-3 mt-5 inline-flex items-center gap-3">
@@ -263,27 +396,42 @@ const SyndicateDealOverview = ({ }: any) => {
                                 </div>
 
                                 <div>
-                                    <h2 className="text-neutral-900 font-normal text-sm">Amount Raised</h2>
-                                    <p className="text-black font-medium text-lg">${numberFormatter(250000)}</p>
+                                    <h2 className="text-neutral-900 font-normal text-sm">{language?.v3?.common?.am_raised}</h2>
+                                    <p className="text-black font-medium text-lg">${numberFormatter(deal?.raised)}</p>
                                 </div>
                             </aside>
 
-                            <aside className="border-[1px] border-neutral-200 rounded-md w-full p-3 mt-5 bg-cbc-check">
-                                <section className="rounded-md bg-white px-3 py-1 inline-flex items-center justify-between w-full border-[1px] border-neutral-200">
-                                    <span className="inline-flex items-center">
-                                        <div className="bg-white w-14 h-14 inline-flex justify-center flex-col w-full">
-                                            <h4 className="inline-flex items-center gap-3 max-w-[200px] cursor-pointer" onClick={() => setModalOpen({ url: "", open: true, type: "" })}>
-                                                <div className="text-sm text-black font-medium ">View Doc</div>
-                                                <ArrowIcon stroke="#000" />
-                                            </h4>
-                                            <h2 className="text-sm font-medium text-neutral-500 max-w-xl truncate" title={"doc?.name"}>{"doc?.name"}</h2>
-                                        </div>
-                                    </span>
+                            <aside className="border-[1px] border-neutral-200 rounded-md w-full p-3 mt-5 bg-cbc-check max-h-[400px] overflow-y-auto no-scrollbar mb-4">
+                                {React.Children.toArray(
+                                    deal?.docs?.map((doc: any) => {
+                                        return (
+                                            <section className="rounded-md bg-white px-3 py-1 inline-flex items-center justify-between w-full border-[1px] border-neutral-200 mb-2">
+                                                <span className="inline-flex items-center w-[80%]">
+                                                    <div className="bg-white w-14 h-14 inline-flex justify-center flex-col w-full">
+                                                        <h4 className="inline-flex items-center gap-3 max-w-[200px] cursor-pointer" onClick={() => {
+                                                            window.open(doc?.url, "_blank");
+                                                        }}>
+                                                            <div className="text-sm text-black font-medium ">{language?.v3?.button?.view}</div>
+                                                            <ArrowIcon stroke="#000" />
+                                                        </h4>
+                                                        <h2 className="text-sm font-medium text-neutral-500 max-w-full truncate" title={doc?.name}>{doc?.name}</h2>
+                                                    </div>
+                                                </span>
 
-                                    <div className="h-10 w-10 rounded-lg inline-flex items-center flex-row justify-center gap-2 bg-white cursor-pointer border-[1px] border-neutral-200">
-                                        <DownloadIcon />
-                                    </div>
-                                </section>
+                                                <div className="h-10 w-10 rounded-lg inline-flex items-center flex-row justify-center gap-2 bg-white cursor-pointer border-[1px] border-neutral-200" onClick={() => {
+                                                    const downloadLink = document.createElement('a');
+                                                    downloadLink.href = doc?.url
+                                                    downloadLink.target = "_blank"
+                                                    downloadLink.download = doc?.name;
+                                                    downloadLink.click();
+                                                    downloadLink.remove();
+                                                }}>
+                                                    <DownloadIcon />
+                                                </div>
+                                            </section>
+                                        )
+                                    })
+                                )}
                             </aside>
                         </section>
                     </section>
@@ -330,23 +478,28 @@ const SyndicateDealOverview = ({ }: any) => {
                             </div>
                             <div className="mb-3 w-full">
                                 {React.Children.toArray(
-                                    files?.map((doc:any) => {
-                                        return(
+                                    files?.map((doc: any) => {
+                                        return (
                                             <section className="rounded-md bg-cbc-grey-sec px-1 py-2 inline-flex items-center justify-between border-[1px] border-neutral-200 w-full">
-                                            <span className="inline-flex items-center">
-                                                <div className="rounded-[7px] bg-white shadow shadow-cs-3 w-14 h-14 inline-grid place-items-center">
-                                                    <img src={FileSVG} alt="File" />
-                                                </div>
-                                                <span className="inline-flex flex-col items-start ml-3">
-                                                    <h2 className="text-sm font-medium text-neutral-900 max-w-[150px] truncate" title={doc?.file?.name}>{doc?.file?.name}</h2>
+                                                <span className="inline-flex items-center">
+                                                    <div className="rounded-[7px] bg-white shadow shadow-cs-3 w-14 h-14 inline-grid place-items-center">
+                                                        <img src={FileSVG} alt="File" />
+                                                    </div>
+                                                    <span className="inline-flex flex-col items-start ml-3">
+                                                        <h2 className="text-sm font-medium text-neutral-900 max-w-[150px] truncate" title={doc?.file?.name}>{doc?.file?.name}</h2>
+                                                    </span>
                                                 </span>
-                                            </span>
-                
-                                               <small>{doc?.size} MB</small>
-                                            <div className="rounded-lg w-8 h-8 inline-flex items-center flex-row justify-center gap-2 bg-white cursor-pointer" onClick={() => setModalOpen({ url: doc.url, open: true, type: doc?.attachment_kind })}>
-                                                <BinIcon stroke="#404040" />
-                                            </div>
-                                        </section>
+
+                                                <small>{doc?.size} MB</small>
+                                                <div className="rounded-lg w-8 h-8 inline-flex items-center flex-row justify-center gap-2 bg-white cursor-pointer" onClick={() => {
+                                                    setFiles((pr: any) => {
+                                                        let files = pr.filter((p: any) => p.id !== doc.id);
+                                                        return files;
+                                                    })
+                                                }}>
+                                                    <BinIcon stroke="#404040" />
+                                                </div>
+                                            </section>
                                         )
                                     })
                                 )}
@@ -354,12 +507,12 @@ const SyndicateDealOverview = ({ }: any) => {
                         </section>
 
                         <footer className="w-full inline-flex justify-between gap-3 py-2 px-3 w-full">
-                            <Button className="w-full !py-1" divStyle="flex items-center justify-center w-full" onClick={() => { }}>Submit</Button>
+                            <Button disabled={!changes.comment && !files.length} className="w-full !py-1" divStyle="flex items-center justify-center w-full" onClick={() => onAddCommentOnDeal()}>{language.buttons.submit}</Button>
                         </footer>
                     </aside>
                 </div>
             </Modal>
-        </main>
+        </main >
     );
 };
 export default SyndicateDealOverview;

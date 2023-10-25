@@ -785,7 +785,11 @@
             "submitted_message": "Please wait while our customer support officer review your submitted deal",
             "accept": "I agree",
             "not_added": "N/A",
-            "investments": "Investments"
+            "investments": "Investments",
+            "risk_disc": "Risk & Disclaimers",
+            "invest_details": "Investment Details",
+            "end_on": "Ends On",
+            "am_raised": "Amount Raised"
         },
         "button": {
             "new_deal": "Create New Deal",
@@ -798,7 +802,12 @@
             "copy_link_success": "Link has been copied",
             "close": "Close",
             "seeMore": "See More",
-            "seeLess": "See Less"
+            "seeLess": "See Less",
+            "new_tab": "Open in New Tab",
+            "app": "Approve",
+            "req_change":"Request Changes",
+            "interested":"Interested",
+            "view":"View Doc"
         },
         "syndicate":{
             "table":{
