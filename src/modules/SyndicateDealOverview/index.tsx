@@ -18,7 +18,7 @@ import Zoomout from "../../ts-icons/ZoomoutIcon.svg";
 import CurrencySVG from "../../assets/svg/currency.svg";
 import { comaFormattedNumber, formatDate, numberFormatter } from "../../utils/object.utils";
 import { fileSize, handleFileRead } from "../../utils/files.utils";
-import { DealStatus, FileType } from "../../enums/types.enum";
+import { FileType } from "../../enums/types.enum";
 import FileSVG from "../../assets/svg/file.svg";
 import BinIcon from "../../ts-icons/binIcon.svg";
 import { addCommentOnDeal, getDealDetail } from "../../apis/deal.api";
@@ -67,8 +67,8 @@ const SyndicateDealOverview = ({ }: any) => {
             const reader = new FileReader();
             reader.readAsDataURL(file);
         }
-
-        doUploadUtil(file, size, type);
+        const fileData: any = await handleFileRead(file);
+        doUploadUtil(fileData, size, type);
         setLoading(false);
     };
 
@@ -140,10 +140,8 @@ const SyndicateDealOverview = ({ }: any) => {
     };
 
     const onAddCommentOnDeal = async () => {
-        console.log(files);
-
         try {
-            // setLoading(true);
+            setLoading(true);
             let allFiles = files.map((file: any) => file.file);
 
             let payload = {
@@ -161,6 +159,7 @@ const SyndicateDealOverview = ({ }: any) => {
         } finally {
             setLoading(false);
             setChanges({ comment: "", action: "", document: null });
+            setFiles([]);
         }
     };
 
@@ -446,6 +445,7 @@ const SyndicateDealOverview = ({ }: any) => {
                             <div className="bg-white h-8 w-8 border-[1px] border-black rounded-md shadow shadow-cs-6 p-1 cursor-pointer" onClick={() => {
                                 setModalOpen(false);
                                 setChanges({ comment: "", action: "", document: null })
+                                setFiles([]);
                             }}>
                                 <CrossIcon stroke="#000" />
                             </div>
@@ -507,7 +507,7 @@ const SyndicateDealOverview = ({ }: any) => {
                         </section>
 
                         <footer className="w-full inline-flex justify-between gap-3 py-2 px-3 w-full">
-                            <Button disabled={!changes.comment && !files.length} className="w-full !py-1" divStyle="flex items-center justify-center w-full" onClick={() => onAddCommentOnDeal()}>{language.buttons.submit}</Button>
+                            <Button disabled={!changes.comment || !files.length} className="w-full !py-1" divStyle="flex items-center justify-center w-full" onClick={() => onAddCommentOnDeal()}>{language.buttons.submit}</Button>
                         </footer>
                     </aside>
                 </div>
