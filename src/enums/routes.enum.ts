@@ -1,4 +1,10 @@
 export enum RoutesEnums {
+    OVERVIEW = "/overview",
+    INVESTOR_UPDATES = "/investor-updates",
+    DATA_ROOMS = "/data-rooms",
+    MARKET_INSIGHTS = "/market-insights",
+    CONTACTS = "/contacts",
+    CREATE_DEAL = "/create-deal",
     INVESTOR_DETAILS = "/investor-onboarding",
     REALTOR_DETAILS = "/realtor-onboarding",
     STARTUP_DETAILS = "/startup-onboarding",
@@ -26,10 +32,5 @@ export enum RoutesEnums {
 }
 
 export enum StartupRoutes {
-    OVERVIEW = "/overview",
-    INVESTOR_UPDATES = "/investor-updates",
-    DATA_ROOMS = "/data-rooms",
-    MARKET_INSIGHTS = "/market-insights",
-    CONTACTS = "/contacts",
-    CREATE_DEAL = "/create-deal",
+    
 }

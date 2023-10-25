@@ -20,6 +20,7 @@ import { saveToken } from "../../redux-toolkit/slicer/auth.slicer";
 import { ApplicationStatus } from "../../enums/types.enum";
 import Chevrond from "../../ts-icons/chevrond.svg";
 import EditIcon from "../../ts-icons/editIcon.svg";
+import CustomStatus from '../../shared/components/CustomStatus';
 
 
 const Startup = ({ }: any) => {
@@ -56,7 +57,7 @@ const Startup = ({ }: any) => {
                         [language?.v3?.table?.target]: `$${numberFormatter(Number(deal?.target))}`,
                         [language?.v3?.table?.stage]: deal?.title || "N/A",
                         [language?.v3?.table?.round]: deal?.round,
-                        [language?.v3?.table?.status]: deal?.status,
+                        [language?.v3?.table?.status]: <CustomStatus options={deal?.status}/>,
                         [language?.v3?.table?.type]: deal?.instrument_type,
                         State: deal?.current_state,
                         [language?.v3?.table?.valuation]: `$${numberFormatter(Number(deal?.valuation))} ${language?.v3?.deal?.valuation}`,
@@ -257,7 +258,7 @@ const Startup = ({ }: any) => {
                             </div>
                             <div className="w-full inline-flex items-center justify-center gap-3 mt-10">
                                 <Button className="w-[100px] bg-transparent border-cyan-800 border-[1px]" type={"outlined"} onClick={() => setModalOpen(null)}>{language?.v3?.button?.cancel}</Button>
-                                <Button className="w-[100px]" disabled={!dummyDisclaimers.d1 || !dummyDisclaimers.d2 || !dummyDisclaimers.d3} onClick={() => navigate(`${StartupRoutes.CREATE_DEAL}/1`)}>{language?.buttons?.continue}</Button>
+                                <Button className="w-[100px]" disabled={!dummyDisclaimers.d1 || !dummyDisclaimers.d2 || !dummyDisclaimers.d3} onClick={() => navigate(`${RoutesEnums.CREATE_DEAL}/1`)}>{language?.buttons?.continue}</Button>
                             </div>
                         </aside>
                     </div>

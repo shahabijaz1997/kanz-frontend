@@ -10,6 +10,7 @@ import { numberFormatter } from "../../../utils/object.utils";
 import Button from "../../../shared/components/Button";
 import { saveToken } from "../../../redux-toolkit/slicer/auth.slicer";
 import { RoutesEnums } from "../../../enums/routes.enum";
+import CustomStatus from '../../../shared/components/CustomStatus';
 
 const InvitedSyndicates = ({id }: any) => {
     const navigate = useNavigate();
@@ -38,7 +39,7 @@ const InvitedSyndicates = ({id }: any) => {
                         [language?.v3?.table?.target]: `$${numberFormatter(Number(deal?.target))}`,
                         [language?.v3?.table?.stage]: deal?.title || "N/A",
                         [language?.v3?.table?.round]: deal?.round,
-                        [language?.v3?.table?.status]: deal?.status,
+                        [language?.v3?.table?.status]: <CustomStatus options={deal?.status} /> ,
                         [language?.v3?.table?.type]: deal?.instrument_type,
                         Stage: deal?.current_stage,
                         Action: <Button divStyle='items-center justify-end' type='outlined' className='!p-3 !py-1 !rounded-full' onClick={() => {

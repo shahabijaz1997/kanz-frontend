@@ -3,7 +3,7 @@ import { useSelector } from "react-redux";
 import { RootState } from "../../../redux-toolkit/store/store";
 import { useLocation, useNavigate } from "react-router-dom";
 import { KanzRoles } from "../../../enums/roles.enum";
-import { RoutesEnums, StartupRoutes } from "../../../enums/routes.enum";
+import { RoutesEnums } from "../../../enums/routes.enum";
 import BagIcon from "../../../ts-icons/bagIcon.svg";
 
 const Sidebar = ({ type }: any) => {
@@ -13,10 +13,10 @@ const Sidebar = ({ type }: any) => {
     const orientation: any = useSelector((state: RootState) => state.orientation.value);
     const DASHBOARD_ITEMS = [
         { id: 1, title: language?.v3?.startup?.sidebar?.overview, route: `/${type.toLowerCase()}` },
-        { id: 2, title: language?.v3?.startup?.sidebar?.investor_updates, route: StartupRoutes.INVESTOR_UPDATES },
-        { id: 3, title: language?.v3?.startup?.sidebar?.data_rooms, route: StartupRoutes.DATA_ROOMS },
-        { id: 4, title: language?.v3?.startup?.sidebar?.market_insights, route: StartupRoutes.MARKET_INSIGHTS },
-        { id: 5, title: language?.v3?.startup?.sidebar?.contacts, route: StartupRoutes.CONTACTS }
+        { id: 2, title: language?.v3?.startup?.sidebar?.investor_updates, route: '/' /* RoutesEnums.INVESTOR_UPDATES  */},
+        { id: 3, title: language?.v3?.startup?.sidebar?.data_rooms, route:'/' /*  RoutesEnums.DATA_ROOMS */ },
+        { id: 4, title: language?.v3?.startup?.sidebar?.market_insights, route:'/' /* RoutesEnums.MARKET_INSIGHTS */ },
+        { id: 5, title: language?.v3?.startup?.sidebar?.contacts, route:'/' /* RoutesEnums.CONTACTS */ }
     ]
     const [sidebarData, setSidebarData]: any = useState();
     const [selected, setSelected]: any = useState();
@@ -30,8 +30,7 @@ const Sidebar = ({ type }: any) => {
         switch (type) {
             case KanzRoles.STARTUP:
                 setSidebarData({
-                    title: language?.v3?.startup?.sidebar?.sidebar_title, icon: <BagIcon />, items: [
-                        { id: 1, title: language?.v3?.startup?.sidebar?.syndicate_requests, route: RoutesEnums.DEAL_SYNDICATE_REQUESTS }]
+                    title: language?.v3?.startup?.sidebar?.sidebar_title, icon: <BagIcon />, items: [...DASHBOARD_ITEMS, { id: 6, title: language?.v3?.startup?.sidebar?.syndicate_requests, route: RoutesEnums.DEAL_SYNDICATE_REQUESTS } ]
                 });
                 route = DASHBOARD_ITEMS.find(it => it.route === pathname);
                 setSelected(route);

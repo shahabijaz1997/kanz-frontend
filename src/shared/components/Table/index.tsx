@@ -52,7 +52,7 @@ const Table = ({ columns, data, noDataNode, onclick, pagination, paginate }: any
                                                     </td>
                                                 ) : (
                                                     <td className={`px-3 h-10 text-sm font-medium text-gray-800 whitespace-nowrap max-w-[150px] truncate ${index === columns.length - 1 && `text-right`} }`}>
-                                                        {column === "Status" ? <aside className="capitalize bg-green-100 rounded-xl text-center py-[2px] w-[80px] text-green-800">{row[column]}</aside> : row[column]}
+                                                            {row[column]}
                                                     </td>
                                                 )
                                             ))

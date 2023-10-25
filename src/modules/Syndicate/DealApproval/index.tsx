@@ -17,6 +17,7 @@ import { comaFormattedNumber, numberFormatter } from "../../../utils/object.util
 import Spinner from "../../../shared/components/Spinner";
 import { ApplicationStatus } from "../../../enums/types.enum";
 import Chevrond from "../../../ts-icons/chevrond.svg";
+import CustomStatus from '../../../shared/components/CustomStatus';
 
 
 const DealApproval = ({ }: any) => {
@@ -56,7 +57,7 @@ const [pagination, setPagination] = useState({ items_per_page: 10, total_items: 
                         id: deal?.id,
                         [language?.v3?.syndicate?.deals?.table?.title]: deal?.deal?.title || "N/A",
                         [language?.v3?.syndicate?.deals?.table?.category]: <span className='capitalize'>{deal?.deal?.type}</span> ,
-                        [language?.v3?.syndicate?.deals?.table?.status]: deal?.status || "N/A",
+                        [language?.v3?.syndicate?.deals?.table?.status]: <CustomStatus options={deal?.status}/> || "N/A",
                         [language?.v3?.syndicate?.deals?.table?.end_date]: deal?.deal?.end_at || " N/A",
                         [language?.v3?.syndicate?.deals?.table?.target]:  `$${numberFormatter(Number(deal?.deal?.target))}`,
 
@@ -229,7 +230,7 @@ const [pagination, setPagination] = useState({ items_per_page: 10, total_items: 
                             </div>
                             <div className="w-full inline-flex items-center justify-center gap-3 mt-10">
                                 <Button className="w-[100px] bg-transparent border-cyan-800 border-[1px]" type={"outlined"} onClick={() => setModalOpen(null)}>{language?.v3?.button?.cancel}</Button>
-                                <Button className="w-[100px]" disabled={!dummyDisclaimers.d1 || !dummyDisclaimers.d2 || !dummyDisclaimers.d3} onClick={() => navigate(`${StartupRoutes.CREATE_DEAL}/1`)}>{language?.buttons?.continue}</Button>
+                                <Button className="w-[100px]" disabled={!dummyDisclaimers.d1 || !dummyDisclaimers.d2 || !dummyDisclaimers.d3} onClick={() => navigate(`${RoutesEnums.CREATE_DEAL}/1`)}>{language?.buttons?.continue}</Button>
                             </div>
                         </aside>
                     </div>

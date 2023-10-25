@@ -803,9 +803,11 @@
         "syndicate":{
             "table":{
                 "title": "Syndicate",
-                "dealflow":"Deal Flow",
-                "raising_ventures": "Raising Ventures Fund",
-                "action": "Action"
+                "deal_title":"Deal",
+                "comments": "Comments",
+                "status": "Status",
+                "documents": "Documents",
+                "view":"View"
             },
             "deals":{
                 "table":{

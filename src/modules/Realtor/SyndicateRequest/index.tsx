@@ -9,15 +9,15 @@ import SearchIcon from "../../../ts-icons/searchIcon.svg";
 import Spinner from "../../../shared/components/Spinner";
 import Button from "../../../shared/components/Button";
 import Table from "../../../shared/components/Table";
-import { RoutesEnums, StartupRoutes } from "../../../enums/routes.enum";
+import { RoutesEnums } from "../../../enums/routes.enum";
 import Modal from "../../../shared/components/Modal";
 import CrossIcon from "../../../ts-icons/crossIcon.svg";
 import { saveDataHolder } from "../../../redux-toolkit/slicer/dataHolder.slicer";
-import { getDealSyndicates } from "../../../apis/deal.api";
 import {getInvitedSyndicates} from "../../../apis/syndicate.api"
-import { numberFormatter } from "../../../utils/object.utils";
 import { saveToken } from "../../../redux-toolkit/slicer/auth.slicer";
 import { ApplicationStatus } from "../../../enums/types.enum";
+import Chevrond from "../../../ts-icons/chevrond.svg";
+import CustomStatus from '../../../shared/components/CustomStatus';
 
 
 const SyndicateRequest = ({ }: any) => {
@@ -28,7 +28,7 @@ const SyndicateRequest = ({ }: any) => {
     const authToken: any = useSelector((state: RootState) => state.auth.value);
     const user: any = useSelector((state: RootState) => state.user.value);
 
-    const columns = [language?.v3?.syndicate?.table?.title, language?.v3?.syndicate?.table?.dealflow, language?.v3?.syndicate?.table?.raising_ventures, language?.v3?.syndicate?.table?.action];
+    const columns = [language?.v3?.syndicate?.table?.title, language?.v3?.syndicate?.table?.deal_title, language?.v3?.syndicate?.table?.status, language?.v3?.syndicate?.table?.comments,language?.v3?.syndicate?.table?.documents,language?.v3?.syndicate?.table?.view];
     const [pagination, setPagination] = useState({ items_per_page: 5, total_items: [], current_page: 1, total_pages: 0 });
     const [modalOpen, setModalOpen]: any = useState(null);
     const [loading, setLoading] = useState(false);
@@ -46,37 +46,28 @@ const SyndicateRequest = ({ }: any) => {
             setLoading(true);
             let { status, data } = await getInvitedSyndicates(user.id,authToken);
             if (status === 200) {
-                let syndicates = data?.status?.data?.map((deal: any) => {
+                let syndicates = data?.status?.data?.map((syndicate: any) => {
                     return {
-                        id: deal?.id,
-                        [language?.v3?.syndicate?.table?.title]: deal?.invitee?.name,
-                        [language?.v3?.table?.target]: `$${numberFormatter(Number(deal?.target))}`,
-                        [language?.v3?.table?.stage]: deal?.title || "N/A",
-                        [language?.v3?.table?.round]: deal?.round,
-                        [language?.v3?.table?.status]: deal?.status,
-                        [language?.v3?.table?.type]: deal?.instrument_type,
-                        Stage: deal?.current_stage,
-                        Action: <Button divStyle='items-center justify-end' type='outlined' className='!p-3 !py-1 !rounded-full' onClick={() => {
-                            handleApprove(deal?.id)
-                        }}>{'M'}</Button>
+                        id: syndicate?.id,
+                        [language?.v3?.syndicate?.table?.title]: syndicate?.invitee?.name,
+                        [language?.v3?.syndicate?.table?.deal_title]: syndicate?.deal?.title || 'N/A',
+                        [language?.v3?.table?.stage]: syndicate?.title || "N/A",
+                        [language?.v3?.syndicate?.table?.status]: <CustomStatus options={syndicate?.status}/>,
+                        [language?.v3?.syndicate?.table?.comments]: syndicate?.comments,
+                        [language?.v3?.syndicate?.table?.documents]: syndicate?.documents,
+                        [language?.v3?.syndicate?.table?.view]: <div onClick={(e) => {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            navigate(`${RoutesEnums.SYNDICATE_DEAL_DETAIL}/${syndicate?.deal?.id}`, { state: KanzRoles.SYNDICATE })
+                        }}
+                            className="bg-neutral-100 inline-flex items-center justify-center w-[30px] h-[30px] rounded-full transition-all hover:bg-cbc-transparent">
+                            <Chevrond className="rotate-[-90deg] w-6 h-6" stroke={"#737373"} />
+                        </div>,
                         
+
+
                     }
                 });
-
-                const handleApprove = function(dealId:any) {
-                
-                    setDeals((prev: any) => {
-                        const updatedDeals = prev.map((deal: any) => {
-                            if (deal?.id === dealId) {
-                                return { ...deal, Status: 'Approved' };
-                            }
-                            return deal;
-                        });
-                        return updatedDeals;
-                    }
-                        
-            )}
-
                 setPagination(prev => {
                     return { ...prev, total_items: syndicates.length, current_page: 1, total_pages: Math.ceil(syndicates.length / prev.items_per_page), data: syndicates?.slice(0, prev.items_per_page) }
                 });
@@ -145,7 +136,7 @@ const SyndicateRequest = ({ }: any) => {
                                 <Table columns={columns} pagination={pagination} paginate={paginate} onclick={(row: any) => {
                                     if (row?.Status !== ApplicationStatus.SUBMITTED) {
                                         dispatch(saveDataHolder(row.id));
-                                        navigate(`/create-deal/${row?.State?.current_step + 2}`);
+                                        navigate(`/create-syndicate/${row?.State?.current_step + 2}`);
                                     }
                                     else setModalOpen("2");
                                 }} noDataNode={<span className="absolute left-1/2 top-1/2 translate-x-[-50%] translate-y-[-50%]">No Data</span>} />
@@ -241,7 +232,7 @@ const SyndicateRequest = ({ }: any) => {
                             </div>
                             <div className="w-full inline-flex items-center justify-center gap-3 mt-10">
                                 <Button className="w-[100px] bg-transparent border-cyan-800 border-[1px]" type={"outlined"} onClick={() => setModalOpen(null)}>{language?.v3?.button?.cancel}</Button>
-                                <Button className="w-[100px]" disabled={!dummyDisclaimers.d1 || !dummyDisclaimers.d2 || !dummyDisclaimers.d3} onClick={() => navigate(`${StartupRoutes.CREATE_DEAL}/1`)}>{language?.buttons?.continue}</Button>
+                                <Button className="w-[100px]" disabled={!dummyDisclaimers.d1 || !dummyDisclaimers.d2 || !dummyDisclaimers.d3} onClick={() => navigate(`${RoutesEnums.CREATE_DEAL}/1`)}>{language?.buttons?.continue}</Button>
                             </div>
                         </aside>
                     </div>

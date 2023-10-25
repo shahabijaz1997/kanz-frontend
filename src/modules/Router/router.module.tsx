@@ -234,7 +234,7 @@ const RouterModule = () => {
               </CHECK_LOGGED_IN>
             </Suspense>
           } />
-        <Route path={`${StartupRoutes.CREATE_DEAL}/:id`}
+        <Route path={`${RoutesEnums.CREATE_DEAL}/:id`}
           element={
             <Suspense fallback={<Loader />}>
               <CHECK_LOGGED_IN>
@@ -314,7 +314,7 @@ const RouterModule = () => {
         {.##..............................................................................................................................................................................................................##......
         {*/ }
 
-        <Route path={`${StartupRoutes.INVESTOR_UPDATES}`}
+        <Route path={`${RoutesEnums.INVESTOR_UPDATES}`}
           element={
             <Suspense fallback={<Loader />}>
               <CHECK_LOGGED_IN>
@@ -323,7 +323,7 @@ const RouterModule = () => {
             </Suspense>
           } />
 
-        <Route path={`${StartupRoutes.DATA_ROOMS}`}
+        <Route path={`${RoutesEnums.DATA_ROOMS}`}
           element={
             <Suspense fallback={<Loader />}>
               <CHECK_LOGGED_IN>
@@ -332,7 +332,7 @@ const RouterModule = () => {
             </Suspense>
           } />
 
-        <Route path={`${StartupRoutes.CONTACTS}`}
+        <Route path={`${RoutesEnums.CONTACTS}`}
           element={
             <Suspense fallback={<Loader />}>
               <CHECK_LOGGED_IN>
@@ -340,7 +340,7 @@ const RouterModule = () => {
               </CHECK_LOGGED_IN>
             </Suspense>
           } />
-        <Route path={`${StartupRoutes.MARKET_INSIGHTS}`}
+        <Route path={`${RoutesEnums.MARKET_INSIGHTS}`}
           element={
             <Suspense fallback={<Loader />}>
               <CHECK_LOGGED_IN>
