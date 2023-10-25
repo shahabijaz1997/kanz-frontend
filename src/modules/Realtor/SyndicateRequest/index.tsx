@@ -19,8 +19,13 @@ import { ApplicationStatus } from "../../../enums/types.enum";
 import Chevrond from "../../../ts-icons/chevrond.svg";
 import CustomStatus from "../../../shared/components/CustomStatus";
 import Drawer from "../../../shared/components/Drawer";
+import UploadIcon from "../../../ts-icons/uploadIcon.svg";
 import ArrowIcon from "../../../ts-icons/arrowIcon.svg";
 import DownloadIcon from "../../../ts-icons/downloadIcon.svg";
+import BinIcon from "../../../ts-icons/binIcon.svg";
+import FileSVG from "../../../assets/svg/file.svg";
+import { fileSize, handleFileRead } from "../../../utils/files.utils";
+import { FileType } from "../../../enums/types.enum";
 
 const SyndicateRequest = ({}: any) => {
   const navigate = useNavigate();
@@ -30,11 +35,16 @@ const SyndicateRequest = ({}: any) => {
   const [CurrentDealStatus, setCurrentDealStatus]: any = useState("");
   const [CurrentDealId, setCurrentDealId]: any = useState("");
   const [CurrentSyndicateName, setCurrentSyndicateName]: any = useState("");
-
+  const [docs, setDocs]: any = useState([]);
+  const [files, setFiles]: any = useState([]);
   const language: any = useSelector((state: RootState) => state.language.value);
   const authToken: any = useSelector((state: RootState) => state.auth.value);
   const user: any = useSelector((state: RootState) => state.user.value);
-  let dealName = "";
+  const [changes, setChanges]: any = useState({
+    comment: "",
+    action: "",
+    document: null,
+  });
 
   const columns = [
     language?.v3?.syndicate?.table?.title,
@@ -69,6 +79,48 @@ const SyndicateRequest = ({}: any) => {
     getAllDeals();
   }, []);
 
+  const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file: any = e.target.files?.[0];
+    setFileInformation(file);
+    e.target.value = "";
+  };
+
+  const setFileInformation = async (file: File) => {
+    let size = fileSize(file.size, "mb");
+    let type;
+
+    setLoading(true);
+    if (file.type.includes("video")) type = FileType.VIDEO;
+    else if (file.type.includes("image")) {
+      type = FileType.IMAGE;
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = () => {
+        const img: any = new Image();
+        img.src = reader.result;
+      };
+    } else {
+      type = FileType.PDF;
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+    }
+    const fileData: any = await handleFileRead(file);
+
+    doUploadUtil(fileData, size, type);
+    setLoading(false);
+  };
+
+  const doUploadUtil = (file: any, size: any, type: string) => {
+    setFiles((prev: any) => {
+      return [...prev, { file, size, type, id: prev.length + 1 }];
+    });
+
+    let timer = setTimeout(() => {
+      setLoading(false);
+      clearTimeout(timer);
+    }, 1000);
+  };
+
   const getAllDeals = async () => {
     try {
       setLoading(true);
@@ -95,9 +147,6 @@ const SyndicateRequest = ({}: any) => {
                   setCurrentDealTitle(syndicate?.deal?.title || "N/A");
                   setCurrentDealStatus(syndicate?.status || "N/A");
                   setCurrentSyndicateName(syndicate?.invitee?.name || "N/A");
-                  /*   console.log("====================================");
-                  console.log(CurrentDealId);
-                  console.log("===================================="); */
                 }}
                 className="bg-neutral-100 inline-flex items-center justify-center w-[30px] h-[30px] rounded-full transition-all hover:bg-cbc-transparent"
               >
@@ -535,7 +584,7 @@ const SyndicateRequest = ({}: any) => {
             <section className="w-full items-center justify-between flex">
               <span>{CurrentSyndicateName}</span>
               <span>
-                <Button>Approve</Button>
+                <Button onClick={() => setModalOpen(true)}>Approve</Button>
               </span>
             </section>
           </header>
@@ -622,6 +671,125 @@ const SyndicateRequest = ({}: any) => {
           </section>
         </div>
       </Drawer>
+      <Modal show={modalOpen ? true : false} className="w-full">
+        <div
+          className="rounded-md overflow-hidden inline-grid place-items-center absolute top-1/2 left-1/2 translate-x-[-50%] translate-y-[-50%]"
+          style={{ backgroundColor: "rgba(0, 0, 0, 0.078" }}
+        >
+          <aside className="bg-white w-[400px] rounded-md h-full">
+            <header className="bg-cbc-grey-sec h-16 py-2 px-3 inline-flex w-full justify-between items-center">
+              <h3 className="text-xl font-medium text-neutral-700">
+                Deal Approval
+              </h3>
+              <div
+                className="bg-white h-8 w-8 border-[1px] border-black rounded-md  shadow-cs-6 p-1 cursor-pointer"
+                onClick={() => {
+                  setModalOpen(false);
+                  setChanges({ comment: "", action: "", document: null });
+                  setFiles([]);
+                }}
+              >
+                <CrossIcon stroke="#000" />
+              </div>
+            </header>
+
+            <section className="py-3 px-4">
+              <div className="mb-6">
+                <label
+                  htmlFor=""
+                  className="text-neutral-900 font-medium text-sm"
+                >
+                  Add Comment
+                </label>
+                <textarea
+                  value={changes?.comment}
+                  onChange={(e) =>
+                    setChanges((prev: any) => {
+                      return { ...prev, comment: e.target.value };
+                    })
+                  }
+                  placeholder="Add Comment"
+                  className=" h-[100px] mt-1 shadow-sm appearance-none border border-neutral-300 rounded-md w-full py-2 px-3 text-gray-500 leading-tight focus:outline-none focus:shadow-outline"
+                ></textarea>
+              </div>
+
+              <div className="mb-3 w-full">
+                <span className="w-full">
+                  <button
+                    className="bg-cbc-grey-sec rounded-lg inline-flex justify-center gap-2 px-4 py-2 w-full"
+                    onClick={() => {
+                      let elem: any =
+                        document.getElementById("doc_deal_uploader");
+                      elem.click();
+                    }}
+                  >
+                    <UploadIcon />
+                    <small className="text-cyan-800 text-sm font-medium">
+                      Upload a Document
+                    </small>
+                  </button>
+                  <input
+                    type="file"
+                    className="hidden"
+                    id="doc_deal_uploader"
+                    multiple={true}
+                    onChange={handleFileUpload}
+                  />
+                </span>
+              </div>
+              <div className="mb-3 w-full">
+                {React.Children.toArray(
+                  files?.map((doc: any) => {
+                    return (
+                      <section className="rounded-md bg-cbc-grey-sec px-1 py-2 inline-flex items-center justify-between border-[1px] border-neutral-200 w-full">
+                        <span className="inline-flex items-center">
+                          <div className="rounded-[7px] bg-white shadow shadow-cs-3 w-14 h-14 inline-grid place-items-center">
+                            <img src={FileSVG} alt="File" />
+                          </div>
+                          <span className="inline-flex flex-col items-start ml-3">
+                            <h2
+                              className="text-sm font-medium text-neutral-900 max-w-[150px] truncate"
+                              title={doc?.file?.name}
+                            >
+                              {doc?.file?.name}
+                            </h2>
+                          </span>
+                        </span>
+
+                        <small>{doc?.size} MB</small>
+                        <div
+                          className="rounded-lg w-8 h-8 inline-flex items-center flex-row justify-center gap-2 bg-white cursor-pointer"
+                          onClick={() => {
+                            setFiles((pr: any) => {
+                              let files = pr.filter(
+                                (p: any) => p.id !== doc.id
+                              );
+                              return files;
+                            });
+                          }}
+                        >
+                          <BinIcon />
+                        </div>
+                      </section>
+                    );
+                  })
+                )}
+              </div>
+            </section>
+
+            <footer className="w-full inline-flex justify-between gap-3 py-2 px-3 w-full">
+              <Button
+                disabled={!changes.comment || !files.length}
+                className="w-full !py-1"
+                divStyle="flex items-center justify-center w-full"
+                onClick={() => {}}
+              >
+                {language.buttons.submit}
+              </Button>
+            </footer>
+          </aside>
+        </div>
+      </Modal>
     </main>
   );
 };
