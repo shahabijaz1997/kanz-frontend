@@ -14,6 +14,7 @@ import Modal from "../../../shared/components/Modal";
 import CrossIcon from "../../../ts-icons/crossIcon.svg";
 import { saveDataHolder } from "../../../redux-toolkit/slicer/dataHolder.slicer";
 import { getInvitedSyndicates } from "../../../apis/syndicate.api";
+import { getViewDealSyndicates } from "../../../apis/deal.api";
 import { saveToken } from "../../../redux-toolkit/slicer/auth.slicer";
 import { ApplicationStatus } from "../../../enums/types.enum";
 import Chevrond from "../../../ts-icons/chevrond.svg";
@@ -31,15 +32,18 @@ const SyndicateRequest = ({}: any) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [isOpen, setOpen]: any = useState(false);
+  const [CommentSubmitted, setCommentSubmitted]: any = useState(false);
   const [CurrentDealTitle, setCurrentDealTitle]: any = useState("");
   const [CurrentDealStatus, setCurrentDealStatus]: any = useState("");
   const [CurrentDealId, setCurrentDealId]: any = useState("");
+  const [CurrentComment, setCurrentComment]: any = useState("");
   const [CurrentSyndicateName, setCurrentSyndicateName]: any = useState("");
   const [docs, setDocs]: any = useState([]);
   const [files, setFiles]: any = useState([]);
   const language: any = useSelector((state: RootState) => state.language.value);
   const authToken: any = useSelector((state: RootState) => state.auth.value);
   const user: any = useSelector((state: RootState) => state.user.value);
+
   const [changes, setChanges]: any = useState({
     comment: "",
     action: "",
@@ -62,7 +66,8 @@ const SyndicateRequest = ({}: any) => {
   });
   const [modalOpen, setModalOpen]: any = useState(null);
   const [loading, setLoading] = useState(false);
-  const [syndicates, setDeals] = useState([]);
+  const [syndicates, setsyndicates] = useState([]);
+  const [syndicatesInformation, setsyndicatesInformation] = useState([]);
   const [dummyDisclaimers, setDummyDisclaimers] = useState({
     d1: false,
     d2: false,
@@ -77,6 +82,7 @@ const SyndicateRequest = ({}: any) => {
   useEffect(() => {
     dispatch(saveDataHolder(""));
     getAllDeals();
+    viewDealSyndicate();
   }, []);
 
   const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -132,21 +138,24 @@ const SyndicateRequest = ({}: any) => {
             [language?.v3?.syndicate?.table?.title]: syndicate?.invitee?.name,
             [language?.v3?.syndicate?.table?.deal_title]:
               syndicate?.deal?.title || "N/A",
-            [language?.v3?.table?.stage]: syndicate?.title || "N/A",
+            [language?.v3?.syndicate?.table?.comments]:
+              syndicate?.deal?.comment || "N/A",
             [language?.v3?.syndicate?.table?.status]: (
               <CustomStatus options={syndicate?.status} />
             ),
-            [language?.v3?.syndicate?.table?.comments]: syndicate?.comments,
             [language?.v3?.syndicate?.table?.documents]: syndicate?.documents,
             [language?.v3?.syndicate?.table?.view]: (
               <div
                 onClick={() => {
-                  console.log(syndicate?.deal?.id);
+                  getViewDealSyndicates(syndicate?.id, authToken);
+                  setOpen(true);
+                  /*    console.log(syndicate?.deal?.id);
                   setOpen(true);
                   setCurrentDealId(syndicate?.deal?.id);
                   setCurrentDealTitle(syndicate?.deal?.title || "N/A");
                   setCurrentDealStatus(syndicate?.status || "N/A");
                   setCurrentSyndicateName(syndicate?.invitee?.name || "N/A");
+                  setCurrentComment(syndicate?.deal?.comment || "N/A"); */
                 }}
                 className="bg-neutral-100 inline-flex items-center justify-center w-[30px] h-[30px] rounded-full transition-all hover:bg-cbc-transparent"
               >
@@ -167,7 +176,65 @@ const SyndicateRequest = ({}: any) => {
             data: syndicates?.slice(0, prev.items_per_page),
           };
         });
-        setDeals(syndicates);
+        setsyndicates(syndicates);
+      }
+    } catch (error: any) {
+      if (error.response && error.response.status === 401) {
+        dispatch(saveToken(""));
+        navigate(RoutesEnums.LOGIN, { state: RoutesEnums.STARTUP_DASHBOARD });
+      }
+    } finally {
+      setLoading(false);
+    }
+  };
+  const viewDealSyndicate = async () => {
+    try {
+      setLoading(true);
+      let { status, data } = await getViewDealSyndicates(user.id, authToken);
+      if (status === 200) {
+        let syndicatesInfo = data?.status?.data?.map((syndicate: any) => {
+          return {
+            id: syndicate?.id,
+            [language?.v3?.syndicate?.table?.title]: syndicate?.invitee?.name,
+            [language?.v3?.syndicate?.table?.deal_title]:
+              syndicate?.deal?.title || "N/A",
+            [language?.v3?.syndicate?.table?.comments]:
+              syndicate?.deal?.comment || "N/A",
+            [language?.v3?.syndicate?.table?.status]: (
+              <CustomStatus options={syndicate?.status} />
+            ),
+            [language?.v3?.syndicate?.table?.documents]: syndicate?.documents,
+            [language?.v3?.syndicate?.table?.view]: (
+              <div
+                onClick={() => {
+                  /*          console.log(syndicate?.deal?.id);
+                  setOpen(true);
+                  setCurrentDealId(syndicate?.deal?.id);
+                  setCurrentDealTitle(syndicate?.deal?.title || "N/A");
+                  setCurrentDealStatus(syndicate?.status || "N/A");
+                  setCurrentSyndicateName(syndicate?.invitee?.name || "N/A");
+                  setCurrentComment(syndicate?.deal?.comment || "N/A"); */
+                }}
+                className="bg-neutral-100 inline-flex items-center justify-center w-[30px] h-[30px] rounded-full transition-all hover:bg-cbc-transparent"
+              >
+                <Chevrond
+                  className="rotate-[-90deg] w-6 h-6"
+                  stroke={"#737373"}
+                />
+              </div>
+            ),
+          };
+        });
+        setPagination((prev) => {
+          return {
+            ...prev,
+            total_items: syndicatesInfo.length,
+            current_page: 1,
+            total_pages: Math.ceil(syndicatesInfo.length / prev.items_per_page),
+            data: syndicatesInfo?.slice(0, prev.items_per_page),
+          };
+        });
+        setsyndicatesInformation(syndicatesInfo);
       }
     } catch (error: any) {
       if (error.response && error.response.status === 401) {
@@ -185,7 +252,7 @@ const SyndicateRequest = ({}: any) => {
         const nextPage = prev.current_page + 1;
         const startIndex = (nextPage - 1) * prev.items_per_page;
         const endIndex = startIndex + prev.items_per_page;
-        const data = syndicates.slice(startIndex, endIndex);
+        const data = syndicatesInformation.slice(startIndex, endIndex);
         return { ...prev, current_page: nextPage, data };
       });
     } else if (type === "previous" && pagination.current_page > 1) {
@@ -193,7 +260,7 @@ const SyndicateRequest = ({}: any) => {
         const prevPage = prev.current_page - 1;
         const startIndex = (prevPage - 1) * prev.items_per_page;
         const endIndex = startIndex + prev.items_per_page;
-        const data = syndicates.slice(startIndex, endIndex);
+        const data = syndicatesInformation.slice(startIndex, endIndex);
 
         return { ...prev, current_page: prevPage, data };
       });
@@ -262,318 +329,6 @@ const SyndicateRequest = ({}: any) => {
           )}
         </section>
       </aside>
-
-      <Modal
-        show={modalOpen ? true : false}
-        className={"w-[700px] screen1024:w-[300px]"}
-      >
-        {modalOpen === "1" ? (
-          <div className="relative p-12 rounded-md shadow-cs-1 flex flex-col items-center w-full bg-white outline-none focus:outline-none screen800:px-3">
-            <div className="rounded-md h-8 w-8 inline-grid place-items-center cursor-pointer absolute right-2 top-2">
-              <CrossIcon
-                stroke="#171717"
-                className="w-6 h-6"
-                onClick={() => setModalOpen(null)}
-              />
-            </div>
-            <aside>
-              <h2 className="font-bold text-xl text-center text-neutral-900">
-                {language?.v3?.startup?.disc_tit}
-              </h2>
-              <p className="text-sm font-normal text-center text-neutral-500 mt-8 mb-12">
-                {language?.v3?.startup?.disc_desc}
-              </p>
-              <div className="py-3 border-t-[1px] border-neutral-200 inline-flex items-start flex-col w-full cursor-pointer">
-                <span>
-                  <h2 className="font-medium text-neutral-700 text-xl">
-                    {language?.v3?.startup?.d1}
-                  </h2>
-                  {disclaimersToggler.d1 ? (
-                    <React.Fragment>
-                      <p
-                        className="font-normal text-neutral-500 text-sm"
-                        dangerouslySetInnerHTML={{
-                          __html: language?.v3?.startup?.d_s_1,
-                        }}
-                      ></p>
-                      <p
-                        className="font-normal text-neutral-500 text-sm"
-                        dangerouslySetInnerHTML={{
-                          __html: language?.v3?.startup?.d_s_2,
-                        }}
-                      ></p>
-                      <p
-                        className="font-normal text-neutral-500 text-sm"
-                        dangerouslySetInnerHTML={{
-                          __html: language?.v3?.startup?.d_s_3,
-                        }}
-                      ></p>
-                      {React.Children.toArray(
-                        language?.v3?.startup?.d_s_arr_1?.map((item: any) => (
-                          <p
-                            className="font-normal text-neutral-500 text-sm"
-                            dangerouslySetInnerHTML={{ __html: item }}
-                          ></p>
-                        ))
-                      )}
-                      <p
-                        className="font-normal text-neutral-500 text-sm"
-                        dangerouslySetInnerHTML={{
-                          __html: language?.v3?.startup?.d_s_4,
-                        }}
-                      ></p>
-                      <p
-                        className="font-normal text-neutral-500 text-sm"
-                        dangerouslySetInnerHTML={{
-                          __html: language?.v3?.startup?.d_s_5,
-                        }}
-                      ></p>
-                      <button
-                        className="cursor-pointer text-sm text-blue-500"
-                        onClick={() =>
-                          setDisclaimersToggler((prev) => {
-                            return { d1: false, d2: false, d3: false };
-                          })
-                        }
-                      >
-                        {language?.v3?.button?.seeLess}
-                      </button>
-                    </React.Fragment>
-                  ) : (
-                    <React.Fragment>
-                      <p
-                        className="font-normal text-neutral-500 text-sm"
-                        dangerouslySetInnerHTML={{
-                          __html:
-                            language?.v3?.startup?.d_s_1?.slice(0, 200) + "...",
-                        }}
-                      ></p>
-                      <button
-                        className="cursor-pointer text-sm text-blue-500"
-                        onClick={() =>
-                          setDisclaimersToggler((prev) => {
-                            return { d1: !prev.d1, d2: false, d3: false };
-                          })
-                        }
-                      >
-                        {language?.v3?.button?.seeMore}
-                      </button>
-                    </React.Fragment>
-                  )}
-                </span>
-                <div
-                  className="w-full inline-flex justify-between mt-4 cursor-pointer"
-                  onClick={() => {
-                    setDummyDisclaimers((prev) => {
-                      return { ...prev, d1: !prev.d1 };
-                    });
-                  }}
-                >
-                  <p className="font-normal text-neutral-700 text-sm">
-                    {language?.v3?.common?.accept}
-                  </p>
-                  <input
-                    type="checkbox"
-                    checked={dummyDisclaimers.d1}
-                    className="accent-cyan-800 cursor-pointer"
-                  />
-                </div>
-              </div>
-              <div className="py-3 border-t-[1px] border-neutral-200 inline-flex items-start flex-col w-full cursor-pointer">
-                <span>
-                  <h2 className="font-medium text-neutral-700 text-xl">
-                    {language?.v3?.startup?.d2}
-                  </h2>
-                  {disclaimersToggler.d2 ? (
-                    <React.Fragment>
-                      <p
-                        className="font-normal text-neutral-500 text-sm"
-                        dangerouslySetInnerHTML={{
-                          __html: language?.v3?.startup?.d2_s_1,
-                        }}
-                      ></p>
-                      <p
-                        className="font-normal text-neutral-500 text-sm"
-                        dangerouslySetInnerHTML={{
-                          __html: language?.v3?.startup?.d2_s_2,
-                        }}
-                      ></p>
-                      {React.Children.toArray(
-                        language?.v3?.startup?.d2_arr_1?.map((item: any) => (
-                          <p
-                            className="font-normal text-neutral-500 text-sm"
-                            dangerouslySetInnerHTML={{ __html: item }}
-                          ></p>
-                        ))
-                      )}
-                      <p
-                        className="font-normal text-neutral-500 text-sm"
-                        dangerouslySetInnerHTML={{
-                          __html: language?.v3?.startup?.d2_s_3,
-                        }}
-                      ></p>
-                      <button
-                        className="cursor-pointer text-sm text-blue-500"
-                        onClick={() =>
-                          setDisclaimersToggler((prev) => {
-                            return { d1: false, d2: false, d3: false };
-                          })
-                        }
-                      >
-                        {language?.v3?.button?.seeLess}
-                      </button>
-                    </React.Fragment>
-                  ) : (
-                    <React.Fragment>
-                      <p
-                        className="font-normal text-neutral-500 text-sm"
-                        dangerouslySetInnerHTML={{
-                          __html:
-                            language?.v3?.startup?.d2_s_1?.slice(0, 200) +
-                            "...",
-                        }}
-                      ></p>
-                      <button
-                        className="cursor-pointer text-sm text-blue-500"
-                        onClick={() =>
-                          setDisclaimersToggler((prev) => {
-                            return { d1: false, d2: !prev.d2, d3: false };
-                          })
-                        }
-                      >
-                        {language?.v3?.button?.seeMore}
-                      </button>
-                    </React.Fragment>
-                  )}
-                </span>
-                <div
-                  className="w-full inline-flex justify-between mt-4 cursor-pointer"
-                  onClick={() => {
-                    setDummyDisclaimers((prev) => {
-                      return { ...prev, d2: !prev.d2 };
-                    });
-                  }}
-                >
-                  <p className="font-normal text-neutral-700 text-sm">
-                    {language?.v3?.common?.accept}
-                  </p>
-                  <input
-                    type="checkbox"
-                    checked={dummyDisclaimers.d2}
-                    className="accent-cyan-800 cursor-pointer"
-                  />
-                </div>
-              </div>
-              <div className="py-3 border-t-[1px] border-neutral-200 inline-flex items-start flex-col w-full cursor-pointer">
-                <span>
-                  <h2 className="font-medium text-neutral-700 text-xl">
-                    {language?.v3?.startup?.d3}
-                  </h2>
-                  {disclaimersToggler.d3 ? (
-                    <React.Fragment>
-                      <p
-                        className="font-normal text-neutral-500 text-sm"
-                        dangerouslySetInnerHTML={{
-                          __html: language?.v3?.startup?.d3_s_1,
-                        }}
-                      ></p>
-                      <p
-                        className="font-normal text-neutral-500 text-sm"
-                        dangerouslySetInnerHTML={{
-                          __html: language?.v3?.startup?.d3_s_2,
-                        }}
-                      ></p>
-                      <button
-                        className="cursor-pointer text-sm text-blue-500"
-                        onClick={() =>
-                          setDisclaimersToggler((prev) => {
-                            return { d1: false, d2: false, d3: false };
-                          })
-                        }
-                      >
-                        {language?.v3?.button?.seeLess}
-                      </button>
-                    </React.Fragment>
-                  ) : (
-                    <React.Fragment>
-                      <p
-                        className="font-normal text-neutral-500 text-sm"
-                        dangerouslySetInnerHTML={{
-                          __html:
-                            language?.v3?.startup?.d3_s_1?.slice(0, 200) +
-                            "...",
-                        }}
-                      ></p>
-                      <button
-                        className="cursor-pointer text-sm text-blue-500"
-                        onClick={() =>
-                          setDisclaimersToggler((prev) => {
-                            return { d1: false, d2: false, d3: !prev.d3 };
-                          })
-                        }
-                      >
-                        {language?.v3?.button?.seeMore}
-                      </button>
-                    </React.Fragment>
-                  )}
-                </span>
-                <div
-                  className="w-full inline-flex justify-between mt-4 cursor-pointer"
-                  onClick={() => {
-                    setDummyDisclaimers((prev) => {
-                      return { ...prev, d3: !prev.d3 };
-                    });
-                  }}
-                >
-                  <p className="font-normal text-neutral-700 text-sm">
-                    {language?.v3?.common?.accept}
-                  </p>
-                  <input
-                    type="checkbox"
-                    checked={dummyDisclaimers.d3}
-                    className="accent-cyan-800 cursor-pointer"
-                  />
-                </div>
-              </div>
-              <div className="w-full inline-flex items-center justify-center gap-3 mt-10">
-                <Button
-                  className="w-[100px] bg-transparent border-cyan-800 border-[1px]"
-                  type={"outlined"}
-                  onClick={() => setModalOpen(null)}
-                >
-                  {language?.v3?.button?.cancel}
-                </Button>
-                <Button
-                  className="w-[100px]"
-                  disabled={
-                    !dummyDisclaimers.d1 ||
-                    !dummyDisclaimers.d2 ||
-                    !dummyDisclaimers.d3
-                  }
-                  onClick={() => navigate(`${RoutesEnums.CREATE_DEAL}/1`)}
-                >
-                  {language?.buttons?.continue}
-                </Button>
-              </div>
-            </aside>
-          </div>
-        ) : (
-          <aside>
-            <div className="relative p-12 rounded-md shadow-cs-1 flex flex-col items-center w-full bg-white outline-none focus:outline-none screen800:px-3">
-              <h2 className="font-bold text-xl text-center text-neutral-900">
-                {language?.v3?.common?.submitted_title}
-              </h2>
-              <p className="text-sm font-normal text-center text-neutral-500 mt-8 mb-7">
-                {language?.v3?.common?.submitted_message}
-              </p>
-              <Button className="w-[100px]" onClick={() => setModalOpen(null)}>
-                {language?.v3?.button?.close}
-              </Button>
-            </div>
-          </aside>
-        )}
-      </Modal>
-
       <Drawer
         drawerWidth="w-[700px]"
         isOpen={isOpen}
@@ -617,10 +372,7 @@ const SyndicateRequest = ({}: any) => {
               <div className="justify-between  pr-2 pb-2 w-10/12">
                 <div className="text-lg font-bold">Comment</div>
                 <p className="w-full pt-2 opacity-80 max-h-24 text-neutral-700 font-normal text-sm text-justify">
-                  Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                  Deleniti saepe, doloremque numquam amet tempora velit quis,
-                  nostrum perspiciatis nesciunt ipsam quo magnam iure dolorem,
-                  rerum maxime incidunt similique ea provident?
+                  {CurrentComment}
                 </p>
               </div>
               <span className="h-[50px] w-[175px] ">
@@ -672,125 +424,170 @@ const SyndicateRequest = ({}: any) => {
         </div>
       </Drawer>
       <Modal show={modalOpen ? true : false} className="w-full">
-        <div
-          className="rounded-md overflow-hidden inline-grid place-items-center absolute top-1/2 left-1/2 translate-x-[-50%] translate-y-[-50%]"
-          style={{ backgroundColor: "rgba(0, 0, 0, 0.078" }}
-        >
-          <aside className="bg-white w-[400px] rounded-md h-full">
-            <header className="bg-cbc-grey-sec h-16 py-2 px-3 inline-flex w-full justify-between items-center">
-              <h3 className="text-xl font-medium text-neutral-700">
-                Deal Approval
-              </h3>
-              <div
-                className="bg-white h-8 w-8 border-[1px] border-black rounded-md  shadow-cs-6 p-1 cursor-pointer"
+        {!CommentSubmitted ? (
+          <div
+            className="rounded-md overflow-hidden inline-grid place-items-center absolute top-1/2 left-1/2 translate-x-[-50%] translate-y-[-50%]"
+            style={{ backgroundColor: "rgba(0, 0, 0, 0.078" }}
+          >
+            <aside className="bg-white w-[700px] rounded-md h-full">
+              <header className="bg-cbc-grey-sec h-16 py-2 px-3 inline-flex w-full justify-between items-center">
+                <h3 className="text-xl font-medium text-neutral-700">
+                  Deal Approval
+                </h3>
+                <div
+                  className="bg-white h-8 w-8 border-[1px] border-black rounded-md  shadow-cs-6 p-1 cursor-pointer"
+                  onClick={() => {
+                    setModalOpen(false);
+                    setChanges({ comment: "", action: "", document: null });
+                  }}
+                >
+                  <CrossIcon stroke="#000" />
+                </div>
+              </header>
+              <section>
+                <div className="justify-between  px-3 pb-2 w-full">
+                  <div className="text-lg font-bold">Comment</div>
+                  <p className="w-full pt-2 opacity-80 max-h-24 text-neutral-700 font-normal text-sm text-justify">
+                    {CurrentComment}
+                  </p>
+                </div>
+              </section>
+              <section className="py-3 px-4">
+                <div className="mb-6">
+                  <label
+                    htmlFor=""
+                    className="text-neutral-900 font-medium text-sm"
+                  >
+                    Add Comment
+                  </label>
+                  <textarea
+                    value={changes?.comment}
+                    onChange={(e) =>
+                      setChanges((prev: any) => {
+                        return { ...prev, comment: e.target.value };
+                      })
+                    }
+                    placeholder="Add Comment"
+                    className=" h-[100px] mt-1 shadow-sm appearance-none border border-neutral-300 rounded-md w-full py-2 px-3 text-gray-500 leading-tight focus:outline-none focus:shadow-outline"
+                  ></textarea>
+                </div>
+                {/* 
+                <div className="mb-3 w-full">
+                  <span className="w-full">
+                    <button
+                      className="bg-cbc-grey-sec rounded-lg inline-flex justify-center gap-2 px-4 py-2 w-full"
+                      onClick={() => {
+                        let elem: any =
+                          document.getElementById("doc_deal_uploader");
+                        elem.click();
+                      }}
+                    >
+                      <UploadIcon />
+                      <small className="text-cyan-800 text-sm font-medium">
+                        Upload a Document
+                      </small>
+                    </button>
+                    <input
+                      type="file"
+                      className="hidden"
+                      id="doc_deal_uploader"
+                      multiple={true}
+                      onChange={handleFileUpload}
+                    />
+                  </span>
+                </div>
+                <div className="mb-3 w-full">
+                  {React.Children.toArray(
+                    files?.map((doc: any) => {
+                      return (
+                        <section className="rounded-md bg-cbc-grey-sec px-1 py-2 inline-flex items-center justify-between border-[1px] border-neutral-200 w-full">
+                          <span className="inline-flex items-center">
+                            <div className="rounded-[7px] bg-white shadow shadow-cs-3 w-14 h-14 inline-grid place-items-center">
+                              <img src={FileSVG} alt="File" />
+                            </div>
+                            <span className="inline-flex flex-col items-start ml-3">
+                              <h2
+                                className="text-sm font-medium text-neutral-900 max-w-[150px] truncate"
+                                title={doc?.file?.name}
+                              >
+                                {doc?.file?.name}
+                              </h2>
+                            </span>
+                          </span>
+
+                          <small>{doc?.size} MB</small>
+                          <div
+                            className="rounded-lg w-8 h-8 inline-flex items-center flex-row justify-center gap-2 bg-white cursor-pointer"
+                            onClick={() =>
+                              setModalOpen({
+                                url: doc.url,
+                                open: true,
+                                type: doc?.attachment_kind,
+                              })
+                            }
+                          >
+                            <BinIcon stroke="#404040" />
+                          </div>
+                        </section>
+                      );
+                    })
+                  )}
+                </div> */}
+              </section>
+
+              <footer className="w-full inline-flex justify-between gap-3 py-2 px-3">
+                <Button
+                  className="w-full !py-1"
+                  divStyle="flex items-center justify-center w-full"
+                  onClick={() => {
+                    console.log("Submit Clicked");
+                    setCommentSubmitted(1);
+                  }}
+                >
+                  Submit
+                </Button>
+              </footer>
+            </aside>
+          </div>
+        ) : (
+          <aside>
+            <div className="relative p-12 rounded-md shadow-cs-1 flex flex-col items-center w-full bg-white outline-none focus:outline-none screen800:px-3">
+              <h2 className="font-bold text-xl text-center text-neutral-900">
+                {language?.v3?.common?.submitted_title}
+              </h2>
+              {
+                <p className="text-sm font-normal text-center text-neutral-500 mt-8 mb-7">
+                  {language?.v3?.common?.submitted_message}
+                </p>
+              }
+              <Button
+                className="w-[100px]"
                 onClick={() => {
-                  setModalOpen(false);
-                  setChanges({ comment: "", action: "", document: null });
-                  setFiles([]);
+                  setModalOpen(null);
+                  setCommentSubmitted(0);
                 }}
               >
-                <CrossIcon stroke="#000" />
-              </div>
-            </header>
-
-            <section className="py-3 px-4">
-              <div className="mb-6">
-                <label
-                  htmlFor=""
-                  className="text-neutral-900 font-medium text-sm"
-                >
-                  Add Comment
-                </label>
-                <textarea
-                  value={changes?.comment}
-                  onChange={(e) =>
-                    setChanges((prev: any) => {
-                      return { ...prev, comment: e.target.value };
-                    })
-                  }
-                  placeholder="Add Comment"
-                  className=" h-[100px] mt-1 shadow-sm appearance-none border border-neutral-300 rounded-md w-full py-2 px-3 text-gray-500 leading-tight focus:outline-none focus:shadow-outline"
-                ></textarea>
-              </div>
-
-              <div className="mb-3 w-full">
-                <span className="w-full">
-                  <button
-                    className="bg-cbc-grey-sec rounded-lg inline-flex justify-center gap-2 px-4 py-2 w-full"
-                    onClick={() => {
-                      let elem: any =
-                        document.getElementById("doc_deal_uploader");
-                      elem.click();
-                    }}
-                  >
-                    <UploadIcon />
-                    <small className="text-cyan-800 text-sm font-medium">
-                      Upload a Document
-                    </small>
-                  </button>
-                  <input
-                    type="file"
-                    className="hidden"
-                    id="doc_deal_uploader"
-                    multiple={true}
-                    onChange={handleFileUpload}
-                  />
-                </span>
-              </div>
-              <div className="mb-3 w-full">
-                {React.Children.toArray(
-                  files?.map((doc: any) => {
-                    return (
-                      <section className="rounded-md bg-cbc-grey-sec px-1 py-2 inline-flex items-center justify-between border-[1px] border-neutral-200 w-full">
-                        <span className="inline-flex items-center">
-                          <div className="rounded-[7px] bg-white shadow shadow-cs-3 w-14 h-14 inline-grid place-items-center">
-                            <img src={FileSVG} alt="File" />
-                          </div>
-                          <span className="inline-flex flex-col items-start ml-3">
-                            <h2
-                              className="text-sm font-medium text-neutral-900 max-w-[150px] truncate"
-                              title={doc?.file?.name}
-                            >
-                              {doc?.file?.name}
-                            </h2>
-                          </span>
-                        </span>
-
-                        <small>{doc?.size} MB</small>
-                        <div
-                          className="rounded-lg w-8 h-8 inline-flex items-center flex-row justify-center gap-2 bg-white cursor-pointer"
-                          onClick={() => {
-                            setFiles((pr: any) => {
-                              let files = pr.filter(
-                                (p: any) => p.id !== doc.id
-                              );
-                              return files;
-                            });
-                          }}
-                        >
-                          <BinIcon />
-                        </div>
-                      </section>
-                    );
-                  })
-                )}
-              </div>
-            </section>
-
-            <footer className="w-full inline-flex justify-between gap-3 py-2 px-3 w-full">
-              <Button
-                disabled={!changes.comment || !files.length}
-                className="w-full !py-1"
-                divStyle="flex items-center justify-center w-full"
-                onClick={() => {}}
-              >
-                {language.buttons.submit}
+                {language?.v3?.button?.close}
               </Button>
-            </footer>
+            </div>
           </aside>
-        </div>
+        )}
       </Modal>
     </main>
   );
 };
 export default SyndicateRequest;
+
+/* <aside>
+  <div className="relative p-12 rounded-md shadow-cs-1 flex flex-col items-center w-full bg-white outline-none focus:outline-none screen800:px-3">
+    <h2 className="font-bold text-xl text-center text-neutral-900">
+      {language?.v3?.common?.submitted_title}
+    </h2>
+    {   <p className="text-sm font-normal text-center text-neutral-500 mt-8 mb-7">
+                {language?.v3?.common?.submitted_message}
+              </p> }
+    <Button className="w-[100px]" onClick={() => setModalOpen(null)}>
+      {language?.v3?.button?.close}
+    </Button>
+  </div>
+</aside>; }*/
