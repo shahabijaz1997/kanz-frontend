@@ -114,3 +114,19 @@ export const submitDeal = (dealId: number, token: string) => {
     }
   );
 };
+
+export const addCommentOnDeal = (
+  dealId: number,
+  token: string,
+  payload: any
+) => {
+  return axios.post(
+    `${ENV.API_URL}/${ENV.API_VERSION}/deals/${dealId}/comments`,
+    payload,
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    }
+  );
+};

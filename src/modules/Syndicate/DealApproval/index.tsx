@@ -52,7 +52,6 @@ const [pagination, setPagination] = useState({ items_per_page: 10, total_items: 
             if (status === 200) {
 
                 let deals = data?.status?.data?.map((deal: any) => {
-                    let features = deal?.features?.map((f: any) => f?.title || f?.description)?.join(",")
                     return {
                         id: deal?.id,
                         [language?.v3?.syndicate?.deals?.table?.title]: deal?.deal?.title || "N/A",
@@ -65,7 +64,7 @@ const [pagination, setPagination] = useState({ items_per_page: 10, total_items: 
                         [language?.v3?.table?.action]: <div onClick={(e) => {
                             e.preventDefault();
                             e.stopPropagation();
-                            navigate(`${RoutesEnums.SYNDICATE_DEAL_DETAIL}/${deal?.id}`, { state: KanzRoles.SYNDICATE })
+                            navigate(`${RoutesEnums.SYNDICATE_DEAL_DETAIL}/${deal?.deal?.id}`, { state: KanzRoles.SYNDICATE })
                         }}
                             className="bg-neutral-100 inline-flex items-center justify-center w-[30px] h-[30px] rounded-full transition-all hover:bg-cbc-transparent">
                             <Chevrond className="rotate-[-90deg] w-6 h-6" stroke={"#737373"} />

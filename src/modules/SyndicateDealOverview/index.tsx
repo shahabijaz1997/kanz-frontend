@@ -443,7 +443,7 @@ const SyndicateDealOverview = ({}: any) => {
                     return (
                       <section className="rounded-md bg-cbc-grey-sec px-1 py-2 inline-flex items-center justify-between border-[1px] border-neutral-200 w-full">
                         <span className="inline-flex items-center">
-                          <div className="rounded-[7px] bg-white shadow shadow-cs-3 w-14 h-14 inline-grid place-items-center">
+                          <div className="rounded-[7px] bg-white shadow w-14 h-14 inline-grid place-items-center">
                             <img src={FileSVG} alt="File" />
                           </div>
                           <span className="inline-flex flex-col items-start ml-3">
