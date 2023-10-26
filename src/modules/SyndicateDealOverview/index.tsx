@@ -10,7 +10,7 @@ const SyndicateDealOverview = ({ }: any) => {
     const { id } = useParams();
 
     return (
-      state === KanzRoles.STARTUP ? <StartupCase id={id} /> : <RealtorCase id={id} />
+      state === KanzRoles.STARTUP?.toLocaleLowerCase() ? <StartupCase id={id} /> : <RealtorCase id={id} />
     );
 };
 export default SyndicateDealOverview;
