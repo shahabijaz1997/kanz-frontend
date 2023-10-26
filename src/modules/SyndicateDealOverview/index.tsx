@@ -18,11 +18,12 @@ import Zoomout from "../../ts-icons/ZoomoutIcon.svg";
 import CurrencySVG from "../../assets/svg/currency.svg";
 import { comaFormattedNumber, formatDate, numberFormatter } from "../../utils/object.utils";
 import { fileSize, handleFileRead } from "../../utils/files.utils";
-import { FileType } from "../../enums/types.enum";
+import { DealStatus, FileType } from "../../enums/types.enum";
 import FileSVG from "../../assets/svg/file.svg";
 import BinIcon from "../../ts-icons/binIcon.svg";
 import { addCommentOnDeal, getDealDetail } from "../../apis/deal.api";
-import { uploadAttachments } from "../../apis/attachment.api";
+import { toast } from "react-toastify";
+import { toastUtil } from "../../utils/toast.utils";
 
 const CURRENCIES = ["USD", "AED"];
 
@@ -36,52 +37,56 @@ const SyndicateDealOverview = ({ }: any) => {
     const [currency, setCurrency] = useState(0);
     const [deal, setdeal]: any = useState([]);
     const [selectedDocs, setSelectedDocs]: any = useState(null);
-    const [files, setFiles]: any = useState([]);
+    // const [files, setFiles]: any = useState([]);
     const [loading, setLoading]: any = useState(false);
     const [fileLoading, setFileLoading]: any = useState(false);
     const [modalOpen, setModalOpen]: any = useState(null);
     const [changes, setChanges]: any = useState({ comment: "", action: "", document: null });
 
-    const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const file: any = e.target.files?.[0];
-        setFileInformation(file);
-        e.target.value = "";
-    };
+    useLayoutEffect(() => {
+        onGetdeal();
+    }, [id]);
 
-    const setFileInformation = async (file: File) => {
-        let size = fileSize(file.size, "mb");
-        let type;
+    // const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    //     const file: any = e.target.files?.[0];
+    //     setFileInformation(file);
+    //     e.target.value = "";
+    // };
 
-        setLoading(true);
-        if (file.type.includes("video")) type = FileType.VIDEO;
-        else if (file.type.includes("image")) {
-            type = FileType.IMAGE;
-            const reader = new FileReader();
-            reader.readAsDataURL(file);
-            reader.onload = () => {
-                const img: any = new Image();
-                img.src = reader.result;
-            };
-        } else {
-            type = FileType.PDF;
-            const reader = new FileReader();
-            reader.readAsDataURL(file);
-        }
-        const fileData: any = await handleFileRead(file);
-        doUploadUtil(fileData, size, type);
-        setLoading(false);
-    };
+    // const setFileInformation = async (file: File) => {
+    //     let size = fileSize(file.size, "mb");
+    //     let type;
 
-    const doUploadUtil = (file: any, size: any, type: string) => {
-        setFiles((prev: any) => {
-            return [...prev, { file, size, type, id: prev.length + 1 }]
-        })
+    //     setLoading(true);
+    //     if (file.type.includes("video")) type = FileType.VIDEO;
+    //     else if (file.type.includes("image")) {
+    //         type = FileType.IMAGE;
+    //         const reader = new FileReader();
+    //         reader.readAsDataURL(file);
+    //         reader.onload = () => {
+    //             const img: any = new Image();
+    //             img.src = reader.result;
+    //         };
+    //     } else {
+    //         type = FileType.PDF;
+    //         const reader = new FileReader();
+    //         reader.readAsDataURL(file);
+    //     }
+    //     const fileData: any = await handleFileRead(file);
+    //     doUploadUtil(fileData, size, type);
+    //     setLoading(false);
+    // };
 
-        let timer = setTimeout(() => {
-            setLoading(false);
-            clearTimeout(timer);
-        }, 1000);
-    }
+    // const doUploadUtil = (file: any, size: any, type: string) => {
+    //     setFiles((prev: any) => {
+    //         return [...prev, { file, size, type, id: prev.length + 1 }]
+    //     })
+
+    //     let timer = setTimeout(() => {
+    //         setLoading(false);
+    //         clearTimeout(timer);
+    //     }, 1000);
+    // }
 
     const numberInputUI = () => {
         let placeholder = currency === 0 ? "$ 0.00" : "0.00 د.إ";
@@ -120,10 +125,6 @@ const SyndicateDealOverview = ({ }: any) => {
             imgElem.style.width = (currWidth - 50) + "px";
     }
 
-    useLayoutEffect(() => {
-        onGetdeal();
-    }, [id]);
-
     const onGetdeal = async () => {
         try {
             setLoading(true);
@@ -142,103 +143,103 @@ const SyndicateDealOverview = ({ }: any) => {
     const onAddCommentOnDeal = async () => {
         try {
             setLoading(true);
-            let allFiles = files.map((file: any) => file.file);
+            // let allFiles = files.map((file: any) => file.file);
 
             let payload = {
                 message: changes.comment,
                 invite_id: deal?.invite?.id,
-                attachments: allFiles
+                // attachments: allFiles
             }
             let { status, data } = await addCommentOnDeal(Number(id), authToken, payload);
             if (status === 200) {
-                setdeal(data?.status?.data);
-                setSelectedDocs(data?.status?.data?.docs[0]);
+                toast.success(language?.v3?.common?.suces_msg, toastUtil);
+                setModalOpen(false)
             }
         } catch (error) {
             console.log(error);
         } finally {
             setLoading(false);
             setChanges({ comment: "", action: "", document: null });
-            setFiles([]);
+            // setFiles([]);
         }
     };
 
     const getRoleBasedUI = () => {
         return (
             <React.Fragment>
-                {deal?.instrument_type && <div className="w-full inline-flex justify-between items-center border-b-[1px] border-b-neutral-200 my-3">
+                {deal?.instrument_type && <div className="w-full inline-flex justify-between items-center border-b-[1px] border-b-neutral-200 py-3">
                     <h3 className="text-neutral-900 font-medium text-sm">{language?.v3?.deal?.instrument_type}</h3>
                     <p className="text-neutral-900 font-normal text-sm capitalize">{deal?.instrument_type || language?.v3?.common?.not_added}</p>
                 </div>}
-                {deal?.stage && <div className="w-full inline-flex justify-between items-center border-b-[1px] border-b-neutral-200 my-3">
+                {deal?.stage && <div className="w-full inline-flex justify-between items-center border-b-[1px] border-b-neutral-200 py-3">
                     <h3 className="text-neutral-900 font-medium text-sm">{language?.v3?.table?.stage}</h3>
                     <p className="text-neutral-900 font-normal text-sm capitalize">{deal?.stage || language?.v3?.common?.not_added}</p>
                 </div>}
-                {deal?.valuation && <div className="w-full inline-flex justify-between items-center border-b-[1px] border-b-neutral-200 my-3">
+                {deal?.valuation && <div className="w-full inline-flex justify-between items-center border-b-[1px] border-b-neutral-200 py-3">
                     <h3 className="text-neutral-900 font-medium text-sm">{language?.v3?.table?.valuation}</h3>
                     <p className="text-neutral-900 font-normal text-sm capitalize">${comaFormattedNumber(deal?.valuation)} ({deal?.equity_type})</p>
                 </div>}
-                {deal?.selling_price && <div className="w-full inline-flex justify-between items-center border-b-[1px] border-b-neutral-200 my-3">
+                {deal?.selling_price && <div className="w-full inline-flex justify-between items-center border-b-[1px] border-b-neutral-200 py-3">
                     <h3 className="text-neutral-900 font-medium text-sm">{language?.v3?.table?.sellingPrice}</h3>
                     <p className="text-neutral-900 font-normal text-sm capitalize">{numberFormatter(deal?.selling_price) || language?.v3?.common?.not_added}</p>
                 </div>}
-                {deal?.status && <div className="w-full inline-flex justify-between items-center border-b-[1px] border-b-neutral-200 my-3">
+                {deal?.status && <div className="w-full inline-flex justify-between items-center border-b-[1px] border-b-neutral-200 py-3">
                     <h3 className="text-neutral-900 font-medium text-sm">{language?.v3?.table?.status}</h3>
                     <p className="text-neutral-900 font-normal text-sm capitalize">{deal?.status || language?.v3?.common?.not_added}</p>
                 </div>}
-                {deal?.start_at && <div className="w-full inline-flex justify-between items-center border-b-[1px] border-b-neutral-200 my-3">
+                {deal?.start_at && <div className="w-full inline-flex justify-between items-center border-b-[1px] border-b-neutral-200 py-3">
                     <h3 className="text-neutral-900 font-medium text-sm">{language?.v3?.deal?.start_at}</h3>
                     <p className="text-neutral-900 font-normal text-sm capitalize">{formatDate(deal?.start_at) || language?.v3?.common?.not_added}</p>
                 </div>}
-                {deal?.end_at && <div className="w-full inline-flex justify-between items-center border-b-[1px] border-b-neutral-200 my-3">
+                {deal?.end_at && <div className="w-full inline-flex justify-between items-center border-b-[1px] border-b-neutral-200 py-3">
                     <h3 className="text-neutral-900 font-medium text-sm">{language?.v3?.deal?.end_at}</h3>
                     <p className="text-neutral-900 font-normal text-sm capitalize">{formatDate(deal?.end_at) || language?.v3?.common?.not_added}</p>
                 </div>}
-                {deal?.committed > 0 && <div className="w-full inline-flex justify-between items-center border-b-[1px] border-b-neutral-200 my-3">
+                {deal?.committed > 0 && <div className="w-full inline-flex justify-between items-center border-b-[1px] border-b-neutral-200 py-3">
                     <h3 className="text-neutral-900 font-medium text-sm">{language?.v3?.deal?.committed}</h3>
                     <p className="text-neutral-900 font-normal text-sm capitalize">{numberFormatter(deal?.committed)}</p>
                 </div>}
-                {deal?.location && <div className="w-full inline-flex justify-between items-center border-b-[1px] border-b-neutral-200 my-3">
+                {deal?.location && <div className="w-full inline-flex justify-between items-center border-b-[1px] border-b-neutral-200 py-3">
                     <h3 className="text-neutral-900 font-medium text-sm">{language?.v3?.deal?.location}</h3>
                     <p className="text-neutral-900 font-normal text-sm capitalize">{deal?.location}</p>
                 </div>}
-                {deal?.raised > 0 && <div className="w-full inline-flex justify-between items-center border-b-[1px] border-b-neutral-200 my-3">
+                {deal?.raised > 0 && <div className="w-full inline-flex justify-between items-center border-b-[1px] border-b-neutral-200 py-3">
                     <h3 className="text-neutral-900 font-medium text-sm">{language?.v3?.deal?.raised}</h3>
                     <p className="text-neutral-900 font-normal text-sm capitalize">${numberFormatter(deal?.raised)}</p>
                 </div>}
-                {deal?.size && <div className="w-full inline-flex justify-between items-center border-b-[1px] border-b-neutral-200 my-3">
+                {deal?.size && <div className="w-full inline-flex justify-between items-center border-b-[1px] border-b-neutral-200 py-3">
                     <h3 className="text-neutral-900 font-medium text-sm">{language?.v3?.table?.size}</h3>
                     <p className="text-neutral-900 font-normal text-sm capitalize">{comaFormattedNumber(deal?.size)} sqft</p>
                 </div>}
-                {deal?.expected_annual_return && <div className="w-full inline-flex justify-between items-center border-b-[1px] border-b-neutral-200 my-3">
+                {deal?.expected_annual_return && <div className="w-full inline-flex justify-between items-center border-b-[1px] border-b-neutral-200 py-3">
                     <h3 className="text-neutral-900 font-medium text-sm">{language?.v3?.deal?.expected_annual_return}</h3>
                     <p className="text-neutral-900 font-normal text-sm capitalize">{deal?.expected_annual_return + "%" || language?.v3?.common?.not_added}</p>
                 </div>}
-                {deal?.expected_dividend_yield && <div className="w-full inline-flex justify-between items-center border-b-[1px] border-b-neutral-200 my-3">
+                {deal?.expected_dividend_yield && <div className="w-full inline-flex justify-between items-center border-b-[1px] border-b-neutral-200 py-3">
                     <h3 className="text-neutral-900 font-medium text-sm">{language?.v3?.deal?.expected_dividend_yield}</h3>
                     <p className="text-neutral-900 font-normal text-sm capitalize">{deal?.expected_dividend_yield + "%" || language?.v3?.common?.not_added}</p>
                 </div>}
-                {deal?.features?.bedrooms && <div className="w-full inline-flex justify-between items-center border-b-[1px] border-b-neutral-200 my-3">
+                {deal?.features?.bedrooms && <div className="w-full inline-flex justify-between items-center border-b-[1px] border-b-neutral-200 py-3">
                     <h3 className="text-neutral-900 font-medium text-sm">{language?.v3?.deal?.beds}</h3>
                     <p className="text-neutral-900 font-normal text-sm capitalize">{deal?.features?.bedrooms}</p>
                 </div>}
-                {deal?.features?.kitchen && <div className="w-full inline-flex justify-between items-center border-b-[1px] border-b-neutral-200 my-3">
+                {deal?.features?.kitchen && <div className="w-full inline-flex justify-between items-center border-b-[1px] border-b-neutral-200 py-3">
                     <h3 className="text-neutral-900 font-medium text-sm">{language?.v3?.deal?.kitchen}</h3>
                     <p className="text-neutral-900 font-normal text-sm capitalize">{deal?.features?.kitchen}</p>
                 </div>}
-                {deal?.features?.washroom && <div className="w-full inline-flex justify-between items-center border-b-[1px] border-b-neutral-200 my-3">
+                {deal?.features?.washroom && <div className="w-full inline-flex justify-between items-center border-b-[1px] border-b-neutral-200 py-3">
                     <h3 className="text-neutral-900 font-medium text-sm">{language?.v3?.deal?.washroom}</h3>
                     <p className="text-neutral-900 font-normal text-sm capitalize">{deal?.features?.washroom}</p>
                 </div>}
-                {deal?.features?.parking && <div className="w-full inline-flex justify-between items-center border-b-[1px] border-b-neutral-200 my-3">
+                {deal?.features?.parking && <div className="w-full inline-flex justify-between items-center border-b-[1px] border-b-neutral-200 py-3">
                     <h3 className="text-neutral-900 font-medium text-sm">{language?.v3?.deal?.parking}</h3>
                     <p className="text-neutral-900 font-normal text-sm capitalize">{deal?.features?.parking}</p>
                 </div>}
-                {deal?.features?.swimming_pool && <div className="w-full inline-flex justify-between items-center border-b-[1px] border-b-neutral-200 my-3">
+                {deal?.features?.swimming_pool && <div className="w-full inline-flex justify-between items-center border-b-[1px] border-b-neutral-200 py-3">
                     <h3 className="text-neutral-900 font-medium text-sm">{language?.v3?.deal?.swim}</h3>
                     <p className="text-neutral-900 font-normal text-sm capitalize">{deal?.features?.swimming_pool}</p>
                 </div>}
-                {deal?.features?.rental_amount && <div className="w-full inline-flex justify-between items-center border-b-[1px] border-b-neutral-200 my-3">
+                {deal?.features?.rental_amount && <div className="w-full inline-flex justify-between items-center border-b-[1px] border-b-neutral-200 py-3">
                     <h3 className="text-neutral-900 font-medium text-sm">{language?.v3?.deal?.por_2}</h3>
                     <p className="text-neutral-900 font-normal text-sm capitalize">${numberFormatter(deal?.features?.rental_amount)} ({deal?.features?.rental_period})</p>
                 </div>}
@@ -353,16 +354,10 @@ const SyndicateDealOverview = ({ }: any) => {
                         {/* Section Right */}
                         <section className="w-[30%]">
                             {/* Show/Hide based on some conditions */}
-                            <div className="w-full inline-flex justify-end gap-4">
+                            {(deal?.invite && deal?.invite?.status !== DealStatus.ACCEPTED) && <div className="w-full inline-flex justify-end gap-4">
                                 <Button type="outlined" onClick={() => setModalOpen(true)}>{language?.v3?.button?.req_change}</Button>
                                 <Button>{language?.v3?.button?.interested}</Button>
-                            </div>
-
-                            {/* {(deal?.invite && deal?.invite?.status !== DealStatus.ACCEPTED) && <div className="w-full inline-flex justify-end gap-4">
-                                <Button type="outlined" onClick={() => setModalOpen(true)}>{language?.v3?.button?.req_change}</Button>
-                                <Button>{language?.v3?.button?.interested}</Button>
-                            </div>
-                            } */}
+                            </div>}
                             {/* <div className="w-full inline-flex justify-end gap-4">
                                 <Button suffix={<Chevrond stroke="#fff" />} onClick={() => setShowInviteSyndicate(!showInviteSyndicate)}>Share Deal</Button>
                                 <div className="relative z-10">
@@ -445,7 +440,7 @@ const SyndicateDealOverview = ({ }: any) => {
                             <div className="bg-white h-8 w-8 border-[1px] border-black rounded-md shadow shadow-cs-6 p-1 cursor-pointer" onClick={() => {
                                 setModalOpen(false);
                                 setChanges({ comment: "", action: "", document: null })
-                                setFiles([]);
+                                // setFiles([]);
                             }}>
                                 <CrossIcon stroke="#000" />
                             </div>
@@ -464,7 +459,7 @@ const SyndicateDealOverview = ({ }: any) => {
                                 ></textarea>
                             </div>
 
-                            <div className="mb-3 w-full">
+                            {/* <div className="mb-3 w-full">
                                 <span className="w-full">
                                     <button className="bg-cbc-grey-sec rounded-lg inline-flex justify-center gap-2 px-4 py-2 w-full" onClick={() => {
                                         let elem: any = document.getElementById("doc_deal_uploader");
@@ -503,11 +498,11 @@ const SyndicateDealOverview = ({ }: any) => {
                                         )
                                     })
                                 )}
-                            </div>
+                            </div> */}
                         </section>
 
                         <footer className="w-full inline-flex justify-between gap-3 py-2 px-3 w-full">
-                            <Button disabled={!changes.comment || !files.length} className="w-full !py-1" divStyle="flex items-center justify-center w-full" onClick={() => onAddCommentOnDeal()}>{language.buttons.submit}</Button>
+                            <Button disabled={!changes.comment} className="w-full !py-1" divStyle="flex items-center justify-center w-full" onClick={() => onAddCommentOnDeal()}>{language.buttons.submit}</Button>
                         </footer>
                     </aside>
                 </div>
