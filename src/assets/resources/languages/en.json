@@ -789,7 +789,8 @@
             "risk_disc": "Risk & Disclaimers",
             "invest_details": "Investment Details",
             "end_on": "Ends On",
-            "am_raised": "Amount Raised"
+            "am_raised": "Amount Raised",
+            "suces_msg": "Comment added successfully!"
         },
         "button": {
             "new_deal": "Create New Deal",
@@ -806,7 +807,7 @@
             "new_tab": "Open in New Tab",
             "app": "Approve",
             "req_change":"Request Changes",
-            "interested":"Interested",
+            "interested":"Approve",
             "view":"View Doc"
         },
         "syndicate":{
