@@ -24,8 +24,6 @@ import Drawer from "../../../shared/components/Drawer";
 import UploadIcon from "../../../ts-icons/uploadIcon.svg";
 import ArrowIcon from "../../../ts-icons/arrowIcon.svg";
 import DownloadIcon from "../../../ts-icons/downloadIcon.svg";
-import BinIcon from "../../../ts-icons/binIcon.svg";
-import FileSVG from "../../../assets/svg/file.svg";
 import { fileSize, handleFileRead } from "../../../utils/files.utils";
 import { FileType } from "../../../enums/types.enum";
 import { toast } from "react-toastify";
@@ -36,12 +34,6 @@ const SyndicateRequest = ({}: any) => {
   const dispatch = useDispatch();
   const [isOpen, setOpen]: any = useState(false);
   const [CommentSubmitted, setCommentSubmitted]: any = useState(false);
-  const [CurrentDealTitle, setCurrentDealTitle]: any = useState("");
-  const [CurrentDealStatus, setCurrentDealStatus]: any = useState("");
-  const [CurrentDealId, setCurrentDealId]: any = useState("");
-  const [CurrentComment, setCurrentComment]: any = useState("");
-  const [CurrentSyndicateName, setCurrentSyndicateName]: any = useState("");
-  const [docs, setDocs]: any = useState([]);
   const [files, setFiles]: any = useState([]);
   const language: any = useSelector((state: RootState) => state.language.value);
   const authToken: any = useSelector((state: RootState) => state.auth.value);
@@ -68,6 +60,7 @@ const SyndicateRequest = ({}: any) => {
     total_pages: 0,
   });
   const [modalOpen, setModalOpen]: any = useState(null);
+  const [syndicateInfo, setsyndicateInfo]: any = useState(null);
   const [modalReplyOpen, setmodalReplyOpen]: any = useState(null);
   const [loading, setLoading] = useState(false);
   const [loadDrawer, setLoadingDrawer] = useState(false);
@@ -139,7 +132,7 @@ const SyndicateRequest = ({}: any) => {
       setLoading(true);
       let payload = {
         message: changes.comment,
-        invite_id: dealDetail?.comments[0]?.id,
+        thread_id: dealDetail?.comments[0]?.id,
       };
       let { status, data } = await addCommentOnDeal(id, authToken, payload);
       if (status === 200) {
@@ -149,6 +142,7 @@ const SyndicateRequest = ({}: any) => {
     } catch (error) {
       console.log(error);
     } finally {
+      viewDealSyndicate(syndicateInfo?.deal?.id, syndicateInfo?.invitee?.id);
       setLoading(false);
       setChanges({ comment: "", action: "", document: null });
     }
@@ -174,6 +168,7 @@ const SyndicateRequest = ({}: any) => {
             [language?.v3?.syndicate?.table?.view]: (
               <div
                 onClick={() => {
+                  setsyndicateInfo(syndicate);
                   viewDealSyndicate(
                     syndicate?.deal?.id,
                     syndicate?.invitee?.id
@@ -366,16 +361,21 @@ const SyndicateRequest = ({}: any) => {
               <aside className="pt-8 w-full inline-flex justify-between">
                 <div className="justify-between  pr-2 pb-2 w-10/12">
                   <div className="text-lg font-bold">Comment</div>
-                  <p className=" overflow-auto no-scrollbar  w-full opacity-80 max-h-56 text-neutral-700 font-normal text-sm text-justify">
+                  <p className=" overflow-auto no-scrollbar rounded-md  w-full opacity-80 max-h-56 text-neutral-700 font-normal text-sm text-justify">
                     {React.Children.toArray(
                       dealDetail?.comments?.map((comments: any) => (
-                        <div className=" max-h-24 p-2 pt-3 rounded-md overflow-hidden bg-cbc-grey-sec font-medium  w-full items-center justify-between">
+                        <div className=" max-h-24 p-2 pt-3  overflow-hidden bg-cbc-grey-sec font-medium  w-full items-center justify-between">
                           <div className=" pl-2 inline-flex items-center">
                             <span>
                               <img
-                                className=" max-h-7"
-                                src={dealDetail?.profile?.logo}
-                              ></img>
+                                className="max-h-7"
+                                src={
+                                  comments?.author_id === user?.id
+                                    ? "https://w7.pngwing.com/pngs/178/595/png-transparent-user-profile-computer-icons-login-user-avatars-thumbnail.png"
+                                    : dealDetail?.profile?.logo
+                                }
+                                alt="Author Logo"
+                              />
                             </span>
                             <h1 className="pl-4 font-bold capitalize text-xl">
                               {comments?.author_id === user?.id
@@ -529,8 +529,10 @@ const SyndicateRequest = ({}: any) => {
                   className="w-full !py-1"
                   divStyle="flex items-center justify-center w-full"
                   onClick={() => {
-                    console.log("Submit Clicked");
-                    setCommentSubmitted(1);
+                    onAddCommentOnDeal(dealDetail?.comments[0]?.deal_id);
+                    setmodalReplyOpen(null);
+                    setCommentSubmitted(0);
+                    toast.success("Comment added", toastUtil);
                   }}
                 >
                   Submit
