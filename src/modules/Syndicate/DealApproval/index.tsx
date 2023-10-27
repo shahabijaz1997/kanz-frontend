@@ -143,7 +143,6 @@ const DealApproval = ({}: any) => {
         const startIndex = (prevPage - 1) * prev.items_per_page;
         const endIndex = startIndex + prev.items_per_page;
         const data = deals.slice(startIndex, endIndex);
-
         return { ...prev, current_page: prevPage, data };
       });
     }
