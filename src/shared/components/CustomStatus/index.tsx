@@ -1,7 +1,7 @@
 import React from "react";
 
 const CustomStatus = ({ options }: any) => {
-  options = options.charAt(0).toUpperCase() + options.slice(1);
+  options = options?.charAt(0).toUpperCase() + options?.slice(1);
   let backgroundColor = "bg-green-100";
   if (options === "Approved" || options === "Raising") {
     backgroundColor = "bg-green-100";
