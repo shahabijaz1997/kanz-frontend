@@ -10,9 +10,8 @@ import { numberFormatter } from "../../../utils/object.utils";
 import Button from "../../../shared/components/Button";
 import { saveToken } from "../../../redux-toolkit/slicer/auth.slicer";
 import { RoutesEnums } from "../../../enums/routes.enum";
-import CustomStatus from "../../../shared/components/CustomStatus";
 
-const InvitedSyndicates = ({ id }: any) => {
+const Requests = ({ id }: any) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const language: any = useSelector((state: RootState) => state.language.value);
@@ -42,23 +41,25 @@ const InvitedSyndicates = ({ id }: any) => {
       setLoading(true);
       let { status, data } = await getDealSyndicates(id, authToken);
       if (status === 200) {
-        let deals = data?.status?.data?.map((deal: any) => {
-          return {
-            id: deal?.id,
-            ["Syndicate"]: deal?.invitee?.name,
-            ["Type"]: deal?.user,
-            ["Sent Date"]: deal?.sent_date || "N/A",
-            Action: (
-              <Button
-                divStyle="items-center justify-end"
-                className="!p-3 !py-1 !rounded-full"
-                onClick={() => {}}
-              >
-                {":"}
-              </Button>
-            ),
-          };
-        });
+        let deals = data?.status?.data
+          ?.filter((deal: any) => deal?.status === "interested")
+          .map((deal: any) => {
+            return {
+              id: deal?.id,
+              ["Syndicate"]: deal?.invitee?.name,
+              ["Type"]: deal?.user,
+              ["Sent Date"]: deal?.sent_date || "N/A",
+              Action: (
+                <Button
+                  divStyle="items-center justify-end"
+                  className="!p-3 !py-1 !rounded-full"
+                  onClick={() => {}}
+                >
+                  {":"}
+                </Button>
+              ),
+            };
+          });
 
         setPagination((prev) => {
           return {
@@ -113,8 +114,13 @@ const InvitedSyndicates = ({ id }: any) => {
             navigate(`/create-deal/${row?.State?.current_step + 2}`);
           }
         }}
+        noDataNode={
+          <span className="absolute left-1/2 top-1/2 translate-x-[-50%] translate-y-[-50%]">
+            No Data
+          </span>
+        }
       />
     </section>
   );
 };
-export default InvitedSyndicates;
+export default Requests;
