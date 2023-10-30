@@ -1,4 +1,4 @@
-import React, { useLayoutEffect, useState } from "react";
+import React, { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { KanzRoles } from "../../enums/roles.enum";
@@ -44,7 +44,6 @@ const DealDetail = ({}: any) => {
   const [loading, setLoading]: any = useState(false);
   const [dealDetail, setDealDetail]: any = useState(null);
   const [dealDocs, setDealDocs] = useState(null);
-  const [showInviteSyndicate, setShowInviteSyndicate] = useState(false);
 
   useLayoutEffect(() => {
     if (selected.id === 1) onGetDealDetail();
@@ -116,16 +115,7 @@ const DealDetail = ({}: any) => {
               </h1>
               <div className="inline-flex items-center gap-2">
                 <div className="relative z-10">
-                  <Button
-                    onClick={() => setShowInviteSyndicate(!showInviteSyndicate)}
-                    className="w-[80px]"
-                    disabled={dealDetail?.status !== ApplicationStatus.APPROVED}
-                  >
-                    {language?.v3?.button?.invite}
-                  </Button>
-                  {showInviteSyndicate && (
-                    <UserListingPopup dealId={id} type={KanzRoles.SYNDICATE} />
-                  )}
+                  <UserListingPopup dealId={id} type={KanzRoles.SYNDICATE} />
                 </div>
 
                 <div className="bg-white rounded-md border-neutral-300 border-[1px] inline-flex items-center justify-center">

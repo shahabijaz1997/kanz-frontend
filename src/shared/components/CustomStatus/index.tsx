@@ -25,7 +25,7 @@ const CustomStatus = ({ options }: any) => {
     <main>
       <section>
         <span
-          className={`font-semibold px-4 w-fit capitalize ${backgroundColor} rounded-xl text-center py-1.5 w-[80px] ${textColor}`}
+          className={`font-semibold  px-4 w-fit capitalize ${backgroundColor} rounded-xl text-center py-1.5 w-[80px] ${textColor}`}
         >
           {options}
         </span>
