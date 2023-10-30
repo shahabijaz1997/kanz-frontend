@@ -28,8 +28,17 @@ import {
   formatDate,
   numberFormatter,
 } from "../../utils/object.utils";
-import { DealStatus, FileType } from "../../enums/types.enum";
-import { addCommentOnDeal, getDealDetail, signOff } from "../../apis/deal.api";
+import {
+  ApplicationStatus,
+  DealStatus,
+  FileType,
+} from "../../enums/types.enum";
+import {
+  addCommentOnDeal,
+  getDealDetail,
+  signOff,
+  syndicateApprove,
+} from "../../apis/deal.api";
 import { toast } from "react-toastify";
 import { toastUtil } from "../../utils/toast.utils";
 
@@ -69,7 +78,17 @@ const RealtorCase = ({ id }: any) => {
   const postSignOff = async () => {
     try {
       setLoading(true);
-      let { status, data } = await signOff({}, deal?.id, authToken);
+      let payload = {
+        invite: {
+          status: "accepted",
+        },
+      };
+      let { status, data } = await syndicateApprove(
+        payload,
+        deal?.id,
+        deal?.invite?.id,
+        authToken
+      );
       if (status === 200) {
         toast.success("Congratulations! Deal Signed Off");
         setModalOpen(false);
@@ -110,58 +129,67 @@ const RealtorCase = ({ id }: any) => {
   const getRoleBasedUI = () => {
     return (
       <React.Fragment>
-        <div className="w-full inline-flex justify-between items-center border-b-[1px] border-b-neutral-200 py-3">
-          <div className="bg-cbc-grey-sec rounded-md h-8 w-8 inline-block align-start inline-grid place-items-center">
-            <img src={DollarSVG} alt="" />
+        {deal?.selling_price && (
+          <div className="w-full inline-flex justify-between items-center border-b-[1px] border-b-neutral-200 py-3">
+            <div className="bg-cbc-grey-sec rounded-md h-8 w-8 inline-block align-start inline-grid place-items-center">
+              <img src={DollarSVG} alt="" />
+            </div>
+            <div className="w-[80%] inline-block align-start">
+              <h3 className="text-neutral-900 font-medium text-sm pb-1">
+                Selling Price
+              </h3>
+              <p className="text-neutral-900 font-normal text-sm capitalize">
+                ${numberFormatter(deal?.selling_price)}
+              </p>
+            </div>
           </div>
-          <div className="w-[80%] inline-block align-start">
-            <h3 className="text-neutral-900 font-medium text-sm pb-1">
-              Selling Price
-            </h3>
-            <p className="text-neutral-900 font-normal text-sm capitalize">
-              ${numberFormatter(10000)}
-            </p>
+        )}
+        {deal?.expected_dividend_yield && (
+          <div className="w-full inline-flex justify-between items-center border-b-[1px] border-b-neutral-200 py-3">
+            <div className="bg-cbc-grey-sec rounded-md h-8 w-8 inline-block align-start inline-grid place-items-center">
+              <img src={ChartSVG} alt="" />
+            </div>
+            <div className="w-[80%] inline-block align-start">
+              <h3 className="text-neutral-900 font-medium text-sm pb-1">
+                Expected Dividend Yield
+              </h3>
+              <p className="text-neutral-900 font-normal text-sm capitalize">
+                {comaFormattedNumber(deal?.expected_dividend_yield)}%
+              </p>
+            </div>
           </div>
-        </div>
-        <div className="w-full inline-flex justify-between items-center border-b-[1px] border-b-neutral-200 py-3">
-          <div className="bg-cbc-grey-sec rounded-md h-8 w-8 inline-block align-start inline-grid place-items-center">
-            <img src={ChartSVG} alt="" />
+        )}
+        {deal?.expected_annual_return && (
+          <div className="w-full inline-flex justify-between items-center border-b-[1px] border-b-neutral-200 py-3">
+            <div className="bg-cbc-grey-sec rounded-md h-8 w-8 inline-block align-start inline-grid place-items-center">
+              <img src={PiChartSVG} alt="" />
+            </div>
+            <div className="w-[80%] inline-block align-start">
+              <h3 className="text-neutral-900 font-medium text-sm pb-1">
+                Expected Annual Appreciation
+              </h3>
+              <p className="text-neutral-900 font-normal text-sm capitalize">
+                {comaFormattedNumber(deal?.expected_annual_return)}%
+              </p>
+            </div>
           </div>
-          <div className="w-[80%] inline-block align-start">
-            <h3 className="text-neutral-900 font-medium text-sm pb-1">
-              Expected Dividend Yield
-            </h3>
-            <p className="text-neutral-900 font-normal text-sm capitalize">
-              {comaFormattedNumber("100")}%
-            </p>
+        )}
+        {deal?.features?.rental_amount && (
+          <div className="w-full inline-flex justify-between items-center border-b-[1px] border-b-neutral-200 py-3">
+            <div className="bg-cbc-grey-sec rounded-md h-8 w-8 inline-block align-start inline-grid place-items-center">
+              <img src={CurrencySVG} alt="" />
+            </div>
+            <div className="w-[80%] inline-block align-start">
+              <h3 className="text-neutral-900 font-medium text-sm pb-1">
+                Property on a Rent
+              </h3>
+              <p className="text-neutral-900 font-normal text-sm capitalize">
+                ${numberFormatter(deal?.features?.rental_amount)} (
+                {deal?.features?.rental_period})
+              </p>
+            </div>
           </div>
-        </div>
-        <div className="w-full inline-flex justify-between items-center border-b-[1px] border-b-neutral-200 py-3">
-          <div className="bg-cbc-grey-sec rounded-md h-8 w-8 inline-block align-start inline-grid place-items-center">
-            <img src={PiChartSVG} alt="" />
-          </div>
-          <div className="w-[80%] inline-block align-start">
-            <h3 className="text-neutral-900 font-medium text-sm pb-1">
-              Expected Annual Appreciation
-            </h3>
-            <p className="text-neutral-900 font-normal text-sm capitalize">
-              {comaFormattedNumber("100")}%
-            </p>
-          </div>
-        </div>
-        <div className="w-full inline-flex justify-between items-center border-b-[1px] border-b-neutral-200 py-3">
-          <div className="bg-cbc-grey-sec rounded-md h-8 w-8 inline-block align-start inline-grid place-items-center">
-            <img src={CurrencySVG} alt="" />
-          </div>
-          <div className="w-[80%] inline-block align-start">
-            <h3 className="text-neutral-900 font-medium text-sm pb-1">
-              Property on a Rent
-            </h3>
-            <p className="text-neutral-900 font-normal text-sm capitalize">
-              ${numberFormatter(10000)} per month
-            </p>
-          </div>
-        </div>
+        )}
       </React.Fragment>
     );
   };
@@ -196,7 +224,6 @@ const RealtorCase = ({ id }: any) => {
                   {language?.v3?.common?.investments}
                 </small>
               </div>
-
               <div
                 className="w-full inline-flex flex-col pb-8 items-start gap-2 cursor-pointer"
                 onClick={() => navigate(-1)}
@@ -208,7 +235,6 @@ const RealtorCase = ({ id }: any) => {
                   {deal?.description}
                 </p>
               </div>
-
               <div
                 className="inline-flex justify-between w-full mb-4"
                 onClick={() => {
@@ -220,7 +246,6 @@ const RealtorCase = ({ id }: any) => {
                 </h1>
                 <Button type="outlined">{language?.v3?.button?.new_tab}</Button>
               </div>
-
               {/* Images Section */}
               {deal?.docs?.length && (
                 <section className="h-[500px] rounded-[8px] overflow-hidden relative">
@@ -272,55 +297,68 @@ const RealtorCase = ({ id }: any) => {
                   </Button>
                 </section>
               )}
-
               <aside className="border-[1px] border-neutral-200 rounded-md w-full p-3 mt-5 flex justify-between">
-                <section className="inline-flex flex-col items-start justify-start">
-                  <small className="text-neutral-500 text-sm font-medium mb-2">
-                    Bedrooms
-                  </small>
-                  <span className="inline-flex items-center gap-2">
-                    <img src={BedSVG} alt="Kitchen" />
-                    <small className="text-black font-semibold">2</small>
-                  </span>
-                </section>
-                <section className="inline-flex flex-col items-start justify-start">
-                  <small className="text-neutral-500 text-sm font-medium mb-2">
-                    Kitchen
-                  </small>
-                  <span className="inline-flex items-center gap-2">
-                    <img src={ChefSVG} alt="Kitchen" />
-                    <small className="text-black font-semibold">2</small>
-                  </span>
-                </section>
-                <section className="inline-flex flex-col items-start justify-start">
-                  <small className="text-neutral-500 text-sm font-medium mb-2">
-                    Washroom
-                  </small>
-                  <span className="inline-flex items-center gap-2">
-                    <img src={TubSVG} alt="Kitchen" />
-                    <small className="text-black font-semibold">2</small>
-                  </span>
-                </section>
-                <section className="inline-flex flex-col items-start justify-start">
-                  <small className="text-neutral-500 text-sm font-medium mb-2">
-                    Parking Space
-                  </small>
-                  <span className="inline-flex items-center gap-2">
-                    <img src={CarSVG} alt="Kitchen" />
-                    <small className="text-black font-semibold">2</small>
-                  </span>
-                </section>
-                <section className="inline-flex flex-col items-start justify-start">
-                  <small className="text-neutral-500 text-sm font-medium mb-2">
-                    Swimming Pool
-                  </small>
-                  <span className="inline-flex items-center gap-2">
-                    <img src={SwimSVG} alt="Kitchen" />
-                    <small className="text-black font-semibold">Shared</small>
-                  </span>
-                </section>
+                {deal?.features?.bedrooms && (
+                  <section className="inline-flex flex-col items-start justify-start">
+                    <small className="text-neutral-500 text-sm font-medium mb-2">
+                      Bedrooms
+                    </small>
+                    <span className="inline-flex items-center gap-2">
+                      <img src={BedSVG} alt="Kitchen" />
+                      <small className="text-black font-semibold">
+                        {deal?.features?.bedrooms}
+                      </small>
+                    </span>
+                  </section>
+                )}
+                {deal?.features?.kitchen && (
+                  <section className="inline-flex flex-col items-start justify-start">
+                    <small className="text-neutral-500 text-sm font-medium mb-2">
+                      {deal?.features?.kitchen}
+                    </small>
+                    <span className="inline-flex items-center gap-2">
+                      <img src={ChefSVG} alt="Kitchen" />
+                      <small className="text-black font-semibold">2</small>
+                    </span>
+                  </section>
+                )}
+                {deal?.features?.washroom && (
+                  <section className="inline-flex flex-col items-start justify-start">
+                    <small className="text-neutral-500 text-sm font-medium mb-2">
+                      {deal?.features?.washroom}
+                    </small>
+                    <span className="inline-flex items-center gap-2">
+                      <img src={TubSVG} alt="Kitchen" />
+                      <small className="text-black font-semibold">2</small>
+                    </span>
+                  </section>
+                )}
+                {deal?.features?.parking && (
+                  <section className="inline-flex flex-col items-start justify-start">
+                    <small className="text-neutral-500 text-sm font-medium mb-2">
+                      deal?.features?.parking
+                    </small>
+                    <span className="inline-flex items-center gap-2">
+                      <img src={CarSVG} alt="Kitchen" />
+                      <small className="text-black font-semibold">
+                        {" "}
+                        {deal?.features?.parking}
+                      </small>
+                    </span>
+                  </section>
+                )}
+                {deal?.features?.swimming_pool && (
+                  <section className="inline-flex flex-col items-start justify-start">
+                    <small className="text-neutral-500 text-sm font-medium mb-2">
+                      {deal?.features?.swimming_pool}
+                    </small>
+                    <span className="inline-flex items-center gap-2">
+                      <img src={SwimSVG} alt="Kitchen" />
+                      <small className="text-black font-semibold">Shared</small>
+                    </span>
+                  </section>
+                )}
               </aside>
-
               <section className="mt-10 rounded-md px-5 py-3 mb-6">
                 <div className="bg-cyan-800 rounded-full h-10 w-10 overflow-hidden inline-grid place-items-center inline-block align-top mr-4">
                   <img src={BagSVG} alt="Bag" />
@@ -335,22 +373,22 @@ const RealtorCase = ({ id }: any) => {
                   </small>
                 </div>
               </section>
-
               <div className="inline-flex justify-between w-full my-10">
                 <h1 className="text-black font-medium text-2xl">
                   {language?.v3?.common?.risk_disc}
                 </h1>
                 <p className="text-sm font-medium"></p>
               </div>
-
-              <Button
-                onClick={() => {
-                  postSignOff();
-                }}
-                className="w-full"
-              >
-                {language?.v3?.button?.app}
-              </Button>
+              {deal?.status !== ApplicationStatus.APPROVED && (
+                <Button
+                  onClick={() => {
+                    postSignOff();
+                  }}
+                  className="w-full"
+                >
+                  Approve
+                </Button>
+              )}
             </section>
 
             {/* Invisible Section */}
@@ -367,7 +405,6 @@ const RealtorCase = ({ id }: any) => {
                   <Button>{language?.v3?.button?.interested}</Button>
                 </div>
               )}
-
               <aside className="border-[1px] border-neutral-200 rounded-md w-full p-3 mt-5">
                 <h2 className="text-neutral-700 text-xl font-medium">
                   {language?.v3?.common?.invest_details}
@@ -378,7 +415,6 @@ const RealtorCase = ({ id }: any) => {
 
                 {getRoleBasedUI()}
               </aside>
-
               <aside className="border-[1px] border-neutral-200 rounded-md w-full p-3 mt-5 bg-cbc-check max-h-[400px] overflow-y-auto no-scrollbar mb-4">
                 {React.Children.toArray(
                   deal?.docs?.map((doc: any) => {
@@ -424,6 +460,36 @@ const RealtorCase = ({ id }: any) => {
                   })
                 )}
               </aside>
+              {deal?.property_links && (
+                <aside>
+                  {" "}
+                  <h2 className="text-neutral-700 text-xl font-medium">
+                    Property Links
+                  </h2>
+                  <div className="border-[1px] border-neutral-200 rounded-md w-full p-3 mt-5  max-h-[400px] overflow-y-auto no-scrollbar mb-4">
+                    <div className="inline-flex flex-col justify-between h-full w-1/2 overflow-hidden">
+                      {React.Children.toArray(
+                        deal?.property_links?.map((link: any) => {
+                          return (
+                            <section className="rounded-md bg-white px-3 py-1 inline-flex items-center justify-between w-full border-[1px] border-neutral-200 mb-2">
+                              <span className="inline-flex items-center w-[80%]">
+                                <div className="bg-white w-14 h-14 inline-flex justify-center flex-col w-full">
+                                  <h2
+                                    className="text-sm font-medium text-neutral-500 max-w-full truncate"
+                                    title={link?.name}
+                                  >
+                                    {link?.name}
+                                  </h2>
+                                </div>
+                              </span>
+                            </section>
+                          );
+                        })
+                      )}
+                    </div>
+                  </div>
+                </aside>
+              )}
             </section>
           </section>
         )}

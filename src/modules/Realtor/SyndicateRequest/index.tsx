@@ -120,6 +120,11 @@ const SyndicateRequest = ({}: any) => {
   const postSignOff = async (id: any) => {
     try {
       setLoading(true);
+      let payload: any = {
+        deal: {
+          invite_id: 117,
+        },
+      };
       let { status, data } = await signOff({}, id, authToken);
       if (status === 200) {
         toast.success("Congratulations! Deal Signed Off");

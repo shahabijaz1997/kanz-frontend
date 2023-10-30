@@ -11,19 +11,15 @@ import Button from "../../../shared/components/Button";
 import { saveToken } from "../../../redux-toolkit/slicer/auth.slicer";
 import { RoutesEnums } from "../../../enums/routes.enum";
 import CustomStatus from "../../../shared/components/CustomStatus";
+import { spawn } from "child_process";
+import Spinner from "../../../shared/components/Spinner";
 
 const Requests = ({ id }: any) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const language: any = useSelector((state: RootState) => state.language.value);
   const authToken: any = useSelector((state: RootState) => state.auth.value);
-  const columns = [
-    "Syndicate",
-    "Status",
-    "Invitation Sent On",
-    "Invitation Expiry On",
-    language?.v3?.syndicate?.table?.action,
-  ];
+  const columns = ["Syndicate", "Type", "Comments", "Documents"];
   const [loading, setLoading]: any = useState(false);
   const [invites, setInvites]: any = useState([]);
   const [pagination, setPagination] = useState({
@@ -44,20 +40,23 @@ const Requests = ({ id }: any) => {
       let { status, data } = await getDealSyndicates(id, authToken);
       if (status === 200) {
         let deals = data?.status?.data
-          ?.filter((deal: any) => deal?.status != "pending")
+          ?.filter((deal: any) => deal?.status !== "pending")
           .map((deal: any) => {
             return {
               id: deal?.id,
               ["Syndicate"]: (
                 <span className=" capitalize">{deal?.invitee?.name}</span>
               ),
-              ["Status"]: (
-                <span>
-                  <CustomStatus options={deal?.status} />
-                </span>
+              ["Type"]: (
+                <span className=" capitalize">{deal?.invitee?.type}</span>
               ),
-              ["Invitation Sent On"]: deal?.user,
-              ["Invitation Expiry On"]: deal?.invite_expiry || "N/A",
+              ["Comments"]: deal?.deal?.comment || " ",
+              ["Documents"]:
+                (
+                  <span className="text-cyan-500">
+                    `{deal?.deal?.docs?.length} documents`
+                  </span>
+                ) || "N/A",
               Action: (
                 <Button
                   divStyle="items-center justify-end"
@@ -112,23 +111,32 @@ const Requests = ({ id }: any) => {
   };
 
   return (
-    <section className="mt-10">
-      <Table
-        columns={columns}
-        pagination={pagination}
-        paginate={paginate}
-        onclick={(row: any) => {
-          if (row?.Status !== ApplicationStatus.SUBMITTED) {
-            dispatch(saveDataHolder(row.id));
-            navigate(`/create-deal/${row?.State?.current_step + 2}`);
+    <section className="mt-10 relative">
+      {loading ? (
+        <div
+          className="absolute left-0 top-0 w-full h-full grid place-items-center"
+          style={{ backgroundColor: "rgba(255, 255, 255, 1)", zIndex: 50 }}
+        >
+          <Spinner />
+        </div>
+      ) : (
+        <Table
+          columns={columns}
+          pagination={pagination}
+          paginate={paginate}
+          onclick={(row: any) => {
+            if (row?.Status !== ApplicationStatus.SUBMITTED) {
+              dispatch(saveDataHolder(row.id));
+              navigate(`/create-deal/${row?.State?.current_step + 2}`);
+            }
+          }}
+          noDataNode={
+            <span className="absolute left-1/2 top-1/2 translate-x-[-50%] translate-y-[-50%]">
+              No Data
+            </span>
           }
-        }}
-        noDataNode={
-          <span className="absolute left-1/2 top-1/2 translate-x-[-50%] translate-y-[-50%]">
-            No Data
-          </span>
-        }
-      />
+        />
+      )}
     </section>
   );
 };

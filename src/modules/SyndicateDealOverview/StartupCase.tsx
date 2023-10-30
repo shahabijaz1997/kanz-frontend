@@ -20,8 +20,17 @@ import {
   formatDate,
   numberFormatter,
 } from "../../utils/object.utils";
-import { DealStatus, FileType } from "../../enums/types.enum";
-import { addCommentOnDeal, getDealDetail, signOff } from "../../apis/deal.api";
+import {
+  ApplicationStatus,
+  DealStatus,
+  FileType,
+} from "../../enums/types.enum";
+import {
+  addCommentOnDeal,
+  getDealDetail,
+  signOff,
+  syndicateApprove,
+} from "../../apis/deal.api";
 import { toast } from "react-toastify";
 import { toastUtil } from "../../utils/toast.utils";
 
@@ -339,7 +348,17 @@ const StartupCase = ({ id }: any) => {
   const postSignOff = async () => {
     try {
       setLoading(true);
-      let { status, data } = await signOff({}, deal?.id, authToken);
+      let payload = {
+        invite: {
+          status: "accepted",
+        },
+      };
+      let { status, data } = await syndicateApprove(
+        payload,
+        deal?.id,
+        deal?.invite?.id,
+        authToken
+      );
       if (status === 200) {
         toast.success("Congratulations! Deal Signed Off");
         setModalOpen(false);
@@ -537,14 +556,17 @@ const StartupCase = ({ id }: any) => {
                 <p className="text-sm font-medium"></p>
               </div>
 
-              <Button
-                onClick={() => {
-                  postSignOff();
-                }}
-                className="w-full"
-              >
-                {language?.v3?.button?.app}
-              </Button>
+              {deal?.status !== ApplicationStatus.APPROVED && (
+                <Button
+                  onClick={() => {
+                    postSignOff();
+                    console.log("Clicked");
+                  }}
+                  className="w-full"
+                >
+                  Approve
+                </Button>
+              )}
             </section>
 
             {/* Invisible Section */}
@@ -558,7 +580,14 @@ const StartupCase = ({ id }: any) => {
                   <Button type="outlined" onClick={() => setModalOpen(true)}>
                     {language?.v3?.button?.req_change}
                   </Button>
-                  <Button>{language?.v3?.button?.interested}</Button>
+                  <Button
+                    onClick={() => {
+                      console.log("Clicked");
+                      postSignOff();
+                    }}
+                  >
+                    {language?.v3?.button?.interested}
+                  </Button>
                 </div>
               )}
               <aside className="border-[1px] border-neutral-200 rounded-md w-full p-3 mt-5">

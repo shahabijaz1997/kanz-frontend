@@ -21,9 +21,8 @@ const InvitedSyndicates = ({ id }: any) => {
   const columns = [
     "Syndicate",
     "Status",
-    "Comments",
-    "Documents",
-    language?.v3?.syndicate?.table?.action,
+    "Invitation Sent On",
+    "Invite Expiration Date",
   ];
   const [loading, setLoading]: any = useState(false);
   const [invites, setInvites]: any = useState([]);
@@ -44,41 +43,34 @@ const InvitedSyndicates = ({ id }: any) => {
       setLoading(true);
       let { status, data } = await getDealSyndicates(id, authToken);
       if (status === 200) {
-        let deals = data?.status?.data?.map((deal: any) => {
-          const documents = deal?.documents || "N/A";
-          const documentsCount = Array.isArray(documents)
-            ? documents.length
-            : 0;
-          return {
-            id: deal?.id,
-            ["Syndicate"]: (
-              <span className=" capitalize">{deal?.invitee?.name}</span>
-            ),
-            ["Status"]: (
-              <span className="capitalize">
-                {" "}
-                <CustomStatus options={deal?.status} />
-              </span>
-            ),
-            ["Comments"]:
-              <p className=" opacity-90 font-light">{deal?.deal?.comment}</p> ||
-              "",
-            ["Documents"]: (
-              <span className=" capitalize text-cyan-600">
-                {documentsCount} documents
-              </span>
-            ),
-            Action: (
-              <Button
-                divStyle="items-center justify-end"
-                className="!p-3 !py-1 !rounded-full"
-                onClick={() => {}}
-              >
-                {":"}
-              </Button>
-            ),
-          };
-        });
+        let deals = data?.status?.data
+          ?.filter((deal: any) => deal?.status === "pending")
+          ?.map((deal: any) => {
+            return {
+              id: deal?.id,
+              ["Syndicate"]: (
+                <span className=" capitalize">{deal?.invitee?.name}</span>
+              ),
+              ["Status"]: (
+                <span className="capitalize">
+                  {" "}
+                  <CustomStatus options={deal?.status} />
+                </span>
+              ),
+              ["Invitation Sent On"]: deal?.sent_at,
+              ["Invite Expiration Date"]: deal?.invite_expiry || "N/A",
+
+              Action: (
+                <Button
+                  divStyle="items-center justify-end"
+                  className="!p-3 !py-1 !rounded-full"
+                  onClick={() => {}}
+                >
+                  {":"}
+                </Button>
+              ),
+            };
+          });
 
         setPagination((prev) => {
           return {
