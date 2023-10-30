@@ -44,15 +44,6 @@ const SyndicateRequest = ({}: any) => {
     action: "",
     document: null,
   });
-
-  const columns = [
-    language?.v3?.syndicate?.table?.title,
-    language?.v3?.syndicate?.table?.deal_title,
-    language?.v3?.syndicate?.table?.status,
-    language?.v3?.syndicate?.table?.comments,
-    language?.v3?.syndicate?.table?.documents,
-    language?.v3?.syndicate?.table?.view,
-  ];
   const [pagination, setPagination] = useState({
     items_per_page: 5,
     total_items: [],
@@ -129,7 +120,7 @@ const SyndicateRequest = ({}: any) => {
   const postSignOff = async (id: any) => {
     try {
       setLoading(true);
-      let { status, data } = await signOff(id, authToken);
+      let { status, data } = await signOff({}, id, authToken);
       if (status === 200) {
         toast.success("Congratulations! Deal Signed Off");
         setModalOpen(false);
@@ -166,24 +157,35 @@ const SyndicateRequest = ({}: any) => {
     }
   };
 
+  const columns = [
+    language?.v3?.deal?.syndicate,
+    language?.v3?.common?.deal,
+    language?.v3?.table?.status,
+    language?.v3?.deal?.comments,
+    language?.v3?.deal?.documents,
+    language?.v3?.table?.view,
+    "",
+  ];
   const getAllDeals = async () => {
     try {
       setLoading(true);
       let { status, data } = await getInvitedSyndicates(user.id, authToken);
       if (status === 200) {
+        console.log("====================================");
+        console.log(data?.status?.data);
+        console.log("====================================");
         let syndicates = data?.status?.data?.map((syndicate: any) => {
           return {
             id: syndicate?.id,
-            [language?.v3?.syndicate?.table?.title]: syndicate?.invitee?.name,
-            [language?.v3?.syndicate?.table?.deal_title]:
-              syndicate?.deal?.title || "N/A",
-            [language?.v3?.syndicate?.table?.comments]:
-              syndicate?.deal?.comment || "N/A",
-            [language?.v3?.syndicate?.table?.status]: (
+            [language?.v3?.deal?.syndicate]: syndicate?.invitee?.name,
+            [language?.v3?.common?.deal]: syndicate?.deal?.title || "N/A",
+            [language?.v3?.deal?.comments]: syndicate?.deal?.comment || "N/A",
+            [language?.v3?.table?.status]: (
               <CustomStatus options={syndicate?.status} />
             ),
-            [language?.v3?.syndicate?.table?.documents]: syndicate?.documents,
-            [language?.v3?.syndicate?.table?.view]: (
+            [language?.v3?.deal
+              ?.documents]: `${syndicate?.deal?.docs?.length} ${language?.v3?.deal?.documents}`,
+            "": (
               <div
                 onClick={() => {
                   setsyndicateInfo(syndicate);
@@ -349,7 +351,7 @@ const SyndicateRequest = ({}: any) => {
                 <div className="inline-flex items-center">
                   <span>
                     <img
-                      className=" max-h-9 pr-4"
+                      className=" h-9 w-9 mr-2.5 rounded-full"
                       src={dealDetail?.profile?.logo}
                     ></img>
                   </span>
@@ -383,25 +385,25 @@ const SyndicateRequest = ({}: any) => {
                     {React.Children.toArray(
                       dealDetail?.comments?.map((comments: any) => (
                         <div className=" max-h-24 p-2 pt-3  overflow-hidden bg-cbc-grey-sec font-medium  w-full items-center justify-between">
-                          <div className=" pl-2 inline-flex items-center">
-                            <span>
-                              <img
-                                className="max-h-7"
-                                src={
-                                  comments?.author_id === user?.id
-                                    ? "https://w7.pngwing.com/pngs/178/595/png-transparent-user-profile-computer-icons-login-user-avatars-thumbnail.png"
-                                    : dealDetail?.profile?.logo
-                                }
-                                alt="Author Logo"
-                              />
+                          <div className=" pl-2 inline-flex items-start">
+                            <img
+                              className="h-7 w-7 rounded-full"
+                              src={
+                                comments?.author_id === user?.id
+                                  ? "https://w7.pngwing.com/pngs/178/595/png-transparent-user-profile-computer-icons-login-user-avatars-thumbnail.png"
+                                  : dealDetail?.profile?.logo
+                              }
+                              alt="Author Logo"
+                            />
+                            <span className="ml-2">
+                              <h1 className="font-medium capitalize text-xl">
+                                {comments?.author_id === user?.id
+                                  ? "You"
+                                  : comments?.author_name}
+                              </h1>
+                              <p className="pt-1">{comments?.message}</p>
                             </span>
-                            <h1 className="pl-4 font-bold capitalize text-xl">
-                              {comments?.author_id === user?.id
-                                ? "You"
-                                : comments?.author_name}
-                            </h1>
                           </div>
-                          <p className="pl-14 pt-3">{comments?.message}</p>
                         </div>
                       ))
                     )}

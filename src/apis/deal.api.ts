@@ -134,9 +134,10 @@ export const addCommentOnDeal = (
     }
   );
 };
-export const signOff = (dealId: number, token: string) => {
+export const signOff = (emptyObj: any, dealId: number, token: string) => {
   return axios.post(
     `${ENV.API_URL}/${ENV.API_VERSION}/deals/${dealId}/sign_off`,
+    emptyObj,
     {
       headers: {
         Authorization: `Bearer ${token}`,

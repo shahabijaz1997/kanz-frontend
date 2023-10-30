@@ -94,10 +94,9 @@ const DealApproval = ({}: any) => {
                 onClick={(e) => {
                   e.preventDefault();
                   e.stopPropagation();
-                  console.log(deal?.deal?.id);
                   navigate(
                     `${RoutesEnums.SYNDICATE_DEAL_DETAIL}/${deal?.deal?.id}`,
-                    { state: KanzRoles.SYNDICATE }
+                    { state: deal?.deal?.type }
                   );
                 }}
                 className="bg-neutral-100 inline-flex items-center justify-center w-[30px] h-[30px] rounded-full transition-all hover:bg-cbc-transparent"

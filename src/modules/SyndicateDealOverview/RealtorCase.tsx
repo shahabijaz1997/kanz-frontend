@@ -69,7 +69,7 @@ const RealtorCase = ({ id }: any) => {
   const postSignOff = async () => {
     try {
       setLoading(true);
-      let { status, data } = await signOff(deal?.id, authToken);
+      let { status, data } = await signOff({}, deal?.id, authToken);
       if (status === 200) {
         toast.success("Congratulations! Deal Signed Off");
         setModalOpen(false);
