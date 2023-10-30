@@ -14,7 +14,7 @@ import Modal from "../../../shared/components/Modal";
 import CrossIcon from "../../../ts-icons/crossIcon.svg";
 import { saveDataHolder } from "../../../redux-toolkit/slicer/dataHolder.slicer";
 import { getInvitedSyndicates } from "../../../apis/syndicate.api";
-import { getViewDealSyndicates } from "../../../apis/deal.api";
+import { getViewDealSyndicates, signOff } from "../../../apis/deal.api";
 import { addCommentOnDeal } from "../../../apis/deal.api";
 import { saveToken } from "../../../redux-toolkit/slicer/auth.slicer";
 import { ApplicationStatus } from "../../../enums/types.enum";
@@ -126,6 +126,23 @@ const SyndicateRequest = ({}: any) => {
       clearTimeout(timer);
     }, 1000);
   };
+  const postSignOff = async (id: any) => {
+    try {
+      setLoading(true);
+      let { status, data } = await signOff(id, authToken);
+      if (status === 200) {
+        toast.success("Congratulations! Deal Signed Off");
+        setModalOpen(false);
+      }
+    } catch (error) {
+      console.log(error);
+    } finally {
+      toast.dismiss();
+      viewDealSyndicate(syndicateInfo?.deal?.id, syndicateInfo?.invitee?.id);
+      setLoading(false);
+      setChanges({ comment: "", action: "", document: null });
+    }
+  };
 
   const onAddCommentOnDeal = async (id: any) => {
     try {
@@ -138,11 +155,12 @@ const SyndicateRequest = ({}: any) => {
       if (status === 200) {
         toast.success(language?.v3?.common?.suces_msg, toastUtil);
         setModalOpen(false);
+        postSignOff(id);
+        viewDealSyndicate(syndicateInfo?.deal?.id, syndicateInfo?.invitee?.id);
       }
     } catch (error) {
       console.log(error);
     } finally {
-      viewDealSyndicate(syndicateInfo?.deal?.id, syndicateInfo?.invitee?.id);
       setLoading(false);
       setChanges({ comment: "", action: "", document: null });
     }

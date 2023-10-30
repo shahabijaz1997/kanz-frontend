@@ -10,6 +10,7 @@ import { numberFormatter } from "../../../utils/object.utils";
 import Button from "../../../shared/components/Button";
 import { saveToken } from "../../../redux-toolkit/slicer/auth.slicer";
 import { RoutesEnums } from "../../../enums/routes.enum";
+import CustomStatus from "../../../shared/components/CustomStatus";
 
 const Requests = ({ id }: any) => {
   const navigate = useNavigate();
@@ -18,8 +19,9 @@ const Requests = ({ id }: any) => {
   const authToken: any = useSelector((state: RootState) => state.auth.value);
   const columns = [
     "Syndicate",
-    "Type",
-    "Sent Date",
+    "Status",
+    "Invitation Sent On",
+    "Invitation Expiry On",
     language?.v3?.syndicate?.table?.action,
   ];
   const [loading, setLoading]: any = useState(false);
@@ -42,13 +44,20 @@ const Requests = ({ id }: any) => {
       let { status, data } = await getDealSyndicates(id, authToken);
       if (status === 200) {
         let deals = data?.status?.data
-          ?.filter((deal: any) => deal?.status === "interested")
+          ?.filter((deal: any) => deal?.status != "pending")
           .map((deal: any) => {
             return {
               id: deal?.id,
-              ["Syndicate"]: deal?.invitee?.name,
-              ["Type"]: deal?.user,
-              ["Sent Date"]: deal?.sent_date || "N/A",
+              ["Syndicate"]: (
+                <span className=" capitalize">{deal?.invitee?.name}</span>
+              ),
+              ["Status"]: (
+                <span>
+                  <CustomStatus options={deal?.status} />
+                </span>
+              ),
+              ["Invitation Sent On"]: deal?.user,
+              ["Invitation Expiry On"]: deal?.invite_expiry || "N/A",
               Action: (
                 <Button
                   divStyle="items-center justify-end"

@@ -6,11 +6,12 @@ import { RootState } from "../../../redux-toolkit/store/store";
 import { ApplicationStatus } from "../../../enums/types.enum";
 import { saveDataHolder } from "../../../redux-toolkit/slicer/dataHolder.slicer";
 import { getDealSyndicates } from "../../../apis/deal.api";
-import { numberFormatter } from "../../../utils/object.utils";
 import Button from "../../../shared/components/Button";
 import { saveToken } from "../../../redux-toolkit/slicer/auth.slicer";
 import { RoutesEnums } from "../../../enums/routes.enum";
 import CustomStatus from "../../../shared/components/CustomStatus";
+import { numberFormatter } from "../../../utils/object.utils";
+import Spinner from "../../../shared/components/Spinner";
 
 const InvitedSyndicates = ({ id }: any) => {
   const navigate = useNavigate();
@@ -19,8 +20,9 @@ const InvitedSyndicates = ({ id }: any) => {
   const authToken: any = useSelector((state: RootState) => state.auth.value);
   const columns = [
     "Syndicate",
-    "Type",
-    "Sent Date",
+    "Status",
+    "Comments",
+    "Documents",
     language?.v3?.syndicate?.table?.action,
   ];
   const [loading, setLoading]: any = useState(false);
@@ -43,11 +45,29 @@ const InvitedSyndicates = ({ id }: any) => {
       let { status, data } = await getDealSyndicates(id, authToken);
       if (status === 200) {
         let deals = data?.status?.data?.map((deal: any) => {
+          const documents = deal?.documents || "N/A";
+          const documentsCount = Array.isArray(documents)
+            ? documents.length
+            : 0;
           return {
             id: deal?.id,
-            ["Syndicate"]: deal?.invitee?.name,
-            ["Type"]: deal?.user,
-            ["Sent Date"]: deal?.sent_date || "N/A",
+            ["Syndicate"]: (
+              <span className=" capitalize">{deal?.invitee?.name}</span>
+            ),
+            ["Status"]: (
+              <span className="capitalize">
+                {" "}
+                <CustomStatus options={deal?.status} />
+              </span>
+            ),
+            ["Comments"]:
+              <p className=" opacity-90 font-light">{deal?.deal?.comment}</p> ||
+              "",
+            ["Documents"]: (
+              <span className=" capitalize text-cyan-600">
+                {documentsCount} documents
+              </span>
+            ),
             Action: (
               <Button
                 divStyle="items-center justify-end"
@@ -102,18 +122,32 @@ const InvitedSyndicates = ({ id }: any) => {
   };
 
   return (
-    <section className="mt-10">
-      <Table
-        columns={columns}
-        pagination={pagination}
-        paginate={paginate}
-        onclick={(row: any) => {
-          if (row?.Status !== ApplicationStatus.SUBMITTED) {
-            dispatch(saveDataHolder(row.id));
-            navigate(`/create-deal/${row?.State?.current_step + 2}`);
+    <section className="mt-10 relative">
+      {loading ? (
+        <div
+          className="absolute left-0 top-0 w-full h-full grid place-items-center"
+          style={{ backgroundColor: "rgba(255, 255, 255, 1)", zIndex: 50 }}
+        >
+          <Spinner />
+        </div>
+      ) : (
+        <Table
+          columns={columns}
+          pagination={pagination}
+          paginate={paginate}
+          onclick={(row: any) => {
+            if (row?.Status !== ApplicationStatus.SUBMITTED) {
+              dispatch(saveDataHolder(row.id));
+              navigate(`/create-deal/${row?.State?.current_step + 2}`);
+            }
+          }}
+          noDataNode={
+            <span className="absolute left-1/2 top-1/2 translate-x-[-50%] translate-y-[-50%]">
+              No Data
+            </span>
           }
-        }}
-      />
+        />
+      )}
     </section>
   );
 };
