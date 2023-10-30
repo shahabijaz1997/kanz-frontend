@@ -14,7 +14,7 @@ const Drawer = ({
 
   return (
     <aside
-      className={`mt-[77px] ${drawerWidth} fixed top-0 h-full ease-in-out ${
+      className={`mt-[50px] ${drawerWidth} fixed top-0 h-full ease-in-out ${
         !isOpen ? "z-[-1]" : "z-[199]"
       }
     ${

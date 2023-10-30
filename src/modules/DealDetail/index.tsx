@@ -20,6 +20,7 @@ import { getDealDetail, getDealDocuments } from "../../apis/deal.api";
 import InvitedSyndicates from "./InvitedSyndicates";
 import UserListingPopup from "./UserListingPopup";
 import Requests from "./Requests";
+import { ApplicationStatus } from "../../enums/types.enum";
 
 const DealDetail = ({}: any) => {
   const params = useParams();
@@ -41,7 +42,7 @@ const DealDetail = ({}: any) => {
 
   const [selected, setSelected]: any = useState(tabs[0]);
   const [loading, setLoading]: any = useState(false);
-  const [dealDetail, setDealDetail] = useState(null);
+  const [dealDetail, setDealDetail]: any = useState(null);
   const [dealDocs, setDealDocs] = useState(null);
   const [showInviteSyndicate, setShowInviteSyndicate] = useState(false);
 
@@ -78,7 +79,13 @@ const DealDetail = ({}: any) => {
         <Header />
       </section>
       <aside className="w-full h-full flex items-start justify-start">
-        <Sidebar type={KanzRoles.STARTUP} />
+        <Sidebar
+          type={
+            state === KanzRoles.STARTUP
+              ? KanzRoles.STARTUP
+              : KanzRoles.SYNDICATE
+          }
+        />
         {loading ? (
           <div
             className="absolute left-0 top-0 w-full h-full grid place-items-center"
@@ -112,6 +119,7 @@ const DealDetail = ({}: any) => {
                   <Button
                     onClick={() => setShowInviteSyndicate(!showInviteSyndicate)}
                     className="w-[80px]"
+                    disabled={dealDetail?.status !== ApplicationStatus.APPROVED}
                   >
                     {language?.v3?.button?.invite}
                   </Button>

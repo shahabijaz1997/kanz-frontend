@@ -339,7 +339,7 @@ const StartupCase = ({ id }: any) => {
   const postSignOff = async () => {
     try {
       setLoading(true);
-      let { status, data } = await signOff(deal?.id, authToken);
+      let { status, data } = await signOff({}, deal?.id, authToken);
       if (status === 200) {
         toast.success("Congratulations! Deal Signed Off");
         setModalOpen(false);
@@ -552,7 +552,6 @@ const StartupCase = ({ id }: any) => {
 
             {/* Section Right */}
             <section className="w-[30%]">
-              gfdgffg
               {/* Show/Hide based on some conditions */}
               {deal?.invite && deal?.invite?.status !== DealStatus.ACCEPTED && (
                 <div className="w-full inline-flex justify-end gap-4">

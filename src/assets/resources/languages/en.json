@@ -751,7 +751,10 @@
       "instrument_type": "Instrument Type",
       "equity_type": "Equity Type",
       "expected_dividend_yield": "Expected Dividend Yield",
-      "expected_annual_return": "Expected Annual Return"
+      "expected_annual_return": "Expected Annual Return",
+      "syndicate": "Syndicate",
+      "comments": "Comments",
+      "documents": "Documents"
     },
     "table": {
       "title": "Title",
@@ -784,7 +787,12 @@
       "submitted_message": "Please wait while our customer support officer review your submitted deal",
       "accept": "I agree",
       "not_added": "N/A",
-      "investments": "Investments"
+      "investments": "Investments",
+      "risk_disc": "Risk & Disclaimers",
+      "invest_details": "Investment Details",
+      "end_on": "Ends On",
+      "am_raised": "Amount Raised",
+      "suces_msg": "Comment added successfully!"
     },
     "button": {
       "new_deal": "Create New Deal",
@@ -798,92 +806,26 @@
       "close": "Close",
       "seeMore": "See More",
       "seeLess": "See Less",
-      "approve": "Approve"
+      "new_tab": "Open in New Tab",
+      "app": "Approve",
+      "req_change": "Request Changes",
+      "interested": "Approve",
+      "view": "View Doc"
     },
     "syndicate": {
       "table": {
         "title": "Syndicate",
-        "deal_title": "Deal",
-        "comments": "Comments",
-        "status": "Status",
-        "documents": "Documents",
-        "view": "View"
+        "dealflow": "Deal Flow",
+        "raising_ventures": "Raising Ventures Fund",
+        "action": "Action"
       },
       "deals": {
         "table": {
           "title": "Title",
-          "type": "Type",
+          "category": "Category",
           "status": "Status",
-          "stage": "Stage",
-          "round": "Round",
-          "target": "Target",
-          "valuation": "Valuation",
-          "propertyName": "Property Name",
-          "size": "Size",
-          "features": "Features",
-          "sellingPrice": "Selling Price",
-          "rentalAmount": "Rental Amount",
           "end_date": "End Date",
-          "action": "Action"
-        },
-        "common": {
-          "search": "Search",
-          "disclaimer": "Disclaimer",
-          "deal": "Deal",
-          "noData": "No Data Available",
-          "vid_specs": "mp4 upto 10MB",
-          "i_agree": "Agree with the terms",
-          "i_agree_desc": "I agree with all the above mentioned terms",
-          "disclaimer_desc": "Lorem ipsum dolor sit amet consectetur, adipisicing elit. Repudiandae quidem libero impedit voluptatum quasi delectus, fuga in aliquid deserunt exercitationem explicabo asperiores, dolorem veritatis maiores, illo vitae officiis sapiente? Est?",
-          "percent": "Percent",
-          "sqft": "Square Feet",
-          "submitted_title": "Your Deal has been submitted",
-          "submitted_message": "Please wait while our customer support officer review your submitted deal",
-          "accept": "I agree",
-          "not_added": "N/A",
-          "investments": "Investments",
-          "risk_disc": "Risk & Disclaimers",
-          "invest_details": "Investment Details",
-          "end_on": "Ends On",
-          "am_raised": "Amount Raised",
-          "suces_msg": "Comment added successfully!"
-        },
-        "button": {
-          "new_deal": "Create New Deal",
-          "invite": "Invite",
-          "invite_link": "Copy Invite Link",
-          "new": "New",
-          "cancel": "Cancel",
-          "add": "Add",
-          "add_new_link": "Add New Link",
-          "copy_link_success": "Link has been copied",
-          "close": "Close",
-          "seeMore": "See More",
-          "seeLess": "See Less",
-          "new_tab": "Open in New Tab",
-          "app": "Approve",
-          "req_change": "Request Changes",
-          "interested": "Approve",
-          "view": "View Doc",
-          "approve": "Approve",
-          "view_all_photos": "View All Photos"
-        },
-        "syndicate": {
-          "table": {
-            "title": "Syndicate",
-            "dealflow": "Deal Flow",
-            "raising_ventures": "Raising Ventures Fund",
-            "action": "Action"
-          },
-          "deals": {
-            "table": {
-              "title": "Title",
-              "category": "Category",
-              "status": "Status",
-              "end_date": "End Date",
-              "target": "Target"
-            }
-          }
+          "target": "Target"
         }
       }
     }
