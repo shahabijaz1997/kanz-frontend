@@ -5,12 +5,14 @@ import RealtorCase from "./RealtorCase";
 
 const CURRENCIES = ["USD", "AED"];
 
-const SyndicateDealOverview = ({ }: any) => {
-    const { state } = useLocation();
-    const { id } = useParams();
+const SyndicateDealOverview = ({}: any) => {
+  const { state } = useLocation();
+  const { id } = useParams();
 
-    return (
-      state === KanzRoles.STARTUP?.toLocaleLowerCase() ? <StartupCase id={id} /> : <RealtorCase id={id} />
-    );
+  return state === KanzRoles.STARTUP?.toLocaleLowerCase() ? (
+    <StartupCase id={id} />
+  ) : (
+    <RealtorCase id={id} />
+  );
 };
 export default SyndicateDealOverview;
