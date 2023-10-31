@@ -161,7 +161,7 @@ const Realtor = ({ }: any) => {
                             </section>
 
                             <section className="mt-10">
-                                <Table columns={columns} pagination={pagination} paginate={paginate} onclick={(row: any) => {
+                                <Table columns={columns} goToPage={paginate}  pagination={pagination} paginate={paginate} onclick={(row: any) => {
                                     if (row?.Status !== ApplicationStatus.SUBMITTED) navigate(`${RoutesEnums.DEAL_DETAIL}/${row?.id}`, { state: KanzRoles.REALTOR })
                                     else setModalOpen("2");
                                 }} noDataNode={<Button onClick={() => setModalOpen("1")} className="absolute left-1/2 top-1/2 translate-x-[-50%] translate-y-[-50%]">{language?.v3?.button?.new_deal}</Button>} />

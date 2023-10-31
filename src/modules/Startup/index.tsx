@@ -22,7 +22,7 @@ import Chevrond from "../../ts-icons/chevrond.svg";
 import EditIcon from "../../ts-icons/editIcon.svg";
 import CustomStatus from "../../shared/components/CustomStatus";
 
-const Startup = ({}: any) => {
+const Startup = ({ }: any) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
@@ -88,36 +88,32 @@ const Startup = ({}: any) => {
             ),
             [language?.v3?.table?.type]: deal?.instrument_type,
             State: deal?.current_state,
-            [language?.v3?.table?.valuation]: `$${numberFormatter(
-              Number(deal?.valuation)
-            )} ${language?.v3?.deal?.valuation}`,
+
             Steps: deal?.current_state?.steps,
             [language?.v3?.table?.action]: (
               <React.Fragment>
                 {(deal?.status === ApplicationStatus.DRAFT ||
                   deal?.status === ApplicationStatus.REOPENED) && (
-                  <div
-                    onClick={(e) => {
-                      e.preventDefault();
-                      e.stopPropagation();
-                      dispatch(saveDataHolder(deal.id));
-                      deal?.status === ApplicationStatus.REOPENED
-                        ? navigate(
-                            `/create-deal/${
-                              deal?.current_state?.current_step + 1
+                    <div
+                      onClick={(e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        dispatch(saveDataHolder(deal.id));
+                        deal?.status === ApplicationStatus.REOPENED
+                          ? navigate(
+                            `/create-deal/${deal?.current_state?.current_step + 1
                             }`
                           )
-                        : navigate(
-                            `/create-deal/${
-                              deal?.current_state?.current_step + 2
+                          : navigate(
+                            `/create-deal/${deal?.current_state?.current_step + 2
                             }`
                           );
-                    }}
-                    className="bg-neutral-100 inline-flex items-center justify-center w-[26px] h-[26px] p-1 rounded-full transition-all hover:bg-cbc-transparent"
-                  >
-                    <EditIcon className="w-6 h-6" stroke={"#737373"} />
-                  </div>
-                )}
+                      }}
+                      className="bg-neutral-100 inline-flex items-center justify-center w-[26px] h-[26px] p-1 rounded-full transition-all hover:bg-cbc-transparent"
+                    >
+                      <EditIcon className="w-6 h-6" stroke={"#737373"} />
+                    </div>
+                  )}
                 <div
                   onClick={(e) => {
                     e.preventDefault();
@@ -176,6 +172,15 @@ const Startup = ({}: any) => {
 
         return { ...prev, current_page: prevPage, data };
       });
+    } else {
+      setPagination((prev: any) => {
+        const prevPage = (Number(type) + 1) - 1;
+        const startIndex = (prevPage - 1) * prev.items_per_page;
+        const endIndex = startIndex + prev.items_per_page;
+        const data = deals.slice(startIndex, endIndex);
+
+        return { ...prev, current_page: type, data };
+      });
     }
   };
 
@@ -227,11 +232,10 @@ const Startup = ({}: any) => {
                         tabs.map((tab) => (
                           <li
                             onClick={() => setSelectedTab(tab)}
-                            className={`py-2 px-3 font-medium cursor-pointer rounded-md transition-all ${
-                              selectedTab === tab
+                            className={`py-2 px-3 font-medium cursor-pointer rounded-md transition-all ${selectedTab === tab
                                 ? "text-neutral-900 bg-neutral-100"
                                 : "text-gray-500"
-                            } `}
+                              } `}
                           >
                             {tab} &nbsp;(0)
                           </li>
@@ -250,6 +254,7 @@ const Startup = ({}: any) => {
                   columns={columns}
                   pagination={pagination}
                   paginate={paginate}
+                  goToPage={paginate}
                   onclick={(row: any) => {
                     if (row?.Status !== ApplicationStatus.SUBMITTED)
                       navigate(`${RoutesEnums.DEAL_DETAIL}/${row?.id}`, {
