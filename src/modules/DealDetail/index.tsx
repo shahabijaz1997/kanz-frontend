@@ -115,7 +115,11 @@ const DealDetail = ({}: any) => {
               </h1>
               <div className="inline-flex items-center gap-2">
                 <div className="relative z-10">
-                  <UserListingPopup dealId={id} type={KanzRoles.SYNDICATE} />
+                  <UserListingPopup
+                    approve={dealDetail?.status}
+                    dealId={id}
+                    type={KanzRoles.SYNDICATE}
+                  />
                 </div>
 
                 <div className="bg-white rounded-md border-neutral-300 border-[1px] inline-flex items-center justify-center">

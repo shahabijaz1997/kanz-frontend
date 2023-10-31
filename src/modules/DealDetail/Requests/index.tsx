@@ -132,7 +132,9 @@ const Requests = ({ id }: any) => {
           }}
           noDataNode={
             <span className="absolute left-1/2 top-1/2 translate-x-[-50%] translate-y-[-50%]">
-              No Data
+              No invites sent! Click on the{" "}
+              <span className=" font-bold">invite button on top right</span> to
+              invite a syndicate
             </span>
           }
         />
