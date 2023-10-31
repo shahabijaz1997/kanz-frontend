@@ -12,13 +12,14 @@ import SearchIcon from "../../../ts-icons/searchIcon.svg";
 import { KanzRoles } from "../../../enums/roles.enum";
 import { toastUtil } from "../../../utils/toast.utils";
 import { toast } from "react-toastify";
+import { ApplicationStatus } from "../../../enums/types.enum";
 interface Syndicate {
   id: number;
   title: React.ReactNode;
   handle: string;
   action: React.ReactNode;
 }
-const UserListingPopup = ({ dealId, type }: any) => {
+const UserListingPopup = ({ approve, dealId, type }: any) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const ref: any = useRef();
@@ -107,6 +108,7 @@ const UserListingPopup = ({ dealId, type }: any) => {
       }
     }
   };
+
   return (
     <div ref={ref}>
       <Button
@@ -114,7 +116,7 @@ const UserListingPopup = ({ dealId, type }: any) => {
           setShowInviteSyndicate(true);
         }}
         className="w-[80px]"
-        // disabled={dealDetail?.status !== ApplicationStatus.APPROVED}
+        disabled={approve !== ApplicationStatus.APPROVED}
       >
         {language?.v3?.button?.invite}
       </Button>
