@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { StartupRoutes } from "../../../enums/routes.enum";
+import { RoutesEnums, StartupRoutes } from "../../../enums/routes.enum";
 import { onReviewDeal } from "../../../apis/deal.api";
 import { KanzRoles } from "../../../enums/roles.enum";
 import { DealType } from "../../../enums/types.enum";
@@ -34,7 +34,7 @@ const ReviewDeal = ({ navigate, dealId, authToken, metadata, language, showDeal 
 
     const showUI = (field: any) => {
         return (
-            <div className="pb-3 w-full cursor-pointer inline-flex w-full justify-between" onClick={() => navigate(`${StartupRoutes.CREATE_DEAL}/1`)}>
+            <div className="pb-3 w-full cursor-pointer inline-flex w-full justify-between" onClick={() => navigate(`${RoutesEnums.CREATE_DEAL}/1`)}>
                 <h3 className="capitalize text-neutral-900 font-medium text-sm">{field?.statement}</h3>
                 <span className="inline-flex items-center">
                     {(typeof field?.value === "string" || typeof field?.value === "number") && <p className="capitalize text-neutral-500 font-normal text-sm">{comaFormattedNumber(field?.value)}</p>}
@@ -61,7 +61,7 @@ const ReviewDeal = ({ navigate, dealId, authToken, metadata, language, showDeal 
             return React.Children.toArray(
                 uniques?.map((nz: any) => {
                     return (
-                        <div className="pb-3 w-full cursor-pointer inline-flex flex-col" onClick={() => navigate(`${StartupRoutes.CREATE_DEAL}/1`)}>
+                        <div className="pb-3 w-full cursor-pointer inline-flex flex-col" onClick={() => navigate(`${RoutesEnums.CREATE_DEAL}/1`)}>
                             <h3 className="capitalize text-neutral-900 font-medium text-sm">{nz?.fields[1]?.value}</h3>
                             <p className="capitalize text-neutral-500 font-normal text-sm">{nz?.fields[0]?.value}</p>
                         </div>
@@ -90,7 +90,7 @@ const ReviewDeal = ({ navigate, dealId, authToken, metadata, language, showDeal 
                         data && React.Children.toArray(
                             data?.map((step: any, index: number) => {
                                 return (
-                                    <div className={`w-full cursor-pointer border-b-[1px] border-b-neutral-200 ${index !== 0 ? "py-4" : "pb-4"}`} onClick={() => navigate(`${StartupRoutes.CREATE_DEAL}/${index + 1}`)}>
+                                    <div className={`w-full cursor-pointer border-b-[1px] border-b-neutral-200 ${index !== 0 ? "py-4" : "pb-4"}`} onClick={() => navigate(`${RoutesEnums.CREATE_DEAL}/${index + 1}`)}>
                                         <h2 className="text-cc-black font-semibold text-2xl capitalize mb-3">{step?.title}</h2>
                                         {showLoopSelection(step)}
                                     </div>

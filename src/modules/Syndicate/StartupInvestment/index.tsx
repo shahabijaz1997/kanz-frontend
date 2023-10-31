@@ -9,7 +9,7 @@ import SearchIcon from "../../../ts-icons/searchIcon.svg";
 import Spinner from "../../../shared/components/Spinner";
 import Button from "../../../shared/components/Button";
 import Table from "../../../shared/components/Table";
-import { RoutesEnums, StartupRoutes } from "../../../enums/routes.enum";
+import { RoutesEnums } from "../../../enums/routes.enum";
 import Modal from "../../../shared/components/Modal";
 import CrossIcon from "../../../ts-icons/crossIcon.svg";
 import { saveDataHolder } from "../../../redux-toolkit/slicer/dataHolder.slicer";
@@ -17,6 +17,7 @@ import { getDeals } from "../../../apis/deal.api";
 import { numberFormatter } from "../../../utils/object.utils";
 import { saveToken } from "../../../redux-toolkit/slicer/auth.slicer";
 import { ApplicationStatus } from "../../../enums/types.enum";
+import CustomStatus from '../../../shared/components/CustomStatus';
 
 
 const StartupInvestment = ({ }: any) => {
@@ -53,7 +54,7 @@ const StartupInvestment = ({ }: any) => {
                         [language?.v3?.table?.target]: `$${numberFormatter(Number(deal?.target))}`,
                         [language?.v3?.table?.stage]: deal?.title || "N/A",
                         [language?.v3?.table?.round]: deal?.round,
-                        [language?.v3?.table?.status]: deal?.status,
+                        [language?.v3?.table?.status]: <CustomStatus options={deal?.status}/>,
                         [language?.v3?.table?.type]: deal?.instrument_type,
                         Stage: deal?.current_stage,
                         Action: <Button divStyle='items-center justify-end' type='outlined' className='!p-3 !py-1 !rounded-full' onClick={() => {
@@ -245,7 +246,7 @@ const StartupInvestment = ({ }: any) => {
                             </div>
                             <div className="w-full inline-flex items-center justify-center gap-3 mt-10">
                                 <Button className="w-[100px] bg-transparent border-cyan-800 border-[1px]" type={"outlined"} onClick={() => setModalOpen(null)}>{language?.v3?.button?.cancel}</Button>
-                                <Button className="w-[100px]" disabled={!dummyDisclaimers.d1 || !dummyDisclaimers.d2 || !dummyDisclaimers.d3} onClick={() => navigate(`${StartupRoutes.CREATE_DEAL}/1`)}>{language?.buttons?.continue}</Button>
+                                <Button className="w-[100px]" disabled={!dummyDisclaimers.d1 || !dummyDisclaimers.d2 || !dummyDisclaimers.d3} onClick={() => navigate(`${RoutesEnums.CREATE_DEAL}/1`)}>{language?.buttons?.continue}</Button>
                             </div>
                         </aside>
                     </div>

@@ -6,24 +6,20 @@ import { RootState } from "../../../redux-toolkit/store/store";
 import { ApplicationStatus } from "../../../enums/types.enum";
 import { saveDataHolder } from "../../../redux-toolkit/slicer/dataHolder.slicer";
 import { getDealSyndicates } from "../../../apis/deal.api";
+import { numberFormatter } from "../../../utils/object.utils";
 import Button from "../../../shared/components/Button";
 import { saveToken } from "../../../redux-toolkit/slicer/auth.slicer";
 import { RoutesEnums } from "../../../enums/routes.enum";
 import CustomStatus from "../../../shared/components/CustomStatus";
-import { numberFormatter } from "../../../utils/object.utils";
+import { spawn } from "child_process";
 import Spinner from "../../../shared/components/Spinner";
 
-const InvitedSyndicates = ({ id }: any) => {
+const Requests = ({ id }: any) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const language: any = useSelector((state: RootState) => state.language.value);
   const authToken: any = useSelector((state: RootState) => state.auth.value);
-  const columns = [
-    "Syndicate",
-    "Status",
-    "Invitation Sent On",
-    "Invite Expiration Date",
-  ];
+  const columns = ["Syndicate", "Type", "Comments", "Documents"];
   const [loading, setLoading]: any = useState(false);
   const [invites, setInvites]: any = useState([]);
   const [pagination, setPagination] = useState({
@@ -44,22 +40,23 @@ const InvitedSyndicates = ({ id }: any) => {
       let { status, data } = await getDealSyndicates(id, authToken);
       if (status === 200) {
         let deals = data?.status?.data
-          ?.filter((deal: any) => deal?.status === "pending")
-          ?.map((deal: any) => {
+          ?.filter((deal: any) => deal?.status !== "pending")
+          .map((deal: any) => {
             return {
               id: deal?.id,
               ["Syndicate"]: (
                 <span className=" capitalize">{deal?.invitee?.name}</span>
               ),
-              ["Status"]: (
-                <span className="capitalize">
-                  {" "}
-                  <CustomStatus options={deal?.status} />
-                </span>
+              ["Type"]: (
+                <span className=" capitalize">{deal?.invitee?.type}</span>
               ),
-              ["Invitation Sent On"]: deal?.sent_at,
-              ["Invite Expiration Date"]: deal?.invite_expiry || "N/A",
-
+              ["Comments"]: deal?.deal?.comment || " ",
+              ["Documents"]:
+                (
+                  <span className="text-cyan-500">
+                    `{deal?.deal?.docs?.length} documents`
+                  </span>
+                ) || "N/A",
               Action: (
                 <Button
                   divStyle="items-center justify-end"
@@ -145,4 +142,4 @@ const InvitedSyndicates = ({ id }: any) => {
     </section>
   );
 };
-export default InvitedSyndicates;
+export default Requests;

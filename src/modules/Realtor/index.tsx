@@ -8,7 +8,7 @@ import SearchIcon from "../../ts-icons/searchIcon.svg";
 import React, { useEffect, useState } from "react";
 import Button from "../../shared/components/Button";
 import Table from "../../shared/components/Table";
-import { RoutesEnums, StartupRoutes } from "../../enums/routes.enum";
+import { RoutesEnums} from "../../enums/routes.enum";
 import Modal from "../../shared/components/Modal";
 import CrossIcon from "../../ts-icons/crossIcon.svg";
 import { saveDataHolder } from "../../redux-toolkit/slicer/dataHolder.slicer";
@@ -18,6 +18,7 @@ import Spinner from "../../shared/components/Spinner";
 import { ApplicationStatus } from "../../enums/types.enum";
 import Chevrond from "../../ts-icons/chevrond.svg";
 import EditIcon from "../../ts-icons/editIcon.svg";
+import CustomStatus from '../../shared/components/CustomStatus';
 
 
 const Realtor = ({ }: any) => {
@@ -65,7 +66,7 @@ const Realtor = ({ }: any) => {
                         [language?.v3?.table?.size]: `${comaFormattedNumber(deal?.size)} sqft`,
                         [language?.v3?.table?.features]: features || "N/A",
                         [language?.v3?.table?.sellingPrice]: `$${numberFormatter(Number(deal?.target))}`,
-                        [language?.v3?.table?.status]: deal?.status,
+                        [language?.v3?.table?.status]: <CustomStatus options={deal?.status}/>,
                         [language?.v3?.table?.rentalAmount]: `$${numberFormatter(Number(deal?.rental_amount))}`,
                         State: deal?.current_state,
 
@@ -254,7 +255,7 @@ const Realtor = ({ }: any) => {
                             </div>
                             <div className="w-full inline-flex items-center justify-center gap-3 mt-10">
                                 <Button className="w-[100px] bg-transparent border-cyan-800 border-[1px]" type={"outlined"} onClick={() => setModalOpen(null)}>{language?.v3?.button?.cancel}</Button>
-                                <Button className="w-[100px]" disabled={!dummyDisclaimers.d1 || !dummyDisclaimers.d2 || !dummyDisclaimers.d3} onClick={() => navigate(`${StartupRoutes.CREATE_DEAL}/1`)}>{language?.buttons?.continue}</Button>
+                                <Button className="w-[100px]" disabled={!dummyDisclaimers.d1 || !dummyDisclaimers.d2 || !dummyDisclaimers.d3} onClick={() => navigate(`${RoutesEnums.CREATE_DEAL}/1`)}>{language?.buttons?.continue}</Button>
                             </div>
                         </aside>
                     </div>
