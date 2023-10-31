@@ -83,10 +83,16 @@ const CreateDeal = () => {
           const step = data?.status?.data?.step_titles[event][i];
           all_steps.push({ id: i + 1, text: step });
         }
+
         let options: any = [];
         let stepper: any;
+        
         data?.status?.data?.steps[step - 1][event]?.sections.forEach((sec: any) => {
           sec?.fields?.sort((a: any, b: any) => a.index - b.index);
+          for (let i = 0; i < sec?.fields?.length; i++) {
+            const field = sec?.fields[i]
+            field?.options && field?.options?.sort((a: any, b: any) => a.index - b.index);
+          }
           let f = sec?.fields?.find((ques: any) => {
             return _dependencies?.find((dep: any) => dep?.dependable_field === ques?.id)
           });
