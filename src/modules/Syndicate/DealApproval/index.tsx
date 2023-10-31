@@ -22,7 +22,7 @@ import { ApplicationStatus } from "../../../enums/types.enum";
 import Chevrond from "../../../ts-icons/chevrond.svg";
 import CustomStatus from "../../../shared/components/CustomStatus";
 
-const DealApproval = ({}: any) => {
+const DealApproval = ({ }: any) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const language: any = useSelector((state: RootState) => state.language.value);
@@ -144,6 +144,15 @@ const DealApproval = ({}: any) => {
         const data = deals.slice(startIndex, endIndex);
         return { ...prev, current_page: prevPage, data };
       });
+    } else {
+      setPagination((prev: any) => {
+        const prevPage = (Number(type) + 1) - 1;
+        const startIndex = (prevPage - 1) * prev.items_per_page;
+        const endIndex = startIndex + prev.items_per_page;
+        const data = deals.slice(startIndex, endIndex);
+
+        return { ...prev, current_page: type, data };
+      });
     }
   };
 
@@ -185,11 +194,10 @@ const DealApproval = ({}: any) => {
                         tabs.map((tab) => (
                           <li
                             onClick={() => setSelectedTab(tab)}
-                            className={`py-2 px-3 font-medium cursor-pointer rounded-md transition-all ${
-                              selectedTab === tab
+                            className={`py-2 px-3 font-medium cursor-pointer rounded-md transition-all ${selectedTab === tab
                                 ? "text-neutral-900 bg-neutral-100"
                                 : "text-gray-500"
-                            } `}
+                              } `}
                           >
                             {tab} &nbsp;(0)
                           </li>
@@ -208,6 +216,7 @@ const DealApproval = ({}: any) => {
                     console.log("Row Clicked");
                   }}
                   paginate={paginate}
+                  goToPage={paginate}
                   noDataNode={
                     <Button
                       onClick={() => setModalOpen("1")}

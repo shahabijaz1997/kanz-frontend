@@ -125,7 +125,16 @@ const Realtor = ({ }: any) => {
 
                 return { ...prev, current_page: prevPage, data };
             });
-        }
+        } else {
+            setPagination((prev: any) => {
+              const prevPage = (Number(type) + 1) - 1;
+              const startIndex = (prevPage - 1) * prev.items_per_page;
+              const endIndex = startIndex + prev.items_per_page;
+              const data = deals.slice(startIndex, endIndex);
+      
+              return { ...prev, current_page: type, data };
+            });
+          }
     };
 
     return (

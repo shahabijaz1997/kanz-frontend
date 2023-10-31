@@ -24,7 +24,7 @@ const SyndicateDashboard = ({ }: any) => {
     const dispatch = useDispatch();
     const language: any = useSelector((state: RootState) => state.language.value);
     const authToken: any = useSelector((state: RootState) => state.auth.value);
-    
+
     const columns = [language?.v3?.table?.propertyName, language?.v3?.table?.size, language?.v3?.table?.status, language?.v3?.table?.features, language?.v3?.table?.sellingPrice, language?.v3?.table?.rentalAmount];
     const [pagination, setPagination] = useState({ items_per_page: 5, total_items: [], current_page: 1, total_pages: 0 });
     const [selectedTab, setSelectedTab] = useState();
@@ -58,7 +58,7 @@ const SyndicateDashboard = ({ }: any) => {
                         [language?.v3?.table?.size]: `${comaFormattedNumber(deal?.size)} sqft`,
                         [language?.v3?.table?.features]: features || "N/A",
                         [language?.v3?.table?.sellingPrice]: `$${numberFormatter(Number(deal?.target))}`,
-                        [language?.v3?.table?.status]: <CustomStatus options={deal?.status}/>,
+                        [language?.v3?.table?.status]: <CustomStatus options={deal?.status} />,
                         [language?.v3?.table?.rentalAmount]: `$${numberFormatter(Number(deal?.rental_amount))}`,
                         State: deal?.current_state,
                         Steps: deal?.current_state?.steps
@@ -94,6 +94,15 @@ const SyndicateDashboard = ({ }: any) => {
                 const data = deals.slice(startIndex, endIndex);
 
                 return { ...prev, current_page: prevPage, data };
+            });
+        } else {
+            setPagination((prev: any) => {
+                const prevPage = (Number(type) + 1) - 1;
+                const startIndex = (prevPage - 1) * prev.items_per_page;
+                const endIndex = startIndex + prev.items_per_page;
+                const data = deals.slice(startIndex, endIndex);
+
+                return { ...prev, current_page: type, data };
             });
         }
     };
@@ -131,13 +140,17 @@ const SyndicateDashboard = ({ }: any) => {
                             </section>
 
                             <section className="mt-10">
-                                <Table columns={columns} pagination={pagination} paginate={paginate} onclick={(row: any) => {
-                                    if (row?.Status !== ApplicationStatus.SUBMITTED) {
-                                        dispatch(saveDataHolder(row.id));
-                                        navigate(`/create-deal/${row?.State?.current_step + 2}`);
-                                    }
-                                    else setModalOpen("2");
-                                }} noDataNode={<Button onClick={() => setModalOpen("1")} className="absolute left-1/2 top-1/2 translate-x-[-50%] translate-y-[-50%]">{language?.v3?.button?.new_deal}</Button>} />
+                                <Table columns={columns}
+                                    pagination={pagination}
+                                    paginate={paginate}
+                                    goToPage={paginate}
+                                    onclick={(row: any) => {
+                                        if (row?.Status !== ApplicationStatus.SUBMITTED) {
+                                            dispatch(saveDataHolder(row.id));
+                                            navigate(`/create-deal/${row?.State?.current_step + 2}`);
+                                        }
+                                        else setModalOpen("2");
+                                    }} noDataNode={<Button onClick={() => setModalOpen("1")} className="absolute left-1/2 top-1/2 translate-x-[-50%] translate-y-[-50%]">{language?.v3?.button?.new_deal}</Button>} />
                             </section>
                         </React.Fragment>
                     )}
