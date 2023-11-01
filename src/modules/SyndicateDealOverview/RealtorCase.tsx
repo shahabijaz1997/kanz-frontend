@@ -349,7 +349,7 @@ const RealtorCase = ({ id }: any) => {
                   </Button>
                 </section>
               )}
-              <aside className="border-[1px] border-neutral-200 rounded-md w-full p-3 mt-5 flex gap-4 justify-start">
+              <aside className="border-[1px] border-neutral-200 rounded-md w-full p-3 mt-5 flex gap-4 justify-between">
                 {deal?.features?.bedrooms && (
                   <section className="inline-flex flex-col items-start justify-start">
                     <small className="text-neutral-500 text-sm font-medium mb-2">
@@ -456,7 +456,7 @@ const RealtorCase = ({ id }: any) => {
                   dangerouslySetInnerHTML={{ __html: deal?.terms }}
                 ></p>
               </div>
-              {deal?.invite?.status === DealStatus.PENDING && (
+              {deal?.invite?.status !== DealStatus.ACCEPTED && (
                 <Button
                   onClick={() => {
                     setModalOpen2(true);
@@ -474,7 +474,7 @@ const RealtorCase = ({ id }: any) => {
             {/* Section Right */}
             <section className="w-[30%]">
               {/* Show/Hide based on some conditions */}
-              {deal?.invite?.status === DealStatus.PENDING && (
+              {deal?.invite?.status !== DealStatus.ACCEPTED && (
                 <div className="w-full inline-flex justify-end gap-4">
                   <Button type="outlined" onClick={() => setModalOpen(true)}>
                     {language?.v3?.button?.req_change}
@@ -542,7 +542,7 @@ const RealtorCase = ({ id }: any) => {
               {deal?.external_links && (
                 <aside className="mt-5">
                   {" "}
-                  <h2 className="text-neutral-700 text-xl font-medium">
+                  <h2 className="text-neutral-700 text-xl pb-2 font-medium">
                     Property Links
                   </h2>
                   <div className="inline-flex flex-col justify-between h-full w-full overflow-hidden">
