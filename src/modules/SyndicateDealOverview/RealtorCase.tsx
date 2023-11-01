@@ -180,6 +180,7 @@ const RealtorCase = ({ id }: any) => {
     } catch (error) {
       console.log(error);
     } finally {
+      onGetdeal();
       setLoading(false);
       setChanges({ comment: "", action: "", document: null });
     }
@@ -479,7 +480,9 @@ const RealtorCase = ({ id }: any) => {
                   <Button type="outlined" onClick={() => setModalOpen(true)}>
                     {language?.v3?.button?.req_change}
                   </Button>
-                  <Button>{language?.v3?.button?.interested}</Button>
+                  <Button onClick={() => setModalOpen2(true)}>
+                    {language?.v3?.button?.interested}
+                  </Button>
                 </div>
               )}
               <aside className="border-[1px] border-neutral-200 rounded-md w-full p-3 mt-5">
@@ -726,15 +729,6 @@ const RealtorCase = ({ id }: any) => {
               <h3 className="text-xl font-medium text-neutral-700">
                 Deal Approval
               </h3>
-              <div
-                className="bg-white h-8 w-8 border-[1px] border-black rounded-md shadow shadow-cs-6 p-1 cursor-pointer"
-                onClick={() => {
-                  setChanges({ comment: "", action: "", document: null });
-                  setFiles([]);
-                }}
-              >
-                <CrossIcon stroke="#000" />
-              </div>
             </header>
 
             <section className="py-3 px-4">
