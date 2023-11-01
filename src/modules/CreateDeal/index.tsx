@@ -86,7 +86,7 @@ const CreateDeal = () => {
 
         let options: any = [];
         let stepper: any;
-        
+
         data?.status?.data?.steps[step - 1][event]?.sections.forEach((sec: any) => {
           sec?.fields?.sort((a: any, b: any) => a.index - b.index);
           for (let i = 0; i < sec?.fields?.length; i++) {
@@ -118,11 +118,9 @@ const CreateDeal = () => {
             setShowCustomBox(true);
             let sect: any = data?.status?.data?.steps[step - 1][event]?.sections?.find((s: any) => s.index === sec?.index);
 
-            if (sect?.fields?.length > 1) {
-              let thatObj = {...sect.fields[0]};
-              thatObj.value = ""
-              sect.fields = [thatObj]
-            }
+            let thatObj = { ...sect.fields[0] };
+            thatObj.value = "";
+            sect.fields = [{...thatObj}]
           }
           else {
             setShowCustomBox(true);
@@ -418,7 +416,7 @@ const CreateDeal = () => {
             </h3>
           )}
           <h3 className="text-neutral-700 font-medium text-base w-[450px] mt-3">
-            {ques?.statement}
+            {ques?.is_required && <span>*&nbsp;</span>}{ques?.statement}
           </h3>
           <p className="text-neutral-500 font-normal text-sm mb-2">
             <span className="text-neutral-500">{ques?.label}</span>&nbsp;
@@ -621,6 +619,7 @@ const CreateDeal = () => {
     }
   };
 
+  /* Validations */
   const checkValidation = () => {
     if (!dealData || !dealData[step - 1] || !dealData[step - 1][event]?.sections.length) return true;
     let flags: any[] = []
@@ -645,7 +644,10 @@ const CreateDeal = () => {
           flags[index].validations.push(flag);
         }
         else if (ques?.field_type === Constants.FILE) {
-          let flag = ques.value?.id ? true : false;
+          let flag = (ques.value?.id) ? true : false;
+          if (ques?.is_required && ques.value?.id) flag = true;
+          else if (!ques?.is_required) flag = true;
+          else flag = false;
           flags[index].validations.push(flag);
         }
         else if (ques?.field_type === Constants.NUMBER_INPUT || ques.field_type === Constants.TEXT_BOX || ques.field_type === Constants.TEXT_FIELD || ques.field_type === Constants.URL || ques.field_type === Constants.DATE) {

@@ -57,15 +57,6 @@ const Requests = ({ id }: any) => {
                     `{deal?.deal?.docs?.length} documents`
                   </span>
                 ) || "N/A",
-              Action: (
-                <Button
-                  divStyle="items-center justify-end"
-                  className="!p-3 !py-1 !rounded-full"
-                  onClick={() => {}}
-                >
-                  {":"}
-                </Button>
-              ),
             };
           });
 
@@ -107,9 +98,9 @@ const Requests = ({ id }: any) => {
 
         return { ...prev, current_page: prevPage, data };
       });
-    }else {
+    } else {
       setPagination((prev: any) => {
-        const prevPage = (Number(type) + 1) - 1;
+        const prevPage = Number(type) + 1 - 1;
         const startIndex = (prevPage - 1) * prev.items_per_page;
         const endIndex = startIndex + prev.items_per_page;
         const data = invites.slice(startIndex, endIndex);
@@ -134,12 +125,6 @@ const Requests = ({ id }: any) => {
           pagination={pagination}
           goToPage={paginate}
           paginate={paginate}
-          onclick={(row: any) => {
-            if (row?.Status !== ApplicationStatus.SUBMITTED) {
-              dispatch(saveDataHolder(row.id));
-              navigate(`/create-deal/${row?.State?.current_step + 2}`);
-            }
-          }}
           noDataNode={
             <span className="absolute left-1/2 top-1/2 translate-x-[-50%] translate-y-[-50%]">
               No invites sent! Click on the{" "}
