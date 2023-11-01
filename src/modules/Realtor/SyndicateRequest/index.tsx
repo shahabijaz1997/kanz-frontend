@@ -270,6 +270,15 @@ const SyndicateRequest = ({}: any) => {
 
         return { ...prev, current_page: prevPage, data };
       });
+    }else {
+      setPagination((prev: any) => {
+        const prevPage = (Number(type) + 1) - 1;
+        const startIndex = (prevPage - 1) * prev.items_per_page;
+        const endIndex = startIndex + prev.items_per_page;
+        const data = syndicatesInformation.slice(startIndex, endIndex);
+
+        return { ...prev, current_page: type, data };
+      });
     }
   };
 
@@ -315,6 +324,7 @@ const SyndicateRequest = ({}: any) => {
                   columns={columns}
                   pagination={pagination}
                   paginate={paginate}
+                  goToPage={paginate}
                   onclick={() => {}}
                   noDataNode={
                     <span className="absolute left-1/2 top-1/2 translate-x-[-50%] translate-y-[-50%]">

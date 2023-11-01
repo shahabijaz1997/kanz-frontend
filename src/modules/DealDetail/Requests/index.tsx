@@ -107,6 +107,15 @@ const Requests = ({ id }: any) => {
 
         return { ...prev, current_page: prevPage, data };
       });
+    }else {
+      setPagination((prev: any) => {
+        const prevPage = (Number(type) + 1) - 1;
+        const startIndex = (prevPage - 1) * prev.items_per_page;
+        const endIndex = startIndex + prev.items_per_page;
+        const data = invites.slice(startIndex, endIndex);
+
+        return { ...prev, current_page: type, data };
+      });
     }
   };
 
@@ -123,6 +132,7 @@ const Requests = ({ id }: any) => {
         <Table
           columns={columns}
           pagination={pagination}
+          goToPage={paginate}
           paginate={paginate}
           onclick={(row: any) => {
             if (row?.Status !== ApplicationStatus.SUBMITTED) {

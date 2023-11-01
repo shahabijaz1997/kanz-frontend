@@ -111,7 +111,16 @@ const StartupInvestment = ({ }: any) => {
 
                 return { ...prev, current_page: prevPage, data };
             });
-        }
+        }else {
+            setPagination((prev: any) => {
+              const prevPage = (Number(type) + 1) - 1;
+              const startIndex = (prevPage - 1) * prev.items_per_page;
+              const endIndex = startIndex + prev.items_per_page;
+              const data = deals.slice(startIndex, endIndex);
+      
+              return { ...prev, current_page: type, data };
+            });
+          }
     };
 
     return (
@@ -147,7 +156,11 @@ const StartupInvestment = ({ }: any) => {
                             </section>
 
                             <section className="mt-10">
-                                <Table columns={columns} pagination={pagination} paginate={paginate} onclick={(row: any) => {
+                                <Table columns={columns} 
+                                pagination={pagination} 
+                                paginate={paginate} 
+                                goToPage={paginate} 
+                                onclick={(row: any) => {
                                     if (row?.Status !== ApplicationStatus.SUBMITTED) {
                                         dispatch(saveDataHolder(row.id));
                                         navigate(`/create-deal/${row?.State?.current_step + 2}`);

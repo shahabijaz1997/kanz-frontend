@@ -64,7 +64,7 @@ const InvitedSyndicates = ({ id }: any) => {
                 <Button
                   divStyle="items-center justify-end"
                   className="!p-3 !py-1 !rounded-full"
-                  onClick={() => {}}
+                  onClick={() => { }}
                 >
                   {":"}
                 </Button>
@@ -110,6 +110,15 @@ const InvitedSyndicates = ({ id }: any) => {
 
         return { ...prev, current_page: prevPage, data };
       });
+    } else {
+      setPagination((prev: any) => {
+        const prevPage = (Number(type) + 1) - 1;
+        const startIndex = (prevPage - 1) * prev.items_per_page;
+        const endIndex = startIndex + prev.items_per_page;
+        const data = invites.slice(startIndex, endIndex);
+
+        return { ...prev, current_page: type, data };
+      });
     }
   };
 
@@ -127,6 +136,7 @@ const InvitedSyndicates = ({ id }: any) => {
           columns={columns}
           pagination={pagination}
           paginate={paginate}
+          goToPage={paginate}
           onclick={(row: any) => {
             if (row?.Status !== ApplicationStatus.SUBMITTED) {
               dispatch(saveDataHolder(row.id));
