@@ -176,9 +176,6 @@ const SyndicateRequest = ({}: any) => {
       setLoading(true);
       let { status, data } = await getInvitedSyndicates(user.id, authToken);
       if (status === 200) {
-        console.log("====================================");
-        console.log(data?.status?.data);
-        console.log("====================================");
         let syndicates = data?.status?.data?.map((syndicate: any) => {
           return {
             id: syndicate?.id,
@@ -270,9 +267,9 @@ const SyndicateRequest = ({}: any) => {
 
         return { ...prev, current_page: prevPage, data };
       });
-    }else {
+    } else {
       setPagination((prev: any) => {
-        const prevPage = (Number(type) + 1) - 1;
+        const prevPage = Number(type) + 1 - 1;
         const startIndex = (prevPage - 1) * prev.items_per_page;
         const endIndex = startIndex + prev.items_per_page;
         const data = syndicatesInformation.slice(startIndex, endIndex);
@@ -351,7 +348,10 @@ const SyndicateRequest = ({}: any) => {
       <Drawer
         drawerWidth="w-[700px]"
         isOpen={isOpen}
-        setIsOpen={(val: boolean) => setOpen(val)}
+        setIsOpen={(val: boolean) => {
+          setsyndicateInfo(null);
+          setOpen(val);
+        }}
       >
         {loadDrawer ? (
           <aside className="relative h-full">
