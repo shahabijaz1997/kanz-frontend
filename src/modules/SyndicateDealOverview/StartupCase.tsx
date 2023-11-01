@@ -706,41 +706,43 @@ const StartupCase = ({ id }: any) => {
                 )}
               </aside>
               <aside>
-                <div className="justify-between pb-2 w-full border-[1px]  rounded-md border-b-neutral-200 ">
-                  <div className="pb-1 m-4  text-lg font-bold border-b-[1px]  border-b-neutral-200">
-                    Comments
-                  </div>
-                  <p className=" overflow-auto no-scrollbar rounded-md  w-full opacity-80 max-h-56 text-neutral-700 font-normal text-sm text-justify">
-                    {React.Children.toArray(
-                      deal?.comments?.map((comments: any) => (
-                        <div className=" max-h-24 p-2 pt-3  overflow-hidden  font-medium  w-full items-center justify-between">
-                          <div className=" pl-2 inline-flex items-start">
-                            <img
-                              className="h-7 w-7 rounded-full"
-                              src={
-                                "https://w7.pngwing.com/pngs/178/595/png-transparent-user-profile-computer-icons-login-user-avatars-thumbnail.png"
-                              }
-                              alt="Author Logo"
-                            />
-                            <span className="ml-2">
-                              <h1 className="font-medium capitalize text-lg">
-                                {comments?.author_id === user?.id
-                                  ? "You"
-                                  : comments?.author_name}
-                                <span className="text-xs font-neutral-700 ml-5 font-normal">
-                                  {timeAgo(comments?.created_at)}
-                                </span>
-                              </h1>
-                              <p className="pt-0 font-nromal text-sm text-neutral-700">
-                                {comments?.message}
-                              </p>
-                            </span>
+                {deal?.comments?.length && (
+                  <div className="justify-between pb-2 w-full border-[1px]  rounded-md border-b-neutral-200 ">
+                    <div className="pb-1 m-4  text-lg font-bold border-b-[1px]  border-b-neutral-200">
+                      Comments
+                    </div>
+                    <p className=" overflow-auto no-scrollbar rounded-md  w-full opacity-80 max-h-56 text-neutral-700 font-normal text-sm text-justify">
+                      {React.Children.toArray(
+                        deal?.comments?.map((comments: any) => (
+                          <div className=" max-h-24 p-2 pt-3  overflow-hidden  font-medium  w-full items-center justify-between">
+                            <div className=" pl-2 inline-flex items-start">
+                              <img
+                                className="h-7 w-7 rounded-full"
+                                src={
+                                  "https://w7.pngwing.com/pngs/178/595/png-transparent-user-profile-computer-icons-login-user-avatars-thumbnail.png"
+                                }
+                                alt="Author Logo"
+                              />
+                              <span className="ml-2">
+                                <h1 className="font-medium capitalize text-lg">
+                                  {comments?.author_id === user?.id
+                                    ? "You"
+                                    : comments?.author_name}
+                                  <span className="text-xs font-neutral-700 ml-5 font-normal">
+                                    {timeAgo(comments?.created_at)}
+                                  </span>
+                                </h1>
+                                <p className="pt-0 font-nromal text-sm text-neutral-700">
+                                  {comments?.message}
+                                </p>
+                              </span>
+                            </div>
                           </div>
-                        </div>
-                      ))
-                    )}
-                  </p>
-                </div>
+                        ))
+                      )}
+                    </p>
+                  </div>
+                )}
               </aside>
             </section>
           </section>
