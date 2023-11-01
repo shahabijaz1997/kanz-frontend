@@ -12,6 +12,7 @@ import ArrowIcon from "../../ts-icons/arrowIcon.svg";
 import DownloadIcon from "../../ts-icons/downloadIcon.svg";
 import Modal from "../../shared/components/Modal";
 import CrossIcon from "../../ts-icons/crossIcon.svg";
+import FileSVG from "../../assets/svg/file.svg";
 import Zoomin from "../../ts-icons/zoominIcon.svg";
 import Zoomout from "../../ts-icons/ZoomoutIcon.svg";
 import CurrencySVG from "../../assets/svg/currency.svg";
@@ -33,6 +34,9 @@ import {
 } from "../../apis/deal.api";
 import { toast } from "react-toastify";
 import { toastUtil } from "../../utils/toast.utils";
+import UploadIcon from "../../ts-icons/uploadIcon.svg";
+import BinIcon from "../../ts-icons/binIcon.svg";
+import { fileSize, handleFileRead } from "../../utils/files.utils";
 
 const CURRENCIES = ["USD", "AED"];
 
@@ -40,13 +44,16 @@ const StartupCase = ({ id }: any) => {
   const navigate = useNavigate();
   const language: any = useSelector((state: RootState) => state.language.value);
   const authToken: any = useSelector((state: RootState) => state.auth.value);
-
+  const user: any = useSelector((state: RootState) => state.user.value);
+  const [files, setFiles]: any = useState([]);
   const [currency, setCurrency] = useState(0);
   const [deal, setdeal]: any = useState([]);
   const [selectedDocs, setSelectedDocs]: any = useState(null);
   const [loading, setLoading]: any = useState(false);
   const [fileLoading, setFileLoading]: any = useState(false);
   const [modalOpen, setModalOpen]: any = useState(null);
+  const [modalOpen2, setModalOpen2]: any = useState(null);
+  const [modalOpen3, setModalOpen3]: any = useState(null);
   const [changes, setChanges]: any = useState({
     comment: "",
     action: "",
@@ -56,6 +63,46 @@ const StartupCase = ({ id }: any) => {
   useLayoutEffect(() => {
     onGetdeal();
   }, [id]);
+
+  const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file: any = e.target.files?.[0];
+    setFileInformation(file);
+    e.target.value = "";
+  };
+
+  const setFileInformation = async (file: File) => {
+    let size = fileSize(file.size, "mb");
+    let type;
+    setLoading(true);
+    if (file.type.includes("video")) type = FileType.VIDEO;
+    else if (file.type.includes("image")) {
+      type = FileType.IMAGE;
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = () => {
+        const img: any = new Image();
+        img.src = reader.result;
+      };
+    } else {
+      type = FileType.PDF;
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+    }
+    /* const fileData: any = await handleFileRead(file); */
+    doUploadUtil(file, size, type);
+    setLoading(false);
+  };
+
+  const doUploadUtil = (file: any, size: any, type: string) => {
+    setFiles((prev: any) => {
+      return [...prev, { file, size, type, id: prev.length + 1 }];
+    });
+
+    let timer = setTimeout(() => {
+      setLoading(false);
+      clearTimeout(timer);
+    }, 1000);
+  };
 
   const numberInputUI = () => {
     let placeholder = currency === 0 ? "$ 0.00" : "0.00 د.إ";
@@ -347,26 +394,35 @@ const StartupCase = ({ id }: any) => {
   };
   const postSignOff = async () => {
     try {
-      setLoading(true);
-      let payload = {
-        invite: {
-          status: "accepted",
-        },
-      };
+      let allFiles = files.map((file: any) => file.file);
+      const formData = new FormData();
+      formData.append("invite[status]", "accepted");
+      for (let i = 0; i < allFiles.length; i++) {
+        const element = allFiles[i];
+        formData.append(
+          `invite[deal_attachments][${i}]file`,
+          element,
+          element?.name
+        );
+        formData.append(
+          `invite[deal_attachments][${i}]attachment_kind`,
+          element?.type.includes("image") ? "image" : "pdf"
+        );
+      }
       let { status, data } = await syndicateApprove(
-        payload,
+        formData,
         deal?.id,
         deal?.invite?.id,
         authToken
       );
       if (status === 200) {
-        toast.success("Congratulations! Deal Signed Off");
-        setModalOpen(false);
+        toast.success("Congratulations! Deal Approved", toastUtil);
+        setModalOpen3(false);
       }
     } catch (error) {
       console.log(error);
     } finally {
-      toast.dismiss();
+      onGetdeal();
       setLoading(false);
       setChanges({ comment: "", action: "", document: null });
     }
@@ -417,7 +473,6 @@ const StartupCase = ({ id }: any) => {
                   {language?.v3?.common?.investments}
                 </small>
               </div>
-
               <div
                 className="w-full inline-flex flex-col pb-8 items-start gap-2 cursor-pointer"
                 onClick={() => navigate(-1)}
@@ -429,7 +484,6 @@ const StartupCase = ({ id }: any) => {
                   {deal?.description}
                 </p>
               </div>
-
               <div
                 className="inline-flex justify-between w-full mb-4"
                 onClick={() => {
@@ -441,7 +495,6 @@ const StartupCase = ({ id }: any) => {
                 </h1>
                 <Button type="outlined">{language?.v3?.button?.new_tab}</Button>
               </div>
-
               {/* If Image or PDF */}
               {selectedDocs?.attachment_kind === FileType.IMAGE ? (
                 <section className="h-[500px] rounded-[8px] overflow-hidden border-[1px] border-neutral-200 relative">
@@ -548,19 +601,16 @@ const StartupCase = ({ id }: any) => {
                   )}
                 </section>
               )}
-
               <div className="inline-flex justify-between w-full my-10">
                 <h1 className="text-black font-medium text-2xl">
                   {language?.v3?.common?.risk_disc}
                 </h1>
                 <p className="text-sm font-medium"></p>
               </div>
-
-              {deal?.status !== ApplicationStatus.APPROVED && (
+              {deal?.invite?.status === DealStatus.PENDING && (
                 <Button
                   onClick={() => {
-                    postSignOff();
-                    console.log("Clicked");
+                    setModalOpen2(true);
                   }}
                   className="w-full"
                 >
@@ -659,6 +709,38 @@ const StartupCase = ({ id }: any) => {
                   })
                 )}
               </aside>
+              <aside>
+                <div className="justify-between pb-2 w-full border-[1px]  rounded-md border-b-neutral-200 ">
+                  <div className="pb-1 m-4  text-lg font-bold border-b-[1px]  border-b-neutral-200">
+                    Comments
+                  </div>
+                  <p className=" overflow-auto no-scrollbar rounded-md  w-full opacity-80 max-h-56 text-neutral-700 font-normal text-sm text-justify">
+                    {React.Children.toArray(
+                      deal?.comments?.map((comments: any) => (
+                        <div className=" max-h-24 p-2 pt-3  overflow-hidden  font-medium  w-full items-center justify-between">
+                          <div className=" pl-2 inline-flex items-start">
+                            <img
+                              className="h-7 w-7 rounded-full"
+                              src={
+                                "https://w7.pngwing.com/pngs/178/595/png-transparent-user-profile-computer-icons-login-user-avatars-thumbnail.png"
+                              }
+                              alt="Author Logo"
+                            />
+                            <span className="ml-2">
+                              <h1 className="font-medium capitalize text-xl">
+                                {comments?.author_id === user?.id
+                                  ? "You"
+                                  : comments?.author_name}
+                              </h1>
+                              <p className="pt-1">{comments?.message}</p>
+                            </span>
+                          </div>
+                        </div>
+                      ))
+                    )}
+                  </p>
+                </div>
+              </aside>
             </section>
           </section>
         )}
@@ -713,6 +795,140 @@ const StartupCase = ({ id }: any) => {
                 className="w-full !py-1"
                 divStyle="flex items-center justify-center w-full"
                 onClick={() => onAddCommentOnDeal()}
+              >
+                {language.buttons.submit}
+              </Button>
+            </footer>
+          </aside>
+        </div>
+      </Modal>
+      <Modal show={modalOpen2 ? true : false} className="w-full">
+        <div
+          className="rounded-md overflow-hidden inline-grid place-items-center absolute top-1/2 left-1/2 translate-x-[-50%] translate-y-[-50%]"
+          style={{ backgroundColor: "rgba(0, 0, 0, 0.078" }}
+        >
+          <aside className="bg-white w-[400px] rounded-md h-full">
+            <section className="py-3 px-10">
+              <div className="mb-6 pt-5 text-center">
+                <label
+                  htmlFor=""
+                  className="text-neutral-900 text-center font-bold text-xl"
+                >
+                  Deal Approved by You!
+                </label>
+                <p className="pt-5">
+                  You've successfully approved the deal. Now you can upload the
+                  required document. Click “Continue” to upload the documents
+                </p>
+              </div>
+            </section>
+
+            <footer className="w-full inline-flex justify-center gap-3 py-2 px-3 w-full">
+              <Button
+                className="w-full !py-1"
+                divStyle="flex items-center justify-center w-6/12"
+                onClick={() => {
+                  setModalOpen2(false);
+                  setModalOpen3(true);
+                }}
+              >
+                Continue
+              </Button>
+            </footer>
+          </aside>
+        </div>
+      </Modal>
+      <Modal show={modalOpen3 ? true : false} className="w-full">
+        <div
+          className="rounded-md overflow-hidden inline-grid place-items-center absolute top-1/2 left-1/2 translate-x-[-50%] translate-y-[-50%]"
+          style={{ backgroundColor: "rgba(0, 0, 0, 0.078" }}
+        >
+          <aside className="bg-white w-[400px] rounded-md h-full">
+            <header className="bg-cbc-grey-sec h-16 py-2 px-3 inline-flex w-full justify-between items-center">
+              <h3 className="text-xl font-medium text-neutral-700">
+                Deal Approval
+              </h3>
+              <div
+                className="bg-white h-8 w-8 border-[1px] border-black rounded-md shadow shadow-cs-6 p-1 cursor-pointer"
+                onClick={() => {
+                  setChanges({ comment: "", action: "", document: null });
+                  setFiles([]);
+                }}
+              >
+                <CrossIcon stroke="#000" />
+              </div>
+            </header>
+
+            <section className="py-3 px-4">
+              <div className="mb-3 w-full">
+                <span className="w-full">
+                  <button
+                    className="bg-cbc-grey-sec rounded-lg inline-flex justify-center gap-2 px-4 py-2 w-full"
+                    onClick={() => {
+                      let elem: any =
+                        document.getElementById("doc_deal_uploader");
+                      elem.click();
+                    }}
+                  >
+                    <UploadIcon />
+                    <small className="text-cyan-800 text-sm font-medium">
+                      Upload a Document
+                    </small>
+                  </button>
+                  <input
+                    type="file"
+                    className="hidden"
+                    id="doc_deal_uploader"
+                    multiple={true}
+                    onChange={handleFileUpload}
+                  />
+                </span>
+              </div>
+              <div className="mb-3 w-full">
+                {React.Children.toArray(
+                  files?.map((doc: any) => {
+                    return (
+                      <section className="rounded-md bg-cbc-grey-sec px-1 py-2 inline-flex items-center justify-between border-[1px] border-neutral-200 w-full">
+                        <span className="inline-flex items-center">
+                          <div className="rounded-[7px] bg-white shadow shadow-cs-3 w-14 h-14 inline-grid place-items-center">
+                            <img src={FileSVG} alt="File" />
+                          </div>
+                          <span className="inline-flex flex-col items-start ml-3">
+                            <h2
+                              className="text-sm font-medium text-neutral-900 max-w-[150px] truncate"
+                              title={doc?.file?.name}
+                            >
+                              {doc?.file?.name}
+                            </h2>
+                          </span>
+                        </span>
+
+                        <small>{doc?.size} MB</small>
+                        <div
+                          className="rounded-lg w-8 h-8 inline-flex items-center flex-row justify-center gap-2 bg-white cursor-pointer"
+                          onClick={() => {
+                            setFiles((pr: any) => {
+                              let files = pr.filter(
+                                (p: any) => p.id !== doc.id
+                              );
+                              return files;
+                            });
+                          }}
+                        >
+                          <BinIcon stroke="#404040" />
+                        </div>
+                      </section>
+                    );
+                  })
+                )}
+              </div>
+            </section>
+
+            <footer className="w-full inline-flex justify-between gap-3 py-2 px-3 w-full">
+              <Button
+                className="w-full !py-1"
+                divStyle="flex items-center justify-center w-full"
+                onClick={() => postSignOff()}
               >
                 {language.buttons.submit}
               </Button>
