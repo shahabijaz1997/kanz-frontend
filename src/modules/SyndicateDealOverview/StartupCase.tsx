@@ -20,6 +20,7 @@ import {
   comaFormattedNumber,
   formatDate,
   numberFormatter,
+  timeAgo,
 } from "../../utils/object.utils";
 import {
   ApplicationStatus,
@@ -601,12 +602,7 @@ const StartupCase = ({ id }: any) => {
                   )}
                 </section>
               )}
-              <div className="inline-flex justify-between w-full my-10">
-                <h1 className="text-black font-medium text-2xl">
-                  {language?.v3?.common?.risk_disc}
-                </h1>
-                <p className="text-sm font-medium"></p>
-              </div>
+
               {deal?.invite?.status === DealStatus.PENDING && (
                 <Button
                   onClick={() => {
@@ -625,7 +621,7 @@ const StartupCase = ({ id }: any) => {
             {/* Section Right */}
             <section className="w-[30%]">
               {/* Show/Hide based on some conditions */}
-              {deal?.invite && deal?.invite?.status !== DealStatus.ACCEPTED && (
+              {deal?.invite?.status === DealStatus.PENDING && (
                 <div className="w-full inline-flex justify-end gap-4">
                   <Button type="outlined" onClick={() => setModalOpen(true)}>
                     {language?.v3?.button?.req_change}
@@ -727,12 +723,17 @@ const StartupCase = ({ id }: any) => {
                               alt="Author Logo"
                             />
                             <span className="ml-2">
-                              <h1 className="font-medium capitalize text-xl">
+                              <h1 className="font-medium capitalize text-lg">
                                 {comments?.author_id === user?.id
                                   ? "You"
                                   : comments?.author_name}
+                                <span className="text-xs font-neutral-700 ml-5 font-normal">
+                                  {timeAgo(comments?.created_at)}
+                                </span>
                               </h1>
-                              <p className="pt-1">{comments?.message}</p>
+                              <p className="pt-0 font-nromal text-sm text-neutral-700">
+                                {comments?.message}
+                              </p>
                             </span>
                           </div>
                         </div>
