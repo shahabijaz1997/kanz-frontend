@@ -348,7 +348,10 @@ const SyndicateRequest = ({}: any) => {
       <Drawer
         drawerWidth="w-[700px]"
         isOpen={isOpen}
-        setIsOpen={(val: boolean) => setOpen(val)}
+        setIsOpen={(val: boolean) => {
+          setsyndicateInfo(null);
+          setOpen(val);
+        }}
       >
         {loadDrawer ? (
           <aside className="relative h-full">
