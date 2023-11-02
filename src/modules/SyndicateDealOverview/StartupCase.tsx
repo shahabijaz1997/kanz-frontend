@@ -604,17 +604,17 @@ const StartupCase = ({ id }: any) => {
                 </section>
               )}
 
-              {deal?.invite?.status !== DealStatus.ACCEPTED ||
-                (deal?.invite?.status !== DealStatus.LIVE && (
-                  <Button
-                    onClick={() => {
-                      setModalOpen2(true);
-                    }}
-                    className="w-full"
-                  >
-                    Approve
-                  </Button>
-                ))}
+              {(deal?.invite?.status !== DealStatus.ACCEPTED ||
+                deal?.invite?.status !== DealStatus.LIVE) && (
+                <Button
+                  onClick={() => {
+                    setModalOpen2(true);
+                  }}
+                  className="w-full"
+                >
+                  Approve
+                </Button>
+              )}
             </section>
 
             {/* Invisible Section */}
@@ -623,21 +623,21 @@ const StartupCase = ({ id }: any) => {
             {/* Section Right */}
             <section className="w-[30%]">
               {/* Show/Hide based on some conditions */}
-              {deal?.invite?.status !== DealStatus.ACCEPTED ||
-                (deal?.invite?.status !== DealStatus.LIVE && (
-                  <div className="w-full inline-flex justify-end gap-4">
-                    <Button type="outlined" onClick={() => setModalOpen(true)}>
-                      {language?.v3?.button?.req_change}
-                    </Button>
-                    <Button
-                      onClick={() => {
-                        setModalOpen2(true);
-                      }}
-                    >
-                      {language?.v3?.button?.interested}
-                    </Button>
-                  </div>
-                ))}
+              {(deal?.invite?.status !== DealStatus.ACCEPTED ||
+                deal?.invite?.status !== DealStatus.LIVE) && (
+                <div className="w-full inline-flex justify-end gap-4">
+                  <Button type="outlined" onClick={() => setModalOpen(true)}>
+                    {language?.v3?.button?.req_change}
+                  </Button>
+                  <Button
+                    onClick={() => {
+                      setModalOpen2(true);
+                    }}
+                  >
+                    {language?.v3?.button?.interested}
+                  </Button>
+                </div>
+              )}
               <aside className="border-[1px] border-neutral-200 rounded-md w-full p-3 mt-5">
                 <h2 className="text-neutral-700 text-xl font-medium">
                   {language?.v3?.common?.invest_details}
