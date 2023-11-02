@@ -582,7 +582,6 @@ const SyndicateRequest = ({}: any) => {
                     onAddCommentOnDeal(dealDetail?.comments[0]?.deal_id);
                     setmodalReplyOpen(null);
                     setCommentSubmitted(0);
-                    toast.success("Comment added", toastUtil);
                   }}
                 >
                   Submit
