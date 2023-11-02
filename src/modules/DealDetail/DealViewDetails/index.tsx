@@ -115,13 +115,8 @@ const DealViewDetails = ({ dealDetail, state }: any) => {
               {dealDetail?.title || language?.v3?.common?.not_added}
             </p>
           </div>
-          <div className="py-4 border-b-[1px] border-b-neutral-200 w-full inline-flex items-center justify-between">
-            <h3 className="text-neutral-900 font-medium text-sm">
-              {language?.v3?.deal?.description}
-            </h3>
-            <p className="text-neutral-900 font-normal text-sm capitalize">
-              {dealDetail?.description || language?.v3?.common?.not_added}
-            </p>
+          <div className="mt-10 mb-4">
+            <h2 className="text-black text-xl font-medium">Location</h2>
           </div>
           {/*       <div className="py-4 border-b-[1px] border-b-neutral-200 w-full inline-flex items-center justify-between">
             <h3 className="text-neutral-900 font-medium text-sm">
@@ -131,63 +126,52 @@ const DealViewDetails = ({ dealDetail, state }: any) => {
               {numberFormatter(dealDetail?.committed)}
             </p>
           </div> */}
-          <div className="py-4 border-b-[1px] border-b-neutral-200 w-full inline-flex items-center justify-between">
-            <h3 className="text-neutral-900 font-medium text-sm">
-              {language?.v3?.deal?.location}
-            </h3>
+          <div className="py-4  w-full inline-flex items-center justify-between">
+            <h3 className="text-neutral-900 font-medium text-sm">Country</h3>
             <p className="text-neutral-900 font-normal text-sm capitalize">
-              {dealDetail?.location}
+              {dealDetail?.address?.country_name}
             </p>
           </div>
-          <div className="py-4 border-b-[1px] border-b-neutral-200 w-full inline-flex items-center justify-between">
-            <h3 className="text-neutral-900 font-medium text-sm">
-              {language?.v3?.deal?.raised}
-            </h3>
+          <div className="py-4  w-full inline-flex items-center justify-between">
+            <h3 className="text-neutral-900 font-medium text-sm">State</h3>
             <p className="text-neutral-900 font-normal text-sm capitalize">
-              ${numberFormatter(dealDetail?.raised)}
+              {dealDetail?.address?.state}
             </p>
           </div>
-          <div className="py-4 border-b-[1px] border-b-neutral-200 w-full inline-flex items-center justify-between">
+          <div className="py-4  w-full inline-flex items-center justify-between">
+            <h3 className="text-neutral-900 font-medium text-sm">City</h3>
+            <p className="text-neutral-900 font-normal text-sm capitalize">
+              {dealDetail?.address?.city}
+            </p>
+          </div>
+          <div className="py-4  w-full inline-flex items-center justify-between">
+            <h3 className="text-neutral-900 font-medium text-sm">Area </h3>
+            <p className="text-neutral-900 font-normal text-sm capitalize">
+              {dealDetail?.address?.area}
+            </p>
+          </div>
+          <div className="py-4 w-full inline-flex items-center justify-between">
+            <h3 className="text-neutral-900 font-medium text-sm">
+              Building Name
+            </h3>
+            <p className="text-neutral-900 font-normal text-sm capitalize">
+              {dealDetail?.address?.building_name}
+            </p>
+          </div>
+          <div className="py-4  w-full inline-flex items-center justify-between">
+            <h3 className="text-neutral-900 font-medium text-sm">
+              Street Address
+            </h3>
+            <p className="text-neutral-900 font-normal text-sm capitalize">
+              {dealDetail?.address?.street_address}
+            </p>
+          </div>
+          <div className="py-6 border-b-[2px] border-b-neutral-200 border-t-[2px] border-t-neutral-200 w-full inline-flex items-center justify-between">
             <h3 className="text-neutral-900 font-medium text-sm">
               {language?.v3?.table?.size}
             </h3>
             <p className="text-neutral-900 font-normal text-sm capitalize">
               {comaFormattedNumber(dealDetail?.size)} sqft
-            </p>
-          </div>
-          <div className="py-4 border-b-[1px] border-b-neutral-200 w-full inline-flex items-center justify-between">
-            <h3 className="text-neutral-900 font-medium text-sm">
-              {language?.v3?.table?.sellingPrice}
-            </h3>
-            <p className="text-neutral-900 font-normal text-sm capitalize">
-              {numberFormatter(dealDetail?.selling_price) ||
-                language?.v3?.common?.not_added}
-            </p>
-          </div>
-          <div className="py-4 border-b-[1px] border-b-neutral-200 w-full inline-flex items-center justify-between">
-            <h3 className="text-neutral-900 font-medium text-sm">
-              {language?.v3?.table?.status}
-            </h3>
-            <p className="text-neutral-900 font-normal text-sm capitalize">
-              {dealDetail?.status || language?.v3?.common?.not_added}
-            </p>
-          </div>
-          <div className="py-4 border-b-[1px] border-b-neutral-200 w-full inline-flex items-center justify-between">
-            <h3 className="text-neutral-900 font-medium text-sm">
-              {language?.v3?.deal?.expected_annual_return}
-            </h3>
-            <p className="text-neutral-900 font-normal text-sm capitalize">
-              {dealDetail?.expected_annual_return + "%" ||
-                language?.v3?.common?.not_added}
-            </p>
-          </div>
-          <div className="py-4 border-b-[1px] border-b-neutral-200 w-full inline-flex items-center justify-between">
-            <h3 className="text-neutral-900 font-medium text-sm">
-              {language?.v3?.deal?.expected_dividend_yield}
-            </h3>
-            <p className="text-neutral-900 font-normal text-sm capitalize">
-              {dealDetail?.expected_dividend_yield + "%" ||
-                language?.v3?.common?.not_added}
             </p>
           </div>
           <div className="pt-6 w-full inline-flex items-start justify-between flex-col">
@@ -196,7 +180,7 @@ const DealViewDetails = ({ dealDetail, state }: any) => {
             </h3>
             <aside className="mt-5 w-full">
               {dealDetail?.features?.bedrooms && (
-                <div className="py-4 border-b-[1px] border-b-neutral-200 w-full inline-flex items-center justify-between">
+                <div className="py-4  w-full inline-flex items-center justify-between">
                   <h3 className="text-neutral-900 font-medium text-sm">
                     {language?.v3?.deal?.beds}
                   </h3>
@@ -206,7 +190,7 @@ const DealViewDetails = ({ dealDetail, state }: any) => {
                 </div>
               )}
               {dealDetail?.features?.kitchen && (
-                <div className="py-4 border-b-[1px] border-b-neutral-200 w-full inline-flex items-center justify-between">
+                <div className="py-4  w-full inline-flex items-center justify-between">
                   <h3 className="text-neutral-900 font-medium text-sm">
                     {language?.v3?.deal?.kitchen}
                   </h3>
@@ -216,7 +200,7 @@ const DealViewDetails = ({ dealDetail, state }: any) => {
                 </div>
               )}
               {dealDetail?.features?.washroom && (
-                <div className="py-4 border-b-[1px] border-b-neutral-200 w-full inline-flex items-center justify-between">
+                <div className="py-4  w-full inline-flex items-center justify-between">
                   <h3 className="text-neutral-900 font-medium text-sm">
                     {language?.v3?.deal?.washroom}
                   </h3>
@@ -226,7 +210,7 @@ const DealViewDetails = ({ dealDetail, state }: any) => {
                 </div>
               )}
               {dealDetail?.features?.parking && (
-                <div className="py-4 border-b-[1px] border-b-neutral-200 w-full inline-flex items-center justify-between">
+                <div className="py-4  w-full inline-flex items-center justify-between">
                   <h3 className="text-neutral-900 font-medium text-sm">
                     {language?.v3?.deal?.parking}
                   </h3>
@@ -236,7 +220,7 @@ const DealViewDetails = ({ dealDetail, state }: any) => {
                 </div>
               )}
               {dealDetail?.features?.swimming_pool && (
-                <div className="py-4 border-b-[1px] border-b-neutral-200 w-full inline-flex items-center justify-between">
+                <div className="py-4 w-full inline-flex items-center justify-between">
                   <h3 className="text-neutral-900 font-medium text-sm">
                     {language?.v3?.deal?.swim}
                   </h3>
@@ -246,7 +230,7 @@ const DealViewDetails = ({ dealDetail, state }: any) => {
                 </div>
               )}
               {dealDetail?.features?.rental_amount && (
-                <div className="py-4 border-b-[1px] border-b-neutral-200 w-full inline-flex items-center justify-between">
+                <div className="py-4  w-full inline-flex items-center justify-between">
                   <h3 className="text-neutral-900 font-medium text-sm">
                     {language?.v3?.deal?.por_2}
                   </h3>
@@ -256,6 +240,64 @@ const DealViewDetails = ({ dealDetail, state }: any) => {
                   </p>
                 </div>
               )}
+              {dealDetail?.description && (
+                <div className="py-6 border-b-[2px]  border-b-neutral-200 border-t-[2px]  border-t-neutral-200 w-full inline-flex items-center justify-between">
+                  <h3 className="text-neutral-900 font-medium text-sm">
+                    Property Description
+                  </h3>
+                  <p className="text-neutral-900 font-normal text-sm capitalize">
+                    {dealDetail?.description}
+                  </p>
+                </div>
+              )}
+              {dealDetail?.selling_price && (
+                <div>
+                  <div className="mt-10 mb-4">
+                    <h2 className="text-black text-xl font-medium">
+                      Selling Price
+                    </h2>
+                  </div>
+
+                  <div className="py-6 border-b-[2px]  border-b-neutral-200 border-t-[2px]  border-t-neutral-200 w-full inline-flex items-center justify-between">
+                    <h3 className="text-neutral-900 font-medium text-sm">
+                      Price
+                    </h3>
+                    <p className="text-neutral-900 font-normal text-sm capitalize">
+                      ${comaFormattedNumber(dealDetail?.valuation)} (
+                      {dealDetail?.selling_price})
+                    </p>
+                  </div>
+                </div>
+              )}
+              {dealDetail?.expected_dividend_yield &&
+                dealDetail?.expected_annual_return && (
+                  <div>
+                    {" "}
+                    <div className="mt-10 mb-4">
+                      <h2 className="text-black text-xl font-medium">
+                        Expected Return
+                      </h2>
+                    </div>
+                    <div className="py-4  w-full inline-flex items-center justify-between">
+                      <h3 className="text-neutral-900 font-medium text-sm">
+                        {language?.v3?.deal?.expected_dividend_yield}
+                      </h3>
+                      <p className="text-neutral-900 font-normal text-sm capitalize">
+                        {dealDetail?.expected_dividend_yield + "%" ||
+                          language?.v3?.common?.not_added}
+                      </p>
+                    </div>
+                    <div className="py-4  w-full inline-flex items-center justify-between">
+                      <h3 className="text-neutral-900 font-medium text-sm">
+                        {language?.v3?.deal?.expected_annual_return}
+                      </h3>
+                      <p className="text-neutral-900 font-normal text-sm capitalize">
+                        {dealDetail?.expected_annual_return + "%" ||
+                          language?.v3?.common?.not_added}
+                      </p>
+                    </div>
+                  </div>
+                )}
             </aside>
           </div>
         </section>
