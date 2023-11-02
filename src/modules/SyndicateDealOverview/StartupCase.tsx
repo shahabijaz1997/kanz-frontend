@@ -605,7 +605,7 @@ const StartupCase = ({ id }: any) => {
               )}
 
               {(deal?.invite?.status !== DealStatus.ACCEPTED ||
-                deal?.invite?.status !== DealStatus.LIVE) && (
+                deal?.status !== DealStatus.LIVE) && (
                 <Button
                   onClick={() => {
                     setModalOpen2(true);
@@ -624,7 +624,7 @@ const StartupCase = ({ id }: any) => {
             <section className="w-[30%]">
               {/* Show/Hide based on some conditions */}
               {(deal?.invite?.status !== DealStatus.ACCEPTED ||
-                deal?.invite?.status !== DealStatus.LIVE) && (
+                deal?.status !== DealStatus.LIVE) && (
                 <div className="w-full inline-flex justify-end gap-4">
                   <Button type="outlined" onClick={() => setModalOpen(true)}>
                     {language?.v3?.button?.req_change}
