@@ -458,7 +458,7 @@ const RealtorCase = ({ id }: any) => {
                 ></p>
               </div>
               {(deal?.invite?.status !== DealStatus.ACCEPTED ||
-                deal?.status !== DealStatus.LIVE) && (
+                deal?.invite?.status !== "approved") && (
                 <Button
                   onClick={() => {
                     setModalOpen2(true);
@@ -477,12 +477,11 @@ const RealtorCase = ({ id }: any) => {
             <section className="w-[30%]">
               {/* Show/Hide based on some conditions */}
               {(deal?.invite?.status !== DealStatus.ACCEPTED ||
-                deal?.status !== DealStatus.LIVE) && (
+                deal?.invite?.status !== "approved") && (
                 <div className="w-full inline-flex justify-end gap-4">
                   <Button type="outlined" onClick={() => setModalOpen(true)}>
                     {language?.v3?.button?.req_change}
                   </Button>
-                  {}
                   <Button onClick={() => setModalOpen2(true)}>
                     {language?.v3?.button?.interested}
                   </Button>
