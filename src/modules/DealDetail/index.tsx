@@ -37,7 +37,7 @@ const DealDetail = ({}: any) => {
     { id: 4, title: "Existing SAFE/Note Holders" },
     { id: 5, title: "Activity" },
     { id: 6, title: "Invited Syndicates" },
-    { id: 7, title: "Requests" },
+    { id: 7, title: "Interested Syndicates" },
   ];
 
   const [selected, setSelected]: any = useState(tabs[0]);
