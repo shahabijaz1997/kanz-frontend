@@ -1,24 +1,27 @@
 import React from "react";
 
 const CustomStatus = ({ options }: any) => {
-  options = options?.charAt(0).toUpperCase() + options?.slice(1);
   let backgroundColor = "bg-green-100";
   if (options === "Approved" || options === "Raising") {
     backgroundColor = "bg-green-100";
-  } else if (options === "Pending") {
+  } else if (options === "pending") {
     backgroundColor = "bg-yellow-100";
-  } else if (options === "Request change") {
+  } else if (options === "interested") {
+    backgroundColor = "bg-blue-100";
+  } else if (options === "req changes") {
     backgroundColor = "bg-indigo-100";
-  } else if (options === "Closed") {
+  } else if (options === "closed") {
     backgroundColor = "bg-grey-100";
   }
 
   let textColor = "text-green-800";
-  if (options === "Approved") {
+  if (options === "approved") {
     textColor = "text-green-800";
-  } else if (options === "Pending") {
+  } else if (options === "interested") {
+    textColor = "text-slate-800";
+  } else if (options === "pending") {
     textColor = "text-yellow-700";
-  } else if (options === "Request change") {
+  } else if (options === "req changes") {
     textColor = "text-indigo-800";
   }
   return (

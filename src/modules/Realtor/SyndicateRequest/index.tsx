@@ -45,7 +45,7 @@ const SyndicateRequest = ({}: any) => {
     document: null,
   });
   const [pagination, setPagination] = useState({
-    items_per_page: 5,
+    items_per_page: 10,
     total_items: [],
     current_page: 1,
     total_pages: 0,
@@ -122,10 +122,10 @@ const SyndicateRequest = ({}: any) => {
       setLoading(true);
       let payload: any = {
         deal: {
-          invite_id: 117,
+          invite_id: dealDetail?.invite_id,
         },
       };
-      let { status, data } = await signOff({}, id, authToken);
+      let { status, data } = await signOff(payload, id, authToken);
       if (status === 200) {
         toast.success("Congratulations! Deal Signed Off");
         setModalOpen(false);
@@ -374,7 +374,15 @@ const SyndicateRequest = ({}: any) => {
                 </div>
 
                 <span>
-                  <Button onClick={() => setModalOpen(true)}>Approve</Button>
+                  {dealDetail?.status !== "accepted" && (
+                    <Button
+                      onClick={() =>
+                        postSignOff(dealDetail?.comments[0]?.deal_id)
+                      }
+                    >
+                      Approve
+                    </Button>
+                  )}
                 </span>
               </section>
             </header>
@@ -384,7 +392,7 @@ const SyndicateRequest = ({}: any) => {
                   <span className="text-lg font-bold">Deal</span>
                   <span>
                     {" "}
-                    <CustomStatus options={dealDetail?.status} />
+                    <CustomStatus options={dealDetail?.deal?.status} />
                   </span>
                 </div>
               </aside>
@@ -392,103 +400,111 @@ const SyndicateRequest = ({}: any) => {
                 <span>{dealDetail?.deal?.title}</span>
               </aside>
             </section>
-            <section className="inline-flex w-full border-b-[1px] border-b-neutral-200 pb-5">
-              <aside className="pt-8 w-full inline-flex justify-between">
-                <div className="justify-between  pr-2 pb-2 w-10/12">
-                  <div className="text-lg font-bold">Comment</div>
-                  <p className=" overflow-auto no-scrollbar rounded-md  w-full opacity-80 max-h-56 text-neutral-700 font-normal text-sm text-justify">
-                    {React.Children.toArray(
-                      dealDetail?.comments?.map((comments: any) => (
-                        <div className=" max-h-24 p-2 pt-3  overflow-hidden bg-cbc-grey-sec font-medium  w-full items-center justify-between">
-                          <div className=" pl-2 inline-flex items-start">
-                            <img
-                              className="h-7 w-7 rounded-full"
-                              src={
-                                comments?.author_id === user?.id
-                                  ? "https://w7.pngwing.com/pngs/178/595/png-transparent-user-profile-computer-icons-login-user-avatars-thumbnail.png"
-                                  : dealDetail?.profile?.logo
-                              }
-                              alt="Author Logo"
-                            />
-                            <span className="ml-2">
-                              <h1 className="font-medium capitalize text-xl">
-                                {comments?.author_id === user?.id
-                                  ? "You"
-                                  : comments?.author_name}
-                              </h1>
-                              <p className="pt-1">{comments?.message}</p>
-                            </span>
-                          </div>
-                        </div>
-                      ))
-                    )}
-                  </p>
-                </div>
-                <span className="h-[50px] w-[125px] ">
-                  <Button type="outlined">
-                    <span
-                      onClick={() => setmodalReplyOpen(true)}
-                      className="text-md font-semibold"
-                    >
-                      Add Reply
+            {dealDetail?.thread_id && (
+              <section className="inline-flex w-full border-b-[1px] border-b-neutral-200 pb-5">
+                <aside className="pt-8 w-full inline-flex justify-between">
+                  {dealDetail?.comments?.length > 0 && (
+                    <div className="justify-between  pr-2 pb-2 w-10/12">
+                      <div className="text-lg font-bold">Comment</div>
+                      <p className=" overflow-auto no-scrollbar rounded-md  w-full opacity-80 max-h-56 text-neutral-700 font-normal text-sm text-justify">
+                        {React.Children.toArray(
+                          dealDetail?.comments?.map((comments: any) => (
+                            <div className=" max-h-24 p-2 pt-3  overflow-hidden bg-cbc-grey-sec font-medium  w-full items-center justify-between">
+                              <div className=" pl-2 inline-flex items-start">
+                                <img
+                                  className="h-7 w-7 rounded-full"
+                                  src={
+                                    comments?.author_id === user?.id
+                                      ? "https://w7.pngwing.com/pngs/178/595/png-transparent-user-profile-computer-icons-login-user-avatars-thumbnail.png"
+                                      : dealDetail?.profile?.logo
+                                  }
+                                  alt="Author Logo"
+                                />
+                                <span className="ml-2">
+                                  <h1 className="font-medium capitalize text-xl">
+                                    {comments?.author_id === user?.id
+                                      ? "You"
+                                      : comments?.author_name}
+                                  </h1>
+                                  <p className="pt-1">{comments?.message}</p>
+                                </span>
+                              </div>
+                            </div>
+                          ))
+                        )}
+                      </p>
+                    </div>
+                  )}
+                  {dealDetail?.thread_id !== null && (
+                    <span className="h-[50px] w-[125px] ">
+                      <Button type="outlined">
+                        <span
+                          onClick={() => setmodalReplyOpen(true)}
+                          className="text-md font-semibold"
+                        >
+                          Add Reply
+                        </span>
+                      </Button>
                     </span>
-                  </Button>
-                </span>
-              </aside>
-            </section>
-            <section className="pt-8">
-              <aside>
-                <h1 className="text-lg font-bold">Documents</h1>
-                <aside className="overflow-auto no-scrollbar max-h-56 border-[1px] border-neutral-200 rounded-md w-full p-3 mt-5 bg-cbc-check">
-                  {React.Children.toArray(
-                    dealDetail?.attachments?.map((documents: any) => (
-                      <section className="rounded-md bg-white px-3 py-1 my-1 inline-flex items-center justify-between w-full border-[1px] border-neutral-200">
-                        <span className="inline-flex items-center">
-                          <div className="bg-white  h-14 inline-flex justify-center flex-col w-full">
-                            <h4
-                              className="inline-flex items-center gap-3 max-w-[200px] cursor-pointer"
-                              onClick={() => {
-                                window.open(documents?.url, "_blank");
-                              }}
-                            >
-                              <div
+                  )}
+                </aside>
+              </section>
+            )}
+            {dealDetail?.attachments?.length > 0 && (
+              <section className="pt-8">
+                <aside>
+                  <h1 className="text-lg font-bold">Documents</h1>
+                  <aside className="overflow-auto no-scrollbar max-h-56 border-[1px] border-neutral-200 rounded-md w-full p-3 mt-5 bg-cbc-check">
+                    {React.Children.toArray(
+                      dealDetail?.attachments?.map((documents: any) => (
+                        <section className="rounded-md bg-white px-3 py-1 my-1 inline-flex items-center justify-between w-full border-[1px] border-neutral-200">
+                          <span className="inline-flex items-center">
+                            <div className="bg-white  h-14 inline-flex justify-center flex-col w-full">
+                              <h4
+                                className="inline-flex items-center gap-3 max-w-[200px] cursor-pointer"
                                 onClick={() => {
                                   window.open(documents?.url, "_blank");
                                 }}
-                                className="text-sm text-black font-medium "
                               >
-                                View Doc
-                              </div>
-                              <ArrowIcon stroke="#000" />
-                            </h4>
-                            <h2
-                              className="text-sm font-medium text-neutral-500 max-w-xl truncate"
-                              title={documents?.name}
-                            >
-                              {documents?.name}
-                            </h2>
-                          </div>
-                        </span>
+                                <div
+                                  onClick={() => {
+                                    window.open(documents?.url, "_blank");
+                                  }}
+                                  className="text-sm text-black font-medium "
+                                >
+                                  View Doc
+                                </div>
+                                <ArrowIcon stroke="#000" />
+                              </h4>
+                              <h2
+                                className="text-sm font-medium text-neutral-500 max-w-xl truncate"
+                                title={documents?.name}
+                              >
+                                {documents?.name}
+                              </h2>
+                            </div>
+                          </span>
 
-                        <div
-                          className="h-10 w-10 rounded-lg inline-flex items-center flex-row justify-center gap-2 bg-white cursor-pointer border-[1px] border-neutral-200"
-                          onClick={() => {
-                            const downloadLink = document.createElement("a");
-                            downloadLink.href = documents?.url;
-                            downloadLink.target = "_blank";
-                            downloadLink.download = documents?.name;
-                            downloadLink.click();
-                            downloadLink.remove();
-                          }}
-                        >
-                          <DownloadIcon />
-                        </div>
-                      </section>
-                    ))
-                  )}
+                          <div
+                            className="h-10 w-10 rounded-lg inline-flex items-center flex-row justify-center gap-2 bg-white cursor-pointer border-[1px] border-neutral-200"
+                            onClick={() => {
+                              const downloadLink = document.createElement("a");
+                              downloadLink.href = documents?.url;
+                              downloadLink.target = "_blank";
+                              downloadLink.download = documents?.name;
+                              downloadLink.click();
+                              downloadLink.remove();
+                            }}
+                          >
+                            <DownloadIcon />
+                          </div>
+                        </section>
+                      ))
+                    )}
+                  </aside>
                 </aside>
-              </aside>
-            </section>
+              </section>
+            )}
           </div>
         )}
       </Drawer>
