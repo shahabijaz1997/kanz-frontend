@@ -28,6 +28,7 @@ export enum ApplicationStatus {
 
 export enum DealStatus {
   ACCEPTED = "accepted",
+  LIVE = "live",
   PENDING = "pending",
 }
 

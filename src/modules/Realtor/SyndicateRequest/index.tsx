@@ -133,7 +133,6 @@ const SyndicateRequest = ({}: any) => {
     } catch (error) {
       console.log(error);
     } finally {
-      toast.dismiss();
       viewDealSyndicate(syndicateInfo?.deal?.id, syndicateInfo?.invitee?.id);
       setLoading(false);
       setChanges({ comment: "", action: "", document: null });
@@ -374,7 +373,7 @@ const SyndicateRequest = ({}: any) => {
                 </div>
 
                 <span>
-                  {dealDetail?.status !== "accepted" && (
+                  {dealDetail?.status !== "approved" && (
                     <Button
                       onClick={() =>
                         postSignOff(dealDetail?.comments[0]?.deal_id)
