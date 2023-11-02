@@ -86,13 +86,9 @@ const GUARD_ROUTE = (props: PropsWithChildren | any) => {
 };
 
 const GUARD_SUBMITTED_ROUTE = (props: PropsWithChildren | any) => {
-  const { children } = props;
+  const { children, status } = props;
   const user: any = useSelector((state: RootState) => state.user.value);
-  if (
-    user &&
-    props.role.includes(user.type) &&
-    user.status === ApplicationStatus.APPROVED
-  )
+  if (user && props.role.includes(user.type) && user.status === status)
     return <React.Fragment>{children}</React.Fragment>;
   return <Navigate to={RoutesEnums.WELCOME} replace />;
 };
@@ -122,10 +118,10 @@ const RouterModule = () => {
       const toastElements = document.querySelectorAll(".Toastify__toast");
       toastElements.forEach(
         (elem: any) =>
-          (elem.style.fontFamily =
-            event === "ar"
-              ? "'Almarai', sans-serif"
-              : "Roboto, 'Open Sans', 'Helvetica Neue', sans-serif")
+        (elem.style.fontFamily =
+          event === "ar"
+            ? "'Almarai', sans-serif"
+            : "Roboto, 'Open Sans', 'Helvetica Neue', sans-serif")
       );
     } catch (error) {
     } finally {
@@ -322,7 +318,7 @@ const RouterModule = () => {
         element={
           <Suspense fallback={<Loader />}>
             <CHECK_LOGGED_IN>
-              <GUARD_SUBMITTED_ROUTE role={[KanzRoles.STARTUP]}>
+              <GUARD_SUBMITTED_ROUTE role={[KanzRoles.STARTUP]} status={ApplicationStatus.APPROVED}>
                 <StartupDashboard />
               </GUARD_SUBMITTED_ROUTE>
             </CHECK_LOGGED_IN>
@@ -334,7 +330,7 @@ const RouterModule = () => {
         element={
           <Suspense fallback={<Loader />}>
             <CHECK_LOGGED_IN>
-              <GUARD_SUBMITTED_ROUTE role={[KanzRoles.REALTOR]}>
+              <GUARD_SUBMITTED_ROUTE role={[KanzRoles.REALTOR]} status={ApplicationStatus.APPROVED}>
                 <RealtorDashboard />
               </GUARD_SUBMITTED_ROUTE>
             </CHECK_LOGGED_IN>
@@ -346,7 +342,7 @@ const RouterModule = () => {
         element={
           <Suspense fallback={<Loader />}>
             <CHECK_LOGGED_IN>
-              <GUARD_SUBMITTED_ROUTE role={[KanzRoles.SYNDICATE]}>
+              <GUARD_SUBMITTED_ROUTE role={[KanzRoles.SYNDICATE]} status={ApplicationStatus.APPROVED}>
                 <SyndicateDashboard />
               </GUARD_SUBMITTED_ROUTE>
             </CHECK_LOGGED_IN>
@@ -358,7 +354,9 @@ const RouterModule = () => {
         element={
           <Suspense fallback={<Loader />}>
             <CHECK_LOGGED_IN>
-              <CreateDeal />
+              <GUARD_SUBMITTED_ROUTE role={[KanzRoles.STARTUP, KanzRoles.REALTOR]} status={ApplicationStatus.APPROVED}>
+                <CreateDeal />
+              </GUARD_SUBMITTED_ROUTE>
             </CHECK_LOGGED_IN>
           </Suspense>
         }
@@ -369,9 +367,7 @@ const RouterModule = () => {
         element={
           <Suspense fallback={<Loader />}>
             <CHECK_LOGGED_IN>
-              <GUARD_SUBMITTED_ROUTE
-                role={[KanzRoles.STARTUP, KanzRoles.REALTOR]}
-              >
+              <GUARD_SUBMITTED_ROUTE role={[KanzRoles.STARTUP, KanzRoles.REALTOR]} status={ApplicationStatus.APPROVED}>
                 <DealDetail />
               </GUARD_SUBMITTED_ROUTE>
             </CHECK_LOGGED_IN>
@@ -384,7 +380,7 @@ const RouterModule = () => {
         element={
           <Suspense fallback={<Loader />}>
             <CHECK_LOGGED_IN>
-              <GUARD_SUBMITTED_ROUTE role={[KanzRoles.SYNDICATE]}>
+              <GUARD_SUBMITTED_ROUTE role={[KanzRoles.SYNDICATE]} status={ApplicationStatus.APPROVED}>
                 <SyndicateDealOverview />
               </GUARD_SUBMITTED_ROUTE>
             </CHECK_LOGGED_IN>
@@ -407,7 +403,7 @@ const RouterModule = () => {
         element={
           <Suspense fallback={<Loader />}>
             <CHECK_LOGGED_IN>
-              <GUARD_SUBMITTED_ROUTE role={[KanzRoles.SYNDICATE]}>
+              <GUARD_SUBMITTED_ROUTE role={[KanzRoles.SYNDICATE]} status={ApplicationStatus.APPROVED}>
                 <DealApproval guard={authToken} />
               </GUARD_SUBMITTED_ROUTE>
             </CHECK_LOGGED_IN>
@@ -421,9 +417,7 @@ const RouterModule = () => {
         element={
           <Suspense fallback={<Loader />}>
             <CHECK_LOGGED_IN>
-              <GUARD_SUBMITTED_ROUTE
-                role={[KanzRoles.REALTOR, KanzRoles.STARTUP]}
-              >
+              <GUARD_SUBMITTED_ROUTE role={[KanzRoles.REALTOR, KanzRoles.STARTUP]} status={ApplicationStatus.APPROVED}>
                 <SyndicateRequest guard={authToken} />
               </GUARD_SUBMITTED_ROUTE>
             </CHECK_LOGGED_IN>
@@ -435,23 +429,13 @@ const RouterModule = () => {
         element={
           <Suspense fallback={<Loader />}>
             <CHECK_LOGGED_IN>
-              <GUARD_SUBMITTED_ROUTE role={KanzRoles.SYNDICATE}>
+              <GUARD_SUBMITTED_ROUTE role={KanzRoles.SYNDICATE} status={ApplicationStatus.APPROVED}>
                 <StartupInvestment guard={authToken} />
               </GUARD_SUBMITTED_ROUTE>
             </CHECK_LOGGED_IN>
           </Suspense>
         }
       />
-
-      {/*
-        {.......##..............................................................................................................................................................................................................##
-        {......##...##...##......................................................................................................................................................................................##...##.......##.
-        {.....##.....##.##........................................................................................................................................................................................##.##.......##..
-        {....##....#########.#######.#######.#######.#######.#######.#######.#######.#######.#######.#######.#######.#######.#######.#######.#######.#######.#######.#######.#######.#######.#######.#######....#########....##...
-        {...##.......##.##........................................................................................................................................................................................##.##.....##....
-        {..##.......##...##......................................................................................................................................................................................##...##...##.....
-        {.##..............................................................................................................................................................................................................##......
-        {*/}
 
       <Route
         path={`${RoutesEnums.INVESTOR_UPDATES}`}
