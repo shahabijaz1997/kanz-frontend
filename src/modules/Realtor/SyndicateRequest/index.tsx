@@ -373,15 +373,16 @@ const SyndicateRequest = ({}: any) => {
                 </div>
 
                 <span>
-                  {dealDetail?.status !== "approved" && (
-                    <Button
-                      onClick={() =>
-                        postSignOff(dealDetail?.comments[0]?.deal_id)
-                      }
-                    >
-                      Approve
-                    </Button>
-                  )}
+                  {dealDetail?.status !== "approved" &&
+                    dealDetail?.deal?.status !== "live" && (
+                      <Button
+                        onClick={() =>
+                          postSignOff(dealDetail?.comments[0]?.deal_id)
+                        }
+                      >
+                        Approve
+                      </Button>
+                    )}
                 </span>
               </section>
             </header>
@@ -405,7 +406,7 @@ const SyndicateRequest = ({}: any) => {
                   {dealDetail?.comments?.length > 0 && (
                     <div className="justify-between  pr-2 pb-2 w-10/12">
                       <div className="text-lg font-bold">Comment</div>
-                      <p className=" overflow-auto no-scrollbar rounded-md  w-full opacity-80 max-h-56 text-neutral-700 font-normal text-sm text-justify">
+                      <p className=" overflow-y-auto custom-scroll rounded-md  w-full opacity-80 max-h-56 text-neutral-700 font-normal text-sm text-justify">
                         {React.Children.toArray(
                           dealDetail?.comments?.map((comments: any) => (
                             <div className=" max-h-24 p-2 pt-3  overflow-hidden bg-cbc-grey-sec font-medium  w-full items-center justify-between">
@@ -453,7 +454,7 @@ const SyndicateRequest = ({}: any) => {
               <section className="pt-8">
                 <aside>
                   <h1 className="text-lg font-bold">Documents</h1>
-                  <aside className="overflow-auto no-scrollbar max-h-56 border-[1px] border-neutral-200 rounded-md w-full p-3 mt-5 bg-cbc-check">
+                  <aside className="overflow-y-auto custom-scroll max-h-56 border-[1px] border-neutral-200 rounded-md w-full p-3 mt-5 bg-cbc-check">
                     {React.Children.toArray(
                       dealDetail?.attachments?.map((documents: any) => (
                         <section className="rounded-md bg-white px-3 py-1 my-1 inline-flex items-center justify-between w-full border-[1px] border-neutral-200">
