@@ -60,27 +60,11 @@ const SyndicateRequest = ({}: any) => {
   const [syndicatesInformation, setsyndicatesInformation] = useState([]);
   const [dealDetail, setDealDetail]: any = useState(null);
 
-  const [dummyDisclaimers, setDummyDisclaimers] = useState({
-    d1: false,
-    d2: false,
-    d3: false,
-  });
-  const [disclaimersToggler, setDisclaimersToggler] = useState({
-    d1: false,
-    d2: false,
-    d3: false,
-  });
-
   useEffect(() => {
     dispatch(saveDataHolder(""));
     getAllDeals();
   }, []);
 
-  const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file: any = e.target.files?.[0];
-    setFileInformation(file);
-    e.target.value = "";
-  };
 
   const setFileInformation = async (file: File) => {
     let size = fileSize(file.size, "mb");
@@ -148,14 +132,13 @@ const SyndicateRequest = ({}: any) => {
       };
       let { status, data } = await addCommentOnDeal(id, authToken, payload);
       if (status === 200) {
-        toast.success(language?.v3?.common?.suces_msg, toastUtil);
         setModalOpen(false);
-        postSignOff(id);
         viewDealSyndicate(syndicateInfo?.deal?.id, syndicateInfo?.invitee?.id);
       }
     } catch (error) {
       console.log(error);
     } finally {
+      toast.success(language?.v3?.common?.suces_msg, toastUtil);
       setLoading(false);
       setChanges({ comment: "", action: "", document: null });
     }
@@ -284,7 +267,7 @@ const SyndicateRequest = ({}: any) => {
         <Header />
       </section>
       <aside className="w-full h-full flex items-start justify-start">
-        <Sidebar type={KanzRoles.STARTUP} />
+        <Sidebar type={user?.role} />
         <section
           className="bg-cbc-auth h-full p-[5rem] relative"
           style={{ width: "calc(100% - 250px)" }}
@@ -334,16 +317,6 @@ const SyndicateRequest = ({}: any) => {
         </section>
       </aside>
 
-      {/*
-        {.......##...............######..####.########..########....########..########.....###....##......##.########.########.....................##
-        {......##...##...##.....##....##..##..##.....##.##..........##.....##.##.....##...##.##...##..##..##.##.......##.....##.....##...##.......##.
-        {.....##.....##.##......##........##..##.....##.##..........##.....##.##.....##..##...##..##..##..##.##.......##.....##......##.##.......##..
-        {....##....#########.....######...##..##.....##.######......##.....##.########..##.....##.##..##..##.######...########.....#########....##...
-        {...##.......##.##............##..##..##.....##.##..........##.....##.##...##...#########.##..##..##.##.......##...##........##.##.....##....
-        {..##.......##...##.....##....##..##..##.....##.##..........##.....##.##....##..##.....##.##..##..##.##.......##....##......##...##...##.....
-        {.##.....................######..####.########..########....########..##.....##.##.....##..###..###..########.##.....##..............##......
-        {*/}
-
       <Drawer
         drawerWidth="w-[700px]"
         isOpen={isOpen}
@@ -360,7 +333,7 @@ const SyndicateRequest = ({}: any) => {
           </aside>
         ) : (
           <div className="z-[103px]">
-            <header className="text-lg pr-3 pt-3 pb-10 items-center  w-full">
+            <header className="text-lg pr-3 pt-3 pb-5 items-center  w-full sticky">
               <section className="border-b-[1px] border-b-neutral-200 pb-10 w-full items-center capitalize justify-between flex">
                 <div className="inline-flex items-center">
                   <span>
@@ -372,21 +345,22 @@ const SyndicateRequest = ({}: any) => {
                   <span className="items-center">{dealDetail?.name}</span>
                 </div>
 
-                <span>
-                  {dealDetail?.status !== "approved" && (
-                    <Button
-                      onClick={() =>
-                        postSignOff(dealDetail?.comments[0]?.deal_id)
-                      }
-                    >
-                      Approve
-                    </Button>
-                  )}
+                <span className="items-center">
+                  {dealDetail?.status !== "approved" &&
+                    dealDetail?.deal?.status !== "live" && (
+                      <Button
+                        onClick={() =>
+                          postSignOff(dealDetail?.comments[0]?.deal_id)
+                        }
+                      >
+                        Approve
+                      </Button>
+                    )}
                 </span>
               </section>
             </header>
-            <section className="border-b-[1px] border-b-neutral-200 pb-5">
-              <aside className="pt-4">
+            <section className="border-b-[1px] border-b-neutral-200 pb-5 items-center">
+              <aside>
                 <div className="justify-between pr-2 flex items-center">
                   <span className="text-lg font-bold">Deal</span>
                   <span>
@@ -401,50 +375,59 @@ const SyndicateRequest = ({}: any) => {
             </section>
             {dealDetail?.thread_id && (
               <section className="inline-flex w-full border-b-[1px] border-b-neutral-200 pb-5">
-                <aside className="pt-8 w-full inline-flex justify-between">
+                <aside className="pt-8 w-full">
                   {dealDetail?.comments?.length > 0 && (
-                    <div className="justify-between  pr-2 pb-2 w-10/12">
-                      <div className="text-lg font-bold">Comment</div>
-                      <p className=" overflow-auto no-scrollbar rounded-md  w-full opacity-80 max-h-56 text-neutral-700 font-normal text-sm text-justify">
-                        {React.Children.toArray(
-                          dealDetail?.comments?.map((comments: any) => (
-                            <div className=" max-h-24 p-2 pt-3  overflow-hidden bg-cbc-grey-sec font-medium  w-full items-center justify-between">
-                              <div className=" pl-2 inline-flex items-start">
-                                <img
-                                  className="h-7 w-7 rounded-full"
-                                  src={
-                                    comments?.author_id === user?.id
-                                      ? "https://w7.pngwing.com/pngs/178/595/png-transparent-user-profile-computer-icons-login-user-avatars-thumbnail.png"
-                                      : dealDetail?.profile?.logo
-                                  }
-                                  alt="Author Logo"
-                                />
-                                <span className="ml-2">
-                                  <h1 className="font-medium capitalize text-xl">
-                                    {comments?.author_id === user?.id
-                                      ? "You"
-                                      : comments?.author_name}
-                                  </h1>
-                                  <p className="pt-1">{comments?.message}</p>
+                    <div className="justify-between  pr-2 pb-2 w-full">
+                      <div className="w-full inline-flex justify-between items-center pb-4">
+                        <div className="text-lg font-bold">Comments</div>
+                        <div>
+                          {dealDetail?.thread_id !== null && (
+                            <span className="h-[50px] w-[125px] ">
+                              <Button type="outlined">
+                                <span
+                                  onClick={() => setmodalReplyOpen(true)}
+                                  className="text-md font-semibold"
+                                >
+                                  Add Reply
                                 </span>
+                              </Button>
+                            </span>
+                          )}
+                        </div>
+                      </div>
+                      <div className="w-full">
+                        {" "}
+                        <p className=" overflow-y-auto custom-scroll rounded-md  w-full opacity-80 max-h-56 text-neutral-700 font-normal text-sm text-justify">
+                          {React.Children.toArray(
+                            dealDetail?.comments?.map((comments: any) => (
+                              <div className=" max-h-24 p-2 pt-3  overflow-hidden bg-cbc-grey-sec font-medium  w-full items-center justify-between">
+                                <div className=" pl-2 inline-flex items-start">
+                                  <img
+                                    className="h-7 w-7 rounded-full"
+                                    src={
+                                      comments?.author_id === user?.id
+                                        ? "https://w7.pngwing.com/pngs/178/595/png-transparent-user-profile-computer-icons-login-user-avatars-thumbnail.png"
+                                        : dealDetail?.profile?.logo
+                                    }
+                                    alt="Author Logo"
+                                  />
+                                  <span className="ml-2">
+                                    <h1 className="font-medium capitalize text-xl">
+                                      {comments?.author_id === user?.id
+                                        ? "You"
+                                        : comments?.author_name}
+                                    </h1>
+                                    <p className="pt-1 overflow-auto custom-scroll max-h-56">
+                                      {comments?.message}
+                                    </p>
+                                  </span>
+                                </div>
                               </div>
-                            </div>
-                          ))
-                        )}
-                      </p>
+                            ))
+                          )}
+                        </p>
+                      </div>
                     </div>
-                  )}
-                  {dealDetail?.thread_id !== null && (
-                    <span className="h-[50px] w-[125px] ">
-                      <Button type="outlined">
-                        <span
-                          onClick={() => setmodalReplyOpen(true)}
-                          className="text-md font-semibold"
-                        >
-                          Add Reply
-                        </span>
-                      </Button>
-                    </span>
                   )}
                 </aside>
               </section>
@@ -453,7 +436,7 @@ const SyndicateRequest = ({}: any) => {
               <section className="pt-8">
                 <aside>
                   <h1 className="text-lg font-bold">Documents</h1>
-                  <aside className="overflow-auto no-scrollbar max-h-56 border-[1px] border-neutral-200 rounded-md w-full p-3 mt-5 bg-cbc-check">
+                  <aside className="overflow-y-auto custom-scroll max-h-56 border-[1px] border-neutral-200 rounded-md w-full p-3 mt-5 bg-cbc-check">
                     {React.Children.toArray(
                       dealDetail?.attachments?.map((documents: any) => (
                         <section className="rounded-md bg-white px-3 py-1 my-1 inline-flex items-center justify-between w-full border-[1px] border-neutral-200">
@@ -633,7 +616,7 @@ const SyndicateRequest = ({}: any) => {
             <aside className="bg-white w-[700px] rounded-md p-5 h-full">
               <section>
                 <div className="justify-between inline-flex pt-3 px-3 w-full">
-                  <div className="text-lg font-bold">Comment</div>
+                  <div className="text-lg font-bold">Latest Comment</div>
                   <div
                     className="bg-white h-8 w-8 border-[1px] border-black rounded-md  shadow-cs-6 p-1 cursor-pointer"
                     onClick={() => {
@@ -650,9 +633,9 @@ const SyndicateRequest = ({}: any) => {
                 <div className="justify-between  px-3  w-full">
                   <p className="w-full pt-2 opacity-80 max-h-24 text-neutral-700  font-lg text-sm text-justify">
                     {dealDetail?.comments && dealDetail.comments.length > 0 && (
-                      <p>
+                      <p className="overflow-auto custom-scroll max-h-24">
                         {dealDetail.comments
-                          .slice(-1) //  Finding the last comment in comments
+                          .slice(-1)
                           .map((comment: any) => comment.message)}
                       </p>
                     )}
@@ -665,7 +648,7 @@ const SyndicateRequest = ({}: any) => {
                     htmlFor=""
                     className="text-neutral-900 font-medium text-sm"
                   >
-                    Add Comment
+                    Reply:
                   </label>
                   <textarea
                     value={changes?.comment}
@@ -674,7 +657,7 @@ const SyndicateRequest = ({}: any) => {
                         return { ...prev, comment: e.target.value };
                       })
                     }
-                    placeholder="Add Comment"
+                    placeholder="Add Reply"
                     className=" h-[100px] mt-1 shadow-sm appearance-none border border-neutral-300 rounded-md w-full py-2 px-3 text-gray-500 leading-tight focus:outline-none focus:shadow-outline"
                   ></textarea>
                 </div>
@@ -689,7 +672,6 @@ const SyndicateRequest = ({}: any) => {
                     onAddCommentOnDeal(dealDetail?.comments[0]?.deal_id);
                     setmodalReplyOpen(null);
                     setCommentSubmitted(0);
-                    toast.success("Comment added", toastUtil);
                   }}
                 >
                   Submit

@@ -92,7 +92,7 @@ const Sidebar = ({ type }: any) => {
             {
               id: 1,
               title: language?.v3?.startup?.sidebar?.dashboard,
-              route: "/",
+              route: "/syndicate",
             },
             {
               id: 2,
@@ -102,12 +102,6 @@ const Sidebar = ({ type }: any) => {
             {
               id: 3,
               title: language?.v3?.startup?.sidebar?.startup_investment,
-              route: RoutesEnums.STARTUP_INVESTMENTS,
-            },
-            {
-              id: 4,
-              title: language?.v3?.startup?.sidebar?.syndicate_requests,
-              route: RoutesEnums.DEAL_SYNDICATE_REQUESTS,
             },
           ],
         });

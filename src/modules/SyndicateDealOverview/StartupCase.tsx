@@ -55,6 +55,8 @@ const StartupCase = ({ id }: any) => {
   const [modalOpen, setModalOpen]: any = useState(null);
   const [modalOpen2, setModalOpen2]: any = useState(null);
   const [modalOpen3, setModalOpen3]: any = useState(null);
+  const [modalOpenComment, setmodalOpenComment]: any = useState(null);
+
   const [changes, setChanges]: any = useState({
     comment: "",
     action: "",
@@ -603,17 +605,19 @@ const StartupCase = ({ id }: any) => {
                   )}
                 </section>
               )}
-              {deal?.invite?.status !== DealStatus.ACCEPTED &&
-                deal?.status !== DealStatus.LIVE && (
-                  <Button
-                    onClick={() => {
-                      setModalOpen2(true);
-                    }}
-                    className="w-full"
-                  >
-                    Approve
-                  </Button>
-                )}
+              <div className="mb-4">
+                {deal?.invite?.status !== DealStatus.ACCEPTED &&
+                  deal?.status !== DealStatus.LIVE && (
+                    <Button
+                      onClick={() => {
+                        setModalOpen2(true);
+                      }}
+                      className="w-full"
+                    >
+                      Approve
+                    </Button>
+                  )}
+              </div>
             </section>
 
             {/* Invisible Section */}
@@ -661,7 +665,7 @@ const StartupCase = ({ id }: any) => {
                   </p>
                 </div>
               </aside>
-              <aside className="border-[1px] border-neutral-200 rounded-md w-full p-3 mt-5 bg-cbc-check max-h-[400px] overflow-y-auto no-scrollbar mb-4">
+              <aside className="border-[1px] border-neutral-200 overflow-auto custom-scroll rounded-md w-full p-3 mt-5 bg-cbc-check max-h-[400px] overflow-y-auto no-scrollbar mb-4">
                 {React.Children.toArray(
                   deal?.docs?.map((doc: any) => {
                     return (
@@ -708,14 +712,23 @@ const StartupCase = ({ id }: any) => {
               </aside>
               <aside>
                 {deal?.comments?.length && (
-                  <div className="justify-between pb-2 w-full border-[1px]  rounded-md border-b-neutral-200 ">
-                    <div className="pb-1 m-4  text-lg font-bold border-b-[1px]  border-b-neutral-200">
-                      Comments
+                  <div className="justify-between pb-2 mb-4 w-full border-[1px]  rounded-md border-b-neutral-200 ">
+                    <div className="inline-flex justify-between items-center w-full">
+                      <div className="pb-1 m-4  text-lg font-bold border-b-[1px]  border-b-neutral-200">
+                        Comments
+                      </div>
+                      <Button
+                        className="mr-4"
+                        onClick={() => setmodalOpenComment(true)}
+                        type="outlined"
+                      >
+                        Add Reply
+                      </Button>
                     </div>
-                    <p className=" overflow-auto no-scrollbar rounded-md  w-full opacity-80 max-h-56 text-neutral-700 font-normal text-sm text-justify">
+                    <p className=" overflow-auto custom-scroll rounded-md  w-full opacity-80 max-h-56 text-neutral-700 font-normal text-sm text-justify">
                       {React.Children.toArray(
                         deal?.comments?.map((comments: any) => (
-                          <div className=" max-h-24 p-2 pt-3  overflow-hidden  font-medium  w-full items-center justify-between">
+                          <div className=" max-h-24 p-2 pt-3 border-b-[1px] border-neutral-300 overflow-hidden  font-medium  w-full items-center justify-between">
                             <div className=" pl-2 inline-flex items-start">
                               <img
                                 className="h-7 w-7 rounded-full"
@@ -733,7 +746,7 @@ const StartupCase = ({ id }: any) => {
                                     {timeAgo(comments?.created_at)}
                                   </span>
                                 </h1>
-                                <p className="pt-0 font-nromal text-sm text-neutral-700">
+                                <p className="pt-0 pb-1 overflow-y-auto custom-scroll  max-h-20 font-nromal text-sm text-neutral-700">
                                   {comments?.message}
                                 </p>
                               </span>
@@ -749,6 +762,57 @@ const StartupCase = ({ id }: any) => {
           </section>
         )}
       </aside>
+
+      <Modal show={modalOpenComment ? true : false} className="w-full">
+        <div
+          className="rounded-md overflow-hidden inline-grid place-items-center absolute top-1/2 left-1/2 translate-x-[-50%] translate-y-[-50%]"
+          style={{ backgroundColor: "rgba(0, 0, 0, 0.078" }}
+        >
+          <aside className="bg-white w-[400px] rounded-md h-full">
+            <section className="py-3 px-4">
+              <header className="h-16 py-2 px-3 inline-flex w-full justify-between items-center">
+                <h3 className="text-xl font-medium text-neutral-700">Reply</h3>
+                <div
+                  className="bg-white h-8 w-8 border-[1px] border-black rounded-md shadow shadow-cs-6 p-1 cursor-pointer"
+                  onClick={() => {
+                    setmodalOpenComment(false);
+                    setChanges({ comment: "", action: "", document: null });
+                    // setFiles([]);
+                  }}
+                >
+                  <CrossIcon stroke="#000" />
+                </div>
+              </header>
+              <div className="mb-6">
+                <textarea
+                  value={changes?.comment}
+                  onChange={(e) =>
+                    setChanges((prev: any) => {
+                      return { ...prev, comment: e.target.value };
+                    })
+                  }
+                  placeholder="Add Reply"
+                  className=" h-[100px] mt-1 shadow-sm appearance-none border border-neutral-300 rounded-md w-full py-2 px-3 text-gray-500 leading-tight focus:outline-none focus:shadow-outline"
+                ></textarea>
+              </div>
+            </section>
+
+            <footer className="w-full inline-flex justify-between gap-3 py-2 px-3 w-full">
+              <Button
+                disabled={!changes.comment}
+                className="w-full !py-1"
+                divStyle="flex items-center justify-center w-full"
+                onClick={() => {
+                  onAddCommentOnDeal();
+                  setmodalOpenComment(false);
+                }}
+              >
+                {"Reply"}
+              </Button>
+            </footer>
+          </aside>
+        </div>
+      </Modal>
 
       <Modal show={modalOpen ? true : false} className="w-full">
         <div

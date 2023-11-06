@@ -13,6 +13,8 @@ import { KanzRoles } from "../../../enums/roles.enum";
 import { toastUtil } from "../../../utils/toast.utils";
 import { toast } from "react-toastify";
 import { ApplicationStatus } from "../../../enums/types.enum";
+import InvitedSyndicates from "../InvitedSyndicates";
+import Spinner from "../../../shared/components/Spinner";
 interface Syndicate {
   id: number;
   title: React.ReactNode;
@@ -63,11 +65,20 @@ const UserListingPopup = ({ approve, dealId, type }: any) => {
         dealId,
         authToken
       );
-      if (status === 200) toast.success("Syndicate Invited", toastUtil);
+      if (status === 200) {
+        toast.success("Syndicate Invited", toastUtil);
+        let elem: any = document.getElementById(`synd-${syndId}`);
+        let button = document.createElement("button");
+        button.innerText = "Invited";
+        elem.innerHTML = "";
+        elem.appendChild(button);
+        /* elem.style.display = "none"; */
+      }
     } catch (error: any) {
       if (error?.response?.status === 400)
         toast.warning(error?.response?.data?.status?.message, toastUtil);
     } finally {
+      /* getAllUserListings(); */
     }
   };
 
@@ -76,7 +87,7 @@ const UserListingPopup = ({ approve, dealId, type }: any) => {
       setLoading(true);
       let results: any;
       if (type === KanzRoles.SYNDICATE)
-        results = await getAllSyndicates(authToken);
+        results = await getAllSyndicates(dealId, authToken);
       let { status, data } = results;
       if (status === 200) {
         let syndicatesData = data?.status?.data || [];
@@ -85,27 +96,38 @@ const UserListingPopup = ({ approve, dealId, type }: any) => {
           title: <span className=" capitalize">{syndicate?.name}</span>,
           handle: syndicate?.handle || "N/A",
           action: (
-            <Button
-              divStyle="items-center justify-end max-w-fit"
-              type="outlined"
-              className="!p-3 !py-1 !rounded-full"
-              onClick={() => onSendInvite(syndicate?.id)}
-            >
-              Invite
-            </Button>
+            <span id={`synd-${syndicate?.id}`}>
+              <Button
+                divStyle="items-center justify-end max-w-fit"
+                type="outlined"
+                className="!p-3 !py-1 !rounded-full"
+                onClick={() => onSendInvite(syndicate?.id)}
+              >
+                Invite
+              </Button>
+            </span>
           ),
         }));
 
         setSyndicates(syndicates);
       }
     } catch (error: any) {
-      if (error.response && error.response.status === 400) {
+      console.log(error);
+
+      if (
+        error.response &&
+        error.response.status === 400 &&
+        error.response.data.status === 400
+      ) {
+        toast.dismiss();
         toast.warn("Already Invited", toastUtil);
       }
       if (error.response && error.response.status === 401) {
         dispatch(saveToken(""));
         navigate(RoutesEnums.LOGIN, { state: RoutesEnums.STARTUP_DASHBOARD });
       }
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -113,6 +135,7 @@ const UserListingPopup = ({ approve, dealId, type }: any) => {
     <div ref={ref}>
       <Button
         onClick={() => {
+          getAllUserListings();
           setShowInviteSyndicate(true);
         }}
         className="w-[80px]"
@@ -130,13 +153,23 @@ const UserListingPopup = ({ approve, dealId, type }: any) => {
               placeholder={language?.v3?.common?.search}
             />
           </div>
-          {React.Children.toArray(
-            syndicates.map((syndicate: Syndicate) => (
-              <div className="py-4 border-b-[1px] border-b-neutral-200 w-full inline-flex items-center justify-between">
-                <p>{syndicate.title}</p>
-                {syndicate.action}
-              </div>
-            ))
+
+          {loading ? (
+            <div
+              className="absolute left-0 top-0 w-full h-full grid place-items-center"
+              style={{ backgroundColor: "rgba(255, 255, 255, 1)", zIndex: 50 }}
+            >
+              <Spinner />
+            </div>
+          ) : (
+            React.Children.toArray(
+              syndicates.map((syndicate: Syndicate) => (
+                <div className="py-4 border-b-[1px] border-b-neutral-200 w-full inline-flex items-center justify-between">
+                  <p>{syndicate.title}</p>
+                  {syndicate.action}
+                </div>
+              ))
+            )
           )}
           <span>
             <Button

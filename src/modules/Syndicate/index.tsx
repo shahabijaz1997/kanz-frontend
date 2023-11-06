@@ -13,7 +13,11 @@ import Modal from "../../shared/components/Modal";
 import CrossIcon from "../../ts-icons/crossIcon.svg";
 import { saveDataHolder } from "../../redux-toolkit/slicer/dataHolder.slicer";
 import { getDeals } from "../../apis/deal.api";
-import { comaFormattedNumber, numberFormatter } from "../../utils/object.utils";
+import {
+  comaFormattedNumber,
+  formatDate,
+  numberFormatter,
+} from "../../utils/object.utils";
 import Spinner from "../../shared/components/Spinner";
 import { ApplicationStatus } from "../../enums/types.enum";
 import CustomStatus from "../../shared/components/CustomStatus";
@@ -89,8 +93,8 @@ const SyndicateDashboard = ({}: any) => {
             [language?.v3?.table?.rentalAmount]: `$${numberFormatter(
               Number(deal?.rental_amount)
             )}`,
-            ["Start At"]: deal?.start_at,
-            ["End At"]: deal?.end_at,
+            ["Start At"]: formatDate(deal?.start_at),
+            ["End At"]: formatDate(deal?.end_at),
           };
         });
 

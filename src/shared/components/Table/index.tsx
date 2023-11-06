@@ -4,7 +4,6 @@ import { RootState } from "../../../redux-toolkit/store/store";
 
 const Table = ({
   columns,
-  data,
   noDataNode,
   onclick = () => {},
   pagination,
@@ -24,7 +23,7 @@ const Table = ({
           <li
             className={`${index !== pages.length - 1 ? "mr-1" : "mr-0"}`}
             onClick={() => {
-              if (page !== pagination?.current_page) goToPage(page);
+              goToPage(page);
             }}
           >
             <a
@@ -113,7 +112,13 @@ const Table = ({
       {pagination?.data?.length > 0 && (
         <nav className="my-5">
           <ul className="list-style-none flex items-center justify-center">
-            <li className="pr-2" onClick={() => paginate("previous")}>
+            <li
+              className="pr-2"
+              onClick={() => {
+                if (pagination?.current_page === 1) return;
+                paginate("previous");
+              }}
+            >
               {" "}
               <a
                 className={`${
@@ -126,7 +131,15 @@ const Table = ({
               </a>
             </li>
             {renderPaginationUI()}
-            <li className="pl-2" onClick={() => paginate("next")}>
+            <li
+              className="pl-2"
+              onClick={() => {
+                if (pagination?.current_page === pagination?.total_pages)
+                  return;
+
+                paginate("next");
+              }}
+            >
               <a
                 className={`${
                   pagination?.current_page === pagination?.total_pages

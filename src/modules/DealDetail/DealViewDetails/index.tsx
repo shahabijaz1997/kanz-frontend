@@ -26,23 +26,10 @@ const DealViewDetails = ({ dealDetail, state }: any) => {
     if (state === KanzRoles.STARTUP)
       return (
         <section className="flex items-start justify-center flex-col w-9/12 min-h-[250px]">
-          <div className="py-4 border-b-[1px] border-b-neutral-200 w-full inline-flex items-center justify-between">
-            <h3 className="text-neutral-900 font-medium text-sm">
-              {language?.v3?.table?.title}
-            </h3>
-            <p className="text-neutral-900 font-normal text-sm capitalize">
-              {dealDetail?.title || language?.v3?.common?.not_added}
-            </p>
+          <div className="mt-10 mb-4">
+            <h2 className="text-black text-xl font-bold">{"Instrument"}</h2>
           </div>
-          <div className="py-4 border-b-[1px] border-b-neutral-200 w-full inline-flex items-center justify-between">
-            <h3 className="text-neutral-900 font-medium text-sm">
-              {language?.v3?.deal?.description}
-            </h3>
-            <p className="text-neutral-900 font-normal text-sm capitalize">
-              {dealDetail?.description || language?.v3?.common?.not_added}
-            </p>
-          </div>
-          <div className="py-4 border-b-[1px] border-b-neutral-200 w-full inline-flex items-center justify-between">
+          <div className="py-4  border-b-neutral-200 w-full inline-flex items-center justify-between">
             <h3 className="text-neutral-900 font-medium text-sm">
               {language?.v3?.deal?.instrument_type}
             </h3>
@@ -52,7 +39,105 @@ const DealViewDetails = ({ dealDetail, state }: any) => {
           </div>
           <div className="py-4 border-b-[1px] border-b-neutral-200 w-full inline-flex items-center justify-between">
             <h3 className="text-neutral-900 font-medium text-sm">
-              {language?.v3?.table?.stage}
+              {language?.v3?.deal?.equity_type}
+            </h3>
+            <p className="text-neutral-900 font-normal text-sm capitalize">
+              {dealDetail?.equity_type || language?.v3?.common?.not_added}
+            </p>
+          </div>
+          <div className="mt-10 mb-4">
+            <h2 className="text-black text-xl font-bold">{"Stage"}</h2>
+          </div>
+          <div className="py-4 border-b-[1px] border-b-neutral-200 w-full inline-flex items-center justify-between">
+            <h3 className="text-neutral-900 font-medium text-sm">
+              {"What round is this?"}
+            </h3>
+            <p className="text-neutral-900 font-normal text-sm capitalize">
+              {dealDetail?.stage || language?.v3?.common?.not_added}
+            </p>
+          </div>
+          <div className="mt-10 mb-4">
+            <h2 className="text-black text-xl font-bold">
+              {language?.v3?.table?.title}
+            </h2>
+          </div>
+          <div className="py-4  border-b-neutral-200 w-full inline-flex items-center justify-between">
+            <h3 className="text-neutral-900 font-medium text-sm">
+              {"Startup Title"}
+            </h3>
+            <p className="text-neutral-900 font-normal text-sm capitalize">
+              {dealDetail?.title || language?.v3?.common?.not_added}
+            </p>
+          </div>
+          <div className="py-4 border-b-[1px] border-b-neutral-200 w-full inline-flex items-center justify-between">
+            <h3 className="text-neutral-900 font-medium text-sm w-full  whitespace-nowrap">
+              {"Startup Description"}
+            </h3>
+            <p className="text-neutral-900  text-xs capitalize text-right  flex-wrap pl-5">
+              {dealDetail?.description || language?.v3?.common?.not_added}
+            </p>
+          </div>
+          <div className="mt-10 mb-4">
+            <h2 className="text-black text-xl font-bold">{"Deal Target"}</h2>
+          </div>
+          <div className="py-4 border-b-[1px] border-b-neutral-200 w-full inline-flex items-center justify-between">
+            <h3 className="text-neutral-900 font-medium text-sm">
+              {"Deal target"}
+            </h3>
+            <p className="text-neutral-900 font-normal text-sm capitalize">
+              ${comaFormattedNumber(dealDetail?.selling_price)}
+            </p>
+          </div>
+          <div className="mt-10 mb-4">
+            <h2 className="text-black text-xl font-bold">{"Valuation"}</h2>
+          </div>
+          <div className="py-4  border-b-neutral-200 w-full inline-flex items-center justify-between">
+            <h3 className="text-neutral-900 font-medium text-sm">
+              {language?.v3?.table?.valuation}
+            </h3>
+            <p className="text-neutral-900 font-normal text-sm capitalize">
+              {dealDetail?.valuation || language?.v3?.common?.not_added}
+            </p>
+          </div>
+          <div className="py-4 border-b-[1px] border-b-neutral-200 w-full inline-flex items-center justify-between">
+            <h3 className="text-neutral-900 font-medium text-sm">{"Type"}</h3>
+            <p className="text-neutral-900 font-normal text-sm capitalize">
+              {dealDetail?.valuation_type || language?.v3?.common?.not_added}
+            </p>
+          </div>
+          <div className="mt-10 mb-4">
+            <h2 className="text-black text-xl font-bold">{"Deal Timeline"}</h2>
+          </div>
+          <div className="py-4  border-b-neutral-200 w-full inline-flex items-center justify-between">
+            <h3 className="text-neutral-900 font-medium text-sm">
+              {"Start Date"}
+            </h3>
+            <p className="text-neutral-900 font-normal text-sm capitalize">
+              {dealDetail?.start_at || language?.v3?.common?.not_added}
+            </p>
+          </div>
+          <div className="py-4 border-b-[1px] border-b-neutral-200 w-full inline-flex items-center justify-between">
+            <h3 className="text-neutral-900 font-medium text-sm">
+              {"End Date"}
+            </h3>
+            <p className="text-neutral-900 font-normal text-sm capitalize">
+              {dealDetail?.end_at || language?.v3?.common?.not_added}
+            </p>
+          </div>
+          <div className="mt-10 mb-4">
+            <h2 className="text-black text-xl font-bold">{"Terms"}</h2>
+          </div>
+          <div className="py-4  border-b-neutral-200 w-full inline-flex items-center justify-between">
+            <h3 className="text-neutral-900 font-medium text-sm">
+              {"Minimum Check Size"}
+            </h3>
+            <p className="text-neutral-900 font-normal text-sm capitalize">
+              {dealDetail?.stage || language?.v3?.common?.not_added}
+            </p>
+          </div>
+          <div className="py-4  border-b-neutral-200 w-full inline-flex items-center justify-between">
+            <h3 className="text-neutral-900 font-medium text-sm">
+              {"Pro rata"}
             </h3>
             <p className="text-neutral-900 font-normal text-sm capitalize">
               {dealDetail?.stage || language?.v3?.common?.not_added}
@@ -60,46 +145,10 @@ const DealViewDetails = ({ dealDetail, state }: any) => {
           </div>
           <div className="py-4 border-b-[1px] border-b-neutral-200 w-full inline-flex items-center justify-between">
             <h3 className="text-neutral-900 font-medium text-sm">
-              {language?.v3?.table?.valuation}
+              {"Expected Dividend Yield"}
             </h3>
             <p className="text-neutral-900 font-normal text-sm capitalize">
-              ${comaFormattedNumber(dealDetail?.valuation)} (
-              {dealDetail?.equity_type})
-            </p>
-          </div>
-          <div className="py-4 border-b-[1px] border-b-neutral-200 w-full inline-flex items-center justify-between">
-            <h3 className="text-neutral-900 font-medium text-sm">
-              {language?.v3?.table?.sellingPrice}
-            </h3>
-            <p className="text-neutral-900 font-normal text-sm capitalize">
-              {numberFormatter(dealDetail?.selling_price) ||
-                language?.v3?.common?.not_added}
-            </p>
-          </div>
-          <div className="py-4 border-b-[1px] border-b-neutral-200 w-full inline-flex items-center justify-between">
-            <h3 className="text-neutral-900 font-medium text-sm">
-              {language?.v3?.table?.status}
-            </h3>
-            <p className="text-neutral-900 font-normal text-sm capitalize">
-              {dealDetail?.status || language?.v3?.common?.not_added}
-            </p>
-          </div>
-          <div className="py-4 border-b-[1px] border-b-neutral-200 w-full inline-flex items-center justify-between">
-            <h3 className="text-neutral-900 font-medium text-sm">
-              {language?.v3?.deal?.start_at}
-            </h3>
-            <p className="text-neutral-900 font-normal text-sm capitalize">
-              {formatDate(dealDetail?.start_at) ||
-                language?.v3?.common?.not_added}
-            </p>
-          </div>
-          <div className="py-4 border-b-[1px] border-b-neutral-200 w-full inline-flex items-center justify-between">
-            <h3 className="text-neutral-900 font-medium text-sm">
-              {language?.v3?.deal?.end_at}
-            </h3>
-            <p className="text-neutral-900 font-normal text-sm capitalize">
-              {formatDate(dealDetail?.end_at) ||
-                language?.v3?.common?.not_added}
+              {dealDetail?.stage || language?.v3?.common?.not_added}
             </p>
           </div>
         </section>
