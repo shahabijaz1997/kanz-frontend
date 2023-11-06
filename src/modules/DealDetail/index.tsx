@@ -86,9 +86,7 @@ const DealDetail = ({}: any) => {
       <aside className="w-full h-full flex items-start justify-start">
         <Sidebar
           type={
-            state === KanzRoles.STARTUP
-              ? KanzRoles.STARTUP
-              : KanzRoles.SYNDICATE
+            state === KanzRoles.STARTUP ? KanzRoles.STARTUP : KanzRoles.REALTOR
           }
         />
         {loading ? (

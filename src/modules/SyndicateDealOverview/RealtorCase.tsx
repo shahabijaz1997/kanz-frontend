@@ -142,6 +142,7 @@ const RealtorCase = ({ id }: any) => {
           `invite[deal_attachments][${i}]attachment_kind`,
           element?.type.includes("image") ? "image" : "pdf"
         );
+        formData.append(`invite[deal_attachments][${i}]name`, element?.name);
       }
       let { status, data } = await syndicateApprove(
         formData,
@@ -162,12 +163,37 @@ const RealtorCase = ({ id }: any) => {
     }
   };
 
+  const onRequestChange = async () => {
+    try {
+      setLoading(true);
+      let payload = {
+        message: changes.comment,
+        invite_id: deal?.invite?.id,
+      };
+      let { status, data } = await addCommentOnDeal(
+        Number(id),
+        authToken,
+        payload
+      );
+      if (status === 200) {
+        toast.success(language?.v3?.common?.suces_msg, toastUtil);
+        setModalOpen(false);
+      }
+    } catch (error) {
+      console.log(error);
+    } finally {
+      onGetdeal();
+      setLoading(false);
+      setChanges({ comment: "", action: "", document: null });
+    }
+  };
   const onAddCommentOnDeal = async () => {
     try {
       setLoading(true);
       let payload = {
         message: changes.comment,
         invite_id: deal?.invite?.id,
+        thread_id: deal?.comments[0]?.id,
       };
       let { status, data } = await addCommentOnDeal(
         Number(id),
@@ -607,7 +633,7 @@ const RealtorCase = ({ id }: any) => {
                     <p className=" overflow-auto custom-scroll rounded-md  w-full opacity-80 max-h-56 text-neutral-700 font-normal text-sm text-justify">
                       {React.Children.toArray(
                         deal?.comments?.map((comments: any) => (
-                          <div className="  max-h-24 p-2 pt-3 border-b-[1px] border-neutral-300 overflow-hidden  font-medium  w-full items-center justify-between">
+                          <div className="p-2 pt-3 border-b-[1px] border-neutral-300 overflow-hidden  font-medium  w-full items-center justify-between">
                             <div className=" pl-2 inline-flex items-start">
                               <img
                                 className="h-7 w-7 rounded-full"
@@ -616,7 +642,7 @@ const RealtorCase = ({ id }: any) => {
                                 }
                                 alt="Author Logo"
                               />
-                              <span className="ml-2">
+                              <span className="ml-2 mr-4">
                                 <h1 className="font-medium capitalize text-lg">
                                   {comments?.author_id === user?.id
                                     ? "You"
@@ -625,7 +651,7 @@ const RealtorCase = ({ id }: any) => {
                                     {timeAgo(comments?.created_at)}
                                   </span>
                                 </h1>
-                                <p className="pt-0 pb-1 overflow-y-auto custom-scroll  max-h-20 font-nromal text-sm text-neutral-700">
+                                <p className="pt-0 pb-1 overflow-y-auto custom-scroll font-nromal text-sm text-neutral-700">
                                   {comments?.message}
                                 </p>
                               </span>
@@ -691,7 +717,7 @@ const RealtorCase = ({ id }: any) => {
                 className="w-full !py-1"
                 divStyle="flex items-center justify-center w-full"
                 onClick={() => {
-                  onAddCommentOnDeal();
+                  onRequestChange();
                   setModalOpen(false);
                 }}
               >
