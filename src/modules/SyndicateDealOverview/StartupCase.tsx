@@ -41,7 +41,7 @@ import { fileSize, handleFileRead } from "../../utils/files.utils";
 
 const CURRENCIES = ["USD", "AED"];
 
-const StartupCase = ({ id }: any) => {
+const StartupCase = ({ id, dealToken }: any) => {
   const navigate = useNavigate();
   const language: any = useSelector((state: RootState) => state.language.value);
   const authToken: any = useSelector((state: RootState) => state.auth.value);
@@ -160,7 +160,7 @@ const StartupCase = ({ id }: any) => {
   const onGetdeal = async () => {
     try {
       setLoading(true);
-      let { status, data } = await getDealDetail(Number(id), authToken);
+      let { status, data } = await getDealDetail(dealToken, authToken);
       if (status === 200) {
         setdeal(data?.status?.data);
         setSelectedDocs(data?.status?.data?.docs[0]);
@@ -475,11 +475,11 @@ const StartupCase = ({ id }: any) => {
   };
 
   return (
-    <main className="h-full max-h-full overflow-y-auto">
+    <main className="h-full max-h-full overflow-y-hidden">
       <section>
         <Header />
       </section>
-      <aside className="w-full h-full flex items-start justify-start pb-10">
+      <aside className="w-full h-full flex items-start justify-start">
         <Sidebar type={KanzRoles.SYNDICATE} />
         {loading ? (
           <div
@@ -490,7 +490,7 @@ const StartupCase = ({ id }: any) => {
           </div>
         ) : (
           <section
-            className="bg-cbc-auth h-full p-[5rem] flex items-start"
+            className="bg-cbc-auth h-full pt-[5rem] px-[5rem] flex items-start overflow-y-auto"
             style={{ width: "calc(100% - 250px)" }}
           >
             {/* Section Left */}
