@@ -361,7 +361,6 @@ const RouterModule = () => {
           </Suspense>
         }
       />
-
       <Route
         path={`${RoutesEnums.DEAL_DETAIL}/:id`}
         element={
