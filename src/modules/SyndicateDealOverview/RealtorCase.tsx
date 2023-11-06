@@ -49,7 +49,7 @@ import { toast } from "react-toastify";
 import { toastUtil } from "../../utils/toast.utils";
 import { fileSize } from "../../utils/files.utils";
 
-const RealtorCase = ({ id }: any) => {
+const RealtorCase = ({ id, dealToken }: any) => {
   const navigate = useNavigate();
   const language: any = useSelector((state: RootState) => state.language.value);
   const authToken: any = useSelector((state: RootState) => state.auth.value);
@@ -115,7 +115,7 @@ const RealtorCase = ({ id }: any) => {
   const onGetdeal = async () => {
     try {
       setLoading(true);
-      let { status, data } = await getDealDetail(Number(id), authToken);
+      let { status, data } = await getDealDetail(dealToken, authToken);
       if (status === 200) {
         setdeal(data?.status?.data);
         setSelectedDocs(data?.status?.data?.docs[0]);
@@ -282,11 +282,11 @@ const RealtorCase = ({ id }: any) => {
   };
 
   return (
-    <main className="h-full max-h-full overflow-y-auto">
+    <main className="h-full max-h-full overflow-y-hidden">
       <section>
         <Header />
       </section>
-      <aside className="w-full h-full flex items-start justify-start pb-10">
+      <aside className="w-full h-full flex items-start justify-start">
         <Sidebar type={KanzRoles.SYNDICATE} />
         {loading ? (
           <div
@@ -297,7 +297,7 @@ const RealtorCase = ({ id }: any) => {
           </div>
         ) : (
           <section
-            className="bg-cbc-auth h-full p-[5rem] flex items-start"
+            className="bg-cbc-auth h-full pt-[5rem] px-[5rem] flex items-start overflow-y-auto"
             style={{ width: "calc(100% - 250px)" }}
           >
             {/* Section Left */}
@@ -346,25 +346,25 @@ const RealtorCase = ({ id }: any) => {
                       {deal?.docs[1]?.attachment_kind === FileType.PDF ? (
                         <embed
                           src={deal?.docs[1]?.url}
-                          className="w-full h-[48%] border-[1px] border-neutral-200 shadow shadow-cs-1 rounded-[8px]"
+                          className="w-full h-[48%] border-[1px] border-neutral-200  shadow-cs-1 rounded-[8px]"
                         ></embed>
                       ) : (
                         <img
                           src={deal?.docs[1]?.url}
                           alt={deal?.docs[1]?.name}
-                          className="w-full h-[48%] border-[1px] shadow shadow-cs-1  border-neutral-200 rounded-[8px]"
+                          className="w-full h-[48%] border-[1px] shadow-cs-1  border-neutral-200 rounded-[8px] object-contain bg-white"
                         />
                       )}
                       {deal?.docs[2]?.attachment_kind === FileType.PDF ? (
                         <embed
                           src={deal?.docs[2]?.url}
-                          className="w-full h-[48%] border-[1px] border-neutral-200 shadow shadow-cs-1  rounded-[8px]"
+                          className="w-full h-[48%] border-[1px] border-neutral-200 shadow-cs-1 rounded-[8px] object-contain bg-white"
                         ></embed>
                       ) : (
                         <img
                           src={deal?.docs[2]?.url}
                           alt={deal?.docs[2]?.name}
-                          className="w-full h-[48%] border-[1px] border-neutral-200 shadow shadow-cs-1  rounded-[8px]"
+                          className="w-full h-[48%] border-[1px] border-neutral-200 shadow-cs-1 rounded-[8px] object-contain bg-white"
                         />
                       )}
                     </div>

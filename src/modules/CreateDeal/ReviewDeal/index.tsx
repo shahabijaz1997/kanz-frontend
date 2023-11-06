@@ -55,17 +55,17 @@ const ReviewDeal = ({
         <span className="inline-flex items-center">
           {(typeof field?.value === "string" ||
             typeof field?.value === "number") && (
-            <p className="capitalize text-neutral-500 font-normal text-sm text-right max-w-xs">
+            <p className="capitalize text-neutral-500 font-normal text-sm">
               {comaFormattedNumber(field?.value)}
             </p>
           )}
           {typeof field?.value === "boolean" && (
-            <p className="capitalize text-neutral-500 font-normal text-sm text-right max-w-xs">
+            <p className="capitalize text-neutral-500 font-normal text-sm">
               {field?.value ? language?.buttons?.yes : language?.buttons?.no}
             </p>
           )}
           {typeof field?.value === "object" && (
-            <p className="capitalize text-neutral-500 font-normal text-sm text-right max-w-xs">
+            <p className="capitalize text-neutral-500 font-normal text-sm">
               {field?.value ? language?.buttons?.yes : language?.buttons?.no}
             </p>
           )}
