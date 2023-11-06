@@ -63,6 +63,16 @@ export const getDealSyndicates = (dealId: number, token: string) => {
     }
   );
 };
+export const getSellingPoints = (dealId: number, token: string) => {
+  return axios.get(
+    `${ENV.API_URL}/${ENV.API_VERSION}/deals/${dealId}//unique_selling_points`,
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    }
+  );
+};
 
 export const getViewDealSyndicates = (
   dealId: number,

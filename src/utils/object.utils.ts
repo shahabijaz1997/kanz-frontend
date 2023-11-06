@@ -33,7 +33,7 @@ export const comaFormattedNumber = (value: string) => {
 
 export const formatDate = (value: string = "") => {
   if (!value) return value;
-  const inputDate = new Date("2023-10-28T00:00:00.000Z");
+  const inputDate = new Date(value);
   const options: any = {
     weekday: "long",
     year: "numeric",

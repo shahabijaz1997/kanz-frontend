@@ -21,6 +21,7 @@ import InvitedSyndicates from "./InvitedSyndicates";
 import UserListingPopup from "./UserListingPopup";
 import Requests from "./Requests";
 import { ApplicationStatus } from "../../enums/types.enum";
+import Usp from "./Usp";
 
 const DealDetail = ({}: any) => {
   const params = useParams();
@@ -32,13 +33,18 @@ const DealDetail = ({}: any) => {
   const authToken: any = useSelector((state: RootState) => state.auth.value);
   const tabs = [
     { id: 1, title: "Details" },
-    { id: 2, title: "Investors" },
-    { id: 3, title: "Documents" },
-    { id: 4, title: "Existing SAFE/Note Holders" },
-    { id: 5, title: "Activity" },
-    { id: 6, title: "Invited Syndicates" },
-    { id: 7, title: "Interested Syndicates" },
+    { id: 3, title: "Investors" },
+    { id: 4, title: "Documents" },
+    { id: 5, title: "Existing SAFE/Note Holders" },
+    { id: 6, title: "Activity" },
+    { id: 7, title: "Invited Syndicates" },
+    { id: 8, title: "Interested Syndicates" },
   ];
+
+  if (state === KanzRoles.REALTOR) {
+    const newTab = { id: 2, title: "Unique Selling Points" };
+    tabs.splice(1, 0, newTab);
+  }
 
   const [selected, setSelected]: any = useState(tabs[0]);
   const [loading, setLoading]: any = useState(false);
@@ -169,12 +175,13 @@ const DealDetail = ({}: any) => {
                 navigate={navigate}
               />
             )}
-            {selected?.id === 2 && <DealInvestors />}
-            {selected?.id === 3 && <DocumentDetails dealDocs={dealDocs} />}
-            {selected?.id === 4 && <NoteDetails />}
-            {selected?.id === 5 && <ActivityDetails />}
-            {selected?.id === 6 && <InvitedSyndicates id={id} />}
-            {selected?.id === 7 && <Requests id={id} />}
+            {selected?.id === 2 && <Usp id={id} />}
+            {selected?.id === 3 && <DealInvestors />}
+            {selected?.id === 4 && <DocumentDetails dealDocs={dealDocs} />}
+            {selected?.id === 5 && <NoteDetails />}
+            {selected?.id === 6 && <ActivityDetails />}
+            {selected?.id === 7 && <InvitedSyndicates id={id} />}
+            {selected?.id === 8 && <Requests id={id} />}
           </section>
         )}
       </aside>

@@ -11,12 +11,15 @@ export const postSyndicateInformation = (payload: number, token: string) => {
   });
 };
 
-export const getAllSyndicates = (token: string) => {
-  return axios.get(`${ENV.API_URL}/${ENV.API_VERSION}/syndicates`, {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  });
+export const getAllSyndicates = (dealId: any, token: string) => {
+  return axios.get(
+    `${ENV.API_URL}/${ENV.API_VERSION}/deals/${dealId}/syndicates`,
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    }
+  );
 };
 export const getInvitedSyndicates = (userId: any, token: string) => {
   return axios.get(
