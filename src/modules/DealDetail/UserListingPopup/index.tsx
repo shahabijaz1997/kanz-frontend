@@ -63,7 +63,9 @@ const UserListingPopup = ({ approve, dealId, type }: any) => {
         dealId,
         authToken
       );
-      if (status === 200) toast.success("Syndicate Invited", toastUtil);
+      if (status === 200) {
+        toast.success("Syndicate Invited", toastUtil);
+      }
     } catch (error: any) {
       if (error?.response?.status === 400)
         toast.warning(error?.response?.data?.status?.message, toastUtil);

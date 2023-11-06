@@ -605,17 +605,19 @@ const StartupCase = ({ id }: any) => {
                   )}
                 </section>
               )}
-              {deal?.invite?.status !== DealStatus.ACCEPTED &&
-                deal?.status !== DealStatus.LIVE && (
-                  <Button
-                    onClick={() => {
-                      setModalOpen2(true);
-                    }}
-                    className="w-full"
-                  >
-                    Approve
-                  </Button>
-                )}
+              <div className="mb-4">
+                {deal?.invite?.status !== DealStatus.ACCEPTED &&
+                  deal?.status !== DealStatus.LIVE && (
+                    <Button
+                      onClick={() => {
+                        setModalOpen2(true);
+                      }}
+                      className="w-full"
+                    >
+                      Approve
+                    </Button>
+                  )}
+              </div>
             </section>
 
             {/* Invisible Section */}
@@ -710,7 +712,7 @@ const StartupCase = ({ id }: any) => {
               </aside>
               <aside>
                 {deal?.comments?.length && (
-                  <div className="justify-between pb-2 w-full border-[1px]  rounded-md border-b-neutral-200 ">
+                  <div className="justify-between pb-2 mb-4 w-full border-[1px]  rounded-md border-b-neutral-200 ">
                     <div className="inline-flex justify-between items-center w-full">
                       <div className="pb-1 m-4  text-lg font-bold border-b-[1px]  border-b-neutral-200">
                         Comments
@@ -726,7 +728,7 @@ const StartupCase = ({ id }: any) => {
                     <p className=" overflow-auto custom-scroll rounded-md  w-full opacity-80 max-h-56 text-neutral-700 font-normal text-sm text-justify">
                       {React.Children.toArray(
                         deal?.comments?.map((comments: any) => (
-                          <div className=" max-h-24 p-2 pt-3  overflow-hidden  font-medium  w-full items-center justify-between">
+                          <div className=" max-h-24 p-2 pt-3 border-b-[1px] border-neutral-300 overflow-hidden  font-medium  w-full items-center justify-between">
                             <div className=" pl-2 inline-flex items-start">
                               <img
                                 className="h-7 w-7 rounded-full"
@@ -744,7 +746,7 @@ const StartupCase = ({ id }: any) => {
                                     {timeAgo(comments?.created_at)}
                                   </span>
                                 </h1>
-                                <p className="pt-0 font-nromal text-sm text-neutral-700">
+                                <p className="pt-0 pb-1 overflow-y-auto custom-scroll  max-h-20 font-nromal text-sm text-neutral-700">
                                   {comments?.message}
                                 </p>
                               </span>
