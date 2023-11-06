@@ -719,10 +719,7 @@ const CreateDeal = () => {
   return (
     <main className="h-full max-h-full overflow-y-auto overflow-x-hidden bg-cbc-auth">
       <section>
-        <Header
-          custom={true}
-          data={{ leftMenu: language?.v3?.deal?.create_deal, button: (<button onClick={() => navigate(`/${metadata.role}`)}> <CrossIcon stroke="#171717" className="w-6 h-6" /></button>) }}
-        />
+        <Header custom={true} data={{ leftMenu: language?.v3?.deal?.create_deal, button: (<button onClick={() => navigate(`/${metadata.role}`)}> <CrossIcon stroke="#171717" className="w-6 h-6" /></button>) }} />
       </section>
 
       <aside className="w-full pt-14 px-12">

@@ -60,27 +60,11 @@ const SyndicateRequest = ({}: any) => {
   const [syndicatesInformation, setsyndicatesInformation] = useState([]);
   const [dealDetail, setDealDetail]: any = useState(null);
 
-  const [dummyDisclaimers, setDummyDisclaimers] = useState({
-    d1: false,
-    d2: false,
-    d3: false,
-  });
-  const [disclaimersToggler, setDisclaimersToggler] = useState({
-    d1: false,
-    d2: false,
-    d3: false,
-  });
-
   useEffect(() => {
     dispatch(saveDataHolder(""));
     getAllDeals();
   }, []);
 
-  const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file: any = e.target.files?.[0];
-    setFileInformation(file);
-    e.target.value = "";
-  };
 
   const setFileInformation = async (file: File) => {
     let size = fileSize(file.size, "mb");
@@ -283,7 +267,7 @@ const SyndicateRequest = ({}: any) => {
         <Header />
       </section>
       <aside className="w-full h-full flex items-start justify-start">
-        <Sidebar type={KanzRoles.STARTUP} />
+        <Sidebar type={user?.role} />
         <section
           className="bg-cbc-auth h-full p-[5rem] relative"
           style={{ width: "calc(100% - 250px)" }}
@@ -332,16 +316,6 @@ const SyndicateRequest = ({}: any) => {
           )}
         </section>
       </aside>
-
-      {/*
-        {.......##...............######..####.########..########....########..########.....###....##......##.########.########.....................##
-        {......##...##...##.....##....##..##..##.....##.##..........##.....##.##.....##...##.##...##..##..##.##.......##.....##.....##...##.......##.
-        {.....##.....##.##......##........##..##.....##.##..........##.....##.##.....##..##...##..##..##..##.##.......##.....##......##.##.......##..
-        {....##....#########.....######...##..##.....##.######......##.....##.########..##.....##.##..##..##.######...########.....#########....##...
-        {...##.......##.##............##..##..##.....##.##..........##.....##.##...##...#########.##..##..##.##.......##...##........##.##.....##....
-        {..##.......##...##.....##....##..##..##.....##.##..........##.....##.##....##..##.....##.##..##..##.##.......##....##......##...##...##.....
-        {.##.....................######..####.########..########....########..##.....##.##.....##..###..###..########.##.....##..............##......
-        {*/}
 
       <Drawer
         drawerWidth="w-[700px]"
