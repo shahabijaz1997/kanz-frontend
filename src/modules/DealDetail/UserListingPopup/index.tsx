@@ -15,13 +15,14 @@ import { toast } from "react-toastify";
 import { ApplicationStatus } from "../../../enums/types.enum";
 import InvitedSyndicates from "../InvitedSyndicates";
 import Spinner from "../../../shared/components/Spinner";
+
 interface Syndicate {
   id: number;
   title: React.ReactNode;
   handle: string;
   action: React.ReactNode;
 }
-const UserListingPopup = ({ approve, dealId, type }: any) => {
+const UserListingPopup = ({ approve, dealId, type, dealToken }: any) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const ref: any = useRef();
@@ -45,8 +46,14 @@ const UserListingPopup = ({ approve, dealId, type }: any) => {
   }, []);
 
   const copyToClipboard = () => {
+    let finalstring =
+      RoutesEnums.FRONTEND_STATIC_LINK +
+      RoutesEnums.SYNDICATE_DEAL_DETAIL +
+      `/${dealId}`;
+    console.log(finalstring);
+
     const clipboard = navigator.clipboard;
-    clipboard.writeText(window.location.href);
+    /* clipboard.writeText(); */
     toast.success(`${language?.v3?.button?.copy_link_success}`, toastUtil);
   };
 
@@ -139,7 +146,6 @@ const UserListingPopup = ({ approve, dealId, type }: any) => {
           setShowInviteSyndicate(true);
         }}
         className="w-[80px]"
-        disabled={approve !== ApplicationStatus.APPROVED}
       >
         {language?.v3?.button?.invite}
       </Button>

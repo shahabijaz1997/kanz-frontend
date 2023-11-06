@@ -118,10 +118,10 @@ const RouterModule = () => {
       const toastElements = document.querySelectorAll(".Toastify__toast");
       toastElements.forEach(
         (elem: any) =>
-        (elem.style.fontFamily =
-          event === "ar"
-            ? "'Almarai', sans-serif"
-            : "Roboto, 'Open Sans', 'Helvetica Neue', sans-serif")
+          (elem.style.fontFamily =
+            event === "ar"
+              ? "'Almarai', sans-serif"
+              : "Roboto, 'Open Sans', 'Helvetica Neue', sans-serif")
       );
     } catch (error) {
     } finally {
@@ -318,7 +318,10 @@ const RouterModule = () => {
         element={
           <Suspense fallback={<Loader />}>
             <CHECK_LOGGED_IN>
-              <GUARD_SUBMITTED_ROUTE role={[KanzRoles.STARTUP]} status={ApplicationStatus.APPROVED}>
+              <GUARD_SUBMITTED_ROUTE
+                role={[KanzRoles.STARTUP]}
+                status={ApplicationStatus.APPROVED}
+              >
                 <StartupDashboard />
               </GUARD_SUBMITTED_ROUTE>
             </CHECK_LOGGED_IN>
@@ -330,7 +333,10 @@ const RouterModule = () => {
         element={
           <Suspense fallback={<Loader />}>
             <CHECK_LOGGED_IN>
-              <GUARD_SUBMITTED_ROUTE role={[KanzRoles.REALTOR]} status={ApplicationStatus.APPROVED}>
+              <GUARD_SUBMITTED_ROUTE
+                role={[KanzRoles.REALTOR]}
+                status={ApplicationStatus.APPROVED}
+              >
                 <RealtorDashboard />
               </GUARD_SUBMITTED_ROUTE>
             </CHECK_LOGGED_IN>
@@ -342,7 +348,10 @@ const RouterModule = () => {
         element={
           <Suspense fallback={<Loader />}>
             <CHECK_LOGGED_IN>
-              <GUARD_SUBMITTED_ROUTE role={[KanzRoles.SYNDICATE]} status={ApplicationStatus.APPROVED}>
+              <GUARD_SUBMITTED_ROUTE
+                role={[KanzRoles.SYNDICATE]}
+                status={ApplicationStatus.APPROVED}
+              >
                 <SyndicateDashboard />
               </GUARD_SUBMITTED_ROUTE>
             </CHECK_LOGGED_IN>
@@ -354,7 +363,10 @@ const RouterModule = () => {
         element={
           <Suspense fallback={<Loader />}>
             <CHECK_LOGGED_IN>
-              <GUARD_SUBMITTED_ROUTE role={[KanzRoles.STARTUP, KanzRoles.REALTOR]} status={ApplicationStatus.APPROVED}>
+              <GUARD_SUBMITTED_ROUTE
+                role={[KanzRoles.STARTUP, KanzRoles.REALTOR]}
+                status={ApplicationStatus.APPROVED}
+              >
                 <CreateDeal />
               </GUARD_SUBMITTED_ROUTE>
             </CHECK_LOGGED_IN>
@@ -366,7 +378,10 @@ const RouterModule = () => {
         element={
           <Suspense fallback={<Loader />}>
             <CHECK_LOGGED_IN>
-              <GUARD_SUBMITTED_ROUTE role={[KanzRoles.STARTUP, KanzRoles.REALTOR]} status={ApplicationStatus.APPROVED}>
+              <GUARD_SUBMITTED_ROUTE
+                role={[KanzRoles.STARTUP, KanzRoles.REALTOR]}
+                status={ApplicationStatus.APPROVED}
+              >
                 <DealDetail />
               </GUARD_SUBMITTED_ROUTE>
             </CHECK_LOGGED_IN>
@@ -375,11 +390,14 @@ const RouterModule = () => {
       />
 
       <Route
-        path={`${RoutesEnums.SYNDICATE_DEAL_DETAIL}/:id`}
+        path={`${RoutesEnums.SYNDICATE_DEAL_DETAIL}/:dealToken`}
         element={
           <Suspense fallback={<Loader />}>
             <CHECK_LOGGED_IN>
-              <GUARD_SUBMITTED_ROUTE role={[KanzRoles.SYNDICATE]} status={ApplicationStatus.APPROVED}>
+              <GUARD_SUBMITTED_ROUTE
+                role={[KanzRoles.SYNDICATE]}
+                status={ApplicationStatus.APPROVED}
+              >
                 <SyndicateDealOverview />
               </GUARD_SUBMITTED_ROUTE>
             </CHECK_LOGGED_IN>
@@ -402,7 +420,10 @@ const RouterModule = () => {
         element={
           <Suspense fallback={<Loader />}>
             <CHECK_LOGGED_IN>
-              <GUARD_SUBMITTED_ROUTE role={[KanzRoles.SYNDICATE]} status={ApplicationStatus.APPROVED}>
+              <GUARD_SUBMITTED_ROUTE
+                role={[KanzRoles.SYNDICATE]}
+                status={ApplicationStatus.APPROVED}
+              >
                 <DealApproval guard={authToken} />
               </GUARD_SUBMITTED_ROUTE>
             </CHECK_LOGGED_IN>
@@ -416,7 +437,10 @@ const RouterModule = () => {
         element={
           <Suspense fallback={<Loader />}>
             <CHECK_LOGGED_IN>
-              <GUARD_SUBMITTED_ROUTE role={[KanzRoles.REALTOR, KanzRoles.STARTUP]} status={ApplicationStatus.APPROVED}>
+              <GUARD_SUBMITTED_ROUTE
+                role={[KanzRoles.REALTOR, KanzRoles.STARTUP]}
+                status={ApplicationStatus.APPROVED}
+              >
                 <SyndicateRequest guard={authToken} />
               </GUARD_SUBMITTED_ROUTE>
             </CHECK_LOGGED_IN>
@@ -428,7 +452,10 @@ const RouterModule = () => {
         element={
           <Suspense fallback={<Loader />}>
             <CHECK_LOGGED_IN>
-              <GUARD_SUBMITTED_ROUTE role={KanzRoles.SYNDICATE} status={ApplicationStatus.APPROVED}>
+              <GUARD_SUBMITTED_ROUTE
+                role={KanzRoles.SYNDICATE}
+                status={ApplicationStatus.APPROVED}
+              >
                 <StartupInvestment guard={authToken} />
               </GUARD_SUBMITTED_ROUTE>
             </CHECK_LOGGED_IN>

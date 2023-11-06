@@ -32,15 +32,12 @@ export const getInvitedDeals = (inviteeId: any, token: string) => {
   );
 };
 
-export const getDealDetail = (dealId: number, token: string) => {
-  return axios.get(
-    `${ENV.API_URL}/${ENV.API_VERSION}/deals/${dealId}/overview`,
-    {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    }
-  );
+export const getDealDetail = (dealToken: string, token: string) => {
+  return axios.get(`${ENV.API_URL}/${ENV.API_VERSION}/deals/${dealToken}`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
 };
 
 export const getDealDocuments = (dealId: number, token: string) => {

@@ -95,7 +95,7 @@ const DealApproval = ({}: any) => {
                   e.preventDefault();
                   e.stopPropagation();
                   navigate(
-                    `${RoutesEnums.SYNDICATE_DEAL_DETAIL}/${deal?.deal?.id}`,
+                    `${RoutesEnums.SYNDICATE_DEAL_DETAIL}/${deal?.deal?.token}`,
                     { state: deal?.deal?.type }
                   );
                 }}
