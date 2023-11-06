@@ -77,13 +77,11 @@ const UserListingPopup = ({ approve, dealId, type, dealToken }: any) => {
         button.innerText = "Invited";
         elem.innerHTML = "";
         elem.appendChild(button);
-        /* elem.style.display = "none"; */
       }
     } catch (error: any) {
       if (error?.response?.status === 400)
         toast.warning(error?.response?.data?.status?.message, toastUtil);
     } finally {
-      /* getAllUserListings(); */
     }
   };
 
