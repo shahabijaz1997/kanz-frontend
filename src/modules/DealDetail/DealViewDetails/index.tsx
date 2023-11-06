@@ -294,7 +294,7 @@ const DealViewDetails = ({ dealDetail, state }: any) => {
                   <h3 className="text-neutral-900 font-medium text-sm">
                     Property Description
                   </h3>
-                  <p className="text-neutral-900 font-normal text-sm capitalize">
+                  <p className="text-neutral-900 font-normal ml-3 text-sm capitalize text-justify ">
                     {dealDetail?.description}
                   </p>
                 </div>

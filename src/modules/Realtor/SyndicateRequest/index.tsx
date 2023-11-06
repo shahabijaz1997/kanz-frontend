@@ -65,7 +65,6 @@ const SyndicateRequest = ({}: any) => {
     getAllDeals();
   }, []);
 
-
   const setFileInformation = async (file: File) => {
     let size = fileSize(file.size, "mb");
     let type;
@@ -237,7 +236,7 @@ const SyndicateRequest = ({}: any) => {
         const nextPage = prev.current_page + 1;
         const startIndex = (nextPage - 1) * prev.items_per_page;
         const endIndex = startIndex + prev.items_per_page;
-        const data = syndicatesInformation.slice(startIndex, endIndex);
+        const data = syndicates.slice(startIndex, endIndex);
         return { ...prev, current_page: nextPage, data };
       });
     } else if (type === "previous" && pagination.current_page > 1) {
@@ -245,7 +244,7 @@ const SyndicateRequest = ({}: any) => {
         const prevPage = prev.current_page - 1;
         const startIndex = (prevPage - 1) * prev.items_per_page;
         const endIndex = startIndex + prev.items_per_page;
-        const data = syndicatesInformation.slice(startIndex, endIndex);
+        const data = syndicates.slice(startIndex, endIndex);
 
         return { ...prev, current_page: prevPage, data };
       });
@@ -254,7 +253,7 @@ const SyndicateRequest = ({}: any) => {
         const prevPage = Number(type) + 1 - 1;
         const startIndex = (prevPage - 1) * prev.items_per_page;
         const endIndex = startIndex + prev.items_per_page;
-        const data = syndicatesInformation.slice(startIndex, endIndex);
+        const data = syndicates.slice(startIndex, endIndex);
 
         return { ...prev, current_page: type, data };
       });
@@ -304,7 +303,6 @@ const SyndicateRequest = ({}: any) => {
                   pagination={pagination}
                   paginate={paginate}
                   goToPage={paginate}
-                  onclick={() => {}}
                   noDataNode={
                     <span className="absolute left-1/2 top-1/2 translate-x-[-50%] translate-y-[-50%]">
                       No Data
@@ -400,7 +398,7 @@ const SyndicateRequest = ({}: any) => {
                         <p className=" overflow-y-auto custom-scroll rounded-md  w-full opacity-80 max-h-56 text-neutral-700 font-normal text-sm text-justify">
                           {React.Children.toArray(
                             dealDetail?.comments?.map((comments: any) => (
-                              <div className=" max-h-24 p-2 pt-3  overflow-hidden bg-cbc-grey-sec font-medium  w-full items-center justify-between">
+                              <div className="p-2 pt-3 overflow-hidden font-medium  w-full items-center justify-between">
                                 <div className=" pl-2 inline-flex items-start">
                                   <img
                                     className="h-7 w-7 rounded-full"
@@ -411,13 +409,13 @@ const SyndicateRequest = ({}: any) => {
                                     }
                                     alt="Author Logo"
                                   />
-                                  <span className="ml-2">
+                                  <span className="ml-2 mr-4">
                                     <h1 className="font-medium capitalize text-xl">
                                       {comments?.author_id === user?.id
                                         ? "You"
                                         : comments?.author_name}
                                     </h1>
-                                    <p className="pt-1 overflow-auto custom-scroll max-h-56">
+                                    <p className="pt-1 overflow-auto custom-scroll">
                                       {comments?.message}
                                     </p>
                                   </span>

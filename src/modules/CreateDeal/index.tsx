@@ -801,7 +801,7 @@ const CreateDeal = () => {
         </section>
 
         <section
-          className="w-full inline-flex items-center gap-2 rounded-md border border-grey w-[450px] p-4 check-background cursor-pointer"
+          className="inline-flex items-center gap-2 rounded-md border border-grey w-[450px] p-4 check-background cursor-pointer"
           onClick={() =>
             dispatch(
               saveDealSelection({
@@ -948,7 +948,7 @@ const CreateDeal = () => {
           )}
           <input
             title={ques?.statement}
-            className="h-[42px] pr-10 shadow-sm appearance-none border rounded-md w-full py-2 px-3 text-gray-700 leading-tight transition-all bg-white w-full focus:outline-none"
+            className="h-[42px] pr-10 shadow-sm appearance-none border rounded-md w-full py-2 px-3 text-gray-700 leading-tight transition-all bg-white focus:outline-none"
             placeholder={ques?.statement}
             id={ques?.id}
             onChange={(e: any) =>
@@ -1343,7 +1343,7 @@ const CreateDeal = () => {
                             {/* For non custom cards */}
                             {showCustomBox && (
                               <section
-                                className={`flex items-start flex-col mb-8 w-[450px] screen500:w-[350px] ${
+                                className={`flex items-start flex-col mb-8 w-[500px] screen500:w-[400px] ${
                                   (index % 2 != 0 || section?.is_multiple) &&
                                   "bg-cbc-check p-4 rounded-md"
                                 }`}
@@ -1439,7 +1439,7 @@ const CreateDeal = () => {
                               section?.is_multiple &&
                               !section?.display_card && (
                                 <section
-                                  className={`flex items-start flex-col mb-8 w-[450px] screen500:w-[350px] bg-cbc-check p-4 rounded-md -mt-16`}
+                                  className={`flex items-start flex-col mb-8  w-[500px] screen500:w-[400px] bg-cbc-check p-4 rounded-md -mt-16`}
                                 >
                                   {React.Children.toArray(
                                     multipleFieldsPayload?.map((mp: any) => {
@@ -1541,7 +1541,7 @@ const CreateDeal = () => {
                           </React.Fragment>
                         ) : (
                           <section
-                            className={`flex items-start flex-col mb-8 w-[450px] screen500:w-[350px] ${
+                            className={`flex items-start flex-col mb-8  w-[500px] screen500:w-[400px] ${
                               (index % 2 != 0 || section?.is_multiple) &&
                               "bg-cbc-check p-4 rounded-md"
                             }`}
