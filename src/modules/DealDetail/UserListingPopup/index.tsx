@@ -50,10 +50,8 @@ const UserListingPopup = ({ approve, dealId, type, dealToken }: any) => {
       RoutesEnums.FRONTEND_STATIC_LINK +
       RoutesEnums.SYNDICATE_DEAL_DETAIL +
       `/${dealId}`;
-    console.log(finalstring);
-
     const clipboard = navigator.clipboard;
-    /* clipboard.writeText(); */
+    clipboard.writeText(finalstring);
     toast.success(`${language?.v3?.button?.copy_link_success}`, toastUtil);
   };
 
@@ -146,6 +144,7 @@ const UserListingPopup = ({ approve, dealId, type, dealToken }: any) => {
           setShowInviteSyndicate(true);
         }}
         className="w-[80px]"
+        disabled={approve !== ApplicationStatus.APPROVED}
       >
         {language?.v3?.button?.invite}
       </Button>
