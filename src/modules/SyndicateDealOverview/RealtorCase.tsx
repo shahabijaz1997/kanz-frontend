@@ -71,7 +71,7 @@ const RealtorCase = ({ id, dealToken }: any) => {
 
   useLayoutEffect(() => {
     onGetdeal();
-  }, [id]);
+  }, [deal?.id]);
 
   const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file: any = e.target.files?.[0];
@@ -171,7 +171,7 @@ const RealtorCase = ({ id, dealToken }: any) => {
         invite_id: deal?.invite?.id,
       };
       let { status, data } = await addCommentOnDeal(
-        Number(id),
+        Number(deal?.id),
         authToken,
         payload
       );
@@ -196,7 +196,7 @@ const RealtorCase = ({ id, dealToken }: any) => {
         thread_id: deal?.comments[0]?.id,
       };
       let { status, data } = await addCommentOnDeal(
-        Number(id),
+        Number(deal?.id),
         authToken,
         payload
       );

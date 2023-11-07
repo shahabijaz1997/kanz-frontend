@@ -22,7 +22,7 @@ interface Syndicate {
   handle: string;
   action: React.ReactNode;
 }
-const UserListingPopup = ({ approve, dealId, type, dealToken }: any) => {
+const UserListingPopup = ({ approve, dealId, type, dealIdReal }: any) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const ref: any = useRef();
@@ -67,7 +67,7 @@ const UserListingPopup = ({ approve, dealId, type, dealToken }: any) => {
           message: "You have been invited",
           invitee_id: syndId,
         },
-        dealId,
+        dealIdReal,
         authToken
       );
       if (status === 200) {
@@ -90,7 +90,7 @@ const UserListingPopup = ({ approve, dealId, type, dealToken }: any) => {
       setLoading(true);
       let results: any;
       if (type === KanzRoles.SYNDICATE)
-        results = await getAllSyndicates(dealId, authToken);
+        results = await getAllSyndicates(dealIdReal, authToken);
       let { status, data } = results;
       if (status === 200) {
         let syndicatesData = data?.status?.data || [];
