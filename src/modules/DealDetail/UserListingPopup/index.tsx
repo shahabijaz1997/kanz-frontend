@@ -13,7 +13,6 @@ import { KanzRoles } from "../../../enums/roles.enum";
 import { toastUtil } from "../../../utils/toast.utils";
 import { toast } from "react-toastify";
 import { ApplicationStatus } from "../../../enums/types.enum";
-import InvitedSyndicates from "../InvitedSyndicates";
 import Spinner from "../../../shared/components/Spinner";
 
 interface Syndicate {
@@ -57,7 +56,7 @@ const UserListingPopup = ({ approve, dealId, type, dealIdReal }: any) => {
 
   useEffect(() => {
     dispatch(saveDataHolder(""));
-    getAllUserListings();
+    /* getAllUserListings(); */
   }, [type]);
 
   const onSendInvite = async (syndId: any) => {
