@@ -7,12 +7,12 @@ const CURRENCIES = ["USD", "AED"];
 
 const SyndicateDealOverview = ({}: any) => {
   const { state } = useLocation();
-  const { dealToken, id } = useParams();
+  const { dealToken } = useParams();
 
   return state === KanzRoles.STARTUP?.toLocaleLowerCase() ? (
-    <StartupCase dealToken={dealToken} id={id} />
+    <StartupCase dealToken={dealToken} />
   ) : (
-    <RealtorCase dealToken={dealToken} id={id} />
+    <RealtorCase dealToken={dealToken} />
   );
 };
 export default SyndicateDealOverview;
