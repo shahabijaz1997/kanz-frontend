@@ -146,7 +146,7 @@ const SyndicateRequest = ({}: any) => {
   const columns = [
     language?.v3?.deal?.syndicate,
     language?.v3?.common?.deal,
-    language?.v3?.table?.status,
+    "Invite Status",
     language?.v3?.deal?.comments,
     language?.v3?.deal?.documents,
     language?.v3?.table?.view,
@@ -163,9 +163,7 @@ const SyndicateRequest = ({}: any) => {
             [language?.v3?.deal?.syndicate]: syndicate?.invitee?.name,
             [language?.v3?.common?.deal]: syndicate?.deal?.title || "N/A",
             [language?.v3?.deal?.comments]: syndicate?.deal?.comment || "N/A",
-            [language?.v3?.table?.status]: (
-              <CustomStatus options={syndicate?.status} />
-            ),
+            ["Invite Status"]: <CustomStatus options={syndicate?.status} />,
             [language?.v3?.deal
               ?.documents]: `${syndicate?.deal?.docs?.length} ${language?.v3?.deal?.documents}`,
             "": (

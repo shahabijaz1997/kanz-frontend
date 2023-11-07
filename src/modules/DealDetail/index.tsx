@@ -59,6 +59,7 @@ const DealDetail = ({}: any) => {
   const onGetDealDetail = async () => {
     try {
       setLoading(true);
+
       let { status, data } = await getDealDetail(id, authToken);
       if (status === 200) setDealDetail(data?.status?.data);
     } catch (error) {
@@ -70,7 +71,7 @@ const DealDetail = ({}: any) => {
   const onGetDealFiles = async () => {
     try {
       setLoading(true);
-      let { status, data } = await getDealDocuments(id, authToken);
+      let { status, data } = await getDealDocuments(dealDetail?.id, authToken); //??????????????????????
       if (status === 200) setDealDocs(data?.status?.data);
     } catch (error) {
     } finally {
@@ -123,6 +124,7 @@ const DealDetail = ({}: any) => {
                     approve={dealDetail?.status}
                     dealId={id}
                     type={KanzRoles.SYNDICATE}
+                    dealIdReal={dealDetail?.id}
                   />
                 </div>
 

@@ -65,7 +65,7 @@ const StartupCase = ({ id, dealToken }: any) => {
 
   useLayoutEffect(() => {
     onGetdeal();
-  }, [id]);
+  }, [deal?.id]);
 
   const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file: any = e.target.files?.[0];
@@ -178,8 +178,9 @@ const StartupCase = ({ id, dealToken }: any) => {
         message: changes.comment,
         invite_id: deal?.invite?.id,
       };
+
       let { status, data } = await addCommentOnDeal(
-        Number(id),
+        Number(deal?.id),
         authToken,
         payload
       );
@@ -205,7 +206,7 @@ const StartupCase = ({ id, dealToken }: any) => {
         thread_id: deal?.comments[0]?.id,
       };
       let { status, data } = await addCommentOnDeal(
-        Number(id),
+        Number(deal?.id),
         authToken,
         payload
       );
