@@ -286,7 +286,7 @@ const RealtorCase = ({ id, dealToken }: any) => {
       <section>
         <Header />
       </section>
-      <aside className="w-full h-full flex items-start justify-start">
+      <aside className="w-full h-full flex items-start justify-start" style={{ height: "calc(100% - 70px)"}}>
         <Sidebar type={KanzRoles.SYNDICATE} />
         {loading ? (
           <div

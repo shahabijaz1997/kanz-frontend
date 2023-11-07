@@ -1,4 +1,4 @@
-import React, { useEffect, useLayoutEffect, useRef, useState } from "react";
+import React, {  useLayoutEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { KanzRoles } from "../../enums/roles.enum";
@@ -6,7 +6,6 @@ import { RootState } from "../../redux-toolkit/store/store";
 import Header from "../../shared/components/Header";
 import Sidebar from "../../shared/components/Sidebar";
 import Chevrond from "../../ts-icons/chevrond.svg";
-import Button from "../../shared/components/Button";
 import CustomDropdown from "../../shared/components/CustomDropdown";
 import MenuIcon from "../../ts-icons/menuIcon.svg";
 import DealInvestors from "./DealInvestors";
@@ -20,7 +19,6 @@ import { getDealDetail, getDealDocuments } from "../../apis/deal.api";
 import InvitedSyndicates from "./InvitedSyndicates";
 import UserListingPopup from "./UserListingPopup";
 import Requests from "./Requests";
-import { ApplicationStatus } from "../../enums/types.enum";
 import Usp from "./Usp";
 
 const DealDetail = ({}: any) => {
@@ -53,7 +51,7 @@ const DealDetail = ({}: any) => {
 
   useLayoutEffect(() => {
     if (selected.id === 1) onGetDealDetail();
-    else if (selected.id === 3) onGetDealFiles();
+    else if (selected.id === 4) onGetDealFiles();
   }, [selected]);
 
   const onGetDealDetail = async () => {
@@ -71,7 +69,7 @@ const DealDetail = ({}: any) => {
   const onGetDealFiles = async () => {
     try {
       setLoading(true);
-      let { status, data } = await getDealDocuments(dealDetail?.id, authToken); //??????????????????????
+      let { status, data } = await getDealDocuments(dealDetail?.id, authToken);
       if (status === 200) setDealDocs(data?.status?.data);
     } catch (error) {
     } finally {
@@ -80,7 +78,7 @@ const DealDetail = ({}: any) => {
   };
 
   return (
-    <main className="h-full max-h-full overflow-y-auto">
+    <main className="h-full max-h-full overflow-y-hidden">
       <section>
         <Header />
       </section>
@@ -99,7 +97,7 @@ const DealDetail = ({}: any) => {
           </div>
         ) : (
           <section
-            className="bg-cbc-auth h-full p-[5rem]"
+            className="bg-cbc-auth h-full p-[5rem] overflow-y-auto"
             style={{ width: "calc(100% - 250px)" }}
           >
             <span
@@ -175,13 +173,13 @@ const DealDetail = ({}: any) => {
                 navigate={navigate}
               />
             )}
-            {selected?.id === 2 && <Usp id={id} />}
+            {selected?.id === 2 && <Usp id={dealDetail?.id} />}
             {selected?.id === 3 && <DealInvestors />}
             {selected?.id === 4 && <DocumentDetails dealDocs={dealDocs} />}
             {selected?.id === 5 && <NoteDetails />}
             {selected?.id === 6 && <ActivityDetails />}
-            {selected?.id === 7 && <InvitedSyndicates id={id} />}
-            {selected?.id === 8 && <Requests id={id} />}
+            {selected?.id === 7 && <InvitedSyndicates id={dealDetail?.id} />}
+            {selected?.id === 8 && <Requests id={dealDetail?.id} />}
           </section>
         )}
       </aside>
