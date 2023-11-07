@@ -54,10 +54,10 @@ const UserListingPopup = ({ approve, dealId, type, dealIdReal }: any) => {
     toast.success(`${language?.v3?.button?.copy_link_success}`, toastUtil);
   };
 
-/*   useEffect(() => {
+  useEffect(() => {
     dispatch(saveDataHolder(""));
-    getAllUserListings();
-  }, [type]); */
+    /* getAllUserListings(); */
+  }, [type]);
 
   const onSendInvite = async (syndId: any) => {
     try {

@@ -480,7 +480,7 @@ const StartupCase = ({ id, dealToken }: any) => {
       <section>
         <Header />
       </section>
-      <aside className="w-full h-full flex items-start justify-start">
+      <aside className="w-full flex items-start justify-start" style={{ height: "calc(100% - 70px)"}}>
         <Sidebar type={KanzRoles.SYNDICATE} />
         {loading ? (
           <div
@@ -490,10 +490,7 @@ const StartupCase = ({ id, dealToken }: any) => {
             <Spinner />
           </div>
         ) : (
-          <section
-            className="bg-cbc-auth h-full pt-[5rem] px-[5rem] flex items-start overflow-y-auto"
-            style={{ width: "calc(100% - 250px)" }}
-          >
+          <section className="bg-cbc-auth h-full pt-[5rem] px-[5rem] flex items-start overflow-y-auto" style={{ width: "calc(100% - 250px)" }} >
             {/* Section Left */}
             <section className="w-[60%]">
               <div

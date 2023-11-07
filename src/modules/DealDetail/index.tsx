@@ -78,7 +78,7 @@ const DealDetail = ({}: any) => {
   };
 
   return (
-    <main className="h-full max-h-full overflow-y-auto">
+    <main className="h-full max-h-full overflow-y-hidden">
       <section>
         <Header />
       </section>
@@ -97,7 +97,7 @@ const DealDetail = ({}: any) => {
           </div>
         ) : (
           <section
-            className="bg-cbc-auth h-full p-[5rem]"
+            className="bg-cbc-auth h-full p-[5rem] overflow-y-auto"
             style={{ width: "calc(100% - 250px)" }}
           >
             <span
