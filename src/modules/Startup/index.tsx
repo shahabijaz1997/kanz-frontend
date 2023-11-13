@@ -93,7 +93,7 @@ const Startup = ({}: any) => {
             [language?.v3?.table?.action]: (
               <React.Fragment>
                 {(deal?.status === ApplicationStatus.DRAFT ||
-                  deal?.status === ApplicationStatus.REOPENED) && (
+                  deal?.status === ApplicationStatus.REOPENED || deal?.status === ApplicationStatus.APPROVED) && (
                   <div
                     onClick={(e) => {
                       e.preventDefault();
@@ -207,10 +207,6 @@ const Startup = ({}: any) => {
                 <h1 className="text-black font-medium text-2xl mb-2">
                   {language?.v3?.startup?.overview?.heading_2}
                 </h1>
-              </section>
-
-              <section className="mt-10 mb-16">
-                <DealTable />
               </section>
 
               <section className="inline-flex justify-between items-center w-full">

@@ -148,7 +148,6 @@ const SyndicateRequest = ({}: any) => {
     language?.v3?.common?.deal,
     "Invite Status",
     language?.v3?.deal?.comments,
-    language?.v3?.deal?.documents,
     language?.v3?.table?.view,
     "",
   ];
@@ -164,8 +163,6 @@ const SyndicateRequest = ({}: any) => {
             [language?.v3?.common?.deal]: syndicate?.deal?.title || "N/A",
             [language?.v3?.deal?.comments]: syndicate?.deal?.comment || "N/A",
             ["Invite Status"]: <CustomStatus options={syndicate?.status} />,
-            [language?.v3?.deal
-              ?.documents]: `${syndicate?.deal?.docs?.length} ${language?.v3?.deal?.documents}`,
             "": (
               <div
                 onClick={() => {
@@ -312,7 +309,20 @@ const SyndicateRequest = ({}: any) => {
           )}
         </section>
       </aside>
+      
 
+{/* 
+{/* .########..########.....###....##......##.########.########.
+{/* .##.....##.##.....##...##.##...##..##..##.##.......##.....##
+{/* .##.....##.##.....##..##...##..##..##..##.##.......##.....##
+{/* .##.....##.########..##.....##.##..##..##.######...########.
+{/* .##.....##.##...##...#########.##..##..##.##.......##...##..
+{/* .##.....##.##....##..##.....##.##..##..##.##.......##....##.
+{/* .########..##.....##.##.....##..###..###..########.##.....##
+{/* */ }
+
+
+      
       <Drawer
         drawerWidth="w-[700px]"
         isOpen={isOpen}

@@ -20,7 +20,9 @@ const DealViewDetails = ({ dealDetail, state }: any) => {
     },
     { id: 2, title: "Compliance Officer", completed: false, ongoing: true },
     { id: 3, title: "Approved", completed: false, ongoing: false },
+    { id: 4, title: "Live", completed: false, ongoing: false },
   ];
+
 
   const getRoleBasedUI = () => {
     if (state === KanzRoles.STARTUP)
@@ -37,6 +39,7 @@ const DealViewDetails = ({ dealDetail, state }: any) => {
               {dealDetail?.instrument_type || language?.v3?.common?.not_added}
             </p>
           </div>
+          {dealDetail?.equity_type ? (  
           <div className="py-4 border-b-[1px] border-b-neutral-200 w-full inline-flex items-center justify-between">
             <h3 className="text-neutral-900 font-medium text-sm">
               {language?.v3?.deal?.equity_type}
@@ -44,8 +47,18 @@ const DealViewDetails = ({ dealDetail, state }: any) => {
             <p className="text-neutral-900 font-normal text-sm capitalize">
               {dealDetail?.equity_type || language?.v3?.common?.not_added}
             </p>
-          </div>
-          <div className="mt-10 mb-4">
+          </div>) :
+            (<div className="py-4 border-b-[1px] border-b-neutral-200 w-full inline-flex items-center justify-between">
+            <h3 className="text-neutral-900 font-medium text-sm">
+              {"Safe Type"}
+            </h3>
+            <p className="text-neutral-900 font-normal text-sm capitalize">
+              {dealDetail?.safe_type || language?.v3?.common?.not_added}
+            </p>
+          </div>)}
+        {dealDetail?.equity_type && 
+        (
+        <React.Fragment>  <div className="mt-10 mb-4">
             <h2 className="text-black text-xl font-bold">{"Stage"}</h2>
           </div>
           <div className="py-4 border-b-[1px] border-b-neutral-200 w-full inline-flex items-center justify-between">
@@ -56,6 +69,9 @@ const DealViewDetails = ({ dealDetail, state }: any) => {
               {dealDetail?.stage || language?.v3?.common?.not_added}
             </p>
           </div>
+          </React.Fragment>
+          )}
+        
           <div className="mt-10 mb-4">
             <h2 className="text-black text-xl font-bold">
               {language?.v3?.table?.title}
@@ -88,7 +104,9 @@ const DealViewDetails = ({ dealDetail, state }: any) => {
               ${comaFormattedNumber(dealDetail?.selling_price)}
             </p>
           </div>
-          <div className="mt-10 mb-4">
+       {dealDetail?.equity_type && (
+       <React.Fragment>
+           <div className="mt-10 mb-4">
             <h2 className="text-black text-xl font-bold">{"Valuation"}</h2>
           </div>
           <div className="py-4  border-b-neutral-200 w-full inline-flex items-center justify-between">
@@ -105,6 +123,7 @@ const DealViewDetails = ({ dealDetail, state }: any) => {
               {dealDetail?.valuation_type || language?.v3?.common?.not_added}
             </p>
           </div>
+       </React.Fragment>)}
           <div className="mt-10 mb-4">
             <h2 className="text-black text-xl font-bold">{"Deal Timeline"}</h2>
           </div>
@@ -127,12 +146,38 @@ const DealViewDetails = ({ dealDetail, state }: any) => {
           <div className="mt-10 mb-4">
             <h2 className="text-black text-xl font-bold">{"Terms"}</h2>
           </div>
+        {dealDetail?.safe_type && (
+          <React.Fragment>
+              <div className="py-4  border-b-neutral-200 w-full inline-flex items-center justify-between">
+            <h3 className="text-neutral-900 font-medium text-sm">
+              {"Valuation Cap"}
+            </h3>
+            <p className="text-neutral-900 font-normal text-sm capitalize">
+              {dealDetail?.terms[0]?.value || "No"}
+            </p>
+          </div>
+          <div className="py-4  border-b-neutral-200 w-full inline-flex items-center justify-between">
+            <h3 className="text-neutral-900 font-medium text-sm">
+              {"Discount"}
+            </h3>
+            <p className="text-neutral-900 font-normal text-sm capitalize">
+              {dealDetail?.terms[1]?.value+ "%"|| "No"}
+            </p>
+          </div>
+          <div className="py-4  border-b-neutral-200 w-full inline-flex items-center justify-between">
+            <h3 className="text-neutral-900 font-medium text-sm">
+              {"MFN Only"}
+            </h3>
+            <p className="text-neutral-900 font-normal text-sm capitalize">
+              {dealDetail?.terms[2]?.is_enabled ? dealDetail?.terms[2]?.value : "No"}
+            </p>
+          </div>
           <div className="py-4  border-b-neutral-200 w-full inline-flex items-center justify-between">
             <h3 className="text-neutral-900 font-medium text-sm">
               {"Minimum Check Size"}
             </h3>
             <p className="text-neutral-900 font-normal text-sm capitalize">
-              {dealDetail?.stage || language?.v3?.common?.not_added}
+              {dealDetail?.terms[3]?.value || "No"}
             </p>
           </div>
           <div className="py-4  border-b-neutral-200 w-full inline-flex items-center justify-between">
@@ -140,17 +185,62 @@ const DealViewDetails = ({ dealDetail, state }: any) => {
               {"Pro rata"}
             </h3>
             <p className="text-neutral-900 font-normal text-sm capitalize">
-              {dealDetail?.stage || language?.v3?.common?.not_added}
+            {dealDetail?.terms[4]?.is_enabled ? dealDetail?.terms[4]?.value : "No"}
             </p>
           </div>
-          <div className="py-4 border-b-[1px] border-b-neutral-200 w-full inline-flex items-center justify-between">
+          <div className="py-4  border-b-neutral-200 w-full inline-flex items-center justify-between">
+            <h3 className="text-neutral-900 font-medium text-sm">
+              {"Additional Terms"}
+            </h3>
+            <p className="text-neutral-900 font-normal text-sm capitalize">
+            {dealDetail?.terms[5]?.value || "No"}
+            </p>
+          </div> 
+          </React.Fragment>
+        )}
+
+        {dealDetail?.equity_type && (
+          <React.Fragment>
+          <div className="py-4  border-b-neutral-200 w-full inline-flex items-center justify-between">
+            <h3 className="text-neutral-900 font-medium text-sm">
+              {"Minimum Check Size"}
+            </h3>
+            <p className="text-neutral-900 font-normal text-sm capitalize">
+              {dealDetail?.terms[0]?.value || "No"}
+            </p>
+          </div>
+          <div className="py-4  border-b-neutral-200 w-full inline-flex items-center justify-between">
+            <h3 className="text-neutral-900 font-medium text-sm">
+              {"Pro rata"}
+            </h3>
+            <p className="text-neutral-900 font-normal text-sm capitalize">
+            {dealDetail?.terms[1]?.is_enabled ? dealDetail?.terms[1]?.value : "No"}
+            </p>
+          </div>
+          <div className="py-4  border-b-neutral-200 w-full inline-flex items-center justify-between">
+            <h3 className="text-neutral-900 font-medium text-sm">
+              {"Additional Terms"}
+            </h3>
+            <p className="text-neutral-900 font-normal text-sm capitalize">
+            {dealDetail?.terms[2]?.value || "No"}
+            </p>
+          </div> 
+          </React.Fragment>
+        )}
+       
+       {/*    {dealDetail?.equity_type && (
+          <React.Fragment>
+            <div className="py-4 border-b-[1px] border-b-neutral-200 w-full inline-flex items-center justify-between">
             <h3 className="text-neutral-900 font-medium text-sm">
               {"Expected Dividend Yield"}
             </h3>
             <p className="text-neutral-900 font-normal text-sm capitalize">
-              {dealDetail?.stage || language?.v3?.common?.not_added}
+              {dealDetail?.stage || "No"}
             </p>
           </div>
+          </React.Fragment>
+          )} */}
+        
         </section>
       );
     else if (state === KanzRoles.REALTOR)
@@ -359,7 +449,7 @@ const DealViewDetails = ({ dealDetail, state }: any) => {
       {dealDetail && getRoleBasedUI()}
       <section className="bg-white rounded-md border-[1px] border-neutral-200 px-6 py-4 w-1/4 min-h-[250px]">
         <h3 className="font-medium text-xl text-neutral-900 mb-4">
-          {language?.v3?.deal?.status}
+          {"Deal Status"}
         </h3>
         <div className="relative flex flex-col justify-center">
           {React.Children.toArray(
@@ -367,21 +457,80 @@ const DealViewDetails = ({ dealDetail, state }: any) => {
               return (
                 <div className="relative w-[30px] inline-flex items-center">
                   <span className="inline-flex items-center flex-col">
-                    {item.completed && (
+                    {  dealDetail?.status === "live" && (
                       <img
                         src={ApprovedSVG}
                         alt="Approved"
                         className="h-[20px] w-[20px]"
                       />
                     )}
-                    {!item.completed && item.ongoing && (
-                      <div className="h-[20px] w-[20px] bg-neutral-200 rounded-full inline-grid place-items-center">
-                        <div className="h-[12px] w-[12px] bg-cyan-800 rounded-full"></div>
-                      </div>
-                    )}
-                    {!item.completed && !item.ongoing && (
+                 {
+                    dealDetail?.status === "submitted"   && (
+                      index === 0 ? (
+                        <div className="h-[20px] w-[20px] bg-neutral-200 rounded-full inline-grid place-items-center">
+                          <div className="h-[12px] w-[12px] bg-cyan-800 rounded-full"></div>
+                        </div>
+                      ) : (
+                        index === 1 || index === 2 || index ===3 ? (
+                          <div className="h-[20px] w-[20px] bg-neutral-300 rounded-full inline-grid place-items-center"></div>
+                        ) :null
+                      )
+                    )
+                  }
+                 {
+                    dealDetail?.status === "draft" || dealDetail?.status === "reopened" && (
                       <div className="h-[20px] w-[20px] bg-neutral-300 rounded-full inline-grid place-items-center"></div>
-                    )}
+                    )
+                  }
+
+                 {
+                    dealDetail?.status === "verified"  && (
+                        index === 0 ? (
+                          <img
+                          src={ApprovedSVG}
+                          alt="Approved"
+                          className="h-[20px] w-[20px]"
+                        />
+                        ) : (
+                          index === 1 ? (
+                            <div className="h-[20px] w-[20px] bg-neutral-200 rounded-full inline-grid place-items-center">
+                            <div className="h-[12px] w-[12px] bg-cyan-800 rounded-full"></div>
+                          </div>
+                          ) : index === 2 ? (
+                            <div className="h-[20px] w-[20px] bg-neutral-300 rounded-full inline-grid place-items-center"></div>
+                          ) : index === 3 ? (
+                            <div className="h-[20px] w-[20px] bg-neutral-300 rounded-full inline-grid place-items-center"></div>
+                          ): null
+                        )
+                      )
+                  }
+                 {
+                    dealDetail?.status === "approved"  && (
+                        index === 0 ? (
+                          <img
+                          src={ApprovedSVG}
+                          alt="Approved"
+                          className="h-[20px] w-[20px]"
+                        />
+                        ) : (
+                          index === 1 ? (
+                            <img
+                            src={ApprovedSVG}
+                            alt="Approved"
+                            className="h-[20px] w-[20px]"
+                          />
+                          ) : index === 2 ? (
+                            <img
+                            src={ApprovedSVG}
+                            alt="Approved"
+                            className="h-[20px] w-[20px]"
+                          />
+                          ) : index === 3 ? (
+                            <div className="h-[20px] w-[20px] bg-neutral-300 rounded-full inline-grid place-items-center"></div>
+                          ) : null
+                        )
+                      )
+                  }
                     {index !== dummy.length - 1 && (
                       <div className="h-[55px] w-1 bg-neutral-300"></div>
                     )}
