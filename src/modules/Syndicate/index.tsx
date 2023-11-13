@@ -35,6 +35,7 @@ const SyndicateDashboard = ({}: any) => {
     language?.v3?.table?.sellingPrice,
     "Start At",
     "End At",
+
   ];
   const [pagination, setPagination] = useState({
     items_per_page: 5,
@@ -81,6 +82,8 @@ const SyndicateDashboard = ({}: any) => {
             ?.map((f: any) => f?.title || f?.description)
             ?.join(",");
           return {
+            token: deal?.token,
+            type: deal?.deal_type,
             id: deal?.id,
             ["Title"]: deal?.title || "N/A",
             ["Type"]: <span className=" capitalize">{deal?.deal_type}</span>,
@@ -200,6 +203,12 @@ const SyndicateDashboard = ({}: any) => {
 
               <section className="mt-10">
                 <Table
+                   onclick={(row: any) => {
+                    navigate(
+                      `${RoutesEnums.SYNDICATE_DEAL_DETAIL}/${row?.token}`,
+                      { state: row?.type }
+                    );
+                  }}
                   columns={columns}
                   pagination={pagination}
                   paginate={paginate}

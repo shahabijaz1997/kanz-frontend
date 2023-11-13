@@ -11,6 +11,7 @@ import Table from "../../../shared/components/Table";
 import { RoutesEnums, StartupRoutes } from "../../../enums/routes.enum";
 import Modal from "../../../shared/components/Modal";
 import CrossIcon from "../../../ts-icons/crossIcon.svg";
+import { saveToken } from "../../../redux-toolkit/slicer/auth.slicer";
 import { saveDataHolder } from "../../../redux-toolkit/slicer/dataHolder.slicer";
 import { getDeals, getInvitedDeals } from "../../../apis/deal.api";
 import {
@@ -21,6 +22,8 @@ import Spinner from "../../../shared/components/Spinner";
 import { ApplicationStatus } from "../../../enums/types.enum";
 import Chevrond from "../../../ts-icons/chevrond.svg";
 import CustomStatus from "../../../shared/components/CustomStatus";
+import { toast } from "react-toastify";
+import { toastUtil } from "../../../utils/toast.utils";
 
 const DealApproval = ({}: any) => {
   const navigate = useNavigate();
@@ -32,7 +35,7 @@ const DealApproval = ({}: any) => {
   const columns = [
     language?.v3?.syndicate?.deals?.table?.title,
     language?.v3?.syndicate?.deals?.table?.category,
-    language?.v3?.syndicate?.deals?.table?.status,
+    "Invite Status",
     language?.v3?.syndicate?.deals?.table?.end_date,
     language?.v3?.syndicate?.deals?.table?.target,
     language?.v3?.table?.action,
@@ -43,13 +46,15 @@ const DealApproval = ({}: any) => {
     current_page: 1,
     total_pages: 0,
   });
-  const [selectedTab, setSelectedTab] = useState();
+  const [selectedTab, setSelectedTab]: any = useState("all");
   const [modalOpen, setModalOpen]: any = useState(null);
   const [loading, setLoading] = useState(false);
   const [tabs] = useState([
-    language?.v3?.startup?.overview?.all,
-    language?.v3?.startup?.overview?.raising,
-    language?.v3?.startup?.overview?.closed,
+    "All",
+    "Pending",
+    "Interested",
+    "Accepted",
+    "Approved",
   ]);
   const [deals, setDeals] = useState([]);
   const [dummyDisclaimers, setDummyDisclaimers] = useState({
@@ -63,25 +68,28 @@ const DealApproval = ({}: any) => {
     d3: false,
   });
 
+
+  
   useEffect(() => {
     dispatch(saveDataHolder(""));
     getAllDeals();
-  }, []);
+  }, [selectedTab]);
 
   const getAllDeals = async () => {
     try {
       setLoading(true);
-      let { status, data } = await getInvitedDeals(user.id, authToken);
+      let { status, data } = await getInvitedDeals(user.id, authToken, selectedTab);
       if (status === 200) {
         let deals = data?.status?.data?.map((deal: any) => {
           return {
             id: deal?.id,
+            filterStatus: deal?.status,
             [language?.v3?.syndicate?.deals?.table?.title]:
               deal?.deal?.title || "N/A",
             [language?.v3?.syndicate?.deals?.table?.category]: (
               <span className="capitalize">{deal?.deal?.type}</span>
             ),
-            [language?.v3?.syndicate?.deals?.table?.status]:
+            ["Invite Status"]:
               <CustomStatus options={deal?.status} /> || "N/A",
             [language?.v3?.syndicate?.deals?.table?.end_date]:
               deal?.deal?.end_at || " N/A",
@@ -121,7 +129,13 @@ const DealApproval = ({}: any) => {
         });
         setDeals(deals);
       }
-    } catch (error) {
+    } catch (error:any) {
+      if (error.response && error.response.status === 401 || error.response.status === 400) {
+        toast.dismiss()
+        toast.error("Session time out",toastUtil)
+        dispatch(saveToken(""));
+        navigate(RoutesEnums.LOGIN);
+      }
     } finally {
       setLoading(false);
     }
@@ -191,16 +205,18 @@ const DealApproval = ({}: any) => {
 
                     <ul className="inline-flex items-center">
                       {React.Children.toArray(
-                        tabs.map((tab) => (
+                        tabs.map((tab:any) => (
                           <li
-                            onClick={() => setSelectedTab(tab)}
+                            onClick={() => {
+                              
+                              setSelectedTab(tab)}}
                             className={`py-2 px-3 font-medium cursor-pointer rounded-md transition-all ${
                               selectedTab === tab
                                 ? "text-neutral-900 bg-neutral-100"
                                 : "text-gray-500"
                             } `}
                           >
-                            {tab} &nbsp;(0)
+                            {tab} &nbsp;()
                           </li>
                         ))
                       )}

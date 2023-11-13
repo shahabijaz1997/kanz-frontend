@@ -43,12 +43,12 @@ const Usp = ({ id }: any) => {
         navigate(RoutesEnums.LOGIN, { state: RoutesEnums.STARTUP_DASHBOARD });
       }
     } finally {
-      console.log(uniqueSP);
+     
       setLoading(false);
     }
   };
   {
-    console.log(uniqueSP);
+    
   }
   return (
     <main>
