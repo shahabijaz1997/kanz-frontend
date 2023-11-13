@@ -161,7 +161,7 @@ const DealViewDetails = ({ dealDetail, state }: any) => {
               {"Discount"}
             </h3>
             <p className="text-neutral-900 font-normal text-sm capitalize">
-              {dealDetail?.terms[1]?.value+ "%"|| "No"}
+              {dealDetail?.terms[1]?.value || "No"}
             </p>
           </div>
           <div className="py-4  border-b-neutral-200 w-full inline-flex items-center justify-between">
@@ -185,7 +185,7 @@ const DealViewDetails = ({ dealDetail, state }: any) => {
               {"Pro rata"}
             </h3>
             <p className="text-neutral-900 font-normal text-sm capitalize">
-            {dealDetail?.terms[4]?.is_enabled ? dealDetail?.terms[4]?.value : "No"}
+            {dealDetail?.terms[4]?.is_enabled ? "Yes" : "No"}
             </p>
           </div>
           <div className="py-4  border-b-neutral-200 w-full inline-flex items-center justify-between">
@@ -214,7 +214,7 @@ const DealViewDetails = ({ dealDetail, state }: any) => {
               {"Pro rata"}
             </h3>
             <p className="text-neutral-900 font-normal text-sm capitalize">
-            {dealDetail?.terms[1]?.is_enabled ? dealDetail?.terms[1]?.value : "No"}
+            {dealDetail?.terms[1]?.is_enabled ? "Yes" : "No"}
             </p>
           </div>
           <div className="py-4  border-b-neutral-200 w-full inline-flex items-center justify-between">
