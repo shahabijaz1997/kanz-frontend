@@ -113,7 +113,7 @@ const DealDetail = ({}: any) => {
             <section className="inline-flex justify-between items-center w-full mb-4">
               <h1 className="text-black font-medium text-2xl">
                 {state === KanzRoles.STARTUP
-                  ? language?.v3?.deal?.angel_round
+                  ? dealDetail?.title
                   : language?.v3?.deal?.deal_detail}
               </h1>
               <div className="inline-flex items-center gap-2">
@@ -136,7 +136,7 @@ const DealDetail = ({}: any) => {
             </section>
             {state !== KanzRoles.REALTOR && (
               <section className="mt-1 mb-16">
-                <DealTable />
+                <DealTable targetSize={dealDetail?.selling_price} committed={dealDetail?.committed} investors={dealDetail?.investors}   />
               </section>
             )}
 

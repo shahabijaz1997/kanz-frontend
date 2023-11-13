@@ -1,4 +1,4 @@
-import React, { useLayoutEffect, useState } from "react";
+import React, { useEffect, useLayoutEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { RootState } from "../../../redux-toolkit/store/store";
 import { useLocation, useNavigate } from "react-router-dom";
@@ -49,6 +49,10 @@ const Sidebar = ({ type }: any) => {
   useLayoutEffect(() => {
     renderRoleBasedSidebar();
   }, [type]);
+
+  useLayoutEffect(() => {
+    setSelected(window.location.pathname)
+  },[window.location.pathname]);
 
   const renderRoleBasedSidebar = () => {
     let route;
@@ -137,7 +141,6 @@ const Sidebar = ({ type }: any) => {
                 <li
                   onClick={() => {
                     if (!item?.route) return;
-                    setSelected(item);
                     navigate(item?.route);
                   }}
                   className={`${
@@ -145,7 +148,7 @@ const Sidebar = ({ type }: any) => {
                   } py-3 text-sm font-medium text-neutral-600 transition-all hover:bg-sidebar-item-hover hover:border-l-sidebar-item-hover border-l-4 border-white ${
                     item.route ? "cursor-pointer" : "cursor-not-allowed"
                   } ${
-                    selected?.id === item.id &&
+                    selected === item?.route &&
                     "bg-sidebar-item-hover border-l-4 border-l-cyan-800 hover:!border-l-cyan-800"
                   }`}
                 >

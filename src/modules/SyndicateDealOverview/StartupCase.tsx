@@ -16,6 +16,7 @@ import FileSVG from "../../assets/svg/file.svg";
 import Zoomin from "../../ts-icons/zoominIcon.svg";
 import Zoomout from "../../ts-icons/ZoomoutIcon.svg";
 import CurrencySVG from "../../assets/svg/currency.svg";
+
 import {
   comaFormattedNumber,
   formatDate,
@@ -55,7 +56,10 @@ const StartupCase = ({ id, dealToken }: any) => {
   const [modalOpen, setModalOpen]: any = useState(null);
   const [modalOpen2, setModalOpen2]: any = useState(null);
   const [modalOpen3, setModalOpen3]: any = useState(null);
+  const [disableUpload, setdisableUpload]: any = useState(false);
   const [modalOpenComment, setmodalOpenComment]: any = useState(null);
+  
+
 
   const [changes, setChanges]: any = useState({
     comment: "",
@@ -630,7 +634,7 @@ const StartupCase = ({ id, dealToken }: any) => {
                   )}
                 </section>
               )}
-              <div className="mb-4">
+              <div className="mb-4 mt-10">
                 {deal?.invite?.status !== DealStatus.ACCEPTED &&
                   deal?.status !== DealStatus.LIVE && (
                     <Button
@@ -690,7 +694,7 @@ const StartupCase = ({ id, dealToken }: any) => {
                   </p>
                 </div>
               </aside>
-              <aside className="border-[1px] border-neutral-200 overflow-auto custom-scroll rounded-md w-full p-3 mt-5 bg-cbc-check max-h-[400px] overflow-y-auto no-scrollbar mb-4">
+              {deal?.docs?.length && (<aside className="border-[1px] border-neutral-200 overflow-auto custom-scroll rounded-md w-full p-3 mt-5 bg-cbc-check max-h-[400px] overflow-y-auto no-scrollbar mb-4">
                 {React.Children.toArray(
                   deal?.docs?.map((doc: any) => {
                     return (
@@ -734,12 +738,13 @@ const StartupCase = ({ id, dealToken }: any) => {
                     );
                   })
                 )}
-              </aside>
+              </aside>)}
+        
               <aside>
                 {deal?.comments?.length && (
-                  <div className="justify-between pb-2 mb-4 w-full border-[1px]  rounded-md border-b-neutral-200 ">
-                    <div className="inline-flex justify-between items-center w-full">
-                      <div className="pb-1 m-4  text-lg font-bold border-b-[1px]  border-b-neutral-200">
+                  <div className="justify-between mb-4 w-full border-[1px]  rounded-md border-b-neutral-200 bg-white ">
+                    <div className="inline-flex justify-between items-center w-full  border-b-[1px] border-b-neutral-200 ">
+                      <div className="pb-1 m-4  text-lg font-bold ">
                         Comments
                       </div>
                       <Button
@@ -847,7 +852,7 @@ const StartupCase = ({ id, dealToken }: any) => {
           <aside className="bg-white w-[400px] rounded-md h-full">
             <header className="bg-cbc-grey-sec h-16 py-2 px-3 inline-flex w-full justify-between items-center">
               <h3 className="text-xl font-medium text-neutral-700">
-                Deal Approval
+                Request Changes
               </h3>
               <div
                 className="bg-white h-8 w-8 border-[1px] border-black rounded-md shadow shadow-cs-6 p-1 cursor-pointer"
@@ -1012,9 +1017,12 @@ const StartupCase = ({ id, dealToken }: any) => {
 
             <footer className="w-full inline-flex justify-between gap-3 py-2 px-3 w-full">
               <Button
+                disabled={disableUpload}
                 className="w-full !py-1"
                 divStyle="flex items-center justify-center w-full"
-                onClick={() => postSignOff()}
+                onClick={() => {
+                  setdisableUpload(true)
+                  postSignOff()}}
               >
                 {language.buttons.submit}
               </Button>

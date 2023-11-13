@@ -106,7 +106,7 @@ const Realtor = ({}: any) => {
             [language?.v3?.table?.action]: (
               <React.Fragment>
                 {(deal?.status === ApplicationStatus.DRAFT ||
-                  deal?.status === ApplicationStatus.REOPENED) && (
+                  deal?.status === ApplicationStatus.REOPENED || deal?.status === ApplicationStatus.APPROVED) && (
                   <div
                     onClick={(e) => {
                       e.preventDefault();

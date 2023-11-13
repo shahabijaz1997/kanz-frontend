@@ -90,7 +90,7 @@ export const timeAgo = (created_at: string) => {
   const hours = Math.floor(minutes / 60);
   const days = Math.floor(hours / 24);
   const months = Math.floor(days / 30);
-  console.log("seconds", created_at);
+ 
 
   if (months >= 1) {
     return months + " month" + (months > 1 ? "s" : "") + " ago";
