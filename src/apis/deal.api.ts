@@ -12,7 +12,20 @@ export const getDealQuestion = (params: any, token: string) => {
   });
 };
 
-export const getDeals = (token: string) => {
+export const getDeals = (token: string, filters : any) => {
+  const queryParameters = new URLSearchParams();
+  if (filters !== "All"){
+    queryParameters.append("status", filters.toLowerCase());
+  }
+  const apiUrl = `${ENV.API_URL}/${ENV.API_VERSION}/deals?${queryParameters.toString()}`;
+  return axios.get(apiUrl, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+};
+export const getNoFilterDeals = (token: string) => {
+  const queryParameters = new URLSearchParams();
   return axios.get(`${ENV.API_URL}/${ENV.API_VERSION}/deals`, {
     headers: {
       Authorization: `Bearer ${token}`,
@@ -22,6 +35,7 @@ export const getDeals = (token: string) => {
 
 export const getInvitedDeals = (inviteeId:any, token:any, filters:any) => {
   const queryParameters = new URLSearchParams();
+  if (filters !== "All")
   queryParameters.append("status", filters.toLowerCase());
   const apiUrl = `${ENV.API_URL}/${ENV.API_VERSION}/invitees/${inviteeId}/invites?${queryParameters.toString()}`;
   return axios.get(apiUrl, {
