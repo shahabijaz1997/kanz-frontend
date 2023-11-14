@@ -15,6 +15,8 @@ import { KanzRoles } from "../../enums/roles.enum";
 import { ApplicationStatus } from "../../enums/types.enum";
 import { RoutesEnums, StartupRoutes } from "../../enums/routes.enum";
 import { LinkedInCallback } from "react-linkedin-login-oauth2";
+import InvestorSyndicates from "../Investor/InvestorSyndicates";
+import Deals from "../Investor/Deals";
 
 /* --- Modules --- */
 
@@ -38,6 +40,7 @@ const AddAttachments = lazy(() => import("../Onboarding/AddAttachments"));
 /* ---### Post Onboarding ###--- */
 const StartupDashboard = lazy(() => import("../Startup"));
 const RealtorDashboard = lazy(() => import("../Realtor"));
+const InvestorDashboard = lazy(() => import("../Investor"));
 const CreateDeal = lazy(() => import("../CreateDeal"));
 const DealDetail = lazy(() => import("../DealDetail"));
 const DealApproval = lazy(() => import("../Syndicate/DealApproval"));
@@ -338,6 +341,51 @@ const RouterModule = () => {
                 status={ApplicationStatus.APPROVED}
               >
                 <RealtorDashboard />
+              </GUARD_SUBMITTED_ROUTE>
+            </CHECK_LOGGED_IN>
+          </Suspense>
+        }
+      />
+      <Route
+        path={`${RoutesEnums.INVESTOR_DASHBOARD}`}
+        element={
+          <Suspense fallback={<Loader />}>
+            <CHECK_LOGGED_IN>
+              <GUARD_SUBMITTED_ROUTE
+                role={[KanzRoles.INVESTOR]}
+                status={ApplicationStatus.APPROVED}
+              >
+                <InvestorDashboard />
+              </GUARD_SUBMITTED_ROUTE>
+            </CHECK_LOGGED_IN>
+          </Suspense>
+        }
+      />
+      <Route
+        path={`${RoutesEnums.INVESTOR_SYNDICATES}`}
+        element={
+          <Suspense fallback={<Loader />}>
+            <CHECK_LOGGED_IN>
+              <GUARD_SUBMITTED_ROUTE
+                role={[KanzRoles.INVESTOR]}
+                status={ApplicationStatus.APPROVED}
+              >
+                <InvestorSyndicates />
+              </GUARD_SUBMITTED_ROUTE>
+            </CHECK_LOGGED_IN>
+          </Suspense>
+        }
+      />
+       <Route
+        path={`${RoutesEnums.INVESTOR_DEALS}`}
+        element={
+          <Suspense fallback={<Loader />}>
+            <CHECK_LOGGED_IN>
+              <GUARD_SUBMITTED_ROUTE
+                role={[KanzRoles.INVESTOR]}
+                status={ApplicationStatus.APPROVED}
+              >
+                <Deals />
               </GUARD_SUBMITTED_ROUTE>
             </CHECK_LOGGED_IN>
           </Suspense>

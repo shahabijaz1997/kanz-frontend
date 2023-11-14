@@ -19,6 +19,30 @@ export const investmentAccridiation = (payload: any, token: string) => {
     });
 };
 
+export const getInvites = (token: string, filters :any) => {
+    const queryParameters = new URLSearchParams();
+    if (filters !== "All"){
+      queryParameters.append("status", filters.toLowerCase());
+    }
+    const apiUrl = `${ENV.API_URL}/${ENV.API_VERSION}/invites?${queryParameters.toString()}`;
+    return axios.get(apiUrl, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+  };
+  export const getCommittments = (token: string, filters :any) => {
+    const queryParameters = new URLSearchParams();
+    if (filters !== "All"){
+      queryParameters.append("status", filters.toLowerCase());
+    }
+    const apiUrl = `${ENV.API_URL}/${ENV.API_VERSION}/committed?${queryParameters.toString()}`;
+    return axios.get(apiUrl, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+  };
 export const getInvestor = (token: string) => {
     return axios.get(`${ENV.API_URL}/${ENV.API_VERSION}/investor`, {
         headers: {

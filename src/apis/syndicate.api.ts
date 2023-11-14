@@ -21,6 +21,16 @@ export const getAllSyndicates = (dealId: any, token: string) => {
     }
   );
 };
+export const getSyndicates = (token: string) => {
+  return axios.get(
+    `${ENV.API_URL}/${ENV.API_VERSION}/syndicates`,
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    }
+  );
+};
 export const getInvitedSyndicates = (userId: any, token: string) => {
   return axios.get(
     `${ENV.API_URL}/${ENV.API_VERSION}/users/${userId}/invites`,

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { RootState } from "../../../redux-toolkit/store/store";
@@ -7,7 +7,13 @@ import { ApplicationStatus } from "../../../enums/types.enum";
 import { isEmpty } from "../../../utils/object.utils";
 import { RoutesEnums } from "../../../enums/routes.enum";
 
+
 const RealtorHome = ({ loading, language }: any) => {
+    useEffect(()=>{
+        console.log()
+    })
+    
+
     const navigate = useNavigate();
     const user: any = useSelector((state: RootState) => state.user.value);
     const metadata: any = useSelector((state: RootState) => state.metadata.value);

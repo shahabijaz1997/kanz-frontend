@@ -56,7 +56,7 @@ const UserListingPopup = ({ approve, dealId, type, dealIdReal }: any) => {
 
   useEffect(() => {
     dispatch(saveDataHolder(""));
-    /* getAllUserListings(); */
+    getAllUserListings();
   }, [type]);
 
   const onSendInvite = async (syndId: any) => {
