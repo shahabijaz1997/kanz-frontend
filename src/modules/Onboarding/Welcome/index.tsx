@@ -13,10 +13,10 @@ import { getInvestor } from "../../../apis/investor.api";
 import { getSyndicateInformation } from "../../../apis/syndicate.api";
 import { saveUserMetaData } from "../../../redux-toolkit/slicer/metadata.slicer";
 import { getCompanyInformation } from "../../../apis/company.api";
-import { getRealtorInformation } from "../../../apis/realtor.api";
+import { getPropertyOwnerInformation } from "../../../apis/propertyOwner.api";
 import InvestorHome from "../../../shared/views/InvestorHome";
 import SyndicateHome from "../../../shared/views/SyndicateHome";
-import RealtorHome from "../../../shared/views/RealtorHome";
+import PropertyOwnerHome from "../../../shared/views/PropertyOwnerHome";
 import StartupHome from "../../../shared/views/StartupHome";
 import { RoutesEnums } from "../../../enums/routes.enum";
 
@@ -61,8 +61,8 @@ const Welcome = ({ }: any) => {
                 results = await getSyndicateInformation(user.id, authToken);
             else if (user.type === KanzRoles.STARTUP)
                 results = await getCompanyInformation(user.id, authToken);
-            else if (user.type === KanzRoles.REALTOR)
-                results = await getRealtorInformation(user.id, authToken);
+            else if (user.type === KanzRoles.PROPERTY_OWNER)
+                results = await getPropertyOwnerInformation(user.id, authToken);
             let { status, data } = results;
             if (status === 200) {
                 dispatch(saveUserMetaData(data?.status?.data));
@@ -82,8 +82,8 @@ const Welcome = ({ }: any) => {
             return <InvestorHome loading={loading} language={language} />
         } else if (user.type === KanzRoles.SYNDICATE) {
             return <SyndicateHome loading={loading} language={language} />
-        } else if (user.type === KanzRoles.REALTOR) {
-            return <RealtorHome loading={loading} language={language} />
+        } else if (user.type === KanzRoles.PROPERTY_OWNER) {
+            return <PropertyOwnerHome loading={loading} language={language} />
         } else if (user.type === KanzRoles.STARTUP) {
             return <StartupHome loading={loading} language={language} />
         }

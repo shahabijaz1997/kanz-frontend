@@ -73,7 +73,7 @@ const Sidebar = ({ type }: any) => {
         route = DASHBOARD_ITEMS.find((it) => it.route === pathname);
         setSelected(route);
         break;
-      case KanzRoles.REALTOR:
+      case KanzRoles.PROPERTY_OWNER:
         setSidebarData({
           title: language?.v3?.startup?.sidebar?.sidebar_title,
           icon: <BagIcon />,

@@ -243,7 +243,7 @@ const DealViewDetails = ({ dealDetail, state }: any) => {
         
         </section>
       );
-    else if (state === KanzRoles.REALTOR)
+    else if (state === KanzRoles.PROPERTY_OWNER)
       return (
         <section className="flex items-start justify-center flex-col w-9/12 min-h-[250px]">
           <div className="py-4 border-b-[1px] border-b-neutral-200 w-full inline-flex items-center justify-between">
