@@ -44,15 +44,24 @@ const Startup = ({}: any) => {
     current_page: 1,
     total_pages: 0,
   });
-  const [selectedTab, setSelectedTab] = useState();
+  
+  const [selectedTab, setSelectedTab] = useState("All");
   const [modalOpen, setModalOpen]: any = useState(null);
+  const [warningModal, setwarningModal]: any = useState(null);
   const [loading, setLoading] = useState(false);
   const [tabs] = useState([
     language?.v3?.startup?.overview?.all,
-    language?.v3?.startup?.overview?.raising,
-    language?.v3?.startup?.overview?.closed,
+    "Draft",
+    "Reopened",
+    "Submitted",
+    "Approved",
+    "Live"
   ]);
-  const [deals, setDeals] = useState([]);
+  const [deals, setDeals]:any = useState([]);
+  const [dealId, setDealId]:any = useState(null);
+  const [dealStep, setDealStep]:any = useState(null);
+  const [dealStatus, setDealStatus]:any = useState(null);
+  
   const [dummyDisclaimers, setDummyDisclaimers] = useState({
     d1: false,
     d2: false,
@@ -63,16 +72,18 @@ const Startup = ({}: any) => {
     d2: false,
     d3: false,
   });
-
+  useEffect(() => {
+    dispatch(saveDataHolder(""));
+  }, []);
   useEffect(() => {
     dispatch(saveDataHolder(""));
     getAllDeals();
-  }, []);
+  }, [selectedTab]);
 
   const getAllDeals = async () => {
     try {
       setLoading(true);
-      let { status, data } = await getDeals(authToken);
+      let { status, data } = await getDeals(authToken,selectedTab);
       if (status === 200) {
         let deals = data?.status?.data?.map((deal: any) => {
           return {
@@ -94,22 +105,24 @@ const Startup = ({}: any) => {
               <React.Fragment>
                 {(deal?.status === ApplicationStatus.DRAFT ||
                   deal?.status === ApplicationStatus.REOPENED || deal?.status === ApplicationStatus.APPROVED) && (
-                  <div
+                    <div
                     onClick={(e) => {
-                      e.preventDefault();
-                      e.stopPropagation();
-                      dispatch(saveDataHolder(deal.id));
-                      deal?.status === ApplicationStatus.REOPENED
-                        ? navigate(
-                            `/create-deal/${
-                              deal?.current_state?.current_step + 1
-                            }`
-                          )
-                        : navigate(
-                            `/create-deal/${
-                              deal?.current_state?.current_step + 2
-                            }`
-                          );
+                      if (deal?.status === ApplicationStatus.APPROVED) {
+                        setDealId(deal?.id);
+                        setDealStatus(deal?.status);
+                        setDealStep(deal?.current_state?.current_step);
+                        setwarningModal(true);
+                      } else {
+                        e.preventDefault();
+                        e.stopPropagation();
+                      
+                        dispatch(saveDataHolder(deal.id));
+                        if (deal?.status === ApplicationStatus.REOPENED) {
+                          navigate(`/create-deal/${deal?.current_state?.current_step + 1}`);
+                        } else {
+                          navigate(`/create-deal/${deal?.current_state?.current_step + 2}`);
+                        }
+                      }
                     }}
                     className="bg-neutral-100 inline-flex items-center justify-center w-[26px] h-[26px] p-1 rounded-full transition-all hover:bg-cbc-transparent"
                   >
@@ -220,7 +233,22 @@ const Startup = ({}: any) => {
                       />
                     </div>
 
-               
+                    <ul className="inline-flex items-center">
+                      {React.Children.toArray(
+                        tabs.map((tab:any) => (
+                          <li
+                            onClick={() => setSelectedTab(tab)}
+                            className={`py-2 px-3 font-medium cursor-pointer rounded-md transition-all ${
+                              selectedTab === tab
+                                ? "text-neutral-900 bg-neutral-100"
+                                : "text-gray-500"
+                            } `}
+                          >
+                            {tab} &nbsp;(0)
+                          </li>
+                        ))
+                      )}
+                    </ul>
                   </span>
                 </div>
                 <Button onClick={() => setModalOpen("1")} className="w-[170px]">
@@ -234,13 +262,7 @@ const Startup = ({}: any) => {
                   pagination={pagination}
                   paginate={paginate}
                   goToPage={paginate}
-                  onclick={(row: any) => {
-                    if (row?.Status !== ApplicationStatus.SUBMITTED)
-                      navigate(`${RoutesEnums.DEAL_DETAIL}/${row?.token}`, {
-                        state: KanzRoles.STARTUP,
-                      });
-                    else setModalOpen("2");
-                  }}
+                 
                   noDataNode={
                     <Button
                       onClick={() => setModalOpen("1")}
@@ -565,6 +587,66 @@ const Startup = ({}: any) => {
             </div>
           </aside>
         )}
+      </Modal>
+      <Modal show={warningModal ? true : false} className="w-full">
+        <div
+          className="rounded-md overflow-hidden inline-grid place-items-center absolute top-1/2 left-1/2 translate-x-[-50%] translate-y-[-50%]"
+          style={{ backgroundColor: "rgba(0, 0, 0, 0.078" }}
+        >
+          <aside className="bg-white w-[400px] rounded-md h-full">
+            <section className="py-3 px-10">
+              <div className="mb-6 pt-5 text-center">
+                <label
+                  htmlFor=""
+                  className="text-neutral-900 text-center font-bold text-xl"
+                >
+                  Warning!
+                </label>
+                <p className="pt-5">
+                Editing an approved deal will impact its status and would require re-approval. Are you sure you want to proceed with editing?
+                </p>
+              </div>
+            </section>
+
+            <footer className="w-full inline-flex justify-center gap-3 py-2 px-3 ">
+            <Button
+            type="outlined"
+                className="w-full !py-1"
+                divStyle="flex items-center justify-center w-6/12"
+                onClick={() => {   
+               setwarningModal(false)
+                }}
+              >
+             Cancel
+              </Button>
+              <Button
+                className="w-full !py-1"
+                divStyle="flex items-center justify-center w-6/12"
+                onClick={(e) => {
+                      
+                  e.preventDefault();
+                  e.stopPropagation();
+                  
+                  dispatch(saveDataHolder(dealId));
+                  dealStatus === ApplicationStatus.REOPENED
+                    ? navigate(
+                        `/create-deal/${
+                          dealStep + 1
+                        }`
+                      )
+                    : navigate(
+                        `/create-deal/${
+                          dealStep + 2
+                        }`
+                      );
+                }}
+                
+              >
+                Continue
+              </Button>
+            </footer>
+          </aside>
+        </div>
       </Modal>
     </main>
   );

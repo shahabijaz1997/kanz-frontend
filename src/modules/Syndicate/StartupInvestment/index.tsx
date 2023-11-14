@@ -13,7 +13,7 @@ import { RoutesEnums } from "../../../enums/routes.enum";
 import Modal from "../../../shared/components/Modal";
 import CrossIcon from "../../../ts-icons/crossIcon.svg";
 import { saveDataHolder } from "../../../redux-toolkit/slicer/dataHolder.slicer";
-import { getDeals } from "../../../apis/deal.api";
+import { getDeals, getNoFilterDeals } from "../../../apis/deal.api";
 import { numberFormatter } from "../../../utils/object.utils";
 import { saveToken } from "../../../redux-toolkit/slicer/auth.slicer";
 import { ApplicationStatus } from "../../../enums/types.enum";
@@ -45,7 +45,7 @@ const StartupInvestment = ({ }: any) => {
     const getAllDeals = async () => {
         try {
             setLoading(true);
-            let { status, data } = await getDeals(authToken);
+            let { status, data } = await getNoFilterDeals(authToken);
             if (status === 200) {
                 let deals = data?.status?.data?.map((deal: any) => {
                     return {

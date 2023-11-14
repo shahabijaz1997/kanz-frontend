@@ -12,7 +12,7 @@ import { RoutesEnums, StartupRoutes } from "../../enums/routes.enum";
 import Modal from "../../shared/components/Modal";
 import CrossIcon from "../../ts-icons/crossIcon.svg";
 import { saveDataHolder } from "../../redux-toolkit/slicer/dataHolder.slicer";
-import { getDeals } from "../../apis/deal.api";
+import { getDeals, getNoFilterDeals } from "../../apis/deal.api";
 import {
   comaFormattedNumber,
   formatDate,
@@ -21,6 +21,7 @@ import {
 import Spinner from "../../shared/components/Spinner";
 import { ApplicationStatus } from "../../enums/types.enum";
 import CustomStatus from "../../shared/components/CustomStatus";
+import Chevrond from "../../ts-icons/chevrond.svg";
 
 const SyndicateDashboard = ({}: any) => {
   const navigate = useNavigate();
@@ -35,10 +36,11 @@ const SyndicateDashboard = ({}: any) => {
     language?.v3?.table?.sellingPrice,
     "Start At",
     "End At",
+    "",
 
   ];
   const [pagination, setPagination] = useState({
-    items_per_page: 5,
+    items_per_page: 10,
     total_items: [],
     current_page: 1,
     total_pages: 0,
@@ -75,7 +77,7 @@ const SyndicateDashboard = ({}: any) => {
   const getAllDeals = async () => {
     try {
       setLoading(true);
-      let { status, data } = await getDeals(authToken);
+      let { status, data } = await getNoFilterDeals(authToken);
       if (status === 200) {
         let deals = data?.status?.data?.map((deal: any) => {
           let features = deal?.features
@@ -98,6 +100,22 @@ const SyndicateDashboard = ({}: any) => {
             )}`,
             ["Start At"]: formatDate(deal?.start_at),
             ["End At"]: formatDate(deal?.end_at),
+            [""]: (
+              <div
+              onClick={() => {
+                navigate(
+                  `${RoutesEnums.SYNDICATE_DEAL_DETAIL}/${deal?.token}`,
+                  { state: deal?.type }
+                );
+              }}
+                className="bg-neutral-100 inline-flex items-center justify-center w-[30px] h-[30px] rounded-full transition-all hover:bg-cbc-transparent mx-5"
+              >
+                <Chevrond
+                  className="rotate-[-90deg] w-6 h-6"
+                  stroke={"#737373"}
+                />
+              </div>
+            )
           };
         });
 
@@ -181,22 +199,6 @@ const SyndicateDashboard = ({}: any) => {
                       />
                     </div>
 
-                    <ul className="inline-flex items-center">
-                      {React.Children.toArray(
-                        tabs.map((tab) => (
-                          <li
-                            onClick={() => setSelectedTab(tab)}
-                            className={`py-2 px-3 font-medium cursor-pointer rounded-md transition-all ${
-                              selectedTab === tab
-                                ? "text-neutral-900 bg-neutral-100"
-                                : "text-gray-500"
-                            } `}
-                          >
-                            {tab} &nbsp;(0)
-                          </li>
-                        ))
-                      )}
-                    </ul>
                   </span>
                 </div>
               </section>
