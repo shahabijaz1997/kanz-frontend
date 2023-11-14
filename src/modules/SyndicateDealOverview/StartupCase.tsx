@@ -287,7 +287,7 @@ const StartupCase = ({ id, dealToken }: any) => {
               {language?.v3?.deal?.start_at}
             </h3>
             <p className="text-neutral-900 font-normal text-sm capitalize">
-              {formatDate(deal?.start_at) || language?.v3?.common?.not_added}
+              {(deal?.start_at) || language?.v3?.common?.not_added}
             </p>
           </div>
         )}
@@ -297,7 +297,7 @@ const StartupCase = ({ id, dealToken }: any) => {
               {language?.v3?.deal?.end_at}
             </h3>
             <p className="text-neutral-900 font-normal text-sm capitalize">
-              {formatDate(deal?.end_at) || language?.v3?.common?.not_added}
+              {deal?.end_at || language?.v3?.common?.not_added}
             </p>
           </div>
         )}
@@ -675,7 +675,7 @@ const StartupCase = ({ id, dealToken }: any) => {
                   {language?.v3?.common?.invest_details}
                 </h2>
                 <small className="text-neutral-500 text-sm font-normal">
-                  {language?.v3?.common?.end_on} {formatDate(deal?.end_at)}
+                  {language?.v3?.common?.end_on} {(deal?.end_at)}
                 </small>
 
                 {getRoleBasedUI()}

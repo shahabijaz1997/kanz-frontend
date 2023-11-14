@@ -523,7 +523,7 @@ const RealtorCase = ({ id, dealToken }: any) => {
                   {language?.v3?.common?.invest_details}
                 </h2>
                 <small className="text-neutral-500 text-sm font-normal">
-                  {language?.v3?.common?.end_on} {formatDate(deal?.end_at)}
+                  {language?.v3?.common?.end_on} {(deal?.end_at)}
                 </small>
 
                 {getRoleBasedUI()}
