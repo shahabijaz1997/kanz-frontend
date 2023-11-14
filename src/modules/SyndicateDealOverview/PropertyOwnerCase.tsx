@@ -49,7 +49,7 @@ import { toast } from "react-toastify";
 import { toastUtil } from "../../utils/toast.utils";
 import { fileSize } from "../../utils/files.utils";
 
-const RealtorCase = ({ id, dealToken }: any) => {
+const PropertyOwnerCase = ({ id, dealToken }: any) => {
   const navigate = useNavigate();
   const language: any = useSelector((state: RootState) => state.language.value);
   const authToken: any = useSelector((state: RootState) => state.auth.value);
@@ -909,4 +909,4 @@ const RealtorCase = ({ id, dealToken }: any) => {
     </main>
   );
 };
-export default RealtorCase;
+export default PropertyOwnerCase;

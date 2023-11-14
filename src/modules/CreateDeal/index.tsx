@@ -30,7 +30,7 @@ import {
 } from "../../utils/object.utils";
 import FileUpload from "../../shared/components/FileUpload";
 import HoverModal from "../../shared/components/HoverModal";
-import ExampleRealtor from "../../assets/example_realtor.png";
+import ExamplePropertyOwner from "../../assets/example_property_owner.png";
 import BinIcon from "../../ts-icons/binIcon.svg";
 import Modal from "../../shared/components/Modal";
 import { removeAttachment } from "../../apis/attachment.api";
@@ -86,7 +86,7 @@ const CreateDeal = () => {
         type:
           metadata.role === KanzRoles.STARTUP
             ? DealType.STARTUP
-            : DealType.REALTOR,
+            : DealType.PROPERTY_OWNER,
       };
       if (dataHolder) queryParams.id = dataHolder;
 
@@ -667,7 +667,7 @@ const CreateDeal = () => {
               <HoverModal width="w-[170px]" height="h-[170px]">
                 <section className="inline-flex flex-row items-center justify-evenly h-full">
                   <img
-                    src={ExampleRealtor}
+                    src={ExamplePropertyOwner}
                     alt={language.syndicate.logo}
                     className="h-[100px]"
                   />

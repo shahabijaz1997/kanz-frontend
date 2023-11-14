@@ -7,7 +7,7 @@ import { ApplicationStatus } from "../../../enums/types.enum";
 import { isEmpty } from "../../../utils/object.utils";
 import { RoutesEnums } from "../../../enums/routes.enum";
 
-const RealtorHome = ({ loading, language }: any) => {
+const PropertyOwnerHome = ({ loading, language }: any) => {
     const navigate = useNavigate();
     const user: any = useSelector((state: RootState) => state.user.value);
     const metadata: any = useSelector((state: RootState) => state.metadata.value);
@@ -18,7 +18,7 @@ const RealtorHome = ({ loading, language }: any) => {
       if (profile_states?.profile_completed) {
         navigate(RoutesEnums.ADD_ATTACHMENTS);
       } else {
-        navigate(RoutesEnums.REALTOR_DETAILS);
+        navigate(RoutesEnums.PROPERTY_OWNER_DETAILS);
       }
     }; 
 
@@ -27,10 +27,10 @@ const RealtorHome = ({ loading, language }: any) => {
             return (
                 <React.Fragment>
                     <h2 className="text-2xl font-bold text-neutral-900 mb-4 screen500:text-[20px]">
-                        {language?.onboarding?.realtorWelcomeText}
+                        {language?.onboarding?.propertyOwnerWelcomeText}
                     </h2>
                     <h3 className="text-base font-normal text-neutral-700 screen500:text-[12px]">
-                        {language?.v2?.realtor?.home_sub}
+                        {language?.v2?.propertyOwner?.home_sub}
                     </h3>
                     <Button className="mt-6 h-[38px]" disabled={loading} htmlType="submit" loading={loading} onClick={onPress}>
                         {language?.buttons?.start}
@@ -42,10 +42,10 @@ const RealtorHome = ({ loading, language }: any) => {
             return (
                 <React.Fragment>
                     <h2 className="text-2xl font-bold text-neutral-900 mb-4 screen500:text-[20px]">
-                        {language?.onboarding?.realtorWelcomeText}
+                        {language?.onboarding?.propertyOwnerWelcomeText}
                     </h2>
                     <h3 className="text-base font-normal text-neutral-700 screen500:text-[12px]">
-                        {language?.v2?.realtor?.home_sub}
+                        {language?.v2?.propertyOwner?.home_sub}
                     </h3>
                     <h3 className="text-base font-normal text-neutral-700 screen500:text-[12px] mt-2">
                         {language?.onboarding?.appStatus}: <strong>{language.common.inprogress}</strong>
@@ -80,11 +80,11 @@ const RealtorHome = ({ loading, language }: any) => {
                     <h3 className="text-base font-normal text-neutral-700 screen500:text-[12px]">
                         {language?.onboarding?.appStatus}: <strong>{language.v2.common[user.status]}</strong>
                     </h3>
-                    {user.status === ApplicationStatus.REOPENED && <Button className="mt-[30px] h-[38px] min-w-[160px]" disabled={loading} htmlType="submit" loading={loading} onClick={() => navigate(RoutesEnums.REALTOR_DETAILS)} >
+                    {user.status === ApplicationStatus.REOPENED && <Button className="mt-[30px] h-[38px] min-w-[160px]" disabled={loading} htmlType="submit" loading={loading} onClick={() => navigate(RoutesEnums.PROPERTY_OWNER_DETAILS)} >
                         {language?.buttons?.continue}
                     </Button>}
                     
-                    {user.status === ApplicationStatus.APPROVED && <Button className="mt-[30px] h-[38px] min-w-[160px]" disabled={loading} htmlType="submit" loading={loading} onClick={() => navigate(RoutesEnums.REALTOR_DASHBOARD)} >
+                    {user.status === ApplicationStatus.APPROVED && <Button className="mt-[30px] h-[38px] min-w-[160px]" disabled={loading} htmlType="submit" loading={loading} onClick={() => navigate(RoutesEnums.PROPERTY_OWNER_DASHBOARD)} >
                         {language?.buttons?.gotoDashboard}
                     </Button>}
                 </React.Fragment>
@@ -93,4 +93,4 @@ const RealtorHome = ({ loading, language }: any) => {
     };
     return render()
 };
-export default RealtorHome;
+export default PropertyOwnerHome;
