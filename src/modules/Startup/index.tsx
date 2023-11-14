@@ -203,11 +203,6 @@ const Startup = ({}: any) => {
             </div>
           ) : (
             <React.Fragment>
-              <section className="inline-flex justify-between items-center w-full">
-                <h1 className="text-black font-medium text-2xl mb-2">
-                  {language?.v3?.startup?.overview?.heading_2}
-                </h1>
-              </section>
 
               <section className="inline-flex justify-between items-center w-full">
                 <div className="w-full">
@@ -216,7 +211,7 @@ const Startup = ({}: any) => {
                   </h1>
 
                   <span className="w-full flex items-center gap-5">
-                    <div className="rounded-md shadow-cs-6 bg-white border-[1px] border-gray-200 h-9 overflow-hidden max-w-[310px] inline-flex items-center px-2">
+                    <div className="mt-2 rounded-md shadow-cs-6 bg-white border-[1px] border-gray-200 h-9 overflow-hidden max-w-[310px] min-w-[350px] inline-flex items-center px-2">
                       <SearchIcon />
                       <input
                         type="search"
@@ -225,22 +220,7 @@ const Startup = ({}: any) => {
                       />
                     </div>
 
-                    <ul className="inline-flex items-center">
-                      {React.Children.toArray(
-                        tabs.map((tab) => (
-                          <li
-                            onClick={() => setSelectedTab(tab)}
-                            className={`py-2 px-3 font-medium cursor-pointer rounded-md transition-all ${
-                              selectedTab === tab
-                                ? "text-neutral-900 bg-neutral-100"
-                                : "text-gray-500"
-                            } `}
-                          >
-                            {tab} &nbsp;(0)
-                          </li>
-                        ))
-                      )}
-                    </ul>
+               
                   </span>
                 </div>
                 <Button onClick={() => setModalOpen("1")} className="w-[170px]">
