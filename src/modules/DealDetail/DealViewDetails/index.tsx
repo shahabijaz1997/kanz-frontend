@@ -169,7 +169,7 @@ const DealViewDetails = ({ dealDetail, state }: any) => {
               {"MFN Only"}
             </h3>
             <p className="text-neutral-900 font-normal text-sm capitalize">
-              {dealDetail?.terms[2]?.is_enabled ? dealDetail?.terms[2]?.value : "No"}
+              {dealDetail?.terms[2]?.is_enabled ? "Yes" : "No"}
             </p>
           </div>
           <div className="py-4  border-b-neutral-200 w-full inline-flex items-center justify-between">
