@@ -5,6 +5,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { KanzRoles } from "../../../enums/roles.enum";
 import { RoutesEnums } from "../../../enums/routes.enum";
 import BagIcon from "../../../ts-icons/bagIcon.svg";
+import { kebabCase } from "../../../utils/string.utils";
 
 const Sidebar = ({ type }: any) => {
   const navigate = useNavigate();
@@ -17,7 +18,7 @@ const Sidebar = ({ type }: any) => {
     {
       id: 1,
       title: language?.v3?.startup?.sidebar?.overview,
-      route: `/${type.toLowerCase()}`,
+      route: `/${kebabCase(type)}`,
     },
     {
       id: 2,

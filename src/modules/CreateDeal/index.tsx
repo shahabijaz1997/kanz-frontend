@@ -39,6 +39,9 @@ import ReviewDeal from "./ReviewDeal";
 import Drawer from "../../shared/components/Drawer";
 import CalendarIcon from "../../ts-icons/calendarIcon.svg";
 import { isValidUrl } from "../../utils/regex.utils";
+import { kebabCase } from "../../utils/string.utils";
+
+
 const CURRENCIES = ["USD", "AED"];
 
 const CreateDeal = () => {
@@ -309,7 +312,7 @@ const CreateDeal = () => {
 
   const onSetPrev = () => {
     if (step > 1) navigate(`/create-deal/${step - 1}`);
-    else navigate(`/${metadata?.role?.toLowerCase()}`);
+    else navigate(`/${kebabCase(metadata?.role)}`);
   };
 
   const tieUpRestrictions = (as: any) => {
@@ -1245,7 +1248,7 @@ const CreateDeal = () => {
           data={{
             leftMenu: language?.v3?.deal?.create_deal,
             button: (
-              <button onClick={() => navigate(`/${metadata.role}`)}>
+              <button onClick={() => navigate(`/${kebabCase(metadata.role)}`)}>
                 {" "}
                 <CrossIcon stroke="#171717" className="w-6 h-6" />
               </button>
@@ -1630,7 +1633,7 @@ const CreateDeal = () => {
                   className="w-6 h-6"
                   onClick={() => {
                     setModalOpen(false);
-                    navigate(`/${metadata?.role?.toLowerCase()}`);
+                    navigate(`/${kebabCase(metadata?.role)}`);
                   }}
                 />
               </div>
