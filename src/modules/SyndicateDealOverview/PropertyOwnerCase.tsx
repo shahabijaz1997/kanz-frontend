@@ -48,6 +48,7 @@ import BinIcon from "../../ts-icons/binIcon.svg";
 import { toast } from "react-toastify";
 import { toastUtil } from "../../utils/toast.utils";
 import { fileSize } from "../../utils/files.utils";
+import { RoutesEnums } from "../../enums/routes.enum";
 
 const PropertyOwnerCase = ({ id, dealToken }: any) => {
   const navigate = useNavigate();
@@ -306,7 +307,7 @@ const PropertyOwnerCase = ({ id, dealToken }: any) => {
             <section className="w-[60%]">
               <div
                 className="w-full inline-flex pb-4 items-center gap-2 relative top-[-25px] cursor-pointer border-b-[1px] border-b-neutral-200"
-                onClick={() => navigate(-1)}
+                onClick={() => navigate(RoutesEnums.SYNDICATE_DASHBOARD)}
               >
                 <Chevrond stroke="#000" className="rotate-90 w-4 h-4" />
                 <small className="text-neutral-500 text-sm font-medium">

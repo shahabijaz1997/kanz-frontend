@@ -290,11 +290,11 @@ const Requests = ({ id }: any) => {
                 </div>
 
                 <span className="items-center">
-                  {dealDetail?.status !== "approved" &&
-                    dealDetail?.deal?.status !== "live" && (
+                  {dealDetail?.status === "accepted" &&
+                    dealDetail?.deal?.status === "approved" && (
                       <Button
                         onClick={() =>
-                          postSignOff(dealDetail?.comments[0]?.deal_id)
+                          postSignOff(dealDetail?.deal?.id)
                         }
                       >
                         Approve

@@ -39,6 +39,7 @@ import { toastUtil } from "../../utils/toast.utils";
 import UploadIcon from "../../ts-icons/uploadIcon.svg";
 import BinIcon from "../../ts-icons/binIcon.svg";
 import { fileSize, handleFileRead } from "../../utils/files.utils";
+import { RoutesEnums } from "../../enums/routes.enum";
 
 const CURRENCIES = ["USD", "AED"];
 
@@ -499,7 +500,7 @@ const StartupCase = ({ id, dealToken }: any) => {
             <section className="w-[60%]">
               <div
                 className="w-full inline-flex pb-4 items-center gap-2 relative top-[-25px] cursor-pointer border-b-[1px] border-b-neutral-200"
-                onClick={() => navigate(-1)}
+                onClick={() => navigate(RoutesEnums.SYNDICATE_DASHBOARD)}
               >
                 <Chevrond stroke="#000" className="rotate-90 w-4 h-4" />
                 <small className="text-neutral-500 text-sm font-medium">
