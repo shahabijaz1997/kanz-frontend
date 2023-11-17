@@ -506,10 +506,7 @@ const StartupCase = ({ id, dealToken }: any) => {
                   {language?.v3?.common?.investments}
                 </small>
               </div>
-              <div
-                className="w-full inline-flex flex-col pb-8 items-start gap-2 cursor-pointer"
-                onClick={() => navigate(-1)}
-              >
+              <div className="w-full inline-flex flex-col pb-8 items-start gap-2">
                 <h1 className="text-black font-medium text-xl">
                   {deal?.title}
                 </h1>

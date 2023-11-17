@@ -313,10 +313,6 @@ const PropertyOwnerCase = ({ id, dealToken }: any) => {
                   {language?.v3?.common?.investments}
                 </small>
               </div>
-              <div
-                className="w-full inline-flex flex-col pb-8 items-start gap-2"
-                onClick={() => navigate(-1)}
-              ></div>
               <div className="inline-flex justify-between w-full mb-4">
                 <h1 className="text-black font-medium text-2xl">
                   {deal?.title}
