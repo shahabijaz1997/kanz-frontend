@@ -307,7 +307,7 @@ const PropertyOwnerCase = ({ id, dealToken }: any) => {
             <section className="w-[60%]">
               <div
                 className="w-full inline-flex pb-4 items-center gap-2 relative top-[-25px] cursor-pointer border-b-[1px] border-b-neutral-200"
-                onClick={() => navigate(RoutesEnums.STARTUP_DASHBOARD)}
+                onClick={() => navigate(RoutesEnums.SYNDICATE_DASHBOARD)}
               >
                 <Chevrond stroke="#000" className="rotate-90 w-4 h-4" />
                 <small className="text-neutral-500 text-sm font-medium">
