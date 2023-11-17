@@ -279,8 +279,6 @@ const Questionare = ({ step, returnSuccessRedirection }: any) => {
 
   const checkValidation = () => {
     const hasTextQuestion = philosophyData?.questions?.length > 0 && philosophyData.questions[0]?.question_type === "text";
-  /*   console.log("hasTextQuestion "+ hasTextQuestion)
-    console.log("event "+ event) */
     if (hasTextQuestion) {
       return philosophyData.questions[0]?.value?.length > 0;
     } else {

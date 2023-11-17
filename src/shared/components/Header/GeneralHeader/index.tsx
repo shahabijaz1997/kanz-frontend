@@ -25,7 +25,7 @@ const GeneralHeader = ({ responsive = false, showMenu = false, showLanguageDropd
     const event: any = useSelector((state: RootState) => state.event.value);
     const navigationMenu = [{ id: 1, title:"Investor" }, { id: 2, title: language.header?.startup }, { id: 3, title: language.header?.syndicate }, { id: 4, title: language.header?.realtor }]
     const [isMenuOpen, setIsMenuOpen] = useState(false);
-    console.log(navigationMenu)
+   
     const toggleMenu = () => {
         setIsMenuOpen(!isMenuOpen);
     };

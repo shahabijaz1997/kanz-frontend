@@ -207,11 +207,13 @@ const Invites = ({}: any) :any => {
            goToPage={paginate}
            paginate={paginate}
            noDataNode={
-             <span className="absolute left-1/2 top-1/2 translate-x-[-50%] translate-y-[-50%]">
-               No invites sent! Click on the{" "}
-               <span className=" font-bold">invite button on top right</span> to
-               invite a syndicate
-             </span>
+             <div className="absolute left-1/2 top-1/2 translate-x-[-50%] translate-y-[-50%]">
+               <p className="font-medium text-center text-lg text-[#828282]">Follow syndicates to get invites</p>
+               <p className=" font-normal mt-1 text-sm  text-[#828282]">You can see the deals here from the following syndicate</p>
+               <Button
+               onClick={() => navigate(`${RoutesEnums.INVESTOR_SYNDICATES}`)}
+               className="mt-4" type="primary">Find Syndicates to Follow</Button>
+             </div>
            }
          />
        )}

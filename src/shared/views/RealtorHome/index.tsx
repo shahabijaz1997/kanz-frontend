@@ -9,9 +9,7 @@ import { RoutesEnums } from "../../../enums/routes.enum";
 
 
 const RealtorHome = ({ loading, language }: any) => {
-    useEffect(()=>{
-        console.log()
-    })
+   
     
 
     const navigate = useNavigate();

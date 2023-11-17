@@ -356,10 +356,10 @@ const SyndicateRequest = ({}: any) => {
                     dealDetail?.deal?.status !== "live" && (
                       <Button
                         onClick={() =>
-                          postSignOff(dealDetail?.comments[0]?.deal_id)
+                          postSignOff(dealDetail?.deal?.id)
                         }
                       >
-                        Approve
+                        {"Approve"}
                       </Button>
                     )}
                 </span>

@@ -48,6 +48,7 @@ import BinIcon from "../../ts-icons/binIcon.svg";
 import { toast } from "react-toastify";
 import { toastUtil } from "../../utils/toast.utils";
 import { fileSize } from "../../utils/files.utils";
+import InvitesListing from "./InvitesListing";
 
 const RealtorCase = ({ id, dealToken }: any) => {
   const navigate = useNavigate();
@@ -487,8 +488,18 @@ const RealtorCase = ({ id, dealToken }: any) => {
                 ></p>
               </div>
               <div className="mb-4 mt-10">
-                {deal?.invite?.status !== DealStatus.ACCEPTED &&
-                  deal?.status !== DealStatus.LIVE && (
+              {deal?.status === DealStatus.LIVE ? (
+                <Button
+                  onClick={() => {
+                    setModalOpen2(true);
+                  }}
+                  className="w-full"
+                >
+                  Invest Now
+                </Button>
+              ) : (
+                <React.Fragment>
+                  {deal?.invite?.status !== DealStatus.ACCEPTED && (
                     <Button
                       onClick={() => {
                         setModalOpen2(true);
@@ -498,6 +509,8 @@ const RealtorCase = ({ id, dealToken }: any) => {
                       Approve
                     </Button>
                   )}
+                </React.Fragment>
+              )}
               </div>
             </section>
 
@@ -507,17 +520,31 @@ const RealtorCase = ({ id, dealToken }: any) => {
             {/* Section Right */}
             <section className="w-[30%]">
               {/* Show/Hide based on some conditions */}
-              {deal?.invite?.status !== DealStatus.ACCEPTED &&
-                deal?.status !== DealStatus.LIVE && (
-                  <div className="w-full inline-flex justify-end gap-4">
-                    <Button type="outlined" onClick={() => setModalOpen(true)}>
-                      {language?.v3?.button?.req_change}
-                    </Button>
-                    <Button onClick={() => setModalOpen2(true)}>
-                      {language?.v3?.button?.interested}
-                    </Button>
-                  </div>
-                )}
+              {deal?.status === DealStatus.LIVE ? (
+               <div className="w-full inline-flex justify-end gap-4">
+                  <div className="relative z-10">
+                  <InvitesListing
+                    approve={true}
+                    dealId={dealToken}
+                    type={KanzRoles.SYNDICATE}
+                    dealIdReal={id}
+                  />
+                </div>
+               </div>
+              ) : (
+                <React.Fragment>
+                  {deal?.invite?.status !== DealStatus.ACCEPTED && (
+                <div className="w-full inline-flex justify-end gap-4">
+                <Button type="outlined" onClick={() => setModalOpen(true)}>
+                  {language?.v3?.button?.req_change}
+                </Button>
+                <Button onClick={() => setModalOpen2(true)}>
+                  {language?.v3?.button?.interested}
+                </Button>
+              </div>
+                  )}
+                </React.Fragment>
+              )}
               <aside className="border-[1px] border-neutral-200 rounded-md w-full p-3 mt-5">
                 <h2 className="text-neutral-700 text-xl font-medium">
                   {language?.v3?.common?.invest_details}

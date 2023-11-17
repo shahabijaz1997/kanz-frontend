@@ -1,4 +1,4 @@
-import React, { useLayoutEffect, useState } from "react";
+import React, { useEffect, useLayoutEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { KanzRoles } from "../../enums/roles.enum";
@@ -39,6 +39,9 @@ import { toastUtil } from "../../utils/toast.utils";
 import UploadIcon from "../../ts-icons/uploadIcon.svg";
 import BinIcon from "../../ts-icons/binIcon.svg";
 import { fileSize, handleFileRead } from "../../utils/files.utils";
+import InvitesListing from "./InvitesListing";
+import InvestmentCalculator from "./InvestmentCalculator";
+import DealActivity from "./DealActivity";
 
 const CURRENCIES = ["USD", "AED"];
 
@@ -58,18 +61,26 @@ const StartupCase = ({ id, dealToken }: any) => {
   const [modalOpen3, setModalOpen3]: any = useState(null);
   const [disableUpload, setdisableUpload]: any = useState(false);
   const [modalOpenComment, setmodalOpenComment]: any = useState(null);
-  
 
+  const [amount, setAmount] = useState(0);
+  const [selectedCurrency, setSelectedCurrency] = useState('USD');
 
+  const handleAmountChange = (event:any) => {
+    setAmount(event.target.value);
+  };
+
+  const handleCurrencyChange = (event:any) => {
+    setSelectedCurrency(event.target.value);
+  };
   const [changes, setChanges]: any = useState({
     comment: "",
     action: "",
     document: null,
   });
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     onGetdeal();
-  }, [deal?.id]);
+  }, []);
 
   const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file: any = e.target.files?.[0];
@@ -287,7 +298,7 @@ const StartupCase = ({ id, dealToken }: any) => {
               {language?.v3?.deal?.start_at}
             </h3>
             <p className="text-neutral-900 font-normal text-sm capitalize">
-              {(deal?.start_at) || language?.v3?.common?.not_added}
+              {deal?.start_at || language?.v3?.common?.not_added}
             </p>
           </div>
         )}
@@ -484,7 +495,10 @@ const StartupCase = ({ id, dealToken }: any) => {
       <section>
         <Header />
       </section>
-      <aside className="w-full flex items-start justify-start" style={{ height: "calc(100% - 70px)"}}>
+      <aside
+        className="w-full flex items-start justify-start"
+        style={{ height: "calc(100% - 70px)" }}
+      >
         <Sidebar type={KanzRoles.SYNDICATE} />
         {loading ? (
           <div
@@ -494,7 +508,10 @@ const StartupCase = ({ id, dealToken }: any) => {
             <Spinner />
           </div>
         ) : (
-          <section className="bg-cbc-auth h-full pt-[5rem] px-[5rem] flex items-start overflow-y-auto" style={{ width: "calc(100% - 250px)" }} >
+          <section
+            className="bg-cbc-auth h-full pt-[5rem] px-[5rem] flex items-start overflow-y-auto"
+            style={{ width: "calc(100% - 250px)" }}
+          >
             {/* Section Left */}
             <section className="w-[60%]">
               <div
@@ -507,8 +524,7 @@ const StartupCase = ({ id, dealToken }: any) => {
                 </small>
               </div>
               <div
-                className="w-full inline-flex flex-col pb-8 items-start gap-2 cursor-pointer"
-                onClick={() => navigate(-1)}
+                className="w-full inline-flex flex-col pb-8 items-start gap-2"
               >
                 <h1 className="text-black font-medium text-xl">
                   {deal?.title}
@@ -634,48 +650,131 @@ const StartupCase = ({ id, dealToken }: any) => {
                   )}
                 </section>
               )}
+              <InvestmentCalculator/>
               <div className="mb-4 mt-10">
-                {deal?.invite?.status !== DealStatus.ACCEPTED &&
-                  deal?.status !== DealStatus.LIVE && (
-                    <Button
-                      onClick={() => {
-                        setModalOpen2(true);
-                      }}
-                      className="w-full"
-                    >
-                      Approve
-                    </Button>
-                  )}
+                {deal?.status === DealStatus.LIVE ? (
+                  <Button
+                    onClick={() => {
+                      setModalOpen2(true);
+                    }}
+                    className="w-full"
+                  >
+                    Invest Now
+                  </Button>
+                ) : (
+                  <React.Fragment>
+                    {deal?.invite?.status !== DealStatus.ACCEPTED && (
+                      <Button
+                        onClick={() => {
+                          setModalOpen2(true);
+                        }}
+                        className="w-full"
+                      >
+                        Approve
+                      </Button>
+                    )}
+                  </React.Fragment>
+                )}
+              </div>
+              <div className="w-full mt-8 mb-4">
+                <DealActivity/>
               </div>
             </section>
+           
+
 
             {/* Invisible Section */}
             <section className="w-[10%]"></section>
 
-            {/* Section Right */}
+            {/*
+            {.......##...............######..########..######..########.####..#######..##....##....########..####..######...##.....##.########....................##
+            {......##...##...##.....##....##.##.......##....##....##.....##..##.....##.###...##....##.....##..##..##....##..##.....##....##........##...##.......##.
+            {.....##.....##.##......##.......##.......##..........##.....##..##.....##.####..##....##.....##..##..##........##.....##....##.........##.##.......##..
+            {....##....#########.....######..######...##..........##.....##..##.....##.##.##.##....########...##..##...####.#########....##.......#########....##...
+            {...##.......##.##............##.##.......##..........##.....##..##.....##.##..####....##...##....##..##....##..##.....##....##.........##.##.....##....
+            {..##.......##...##.....##....##.##.......##....##....##.....##..##.....##.##...###....##....##...##..##....##..##.....##....##........##...##...##.....
+            {.##.....................######..########..######.....##....####..#######..##....##....##.....##.####..######...##.....##....##.................##......
+            {*/}
             <section className="w-[30%]">
               {/* Show/Hide based on some conditions */}
-              {deal?.invite?.status !== DealStatus.ACCEPTED &&
-                deal?.status !== DealStatus.LIVE && (
-                  <div className="w-full inline-flex justify-end gap-4">
-                    <Button type="outlined" onClick={() => setModalOpen(true)}>
-                      {language?.v3?.button?.req_change}
-                    </Button>
-                    <Button
-                      onClick={() => {
-                        setModalOpen2(true);
-                      }}
-                    >
-                      {language?.v3?.button?.interested}
-                    </Button>
+              {deal?.status === DealStatus.LIVE ? (
+                <div className="w-full inline-flex justify-end gap-4">
+                  <div className="relative z-10">
+                    <InvitesListing
+                      approve={true}
+                      dealId={dealToken}
+                      type={KanzRoles.SYNDICATE}
+                      dealIdReal={id}
+                    />
                   </div>
-                )}
+                </div>
+              ) : (
+                <React.Fragment>
+                  {deal?.invite?.status !== DealStatus.ACCEPTED && (
+                    <div className="w-full inline-flex justify-end gap-4">
+                      <Button
+                        type="outlined"
+                        onClick={() => setModalOpen(true)}
+                      >
+                        {language?.v3?.button?.req_change}
+                      </Button>
+                      <Button onClick={() => setModalOpen2(true)}>
+                        {language?.v3?.button?.interested}
+                      </Button>
+                    </div>
+                  )}
+                </React.Fragment>
+              )}
+
+                    
+              <aside className="mx-4">
+              <section className="mb-4 mt-10">
+                <div className="font-semibold text-sm">Invest</div>
+                <div className=" text-xs  text-neutral-500 mb-2">
+                  Minimum is $2500 Invest by Oct 2
+                </div>
+                <div className="border-neutral-500 border-[1px] rounded-md min-w-full bg-white px-2 justify-between flex">
+                  <label className="w-full">
+                    <input className="min-w-full h-9 no-spin-button"
+                    pattern="[0-9]*"
+                    placeholder={
+                      selectedCurrency === 'USD' ? '$ 00.00' : 'AED 00.00'
+                    }
+                    onKeyDown={(evt) => ["e", "E", "+", "-"].includes(evt.key) && evt.preventDefault()}
+                      min="0"
+                      type="number"
+                      value={amount}
+                      onChange={handleAmountChange}
+                    />
+                  </label>
+                  <label >
+                    <select
+                    className="h-9"
+                      value={selectedCurrency}
+                      onChange={handleCurrencyChange}
+                    >
+                      <option className="text-md font-light" value="USD">USD</option>
+                      <option className="text-md font-light" value="AED">AED</option>
+                    </select>
+                  </label>
+                </div>
+                <Button 
+                    onClick={() => {
+                      console.log("Clicked")
+                    }}
+                    className="w-full mt-4"
+                  >
+                    Invest Now
+                  </Button>
+              </section>
+              </aside>
+
               <aside className="border-[1px] border-neutral-200 rounded-md w-full p-3 mt-5">
                 <h2 className="text-neutral-700 text-xl font-medium">
                   {language?.v3?.common?.invest_details}
                 </h2>
                 <small className="text-neutral-500 text-sm font-normal">
-                  {language?.v3?.common?.end_on} {(deal?.end_at)}
+                  {language?.v3?.common?.end_on} {deal?.end_at}
                 </small>
 
                 {getRoleBasedUI()}
@@ -694,52 +793,54 @@ const StartupCase = ({ id, dealToken }: any) => {
                   </p>
                 </div>
               </aside>
-              {deal?.docs?.length && (<aside className="border-[1px] border-neutral-200 overflow-auto custom-scroll rounded-md w-full p-3 mt-5 bg-cbc-check max-h-[400px] overflow-y-auto no-scrollbar mb-4">
-                {React.Children.toArray(
-                  deal?.docs?.map((doc: any) => {
-                    return (
-                      <section className="rounded-md bg-white px-3 py-1 inline-flex items-center justify-between w-full border-[1px] border-neutral-200 mb-2">
-                        <span className="inline-flex items-center w-[80%]">
-                          <div className="bg-white w-14 h-14 inline-flex justify-center flex-col w-full">
-                            <h4
-                              className="inline-flex items-center gap-3 max-w-[200px] cursor-pointer"
-                              onClick={() => {
-                                window.open(doc?.url, "_blank");
-                              }}
-                            >
-                              <div className="text-sm text-black font-medium ">
-                                {language?.v3?.button?.view}
-                              </div>
-                              <ArrowIcon stroke="#000" />
-                            </h4>
-                            <h2
-                              className="text-sm font-medium text-neutral-500 max-w-full truncate"
-                              title={doc?.name}
-                            >
-                              {doc?.name}
-                            </h2>
-                          </div>
-                        </span>
+              {deal?.docs?.length && (
+                <aside className="border-[1px] border-neutral-200 overflow-auto custom-scroll rounded-md w-full p-3 mt-5 bg-cbc-check max-h-[400px] overflow-y-auto no-scrollbar mb-4">
+                  {React.Children.toArray(
+                    deal?.docs?.map((doc: any) => {
+                      return (
+                        <section className="rounded-md bg-white px-3 py-1 inline-flex items-center justify-between w-full border-[1px] border-neutral-200 mb-2">
+                          <span className="inline-flex items-center w-[80%]">
+                            <div className="bg-white w-14 h-14 inline-flex justify-center flex-col w-full">
+                              <h4
+                                className="inline-flex items-center gap-3 max-w-[200px] cursor-pointer"
+                                onClick={() => {
+                                  window.open(doc?.url, "_blank");
+                                }}
+                              >
+                                <div className="text-sm text-black font-medium ">
+                                  {language?.v3?.button?.view}
+                                </div>
+                                <ArrowIcon stroke="#000" />
+                              </h4>
+                              <h2
+                                className="text-sm font-medium text-neutral-500 max-w-full truncate"
+                                title={doc?.name}
+                              >
+                                {doc?.name}
+                              </h2>
+                            </div>
+                          </span>
 
-                        <div
-                          className="h-10 w-10 rounded-lg inline-flex items-center flex-row justify-center gap-2 bg-white cursor-pointer border-[1px] border-neutral-200"
-                          onClick={() => {
-                            const downloadLink = document.createElement("a");
-                            downloadLink.href = doc?.url;
-                            downloadLink.target = "_blank";
-                            downloadLink.download = doc?.name;
-                            downloadLink.click();
-                            downloadLink.remove();
-                          }}
-                        >
-                          <DownloadIcon />
-                        </div>
-                      </section>
-                    );
-                  })
-                )}
-              </aside>)}
-        
+                          <div
+                            className="h-10 w-10 rounded-lg inline-flex items-center flex-row justify-center gap-2 bg-white cursor-pointer border-[1px] border-neutral-200"
+                            onClick={() => {
+                              const downloadLink = document.createElement("a");
+                              downloadLink.href = doc?.url;
+                              downloadLink.target = "_blank";
+                              downloadLink.download = doc?.name;
+                              downloadLink.click();
+                              downloadLink.remove();
+                            }}
+                          >
+                            <DownloadIcon />
+                          </div>
+                        </section>
+                      );
+                    })
+                  )}
+                </aside>
+              )}
+
               <aside>
                 {deal?.comments?.length && (
                   <div className="justify-between mb-4 w-full border-[1px]  rounded-md border-b-neutral-200 bg-white ">
@@ -1015,14 +1116,15 @@ const StartupCase = ({ id, dealToken }: any) => {
               </div>
             </section>
 
-            <footer className="w-full inline-flex justify-between gap-3 py-2 px-3 w-full">
+            <footer className="inline-flex justify-between gap-3 py-2 px-3 w-full">
               <Button
                 disabled={disableUpload}
                 className="w-full !py-1"
                 divStyle="flex items-center justify-center w-full"
                 onClick={() => {
-                  setdisableUpload(true)
-                  postSignOff()}}
+                  setdisableUpload(true);
+                  postSignOff();
+                }}
               >
                 {language.buttons.submit}
               </Button>

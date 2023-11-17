@@ -17,6 +17,8 @@ import { RoutesEnums, StartupRoutes } from "../../enums/routes.enum";
 import { LinkedInCallback } from "react-linkedin-login-oauth2";
 import InvestorSyndicates from "../Investor/InvestorSyndicates";
 import Deals from "../Investor/Deals";
+import SyndicateInvestments from "../Syndicate/Investments";
+import ManageGroup from "../Syndicate/ManageGroup";
 
 /* --- Modules --- */
 
@@ -452,6 +454,53 @@ const RouterModule = () => {
           </Suspense>
         }
       />
+
+      <Route
+        path={`${RoutesEnums.SYNDICATE_INVESTMENTS}`}
+        element={
+          <Suspense fallback={<Loader />}>
+            <CHECK_LOGGED_IN>
+              <GUARD_SUBMITTED_ROUTE
+                role={[KanzRoles.SYNDICATE]}
+                status={ApplicationStatus.APPROVED}
+              >
+                <SyndicateInvestments />
+              </GUARD_SUBMITTED_ROUTE>
+            </CHECK_LOGGED_IN>
+          </Suspense>
+        }
+      />
+      <Route
+        path={`${RoutesEnums.SYNDICATE_MANAGE_GROUP}`}
+        element={
+          <Suspense fallback={<Loader />}>
+            <CHECK_LOGGED_IN>
+              <GUARD_SUBMITTED_ROUTE
+                role={[KanzRoles.SYNDICATE]}
+                status={ApplicationStatus.APPROVED}
+              >
+                <ManageGroup />
+              </GUARD_SUBMITTED_ROUTE>
+            </CHECK_LOGGED_IN>
+          </Suspense>
+        }
+      />
+{/* 
+      <Route
+        path={`${RoutesEnums.SYNDICATE_INVESTMENTS_DEALDETAILS}/:dealToken`}
+        element={
+          <Suspense fallback={<Loader />}>
+            <CHECK_LOGGED_IN>
+              <GUARD_SUBMITTED_ROUTE
+                role={[KanzRoles.SYNDICATE]}
+                status={ApplicationStatus.APPROVED}
+              >
+                <SyndicateInvestments />
+              </GUARD_SUBMITTED_ROUTE>
+            </CHECK_LOGGED_IN>
+          </Suspense>
+        }
+      /> */}
 
       {/*
         {.......##...............######..##....##.##....##.########..####..######.....###....########.########....########...#######..##.....##.########.########..######.....................##

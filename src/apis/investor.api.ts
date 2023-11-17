@@ -4,7 +4,7 @@ import { getEnv } from "../env";
 const ENV = getEnv();
 
 export const selectInvestorType = (payload: any, token: string) => {
-    return axios.post(`${ENV.API_URL}/${ENV.API_VERSION}/investor/type`, payload, {
+    return axios.post(`${ENV.API_URL}/${ENV.API_VERSION}/investors/type`, payload, {
         headers: {
             Authorization: `Bearer ${token}`
         },
@@ -12,12 +12,23 @@ export const selectInvestorType = (payload: any, token: string) => {
 };
 
 export const investmentAccridiation = (payload: any, token: string) => {
-    return axios.post(`${ENV.API_URL}/${ENV.API_VERSION}/investor/accreditation`, payload, {
+    return axios.post(`${ENV.API_URL}/${ENV.API_VERSION}/investors/accreditation`, payload, {
         headers: {
             Authorization: `Bearer ${token}`
         },
     });
 };
+
+export const getAllInvestors = (token: string) => {
+    return axios.get(
+      `${ENV.API_URL}/${ENV.API_VERSION}/syndicate_members`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+  };
 
 export const getInvites = (token: string, filters :any) => {
     const queryParameters = new URLSearchParams();
@@ -43,8 +54,13 @@ export const getInvites = (token: string, filters :any) => {
       },
     });
   };
+
+
+
+
+
 export const getInvestor = (token: string) => {
-    return axios.get(`${ENV.API_URL}/${ENV.API_VERSION}/investor`, {
+    return axios.get(`${ENV.API_URL}/${ENV.API_VERSION}/investors`, {
         headers: {
             Authorization: `Bearer ${token}`
         },

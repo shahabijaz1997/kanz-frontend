@@ -10,9 +10,11 @@ import InvestorInvestmentIcon from "../../../ts-icons/InvestorInvestmentIcon.svg
 import InvestorSyndicateIcon from "../../../ts-icons/InvestorSyndicateIcon.svg";
 import InvestorPortfolioIcon from "../../../ts-icons/InvestorPortfolioIcon.svg";
 import InvestorInvitesIcon from "../../../ts-icons/InvestorInvitesIcon.svg";
+import SyndicateDealApprovalIcon from "../../../ts-icons/SyndicateDealApprovalIcon.svg";
+import SyndicateInvestorUpdates from "../../../ts-icons/SyndicateInvestorUpdates.svg";
 
 const Sidebar = ({ type }: any) => {
-  console.log("Type" , type)
+ 
   const navigate = useNavigate();
   const { pathname } = useLocation();
   const language: any = useSelector((state: RootState) => state.language.value);
@@ -56,9 +58,6 @@ const Sidebar = ({ type }: any) => {
     renderRoleBasedSidebar();
   }, [type]);
 
-  useEffect(()=>{
-    console.log(sidebarData)
-  },[sidebarData])
 
   useLayoutEffect(() => {
     setSelected(window.location.pathname)
@@ -109,17 +108,34 @@ const Sidebar = ({ type }: any) => {
           items: [
             {
               id: 1,
+              icon:<InvestorHomeIcon />,
               title: language?.v3?.startup?.sidebar?.dashboard,
               route: "/syndicate",
             },
             {
               id: 2,
+              icon: <InvestorInvestmentIcon/>,
+              title: "Investments",
+              route: RoutesEnums.SYNDICATE_INVESTMENTS
+
+            },
+            {
+              id: 3,
+              icon: <SyndicateInvestorUpdates/>,
+              title: "Investor Updates",
+         
+            },
+            {
+              id: 4,
+              icon: <SyndicateDealApprovalIcon/>,
               title: language?.v3?.startup?.sidebar?.deal_approval,
               route: RoutesEnums.DEAL_APPROVAL,
             },
             {
-              id: 3,
-              title: language?.v3?.startup?.sidebar?.startup_investment,
+              id: 5,
+              icon: <InvestorSyndicateIcon/>,
+              title: "Manage Group",
+              route: RoutesEnums.SYNDICATE_MANAGE_GROUP,
             },
           ],
         });

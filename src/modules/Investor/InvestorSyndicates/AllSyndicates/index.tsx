@@ -70,19 +70,19 @@ const AllSyndicates = ({}: any) :any => {
                 return {
                   id: deal?.id,
                   ["Syndicate"]: (
-                    <span className=" capitalize">{deal?.invitee?.name}</span>
+                    <span className=" capitalize">{deal?.name}</span>
                   ),
                   ["Total Deals"]: (
-                    <span className=" capitalize">{<CustomStatus options={deal?.status} />}</span>
+                    <span className=" capitalize">{deal?.details?.total_deals}</span>
                   ),
                   ["Active Deals"]: (
-                    <span className=" capitalize">{<CustomStatus options={deal?.status} />}</span>
+                    <span className=" capitalize">{deal?.details?.active_deals}</span>
                   ),
                   ["Raising Fund"]: (
-                    <span className=" capitalize">{<CustomStatus options={deal?.status} />}</span>
+                    <span className=" capitalize">{deal?.details?.raising_fund ? (<CustomStatus options={"Yes"} />) : (<CustomStatus options={"No"} />)}</span>
                   ),
                   ["Formation Date"]: (
-                    <span className=" capitalize">{<CustomStatus options={deal?.status} />}</span>
+                    <span className=" capitalize">{deal?.details?.created_at}</span>
                   ),
                   [""]: (
                     <div
@@ -92,7 +92,7 @@ const AllSyndicates = ({}: any) :any => {
                         { state: deal?.type }
                       );
                     }}
-                      className="bg-neutral-100 inline-flex items-center justify-center w-[30px] h-[30px] rounded-full transition-all hover:bg-cbc-transparent mx-7"
+                      className="bg-neutral-100 inline-flex items-center justify-center w-[30px] h-[30px] rounded-full transition-all hover:bg-cbc-transparent mr-10"
                     >
                       <Chevrond
                         className="rotate-[-90deg] w-6 h-6"

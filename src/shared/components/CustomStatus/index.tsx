@@ -12,7 +12,11 @@ const CustomStatus = ({ options }: any) => {
     backgroundColor = "bg-indigo-100";
   } else if (options === "closed") {
     backgroundColor = "bg-grey-100";
-  }
+  } else if (options === "No") {
+    backgroundColor = "bg-red-100";
+  } else if (options === "follower") {
+    backgroundColor = "bg-blue-100";
+   } 
 
   let textColor = "text-green-800";
   if (options === "approved") {
@@ -20,9 +24,13 @@ const CustomStatus = ({ options }: any) => {
   } else if (options === "interested") {
     textColor = "text-slate-800";
   } else if (options === "pending") {
-    textColor = "text-yellow-700";
+    textColor = "text-yellow-800";
   } else if (options === "req changes") {
     textColor = "text-indigo-800";
+  } else if (options === "No") {
+    textColor = "text-red-800";
+  } else if (options === "follower") {
+    textColor = "text-blue-800";
   }
   return (
     <main>
