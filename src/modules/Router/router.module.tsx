@@ -35,18 +35,18 @@ const CompleteDetails = lazy(() => import("../Onboarding/CompleteDetails"));
 const CompleteGoals = lazy(() => import("../Onboarding/CompleteGoals"));
 const PhilosophyGoals = lazy(() => import("../Onboarding/PhilosophyGoals"));
 const StartupOnboarding = lazy(() => import("../Onboarding/StartupFlow"));
-const RealtorsOnboarding = lazy(() => import("../Onboarding/RealtorsFlow"));
+const PropertyOwnerOnboarding = lazy(() => import("../Onboarding/PropertyOwnersFlow"));
 const SyndicateOnboarding = lazy(() => import("../Onboarding/SyndicateFlow"));
 const AddAttachments = lazy(() => import("../Onboarding/AddAttachments"));
 
 /* ---### Post Onboarding ###--- */
 const StartupDashboard = lazy(() => import("../Startup"));
-const RealtorDashboard = lazy(() => import("../Realtor"));
+const PropertyOwnerDashboard = lazy(() => import("../PropertyOwner"));
 const InvestorDashboard = lazy(() => import("../Investor"));
 const CreateDeal = lazy(() => import("../CreateDeal"));
 const DealDetail = lazy(() => import("../DealDetail"));
 const DealApproval = lazy(() => import("../Syndicate/DealApproval"));
-const SyndicateRequest = lazy(() => import("../Realtor/SyndicateRequest"));
+const SyndicateRequest = lazy(() => import("../PropertyOwner/SyndicateRequest"));
 const InvestorUpdates = lazy(() => import("../InvestorUpdates"));
 const DataRooms = lazy(() => import("../DataRooms"));
 const Contacts = lazy(() => import("../Contacts"));
@@ -196,12 +196,12 @@ const RouterModule = () => {
         }
       />
       <Route
-        path={RoutesEnums.REALTOR_DETAILS}
+        path={RoutesEnums.PROPERTY_OWNER_DETAILS}
         element={
           <Suspense fallback={<Loader />}>
             <CHECK_LOGGED_IN>
-              <GUARD_ROUTE role={KanzRoles.REALTOR}>
-                <RealtorsOnboarding guard={authToken} />
+              <GUARD_ROUTE role={KanzRoles.PROPERTY_OWNER}>
+                <PropertyOwnerOnboarding guard={authToken} />
               </GUARD_ROUTE>
             </CHECK_LOGGED_IN>
           </Suspense>
@@ -334,15 +334,15 @@ const RouterModule = () => {
         }
       />
       <Route
-        path={`${RoutesEnums.REALTOR_DASHBOARD}`}
+        path={`${RoutesEnums.PROPERTY_OWNER_DASHBOARD}`}
         element={
           <Suspense fallback={<Loader />}>
             <CHECK_LOGGED_IN>
               <GUARD_SUBMITTED_ROUTE
-                role={[KanzRoles.REALTOR]}
+                role={[KanzRoles.PROPERTY_OWNER]}
                 status={ApplicationStatus.APPROVED}
               >
-                <RealtorDashboard />
+                <PropertyOwnerDashboard />
               </GUARD_SUBMITTED_ROUTE>
             </CHECK_LOGGED_IN>
           </Suspense>
@@ -414,7 +414,7 @@ const RouterModule = () => {
           <Suspense fallback={<Loader />}>
             <CHECK_LOGGED_IN>
               <GUARD_SUBMITTED_ROUTE
-                role={[KanzRoles.STARTUP, KanzRoles.REALTOR]}
+                role={[KanzRoles.STARTUP, KanzRoles.PROPERTY_OWNER]}
                 status={ApplicationStatus.APPROVED}
               >
                 <CreateDeal />
@@ -429,7 +429,7 @@ const RouterModule = () => {
           <Suspense fallback={<Loader />}>
             <CHECK_LOGGED_IN>
               <GUARD_SUBMITTED_ROUTE
-                role={[KanzRoles.STARTUP, KanzRoles.REALTOR]}
+                role={[KanzRoles.STARTUP, KanzRoles.PROPERTY_OWNER]}
                 status={ApplicationStatus.APPROVED}
               >
                 <DealDetail />
@@ -535,7 +535,7 @@ const RouterModule = () => {
           <Suspense fallback={<Loader />}>
             <CHECK_LOGGED_IN>
               <GUARD_SUBMITTED_ROUTE
-                role={[KanzRoles.REALTOR, KanzRoles.STARTUP]}
+                role={[KanzRoles.PROPERTY_OWNER, KanzRoles.STARTUP]}
                 status={ApplicationStatus.APPROVED}
               >
                 <SyndicateRequest guard={authToken} />

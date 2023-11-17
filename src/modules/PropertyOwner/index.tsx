@@ -20,7 +20,7 @@ import Chevrond from "../../ts-icons/chevrond.svg";
 import EditIcon from "../../ts-icons/editIcon.svg";
 import CustomStatus from "../../shared/components/CustomStatus";
 
-const Realtor = ({}: any) => {
+const PropertyOwner = ({}: any) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const language: any = useSelector((state: RootState) => state.language.value);
@@ -149,7 +149,7 @@ const Realtor = ({}: any) => {
                     e.preventDefault();
                     e.stopPropagation();
                     navigate(`${RoutesEnums.DEAL_DETAIL}/${deal?.token}`, {
-                      state: KanzRoles.REALTOR,
+                      state: KanzRoles.PROPERTY_OWNER,
                     });
                   }}
                   className="ml-2 bg-neutral-100 inline-flex items-center justify-center w-[26px] h-[26px] rounded-full transition-all hover:bg-cbc-transparent"
@@ -217,7 +217,7 @@ const Realtor = ({}: any) => {
         <Header />
       </section>
       <aside className="w-full h-full flex items-start justify-start">
-        <Sidebar type={KanzRoles.REALTOR} />
+        <Sidebar type={KanzRoles.PROPERTY_OWNER} />
         <section
           className="bg-cbc-auth h-full p-[5rem] relative"
           style={{ width: "calc(100% - 250px)" }}
@@ -650,4 +650,4 @@ const Realtor = ({}: any) => {
     </main>
   );
 };
-export default Realtor;
+export default PropertyOwner;

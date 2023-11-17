@@ -12,6 +12,7 @@ import InvestorPortfolioIcon from "../../../ts-icons/InvestorPortfolioIcon.svg";
 import InvestorInvitesIcon from "../../../ts-icons/InvestorInvitesIcon.svg";
 import SyndicateDealApprovalIcon from "../../../ts-icons/SyndicateDealApprovalIcon.svg";
 import SyndicateInvestorUpdates from "../../../ts-icons/SyndicateInvestorUpdates.svg";
+import { kebabCase } from "../../../utils/string.utils";
 
 const Sidebar = ({ type }: any) => {
  
@@ -25,7 +26,7 @@ const Sidebar = ({ type }: any) => {
     {
       id: 1,
       title: language?.v3?.startup?.sidebar?.overview,
-      route: `/${type.toLowerCase()}`,
+      route: `/${kebabCase(type)}`,
     },
     {
       id: 2,
@@ -84,9 +85,7 @@ const Sidebar = ({ type }: any) => {
         route = DASHBOARD_ITEMS.find((it) => it.route === pathname);
         setSelected(route);
         break;
-      case KanzRoles.REALTOR:
-        
-
+      case KanzRoles.PROPERTY_OWNER:
         setSidebarData({
           title: language?.v3?.startup?.sidebar?.sidebar_title,
           icon: <BagIcon />,

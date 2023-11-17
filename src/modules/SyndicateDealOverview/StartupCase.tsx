@@ -42,6 +42,7 @@ import { fileSize, handleFileRead } from "../../utils/files.utils";
 import InvitesListing from "./InvitesListing";
 import InvestmentCalculator from "./InvestmentCalculator";
 import DealActivity from "./DealActivity";
+import { RoutesEnums } from "../../enums/routes.enum";
 
 const CURRENCIES = ["USD", "AED"];
 
@@ -516,16 +517,14 @@ const StartupCase = ({ id, dealToken }: any) => {
             <section className="w-[60%]">
               <div
                 className="w-full inline-flex pb-4 items-center gap-2 relative top-[-25px] cursor-pointer border-b-[1px] border-b-neutral-200"
-                onClick={() => navigate(-1)}
+                onClick={() => navigate(RoutesEnums.SYNDICATE_DASHBOARD)}
               >
                 <Chevrond stroke="#000" className="rotate-90 w-4 h-4" />
                 <small className="text-neutral-500 text-sm font-medium">
                   {language?.v3?.common?.investments}
                 </small>
               </div>
-              <div
-                className="w-full inline-flex flex-col pb-8 items-start gap-2"
-              >
+              <div className="w-full inline-flex flex-col pb-8 items-start gap-2">
                 <h1 className="text-black font-medium text-xl">
                   {deal?.title}
                 </h1>

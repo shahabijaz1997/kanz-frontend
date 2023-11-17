@@ -30,7 +30,7 @@ import {
 } from "../../utils/object.utils";
 import FileUpload from "../../shared/components/FileUpload";
 import HoverModal from "../../shared/components/HoverModal";
-import ExampleRealtor from "../../assets/example_realtor.png";
+import ExamplePropertyOwner from "../../assets/example_property_owner.png";
 import BinIcon from "../../ts-icons/binIcon.svg";
 import Modal from "../../shared/components/Modal";
 import { removeAttachment } from "../../apis/attachment.api";
@@ -39,6 +39,9 @@ import ReviewDeal from "./ReviewDeal";
 import Drawer from "../../shared/components/Drawer";
 import CalendarIcon from "../../ts-icons/calendarIcon.svg";
 import { isValidUrl } from "../../utils/regex.utils";
+import { kebabCase } from "../../utils/string.utils";
+
+
 const CURRENCIES = ["USD", "AED"];
 
 const CreateDeal = () => {
@@ -86,7 +89,7 @@ const CreateDeal = () => {
         type:
           metadata.role === KanzRoles.STARTUP
             ? DealType.STARTUP
-            : DealType.REALTOR,
+            : DealType.PROPERTY_OWNER,
       };
       if (dataHolder) queryParams.id = dataHolder;
 
@@ -309,7 +312,7 @@ const CreateDeal = () => {
 
   const onSetPrev = () => {
     if (step > 1) navigate(`/create-deal/${step - 1}`);
-    else navigate(`/${metadata?.role?.toLowerCase()}`);
+    else navigate(`/${kebabCase(metadata?.role)}`);
   };
 
   const tieUpRestrictions = (as: any) => {
@@ -667,7 +670,7 @@ const CreateDeal = () => {
               <HoverModal width="w-[170px]" height="h-[170px]">
                 <section className="inline-flex flex-row items-center justify-evenly h-full">
                   <img
-                    src={ExampleRealtor}
+                    src={ExamplePropertyOwner}
                     alt={language.syndicate.logo}
                     className="h-[100px]"
                   />
@@ -1245,7 +1248,7 @@ const CreateDeal = () => {
           data={{
             leftMenu: language?.v3?.deal?.create_deal,
             button: (
-              <button onClick={() => navigate(`/${metadata.role}`)}>
+              <button onClick={() => navigate(`/${kebabCase(metadata.role)}`)}>
                 {" "}
                 <CrossIcon stroke="#171717" className="w-6 h-6" />
               </button>
@@ -1630,7 +1633,7 @@ const CreateDeal = () => {
                   className="w-6 h-6"
                   onClick={() => {
                     setModalOpen(false);
-                    navigate(`/${metadata?.role?.toLowerCase()}`);
+                    navigate(`/${kebabCase(metadata?.role)}`);
                   }}
                 />
               </div>

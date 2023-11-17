@@ -87,9 +87,9 @@ const Home = ({ }: any) => {
           </div>
         </aside>
 
-        <aside className="mt-[15rem] screen500:mt-[5rem]" id={language.header.realtor}>
+        <aside className="mt-[15rem] screen500:mt-[5rem]" id={language.header.propertyOwner}>
           <h3 className="text-cyan-800 text-xl tracking-[0.03em] font-bold">
-            {language.landing.realtor}
+            {language.landing.propertyOwner}
           </h3>
           <h1 className="text-neutral-900 text-2xl tracking-[0.03em] font-bold my-2">
             3017 {language.landing.switchedToKanz}
@@ -105,7 +105,7 @@ const Home = ({ }: any) => {
               style={{ fontSize: "1.125rem", fontWeight: 500 }}
               className="bg-cyan-800 h-[56px] w-[173px] font-medium text-lg mt-6"
               htmlType="submit"
-              onClick={() => navigate(RoutesEnums.SIGNUP, { state: KanzRoles.REALTOR })}
+              onClick={() => navigate(RoutesEnums.SIGNUP, { state: KanzRoles.PROPERTY_OWNER })}
             >
               {language.buttons.getStart}
             </Button>

@@ -49,8 +49,9 @@ import { toast } from "react-toastify";
 import { toastUtil } from "../../utils/toast.utils";
 import { fileSize } from "../../utils/files.utils";
 import InvitesListing from "./InvitesListing";
+import { RoutesEnums } from "../../enums/routes.enum";
 
-const RealtorCase = ({ id, dealToken }: any) => {
+const PropertyOwnerCase = ({ id, dealToken }: any) => {
   const navigate = useNavigate();
   const language: any = useSelector((state: RootState) => state.language.value);
   const authToken: any = useSelector((state: RootState) => state.auth.value);
@@ -307,17 +308,13 @@ const RealtorCase = ({ id, dealToken }: any) => {
             <section className="w-[60%]">
               <div
                 className="w-full inline-flex pb-4 items-center gap-2 relative top-[-25px] cursor-pointer border-b-[1px] border-b-neutral-200"
-                onClick={() => navigate(-1)}
+                onClick={() => navigate(RoutesEnums.SYNDICATE_DASHBOARD)}
               >
                 <Chevrond stroke="#000" className="rotate-90 w-4 h-4" />
                 <small className="text-neutral-500 text-sm font-medium">
                   {language?.v3?.common?.investments}
                 </small>
               </div>
-              <div
-                className="w-full inline-flex flex-col pb-8 items-start gap-2"
-                onClick={() => navigate(-1)}
-              ></div>
               <div className="inline-flex justify-between w-full mb-4">
                 <h1 className="text-black font-medium text-2xl">
                   {deal?.title}
@@ -936,4 +933,4 @@ const RealtorCase = ({ id, dealToken }: any) => {
     </main>
   );
 };
-export default RealtorCase;
+export default PropertyOwnerCase;

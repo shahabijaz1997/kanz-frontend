@@ -28,7 +28,7 @@ const ReviewDeal = ({
         type:
           metadata.role === KanzRoles.STARTUP
             ? DealType.STARTUP
-            : DealType.REALTOR,
+            : DealType.PROPERTY_OWNER,
       };
       let { status, data } = await onReviewDeal(dealId, queryParams, authToken);
       if (status === 200) {
