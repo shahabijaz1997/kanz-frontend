@@ -21,7 +21,7 @@ interface Syndicate {
   handle: string;
   action: React.ReactNode;
 }
-const UserListingPopup = ({ approve, dealId, type, dealIdReal }: any) => {
+const UserListingPopup = ({ approve, dealId, type, dealIdReal, setLoader }: any) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const ref: any = useRef();
@@ -44,6 +44,8 @@ const UserListingPopup = ({ approve, dealId, type, dealIdReal }: any) => {
     };
   }, []);
 
+  
+
   const copyToClipboard = () => {
     let finalstring =
       RoutesEnums.FRONTEND_STATIC_LINK +
@@ -61,6 +63,7 @@ const UserListingPopup = ({ approve, dealId, type, dealIdReal }: any) => {
 
   const onSendInvite = async (syndId: any) => {
     try {
+      setLoader(true)
       const { status } = await postInviteSyn(
         {
           message: "You have been invited",
@@ -81,6 +84,8 @@ const UserListingPopup = ({ approve, dealId, type, dealIdReal }: any) => {
       if (error?.response?.status === 400)
         toast.warning(error?.response?.data?.status?.message, toastUtil);
     } finally {
+      setLoader(false)
+      
     }
   };
 

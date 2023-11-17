@@ -21,13 +21,19 @@ import EditIcon from "../../../../ts-icons/editIcon.svg";
 import CustomStatus from "../../../../shared/components/CustomStatus";
 import { getSyndicates } from "../../../../apis/syndicate.api";
 import { saveToken } from "../../../../redux-toolkit/slicer/auth.slicer";
+import SyndicateInfoDrawer from "../SyndicateInfoDrawer";
 
 
 
 const AllSyndicates = ({}: any) :any => {
 
 
-
+  const [childData, setChildData] = useState('');
+  
+  const handleChildData = (data:any) => {
+    // Do something with the data in the parent component
+    setChildData(data);
+  };
     const navigate = useNavigate();
     const dispatch = useDispatch();
     const language: any = useSelector((state: RootState) => state.language.value);
@@ -37,14 +43,9 @@ const AllSyndicates = ({}: any) :any => {
     const columns = ["Syndicate", "Total Deals", "Active Deals", "Raising Fund", "Formation Date", ""];
     const [loading, setLoading]: any = useState(false);
     const [invites, setInvites]: any = useState([]);
-    const [dealDetail, setDealDetail]: any = useState(null);
-    const [loadDrawer, setLoadingDrawer] = useState(false);
     const [syndicateInfo, setsyndicateInfo]: any = useState(null);
     const [isOpen, setOpen]: any = useState(false);
-    const [modalReplyOpen, setmodalReplyOpen]: any = useState(null);
-    const [modalOpen, setModalOpen]: any = useState(null);
-    const [CommentSubmitted, setCommentSubmitted]: any = useState(false);
-    const [currentDealId,setCurrentDealId]:any = useState (null)
+    
     const [pagination, setPagination] = useState({
         items_per_page: 5,
         total_items: [],
@@ -52,7 +53,14 @@ const AllSyndicates = ({}: any) :any => {
         total_pages: 0,
       });
     
-
+      useEffect(() => {
+        dispatch(saveDataHolder(""));
+        console.log("DRAWER", isOpen);
+      }, [isOpen]);
+      useEffect(() => {
+        dispatch(saveDataHolder(""));
+        console.log("Child Data", childData);
+      }, [childData]);
 
       useEffect(() => {
         dispatch(saveDataHolder(""));
@@ -87,10 +95,7 @@ const AllSyndicates = ({}: any) :any => {
                   [""]: (
                     <div
                     onClick={() => {
-                      navigate(
-                        `${RoutesEnums.SYNDICATE_DEAL_DETAIL}/${deal?.token}`,
-                        { state: deal?.type }
-                      );
+                     setOpen(true)
                     }}
                       className="bg-neutral-100 inline-flex items-center justify-center w-[30px] h-[30px] rounded-full transition-all hover:bg-cbc-transparent mr-10"
                     >
@@ -189,6 +194,47 @@ const AllSyndicates = ({}: any) :any => {
          />
        )}
      </section>
+     <SyndicateInfoDrawer syndicateInfo={{
+    "status": {
+        "code": 200,
+        "message": "Data successfully retrieved.",
+        "data": {
+            "id": 4,
+            "name": "Syndicate One",
+            "email": "naveed.fiaz+sy@whizzbridge.com",
+            "type": "Syndicate",
+            "status": "approved",
+            "language": "en",
+            "profile_states": {
+                "investor_type": "",
+                "account_confirmed": true,
+                "profile_completed": true,
+                "profile_current_step": "2",
+                "attachments_completed": true,
+                "questionnaire_completed": false,
+                "questionnaire_steps_completed": 0
+            },
+            "profile": {
+                "have_you_ever_raised": true,
+                "raised_amount": 3000000.0,
+                "no_times_raised": 2,
+                "profile_link": "google.com",
+                "dealflow": "10000",
+                "name": "Noman",
+                "tagline": "Expert in raising tech funds",
+                "logo": "/home/user/tech/kanz-api/storage/Sy/nd/SyndicateProfile/1/xf2ta9wdi4gou4tu49j7gk7o54ci",
+                "region_ids": [
+                    2
+                ],
+                "industry_ids": [
+                    2,
+                    3
+                ]
+            },
+            "role": "Syndicate"
+        }
+    }
+}} openDrawer={isOpen} isDrawerOpen={setOpen} onData={handleChildData} />
      </>
       )
  

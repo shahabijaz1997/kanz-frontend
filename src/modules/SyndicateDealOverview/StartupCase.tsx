@@ -64,13 +64,13 @@ const StartupCase = ({ id, dealToken }: any) => {
   const [modalOpenComment, setmodalOpenComment]: any = useState(null);
 
   const [amount, setAmount] = useState(0);
-  const [selectedCurrency, setSelectedCurrency] = useState('USD');
+  const [selectedCurrency, setSelectedCurrency] = useState("USD");
 
-  const handleAmountChange = (event:any) => {
+  const handleAmountChange = (event: any) => {
     setAmount(event.target.value);
   };
 
-  const handleCurrencyChange = (event:any) => {
+  const handleCurrencyChange = (event: any) => {
     setSelectedCurrency(event.target.value);
   };
   const [changes, setChanges]: any = useState({
@@ -242,37 +242,178 @@ const StartupCase = ({ id, dealToken }: any) => {
   const getRoleBasedUI = () => {
     return (
       <React.Fragment>
-        {deal?.instrument_type && (
+
+{deal?.equity_type && (
+  <>
+    {deal?.instrument_type && (
+      <div className="w-full inline-flex justify-between items-center border-b-[1px] border-b-neutral-200 py-3">
+        <h3 className="text-neutral-900 font-medium text-sm">
+          {language?.v3?.deal?.instrument_type}
+        </h3>
+        <p className="text-neutral-900 font-normal text-sm capitalize">
+          {deal?.instrument_type || language?.v3?.common?.not_added}
+        </p>
+      </div>
+    )}
+    {deal?.stage && (
+      <div className="w-full inline-flex justify-between items-center border-b-[1px] border-b-neutral-200 py-3">
+        <h3 className="text-neutral-900 font-medium text-sm">
+          {language?.v3?.table?.stage}
+        </h3>
+        <p className="text-neutral-900 font-normal text-sm capitalize">
+          {deal?.stage || language?.v3?.common?.not_added}
+        </p>
+      </div>
+    )}
+    {deal?.selling_price && (
+      <div className="w-full inline-flex justify-between items-center border-b-[1px] border-b-neutral-200 py-3">
+        <h3 className="text-neutral-900 font-medium text-sm">
+          {"Deal Target"}
+        </h3>
+        <p className="text-neutral-900 font-normal text-sm capitalize">
+          {comaFormattedNumber(deal?.selling_price) ||
+            language?.v3?.common?.not_added}
+        </p>
+      </div>
+    )}
+    {deal?.valuation && (
+      <div className="w-full inline-flex justify-between items-center border-b-[1px] border-b-neutral-200 py-3">
+        <h3 className="text-neutral-900 font-medium text-sm">
+          {language?.v3?.table?.valuation}
+        </h3>
+        <p className="text-neutral-900 font-normal text-sm capitalize">
+          ${comaFormattedNumber(deal?.valuation)} ({deal?.equity_type})
+        </p>
+      </div>
+    )}
+    {deal?.valuation_type && (
+      <div className="w-full inline-flex justify-between items-center border-b-[1px] border-b-neutral-200 py-3">
+        <h3 className="text-neutral-900 font-medium text-sm">
+          {language?.v3?.table?.type}
+        </h3>
+        <p className="text-neutral-900 font-normal text-sm capitalize">
+          {deal?.valuation_type}
+        </p>
+      </div>
+    )}
+    {deal?.terms &&  (
+      <div className="w-full inline-flex justify-between items-center border-b-[1px] border-b-neutral-200 py-3">
+        <h3 className="text-neutral-900 font-medium text-sm">
+          {"Minimum Check Size"}
+        </h3>
+        <p className="text-neutral-900 font-normal text-sm capitalize">
+        {deal.terms[0]?.is_enabled ? (numberFormatter(deal.terms[0]?.value) || "Yes") : "No"}
+        </p>
+      </div>
+    )}
+    {deal?.terms &&  (
+      <div className="w-full inline-flex justify-between items-center border-b-[1px] border-b-neutral-200 py-3">
+        <h3 className="text-neutral-900 font-medium text-sm">
+          {"Pro Rata"}
+        </h3>
+        <p className="text-neutral-900 font-normal text-sm capitalize">
+          {deal.terms[1]?.is_enabled ? "Yes" : "No"}
+        </p>
+      </div>
+    )}
+  </>
+)}   
+
+{deal?.safe_type && (
+  <>
+    {deal?.instrument_type && (
+      <div className="w-full inline-flex justify-between items-center border-b-[1px] border-b-neutral-200 py-3">
+        <h3 className="text-neutral-900 font-medium text-sm">
+          {language?.v3?.deal?.instrument_type}
+        </h3>
+        <p className="text-neutral-900 font-normal text-sm capitalize">
+          {deal?.instrument_type || language?.v3?.common?.not_added}
+        </p>
+      </div>
+    )}
+
+    {deal?.safe_type && (
+      <div className="w-full inline-flex justify-between items-center border-b-[1px] border-b-neutral-200 py-3">
+        <h3 className="text-neutral-900 font-medium text-sm">
+          {language?.v3?.deal?.instrument_type}
+        </h3>
+        <p className="text-neutral-900 font-normal text-sm capitalize">
+          {deal?.safe_type || language?.v3?.common?.not_added}
+        </p>
+      </div>
+    )}
+
+  {deal?.selling_price && (
           <div className="w-full inline-flex justify-between items-center border-b-[1px] border-b-neutral-200 py-3">
             <h3 className="text-neutral-900 font-medium text-sm">
-              {language?.v3?.deal?.instrument_type}
+              {language?.v3?.table?.target}
             </h3>
             <p className="text-neutral-900 font-normal text-sm capitalize">
-              {deal?.instrument_type || language?.v3?.common?.not_added}
+              {numberFormatter(deal?.selling_price) ||
+                language?.v3?.common?.not_added}
             </p>
           </div>
         )}
-        {deal?.stage && (
-          <div className="w-full inline-flex justify-between items-center border-b-[1px] border-b-neutral-200 py-3">
-            <h3 className="text-neutral-900 font-medium text-sm">
-              {language?.v3?.table?.stage}
-            </h3>
-            <p className="text-neutral-900 font-normal text-sm capitalize">
-              {deal?.stage || language?.v3?.common?.not_added}
-            </p>
-          </div>
-        )}
-        {deal?.valuation && (
-          <div className="w-full inline-flex justify-between items-center border-b-[1px] border-b-neutral-200 py-3">
-            <h3 className="text-neutral-900 font-medium text-sm">
-              {language?.v3?.table?.valuation}
-            </h3>
-            <p className="text-neutral-900 font-normal text-sm capitalize">
-              ${comaFormattedNumber(deal?.valuation)} ({deal?.equity_type})
-            </p>
-          </div>
-        )}
-        {deal?.selling_price && (
+
+    {deal?.terms && (
+      <div className="w-full inline-flex justify-between items-center border-b-[1px] border-b-neutral-200 py-3">
+        <h3 className="text-neutral-900 font-medium text-sm">
+          {"Valuation Cap"}
+        </h3>
+        <p className="text-neutral-900 font-normal text-sm capitalize">
+          {deal.terms[0]?.is_enabled ? (deal.terms[0]?.value || "Yes") : "No"}
+        </p>
+      </div>
+    )}
+
+    {deal?.terms &&  (
+      <div className="w-full inline-flex justify-between items-center border-b-[1px] border-b-neutral-200 py-3">
+        <h3 className="text-neutral-900 font-medium text-sm">
+          {"Discount"}
+        </h3>
+        <p className="text-neutral-900 font-normal text-sm capitalize">
+          {deal.terms[1]?.is_enabled ? (deal.terms[1]?.value || "Yes") : "No"}
+        </p>
+      </div>
+    )}
+
+    {deal?.terms &&  (
+      <div className="w-full inline-flex justify-between items-center border-b-[1px] border-b-neutral-200 py-3">
+        <h3 className="text-neutral-900 font-medium text-sm">
+          {"MFN Only"}
+        </h3>
+        <p className="text-neutral-900 font-normal text-sm capitalize">
+          {deal.terms[2]?.is_enabled ? (Object.keys(deal.terms[2]?.value).length > 0 ? "Yes" : "No") : "No"}
+        </p>
+      </div>
+    )}
+
+    {deal?.terms &&  (
+      <div className="w-full inline-flex justify-between items-center border-b-[1px] border-b-neutral-200 py-3">
+        <h3 className="text-neutral-900 font-medium text-sm">
+          {"Minimum Check Size"}
+        </h3>
+        <p className="text-neutral-900 font-normal text-sm capitalize">
+          {deal.terms[3]?.is_enabled ? (deal.terms[3]?.value || "Yes") : "No"}
+        </p>
+      </div>
+    )}
+
+    {deal?.terms  && (
+      <div className="w-full inline-flex justify-between items-center border-b-[1px] border-b-neutral-200 py-3">
+        <h3 className="text-neutral-900 font-medium text-sm">
+          {"Pro Rata"}
+        </h3>
+        <p className="text-neutral-900 font-normal text-sm capitalize">
+          {deal.terms[4]?.is_enabled ? (Object.keys(deal.terms[4]?.value).length > 0 ? "Yes" : "No") : "No"}
+        </p>
+      </div>
+    )}
+  </>
+)}
+  
+      
+        {!deal?.equity_type && !deal?.safe_type && deal?.selling_price &&  (
           <div className="w-full inline-flex justify-between items-center border-b-[1px] border-b-neutral-200 py-3">
             <h3 className="text-neutral-900 font-medium text-sm">
               {language?.v3?.table?.sellingPrice}
@@ -649,7 +790,7 @@ const StartupCase = ({ id, dealToken }: any) => {
                   )}
                 </section>
               )}
-              <InvestmentCalculator/>
+              <InvestmentCalculator />
               <div className="mb-4 mt-10">
                 {deal?.status === DealStatus.LIVE ? (
                   <Button
@@ -676,11 +817,9 @@ const StartupCase = ({ id, dealToken }: any) => {
                 )}
               </div>
               <div className="w-full mt-8 mb-4">
-                <DealActivity/>
+                <DealActivity />
               </div>
             </section>
-           
-
 
             {/* Invisible Section */}
             <section className="w-[10%]"></section>
@@ -725,47 +864,54 @@ const StartupCase = ({ id, dealToken }: any) => {
                 </React.Fragment>
               )}
 
-                    
               <aside className="mx-4">
-              <section className="mb-4 mt-10">
-                <div className="font-semibold text-sm">Invest</div>
-                <div className=" text-xs  text-neutral-500 mb-2">
-                  Minimum is $2500 Invest by Oct 2
-                </div>
-                <div className="border-neutral-500 border-[1px] rounded-md min-w-full bg-white px-2 justify-between flex">
-                  <label className="w-full">
-                    <input className="min-w-full h-9 no-spin-button"
-                    pattern="[0-9]*"
-                    placeholder={
-                      selectedCurrency === 'USD' ? '$ 00.00' : 'AED 00.00'
-                    }
-                    onKeyDown={(evt) => ["e", "E", "+", "-"].includes(evt.key) && evt.preventDefault()}
-                      min="0"
-                      type="number"
-                      value={amount}
-                      onChange={handleAmountChange}
-                    />
-                  </label>
-                  <label >
-                    <select
-                    className="h-9"
-                      value={selectedCurrency}
-                      onChange={handleCurrencyChange}
-                    >
-                      <option className="text-md font-light" value="USD">USD</option>
-                      <option className="text-md font-light" value="AED">AED</option>
-                    </select>
-                  </label>
-                </div>
-                <Button 
+                <section className="mb-4 mt-10">
+                  <div className="font-semibold text-sm">Invest</div>
+                  <div className=" text-xs  text-neutral-500 mb-2">
+                    Minimum is $2500 Invest by Oct 2
+                  </div>
+                  <div className="border-neutral-500 border-[1px] rounded-md min-w-full bg-white px-2 justify-between flex">
+                    <label className="w-full">
+                      <input
+                        className="min-w-full h-9 no-spin-button"
+                        pattern="[0-9]*"
+                        placeholder={
+                          selectedCurrency === "USD" ? "$ 00.00" : "AED 00.00"
+                        }
+                        onKeyDown={(evt) =>
+                          ["e", "E", "+", "-"].includes(evt.key) &&
+                          evt.preventDefault()
+                        }
+                        min="0"
+                        type="number"
+                        value={amount}
+                        onChange={handleAmountChange}
+                      />
+                    </label>
+                    <label>
+                      <select
+                        className="h-9"
+                        value={selectedCurrency}
+                        onChange={handleCurrencyChange}
+                      >
+                        <option className="text-md font-light" value="USD">
+                          USD
+                        </option>
+                        <option className="text-md font-light" value="AED">
+                          AED
+                        </option>
+                      </select>
+                    </label>
+                  </div>
+                  <Button
                     onClick={() => {
-                      console.log("Clicked")
+                      console.log("Clicked");
                     }}
                     className="w-full mt-4"
                   >
                     Invest Now
                   </Button>
-              </section>
+                </section>
               </aside>
 
               <aside className="border-[1px] border-neutral-200 rounded-md w-full p-3 mt-5">

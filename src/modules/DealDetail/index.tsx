@@ -123,6 +123,7 @@ const DealDetail = ({}: any) => {
                     dealId={id}
                     type={KanzRoles.SYNDICATE}
                     dealIdReal={dealDetail?.id}
+                    setLoader={setLoading}
                   />
                 </div>
 
