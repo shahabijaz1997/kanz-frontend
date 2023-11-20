@@ -1,57 +1,55 @@
 import React, { useLayoutEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { KanzRoles } from "../../enums/roles.enum";
-import { RootState } from "../../redux-toolkit/store/store";
-import Header from "../../shared/components/Header";
-import Sidebar from "../../shared/components/Sidebar";
-import Chevrond from "../../ts-icons/chevrond.svg";
-import Button from "../../shared/components/Button";
-import Spinner from "../../shared/components/Spinner";
-import ArrowIcon from "../../ts-icons/arrowIcon.svg";
-import DownloadIcon from "../../ts-icons/downloadIcon.svg";
-import Modal from "../../shared/components/Modal";
+import { KanzRoles } from "../../../enums/roles.enum";
+import { RootState } from "../../../redux-toolkit/store/store";
+import Header from "../../../shared/components/Header";
+import Sidebar from "../../../shared/components/Sidebar";
+import Chevrond from "../../../ts-icons/chevrond.svg";
+import Button from "../../../shared/components/Button";
+import Spinner from "../../../shared/components/Spinner";
+import ArrowIcon from "../../../ts-icons/arrowIcon.svg";
+import DownloadIcon from "../../../ts-icons/downloadIcon.svg";
+import Modal from "../../../shared/components/Modal";
 import CrossIcon from "../../ts-icons/crossIcon.svg";
-import CurrencySVG from "../../assets/svg/currency.svg";
-import ImgSVG from "../../assets/svg/img.svg";
-import BedSVG from "../../assets/svg/bed.svg";
-import ChefSVG from "../../assets/svg/chef.svg";
-import TubSVG from "../../assets/svg/tub.svg";
-import CarSVG from "../../assets/svg/car.svg";
-import SwimSVG from "../../assets/svg/swim.svg";
-import BagSVG from "../../assets/svg/bag.svg";
-import DollarSVG from "../../assets/svg/dol.svg";
-import ChartSVG from "../../assets/svg/chart.svg";
-import PiChartSVG from "../../assets/svg/pichart.svg";
+import CurrencySVG from "../../../assets/svg/currency.svg";
+import ImgSVG from "../../../assets/svg/img.svg";
+import BedSVG from "../../../assets/svg/bed.svg";
+import ChefSVG from "../../../assets/svg/chef.svg";
+import TubSVG from "../../../assets/svg/tub.svg";
+import CarSVG from "../../../assets/svg/car.svg";
+import SwimSVG from "../../../assets/svg/swim.svg";
+import BagSVG from "../../../assets/svg/bag.svg";
+import DollarSVG from "../../../assets/svg/dol.svg";
+import ChartSVG from "../../../assets/svg/chart.svg";
+import PiChartSVG from "../../../assets/svg/pichart.svg";
 import FileSVG from "../../assets/svg/file.svg";
-import ExternalSvg from "../../assets/svg/externl.svg";
+import ExternalSvg from "../../../assets/svg/externl.svg";
 
 import {
   comaFormattedNumber,
   formatDate,
   numberFormatter,
   timeAgo,
-} from "../../utils/object.utils";
+} from "../../../utils/object.utils";
 import {
   ApplicationStatus,
   DealStatus,
   FileType,
-} from "../../enums/types.enum";
+} from "../../../enums/types.enum";
 import {
   addCommentOnDeal,
   getDealDetail,
   signOff,
   syndicateApprove,
-} from "../../apis/deal.api";
+} from "../../../apis/deal.api";
 import UploadIcon from "../../ts-icons/uploadIcon.svg";
 import BinIcon from "../../ts-icons/binIcon.svg";
 import { toast } from "react-toastify";
-import { toastUtil } from "../../utils/toast.utils";
-import { fileSize } from "../../utils/files.utils";
-import InvitesListing from "./InvitesListing";
-import { RoutesEnums } from "../../enums/routes.enum";
-import InvestmentCalculator from "./InvestmentCalculator";
-import DealActivity from "./DealActivity";
+import { toastUtil } from "../../../utils/toast.utils";
+import { fileSize } from "../../../utils/files.utils";
+
+import { RoutesEnums } from "../../../enums/routes.enum";
 
 const PropertyOwnerCase = ({ id, dealToken }: any) => {
   const navigate = useNavigate();
@@ -88,12 +86,6 @@ const PropertyOwnerCase = ({ id, dealToken }: any) => {
   useLayoutEffect(() => {
     onGetdeal();
   }, [deal?.id]);
-
-  const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file: any = e.target.files?.[0];
-    setFileInformation(file);
-    e.target.value = "";
-  };
 
   const setFileInformation = async (file: File) => {
     let size = fileSize(file.size, "mb");
@@ -142,92 +134,9 @@ const PropertyOwnerCase = ({ id, dealToken }: any) => {
     }
   };
 
-  const postSignOff = async () => {
-    try {
-      let allFiles = files.map((file: any) => file.file);
-      const formData = new FormData();
-      formData.append("invite[status]", "accepted");
-      for (let i = 0; i < allFiles.length; i++) {
-        const element = allFiles[i];
-        formData.append(
-          `invite[deal_attachments][${i}]file`,
-          element,
-          element?.name
-        );
-        formData.append(
-          `invite[deal_attachments][${i}]attachment_kind`,
-          element?.type.includes("image") ? "image" : "pdf"
-        );
-        formData.append(`invite[deal_attachments][${i}]name`, element?.name);
-      }
-      let { status, data } = await syndicateApprove(
-        formData,
-        deal?.id,
-        deal?.invite?.id,
-        authToken
-      );
-      if (status === 200) {
-        toast.success("Congratulations! Approved", toastUtil);
-        setModalOpen3(false);
-      }
-    } catch (error) {
-      console.log(error);
-    } finally {
-      onGetdeal();
-      setLoading(false);
-      setChanges({ comment: "", action: "", document: null });
-    }
-  };
 
-  const onRequestChange = async () => {
-    try {
-      setLoading(true);
-      let payload = {
-        message: changes.comment,
-        invite_id: deal?.invite?.id,
-      };
-      let { status, data } = await addCommentOnDeal(
-        Number(deal?.id),
-        authToken,
-        payload
-      );
-      if (status === 200) {
-        toast.success(language?.v3?.common?.suces_msg, toastUtil);
-        setModalOpen(false);
-      }
-    } catch (error) {
-      console.log(error);
-    } finally {
-      onGetdeal();
-      setLoading(false);
-      setChanges({ comment: "", action: "", document: null });
-    }
-  };
-  const onAddCommentOnDeal = async () => {
-    try {
-      setLoading(true);
-      let payload = {
-        message: changes.comment,
-        invite_id: deal?.invite?.id,
-        thread_id: deal?.comments[0]?.id,
-      };
-      let { status, data } = await addCommentOnDeal(
-        Number(deal?.id),
-        authToken,
-        payload
-      );
-      if (status === 200) {
-        toast.success(language?.v3?.common?.suces_msg, toastUtil);
-        setModalOpen(false);
-      }
-    } catch (error) {
-      console.log(error);
-    } finally {
-      onGetdeal();
-      setLoading(false);
-      setChanges({ comment: "", action: "", document: null });
-    }
-  };
+  const formattedAddress = `${deal?.address?.street_address}, ${deal?.address?.building_name}, ${deal?.address?.area}, ${deal?.address?.city}, ${deal?.address?.state}, ${deal?.address?.country_name}`;
+  
 
   const getRoleBasedUI = () => {
     return (
@@ -300,10 +209,10 @@ const PropertyOwnerCase = ({ id, dealToken }: any) => {
   return (
     <main className="h-full max-h-full overflow-y-hidden">
       <section>
+        
         <Header />
       </section>
-      <aside className="w-full h-full flex items-start justify-start" style={{ height: "calc(100% - 70px)"}}>
-      {user.type?.toLowerCase() === "investor" ? <Sidebar type={KanzRoles.INVESTOR} /> : <Sidebar type={KanzRoles.SYNDICATE} />}
+      <div className="w-full h-full flex justify-center" style={{ height: "calc(100% - 70px)"}}>
         {loading ? (
           <div
             className="absolute left-0 top-0 w-full h-full grid place-items-center"
@@ -313,20 +222,11 @@ const PropertyOwnerCase = ({ id, dealToken }: any) => {
           </div>
         ) : (
           <section
-            className="bg-cbc-auth h-full pt-[5rem] px-[5rem] flex items-start overflow-y-auto"
-            style={{ width: "calc(100% - 250px)" }}
+            className="bg-cbc-auth h-full w-full pt-[5rem] px-[5rem] flex items-start overflow-y-auto"
+            
           >
             {/* Section Left */}
             <section className="w-[60%]">
-              <div
-                className="w-full inline-flex pb-4 items-center gap-2 relative top-[-25px] cursor-pointer border-b-[1px] border-b-neutral-200"
-                onClick={() => user.type === "Investor" ? navigate(RoutesEnums.INVESTOR_DEALS):navigate(RoutesEnums.SYNDICATE_DASHBOARD) }
-              >
-                <Chevrond stroke="#000" className="rotate-90 w-4 h-4" />
-                <small className="text-neutral-500 text-sm font-medium">
-                  {language?.v3?.common?.investments}
-                </small>
-              </div>
               <div className="inline-flex justify-between w-full mb-4">
                 <h1 className="text-black font-medium text-2xl">
                   {deal?.title}
@@ -338,6 +238,9 @@ const PropertyOwnerCase = ({ id, dealToken }: any) => {
                   {comaFormattedNumber(deal?.size)}&nbsp;SQFT
                 </Button>
               </div>
+              <div className="mb-4 mt-4 text-sm">
+                {formattedAddress}
+                </div>
               {/* Images Section */}
               {deal?.docs?.length && (
                 <section className="h-[500px] rounded-[8px] overflow-hidden relative">
@@ -457,7 +360,7 @@ const PropertyOwnerCase = ({ id, dealToken }: any) => {
                   </section>
                 )}
               </aside>
-              <section className="mt-10 rounded-md px-5 py-3 mb-6">
+              <section className="mt-10 rounded-md px-5 py-3 mb-6 blur-content prevent-select">
                 {React.Children.toArray(
                   deal?.unique_selling_points?.map((usp: any) => {
                     return (
@@ -478,16 +381,12 @@ const PropertyOwnerCase = ({ id, dealToken }: any) => {
                   })
                 )}
               </section>
-              {deal?.status === DealStatus.LIVE && (
-              <>
-              <InvestmentCalculator />
-              
-              <section className="mb-4 mt-10">
+              <section className="mb-4 mt-10 blur-content prevent-select" >
                 <div className="font-semibold text-sm">Invest</div>
                 <div className=" text-xs  text-neutral-500 mb-2">
                   Minimum is $2500 Invest by Oct 2
                 </div>
-                <div className="border-neutral-500 border-[1px] rounded-md min-w-full px-2 justify-between flex bg-white">
+                <div className="border-neutral-500 border-[1px] rounded-md min-w-full pl-2 justify-between flex bg-white">
                   <label className="w-full">
                     <input className="min-w-full h-9 no-spin-button"
                     pattern="[0-9]*"
@@ -512,18 +411,16 @@ const PropertyOwnerCase = ({ id, dealToken }: any) => {
                     </select>
                   </label>
                 </div>
-              </section></>
-              )}
-              
-              <section className="mt-10 ">
-                <h1 className="text-black font-medium text-2xl mb-3">
+              </section>
+              <section className="mt-10 blur-content prevent-select ">
+                <h1 className="text-black font-medium text-2xl mb-3 ">
                   About the Property
                 </h1>
                 <p className="text-sm text-neutral-500 font-medium">
                   {deal?.description}
                 </p>
               </section>
-              <div className="inline-flex justify-between w-full flex-col my-10">
+              <div className="inline-flex justify-between w-full flex-col my-10 blur-content prevent-select">
                 <h1 className="text-black font-medium text-2xl mb-3">
                   {language?.v3?.common?.risk_disc}
                 </h1>
@@ -532,35 +429,16 @@ const PropertyOwnerCase = ({ id, dealToken }: any) => {
                   dangerouslySetInnerHTML={{ __html: deal?.terms }}
                 ></p>
               </div>
-              {user.type.toLowerCase() ==="syndicate" && (
-                <div className="w-full mt-8 mb-4">
-                  <DealActivity />
-                </div>
-              )}
-              <div className="mb-4 mt-10">
-              {deal?.status === DealStatus.LIVE ? (
-                <Button
-                  onClick={() => {
-                    setModalOpen2(true);
-                  }}
+              <div className="mb-4 mt-10 blur-content prevent-select">
+             
+                <Button 
+                  disabled
+                  title="Sign in to start investing"
                   className="w-full"
                 >
                   Invest Now
                 </Button>
-              ) : (
-                <React.Fragment>
-                  {deal?.invite?.status !== DealStatus.ACCEPTED && (
-                    <Button
-                      onClick={() => {
-                        setModalOpen2(true);
-                      }}
-                      className="w-full"
-                    >
-                      Approve
-                    </Button>
-                  )}
-                </React.Fragment>
-              )}
+              
               </div>
             </section>
 
@@ -569,72 +447,51 @@ const PropertyOwnerCase = ({ id, dealToken }: any) => {
 
             {/* Section Right */}
             <section className="w-[30%]">
-              {/* Show/Hide based on some conditions */}
-              {user.type.toLowerCase() === "syndicate" &&
-                  deal?.status === DealStatus.LIVE && (
-                    <div className="w-full inline-flex justify-end gap-4">
-                      <div className="relative z-10">
-                        <InvitesListing
-                          approve={true}
-                          dealId={dealToken}
-                          type={KanzRoles.SYNDICATE}
-                          dealIdReal={deal?.id}
-                        />
-                      </div>
-                    </div>
-                  )}
 
-                {user.type.toLowerCase() === "syndicate" &&
-                  deal?.status !== DealStatus.LIVE && (
-                    <div className="w-full inline-flex justify-end gap-4">
-                      {deal?.invite?.status !== DealStatus.ACCEPTED && (
-                        <React.Fragment>
-                          <Button
-                            type="outlined"
-                            onClick={() => setModalOpen(true)}
-                          >
-                            {language?.v3?.button?.req_change}
-                          </Button>
-                          <Button onClick={() => setModalOpen2(true)}>
-                            {language?.v3?.button?.interested}
-                          </Button>
-                        </React.Fragment>
-                      )}
-                    </div>
-                  )}
-                  {deal?.status === DealStatus.LIVE && (
-                        <section className="mb-4 mt-10">
-                        <div className="font-semibold text-sm">Invest</div>
-                        <div className=" text-xs  text-neutral-500 mb-2">
-                          Minimum is $2500 Invest by Oct 2
-                        </div>
-                        <div className="border-neutral-500 border-[1px] rounded-md min-w-full px-2 pr-10 justify-between flex bg-white">
-                          <label className="w-full">
-                            <input className="min-w-full h-9 no-spin-button"
-                            pattern="[0-9]*"
-                            placeholder={
-                              selectedCurrency === 'USD' ? '$ 00.00' : 'AED 00.00'
-                            }
-                            onKeyDown={(evt) => ["e", "E", "+", "-"].includes(evt.key) && evt.preventDefault()}
-                              min="0"
-                              type="number"
-                              value={amount}
-                              onChange={handleAmountChange}
-                            />
-                          </label>
-                          <label className="w-[10%]">
-                            <select
-                            className="h-9"
-                              value={selectedCurrency}
-                              onChange={handleCurrencyChange}
-                            >
-                              <option className="text-md font-light" value="USD">USD</option>
-                              <option className="text-md font-light" value="AED">AED</option>
-                            </select>
-                          </label>
-                        </div>
-                      </section>
-                  )}
+              {/* Show/Hide based on some conditions */}
+               <section className="mb-4 mt-10 blur-content  prevent-select" >
+                <div className="font-semibold text-sm">Invest</div>
+                <div className=" text-xs  text-neutral-500 mb-2">
+                  Minimum is $2500 Invest by Oct 2
+                </div>
+                <div className="border-neutral-500 border-[1px] rounded-md min-w-full pl-2 justify-between flex bg-white ">
+                  <label className="w-full">
+                    <input className="min-w-full h-9 no-spin-button"
+                    disabled
+                    pattern="[0-9]*"
+                    placeholder={
+                      selectedCurrency === 'USD' ? '$ 00.00' : 'AED 00.00'
+                    }
+                    onKeyDown={(evt) => ["e", "E", "+", "-"].includes(evt.key) && evt.preventDefault()}
+                      min="0"
+                      type="number"
+                      value={amount}
+                      onChange={handleAmountChange}
+                    />
+                  </label>
+                  <label className="w-[10%]">
+                    <select
+                    className="h-9"
+                      value={selectedCurrency}
+                      onChange={handleCurrencyChange}
+                    >
+                      <option className="text-md font-light" value="USD">USD</option>
+                      <option className="text-md font-light" value="AED">AED</option>
+                    </select>
+                  </label>
+                </div>
+                <div className="mb-4 mt-10">
+             
+             <Button 
+               disabled
+               title="Sign in to start investing"
+               className="w-full"
+             >
+               Invest Now
+             </Button>
+           
+           </div>
+              </section>
               <aside className="border-[1px] border-neutral-200 rounded-md w-full p-3 mt-5">
                 <h2 className="text-neutral-700 text-xl font-medium">
                   {language?.v3?.common?.invest_details}
@@ -662,7 +519,7 @@ const PropertyOwnerCase = ({ id, dealToken }: any) => {
                                 <div className="text-sm text-black font-medium ">
                                   {language?.v3?.button?.view}
                                 </div>
-                                <ArrowIcon stroke="#000" />
+                                <ArrowIcon  />
                               </h4>
                               <h2
                                 className="text-sm font-medium text-neutral-500 max-w-full truncate"
@@ -693,7 +550,7 @@ const PropertyOwnerCase = ({ id, dealToken }: any) => {
                 </aside>
               )}
               {deal?.external_links && (
-                <aside className="mt-5">
+                <aside className="mt-5 blur-content prevent-select">
                   {" "}
                   <h2 className="text-neutral-700 text-xl pb-2 font-medium">
                     Property Links
@@ -784,245 +641,9 @@ const PropertyOwnerCase = ({ id, dealToken }: any) => {
             </section>
           </section>
         )}
-      </aside>
+      </div>
 
-      <Modal show={modalOpen ? true : false} className="w-full">
-        <div
-          className="rounded-md overflow-hidden inline-grid place-items-center absolute top-1/2 left-1/2 translate-x-[-50%] translate-y-[-50%]"
-          style={{ backgroundColor: "rgba(0, 0, 0, 0.078" }}
-        >
-          <aside className="bg-white w-[400px] rounded-md h-full">
-            <header className="bg-cbc-grey-sec h-16 py-2 px-3 inline-flex w-full justify-between items-center">
-              <h3 className="text-xl font-medium text-neutral-700">
-                Request Changes
-              </h3>
-              <div
-                className="bg-white h-8 w-8 border-[1px] border-black rounded-md shadow shadow-cs-6 p-1 cursor-pointer"
-                onClick={() => {
-                  setModalOpen(false);
-                  setChanges({ comment: "", action: "", document: null });
-                  // setFiles([]);
-                }}
-              >
-                <CrossIcon stroke="#000" />
-              </div>
-            </header>
-
-            <section className="py-3 px-4">
-              <div className="mb-6">
-                <label
-                  htmlFor=""
-                  className="text-neutral-900 font-medium text-sm"
-                >
-                  Add Comment
-                </label>
-                <textarea
-                  value={changes?.comment}
-                  onChange={(e) =>
-                    setChanges((prev: any) => {
-                      return { ...prev, comment: e.target.value };
-                    })
-                  }
-                  placeholder="Add Comment"
-                  className=" h-[100px] mt-1 shadow-sm appearance-none border border-neutral-300 rounded-md w-full py-2 px-3 text-gray-500 leading-tight focus:outline-none focus:shadow-outline"
-                ></textarea>
-              </div>
-            </section>
-
-            <footer className="w-full inline-flex justify-between gap-3 py-2 px-3 w-full">
-              <Button
-                disabled={!changes.comment}
-                className="w-full !py-1"
-                divStyle="flex items-center justify-center w-full"
-                onClick={() => {
-                  onRequestChange();
-                  setModalOpen(false);
-                }}
-              >
-                {language.buttons.submit}
-              </Button>
-            </footer>
-          </aside>
-        </div>
-      </Modal>
-      <Modal show={modalOpenComment ? true : false} className="w-full">
-        <div
-          className="rounded-md overflow-hidden inline-grid place-items-center absolute top-1/2 left-1/2 translate-x-[-50%] translate-y-[-50%]"
-          style={{ backgroundColor: "rgba(0, 0, 0, 0.078" }}
-        >
-          <aside className="bg-white w-[400px] rounded-md h-full">
-            <section className="py-3 px-4">
-              <header className="h-16 py-2 px-3 inline-flex w-full justify-between items-center">
-                <h3 className="text-xl font-medium text-neutral-700">Reply</h3>
-                <div
-                  className="bg-white h-8 w-8 border-[1px] border-black rounded-md shadow shadow-cs-6 p-1 cursor-pointer"
-                  onClick={() => {
-                    setmodalOpenComment(false);
-                    setChanges({ comment: "", action: "", document: null });
-                    // setFiles([]);
-                  }}
-                >
-                  <CrossIcon stroke="#000" />
-                </div>
-              </header>
-              <div className="mb-6">
-                <textarea
-                  value={changes?.comment}
-                  onChange={(e) =>
-                    setChanges((prev: any) => {
-                      return { ...prev, comment: e.target.value };
-                    })
-                  }
-                  placeholder="Add Reply"
-                  className=" h-[100px] mt-1 shadow-sm appearance-none border border-neutral-300 rounded-md w-full py-2 px-3 text-gray-500 leading-tight focus:outline-none focus:shadow-outline"
-                ></textarea>
-              </div>
-            </section>
-
-            <footer className="w-full inline-flex justify-between gap-3 py-2 px-3 w-full">
-              <Button
-                disabled={!changes.comment}
-                className="w-full !py-1"
-                divStyle="flex items-center justify-center w-full"
-                onClick={() => {
-                  onAddCommentOnDeal();
-                  setmodalOpenComment(false);
-                }}
-              >
-                {"Reply"}
-              </Button>
-            </footer>
-          </aside>
-        </div>
-      </Modal>
-      <Modal show={modalOpen2 ? true : false} className="w-full">
-        <div
-          className="rounded-md overflow-hidden inline-grid place-items-center absolute top-1/2 left-1/2 translate-x-[-50%] translate-y-[-50%]"
-          style={{ backgroundColor: "rgba(0, 0, 0, 0.078" }}
-        >
-          <aside className="bg-white w-[400px] rounded-md h-full">
-            <section className="py-3 px-10">
-              <div className="mb-6 pt-5 text-center">
-                <label
-                  htmlFor=""
-                  className="text-neutral-900 text-center font-bold text-xl"
-                >
-                  Deal Approved by You!
-                </label>
-                <p className="pt-5">
-                  You've successfully approved the deal. Now you can upload the
-                  required document. Click “Continue” to upload the documents
-                </p>
-              </div>
-            </section>
-
-            <footer className="w-full inline-flex justify-center gap-3 py-2 px-3 w-full">
-              <Button
-                className="w-full !py-1"
-                divStyle="flex items-center justify-center w-6/12"
-                onClick={() => {
-                  setModalOpen2(false);
-                  setModalOpen3(true);
-                }}
-              >
-                Continue
-              </Button>
-            </footer>
-          </aside>
-        </div>
-      </Modal>
-      <Modal show={modalOpen3 ? true : false} className="w-full">
-        <div
-          className="rounded-md overflow-hidden inline-grid place-items-center absolute top-1/2 left-1/2 translate-x-[-50%] translate-y-[-50%]"
-          style={{ backgroundColor: "rgba(0, 0, 0, 0.078" }}
-        >
-          <aside className="bg-white w-[400px] rounded-md h-full">
-            <header className="bg-cbc-grey-sec h-16 py-2 px-3 inline-flex w-full justify-between items-center">
-              <h3 className="text-xl font-medium text-neutral-700">
-                Deal Approval
-              </h3>
-            </header>
-
-            <section className="py-3 px-4">
-              <div className="mb-3 w-full">
-                <span className="w-full">
-                  <button
-                    className="bg-cbc-grey-sec rounded-lg inline-flex justify-center gap-2 px-4 py-2 w-full"
-                    onClick={() => {
-                      let elem: any =
-                        document.getElementById("doc_deal_uploader");
-                      elem.click();
-                    }}
-                  >
-                    <UploadIcon />
-                    <small className="text-cyan-800 text-sm font-medium">
-                      Upload a Document
-                    </small>
-                  </button>
-                  <input
-                    type="file"
-                    className="hidden"
-                    id="doc_deal_uploader"
-                    multiple={true}
-                    onChange={handleFileUpload}
-                  />
-                </span>
-              </div>
-              <div className="mb-3 w-full">
-                {React.Children.toArray(
-                  files?.map((doc: any) => {
-                    return (
-                      <section className="rounded-md bg-cbc-grey-sec px-1 py-2 inline-flex items-center justify-between border-[1px] border-neutral-200 w-full">
-                        <span className="inline-flex items-center">
-                          <div className="rounded-[7px] bg-white shadow shadow-cs-3 w-14 h-14 inline-grid place-items-center">
-                            <img src={FileSVG} alt="File" />
-                          </div>
-                          <span className="inline-flex flex-col items-start ml-3">
-                            <h2
-                              className="text-sm font-medium text-neutral-900 max-w-[150px] truncate"
-                              title={doc?.file?.name}
-                            >
-                              {doc?.file?.name}
-                            </h2>
-                          </span>
-                        </span>
-
-                        <small>{doc?.size} MB</small>
-                        <div
-                          className="rounded-lg w-8 h-8 inline-flex items-center flex-row justify-center gap-2 bg-white cursor-pointer"
-                          onClick={() => {
-                            setFiles((pr: any) => {
-                              let files = pr.filter(
-                                (p: any) => p.id !== doc.id
-                              );
-                              return files;
-                            });
-                          }}
-                        >
-                          <BinIcon stroke="#404040" />
-                        </div>
-                      </section>
-                    );
-                  })
-                )}
-              </div>
-            </section>
-
-            <footer className="w-full inline-flex justify-between gap-3 py-2 px-3 w-full">
-              <Button
-                disabled={disableUpload}
-                className="w-full !py-1"
-                divStyle="flex items-center justify-center w-full"
-                onClick={() => {
-                  setdisableUpload(true)
-                  postSignOff()}}
-              >
-                {language.buttons.submit}
-              </Button>
-            </footer>
-          </aside>
-        </div>
-      </Modal>
+      
          <svg id="svg-filter">
         <filter id="svg-blur">
             <feGaussianBlur in="SourceGraphic" stdDeviation="4"></feGaussianBlur>

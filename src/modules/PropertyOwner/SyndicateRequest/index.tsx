@@ -359,7 +359,7 @@ const SyndicateRequest = ({}: any) => {
                           postSignOff(dealDetail?.deal?.id)
                         }
                       >
-                        Approve
+                        {"Approve"}
                       </Button>
                     )}
                 </span>

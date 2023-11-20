@@ -15,6 +15,11 @@ import { KanzRoles } from "../../enums/roles.enum";
 import { ApplicationStatus } from "../../enums/types.enum";
 import { RoutesEnums, StartupRoutes } from "../../enums/routes.enum";
 import { LinkedInCallback } from "react-linkedin-login-oauth2";
+import InvestorSyndicates from "../Investor/InvestorSyndicates";
+import Deals from "../Investor/Deals";
+import SyndicateInvestments from "../Syndicate/Investments";
+import ManageGroup from "../Syndicate/ManageGroup";
+import GuestInvestorOverview from "../Guest/GuestDealOverview";
 
 /* --- Modules --- */
 
@@ -38,6 +43,7 @@ const AddAttachments = lazy(() => import("../Onboarding/AddAttachments"));
 /* ---### Post Onboarding ###--- */
 const StartupDashboard = lazy(() => import("../Startup"));
 const PropertyOwnerDashboard = lazy(() => import("../PropertyOwner"));
+const InvestorDashboard = lazy(() => import("../Investor"));
 const CreateDeal = lazy(() => import("../CreateDeal"));
 const DealDetail = lazy(() => import("../DealDetail"));
 const DealApproval = lazy(() => import("../Syndicate/DealApproval"));
@@ -144,6 +150,14 @@ const RouterModule = () => {
           </Suspense>
         }
       />
+      <Route
+        path={`${RoutesEnums.GUEST_DEAL_VIEW}/:dealToken`}
+        element={
+          <Suspense fallback={<Loader />}>
+            <GuestInvestorOverview/>
+          </Suspense>
+        }
+      />
 
       {/*
         {.......##...............#######..##....##.########...#######.....###....########..########..####.##....##..######......########...#######..##.....##.########.########..######.....................##
@@ -154,6 +168,19 @@ const RouterModule = () => {
         {..##.......##...##.....##.....##.##...###.##.....##.##.....##.##.....##.##....##..##.....##..##..##...###.##....##.....##....##..##.....##.##.....##....##....##.......##....##.....##...##...##.....
         {.##.....................#######..##....##.########...#######..##.....##.##.....##.########..####.##....##..######......##.....##..#######...#######.....##....########..######...............##......
         {*/}
+
+<Route
+        path={RoutesEnums.GUEST_DEAL_VIEW}
+        element={
+          <Suspense fallback={<Loader />}>
+            
+              
+                <GuestInvestorOverview guard={authToken}/>
+              
+            
+          </Suspense>
+        }
+      />
       <Route
         path={RoutesEnums.INVESTOR_DETAILS}
         element={
@@ -166,6 +193,7 @@ const RouterModule = () => {
           </Suspense>
         }
       />
+
       <Route
         path={`${RoutesEnums.STARTUP_DETAILS}/:id`}
         element={
@@ -202,7 +230,7 @@ const RouterModule = () => {
           </Suspense>
         }
       />
-      <Route
+    <Route
         path={RoutesEnums.LINKEDIN}
         element={
           <Suspense fallback={<Loader />}>
@@ -344,6 +372,51 @@ const RouterModule = () => {
         }
       />
       <Route
+        path={`${RoutesEnums.INVESTOR_DASHBOARD}`}
+        element={
+          <Suspense fallback={<Loader />}>
+            <CHECK_LOGGED_IN>
+              <GUARD_SUBMITTED_ROUTE
+                role={[KanzRoles.INVESTOR]}
+                status={ApplicationStatus.APPROVED}
+              >
+                <InvestorDashboard />
+              </GUARD_SUBMITTED_ROUTE>
+            </CHECK_LOGGED_IN>
+          </Suspense>
+        }
+      />
+      <Route
+        path={`${RoutesEnums.INVESTOR_SYNDICATES}`}
+        element={
+          <Suspense fallback={<Loader />}>
+            <CHECK_LOGGED_IN>
+              <GUARD_SUBMITTED_ROUTE
+                role={[KanzRoles.INVESTOR]}
+                status={ApplicationStatus.APPROVED}
+              >
+                <InvestorSyndicates />
+              </GUARD_SUBMITTED_ROUTE>
+            </CHECK_LOGGED_IN>
+          </Suspense>
+        }
+      />
+       <Route
+        path={`${RoutesEnums.INVESTOR_DEALS}`}
+        element={
+          <Suspense fallback={<Loader />}>
+            <CHECK_LOGGED_IN>
+              <GUARD_SUBMITTED_ROUTE
+                role={[KanzRoles.INVESTOR]}
+                status={ApplicationStatus.APPROVED}
+              >
+                <Deals />
+              </GUARD_SUBMITTED_ROUTE>
+            </CHECK_LOGGED_IN>
+          </Suspense>
+        }
+      />
+      <Route
         path={`${RoutesEnums.SYNDICATE_DASHBOARD}`}
         element={
           <Suspense fallback={<Loader />}>
@@ -395,7 +468,7 @@ const RouterModule = () => {
           <Suspense fallback={<Loader />}>
             <CHECK_LOGGED_IN>
               <GUARD_SUBMITTED_ROUTE
-                role={[KanzRoles.SYNDICATE]}
+                role={[KanzRoles.SYNDICATE,KanzRoles.INVESTOR]}
                 status={ApplicationStatus.APPROVED}
               >
                 <SyndicateDealOverview />
@@ -404,6 +477,53 @@ const RouterModule = () => {
           </Suspense>
         }
       />
+
+      <Route
+        path={`${RoutesEnums.SYNDICATE_INVESTMENTS}`}
+        element={
+          <Suspense fallback={<Loader />}>
+            <CHECK_LOGGED_IN>
+              <GUARD_SUBMITTED_ROUTE
+                role={[KanzRoles.SYNDICATE]}
+                status={ApplicationStatus.APPROVED}
+              >
+                <SyndicateInvestments />
+              </GUARD_SUBMITTED_ROUTE>
+            </CHECK_LOGGED_IN>
+          </Suspense>
+        }
+      />
+      <Route
+        path={`${RoutesEnums.SYNDICATE_MANAGE_GROUP}`}
+        element={
+          <Suspense fallback={<Loader />}>
+            <CHECK_LOGGED_IN>
+              <GUARD_SUBMITTED_ROUTE
+                role={[KanzRoles.SYNDICATE]}
+                status={ApplicationStatus.APPROVED}
+              >
+                <ManageGroup />
+              </GUARD_SUBMITTED_ROUTE>
+            </CHECK_LOGGED_IN>
+          </Suspense>
+        }
+      />
+{/* 
+      <Route
+        path={`${RoutesEnums.SYNDICATE_INVESTMENTS_DEALDETAILS}/:dealToken`}
+        element={
+          <Suspense fallback={<Loader />}>
+            <CHECK_LOGGED_IN>
+              <GUARD_SUBMITTED_ROUTE
+                role={[KanzRoles.SYNDICATE]}
+                status={ApplicationStatus.APPROVED}
+              >
+                <SyndicateInvestments />
+              </GUARD_SUBMITTED_ROUTE>
+            </CHECK_LOGGED_IN>
+          </Suspense>
+        }
+      /> */}
 
       {/*
         {.......##...............######..##....##.##....##.########..####..######.....###....########.########....########...#######..##.....##.########.########..######.....................##

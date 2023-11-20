@@ -26,7 +26,7 @@ export const numberFormatter = (number: number) => {
   else return number.toString();
 };
 
-export const comaFormattedNumber = (value: string) => {
+export const comaFormattedNumber = (value: any) => {
   if (!value || isNaN(Number(value))) return value;
   return String(value).replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 };

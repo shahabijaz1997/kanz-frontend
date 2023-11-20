@@ -27,3 +27,84 @@
   .border-grey {
     border-color: var(--header-border);
   }
+
+  input[type="range"] {
+    /* removing default appearance */
+    -webkit-appearance: none;
+    appearance: none; 
+    /* creating a custom design */
+    width: 100%;
+    cursor: pointer;
+    outline: none;
+    /*  slider progress trick  */
+    overflow: hidden;
+    border-radius: 20px;
+  }
+  
+  /* Track: webkit browsers */
+  input[type="range"]::-webkit-slider-runnable-track {
+    height: 20px;
+    background: #ccc;
+    border-radius: 20px;
+  }
+
+  /* Thumb: webkit */
+  input[type="range"]::-webkit-slider-thumb {
+    /* removing default appearance */
+    -webkit-appearance: none;
+    appearance: none; 
+    /* creating a custom design */
+    height: 20px;
+    width: 20px;
+    background-color: #fff;
+    border-radius: 100%;
+    border: 1.75px solid white;
+    /*  slider progress trick  */
+    box-shadow: -410px 0 0 400px #155E75;
+  }
+  
+  input:focus {
+    outline: none; 
+  }
+  select:focus{
+    outline: none;
+  }
+  .no-spin-button {
+    -moz-appearance: textfield;
+    appearance: textfield;
+  }
+  .no-spin-button::-webkit-inner-spin-button,
+.no-spin-button::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.blur-content {
+  -webkit-filter: url(#svg-blur);
+  filter: url(#svg-blur);
+}
+
+.masked{
+  background: white;
+  z-index: 1;
+  position:relative;
+}
+.prevent-select {
+  -webkit-user-select: none; /* Safari */
+  -ms-user-select: none; /* IE 10 and IE 11 */
+  user-select: none; /* Standard syntax */
+}
+
+.masked:after {
+  content: "";
+  position: absolute;
+  top:0;
+  left:0;
+  width:100%;
+  height: 100%;
+  z-index: 2;
+  background: -webkit-linear-gradient(rgba(255,255,255,0) 0%, rgba(255,255,255,1) 100%);
+  background: -moz-linear-gradient(rgba(255,255,255,0) 0%, rgba(255,255,255,1) 70%);
+  background: -o-linear-gradient(rgba(255,255,255,0) 0%, rgba(255,255,255,1) 70%);
+  background: linear-gradient(rgba(255,255,255,0) 0%, rgba(255,255,255,1) 100%);
+}

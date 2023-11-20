@@ -93,7 +93,7 @@ const InvestorHome = ({ loading, language }: any) => {
                     <h3 className="text-base font-normal text-neutral-700 screen500:text-[12px]">
                         {language?.onboarding?.appStatus}: <strong>{language.v2.common[user.status]}</strong>
                     </h3>
-                    {user.status === ApplicationStatus.REOPENED && <Button className="mt-[30px] h-[38px] min-w-[160px]" disabled={loading} htmlType="submit" loading={loading} onClick={onPress} >
+                    {user.status === ApplicationStatus.APPROVED && <Button className="mt-[30px] h-[38px] min-w-[160px]" disabled={loading} htmlType="submit" loading={loading} onClick={() => navigate(RoutesEnums.INVESTOR_DASHBOARD)} >
                         {language?.buttons?.continue}
                     </Button>}
                 </React.Fragment>

@@ -5,9 +5,17 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { KanzRoles } from "../../../enums/roles.enum";
 import { RoutesEnums } from "../../../enums/routes.enum";
 import BagIcon from "../../../ts-icons/bagIcon.svg";
+import InvestorHomeIcon from "../../../ts-icons/InvestorHomeIcon.svg";
+import InvestorInvestmentIcon from "../../../ts-icons/InvestorInvestmentIcon.svg";
+import InvestorSyndicateIcon from "../../../ts-icons/InvestorSyndicateIcon.svg";
+import InvestorPortfolioIcon from "../../../ts-icons/InvestorPortfolioIcon.svg";
+import InvestorInvitesIcon from "../../../ts-icons/InvestorInvitesIcon.svg";
+import SyndicateDealApprovalIcon from "../../../ts-icons/SyndicateDealApprovalIcon.svg";
+import SyndicateInvestorUpdates from "../../../ts-icons/SyndicateInvestorUpdates.svg";
 import { kebabCase } from "../../../utils/string.utils";
 
 const Sidebar = ({ type }: any) => {
+ 
   const navigate = useNavigate();
   const { pathname } = useLocation();
   const language: any = useSelector((state: RootState) => state.language.value);
@@ -51,6 +59,7 @@ const Sidebar = ({ type }: any) => {
     renderRoleBasedSidebar();
   }, [type]);
 
+
   useLayoutEffect(() => {
     setSelected(window.location.pathname)
   },[window.location.pathname]);
@@ -59,6 +68,8 @@ const Sidebar = ({ type }: any) => {
     let route;
     switch (type) {
       case KanzRoles.STARTUP:
+        
+
         setSidebarData({
           title: language?.v3?.startup?.sidebar?.sidebar_title,
           icon: <BagIcon />,
@@ -96,25 +107,75 @@ const Sidebar = ({ type }: any) => {
           items: [
             {
               id: 1,
+              icon:<InvestorHomeIcon />,
               title: language?.v3?.startup?.sidebar?.dashboard,
               route: "/syndicate",
             },
             {
               id: 2,
+              icon: <InvestorInvestmentIcon/>,
+              title: "Investments",
+              route: RoutesEnums.SYNDICATE_INVESTMENTS
+
+            },
+            {
+              id: 3,
+              icon: <SyndicateInvestorUpdates/>,
+              title: "Investor Updates",
+         
+            },
+            {
+              id: 4,
+              icon: <SyndicateDealApprovalIcon/>,
               title: language?.v3?.startup?.sidebar?.deal_approval,
               route: RoutesEnums.DEAL_APPROVAL,
             },
             {
-              id: 3,
-              title: language?.v3?.startup?.sidebar?.startup_investment,
+              id: 5,
+              icon: <InvestorSyndicateIcon/>,
+              title: "Manage Group",
+              route: RoutesEnums.SYNDICATE_MANAGE_GROUP,
             },
           ],
         });
         break;
       case KanzRoles.INVESTOR:
         setSidebarData({
-          title: language?.v3?.startup?.sidebar?.sidebar_title,
-          items: [],
+          items: [
+            {
+              id: 1,
+              icon: <InvestorHomeIcon />,
+              title: language?.v3?.startup?.sidebar?.dashboard,
+              route: RoutesEnums.INVESTOR_DASHBOARD
+              
+            },
+            {
+              id: 2,
+              icon: <InvestorInvestmentIcon/>,
+              title: "Investments",
+              
+            },
+            {
+              id: 3,
+              icon: <InvestorSyndicateIcon/>,
+              title: "Syndicates",
+              route: RoutesEnums.INVESTOR_SYNDICATES
+              
+            },
+            {
+              id: 4,
+              icon: <InvestorInvitesIcon/>,
+              title: "Deals",
+              route: RoutesEnums.INVESTOR_DEALS
+              
+            },
+            {
+              id: 5,
+              icon: <InvestorPortfolioIcon/>,
+              title: "Portfolio",
+              
+            },
+          ],
         });
         break;
 
@@ -146,14 +207,17 @@ const Sidebar = ({ type }: any) => {
                   }}
                   className={`${
                     orientation === "rtl" ? "pr-[2rem]" : "pl-[2rem]"
-                  } py-3 text-sm font-medium text-neutral-600 transition-all hover:bg-sidebar-item-hover hover:border-l-sidebar-item-hover border-l-4 border-white ${
+                  } py-3 w-full flex items-center text-sm font-medium text-neutral-600 transition-all hover:bg-sidebar-item-hover hover:border-l-sidebar-item-hover border-l-4 border-white ${
                     item.route ? "cursor-pointer" : "cursor-not-allowed"
                   } ${
                     selected === item?.route &&
                     "bg-sidebar-item-hover border-l-4 border-l-cyan-800 hover:!border-l-cyan-800"
                   }`}
                 >
-                  {item?.title}
+             <span>{item?.icon}</span>
+          <p className="text-black font-medium text-sm ml-1 mt-1">
+            {item?.title}
+          </p>
                 </li>
               );
             })
