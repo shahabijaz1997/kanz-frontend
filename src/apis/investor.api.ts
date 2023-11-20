@@ -19,16 +19,6 @@ export const investmentAccridiation = (payload: any, token: string) => {
     });
 };
 
-export const getAllInvestors = (token: string) => {
-    return axios.get(
-      `${ENV.API_URL}/${ENV.API_VERSION}/syndicate_members`,
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      }
-    );
-  };
 
 export const getInvites = (token: string, filters :any) => {
     const queryParameters = new URLSearchParams();
@@ -55,9 +45,27 @@ export const getInvites = (token: string, filters :any) => {
     });
   };
 
+  export const getFollowedSyndicates = (token: string) => {
+  const queryParameters = new URLSearchParams();
+  queryParameters.append("followed", "true");
+    return axios.get(
+      `${ENV.API_URL}/${ENV.API_VERSION}/syndicates/all?${queryParameters.toString()}`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+  };
 
 
-
+  export const postFollowSyndicate = (payload: any, syndicateID :any, token: string) => {
+    return axios.post(`${ENV.API_URL}/${ENV.API_VERSION}/syndicates/${syndicateID}/syndicate_members`, payload, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+  };
 
 export const getInvestor = (token: string) => {
     return axios.get(`${ENV.API_URL}/${ENV.API_VERSION}/investors`, {
@@ -66,3 +74,12 @@ export const getInvestor = (token: string) => {
         },
     });
 };
+
+export const getSyndicateInfo = (token: string, syndID:any) => {
+    return axios.get(`${ENV.API_URL}/${ENV.API_VERSION}/syndicates/${syndID}`, {
+        headers: {
+            Authorization: `Bearer ${token}`
+        },
+    });
+};
+

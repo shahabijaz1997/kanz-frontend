@@ -37,7 +37,7 @@ const DealActivity = ({}: any) => {
     language?.v3?.syndicate?.deals?.table?.category,
     "Invite Status",
     language?.v3?.syndicate?.deals?.table?.end_date,
-    language?.v3?.syndicate?.deals?.table?.target,
+    
   ];
   const [pagination, setPagination] = useState({
     items_per_page: 10,

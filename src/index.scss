@@ -79,12 +79,20 @@
   margin: 0;
 }
 
-
+.blur-content {
+  -webkit-filter: url(#svg-blur);
+  filter: url(#svg-blur);
+}
 
 .masked{
   background: white;
   z-index: 1;
   position:relative;
+}
+.prevent-select {
+  -webkit-user-select: none; /* Safari */
+  -ms-user-select: none; /* IE 10 and IE 11 */
+  user-select: none; /* Standard syntax */
 }
 
 .masked:after {

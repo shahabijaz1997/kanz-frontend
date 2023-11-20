@@ -12,7 +12,7 @@ import { RoutesEnums } from "../../../../enums/routes.enum";
 import Modal from "../../../../shared/components/Modal";
 import CrossIcon from "../../../../ts-icons/crossIcon.svg";
 import { saveDataHolder } from "../../../../redux-toolkit/slicer/dataHolder.slicer";
-import { getDeals, getNoFilterDeals } from "../../../../apis/deal.api";
+import { getDeals, getInvitedDeals, getNoFilterDeals } from "../../../../apis/deal.api";
 import { numberFormatter } from "../../../../utils/object.utils";
 import Spinner from "../../../../shared/components/Spinner";
 import { ApplicationStatus } from "../../../../enums/types.enum";
@@ -22,6 +22,8 @@ import CustomStatus from "../../../../shared/components/CustomStatus";
 import { getSyndicates } from "../../../../apis/syndicate.api";
 import { saveToken } from "../../../../redux-toolkit/slicer/auth.slicer";
 import { getInvites } from "../../../../apis/investor.api";
+import { toast } from "react-toastify";
+import { toastUtil } from "../../../../utils/toast.utils";
 
 
 
@@ -34,10 +36,19 @@ const Invites = ({}: any) :any => {
     const language: any = useSelector((state: RootState) => state.language.value);
     const authToken: any = useSelector((state: RootState) => state.auth.value);
     const user: any = useSelector((state: RootState) => state.user.value);
-    const columns = ["Syndicate", "Title", "Category", "Status", "End Date", "Target", ""];
+   /*  const columns = ["Syndicate", "Title", "Category", "Status", "End Date", "Target", ""]; */         // THis is actual values
+   const columns = [
+    language?.v3?.syndicate?.deals?.table?.title,
+    language?.v3?.syndicate?.deals?.table?.category,
+    "Invite Status",
+    language?.v3?.syndicate?.deals?.table?.end_date,
+    language?.v3?.syndicate?.deals?.table?.target,
+    language?.v3?.table?.action,
+  ];
     const [loading, setLoading]: any = useState(false);
     const [invites, setInvites]: any = useState([]);
-    const [dealDetail, setDealDetail]: any = useState(null);
+    const [deals, setDeals] = useState([]);
+
     const [loadDrawer, setLoadingDrawer] = useState(false);
     const [syndicateInfo, setsyndicateInfo]: any = useState(null);
     const [isOpen, setOpen]: any = useState(false);
@@ -48,7 +59,7 @@ const Invites = ({}: any) :any => {
   const [selectedTab, setSelectedTab] = useState("All");
 
     const [pagination, setPagination] = useState({
-        items_per_page: 5,
+        items_per_page: 10,
         total_items: [],
         current_page: 1,
         total_pages: 0,
@@ -59,17 +70,137 @@ const Invites = ({}: any) :any => {
         "Real Estate",
       ]);
     
-
-
       useEffect(() => {
+        dispatch(saveDataHolder(""));
+        getAllDeals();
+      }, [selectedTab]);
+    
+      const getAllDeals = async () => {
+        try {
+          setLoading(true);
+          let { status, data } = await getInvitedDeals(117, authToken, "All");
+          if (status === 200) {
+            let deals = data?.status?.data?.map((deal: any) => {
+              return {
+                id: deal?.id,
+                filterStatus: deal?.status,
+                [language?.v3?.syndicate?.deals?.table?.title]:
+                  deal?.deal?.title || "N/A",
+                [language?.v3?.syndicate?.deals?.table?.category]: (
+                  <span className="capitalize">{deal?.deal?.type}</span>
+                ),
+                ["Invite Status"]:
+                  <CustomStatus options={deal?.status} /> || "N/A",
+                [language?.v3?.syndicate?.deals?.table?.end_date]:
+                  deal?.deal?.end_at || " N/A",
+                [language?.v3?.syndicate?.deals?.table
+                  ?.target]: `$${numberFormatter(Number(deal?.deal?.target))}`,
+    
+                Steps: deal?.current_state?.steps,
+                [language?.v3?.table?.action]: (
+                  <div
+                    onClick={(e) => {
+                      e.preventDefault();
+                      e.stopPropagation();
+                      navigate(
+                        `${RoutesEnums.SYNDICATE_DEAL_DETAIL}/${deal?.deal?.token}`,
+                        { state: deal?.deal?.type }
+                      );
+                    }}
+                    className="bg-neutral-100 inline-flex items-center justify-center w-[30px] h-[30px] rounded-full transition-all hover:bg-cbc-transparent"
+                  >
+                    <Chevrond
+                      className="rotate-[-90deg] w-6 h-6"
+                      stroke={"#737373"}
+                    />
+                  </div>
+                ),
+              };
+            });
+    
+            setPagination((prev) => {
+              return {
+                ...prev,
+                total_items: deals.length,
+                current_page: 1,
+                total_pages: Math.ceil(deals.length / prev.items_per_page),
+                data: deals?.slice(0, prev.items_per_page),
+              };
+            });
+            setDeals(deals);
+          }
+        } catch (error:any) {
+          if (error.response && error.response.status === 401 || error.response.status === 400) {
+            toast.dismiss()
+            toast.error("Session time out",toastUtil)
+            dispatch(saveToken(""));
+            navigate(RoutesEnums.LOGIN);
+          }
+        } finally {
+          setLoading(false);
+        }
+      };
+    
+      const paginate = (type: string) => {
+        if (type === "next" && pagination.current_page < pagination.total_pages) {
+          setPagination((prev: any) => {
+            const nextPage = prev.current_page + 1;
+            const startIndex = (nextPage - 1) * prev.items_per_page;
+            const endIndex = startIndex + prev.items_per_page;
+            const data = deals.slice(startIndex, endIndex);
+            return { ...prev, current_page: nextPage, data };
+          });
+        } else if (type === "previous" && pagination.current_page > 1) {
+          setPagination((prev: any) => {
+            const prevPage = prev.current_page - 1;
+            const startIndex = (prevPage - 1) * prev.items_per_page;
+            const endIndex = startIndex + prev.items_per_page;
+            const data = deals.slice(startIndex, endIndex);
+            return { ...prev, current_page: prevPage, data };
+          });
+        } else {
+          setPagination((prev: any) => {
+            const prevPage = Number(type) + 1 - 1;
+            const startIndex = (prevPage - 1) * prev.items_per_page;
+            const endIndex = startIndex + prev.items_per_page;
+            const data = deals.slice(startIndex, endIndex);
+    
+            return { ...prev, current_page: type, data };
+          });
+        }
+      };
+
+
+
+
+
+
+
+      /*
+      .......##..............###.....######..########.##.....##....###....##...........######...#######..########..########.................##
+      ......##...##...##....##.##...##....##....##....##.....##...##.##...##..........##....##.##.....##.##.....##.##........##...##.......##.
+      .....##.....##.##....##...##..##..........##....##.....##..##...##..##..........##.......##.....##.##.....##.##.........##.##.......##..
+      ....##....#########.##.....##.##..........##....##.....##.##.....##.##..........##.......##.....##.##.....##.######...#########....##...
+      ...##.......##.##...#########.##..........##....##.....##.#########.##..........##.......##.....##.##.....##.##.........##.##.....##....
+      ..##.......##...##..##.....##.##....##....##....##.....##.##.....##.##..........##....##.##.....##.##.....##.##........##...##...##.....
+      .##.................##.....##..######.....##.....#######..##.....##.########.....######...#######..########..########...........##......
+      */
+
+
+
+
+
+
+
+/*       useEffect(() => {
         dispatch(saveDataHolder(""));
         getAllSyndicates();
       }, []);
       useEffect(() => {
         dispatch(saveDataHolder(""));
         getAllSyndicates();
-      }, [selectedTab]);
-
+      }, [selectedTab]); */
+/* 
     const getAllSyndicates = async () => {
         try {
           setLoading(true);
@@ -165,7 +296,7 @@ const Invites = ({}: any) :any => {
           });
         }
       };
-    
+     */
       return(
         <>  
            <section className="inline-flex justify-between items-center w-full">

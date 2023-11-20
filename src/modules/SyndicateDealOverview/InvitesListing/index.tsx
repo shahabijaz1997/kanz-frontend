@@ -14,7 +14,7 @@ import { toast } from "react-toastify";
 import { ApplicationStatus } from "../../../enums/types.enum";
 import Spinner from "../../../shared/components/Spinner";
 import DropDownShareDeal from "../../../ts-icons/DropDownShareDeal.svg";
-import { getAllInvestors } from "../../../apis/investor.api";
+import { getAllInvestors, sharewithGroup } from "../../../apis/syndicate.api";
 import SharewithGroupIcon from "../../../ts-icons/SharewithGroupIcon.svg";
 import CopyInviteLinkIcon from "../../../ts-icons/CopyInviteLinkIcon.svg";
 import { numberFormatter } from "../../../utils/object.utils";
@@ -45,7 +45,6 @@ const InvitesListing = ({  dealId, type, dealIdReal }: any) => {
     };
   }, []);
   useEffect (()=>{
-    console.log(dealId)
   },[])
 
   const copyToClipboard = () => {
@@ -71,21 +70,21 @@ const InvitesListing = ({  dealId, type, dealIdReal }: any) => {
   
 
 
-  const onSendInvite = async (syndId: any) => {
+  const onShareDeal = async (investorID: any) => {
     try {
       const { status } = await postInviteSyn(
         {
           message: "You have been invited",
-          invitee_id: syndId,
+          invitee_id: investorID,
         },
         dealIdReal,
         authToken
       );
       if (status === 200) {
         toast.success("Investor Invited", toastUtil);
-        let elem: any = document.getElementById(`synd-${syndId}`);
+        let elem: any = document.getElementById(`synd-${investorID}`);
         let button = document.createElement("button");
-        button.innerText = "Invited";
+        button.innerText = "Shared";
         elem.innerHTML = "";
         elem.appendChild(button);
       }
@@ -98,21 +97,17 @@ const InvitesListing = ({  dealId, type, dealIdReal }: any) => {
 
 
 
-  const inviteAllGroup = async (syndId: any) => {
+  const inviteAllGroup = async () => {
     try {
-      const { status } = await postInviteSyn(
-        {
-          message: "You have been invited",
-          invitee_id: syndId,
-        },
+      const { status } = await sharewithGroup(
         dealIdReal,
         authToken
       );
       if (status === 200) {
-        toast.success("Investor Invited", toastUtil);
-        let elem: any = document.getElementById(`synd-${syndId}`);
+        toast.success("Invitation sent", toastUtil);
+        let elem: any = document.getElementById(`group`);
         let button = document.createElement("button");
-        button.innerText = "Invited";
+        button.innerText = "Group Invited";
         elem.innerHTML = "";
         elem.appendChild(button);
       }
@@ -136,8 +131,7 @@ const InvitesListing = ({  dealId, type, dealIdReal }: any) => {
         let syndicatesData = data?.status?.data || [];
         let investors:any = syndicatesData.map((investor: any) => ({
           id: investor?.id,
-          member_name: <span className=" capitalize">{investor?.member_name}</span>,
-          /* handle: investor?.handle || "N/A", */
+          member_name: <span className=" capitalize">{investor?.name}</span>,
           profileImage: investor?.image,
           action: (
             <span id={`synd-${investor?.id}`}>
@@ -145,7 +139,7 @@ const InvitesListing = ({  dealId, type, dealIdReal }: any) => {
                 divStyle="items-center justify-end max-w-fit"
                 type="outlined"
                 className="!p-3 !py-1 !rounded-full"
-                onClick={() => onSendInvite(investor?.id)}
+                onClick={() => onShareDeal(investor?.id)}
               >
                 Share
               </Button>
@@ -212,7 +206,7 @@ const InvitesListing = ({  dealId, type, dealIdReal }: any) => {
                   <div className="py-3 border-b-[1px] border-b-neutral-200 w-full inline-flex items-center">
                     <div className=" justify-between items-center w-full">
                     <p>{investor.member_name}</p>
-                    <div className="font-sm text-xs font-light">{numberFormatter(investor.invested_amount)} invested in {numberFormatter(investor.no_investments)} investments</div>
+                    <div className="font-sm text-xs font-light">{numberFormatter(investor?.invested_amount)} invested in {numberFormatter(investor?.no_investments)} investments</div>
                     </div>
                     {investor.action}
                   </div>
@@ -225,14 +219,14 @@ const InvitesListing = ({  dealId, type, dealIdReal }: any) => {
               )
           
           )}
-          <span className="inline-flex justify-between w-full mt-2">
+          <span id={`group-${user.id}`} className="inline-flex justify-between w-full mt-2">
             <Button
               type="outlined"
               onClick={() => {
-                inviteAllGroup(user.id);
+                inviteAllGroup();
               }}
               className="w-full mx-1 px-[15px]"
-            >
+            >              
                 <span className="mr-3">
                     <SharewithGroupIcon/>
                 </span>

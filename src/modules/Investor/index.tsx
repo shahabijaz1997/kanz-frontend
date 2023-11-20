@@ -275,12 +275,12 @@ const Investor = ({}: any) => {
                   pagination={pagination}
                   paginate={paginate}
                   noDataNode={
-                    <Button
-                      onClick={() => setModalOpen("1")}
+                    <h1
+                      
                       className="absolute left-1/2 top-1/2 translate-x-[-50%] translate-y-[-50%]"
                     >
-                      {language?.v3?.button?.new_deal}
-                    </Button>
+                      {"No data"}
+                    </h1>
                   }
                 />
               </section>

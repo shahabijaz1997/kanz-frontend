@@ -15,7 +15,7 @@ import { ApplicationStatus } from "../../../enums/types.enum";
 import Spinner from "../../../shared/components/Spinner";
 import DropDownShareDeal from "../../../ts-icons/DropDownShareDeal.svg";
 import {
-  getAllInvestors,
+  
   getInvestor,
 } from "../../../apis/investor.api";
 import SharewithGroupIcon from "../../../ts-icons/SharewithGroupIcon.svg";
@@ -33,7 +33,7 @@ import Chevrond from "../../../ts-icons/chevrond.svg";
 import CustomStatus from "../../../shared/components/CustomStatus";
 import CrossIcon from "../../../ts-icons/crossIcon.svg";
 import ManageGroupActionsIcon from "../../../ts-icons/ManageGroupActionsIcon.svg";
-import { delRemoveInvestor, getGroupInvestors, postAddInvestor } from "../../../apis/syndicate.api";
+import { delRemoveInvestor, getGroupInvestors, getNonAddedInvestors, postAddInvestor } from "../../../apis/syndicate.api";
 
 const ManageGroup = ({ dealId, type, dealIdReal }: any) => {
   const navigate = useNavigate();
@@ -70,7 +70,7 @@ const ManageGroup = ({ dealId, type, dealIdReal }: any) => {
 
   useEffect(() => {
     dispatch(saveDataHolder(""));
-    getMemebers();
+    getMembers();
   }, [selectedTab]);
 
   const ActionButton = ({ investorID }: any): any => {
@@ -105,7 +105,7 @@ const ManageGroup = ({ dealId, type, dealIdReal }: any) => {
     );
   };
 
-  const getMemebers = async () => {
+  const getMembers = async () => {
     try {
       setLoading(true);
       let { status, data } = await getGroupInvestors(authToken, selectedTab);
@@ -150,6 +150,7 @@ const ManageGroup = ({ dealId, type, dealIdReal }: any) => {
       }
     } finally {
       setLoading(false);
+      getAllUserListings()
     }
   };
 
@@ -217,7 +218,8 @@ const ManageGroup = ({ dealId, type, dealIdReal }: any) => {
       if (error?.response?.status === 400)
         toast.warning(error?.response?.data?.status?.message, toastUtil);
     } finally {
-      getMemebers();
+      getMembers();
+      getAllUserListings();
     }
   };
 
@@ -254,7 +256,8 @@ const ManageGroup = ({ dealId, type, dealIdReal }: any) => {
       if (error?.response?.status === 400)
         toast.warning(error?.response?.data?.status?.message, toastUtil);
     } finally {
-      getMemebers();
+      getMembers();
+      getAllUserListings()
 
     }
   };
@@ -262,7 +265,7 @@ const ManageGroup = ({ dealId, type, dealIdReal }: any) => {
   const getAllUserListings = async () => {
     try {
       setLoading(true);
-      let { status, data } =  await getInvestor(authToken);
+      let { status, data } =  await getNonAddedInvestors(authToken);
       if (status === 200) {
         let investorData = data?.status?.data || [];
         let investors: any = investorData.map((investor: any) => ({

@@ -19,6 +19,7 @@ import InvestorSyndicates from "../Investor/InvestorSyndicates";
 import Deals from "../Investor/Deals";
 import SyndicateInvestments from "../Syndicate/Investments";
 import ManageGroup from "../Syndicate/ManageGroup";
+import GuestInvestorOverview from "../Guest/GuestDealOverview";
 
 /* --- Modules --- */
 
@@ -149,6 +150,14 @@ const RouterModule = () => {
           </Suspense>
         }
       />
+      <Route
+        path={`${RoutesEnums.GUEST_DEAL_VIEW}/:dealToken`}
+        element={
+          <Suspense fallback={<Loader />}>
+            <GuestInvestorOverview/>
+          </Suspense>
+        }
+      />
 
       {/*
         {.......##...............#######..##....##.########...#######.....###....########..########..####.##....##..######......########...#######..##.....##.########.########..######.....................##
@@ -159,6 +168,19 @@ const RouterModule = () => {
         {..##.......##...##.....##.....##.##...###.##.....##.##.....##.##.....##.##....##..##.....##..##..##...###.##....##.....##....##..##.....##.##.....##....##....##.......##....##.....##...##...##.....
         {.##.....................#######..##....##.########...#######..##.....##.##.....##.########..####.##....##..######......##.....##..#######...#######.....##....########..######...............##......
         {*/}
+
+<Route
+        path={RoutesEnums.GUEST_DEAL_VIEW}
+        element={
+          <Suspense fallback={<Loader />}>
+            
+              
+                <GuestInvestorOverview guard={authToken}/>
+              
+            
+          </Suspense>
+        }
+      />
       <Route
         path={RoutesEnums.INVESTOR_DETAILS}
         element={
@@ -171,6 +193,7 @@ const RouterModule = () => {
           </Suspense>
         }
       />
+
       <Route
         path={`${RoutesEnums.STARTUP_DETAILS}/:id`}
         element={
@@ -207,7 +230,7 @@ const RouterModule = () => {
           </Suspense>
         }
       />
-      <Route
+    <Route
         path={RoutesEnums.LINKEDIN}
         element={
           <Suspense fallback={<Loader />}>
@@ -445,7 +468,7 @@ const RouterModule = () => {
           <Suspense fallback={<Loader />}>
             <CHECK_LOGGED_IN>
               <GUARD_SUBMITTED_ROUTE
-                role={[KanzRoles.SYNDICATE]}
+                role={[KanzRoles.SYNDICATE,KanzRoles.INVESTOR]}
                 status={ApplicationStatus.APPROVED}
               >
                 <SyndicateDealOverview />
