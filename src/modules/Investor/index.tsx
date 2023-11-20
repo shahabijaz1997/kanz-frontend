@@ -19,8 +19,9 @@ import { ApplicationStatus } from "../../enums/types.enum";
 import Chevrond from "../../ts-icons/chevrond.svg";
 import EditIcon from "../../ts-icons/editIcon.svg";
 import CustomStatus from "../../shared/components/CustomStatus";
+    
 
-const Realtor = ({}: any) => {
+const Investor = ({}: any) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const language: any = useSelector((state: RootState) => state.language.value);
@@ -149,7 +150,7 @@ const Realtor = ({}: any) => {
                     e.preventDefault();
                     e.stopPropagation();
                     navigate(`${RoutesEnums.DEAL_DETAIL}/${deal?.token}`, {
-                      state: KanzRoles.REALTOR,
+                      state: KanzRoles.INVESTOR,
                     });
                   }}
                   className="ml-2 bg-neutral-100 inline-flex items-center justify-center w-[26px] h-[26px] rounded-full transition-all hover:bg-cbc-transparent"
@@ -217,7 +218,7 @@ const Realtor = ({}: any) => {
         <Header />
       </section>
       <aside className="w-full h-full flex items-start justify-start">
-        <Sidebar type={KanzRoles.REALTOR} />
+        <Sidebar type={KanzRoles.INVESTOR} />
         <section
           className="bg-cbc-auth h-full p-[5rem] relative"
           style={{ width: "calc(100% - 250px)" }}
@@ -274,12 +275,12 @@ const Realtor = ({}: any) => {
                   pagination={pagination}
                   paginate={paginate}
                   noDataNode={
-                    <Button
-                      onClick={() => setModalOpen("1")}
+                    <h1
+                      
                       className="absolute left-1/2 top-1/2 translate-x-[-50%] translate-y-[-50%]"
                     >
-                      {language?.v3?.button?.new_deal}
-                    </Button>
+                      {"No data"}
+                    </h1>
                   }
                 />
               </section>
@@ -650,4 +651,4 @@ const Realtor = ({}: any) => {
     </main>
   );
 };
-export default Realtor;
+export default Investor;

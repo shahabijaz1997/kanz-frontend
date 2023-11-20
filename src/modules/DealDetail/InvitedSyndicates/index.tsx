@@ -13,7 +13,7 @@ import CustomStatus from "../../../shared/components/CustomStatus";
 import { numberFormatter } from "../../../utils/object.utils";
 import Spinner from "../../../shared/components/Spinner";
 
-const InvitedSyndicates = ({ id }: any) => {
+const InvitedSyndicates = ({ id, setInnerLoader }: any) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const language: any = useSelector((state: RootState) => state.language.value);
@@ -37,6 +37,7 @@ const InvitedSyndicates = ({ id }: any) => {
     dispatch(saveDataHolder(""));
     getAllDeals();
   }, []);
+ 
 
   const getAllDeals = async () => {
     try {
@@ -114,7 +115,7 @@ const InvitedSyndicates = ({ id }: any) => {
 
   return (
     <section className="mt-10 relative">
-      {loading ? (
+      {loading && setInnerLoader ? (
         <div
           className="absolute left-0 top-0 w-full h-full grid place-items-center"
           style={{ backgroundColor: "rgba(255, 255, 255, 1)", zIndex: 50 }}

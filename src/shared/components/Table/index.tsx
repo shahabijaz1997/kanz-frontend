@@ -9,6 +9,7 @@ const Table = ({
   pagination,
   paginate,
   goToPage = () => {},
+  removeHref = false
 }: any) => {
   const orientation: any = useSelector(
     (state: RootState) => state.orientation.value
@@ -32,7 +33,7 @@ const Table = ({
                   ? "bg-cyan-900 text-white"
                   : "bg-transparent text-cyan-800"
               } transition-all block rounded border-[1px] border-cyan-800 px-3 py-1.5 text-sm font-medium`}
-              href="#!"
+              href={removeHref ?  undefined : "#!"}
             >
               {page}
             </a>
@@ -146,7 +147,7 @@ const Table = ({
                     ? "cursor-not-allowed"
                     : "cursor-pointer"
                 } text-cyan-800 px-3 py-1.5 text-2xl`}
-                href="#!"
+                href={removeHref ?  undefined : "#!"}
               >
                 <span aria-hidden="true">&raquo;</span>
               </a>

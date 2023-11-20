@@ -49,7 +49,7 @@ const Drawer = ({
       ${!isOpen && orientation === "rtl" && " left-[-100%] "}
       `}
       >
-        <article className="relative w-full p-6 flex flex-col space-y-6 overflow-y-auto h-full no-scrollbar">
+        <article className="relative w-full p-6 flex flex-col space-y-6 overflow-y-auto h-full custom-scroll">
           <div className="cursor-pointer" onClick={() => setIsOpen(false)}>
             <CrossIcon
               stroke="#171717"

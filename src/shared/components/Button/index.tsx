@@ -13,6 +13,7 @@ type ButtonProps = {
   children?: React.ReactNode; // Suffix icon
   style?: React.CSSProperties; // button style
   divStyle?: string; //
+  title?: string ;
 };
 
 const Button: React.FC<ButtonProps> = ({
@@ -28,6 +29,7 @@ const Button: React.FC<ButtonProps> = ({
   children,
   style,
   divStyle = "flex items-center justify-center",
+  title="",
   ...props
 }) => {
   // Map button type to Tailwind CSS className
@@ -57,10 +59,10 @@ const Button: React.FC<ButtonProps> = ({
         return "px-4 py-2 text-base";
     }
   };
-
   return (
     <div className={divStyle}>
       <button
+        title={title}
         style={style}
         onClick={onClick}
         disabled={disabled || loading}

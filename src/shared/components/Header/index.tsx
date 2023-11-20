@@ -2,7 +2,7 @@ import React from "react";
 import GeneralHeader from "./GeneralHeader";
 import CustomHeader from "./CustomHeader";
 
-const Header = ({ data, showMenu = false, custom = false, showLanguageDropdown = false }: any) => {
+const Header = ({ data=null, showMenu = false, custom = false, showLanguageDropdown = false }: any) => {
     return (
         <React.Fragment>
             <header className="cbc-auth border border-grey block screen991:hidden h-full">

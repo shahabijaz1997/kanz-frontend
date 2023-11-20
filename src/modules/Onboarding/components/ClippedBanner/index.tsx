@@ -18,10 +18,10 @@ const ClippedBanner = () => {
     }, [orientation]);
 
     const showRoleBasedText = () => {
-        if (state === KanzRoles.REALTOR) {
+        if (state === KanzRoles.PROPERTY_OWNER) {
             return (
                 <React.Fragment>
-                    <div>{language?.v2?.realtor?.onboardSub_2}</div>
+                    <div>{language?.v2?.propertyOwner?.onboardSub_2}</div>
                 </React.Fragment>
             )
         } else if (state === KanzRoles.INVESTOR) {

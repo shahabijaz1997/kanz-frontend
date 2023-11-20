@@ -39,7 +39,7 @@ const DealDetail = ({}: any) => {
     { id: 8, title: "Interested Syndicates" },
   ];
 
-  if (state === KanzRoles.REALTOR) {
+  if (state === KanzRoles.PROPERTY_OWNER) {
     const newTab = { id: 2, title: "Unique Selling Points" };
     tabs.splice(1, 0, newTab);
   }
@@ -85,7 +85,7 @@ const DealDetail = ({}: any) => {
       <aside className="w-full h-full flex items-start justify-start">
         <Sidebar
           type={
-            state === KanzRoles.STARTUP ? KanzRoles.STARTUP : KanzRoles.REALTOR
+            state === KanzRoles.STARTUP ? KanzRoles.STARTUP : KanzRoles.PROPERTY_OWNER
           }
         />
         {loading ? (
@@ -123,6 +123,7 @@ const DealDetail = ({}: any) => {
                     dealId={id}
                     type={KanzRoles.SYNDICATE}
                     dealIdReal={dealDetail?.id}
+                    setLoader={setLoading}
                   />
                 </div>
 
@@ -134,7 +135,7 @@ const DealDetail = ({}: any) => {
                 </div>
               </div>
             </section>
-            {state !== KanzRoles.REALTOR && (
+            {state !== KanzRoles.PROPERTY_OWNER && (
               <section className="mt-1 mb-16">
                 <DealTable targetSize={dealDetail?.selling_price} committed={dealDetail?.committed} investors={dealDetail?.investors}   />
               </section>

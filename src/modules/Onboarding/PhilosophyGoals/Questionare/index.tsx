@@ -1,4 +1,4 @@
-import React, { useState, useLayoutEffect } from "react";
+import React, { useState, useLayoutEffect, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../../../redux-toolkit/store/store";
@@ -247,7 +247,7 @@ const Questionare = ({ step, returnSuccessRedirection }: any) => {
         const finalQuestion = {
           question_id: question.id,
           selected_option_ids: [],
-          answer: question.answer,
+          answer: question.value,
         };
         _questions.push(finalQuestion);
       } else {
@@ -279,9 +279,8 @@ const Questionare = ({ step, returnSuccessRedirection }: any) => {
 
   const checkValidation = () => {
     const hasTextQuestion = philosophyData?.questions?.length > 0 && philosophyData.questions[0]?.question_type === "text";
-
     if (hasTextQuestion) {
-      return philosophyData.questions[0]?.answer?.length > 0;
+      return philosophyData.questions[0]?.value?.length > 0;
     } else {
       const question = philosophyData?.questions?.find(
         (question: any) => question[event]?.options?.length === 2

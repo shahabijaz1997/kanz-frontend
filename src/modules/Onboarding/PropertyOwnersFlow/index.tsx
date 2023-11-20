@@ -11,7 +11,7 @@ import Header from "../../../shared/components/Header";
 import Drawer from "../../../shared/components/Drawer";
 import Button from "../../../shared/components/Button";
 import { toastUtil } from "../../../utils/toast.utils";
-import { getRealtorInformation, postRealtorInformation } from "../../../apis/realtor.api";
+import { getPropertyOwnerInformation, postPropertyOwnerInformation } from "../../../apis/propertyOwner.api";
 import Loader from "../../../shared/views/Loader";
 import { ApplicationStatus } from "../../../enums/types.enum";
 import { isEmpty } from "../../../utils/object.utils";
@@ -23,7 +23,7 @@ type FormValues = {
   noOfProperty: number;
 };
 
-const Realtors = (props: any) => {
+const PropertyOwner = (props: any) => {
   const { disabled } = props;
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -44,10 +44,10 @@ const Realtors = (props: any) => {
   });
   const requiredFieldError = language?.common?.required_field;
 
-  const getRealtorDetails = async () => {
+  const getPropertyOwnerDetails = async () => {
     try {
       setLoading(true);
-      let { status, data } = await getRealtorInformation(user.id, authToken);
+      let { status, data } = await getPropertyOwnerInformation(user.id, authToken);
       if (status === 200) {
         dispatch(saveUserMetaData(data?.status?.data));
       }
@@ -56,7 +56,7 @@ const Realtors = (props: any) => {
       toast.error(message, toastUtil);
       if (error.response && error.response.status === 401) {
         dispatch(saveToken(""));
-        navigate(RoutesEnums.LOGIN, { state: RoutesEnums.REALTOR_DETAILS });
+        navigate(RoutesEnums.LOGIN, { state: RoutesEnums.PROPERTY_OWNER_DETAILS });
       }
     } finally {
       setLoading(false);
@@ -78,11 +78,11 @@ const Realtors = (props: any) => {
   }, [metadata]);
 
   useEffect(() => {
-    getRealtorDetails();
+    getPropertyOwnerDetails();
   }, [])
 
   useLayoutEffect(() => {
-    if (user.type !== KanzRoles.REALTOR) navigate(RoutesEnums.WELCOME);
+    if (user.type !== KanzRoles.PROPERTY_OWNER) navigate(RoutesEnums.WELCOME);
     getAllCountries();
   }, []);
 
@@ -136,13 +136,13 @@ const Realtors = (props: any) => {
       let residence: any = countries.all.find((c: any) => c[event].name === payload?.residence?.value);
 
       let pData: any = {
-        realtor_profile: {
+        property_owner_profile: {
           nationality_id: country.id,
           residence_id: residence.id,
           no_of_properties: payload?.noOfProperty,
         },
       };
-      let { status } = await postRealtorInformation(pData, authToken);
+      let { status } = await postPropertyOwnerInformation(pData, authToken);
       if (status === 200) {
         navigate(RoutesEnums.ADD_ATTACHMENTS);
       }
@@ -151,7 +151,7 @@ const Realtors = (props: any) => {
       toast.error(message, toastUtil);
       if (error.response && error.response.status === 401) {
         dispatch(saveToken(""));
-        navigate(RoutesEnums.LOGIN, { state: "realtor-type" });
+        navigate(RoutesEnums.LOGIN, { state: "property-owner-type" });
       }
     } finally {
       setLoading(false);
@@ -170,9 +170,9 @@ const Realtors = (props: any) => {
           <form className="pb-8 mb-4 w-full" onSubmit={handleSubmit(onSubmit)}>
             <div className="flex items-center justify-center">
               <div>
-                <div className="w-[450px] mt-[78px]">{language?.v2?.realtor?.add_title}</div>
+                <div className="w-[450px] mt-[78px]">{language?.v2?.propertyOwner?.add_title}</div>
                 <p className="text-neutral-500 font-normal text-sm">
-                  <span>{language.onboarding.realtorSubDetail}</span>&nbsp;
+                  <span>{language.onboarding.propertyOwnerSubDetail}</span>&nbsp;
                   <span className="text-cc-blue font-medium cursor-pointer" onClick={() => setOpen(true)}>
                     {language.common.learn}
                   </span>
@@ -188,7 +188,7 @@ const Realtors = (props: any) => {
                   </section>
                   <section className="mb-4 w-full">
                     <label className="mb-2 block text-neutral-700 text-sm font-medium mb-1" htmlFor="full-name" >
-                      {language?.v2?.realtor?.country_of_res}
+                      {language?.v2?.propertyOwner?.country_of_res}
                     </label>
                     <div className="relative w-full" style={{ zIndex: 100 }}>
                       <Selector disabled={disabled} value={payload?.residence} options={_countries && _countries} onChange={(v: any) => onSetPayload(v, "residence")} defaultValue={payload?.residence} />
@@ -226,10 +226,10 @@ const Realtors = (props: any) => {
           <header className="font-bold text-xl">
             {language.philosophyGoals.objective}
           </header>
-          <p className="text-neutral-700 font-normal text-sm text-justify">{language?.drawer?.realtor}</p>
+          <p className="text-neutral-700 font-normal text-sm text-justify">{language?.drawer?.propertyOwner}</p>
         </div>
       </Drawer>
     </main>
   );
 };
-export default Realtors;
+export default PropertyOwner;

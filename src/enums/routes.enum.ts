@@ -7,7 +7,7 @@ export enum RoutesEnums {
   CONTACTS = "/contacts",
   CREATE_DEAL = "/create-deal",
   INVESTOR_DETAILS = "/investor-onboarding",
-  REALTOR_DETAILS = "/realtor-onboarding",
+  PROPERTY_OWNER_DETAILS = "/property-owner-onboarding",
   STARTUP_DETAILS = "/startup-onboarding",
   SYNIDCATE_DETAILS = "/syndicate-onboarding",
   COMPLETE_DETAILS = "/complete-details",
@@ -22,14 +22,20 @@ export enum RoutesEnums {
   PRIVACY_POLICY = "/privacy-policy",
   TERMS_CONDITIONS = "/terms-and-conditions",
   STARTUP_DASHBOARD = "/startup",
-  REALTOR_DASHBOARD = "/realtor",
+  PROPERTY_OWNER_DASHBOARD = "/property-owner",
+  INVESTOR_DASHBOARD = "/investor",
+  INVESTOR_SYNDICATES = "/investor-syndicates",
+  INVESTOR_DEALS = "/investors-deals",
   SYNDICATE_DASHBOARD = "/syndicate",
   DEAL_APPROVAL = "/deal-approval",
   STARTUP_INVESTMENTS = "/startup-investments",
   DEAL_DETAIL = "/view-deal",
-  SYNDICATE_DEAL_DETAIL = "/view-deal-syndicate",
+  SYNDICATE_DEAL_DETAIL = "/deal",
   DEAL_SYNDICATE_REQUESTS = "/deal-syndicate-requests",
   SYNDICATES_ALL = "/syndicates-all",
+  SYNDICATE_INVESTMENTS = "/syndicate-investments",
+  SYNDICATE_MANAGE_GROUP="/manage-group",
+  GUEST_DEAL_VIEW="/deal-guest-view"
 }
 
 export enum StartupRoutes {}

@@ -34,5 +34,5 @@ export enum DealStatus {
 
 export enum DealType {
   STARTUP = "startup_deal",
-  REALTOR = "property_deal",
+  PROPERTY_OWNER = "property_deal",
 }

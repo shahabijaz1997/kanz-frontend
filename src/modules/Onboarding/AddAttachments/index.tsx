@@ -134,8 +134,8 @@ const AddAttachments = (props: any) => {
     ) {
       // todo: remove these constants(5,2) and use this value from backend
       navigate(`${RoutesEnums.PHILOSOPHY_GOALS}/5`);
-    } else if (metadata.role === KanzRoles.REALTOR) {
-      navigate(RoutesEnums.REALTOR_DETAILS);
+    } else if (metadata.role === KanzRoles.PROPERTY_OWNER) {
+      navigate(RoutesEnums.PROPERTY_OWNER_DETAILS);
     } else if (metadata.role === KanzRoles.SYNDICATE) {
       navigate(`${RoutesEnums.SYNIDCATE_DETAILS}/2`);
     } else if (metadata.role === KanzRoles.STARTUP) {
@@ -165,7 +165,7 @@ const AddAttachments = (props: any) => {
                     className="text-cc-blue cursor-pointer"
                     onClick={() => setOpen(true)}
                   >
-                    {language.v2?.realtor?.attachment_provider}
+                    {language.v2?.propertyOwner?.attachment_provider}
                   </span>
                 </p>
               </section>
@@ -278,10 +278,10 @@ const AddAttachments = (props: any) => {
       }
       <Drawer isOpen={isOpen} setIsOpen={(val: boolean) => setOpen(val)}>
         <header className="font-bold text-xl">
-          {language.v2.realtor.attachment_provider}
+          {language.v2.propertyOwner.attachment_provider}
         </header>
         {user?.type === KanzRoles.INVESTOR && <p className="text-neutral-700 font-normal text-sm text-justify">{language?.drawer?.attachments}</p>}
-        {user?.type === KanzRoles.REALTOR && <p className="text-neutral-700 font-normal text-sm text-justify">{language?.drawer?.attach_realtor}</p>}
+        {user?.type === KanzRoles.PROPERTY_OWNER && <p className="text-neutral-700 font-normal text-sm text-justify">{language?.drawer?.attachPropertyOwner}</p>}
         {user?.type === KanzRoles.STARTUP && <p className="text-neutral-700 font-normal text-sm text-justify">{language?.drawer?.attach_startup}</p>}
         {user?.type === KanzRoles.SYNDICATE && <p className="text-neutral-700 font-normal text-sm text-justify">{language?.drawer?.attach_syndicate}</p>}
       </Drawer>
