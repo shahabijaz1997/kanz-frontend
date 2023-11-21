@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import Button from "../../../shared/components/Button";
 import { RootState } from "../../../redux-toolkit/store/store";
 import { saveDataHolder } from "../../../redux-toolkit/slicer/dataHolder.slicer";
-import { getAllSyndicates } from "../../../apis/syndicate.api";
+import { getSyndicatetoInvite } from "../../../apis/syndicate.api";
 import { postInviteSyn } from "../../../apis/deal.api";
 import { saveToken } from "../../../redux-toolkit/slicer/auth.slicer";
 import { RoutesEnums } from "../../../enums/routes.enum";
@@ -94,7 +94,7 @@ const UserListingPopup = ({ approve, dealId, type, dealIdReal, setLoader }: any)
       setLoading(true);
       let results: any;
       if (type === KanzRoles.SYNDICATE)
-        results = await getAllSyndicates(dealIdReal, authToken);
+        results = await getSyndicatetoInvite(dealIdReal, authToken);
       let { status, data } = results;
       if (status === 200) {
         let syndicatesData = data?.status?.data || [];

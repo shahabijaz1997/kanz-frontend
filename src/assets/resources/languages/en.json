@@ -827,7 +827,26 @@
           "end_date": "End Date",
           "target": "Target"
         }
+        
       }
+
+    },
+
+    "dealOverview":{
+      "title":"Risk and Disclaimer",
+      "heading1": "Eligibility and Registration:",
+      "h1bullet1": "Requirements for users to be eligible to use the platform.",
+      "h1bullet2": "The registration process, including identity verification procedures.",
+      "h1bullet3": "Restrictions on who can invest, such as accredited investors.",
+      "heading2": "Who can invest?",  
+      "h2bullet1": "Lorem Ipsum is a great library for dummy text.",
+      "h2bullet2": "sunt in culpa qui officia deserunt mollit anim id est laborum.",
+      "h2bullet3": "Excepteur sint occaecat cupidatat non proident.",
+      "heading3": "Version Control:",
+      "h3bullet1": "Duis aute irure dolor in reprehenderit in voluptate velit esse cillum.",
+      "h3bullet2": "eiusmod tempor incididunt ut labore et dolore magna aliqua.",
+      "h3bullet3": "quis nostrud exercitation ullamco laboris nisi ut."
+
     }
   }
 }

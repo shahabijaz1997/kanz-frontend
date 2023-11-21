@@ -47,9 +47,41 @@ export const getAllSyndicates = (dealId: any, token: string) => {
   );
 };
 
+export const getSyndicatetoInvite = (dealId: any, token: string) => {
+  return axios.get(
+    `${ENV.API_URL}/${ENV.API_VERSION}/deals/${dealId}/syndicates`,
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    }
+  );
+};
+export const getDealActivity = (dealId: any, token: string) => {
+  return axios.get(
+    `${ENV.API_URL}/${ENV.API_VERSION}/deals/${dealId}/investments`,
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    }
+  );
+};
+
+export const investSyndicate = (dealId:any, payload: any, token: string) => {
+  return axios.post(`${ENV.API_URL}/${ENV.API_VERSION}/deals/${dealId}/investments`, payload, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+};
+
 export const sharewithGroup = (dealId: any, token: string) => {
   return axios.post(
     `${ENV.API_URL}/${ENV.API_VERSION}/deals/${dealId}/invites/syndicate_group`,
+    { 
+      invite_type:"Share"
+    },
     {
       headers: {
         Authorization: `Bearer ${token}`,
