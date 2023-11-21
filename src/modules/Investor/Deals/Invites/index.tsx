@@ -12,7 +12,6 @@ import { RoutesEnums } from "../../../../enums/routes.enum";
 import Modal from "../../../../shared/components/Modal";
 import CrossIcon from "../../../../ts-icons/crossIcon.svg";
 import { saveDataHolder } from "../../../../redux-toolkit/slicer/dataHolder.slicer";
-import { getDeals, getInvitedDeals, getNoFilterDeals } from "../../../../apis/deal.api";
 import { numberFormatter } from "../../../../utils/object.utils";
 import Spinner from "../../../../shared/components/Spinner";
 import { ApplicationStatus } from "../../../../enums/types.enum";
@@ -21,7 +20,7 @@ import EditIcon from "../../../../ts-icons/editIcon.svg";
 import CustomStatus from "../../../../shared/components/CustomStatus";
 import { getSyndicates } from "../../../../apis/syndicate.api";
 import { saveToken } from "../../../../redux-toolkit/slicer/auth.slicer";
-import { getInvites } from "../../../../apis/investor.api";
+import { getInvitees, getInvites } from "../../../../apis/investor.api";
 import { toast } from "react-toastify";
 import { toastUtil } from "../../../../utils/toast.utils";
 
@@ -38,24 +37,16 @@ const Invites = ({}: any) :any => {
     const user: any = useSelector((state: RootState) => state.user.value);
    /*  const columns = ["Syndicate", "Title", "Category", "Status", "End Date", "Target", ""]; */         // THis is actual values
    const columns = [
+    "Syndicate",
     language?.v3?.syndicate?.deals?.table?.title,
     language?.v3?.syndicate?.deals?.table?.category,
-    "Invite Status",
+    "Status",
     language?.v3?.syndicate?.deals?.table?.end_date,
     language?.v3?.syndicate?.deals?.table?.target,
-    language?.v3?.table?.action,
+    "",
   ];
     const [loading, setLoading]: any = useState(false);
-    const [invites, setInvites]: any = useState([]);
-    const [deals, setDeals] = useState([]);
-
-    const [loadDrawer, setLoadingDrawer] = useState(false);
-    const [syndicateInfo, setsyndicateInfo]: any = useState(null);
-    const [isOpen, setOpen]: any = useState(false);
-    const [modalReplyOpen, setmodalReplyOpen]: any = useState(null);
-    const [modalOpen, setModalOpen]: any = useState(null);
-    const [CommentSubmitted, setCommentSubmitted]: any = useState(false);
-    const [currentDealId,setCurrentDealId]:any = useState (null)
+    const [invitees, setInvitees] = useState([]);
   const [selectedTab, setSelectedTab] = useState("All");
 
     const [pagination, setPagination] = useState({
@@ -72,39 +63,40 @@ const Invites = ({}: any) :any => {
     
       useEffect(() => {
         dispatch(saveDataHolder(""));
-        getAllDeals();
+        getAllInvitees();
       }, [selectedTab]);
     
-      const getAllDeals = async () => {
+      const getAllInvitees = async () => {
         try {
           setLoading(true);
-          let { status, data } = await getInvitedDeals(117, authToken, "All");
+          let { status, data } = await getInvitees(user.id, authToken, selectedTab);
           if (status === 200) {
-            let deals = data?.status?.data?.map((deal: any) => {
+            let invitees = data?.status?.data?.map((invitee: any) => {
               return {
-                id: deal?.id,
-                filterStatus: deal?.status,
+                id: invitee?.id,
+                filterStatus: invitee?.status,
+                "Syndicate": <span className=" capitalize">{invitee?.invited_by}</span> ,
                 [language?.v3?.syndicate?.deals?.table?.title]:
-                  deal?.deal?.title || "N/A",
+                  invitee?.deal?.title || "N/A",
                 [language?.v3?.syndicate?.deals?.table?.category]: (
-                  <span className="capitalize">{deal?.deal?.type}</span>
+                  <span className="capitalize">{invitee?.deal?.type}</span>
                 ),
-                ["Invite Status"]:
-                  <CustomStatus options={deal?.status} /> || "N/A",
+                ["Status"]:
+                  <CustomStatus options={invitee?.status} /> || "N/A",
                 [language?.v3?.syndicate?.deals?.table?.end_date]:
-                  deal?.deal?.end_at || " N/A",
+                  invitee?.deal?.end_at || " N/A",
                 [language?.v3?.syndicate?.deals?.table
-                  ?.target]: `$${numberFormatter(Number(deal?.deal?.target))}`,
+                  ?.target]: `$${numberFormatter(Number(invitee?.deal?.target))}`,
     
-                Steps: deal?.current_state?.steps,
-                [language?.v3?.table?.action]: (
+                Steps: invitee?.current_state?.steps,
+                [""]: (
                   <div
                     onClick={(e) => {
                       e.preventDefault();
                       e.stopPropagation();
                       navigate(
-                        `${RoutesEnums.SYNDICATE_DEAL_DETAIL}/${deal?.deal?.token}`,
-                        { state: deal?.deal?.type }
+                        `${RoutesEnums.SYNDICATE_DEAL_DETAIL}/${invitee?.deal?.token}`,
+                        { state: invitee?.invitee?.type }
                       );
                     }}
                     className="bg-neutral-100 inline-flex items-center justify-center w-[30px] h-[30px] rounded-full transition-all hover:bg-cbc-transparent"
@@ -121,13 +113,13 @@ const Invites = ({}: any) :any => {
             setPagination((prev) => {
               return {
                 ...prev,
-                total_items: deals.length,
+                total_items: invitees.length,
                 current_page: 1,
-                total_pages: Math.ceil(deals.length / prev.items_per_page),
-                data: deals?.slice(0, prev.items_per_page),
+                total_pages: Math.ceil(invitees.length / prev.items_per_page),
+                data: invitees?.slice(0, prev.items_per_page),
               };
             });
-            setDeals(deals);
+            setInvitees(invitees);
           }
         } catch (error:any) {
           if (error.response && error.response.status === 401 || error.response.status === 400) {
@@ -147,7 +139,7 @@ const Invites = ({}: any) :any => {
             const nextPage = prev.current_page + 1;
             const startIndex = (nextPage - 1) * prev.items_per_page;
             const endIndex = startIndex + prev.items_per_page;
-            const data = deals.slice(startIndex, endIndex);
+            const data = invitees.slice(startIndex, endIndex);
             return { ...prev, current_page: nextPage, data };
           });
         } else if (type === "previous" && pagination.current_page > 1) {
@@ -155,7 +147,7 @@ const Invites = ({}: any) :any => {
             const prevPage = prev.current_page - 1;
             const startIndex = (prevPage - 1) * prev.items_per_page;
             const endIndex = startIndex + prev.items_per_page;
-            const data = deals.slice(startIndex, endIndex);
+            const data = invitees.slice(startIndex, endIndex);
             return { ...prev, current_page: prevPage, data };
           });
         } else {
@@ -163,7 +155,7 @@ const Invites = ({}: any) :any => {
             const prevPage = Number(type) + 1 - 1;
             const startIndex = (prevPage - 1) * prev.items_per_page;
             const endIndex = startIndex + prev.items_per_page;
-            const data = deals.slice(startIndex, endIndex);
+            const data = invitees.slice(startIndex, endIndex);
     
             return { ...prev, current_page: type, data };
           });
@@ -206,32 +198,32 @@ const Invites = ({}: any) :any => {
           setLoading(true);
           let { status, data } = await getInvites(authToken,selectedTab);
           if (status === 200) {
-            let deals = data?.status?.data
-              ?.filter((deal: any) => deal?.status !== "pending")
-              .map((deal: any) => {
+            let invitees = data?.status?.data
+              ?.filter((invitee: any) => invitee?.status !== "pending")
+              .map((invitee: any) => {
                 return {
-                  id: deal?.id,
+                  id: invitee?.id,
                   ["Syndicate"]: (
-                    <span className=" capitalize">{deal?.invitee?.name}</span>
+                    <span className=" capitalize">{invitee?.invitee?.name}</span>
                   ),
                   ["Total Deals"]: (
-                    <span className=" capitalize">{<CustomStatus options={deal?.status} />}</span>
+                    <span className=" capitalize">{<CustomStatus options={invitee?.status} />}</span>
                   ),
                   ["Active Deals"]: (
-                    <span className=" capitalize">{<CustomStatus options={deal?.status} />}</span>
+                    <span className=" capitalize">{<CustomStatus options={invitee?.status} />}</span>
                   ),
                   ["Raising Fund"]: (
-                    <span className=" capitalize">{<CustomStatus options={deal?.status} />}</span>
+                    <span className=" capitalize">{<CustomStatus options={invitee?.status} />}</span>
                   ),
                   ["Formation Date"]: (
-                    <span className=" capitalize">{<CustomStatus options={deal?.status} />}</span>
+                    <span className=" capitalize">{<CustomStatus options={invitee?.status} />}</span>
                   ),
                   [""]: (
                     <div
                     onClick={() => {
                       navigate(
-                        `${RoutesEnums.SYNDICATE_DEAL_DETAIL}/${deal?.token}`,
-                        { state: deal?.type }
+                        `${RoutesEnums.SYNDICATE_DEAL_DETAIL}/${invitee?.token}`,
+                        { state: invitee?.type }
                       );
                     }}
                       className="bg-neutral-100 inline-flex items-center justify-center w-[30px] h-[30px] rounded-full transition-all hover:bg-cbc-transparent mx-7"
@@ -249,13 +241,13 @@ const Invites = ({}: any) :any => {
             setPagination((prev) => {
               return {
                 ...prev,
-                total_items: deals.length,
+                total_items: invitees.length,
                 current_page: 1,
-                total_pages: Math.ceil(deals.length / prev.items_per_page),
-                data: deals?.slice(0, prev.items_per_page),
+                total_pages: Math.ceil(invitees.length / prev.items_per_page),
+                data: invitees?.slice(0, prev.items_per_page),
               };
             });
-            setInvites(deals);
+            setInvites(invitees);
           }
         } catch (error: any) {
           if (error.response && error.response.status === 401) {
@@ -340,7 +332,7 @@ const Invites = ({}: any) :any => {
            noDataNode={
              <div className="absolute left-1/2 top-1/2 translate-x-[-50%] translate-y-[-50%]">
                <p className="font-medium text-center text-lg text-[#828282]">Follow syndicates to get invites</p>
-               <p className=" font-normal mt-1 text-sm  text-[#828282]">You can see the deals here from the following syndicate</p>
+               <p className=" font-normal mt-1 text-sm  text-[#828282]">You can see the invitees here from the following syndicate</p>
                <Button
                onClick={() => navigate(`${RoutesEnums.INVESTOR_SYNDICATES}`)}
                className="mt-4" type="primary">Find Syndicates to Follow</Button>

@@ -165,6 +165,7 @@ const DealDetail = ({}: any) => {
                 </h2>
               </div>
             </section>
+            
 
             {selected?.id === 1 && (
               <DealViewDetails
@@ -175,7 +176,7 @@ const DealDetail = ({}: any) => {
               />
             )}
             {selected?.id === 2 && <Usp id={dealDetail?.id} />}
-            {selected?.id === 3 && <DealInvestors />}
+            {selected?.id === 3 && <DealInvestors id={dealDetail?.id}/>}
             {selected?.id === 4 && <DocumentDetails dealDocs={dealDocs} />}
             {selected?.id === 5 && <NoteDetails />}
             {selected?.id === 6 && <ActivityDetails />}

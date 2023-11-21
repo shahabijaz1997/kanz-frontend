@@ -53,15 +53,15 @@ import { RoutesEnums } from "../../enums/routes.enum";
 import InvestmentCalculator from "./InvestmentCalculator";
 import DealActivity from "./DealActivity";
 
-const PropertyOwnerCase = ({ id, dealToken }: any) => {
+const PropertyOwnerCase = ({ dealToken, dealDetail, dealDocs }: any) => {
   const navigate = useNavigate();
   const language: any = useSelector((state: RootState) => state.language.value);
   const authToken: any = useSelector((state: RootState) => state.auth.value);
   const user: any = useSelector((state: RootState) => state.user.value);
   const [files, setFiles]: any = useState([]);
 
-  const [deal, setdeal]: any = useState([]);
-  const [selectedDocs, setSelectedDocs]: any = useState(null);
+  const [deal, setdeal]: any = useState(dealDetail);
+  const [selectedDocs, setSelectedDocs]: any = useState(dealDocs);
   const [loading, setLoading]: any = useState(false);
   const [modalOpen, setModalOpen]: any = useState(null);
   const [modalOpen2, setModalOpen2]: any = useState(null);
@@ -480,7 +480,9 @@ const PropertyOwnerCase = ({ id, dealToken }: any) => {
               </section>
               {deal?.status === DealStatus.LIVE && (
               <>
+              {user.type === KanzRoles.INVESTOR && (
               <InvestmentCalculator />
+              )}
               
               <section className="mb-4 mt-10">
                 <div className="font-semibold text-sm">Invest</div>
@@ -523,18 +525,69 @@ const PropertyOwnerCase = ({ id, dealToken }: any) => {
                   {deal?.description}
                 </p>
               </section>
+              <section>
               <div className="inline-flex justify-between w-full flex-col my-10">
                 <h1 className="text-black font-medium text-2xl mb-3">
                   {language?.v3?.common?.risk_disc}
                 </h1>
                 <p
-                  className="text-sm font-medium"
-                  dangerouslySetInnerHTML={{ __html: deal?.terms }}
-                ></p>
+                  className="font-medium"                  
+                  /* dangerouslySetInnerHTML={{ __html: deal?.terms }} */
+                >
+                  {language?.v3?.dealOverview?.heading1}
+                </p>
+                <ul className=" list-disc pl-6 text-sm">
+                <li>
+                { " "+ language?.v3?.dealOverview?.h1bullet1}
+                </li>
+                <li>
+                { " "+ language?.v3?.dealOverview?.h1bullet2}
+                </li>
+                <li>
+                { " "+ language?.v3?.dealOverview?.h1bullet3}
+                </li>
+                </ul>
+                <p
+                  className="font-medium"                  
+                  /* dangerouslySetInnerHTML={{ __html: deal?.terms }} */
+                >
+                  {language?.v3?.dealOverview?.heading2}
+                </p>
+                <ul className=" list-disc pl-6 text-sm">
+                <li>
+                { " "+ language?.v3?.dealOverview?.h2bullet1}
+                </li>
+                <li>
+                { " "+ language?.v3?.dealOverview?.h2bullet2}
+                </li>
+                <li>
+                { " "+ language?.v3?.dealOverview?.h1bullet3}
+                </li>
+                </ul>
+                <p
+                  className="font-medium"                  
+                  /* dangerouslySetInnerHTML={{ __html: deal?.terms }} */
+                >
+                  {language?.v3?.dealOverview?.heading3}
+                </p>
+                <ul className=" list-disc pl-6 text-sm">
+                <li>
+                { " "+ language?.v3?.dealOverview?.h3bullet1}
+                </li>
+                <li>
+                { " "+ language?.v3?.dealOverview?.h3bullet2}
+                </li>
+                <li>
+                { " "+ language?.v3?.dealOverview?.h3bullet3}
+                </li>
+                </ul>
+                
+                
               </div>
-              {user.type.toLowerCase() ==="syndicate" && (
+              </section>
+              {user.type.toLowerCase() ==="syndicate" && dealDetail && (
                 <div className="w-full mt-8 mb-4">
-                  <DealActivity />
+                  <DealActivity dealID={deal.id} />
                 </div>
               )}
               <div className="mb-4 mt-10">

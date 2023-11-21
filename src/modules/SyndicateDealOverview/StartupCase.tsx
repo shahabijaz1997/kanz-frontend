@@ -40,21 +40,21 @@ import UploadIcon from "../../ts-icons/uploadIcon.svg";
 import BinIcon from "../../ts-icons/binIcon.svg";
 import { fileSize, handleFileRead } from "../../utils/files.utils";
 import InvitesListing from "./InvitesListing";
-import InvestmentCalculator from "./InvestmentCalculator";
 import DealActivity from "./DealActivity";
 import { RoutesEnums } from "../../enums/routes.enum";
+import { investSyndicate } from "../../apis/syndicate.api";
 
 const CURRENCIES = ["USD", "AED"];
 
-const StartupCase = ({ id, dealToken }: any) => {
+const StartupCase = ({ dealToken, dealDetail, docs }: any) => {
   const navigate = useNavigate();
   const language: any = useSelector((state: RootState) => state.language.value);
   const authToken: any = useSelector((state: RootState) => state.auth.value);
   const user: any = useSelector((state: RootState) => state.user.value);
   const [files, setFiles]: any = useState([]);
   const [currency, setCurrency] = useState(0);
-  const [deal, setdeal]: any = useState([]);
-  const [selectedDocs, setSelectedDocs]: any = useState(null);
+  const [deal, setDeal]: any = useState(dealDetail);
+  const [selectedDocs, setSelectedDocs]: any = useState(docs);
   const [loading, setLoading]: any = useState(false);
   const [fileLoading, setFileLoading]: any = useState(false);
   const [modalOpen, setModalOpen]: any = useState(null);
@@ -63,7 +63,7 @@ const StartupCase = ({ id, dealToken }: any) => {
   const [disableUpload, setdisableUpload]: any = useState(false);
   const [modalOpenComment, setmodalOpenComment]: any = useState(null);
 
-  const [amount, setAmount] = useState(0);
+  const [investmentAmount, setAmount] = useState(0);
   const [selectedCurrency, setSelectedCurrency] = useState("USD");
 
   const handleAmountChange = (event: any) => {
@@ -78,13 +78,6 @@ const StartupCase = ({ id, dealToken }: any) => {
     action: "",
     document: null,
   });
-
-  useEffect(() => {
-    onGetdeal();
-  }, []);
-  useEffect(() => {
-    console.log(user?.type);
-  }, []);
 
   const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file: any = e.target.files?.[0];
@@ -181,7 +174,7 @@ const StartupCase = ({ id, dealToken }: any) => {
       setLoading(true);
       let { status, data } = await getDealDetail(dealToken, authToken);
       if (status === 200) {
-        setdeal(data?.status?.data);
+        setDeal(data?.status?.data);
         setSelectedDocs(data?.status?.data?.docs[0]);
       }
     } catch (error) {
@@ -583,6 +576,31 @@ const StartupCase = ({ id, dealToken }: any) => {
       </React.Fragment>
     );
   };
+
+  const syndicateInvestment = async () => {
+    try {
+      setLoading(true)
+      const { status } = await investSyndicate(
+        dealDetail?.id,
+        {
+          investment: {
+            amount: investmentAmount,
+          },
+        },
+        authToken
+      );
+      if (status === 200) {
+        toast.success("Invested", toastUtil);        
+      }
+    } catch (error: any) {
+      if (error?.response?.status === 400)
+        toast.warning(error?.response?.data?.status?.message, toastUtil);
+    } finally {
+      setLoading(false)
+      
+    }
+  };
+
   const postSignOff = async () => {
     try {
       let allFiles = files.map((file: any) => file.file);
@@ -815,7 +833,7 @@ const StartupCase = ({ id, dealToken }: any) => {
                       }
                       min="0"
                       type="number"
-                      value={amount}
+                      value={investmentAmount}
                       onChange={handleAmountChange}
                     />
                   </label>
@@ -839,7 +857,7 @@ const StartupCase = ({ id, dealToken }: any) => {
                 {deal?.status === DealStatus.LIVE ? (
                   <Button
                     onClick={() => {
-                      setModalOpen2(true);
+                      syndicateInvestment()
                     }}
                     className="w-full"
                   >
@@ -860,9 +878,68 @@ const StartupCase = ({ id, dealToken }: any) => {
                   </React.Fragment>
                 )}
               </div>
-              {user.type.toLowerCase() ==="syndicate" && (
+              <section>
+              <div className="inline-flex justify-between w-full flex-col my-10">
+                <h1 className="text-black font-medium text-2xl mb-3">
+                  {language?.v3?.common?.risk_disc}
+                </h1>
+                <p
+                  className="font-medium"                  
+                  /* dangerouslySetInnerHTML={{ __html: deal?.terms }} */
+                >
+                  {language?.v3?.dealOverview?.heading1}
+                </p>
+                <ul className=" list-disc pl-6 text-sm">
+                <li>
+                { " "+ language?.v3?.dealOverview?.h1bullet1}
+                </li>
+                <li>
+                { " "+ language?.v3?.dealOverview?.h1bullet2}
+                </li>
+                <li>
+                { " "+ language?.v3?.dealOverview?.h1bullet3}
+                </li>
+                </ul>
+                <p
+                  className="font-medium"                  
+                  /* dangerouslySetInnerHTML={{ __html: deal?.terms }} */
+                >
+                  {language?.v3?.dealOverview?.heading2}
+                </p>
+                <ul className=" list-disc pl-6 text-sm">
+                <li>
+                { " "+ language?.v3?.dealOverview?.h2bullet1}
+                </li>
+                <li>
+                { " "+ language?.v3?.dealOverview?.h2bullet2}
+                </li>
+                <li>
+                { " "+ language?.v3?.dealOverview?.h1bullet3}
+                </li>
+                </ul>
+                <p
+                  className="font-medium"                  
+                  /* dangerouslySetInnerHTML={{ __html: deal?.terms }} */
+                >
+                  {language?.v3?.dealOverview?.heading3}
+                </p>
+                <ul className=" list-disc pl-6 text-sm">
+                <li>
+                { " "+ language?.v3?.dealOverview?.h3bullet1}
+                </li>
+                <li>
+                { " "+ language?.v3?.dealOverview?.h3bullet2}
+                </li>
+                <li>
+                { " "+ language?.v3?.dealOverview?.h3bullet3}
+                </li>
+                </ul>
+              </div>
+              </section>
+           
+              {deal && user.type.toLowerCase() ==="syndicate" && (
                 <div className="w-full mt-8 mb-4">
-                  <DealActivity />
+                  <DealActivity dealID={deal.id}/>
                 </div>
               )}
             </section>
@@ -934,7 +1011,7 @@ const StartupCase = ({ id, dealToken }: any) => {
                         }
                         min="0"
                         type="number"
-                        value={amount}
+                        value={investmentAmount}
                         onChange={handleAmountChange}
                       />
                     </label>
@@ -955,7 +1032,7 @@ const StartupCase = ({ id, dealToken }: any) => {
                   </div>
                   <Button
                     onClick={() => {
-                      console.log("Clicked");
+                      syndicateInvestment()
                     }}
                     className="w-full mt-4"
                   >
