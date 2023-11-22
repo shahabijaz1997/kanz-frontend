@@ -122,7 +122,7 @@ const Invites = ({}: any) :any => {
             setInvitees(invitees);
           }
         } catch (error:any) {
-          if (error.response && error.response.status === 401 || error.response.status === 400) {
+          if (error.response && error.response.status === 302) {
             toast.dismiss()
             toast.error("Session time out",toastUtil)
             dispatch(saveToken(""));

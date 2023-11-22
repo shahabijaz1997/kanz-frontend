@@ -68,7 +68,7 @@ const Investors = ({dealID}: any) => {
         setDeals(activity);
       }
     } catch (error:any) {
-      if (error.response && error.response.status === 401 || error.response.status === 400) {
+      if (error.response && error.response.status === 302) {
         toast.dismiss()
         toast.error("Session time out",toastUtil)
         dispatch(saveToken(""));

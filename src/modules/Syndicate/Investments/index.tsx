@@ -131,7 +131,7 @@ const SyndicateInvestments = ({}: any) => {
         setDeals(deals);
       }
     } catch (error:any) {
-      if (error.response && error.response.status === 302 ) {
+      if (error.response && error.response.status === 302) {
         toast.dismiss()
         toast.error("Session time out",toastUtil)
         dispatch(saveToken(""));
