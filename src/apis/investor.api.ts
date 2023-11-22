@@ -3,16 +3,16 @@ import { getEnv } from "../env";
 
 const ENV = getEnv();
 
-export const selectInvestorType = (payload: any, token: string) => {
-    return axios.post(`${ENV.API_URL}/${ENV.API_VERSION}/investors/type`, payload, {
+export const selectInvestorType = (investorID: any, payload: any, token: string) => {
+    return axios.post(`${ENV.API_URL}/${ENV.API_VERSION}/investors/${investorID}/investor_type`, payload, {
         headers: {
             Authorization: `Bearer ${token}`
         },
     });
 };
 
-export const investmentAccridiation = (payload: any, token: string) => {
-    return axios.post(`${ENV.API_URL}/${ENV.API_VERSION}/investors/accreditation`, payload, {
+export const investmentAccridiation = (investorID: any, payload: any, token: string) => {
+    return axios.post(`${ENV.API_URL}/${ENV.API_VERSION}/investors/${investorID}/accreditation`, payload, {
         headers: {
             Authorization: `Bearer ${token}`
         },
@@ -80,8 +80,8 @@ export const getInvites = (token: string, filters :any) => {
     });
   };
 
-export const getInvestor = (token: string) => {
-    return axios.get(`${ENV.API_URL}/${ENV.API_VERSION}/investors`, {
+export const getInvestor = (investorID:any, token: string) => {
+    return axios.get(`${ENV.API_URL}/${ENV.API_VERSION}/investors/${investorID}`, {
         headers: {
             Authorization: `Bearer ${token}`
         },

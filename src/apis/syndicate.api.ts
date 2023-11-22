@@ -57,9 +57,21 @@ export const getSyndicatetoInvite = (dealId: any, token: string) => {
     }
   );
 };
-export const getDealActivity = (dealId: any, token: string) => {
+export const getDealInvestors = (dealId: any, token: string) => {
   return axios.get(
     `${ENV.API_URL}/${ENV.API_VERSION}/deals/${dealId}/investments`,
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    }
+  );
+};
+
+
+export const getDealActivity = (dealId: any, token: string) => {
+  return axios.get(
+    `${ENV.API_URL}/${ENV.API_VERSION}/deals/${dealId}/activities`,
     {
       headers: {
         Authorization: `Bearer ${token}`,

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { RootState } from "../../../redux-toolkit/store/store";
@@ -14,31 +14,40 @@ const InvestorHome = ({ loading, language }: any) => {
     const onPress = () => {
       const { profile_states } = metadata;
       if (
-        profile_states.profile_completed &&
-        !profile_states.questionnaire_completed &&
-        profile_states.questionnaire_steps_completed < 5 &&
-        profile_states.questionnaire_steps_completed !== 0
+        profile_states?.profile_completed &&
+        !profile_states?.questionnaire_completed &&
+        profile_states?.questionnaire_steps_completed < 5 &&
+        profile_states?.questionnaire_steps_completed !== 0
       ) {
         navigate(
           `${RoutesEnums.PHILOSOPHY_GOALS}/${
-            profile_states.questionnaire_steps_completed + 1
+            profile_states?.questionnaire_steps_completed + 1
           }`
         );
-      } else if (!profile_states.profile_completed) {
+      } else if (!profile_states?.profile_completed) {
         navigate(RoutesEnums.INVESTOR_DETAILS);
       } else if (
-        profile_states.profile_completed &&
-        profile_states.questionnaire_steps_completed === 0
+        profile_states?.profile_completed &&
+        profile_states?.questionnaire_steps_completed === 0
       ) {
         navigate(RoutesEnums.COMPLETE_GOALS);
       } else if (
-        profile_states.profile_completed &&
-        profile_states.questionnaire_completed &&
-        profile_states.questionnaire_steps_completed === 5
+        profile_states?.profile_completed &&
+        profile_states?.questionnaire_completed &&
+        profile_states?.questionnaire_steps_completed === 5
       ) {
         navigate(RoutesEnums.ADD_ATTACHMENTS);
       }
     };
+
+
+    useEffect(()=>{
+        if (user.status === ApplicationStatus.APPROVED)
+        {
+          navigate(RoutesEnums.INVESTOR_DASHBOARD)
+          return
+        }
+      })
   
 
     const render = () => {

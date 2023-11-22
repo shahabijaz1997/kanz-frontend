@@ -183,13 +183,7 @@ const ManageGroup = ({ dealId, type, dealIdReal }: any) => {
     }
   };
 
-  useEffect(() => {
 
-    if(loading ===true)
-    {
-      console.log("It was true at some time")
-    }
-  }, [loading]);
 
   useEffect(() => {
     getAllUserListings();

@@ -29,6 +29,8 @@ const Firm = ({ language }: any) => {
   const [payload, setPayload]: any = useState({ legal: "", residence: "", accer: "", risk: false });
   const [loading, setLoading] = useState(false);
   const [riskChecked, setRiskChecked] = useState(false);
+  const user: any = useSelector((state: RootState) => state.user.value);
+
   const [isOpen, setOpen] = useState(false);
   const [countries, setCountries] = useState({ all: [], names: [] });
 
@@ -71,21 +73,21 @@ const Firm = ({ language }: any) => {
   const addinvestmentAccridiation = async () => {
     if (!selectedAssert?.id || !payload.legal || !payload.residence || !riskChecked) {
       toast.dismiss();
-      return toast.warning(language.promptMessages.pleaseSelectAllData, toastUtil);
+      return toast.warning(language?.promptMessages?.pleaseSelectAllData, toastUtil);
     }
     try {
       setLoading(true);
-      let country: any = countries.all.find((c: any) => c[event].name === payload?.residence?.value);
+      let country: any = countries?.all?.find((c: any) => c[event].name === payload?.residence?.value);
 
       let _payload = {
         investor_profile: {
-          country_id: country.id,
+          country_id: country?.id,
           legal_name: payload?.legal,
           accepted_investment_criteria: riskChecked,
           accreditation_option_id: selectedAssert?.id
         }
       }
-      let { data, status } = await investmentAccridiation(_payload, authToken);
+      let { data, status } = await investmentAccridiation(user.id ,_payload, authToken);
       if (status === 200) {
         toast.success(data?.status?.message, toastUtil);
         navigate(RoutesEnums.COMPLETE_GOALS, {
@@ -135,7 +137,7 @@ const Firm = ({ language }: any) => {
               <CountrySelector
                 allCountries={countries.names}
                 onChange={(v: any) => onSetPayload(v, "residence")}
-                selectedValue={payload.residence}
+                selectedValue={payload?.residence}
                 defaultValue={payload?.residence}
               />
             </section>
@@ -146,7 +148,7 @@ const Firm = ({ language }: any) => {
               </label>
               <ul>
                 {React.Children.toArray(
-                  metadata?.profile[event]?.accreditation?.options.map((as: any) => {
+                  metadata?.profile[event]?.accreditation?.options?.map((as: any) => {
                     return (
                       <li
                         className={`h-[50px] w-[420px] p-4 grey-neutral-200 text-sm font-medium cursor-pointer border border-grey inline-flex items-center justify-start first:rounded-t-md last:rounded-b-md screen500:w-full ${selectedAssert?.id === as.id
@@ -158,9 +160,9 @@ const Firm = ({ language }: any) => {
                         <input
                           className="accent-cyan-800 relative float-left mx-2 h-3 w-3 rounded-full border-2 border-solid border-cyan-300 before:pointer-events-none before:absolute before:h-4 before:w-4 before:scale-0 before:rounded-full before:bg-transparent before:opacity-0 before:content-[''] after:absolute after:z-[1] after:block after:h-4 after:w-4 after:rounded-full after:content-[''] checked:border-primary checked:before:opacity-[0.16] checked:after:absolute checked:after:left-1/2 checked:after:top-1/2 checked:after:h-[0.625rem] checked:after:w-[0.625rem] checked:after:rounded-full checked:after:border-primary checked:after:bg-primary checked:after:content-[''] checked:after:[transform:translate(-50%,-50%)] hover:cursor-pointer hover:before:opacity-[0.04]"
                           type="radio"
-                          checked={selectedAssert?.id === as.id ? true : false}
+                          checked={selectedAssert?.id === as?.id ? true : false}
                         />
-                        <small>{as.statement}</small>
+                        <small>{as?.statement}</small>
                       </li>
                     );
                   })

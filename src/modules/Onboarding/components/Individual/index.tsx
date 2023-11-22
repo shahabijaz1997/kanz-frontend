@@ -24,6 +24,8 @@ const Individual = ({ language }: any) => {
   const [payload, setPayload]: any = useState({ national: "", residence: "", accer: "" });
   const [riskChecked, setRiskChecked] = useState(false);
   const [loading, setLoading] = useState(false);
+  const user: any = useSelector((state: RootState) => state.user.value);
+
   const [isOpen, setOpen] = useState(false);
   const [countries, setCountries] = useState({ all: [], names: [] });
 
@@ -80,7 +82,7 @@ const Individual = ({ language }: any) => {
         }
       }
 
-      let { data, status } = await investmentAccridiation(_payload, authToken);
+      let { data, status } = await investmentAccridiation(user.id ,_payload, authToken);
       if (status === 200) {
         toast.success(data?.status?.message, toastUtil);
         navigate(RoutesEnums.COMPLETE_GOALS);

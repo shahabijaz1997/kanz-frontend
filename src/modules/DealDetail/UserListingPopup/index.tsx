@@ -58,12 +58,11 @@ const UserListingPopup = ({ approve, dealId, type, dealIdReal, setLoader }: any)
 
   useEffect(() => {
     dispatch(saveDataHolder(""));
-    getAllUserListings();
+    dealIdReal && getAllUserListings();
   }, [type]);
 
   const onSendInvite = async (syndId: any) => {
     try {
-      setLoader(true)
       const { status } = await postInviteSyn(
         {
           message: "You have been invited",
@@ -83,10 +82,7 @@ const UserListingPopup = ({ approve, dealId, type, dealIdReal, setLoader }: any)
     } catch (error: any) {
       if (error?.response?.status === 400)
         toast.warning(error?.response?.data?.status?.message, toastUtil);
-    } finally {
-      setLoader(false)
-      
-    }
+    } 
   };
 
   const getAllUserListings = async () => {
@@ -108,7 +104,7 @@ const UserListingPopup = ({ approve, dealId, type, dealIdReal, setLoader }: any)
                 divStyle="items-center justify-end max-w-fit"
                 type="outlined"
                 className="!p-3 !py-1 !rounded-full"
-                onClick={() => onSendInvite(syndicate?.id)}
+                onClick={() => {onSendInvite(syndicate?.id)}}
               >
                 Invite
               </Button>
