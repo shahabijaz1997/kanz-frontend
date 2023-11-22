@@ -15,7 +15,7 @@ import { KanzRoles } from "../../enums/roles.enum";
 import { ApplicationStatus } from "../../enums/types.enum";
 import { RoutesEnums, StartupRoutes } from "../../enums/routes.enum";
 import { LinkedInCallback } from "react-linkedin-login-oauth2";
-import InvestorSyndicates from "../Investor/InvestorSyndicates";
+import InvestorSyndicates from "../Investor/InvestorSyndicates" ;
 import Deals from "../Investor/Deals";
 import SyndicateInvestments from "../Syndicate/Investments";
 import ManageGroup from "../Syndicate/ManageGroup";

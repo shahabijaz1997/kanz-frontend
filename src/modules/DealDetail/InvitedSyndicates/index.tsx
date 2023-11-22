@@ -115,7 +115,7 @@ const InvitedSyndicates = ({ id, setInnerLoader }: any) => {
 
   return (
     <section className="mt-10 relative">
-      {loading && setInnerLoader ? (
+      {loading ? (
         <div
           className="absolute left-0 top-0 w-full h-full grid place-items-center"
           style={{ backgroundColor: "rgba(255, 255, 255, 1)", zIndex: 50 }}

@@ -54,17 +54,14 @@ const AllSyndicates = ({}: any) :any => {
         total_pages: 0,
       });
     
-      useEffect(() => {
-        dispatch(saveDataHolder(""));
-        console.log("DRAWER", isOpen);
-      }, [isOpen]);
+   
       
       useEffect(() => {
         dispatch(saveDataHolder(""));
         getAllSyndicates();
       }, []);
       useEffect(()=>{
-        onGetSyndicateDetail(syndicateInfo?.id)
+        syndicateInfo?.id && onGetSyndicateDetail(syndicateInfo?.id)
         setChildData(false)
       },[childData])
 
@@ -110,7 +107,7 @@ const AllSyndicates = ({}: any) :any => {
                     onClick={() => {
                       onGetSyndicateDetail(syndicate?.id)
                       setOpen(true)
-                     console.log(syndicateInfo)
+                     
                     }}
                       className="bg-neutral-100 inline-flex items-center justify-center w-[30px] h-[30px] rounded-full transition-all hover:bg-cbc-transparent mr-10"
                     >
