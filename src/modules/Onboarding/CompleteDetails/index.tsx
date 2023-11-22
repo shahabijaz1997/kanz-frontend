@@ -39,12 +39,12 @@ const CompleteDetails = (props: any) => {
     
       const getInvestorDetails = async () => {
         try {
-          let { status, data } = await getInvestor(authToken);
+          let { status, data } = await getInvestor(user?.id ,authToken);
           if (status === 200) {
             dispatch(saveUserMetaData(data?.status?.data));
           }
         } catch (error: any) {
-          const message = error?.response?.data?.status?.message || error?.response?.data || language.promptMessages.errorGeneral;
+          const message = error?.response?.data?.status?.message || error?.response?.data || language?.promptMessages?.errorGeneral;
           toast.error(message, toastUtil);
           if (error.response && error.response.status === 401) {
             dispatch(saveToken(""));

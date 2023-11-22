@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { RootState } from "../../../redux-toolkit/store/store";
@@ -6,6 +6,7 @@ import Button from "../../components/Button";
 import { ApplicationStatus } from "../../../enums/types.enum";
 import { isEmpty } from "../../../utils/object.utils";
 import { RoutesEnums } from "../../../enums/routes.enum";
+import { KanzRoles } from "../../../enums/roles.enum";
 
 const StartupHome = ({ loading, language }: any) => {
   const navigate = useNavigate();
@@ -14,14 +15,23 @@ const StartupHome = ({ loading, language }: any) => {
 
   const onPress = () => {
     const { profile_states } = metadata;
-    if (profile_states.profile_completed) {
+    if (profile_states?.profile_completed) {
       navigate(RoutesEnums.ADD_ATTACHMENTS);
     } else {
       navigate(
-        `${RoutesEnums.STARTUP_DETAILS}/${profile_states.profile_current_step}`
+        `${RoutesEnums.STARTUP_DETAILS}/${profile_states?.profile_current_step}`
       );
     }
   };
+
+
+  useEffect(()=>{
+    if (user.status === ApplicationStatus.APPROVED)
+    {
+      navigate(RoutesEnums.STARTUP_DASHBOARD)
+      return
+    }
+  })
 
   const render = () => {
     if (

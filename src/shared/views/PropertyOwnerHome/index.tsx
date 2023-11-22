@@ -6,6 +6,7 @@ import Button from "../../components/Button";
 import { ApplicationStatus } from "../../../enums/types.enum";
 import { isEmpty } from "../../../utils/object.utils";
 import { RoutesEnums } from "../../../enums/routes.enum";
+import { KanzRoles } from "../../../enums/roles.enum";
 
 const PropertyOwnerHome = ({ loading, language }: any) => {
     const navigate = useNavigate();
@@ -21,6 +22,14 @@ const PropertyOwnerHome = ({ loading, language }: any) => {
         navigate(RoutesEnums.PROPERTY_OWNER_DETAILS);
       }
     }; 
+
+    useEffect(()=>{
+        if (user.status === ApplicationStatus.APPROVED)
+        {
+          navigate(RoutesEnums.PROPERTY_OWNER_DASHBOARD)
+          return
+        }
+      })
 
     const render = () => {
         if (user.status === ApplicationStatus.OPENED && isEmpty(metadata?.profile)) {

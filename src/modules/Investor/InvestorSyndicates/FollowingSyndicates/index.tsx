@@ -63,7 +63,7 @@ const FollowingSyndicates = (): any => {
   };
 
   useEffect(() => {
-    onGetSyndicateDetail(syndicateInfo?.id);
+    syndicateInfo?.id && onGetSyndicateDetail(syndicateInfo?.id);
     setChildData(false);
   }, [childData]);
 
@@ -119,7 +119,7 @@ const FollowingSyndicates = (): any => {
                   onClick={() => {
                     onGetSyndicateDetail(syndicate?.id);
                     setOpen(true);
-                    console.log(syndicateInfo);
+                    
                   }}
                   className="bg-neutral-100 inline-flex items-center justify-center w-[30px] h-[30px] rounded-full transition-all hover:bg-cbc-transparent mr-10"
                 >

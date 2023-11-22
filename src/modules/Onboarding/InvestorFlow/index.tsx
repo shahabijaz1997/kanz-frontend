@@ -49,7 +49,7 @@ const InvestorFlow = ({ }: any) => {
       let fd = new FormData();
 
       fd.append("investor[type]", acc.payload)
-      let { status, data } = await selectInvestorType({ investor: { role: acc.payload } }, authToken);
+      let { status, data } = await selectInvestorType(user.id , {  investor: { role: acc.payload } }, authToken);
       if (status === 200) {
         localStorage.setItem("investor-type", acc?.link)
         navigate(RoutesEnums.COMPLETE_DETAILS, { state: acc?.link })
@@ -69,7 +69,7 @@ const InvestorFlow = ({ }: any) => {
   const onGetInvestorDetails = async () => {
     try {
       setLoading(true);
-      let { status, data } = await getInvestor(authToken);
+      let { status, data } = await getInvestor(user?.id, authToken);
       if (status === 200) {
         dispatch(saveUserMetaData(data?.status?.data));
         const { investor_type } = data?.status?.data?.profile_states;

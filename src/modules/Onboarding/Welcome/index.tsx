@@ -56,7 +56,7 @@ const Welcome = ({ }: any) => {
             setLoading(true);
             let results: any;
             if (user.type === KanzRoles.INVESTOR)
-                results = await getInvestor(authToken);
+                results = await getInvestor(user?.id, authToken);
             else if (user.type === KanzRoles.SYNDICATE)
                 results = await getSyndicateInformation(user.id, authToken);
             else if (user.type === KanzRoles.STARTUP)

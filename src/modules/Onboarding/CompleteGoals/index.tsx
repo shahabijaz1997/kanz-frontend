@@ -45,7 +45,7 @@ const CompleteGoals = ({ }: any) => {
   const getInvestorDetails = async () => {
     try {
       setLoading(true);
-      let { status, data } = await getInvestor(authToken);
+      let { status, data } = await getInvestor(user?.id, authToken);
       if (status === 200) {
         dispatch(saveUserMetaData(data?.status?.data));
       }

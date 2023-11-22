@@ -12,10 +12,9 @@ import {
 import Spinner from "../../../shared/components/Spinner";
 import { toast } from "react-toastify";
 import { toastUtil } from "../../../utils/toast.utils";
-import { getDealActivity } from "../../../apis/syndicate.api";
-import CustomStatus from "../../../shared/components/CustomStatus";
+import { getDealActivity, getDealInvestors } from "../../../apis/syndicate.api";
 
-const DealActivity = ({dealID}: any) => {
+const Investors = ({dealID}: any) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const authToken: any = useSelector((state: RootState) => state.auth.value);
@@ -23,7 +22,6 @@ const DealActivity = ({dealID}: any) => {
   const columns = [
     "Name",
     "Date",
-    "Status",
     "Amount Raised",
     
   ];
@@ -38,13 +36,13 @@ const DealActivity = ({dealID}: any) => {
  
   useEffect(() => {
     dispatch(saveDataHolder(""));
-    dealID && getAllDeals();
+    dealID && getInvestorsforDeal();
   }, []);
 
-  const getAllDeals = async () => {
+  const getInvestorsforDeal = async () => {
     try {
       setLoading(true);
-      let { status, data } = await getDealActivity(dealID, authToken);
+      let { status, data } = await getDealInvestors(dealID, authToken);
       if (status === 200) {
         let activity = data?.status?.data?.map((dealActivity: any) => {
           return {
@@ -52,8 +50,6 @@ const DealActivity = ({dealID}: any) => {
             "Name":<span className="capitalize">{dealActivity?.investor_name}</span> ,
             ["Date"]:
               dealActivity?.date|| "N/A",
-             ["Status"]:
-              <CustomStatus options={dealActivity?.status} /> || "N/A", 
             ["Amount Raised"]: (
               <span>{comaFormattedNumber(dealActivity?.amount)}</span>
             ),
@@ -146,4 +142,4 @@ const DealActivity = ({dealID}: any) => {
     </main>
   );
 };
-export default DealActivity;
+export default Investors;

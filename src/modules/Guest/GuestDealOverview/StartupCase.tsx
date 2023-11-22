@@ -79,10 +79,7 @@ const StartupCase = ({ id, dealToken }: any) => {
   useEffect(() => {
     onGetdeal();
   }, []);
-  useEffect(() => {
-    console.log("In guest view");
-  }, []);
-
+ 
 
 
 

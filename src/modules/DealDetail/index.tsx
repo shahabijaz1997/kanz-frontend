@@ -123,7 +123,6 @@ const DealDetail = ({}: any) => {
                     dealId={id}
                     type={KanzRoles.SYNDICATE}
                     dealIdReal={dealDetail?.id}
-                    setLoader={setLoading}
                   />
                 </div>
 
@@ -135,11 +134,11 @@ const DealDetail = ({}: any) => {
                 </div>
               </div>
             </section>
-            {state !== KanzRoles.PROPERTY_OWNER && (
+            
               <section className="mt-1 mb-16">
                 <DealTable targetSize={dealDetail?.selling_price} committed={dealDetail?.committed} investors={dealDetail?.investors}   />
               </section>
-            )}
+            
 
             <section>
               <ul className="flex border-neutral-200 border-b-[1px]">
@@ -179,7 +178,7 @@ const DealDetail = ({}: any) => {
             {selected?.id === 3 && <DealInvestors id={dealDetail?.id}/>}
             {selected?.id === 4 && <DocumentDetails dealDocs={dealDocs} />}
             {selected?.id === 5 && <NoteDetails />}
-            {selected?.id === 6 && <ActivityDetails />}
+            {selected?.id === 6 && <ActivityDetails  id={dealDetail?.id}/>}
             {selected?.id === 7 && <InvitedSyndicates id={dealDetail?.id} />}
             {selected?.id === 8 && <Requests id={dealDetail?.id} />}
           </section>

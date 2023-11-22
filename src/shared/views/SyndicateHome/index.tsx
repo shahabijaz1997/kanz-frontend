@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { RootState } from "../../../redux-toolkit/store/store";
@@ -21,6 +21,14 @@ const SyndicateHome = ({ loading, language }: any) => {
           `${RoutesEnums.SYNIDCATE_DETAILS}/${profile_states.profile_current_step}`
         );
     }; 
+
+    useEffect(()=>{
+        if (user.status === ApplicationStatus.APPROVED)
+        {
+          navigate(RoutesEnums.SYNDICATE_DASHBOARD)
+          return
+        }
+      })
   
 
     const render = () => {

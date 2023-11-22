@@ -52,6 +52,7 @@ import InvitesListing from "./InvitesListing";
 import { RoutesEnums } from "../../enums/routes.enum";
 import InvestmentCalculator from "./InvestmentCalculator";
 import DealActivity from "./DealActivity";
+import { investSyndicate } from "../../apis/syndicate.api";
 
 const PropertyOwnerCase = ({ dealToken, dealDetail, dealDocs }: any) => {
   const navigate = useNavigate();
@@ -68,8 +69,9 @@ const PropertyOwnerCase = ({ dealToken, dealDetail, dealDocs }: any) => {
   const [modalOpen3, setModalOpen3]: any = useState(null);
   const [modalOpenComment, setmodalOpenComment]: any = useState(null);
   const [disableUpload, setdisableUpload]: any = useState(false);
-  const [amount, setAmount] = useState(0);
   const [selectedCurrency, setSelectedCurrency] = useState("USD");
+  const [investmentAmount, setAmount] = useState(0);
+
 
   const handleAmountChange = (event: any) => {
     setAmount(event.target.value);
@@ -229,6 +231,31 @@ const PropertyOwnerCase = ({ dealToken, dealDetail, dealDocs }: any) => {
     }
   };
 
+  
+  const syndicateInvestment = async () => {
+    try {
+      setLoading(true)
+      const { status } = await investSyndicate(
+        dealDetail?.id,
+        {
+          investment: {
+            amount: investmentAmount,
+          },
+        },
+        authToken
+      );
+      if (status === 200) {
+        toast.success("Invested", toastUtil);        
+      }
+    } catch (error: any) {
+      if (error?.response?.status === 400)
+        toast.warning(error?.response?.data?.status?.message, toastUtil);
+    } finally {
+      setLoading(false)
+      
+    }
+  };
+
   const getRoleBasedUI = () => {
     return (
       <React.Fragment>
@@ -302,8 +329,15 @@ const PropertyOwnerCase = ({ dealToken, dealDetail, dealDocs }: any) => {
       <section>
         <Header />
       </section>
-      <aside className="w-full h-full flex items-start justify-start" style={{ height: "calc(100% - 70px)"}}>
-      {user.type?.toLowerCase() === "investor" ? <Sidebar type={KanzRoles.INVESTOR} /> : <Sidebar type={KanzRoles.SYNDICATE} />}
+      <aside
+        className="w-full h-full flex items-start justify-start"
+        style={{ height: "calc(100% - 70px)" }}
+      >
+        {user.type?.toLowerCase() === "investor" ? (
+          <Sidebar type={KanzRoles.INVESTOR} />
+        ) : (
+          <Sidebar type={KanzRoles.SYNDICATE} />
+        )}
         {loading ? (
           <div
             className="absolute left-0 top-0 w-full h-full grid place-items-center"
@@ -320,7 +354,11 @@ const PropertyOwnerCase = ({ dealToken, dealDetail, dealDocs }: any) => {
             <section className="w-[60%]">
               <div
                 className="w-full inline-flex pb-4 items-center gap-2 relative top-[-25px] cursor-pointer border-b-[1px] border-b-neutral-200"
-                onClick={() => user.type === "Investor" ? navigate(RoutesEnums.INVESTOR_DEALS):navigate(RoutesEnums.SYNDICATE_DASHBOARD) }
+                onClick={() =>
+                  user.type === "Investor"
+                    ? navigate(RoutesEnums.INVESTOR_DEALS)
+                    : navigate(RoutesEnums.SYNDICATE_DASHBOARD)
+                }
               >
                 <Chevrond stroke="#000" className="rotate-90 w-4 h-4" />
                 <small className="text-neutral-500 text-sm font-medium">
@@ -479,44 +517,54 @@ const PropertyOwnerCase = ({ dealToken, dealDetail, dealDocs }: any) => {
                 )}
               </section>
               {deal?.status === DealStatus.LIVE && (
-              <>
-              {user.type === KanzRoles.INVESTOR && (
-              <InvestmentCalculator />
+                <>
+                  {(user.type === KanzRoles.INVESTOR ||
+                    user.type === KanzRoles.SYNDICATE) && (
+                    <InvestmentCalculator />
+                  )}
+
+                  <section className="mb-4 mt-10">
+                    <div className="font-semibold text-sm">Invest</div>
+                    <div className=" text-xs  text-neutral-500 mb-2">
+                      Minimum is $2500 Invest by Oct 2
+                    </div>
+                    <div className="border-neutral-500 border-[1px] rounded-md min-w-full px-2 justify-between flex bg-white">
+                      <label className="w-full">
+                        <input
+                          className="min-w-full h-9 no-spin-button"
+                          pattern="[0-9]*"
+                          placeholder={
+                            selectedCurrency === "USD" ? "$ 00.00" : "AED 00.00"
+                          }
+                          onKeyDown={(evt) =>
+                            ["e", "E", "+", "-"].includes(evt.key) &&
+                            evt.preventDefault()
+                          }
+                          min="0"
+                          type="number"
+                          value={investmentAmount}
+                          onChange={handleAmountChange}
+                        />
+                      </label>
+                      <label className="w-[10%]">
+                        <select
+                          className="h-9"
+                          value={selectedCurrency}
+                          onChange={handleCurrencyChange}
+                        >
+                          <option className="text-md font-light" value="USD">
+                            USD
+                          </option>
+                          <option className="text-md font-light" value="AED">
+                            AED
+                          </option>
+                        </select>
+                      </label>
+                    </div>
+                  </section>
+                </>
               )}
-              
-              <section className="mb-4 mt-10">
-                <div className="font-semibold text-sm">Invest</div>
-                <div className=" text-xs  text-neutral-500 mb-2">
-                  Minimum is $2500 Invest by Oct 2
-                </div>
-                <div className="border-neutral-500 border-[1px] rounded-md min-w-full px-2 justify-between flex bg-white">
-                  <label className="w-full">
-                    <input className="min-w-full h-9 no-spin-button"
-                    pattern="[0-9]*"
-                    placeholder={
-                      selectedCurrency === 'USD' ? '$ 00.00' : 'AED 00.00'
-                    }
-                    onKeyDown={(evt) => ["e", "E", "+", "-"].includes(evt.key) && evt.preventDefault()}
-                      min="0"
-                      type="number"
-                      value={amount}
-                      onChange={handleAmountChange}
-                    />
-                  </label>
-                  <label className="w-[10%]">
-                    <select
-                    className="h-9"
-                      value={selectedCurrency}
-                      onChange={handleCurrencyChange}
-                    >
-                      <option className="text-md font-light" value="USD">USD</option>
-                      <option className="text-md font-light" value="AED">AED</option>
-                    </select>
-                  </label>
-                </div>
-              </section></>
-              )}
-              
+
               <section className="mt-10 ">
                 <h1 className="text-black font-medium text-2xl mb-3">
                   About the Property
@@ -526,94 +574,74 @@ const PropertyOwnerCase = ({ dealToken, dealDetail, dealDocs }: any) => {
                 </p>
               </section>
               <section>
-              <div className="inline-flex justify-between w-full flex-col my-10">
-                <h1 className="text-black font-medium text-2xl mb-3">
-                  {language?.v3?.common?.risk_disc}
-                </h1>
-                <p
-                  className="font-medium"                  
-                  /* dangerouslySetInnerHTML={{ __html: deal?.terms }} */
-                >
-                  {language?.v3?.dealOverview?.heading1}
-                </p>
-                <ul className=" list-disc pl-6 text-sm">
-                <li>
-                { " "+ language?.v3?.dealOverview?.h1bullet1}
-                </li>
-                <li>
-                { " "+ language?.v3?.dealOverview?.h1bullet2}
-                </li>
-                <li>
-                { " "+ language?.v3?.dealOverview?.h1bullet3}
-                </li>
-                </ul>
-                <p
-                  className="font-medium"                  
-                  /* dangerouslySetInnerHTML={{ __html: deal?.terms }} */
-                >
-                  {language?.v3?.dealOverview?.heading2}
-                </p>
-                <ul className=" list-disc pl-6 text-sm">
-                <li>
-                { " "+ language?.v3?.dealOverview?.h2bullet1}
-                </li>
-                <li>
-                { " "+ language?.v3?.dealOverview?.h2bullet2}
-                </li>
-                <li>
-                { " "+ language?.v3?.dealOverview?.h1bullet3}
-                </li>
-                </ul>
-                <p
-                  className="font-medium"                  
-                  /* dangerouslySetInnerHTML={{ __html: deal?.terms }} */
-                >
-                  {language?.v3?.dealOverview?.heading3}
-                </p>
-                <ul className=" list-disc pl-6 text-sm">
-                <li>
-                { " "+ language?.v3?.dealOverview?.h3bullet1}
-                </li>
-                <li>
-                { " "+ language?.v3?.dealOverview?.h3bullet2}
-                </li>
-                <li>
-                { " "+ language?.v3?.dealOverview?.h3bullet3}
-                </li>
-                </ul>
-                
-                
-              </div>
+                <div className="inline-flex justify-between w-full flex-col my-10">
+                  <h1 className="text-black font-medium text-2xl mb-3">
+                    {language?.v3?.common?.risk_disc}
+                  </h1>
+                  <p
+                    className="font-medium"
+                    /* dangerouslySetInnerHTML={{ __html: deal?.terms }} */
+                  >
+                    {language?.v3?.dealOverview?.heading1}
+                  </p>
+                  <ul className=" list-disc pl-6 text-sm">
+                    <li>{" " + language?.v3?.dealOverview?.h1bullet1}</li>
+                    <li>{" " + language?.v3?.dealOverview?.h1bullet2}</li>
+                    <li>{" " + language?.v3?.dealOverview?.h1bullet3}</li>
+                  </ul>
+                  <p
+                    className="font-medium"
+                    /* dangerouslySetInnerHTML={{ __html: deal?.terms }} */
+                  >
+                    {language?.v3?.dealOverview?.heading2}
+                  </p>
+                  <ul className=" list-disc pl-6 text-sm">
+                    <li>{" " + language?.v3?.dealOverview?.h2bullet1}</li>
+                    <li>{" " + language?.v3?.dealOverview?.h2bullet2}</li>
+                    <li>{" " + language?.v3?.dealOverview?.h1bullet3}</li>
+                  </ul>
+                  <p
+                    className="font-medium"
+                    /* dangerouslySetInnerHTML={{ __html: deal?.terms }} */
+                  >
+                    {language?.v3?.dealOverview?.heading3}
+                  </p>
+                  <ul className=" list-disc pl-6 text-sm">
+                    <li>{" " + language?.v3?.dealOverview?.h3bullet1}</li>
+                    <li>{" " + language?.v3?.dealOverview?.h3bullet2}</li>
+                    <li>{" " + language?.v3?.dealOverview?.h3bullet3}</li>
+                  </ul>
+                </div>
               </section>
-              {user.type.toLowerCase() ==="syndicate" && dealDetail && (
+              {user.type.toLowerCase() === "syndicate" && dealDetail && (
                 <div className="w-full mt-8 mb-4">
                   <DealActivity dealID={deal.id} />
                 </div>
               )}
               <div className="mb-4 mt-10">
-              {deal?.status === DealStatus.LIVE ? (
-                <Button
-                  onClick={() => {
-                    setModalOpen2(true);
-                  }}
-                  className="w-full"
-                >
-                  Invest Now
-                </Button>
-              ) : (
-                <React.Fragment>
-                  {deal?.invite?.status !== DealStatus.ACCEPTED && (
-                    <Button
-                      onClick={() => {
-                        setModalOpen2(true);
-                      }}
-                      className="w-full"
-                    >
-                      Approve
-                    </Button>
-                  )}
-                </React.Fragment>
-              )}
+                {deal?.status === DealStatus.LIVE ? (
+                  <Button
+                    onClick={() => {
+                      syndicateInvestment();
+                    }}
+                    className="w-full"
+                  >
+                    Invest Now
+                  </Button>
+                ) : (
+                  <React.Fragment>
+                    {deal?.invite?.status !== DealStatus.ACCEPTED && (
+                      <Button
+                        onClick={() => {
+                          setModalOpen2(true);
+                        }}
+                        className="w-full"
+                      >
+                        Approve
+                      </Button>
+                    )}
+                  </React.Fragment>
+                )}
               </div>
             </section>
 
@@ -624,76 +652,95 @@ const PropertyOwnerCase = ({ dealToken, dealDetail, dealDocs }: any) => {
             <section className="w-[30%]">
               {/* Show/Hide based on some conditions */}
               {user.type.toLowerCase() === "syndicate" &&
-                  deal?.status === DealStatus.LIVE && (
-                    <div className="w-full inline-flex justify-end gap-4">
-                      <div className="relative z-10">
-                        <InvitesListing
-                          approve={true}
-                          dealId={dealToken}
-                          type={KanzRoles.SYNDICATE}
-                          dealIdReal={deal?.id}
-                        />
-                      </div>
+                deal?.status === DealStatus.LIVE && (
+                  <div className="w-full inline-flex justify-end gap-4">
+                    <div className="relative z-10">
+                      <InvitesListing
+                        approve={true}
+                        dealId={dealToken}
+                        type={KanzRoles.SYNDICATE}
+                        dealIdReal={deal?.id}
+                      />
                     </div>
-                  )}
+                  </div>
+                )}
 
-                {user.type.toLowerCase() === "syndicate" &&
-                  deal?.status !== DealStatus.LIVE && (
-                    <div className="w-full inline-flex justify-end gap-4">
-                      {deal?.invite?.status !== DealStatus.ACCEPTED && (
-                        <React.Fragment>
-                          <Button
-                            type="outlined"
-                            onClick={() => setModalOpen(true)}
-                          >
-                            {language?.v3?.button?.req_change}
-                          </Button>
-                          <Button onClick={() => setModalOpen2(true)}>
-                            {language?.v3?.button?.interested}
-                          </Button>
-                        </React.Fragment>
-                      )}
-                    </div>
-                  )}
-                  {deal?.status === DealStatus.LIVE && (
-                        <section className="mb-4 mt-10">
-                        <div className="font-semibold text-sm">Invest</div>
-                        <div className=" text-xs  text-neutral-500 mb-2">
-                          Minimum is $2500 Invest by Oct 2
-                        </div>
-                        <div className="border-neutral-500 border-[1px] rounded-md min-w-full px-2 pr-10 justify-between flex bg-white">
-                          <label className="w-full">
-                            <input className="min-w-full h-9 no-spin-button"
-                            pattern="[0-9]*"
-                            placeholder={
-                              selectedCurrency === 'USD' ? '$ 00.00' : 'AED 00.00'
-                            }
-                            onKeyDown={(evt) => ["e", "E", "+", "-"].includes(evt.key) && evt.preventDefault()}
-                              min="0"
-                              type="number"
-                              value={amount}
-                              onChange={handleAmountChange}
-                            />
-                          </label>
-                          <label className="w-[10%]">
-                            <select
-                            className="h-9"
-                              value={selectedCurrency}
-                              onChange={handleCurrencyChange}
-                            >
-                              <option className="text-md font-light" value="USD">USD</option>
-                              <option className="text-md font-light" value="AED">AED</option>
-                            </select>
-                          </label>
-                        </div>
-                      </section>
-                  )}
+              {user.type.toLowerCase() === "syndicate" &&
+                deal?.status !== DealStatus.LIVE && (
+                  <div className="w-full inline-flex justify-end gap-4">
+                    {deal?.invite?.status !== DealStatus.ACCEPTED && (
+                      <React.Fragment>
+                        <Button
+                          type="outlined"
+                          onClick={() => setModalOpen(true)}
+                        >
+                          {language?.v3?.button?.req_change}
+                        </Button>
+                        <Button onClick={() => setModalOpen2(true)}>
+                          {language?.v3?.button?.interested}
+                        </Button>
+                      </React.Fragment>
+                    )}
+                  </div>
+                )}
+              {deal?.status === DealStatus.LIVE && (
+                <section className="mb-4 mt-10">
+                  <div className="font-semibold text-sm">Invest</div>
+                  <div className=" text-xs  text-neutral-500 mb-2">
+                    Minimum is $2500 Invest by Oct 2
+                  </div>
+                  <div className="border-neutral-500 border-[1px] rounded-md min-w-full px-2 pr-10 justify-between flex bg-white">
+                    <label className="w-full">
+                      <input
+                        className="min-w-full h-9 no-spin-button"
+                        pattern="[0-9]*"
+                        placeholder={
+                          selectedCurrency === "USD" ? "$ 00.00" : "AED 00.00"
+                        }
+                        onKeyDown={(evt) =>
+                          ["e", "E", "+", "-"].includes(evt.key) &&
+                          evt.preventDefault()
+                        }
+                        min="0"
+                        type="number"
+                        value={investmentAmount}
+                        onChange={handleAmountChange}
+                      />
+                    </label>
+                    <label className="w-[10%]">
+                      <select
+                        className="h-9"
+                        value={selectedCurrency}
+                        onChange={handleCurrencyChange}
+                      >
+                        <option className="text-md font-light" value="USD">
+                          USD
+                        </option>
+                        <option className="text-md font-light" value="AED">
+                          AED
+                        </option>
+                      </select>
+                    </label>
+                  </div>
+                  <div className="mt-4">
+                  <Button
+                    onClick={() => {
+                      syndicateInvestment();
+                    }}
+                    className="w-full"
+                  >
+                    Invest Now
+                  </Button>
+                  </div>
+              
+                </section>
+              )}
               <aside className="border-[1px] border-neutral-200 rounded-md w-full p-3 mt-5">
                 <h2 className="text-neutral-700 text-xl font-medium">
                   {language?.v3?.common?.invest_details}
                 </h2>
                 <small className="text-neutral-500 text-sm font-normal">
-                  {language?.v3?.common?.end_on} {(deal?.end_at)}
+                  {language?.v3?.common?.end_on} {deal?.end_at}
                 </small>
 
                 {getRoleBasedUI()}
@@ -1067,8 +1114,9 @@ const PropertyOwnerCase = ({ dealToken, dealDetail, dealDocs }: any) => {
                 className="w-full !py-1"
                 divStyle="flex items-center justify-center w-full"
                 onClick={() => {
-                  setdisableUpload(true)
-                  postSignOff()}}
+                  setdisableUpload(true);
+                  postSignOff();
+                }}
               >
                 {language.buttons.submit}
               </Button>
@@ -1076,11 +1124,11 @@ const PropertyOwnerCase = ({ dealToken, dealDetail, dealDocs }: any) => {
           </aside>
         </div>
       </Modal>
-         <svg id="svg-filter">
+      <svg id="svg-filter">
         <filter id="svg-blur">
-            <feGaussianBlur in="SourceGraphic" stdDeviation="4"></feGaussianBlur>
+          <feGaussianBlur in="SourceGraphic" stdDeviation="4"></feGaussianBlur>
         </filter>
-    </svg>
+      </svg>
     </main>
   );
 };
