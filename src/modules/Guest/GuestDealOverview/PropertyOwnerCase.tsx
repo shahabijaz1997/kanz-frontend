@@ -382,10 +382,7 @@ const PropertyOwnerCase = ({ id, dealToken }: any) => {
                 )}
               </section>
               <section className="mb-4 mt-10 blur-content prevent-select" >
-                <div className="font-semibold text-sm">Invest</div>
-                <div className=" text-xs  text-neutral-500 mb-2">
-                  Minimum is $2500 Invest by Oct 2
-                </div>
+             
                 <div className="border-neutral-500 border-[1px] rounded-md min-w-full pl-2 justify-between flex bg-white">
                   <label className="w-full">
                     <input className="min-w-full h-9 no-spin-button"
@@ -450,10 +447,6 @@ const PropertyOwnerCase = ({ id, dealToken }: any) => {
 
               {/* Show/Hide based on some conditions */}
                <section className="mb-4 mt-10 blur-content  prevent-select" >
-                <div className="font-semibold text-sm">Invest</div>
-                <div className=" text-xs  text-neutral-500 mb-2">
-                  Minimum is $2500 Invest by Oct 2
-                </div>
                 <div className="border-neutral-500 border-[1px] rounded-md min-w-full pl-2 justify-between flex bg-white ">
                   <label className="w-full">
                     <input className="min-w-full h-9 no-spin-button"

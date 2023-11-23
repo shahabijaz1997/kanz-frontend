@@ -52,7 +52,7 @@ const InvestmentCalculator = ({}: any) => {
   return (
 <main>
 <section className="mb-4 mt-10 items-center justify-center">
-                <h1 className="text-black font-medium text-2xl mb-4">
+                <h1 className="text-black font-medium text-2xl mb-8">
                   Investment Calcluator
                 </h1>
                 <div className="w-full items-center grid">
@@ -70,7 +70,7 @@ const InvestmentCalculator = ({}: any) => {
                     </div>
                     <p className="justify-end flex items-center">
                       <span className="text-sm text-neutral-500 mr-2">
-                        Investment Amount
+                        Investment amount
                       </span>
                       <span className="text-lg font-semibold text-[#155E75]">{`(AED ${comaFormattedNumber(
                         investmentAmount.toString()
@@ -78,9 +78,9 @@ const InvestmentCalculator = ({}: any) => {
                     </p>
                   </div>
 
-                  <div className="min-w-full">
+                  <div className="min-w-full mt-3 mb-8">
                     <input
-                      className="min-w-full mb-4"
+                      className="min-w-full mb-2"
                       type="range"
                       id="rangeSlider2"
                       min="0.0"
@@ -99,7 +99,7 @@ const InvestmentCalculator = ({}: any) => {
 
                   <div className="min-w-full">
                     <input
-                      className="min-w-full mb-4"
+                      className="min-w-full mb-2"
                       type="range"
                       id="rangeSlider3"
                       min="0.0"
@@ -118,7 +118,7 @@ const InvestmentCalculator = ({}: any) => {
                 </div>
                 <section>
                   <div>
-                    <div className=" mb-4 mt-10  w-full font-medium border-[#155E75] border-[1px] rounded-md ">
+                    <div className=" mb-4 mt-10  w-full font-medium border-[#155E75] border-[1px] rounded-xl ">
                       <p className="px-5 pt-5 text-xl text-[#155E75] ">
                         Total return on investment
                       </p>

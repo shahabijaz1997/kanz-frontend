@@ -143,10 +143,10 @@ const ManageGroup = ({ dealId, type, dealIdReal }: any) => {
       }
     } catch (error: any) {
       if (error.response && error.response.status === 302) {
-        toast.dismiss();
-        toast.error("Session time out", toastUtil);
-        dispatch(saveToken(""));
-        navigate(RoutesEnums.LOGIN);
+    //   toast.dismiss();
+     //   toast.error("Session time out", toastUtil);
+      //  dispatch(saveToken(""));
+       // navigate(RoutesEnums.LOGIN);
       }
     } finally {
       setLoading(false);

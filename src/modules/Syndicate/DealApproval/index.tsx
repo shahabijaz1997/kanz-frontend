@@ -131,10 +131,10 @@ const DealApproval = ({}: any) => {
       }
     } catch (error:any) {
       if (error.response && error.response.status === 302) {
-        toast.dismiss()
+    /*     toast.dismiss()
         toast.error("Session time out",toastUtil)
         dispatch(saveToken(""));
-        navigate(RoutesEnums.LOGIN);
+        navigate(RoutesEnums.LOGIN); */
       }
     } finally {
       setLoading(false);
