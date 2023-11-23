@@ -63,7 +63,7 @@ const StartupCase = ({ dealToken, dealDetail, docs }: any) => {
   const [disableUpload, setdisableUpload]: any = useState(false);
   const [modalOpenComment, setmodalOpenComment]: any = useState(null);
 
-  const [investmentAmount, setAmount] = useState(0);
+  const [investmentAmount, setAmount] = useState<number>();
   const [selectedCurrency, setSelectedCurrency] = useState("USD");
 
   const handleAmountChange = (event: any) => {
@@ -238,178 +238,192 @@ const StartupCase = ({ dealToken, dealDetail, docs }: any) => {
   const getRoleBasedUI = () => {
     return (
       <React.Fragment>
-
-{deal?.equity_type && (
-  <>
-    {deal?.instrument_type && (
-      <div className="w-full inline-flex justify-between items-center border-b-[1px] border-b-neutral-200 py-3">
-        <h3 className="text-neutral-900 font-medium text-sm">
-          {language?.v3?.deal?.instrument_type}
-        </h3>
-        <p className="text-neutral-900 font-normal text-sm capitalize">
-          {deal?.instrument_type || language?.v3?.common?.not_added}
-        </p>
-      </div>
-    )}
-    {deal?.stage && (
-      <div className="w-full inline-flex justify-between items-center border-b-[1px] border-b-neutral-200 py-3">
-        <h3 className="text-neutral-900 font-medium text-sm">
-          {language?.v3?.table?.stage}
-        </h3>
-        <p className="text-neutral-900 font-normal text-sm capitalize">
-          {deal?.stage || language?.v3?.common?.not_added}
-        </p>
-      </div>
-    )}
-    {deal?.selling_price && (
-      <div className="w-full inline-flex justify-between items-center border-b-[1px] border-b-neutral-200 py-3">
-        <h3 className="text-neutral-900 font-medium text-sm">
-          {"Deal Target"}
-        </h3>
-        <p className="text-neutral-900 font-normal text-sm capitalize">
-          {comaFormattedNumber(deal?.selling_price) ||
-            language?.v3?.common?.not_added}
-        </p>
-      </div>
-    )}
-    {deal?.valuation && (
-      <div className="w-full inline-flex justify-between items-center border-b-[1px] border-b-neutral-200 py-3">
-        <h3 className="text-neutral-900 font-medium text-sm">
-          {language?.v3?.table?.valuation}
-        </h3>
-        <p className="text-neutral-900 font-normal text-sm capitalize">
-          ${comaFormattedNumber(deal?.valuation)} ({deal?.equity_type})
-        </p>
-      </div>
-    )}
-    {deal?.valuation_type && (
-      <div className="w-full inline-flex justify-between items-center border-b-[1px] border-b-neutral-200 py-3">
-        <h3 className="text-neutral-900 font-medium text-sm">
-          {language?.v3?.table?.type}
-        </h3>
-        <p className="text-neutral-900 font-normal text-sm capitalize">
-          {deal?.valuation_type}
-        </p>
-      </div>
-    )}
-    {deal?.terms &&  (
-      <div className="w-full inline-flex justify-between items-center border-b-[1px] border-b-neutral-200 py-3">
-        <h3 className="text-neutral-900 font-medium text-sm">
-          {"Minimum Check Size"}
-        </h3>
-        <p className="text-neutral-900 font-normal text-sm capitalize">
-        {deal.terms[0]?.is_enabled ? (numberFormatter(deal.terms[0]?.value) || "Yes") : "No"}
-        </p>
-      </div>
-    )}
-    {deal?.terms &&  (
-      <div className="w-full inline-flex justify-between items-center border-b-[1px] border-b-neutral-200 py-3">
-        <h3 className="text-neutral-900 font-medium text-sm">
-          {"Pro Rata"}
-        </h3>
-        <p className="text-neutral-900 font-normal text-sm capitalize">
-          {deal.terms[1]?.is_enabled ? "Yes" : "No"}
-        </p>
-      </div>
-    )}
-  </>
-)}   
-
-{deal?.safe_type && (
-  <>
-    {deal?.instrument_type && (
-      <div className="w-full inline-flex justify-between items-center border-b-[1px] border-b-neutral-200 py-3">
-        <h3 className="text-neutral-900 font-medium text-sm">
-          {language?.v3?.deal?.instrument_type}
-        </h3>
-        <p className="text-neutral-900 font-normal text-sm capitalize">
-          {deal?.instrument_type || language?.v3?.common?.not_added}
-        </p>
-      </div>
-    )}
-
-    {deal?.safe_type && (
-      <div className="w-full inline-flex justify-between items-center border-b-[1px] border-b-neutral-200 py-3">
-        <h3 className="text-neutral-900 font-medium text-sm">
-          {language?.v3?.deal?.instrument_type}
-        </h3>
-        <p className="text-neutral-900 font-normal text-sm capitalize">
-          {deal?.safe_type || language?.v3?.common?.not_added}
-        </p>
-      </div>
-    )}
-
-  {deal?.selling_price && (
-          <div className="w-full inline-flex justify-between items-center border-b-[1px] border-b-neutral-200 py-3">
-            <h3 className="text-neutral-900 font-medium text-sm">
-              {language?.v3?.table?.target}
-            </h3>
-            <p className="text-neutral-900 font-normal text-sm capitalize">
-              {numberFormatter(deal?.selling_price) ||
-                language?.v3?.common?.not_added}
-            </p>
-          </div>
+        {deal?.equity_type && (
+          <>
+            {deal?.instrument_type && (
+              <div className="w-full inline-flex justify-between items-center border-b-[1px] border-b-neutral-200 py-3">
+                <h3 className="text-neutral-900 font-medium text-sm">
+                  {language?.v3?.deal?.instrument_type}
+                </h3>
+                <p className="text-neutral-900 font-normal text-sm capitalize">
+                  {deal?.instrument_type || language?.v3?.common?.not_added}
+                </p>
+              </div>
+            )}
+            {deal?.stage && (
+              <div className="w-full inline-flex justify-between items-center border-b-[1px] border-b-neutral-200 py-3">
+                <h3 className="text-neutral-900 font-medium text-sm">
+                  {language?.v3?.table?.stage}
+                </h3>
+                <p className="text-neutral-900 font-normal text-sm capitalize">
+                  {deal?.stage || language?.v3?.common?.not_added}
+                </p>
+              </div>
+            )}
+            {deal?.selling_price && (
+              <div className="w-full inline-flex justify-between items-center border-b-[1px] border-b-neutral-200 py-3">
+                <h3 className="text-neutral-900 font-medium text-sm">
+                  {"Deal Target"}
+                </h3>
+                <p className="text-neutral-900 font-normal text-sm capitalize">
+                  {comaFormattedNumber(deal?.selling_price) ||
+                    language?.v3?.common?.not_added}
+                </p>
+              </div>
+            )}
+            {deal?.valuation && (
+              <div className="w-full inline-flex justify-between items-center border-b-[1px] border-b-neutral-200 py-3">
+                <h3 className="text-neutral-900 font-medium text-sm">
+                  {language?.v3?.table?.valuation}
+                </h3>
+                <p className="text-neutral-900 font-normal text-sm capitalize">
+                  ${comaFormattedNumber(deal?.valuation)} ({deal?.equity_type})
+                </p>
+              </div>
+            )}
+            {deal?.valuation_type && (
+              <div className="w-full inline-flex justify-between items-center border-b-[1px] border-b-neutral-200 py-3">
+                <h3 className="text-neutral-900 font-medium text-sm">
+                  {language?.v3?.table?.type}
+                </h3>
+                <p className="text-neutral-900 font-normal text-sm capitalize">
+                  {deal?.valuation_type}
+                </p>
+              </div>
+            )}
+            {deal?.terms && (
+              <div className="w-full inline-flex justify-between items-center border-b-[1px] border-b-neutral-200 py-3">
+                <h3 className="text-neutral-900 font-medium text-sm">
+                  {"Minimum Check Size"}
+                </h3>
+                <p className="text-neutral-900 font-normal text-sm capitalize">
+                  {deal.terms[0]?.is_enabled
+                    ? numberFormatter(deal.terms[0]?.value) || "Yes"
+                    : "No"}
+                </p>
+              </div>
+            )}
+            {deal?.terms && (
+              <div className="w-full inline-flex justify-between items-center border-b-[1px] border-b-neutral-200 py-3">
+                <h3 className="text-neutral-900 font-medium text-sm">
+                  {"Pro Rata"}
+                </h3>
+                <p className="text-neutral-900 font-normal text-sm capitalize">
+                  {deal.terms[1]?.is_enabled ? "Yes" : "No"}
+                </p>
+              </div>
+            )}
+          </>
         )}
 
-    {deal?.terms && (
-      <div className="w-full inline-flex justify-between items-center border-b-[1px] border-b-neutral-200 py-3">
-        <h3 className="text-neutral-900 font-medium text-sm">
-          {"Valuation Cap"}
-        </h3>
-        <p className="text-neutral-900 font-normal text-sm capitalize">
-          {deal.terms[0]?.is_enabled ? (deal.terms[0]?.value || "Yes") : "No"}
-        </p>
-      </div>
-    )}
+        {deal?.safe_type && (
+          <>
+            {deal?.instrument_type && (
+              <div className="w-full inline-flex justify-between items-center border-b-[1px] border-b-neutral-200 py-3">
+                <h3 className="text-neutral-900 font-medium text-sm">
+                  {language?.v3?.deal?.instrument_type}
+                </h3>
+                <p className="text-neutral-900 font-normal text-sm capitalize">
+                  {deal?.instrument_type || language?.v3?.common?.not_added}
+                </p>
+              </div>
+            )}
 
-    {deal?.terms &&  (
-      <div className="w-full inline-flex justify-between items-center border-b-[1px] border-b-neutral-200 py-3">
-        <h3 className="text-neutral-900 font-medium text-sm">
-          {"Discount"}
-        </h3>
-        <p className="text-neutral-900 font-normal text-sm capitalize">
-          {deal.terms[1]?.is_enabled ? (deal.terms[1]?.value || "Yes") : "No"}
-        </p>
-      </div>
-    )}
+            {deal?.safe_type && (
+              <div className="w-full inline-flex justify-between items-center border-b-[1px] border-b-neutral-200 py-3">
+                <h3 className="text-neutral-900 font-medium text-sm">
+                  {language?.v3?.deal?.instrument_type}
+                </h3>
+                <p className="text-neutral-900 font-normal text-sm capitalize">
+                  {deal?.safe_type || language?.v3?.common?.not_added}
+                </p>
+              </div>
+            )}
 
-    {deal?.terms &&  (
-      <div className="w-full inline-flex justify-between items-center border-b-[1px] border-b-neutral-200 py-3">
-        <h3 className="text-neutral-900 font-medium text-sm">
-          {"MFN Only"}
-        </h3>
-        <p className="text-neutral-900 font-normal text-sm capitalize">
-          {deal.terms[2]?.is_enabled ? (Object.keys(deal.terms[2]?.value).length > 0 ? "Yes" : "No") : "No"}
-        </p>
-      </div>
-    )}
+            {deal?.selling_price && (
+              <div className="w-full inline-flex justify-between items-center border-b-[1px] border-b-neutral-200 py-3">
+                <h3 className="text-neutral-900 font-medium text-sm">
+                  {language?.v3?.table?.target}
+                </h3>
+                <p className="text-neutral-900 font-normal text-sm capitalize">
+                  {numberFormatter(deal?.selling_price) ||
+                    language?.v3?.common?.not_added}
+                </p>
+              </div>
+            )}
 
-    {deal?.terms &&  (
-      <div className="w-full inline-flex justify-between items-center border-b-[1px] border-b-neutral-200 py-3">
-        <h3 className="text-neutral-900 font-medium text-sm">
-          {"Minimum Check Size"}
-        </h3>
-        <p className="text-neutral-900 font-normal text-sm capitalize">
-          {deal.terms[3]?.is_enabled ? (deal.terms[3]?.value || "Yes") : "No"}
-        </p>
-      </div>
-    )}
+            {deal?.terms && (
+              <div className="w-full inline-flex justify-between items-center border-b-[1px] border-b-neutral-200 py-3">
+                <h3 className="text-neutral-900 font-medium text-sm">
+                  {"Valuation Cap"}
+                </h3>
+                <p className="text-neutral-900 font-normal text-sm capitalize">
+                  {deal.terms[0]?.is_enabled
+                    ? deal.terms[0]?.value || "Yes"
+                    : "No"}
+                </p>
+              </div>
+            )}
 
-    {deal?.terms  && (
-      <div className="w-full inline-flex justify-between items-center border-b-[1px] border-b-neutral-200 py-3">
-        <h3 className="text-neutral-900 font-medium text-sm">
-          {"Pro Rata"}
-        </h3>
-        <p className="text-neutral-900 font-normal text-sm capitalize">
-          {deal.terms[4]?.is_enabled ? (Object.keys(deal.terms[4]?.value).length > 0 ? "Yes" : "No") : "No"}
-        </p>
-      </div>
-    )}
-  </>
-)}
-  
-      
-        {!deal?.equity_type && !deal?.safe_type && deal?.selling_price &&  (
+            {deal?.terms && (
+              <div className="w-full inline-flex justify-between items-center border-b-[1px] border-b-neutral-200 py-3">
+                <h3 className="text-neutral-900 font-medium text-sm">
+                  {"Discount"}
+                </h3>
+                <p className="text-neutral-900 font-normal text-sm capitalize">
+                  {deal.terms[1]?.is_enabled
+                    ? deal.terms[1]?.value || "Yes"
+                    : "No"}
+                </p>
+              </div>
+            )}
+
+            {deal?.terms && (
+              <div className="w-full inline-flex justify-between items-center border-b-[1px] border-b-neutral-200 py-3">
+                <h3 className="text-neutral-900 font-medium text-sm">
+                  {"MFN Only"}
+                </h3>
+                <p className="text-neutral-900 font-normal text-sm capitalize">
+                  {deal.terms[2]?.is_enabled
+                    ? Object.keys(deal.terms[2]?.value).length > 0
+                      ? "Yes"
+                      : "No"
+                    : "No"}
+                </p>
+              </div>
+            )}
+
+            {deal?.terms && (
+              <div className="w-full inline-flex justify-between items-center border-b-[1px] border-b-neutral-200 py-3">
+                <h3 className="text-neutral-900 font-medium text-sm">
+                  {"Minimum Check Size"}
+                </h3>
+                <p className="text-neutral-900 font-normal text-sm capitalize">
+                  {deal.terms[3]?.is_enabled
+                    ? deal.terms[3]?.value || "Yes"
+                    : "No"}
+                </p>
+              </div>
+            )}
+
+            {deal?.terms && (
+              <div className="w-full inline-flex justify-between items-center border-b-[1px] border-b-neutral-200 py-3">
+                <h3 className="text-neutral-900 font-medium text-sm">
+                  {"Pro Rata"}
+                </h3>
+                <p className="text-neutral-900 font-normal text-sm capitalize">
+                  {deal.terms[4]?.is_enabled
+                    ? Object.keys(deal.terms[4]?.value).length > 0
+                      ? "Yes"
+                      : "No"
+                    : "No"}
+                </p>
+              </div>
+            )}
+          </>
+        )}
+
+        {!deal?.equity_type && !deal?.safe_type && deal?.selling_price && (
           <div className="w-full inline-flex justify-between items-center border-b-[1px] border-b-neutral-200 py-3">
             <h3 className="text-neutral-900 font-medium text-sm">
               {language?.v3?.table?.sellingPrice}
@@ -579,7 +593,7 @@ const StartupCase = ({ dealToken, dealDetail, docs }: any) => {
 
   const syndicateInvestment = async () => {
     try {
-      setLoading(true)
+      setLoading(true);
       const { status } = await investSyndicate(
         dealDetail?.id,
         {
@@ -590,14 +604,13 @@ const StartupCase = ({ dealToken, dealDetail, docs }: any) => {
         authToken
       );
       if (status === 200) {
-        toast.success("Invested", toastUtil);        
+        toast.success("Invested", toastUtil);
       }
     } catch (error: any) {
       if (error?.response?.status === 400)
         toast.warning(error?.response?.data?.status?.message, toastUtil);
     } finally {
-      setLoading(false)
-      
+      setLoading(false);
     }
   };
 
@@ -655,7 +668,6 @@ const StartupCase = ({ dealToken, dealDetail, docs }: any) => {
 
   return (
     <main className="h-full max-h-full overflow-y-hidden">
-       
       <section>
         <Header />
       </section>
@@ -663,9 +675,12 @@ const StartupCase = ({ dealToken, dealDetail, docs }: any) => {
         className="w-full flex items-start justify-start"
         style={{ height: "calc(100% - 70px)" }}
       >
-       
-        {user.type.toLowerCase() === "investor" ? <Sidebar type={KanzRoles.INVESTOR} /> : <Sidebar type={KanzRoles.SYNDICATE} />}
-        
+        {user.type.toLowerCase() === "investor" ? (
+          <Sidebar type={KanzRoles.INVESTOR} />
+        ) : (
+          <Sidebar type={KanzRoles.SYNDICATE} />
+        )}
+
         {loading ? (
           <div
             className="absolute left-0 top-0 w-full h-full grid place-items-center"
@@ -682,7 +697,11 @@ const StartupCase = ({ dealToken, dealDetail, docs }: any) => {
             <section className="w-[60%]">
               <div
                 className="w-full inline-flex pb-4 items-center gap-2 relative top-[-25px] cursor-pointer border-b-[1px] border-b-neutral-200"
-                onClick={() => user.type === "Investor" ? navigate(RoutesEnums.INVESTOR_DASHBOARD):navigate(RoutesEnums.SYNDICATE_DASHBOARD) }
+                onClick={() =>
+                  user.type === "Investor"
+                    ? navigate(RoutesEnums.INVESTOR_DASHBOARD)
+                    : navigate(RoutesEnums.SYNDICATE_DASHBOARD)
+                }
               >
                 <Chevrond stroke="#000" className="rotate-90 w-4 h-4" />
                 <small className="text-neutral-500 text-sm font-medium">
@@ -814,55 +833,100 @@ const StartupCase = ({ dealToken, dealDetail, docs }: any) => {
                   )}
                 </section>
               )}
-              <section className="mb-4 mt-10">
-                <div className="font-semibold text-sm">Invest</div>
-                <div className=" text-xs  text-neutral-500 mb-2">
-                  Minimum is $2500 Invest by Oct 2
-                </div>
-                <div className="border-neutral-500 border-[1px] rounded-md min-w-full px-2 justify-between flex bg-white">
-                  <label className="w-full">
-                    <input
-                      className="min-w-full h-9 no-spin-button"
-                      pattern="[0-9]*"
-                      placeholder={
-                        selectedCurrency === "USD" ? "$ 00.00" : "AED 00.00"
-                      }
-                      onKeyDown={(evt) =>
-                        ["e", "E", "+", "-"].includes(evt.key) &&
-                        evt.preventDefault()
-                      }
-                      min="0"
-                      type="number"
-                      value={investmentAmount}
-                      onChange={handleAmountChange}
-                    />
-                  </label>
-                  <label className="w-[10%]">
-                    <select
-                      className="h-9"
-                      value={selectedCurrency}
-                      onChange={handleCurrencyChange}
-                    >
-                      <option className="text-md font-light" value="USD">
-                        USD
-                      </option>
-                      <option className="text-md font-light" value="AED">
-                        AED
-                      </option>
-                    </select>
-                  </label>
+
+              {deal?.status === DealStatus.LIVE && (
+                <>
+                  <section className="mb-4 mt-10">
+                
+                    <div className="border-neutral-500 border-[1px] rounded-md min-w-full px-2 justify-between flex bg-white">
+                      <label className="w-full">
+                        <input
+                          className="min-w-full h-9 no-spin-button"
+                          pattern="[0-9]*"
+                          placeholder={
+                            selectedCurrency === "USD" ? "$ 0.00" : "AED 0.00"
+                          }
+                          onKeyDown={(evt) =>
+                            ["e", "E", "+", "-"].includes(evt.key) &&
+                            evt.preventDefault()
+                          }
+                          min="0"
+                          type="number"
+                          value={investmentAmount}
+                          onChange={handleAmountChange}
+                        />
+                      </label>
+                      <label className="w-[10%]">
+                        <select
+                          className="h-9"
+                          value={selectedCurrency}
+                          onChange={handleCurrencyChange}
+                        >
+                          <option className="text-md font-light" value="USD">
+                            USD
+                          </option>
+                          <option className="text-md font-light" value="AED">
+                            AED
+                          </option>
+                        </select>
+                      </label>
+                    </div>
+                    <div className="mt-3">
+                      <Button
+                        onClick={() => {
+                          syndicateInvestment();
+                        }}
+                        className="w-full"
+                      >
+                        Invest Now
+                      </Button>
+                    </div>
+                  </section>
+                </>
+              )}
+              <section>
+                <div className="inline-flex justify-between w-full flex-col my-10">
+                  <h1 className="text-black font-medium text-2xl mb-3">
+                    {language?.v3?.common?.risk_disc}
+                  </h1>
+                  <p
+                    className="font-medium"
+                    /* dangerouslySetInnerHTML={{ __html: deal?.terms }} */
+                  >
+                    {language?.v3?.dealOverview?.heading1}
+                  </p>
+                  <ul className=" list-disc pl-6 text-sm">
+                    <li>{" " + language?.v3?.dealOverview?.h1bullet1}</li>
+                    <li>{" " + language?.v3?.dealOverview?.h1bullet2}</li>
+                    <li>{" " + language?.v3?.dealOverview?.h1bullet3}</li>
+                  </ul>
+                  <p
+                    className="font-medium"
+                    /* dangerouslySetInnerHTML={{ __html: deal?.terms }} */
+                  >
+                    {language?.v3?.dealOverview?.heading2}
+                  </p>
+                  <ul className=" list-disc pl-6 text-sm">
+                    <li>{" " + language?.v3?.dealOverview?.h2bullet1}</li>
+                    <li>{" " + language?.v3?.dealOverview?.h2bullet2}</li>
+                    <li>{" " + language?.v3?.dealOverview?.h1bullet3}</li>
+                  </ul>
+                  <p
+                    className="font-medium"
+                    /* dangerouslySetInnerHTML={{ __html: deal?.terms }} */
+                  >
+                    {language?.v3?.dealOverview?.heading3}
+                  </p>
+                  <ul className=" list-disc pl-6 text-sm">
+                    <li>{" " + language?.v3?.dealOverview?.h3bullet1}</li>
+                    <li>{" " + language?.v3?.dealOverview?.h3bullet2}</li>
+                    <li>{" " + language?.v3?.dealOverview?.h3bullet3}</li>
+                  </ul>
                 </div>
               </section>
               <div className="mb-4 mt-10">
                 {deal?.status === DealStatus.LIVE ? (
-                  <Button
-                    onClick={() => {
-                      syndicateInvestment()
-                    }}
-                    className="w-full"
-                  >
-                    Invest Now
-                  </Button>
+                  <React.Fragment></React.Fragment>
                 ) : (
                   <React.Fragment>
                     {deal?.invite?.status !== DealStatus.ACCEPTED && (
@@ -878,68 +942,10 @@ const StartupCase = ({ dealToken, dealDetail, docs }: any) => {
                   </React.Fragment>
                 )}
               </div>
-              <section>
-              <div className="inline-flex justify-between w-full flex-col my-10">
-                <h1 className="text-black font-medium text-2xl mb-3">
-                  {language?.v3?.common?.risk_disc}
-                </h1>
-                <p
-                  className="font-medium"                  
-                  /* dangerouslySetInnerHTML={{ __html: deal?.terms }} */
-                >
-                  {language?.v3?.dealOverview?.heading1}
-                </p>
-                <ul className=" list-disc pl-6 text-sm">
-                <li>
-                { " "+ language?.v3?.dealOverview?.h1bullet1}
-                </li>
-                <li>
-                { " "+ language?.v3?.dealOverview?.h1bullet2}
-                </li>
-                <li>
-                { " "+ language?.v3?.dealOverview?.h1bullet3}
-                </li>
-                </ul>
-                <p
-                  className="font-medium"                  
-                  /* dangerouslySetInnerHTML={{ __html: deal?.terms }} */
-                >
-                  {language?.v3?.dealOverview?.heading2}
-                </p>
-                <ul className=" list-disc pl-6 text-sm">
-                <li>
-                { " "+ language?.v3?.dealOverview?.h2bullet1}
-                </li>
-                <li>
-                { " "+ language?.v3?.dealOverview?.h2bullet2}
-                </li>
-                <li>
-                { " "+ language?.v3?.dealOverview?.h1bullet3}
-                </li>
-                </ul>
-                <p
-                  className="font-medium"                  
-                  /* dangerouslySetInnerHTML={{ __html: deal?.terms }} */
-                >
-                  {language?.v3?.dealOverview?.heading3}
-                </p>
-                <ul className=" list-disc pl-6 text-sm">
-                <li>
-                { " "+ language?.v3?.dealOverview?.h3bullet1}
-                </li>
-                <li>
-                { " "+ language?.v3?.dealOverview?.h3bullet2}
-                </li>
-                <li>
-                { " "+ language?.v3?.dealOverview?.h3bullet3}
-                </li>
-                </ul>
-              </div>
-              </section>
-           
-              {deal && user.type.toLowerCase() ==="syndicate" && (
+
+              {deal && user.type.toLowerCase() === "syndicate" && (
                 <div className="w-full mt-8 mb-4">
-                  <DealActivity dealID={deal.id}/>
+                  <DealActivity dealID={deal.id} />
                 </div>
               )}
             </section>
@@ -958,97 +964,95 @@ const StartupCase = ({ dealToken, dealDetail, docs }: any) => {
             {*/}
             <section className="w-[30%]">
               {/* Show/Hide based on some conditions */}
-              
-              {user.type.toLowerCase() === "syndicate" &&
-                  deal?.status === DealStatus.LIVE && (
-                    <div className="w-full inline-flex justify-end gap-4">
-                      <div className="relative z-10">
-                        <InvitesListing
-                          approve={true}
-                          dealId={dealToken}
-                          type={KanzRoles.SYNDICATE}
-                          dealIdReal={deal?.id}
-                        />
-                      </div>
-                    </div>
-                  )}
 
-                {user.type.toLowerCase() === "syndicate" &&
-                  deal?.status !== DealStatus.LIVE && (
-                    <div className="w-full inline-flex justify-end gap-4">
-                      {deal?.invite?.status !== DealStatus.ACCEPTED && (
-                        <React.Fragment>
-                          <Button
-                            type="outlined"
-                            onClick={() => setModalOpen(true)}
-                          >
-                            {language?.v3?.button?.req_change}
-                          </Button>
-                          <Button onClick={() => setModalOpen2(true)}>
-                            {language?.v3?.button?.interested}
-                          </Button>
-                        </React.Fragment>
-                      )}
-                    </div>
-                  )}
-              {deal?.status === DealStatus.LIVE && (<aside className="mx-4">
-                <section className="mb-4 mt-10">
-                  <div className="font-semibold text-sm">Invest</div>
-                  <div className=" text-xs  text-neutral-500 mb-2">
-                    Minimum is $2500 Invest by Oct 2
-                  </div>
-                  <div className="border-neutral-500 border-[1px] rounded-md min-w-full bg-white px-2 justify-between flex">
-                    <label className="w-full">
-                      <input
-                        className="min-w-full h-9 no-spin-button"
-                        pattern="[0-9]*"
-                        placeholder={
-                          selectedCurrency === "USD" ? "$ 00.00" : "AED 00.00"
-                        }
-                        onKeyDown={(evt) =>
-                          ["e", "E", "+", "-"].includes(evt.key) &&
-                          evt.preventDefault()
-                        }
-                        min="0"
-                        type="number"
-                        value={investmentAmount}
-                        onChange={handleAmountChange}
+              {user.type.toLowerCase() === "syndicate" &&
+                deal?.status === DealStatus.LIVE && (
+                  <div className="w-full inline-flex justify-end gap-4">
+                    <div className="relative z-10">
+                      <InvitesListing
+                        approve={true}
+                        dealId={dealToken}
+                        type={KanzRoles.SYNDICATE}
+                        dealIdReal={deal?.id}
                       />
-                    </label>
-                    <label>
-                      <select
-                        className="h-9"
-                        value={selectedCurrency}
-                        onChange={handleCurrencyChange}
-                      >
-                        <option className="text-md font-light" value="USD">
-                          USD
-                        </option>
-                        <option className="text-md font-light" value="AED">
-                          AED
-                        </option>
-                      </select>
-                    </label>
+                    </div>
                   </div>
-                  <Button
-                    onClick={() => {
-                      syndicateInvestment()
-                    }}
-                    className="w-full mt-4"
-                  >
-                    Invest Now
-                  </Button>
-                </section>
-              </aside>
-)}
-              
-              <aside className="border-[1px] border-neutral-200 rounded-md w-full p-3 mt-5">
-                <h2 className="text-neutral-700 text-xl font-medium">
-                  {language?.v3?.common?.invest_details}
-                </h2>
-                <small className="text-neutral-500 text-sm font-normal">
-                  {language?.v3?.common?.end_on} {deal?.end_at}
-                </small>
+                )}
+              {user.type.toLowerCase() === "syndicate" &&
+                deal?.status !== DealStatus.LIVE && (
+                  <div className="w-full inline-flex justify-end gap-4">
+                    {deal?.invite?.status !== DealStatus.ACCEPTED && (
+                      <React.Fragment>
+                        <Button
+                          type="outlined"
+                          onClick={() => setModalOpen(true)}
+                        >
+                          {language?.v3?.button?.req_change}
+                        </Button>
+                        <Button onClick={() => setModalOpen2(true)}>
+                          {language?.v3?.button?.interested}
+                        </Button>
+                      </React.Fragment>
+                    )}
+                  </div>
+                )}
+
+              <aside className="border-[1px] border-neutral-200 rounded-md w-full px-3 pt-3 mt-5 bg-white">
+                {deal?.status === DealStatus.LIVE && (
+                  <aside className="">
+                    <section className="mb-4 mt-1">
+                      <h2 className="text-neutral-700 text-xl font-medium">
+                        {language?.v3?.common?.invest_details}
+                      </h2>
+                      <small className="text-neutral-500 text-sm font-normal">
+                        {language?.v3?.common?.end_on} {deal?.end_at}
+                      </small>
+                      <div className="border-neutral-500 border-[1px] rounded-md min-w-full bg-white px-2 justify-between flex">
+                        <label className="w-full">
+                          <input
+                            className="min-w-full h-9 no-spin-button"
+                            pattern="[0-9]*"
+                            placeholder={
+                              selectedCurrency === "USD"
+                                ? "$ 0.00"
+                                : "AED 0.00"
+                            }
+                            onKeyDown={(evt) =>
+                              ["e", "E", "+", "-"].includes(evt.key) &&
+                              evt.preventDefault()
+                            }
+                            min="0"
+                            type="number"
+                            value={investmentAmount}
+                            onChange={handleAmountChange}
+                          />
+                        </label>
+                        <label>
+                          <select
+                            className="h-9"
+                            value={selectedCurrency}
+                            onChange={handleCurrencyChange}
+                          >
+                            <option className="text-md font-light" value="USD">
+                              USD
+                            </option>
+                            <option className="text-md font-light" value="AED">
+                              AED
+                            </option>
+                          </select>
+                        </label>
+                      </div>
+                      <Button
+                        onClick={() => {
+                          syndicateInvestment();
+                        }}
+                        className="w-full mt-4"
+                      >
+                        Invest Now
+                      </Button>
+                    </section>
+                  </aside>
+                )}
 
                 {getRoleBasedUI()}
               </aside>

@@ -70,8 +70,7 @@ const PropertyOwnerCase = ({ dealToken, dealDetail, dealDocs }: any) => {
   const [modalOpenComment, setmodalOpenComment]: any = useState(null);
   const [disableUpload, setdisableUpload]: any = useState(false);
   const [selectedCurrency, setSelectedCurrency] = useState("USD");
-  const [investmentAmount, setAmount] = useState(0);
-
+  const [investmentAmount, setAmount] = useState<number>();
 
   const handleAmountChange = (event: any) => {
     setAmount(event.target.value);
@@ -231,10 +230,9 @@ const PropertyOwnerCase = ({ dealToken, dealDetail, dealDocs }: any) => {
     }
   };
 
-  
   const syndicateInvestment = async () => {
     try {
-      setLoading(true)
+      setLoading(true);
       const { status } = await investSyndicate(
         dealDetail?.id,
         {
@@ -245,14 +243,13 @@ const PropertyOwnerCase = ({ dealToken, dealDetail, dealDocs }: any) => {
         authToken
       );
       if (status === 200) {
-        toast.success("Invested", toastUtil);        
+        toast.success("Invested", toastUtil);
       }
     } catch (error: any) {
       if (error?.response?.status === 400)
         toast.warning(error?.response?.data?.status?.message, toastUtil);
     } finally {
-      setLoading(false)
-      
+      setLoading(false);
     }
   };
 
@@ -427,7 +424,7 @@ const PropertyOwnerCase = ({ dealToken, dealDetail, dealDocs }: any) => {
                   </Button>
                 </section>
               )}
-              <aside className="border-[1px] border-neutral-200 rounded-md w-full p-3 mt-5 flex gap-4 justify-between">
+              <aside className="border-[1px] border-neutral-200 rounded-md w-full px-3 py-5 mt-5 flex gap-4 justify-between">
                 {deal?.features?.bedrooms && (
                   <section className="inline-flex flex-col items-start justify-start">
                     <small className="text-neutral-500 text-sm font-medium mb-2">
@@ -524,17 +521,14 @@ const PropertyOwnerCase = ({ dealToken, dealDetail, dealDocs }: any) => {
                   )}
 
                   <section className="mb-4 mt-10">
-                    <div className="font-semibold text-sm">Invest</div>
-                    <div className=" text-xs  text-neutral-500 mb-2">
-                      Minimum is $2500 Invest by Oct 2
-                    </div>
+              
                     <div className="border-neutral-500 border-[1px] rounded-md min-w-full px-2 justify-between flex bg-white">
                       <label className="w-full">
                         <input
                           className="min-w-full h-9 no-spin-button"
                           pattern="[0-9]*"
                           placeholder={
-                            selectedCurrency === "USD" ? "$ 00.00" : "AED 00.00"
+                            selectedCurrency === "USD" ? "$ 0.00" : "AED 0.00"
                           }
                           onKeyDown={(evt) =>
                             ["e", "E", "+", "-"].includes(evt.key) &&
@@ -560,6 +554,16 @@ const PropertyOwnerCase = ({ dealToken, dealDetail, dealDocs }: any) => {
                           </option>
                         </select>
                       </label>
+                    </div>
+                    <div className="mt-3">
+                      <Button
+                        onClick={() => {
+                          syndicateInvestment();
+                        }}
+                        className="w-full"
+                      >
+                        Invest Now
+                      </Button>
                     </div>
                   </section>
                 </>
@@ -620,14 +624,7 @@ const PropertyOwnerCase = ({ dealToken, dealDetail, dealDocs }: any) => {
               )}
               <div className="mb-4 mt-10">
                 {deal?.status === DealStatus.LIVE ? (
-                  <Button
-                    onClick={() => {
-                      syndicateInvestment();
-                    }}
-                    className="w-full"
-                  >
-                    Invest Now
-                  </Button>
+                  <React.Fragment></React.Fragment>
                 ) : (
                   <React.Fragment>
                     {deal?.invite?.status !== DealStatus.ACCEPTED && (
@@ -683,65 +680,61 @@ const PropertyOwnerCase = ({ dealToken, dealDetail, dealDocs }: any) => {
                     )}
                   </div>
                 )}
-              {deal?.status === DealStatus.LIVE && (
-                <section className="mb-4 mt-10">
-                  <div className="font-semibold text-sm">Invest</div>
-                  <div className=" text-xs  text-neutral-500 mb-2">
-                    Minimum is $2500 Invest by Oct 2
-                  </div>
-                  <div className="border-neutral-500 border-[1px] rounded-md min-w-full px-2 pr-10 justify-between flex bg-white">
-                    <label className="w-full">
-                      <input
-                        className="min-w-full h-9 no-spin-button"
-                        pattern="[0-9]*"
-                        placeholder={
-                          selectedCurrency === "USD" ? "$ 00.00" : "AED 00.00"
-                        }
-                        onKeyDown={(evt) =>
-                          ["e", "E", "+", "-"].includes(evt.key) &&
-                          evt.preventDefault()
-                        }
-                        min="0"
-                        type="number"
-                        value={investmentAmount}
-                        onChange={handleAmountChange}
-                      />
-                    </label>
-                    <label className="w-[10%]">
-                      <select
-                        className="h-9"
-                        value={selectedCurrency}
-                        onChange={handleCurrencyChange}
-                      >
-                        <option className="text-md font-light" value="USD">
-                          USD
-                        </option>
-                        <option className="text-md font-light" value="AED">
-                          AED
-                        </option>
-                      </select>
-                    </label>
-                  </div>
-                  <div className="mt-4">
-                  <Button
-                    onClick={() => {
-                      syndicateInvestment();
-                    }}
-                    className="w-full"
-                  >
-                    Invest Now
-                  </Button>
-                  </div>
-              
-                </section>
-              )}
-              <aside className="border-[1px] border-neutral-200 rounded-md w-full p-3 mt-5">
+              <aside className="border-[1px] border-neutral-200 rounded-md w-full px-3 pt-3 mt-5 bg-white">
                 <h2 className="text-neutral-700 text-xl font-medium">
                   {language?.v3?.common?.invest_details}
                 </h2>
                 <small className="text-neutral-500 text-sm font-normal">
                   {language?.v3?.common?.end_on} {deal?.end_at}
                 </small>
+
+                {deal?.status === DealStatus.LIVE && (
+                  <section className="mb-4 mt-1">
+                    <div className="border-neutral-500 border-[1px] rounded-md min-w-full px-2 pr-10 justify-between flex bg-white">
+                      <label className="w-full">
+                        <input
+                          className="min-w-full h-9 no-spin-button"
+                          pattern="[0-9]*"
+                          placeholder={
+                            selectedCurrency === "USD" ? "$ 0.00" : "AED 0.00"
+                          }
+                          onKeyDown={(evt) =>
+                            ["e", "E", "+", "-"].includes(evt.key) &&
+                            evt.preventDefault()
+                          }
+                          min="0"
+                          type="number"
+                          value={investmentAmount}
+                          onChange={handleAmountChange}
+                        />
+                      </label>
+                      <label className="w-[10%]">
+                        <select
+                          className="h-9"
+                          value={selectedCurrency}
+                          onChange={handleCurrencyChange}
+                        >
+                          <option className="text-md font-light" value="USD">
+                            USD
+                          </option>
+                          <option className="text-md font-light" value="AED">
+                            AED
+                          </option>
+                        </select>
+                      </label>
+                    </div>
+                    <div className="mt-4">
+                      <Button
+                        onClick={() => {
+                          syndicateInvestment();
+                        }}
+                        className="w-full"
+                      >
+                        Invest Now
+                      </Button>
+                    </div>
+                  </section>
+                )}
 
                 {getRoleBasedUI()}
               </aside>
