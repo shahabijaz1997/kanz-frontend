@@ -51,7 +51,6 @@ export const getLiveDeals = (inviteeId:any, token:any, filters:any) => {
   if (filters !== "All")
   queryParameters.append("type", filters.toLowerCase());
   const apiUrl = `${ENV.API_URL}/${ENV.API_VERSION}/deals/live?${queryParameters.toString()}`;
-  console.log(apiUrl)
   return axios.get(apiUrl, {
     headers: {
       Authorization: `Bearer ${token}`,

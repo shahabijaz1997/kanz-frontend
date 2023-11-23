@@ -138,7 +138,7 @@ const InvitesListing = ({  dealId, type, dealIdReal }: any) => {
               <Button
                 divStyle="items-center justify-end max-w-fit"
                 type="outlined"
-                className="!p-3 !py-1 !rounded-full"
+                className="!p-3 !py-0 !rounded-full !text-black "
                 onClick={() => onShareDeal(investor?.id)}
               >
                 Share
@@ -188,7 +188,7 @@ const InvitesListing = ({  dealId, type, dealIdReal }: any) => {
             <input
               type="search"
               className="h-full w-full outline-none pl-2 pr-[6.5rem] text-sm font-normal text-gray-400"
-              placeholder={language?.v3?.common?.search}
+              placeholder={"Search for Investors"}
             />
           </div>
 
@@ -201,7 +201,8 @@ const InvitesListing = ({  dealId, type, dealIdReal }: any) => {
             </div>
             
           ) : (
-            investors.length > 0 ? (  React.Children.toArray(
+            <div className="max-h-[250px] overflow-auto custom-scroll">
+              { investors.length > 0 ? (  React.Children.toArray(
                 investors.map((investor: any) => (
                   <div className="py-3 border-b-[1px] border-b-neutral-200 w-full inline-flex items-center">
                     <div className=" justify-between items-center w-full">
@@ -216,7 +217,9 @@ const InvitesListing = ({  dealId, type, dealIdReal }: any) => {
                 <div className="flex flex-col items-center justify-start mt-8 space-y-4">
                     All investors invited
                 </div>
-              )
+              )}
+            </div>
+           
           
           )}
           <span id={`group-${user.id}`} className="inline-flex justify-between w-full mt-2">
