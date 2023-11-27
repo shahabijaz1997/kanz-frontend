@@ -65,9 +65,7 @@ const SyndicateDashboard = ({}: any) => {
     d3: false,
   });
 
-  useEffect(() => {
-    console.log(window.location.pathname)
-  }, []);
+
 
   useEffect(() => {
     dispatch(saveDataHolder(""));
@@ -98,8 +96,8 @@ const SyndicateDashboard = ({}: any) => {
             [language?.v3?.table?.rentalAmount]: `$${numberFormatter(
               Number(deal?.rental_amount)
             )}`,
-            ["Start At"]: formatDate(deal?.start_at),
-            ["End At"]: formatDate(deal?.end_at),
+            ["Start At"]: (deal?.start_at),
+            ["End At"]: (deal?.end_at),
             [""]: (
               <div
               onClick={() => {

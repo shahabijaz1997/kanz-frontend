@@ -178,6 +178,7 @@ export const signOff = (emptyObj: any, dealId: number, token: string) => {
     }
   );
 };
+
 export const syndicateApprove = (
   payload: any,
   dealId: number,
@@ -185,6 +186,22 @@ export const syndicateApprove = (
   token: string
 ) => {
   return axios.put(
+    `${ENV.API_URL}/${ENV.API_VERSION}/deals/${dealId}/invites/${id}`,
+    payload,
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    }
+  );
+};
+export const requestSyndication = (
+  payload: any,
+  dealId: number,
+  id: number,
+  token: string
+) => {
+  return axios.post(
     `${ENV.API_URL}/${ENV.API_VERSION}/deals/${dealId}/invites/${id}`,
     payload,
     {
