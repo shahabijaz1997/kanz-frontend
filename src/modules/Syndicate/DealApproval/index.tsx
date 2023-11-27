@@ -104,7 +104,7 @@ const DealApproval = ({}: any) => {
                   e.stopPropagation();
                   navigate(
                     `${RoutesEnums.SYNDICATE_DEAL_DETAIL}/${deal?.deal?.token}`,
-                    { state: deal?.deal?.type }
+                    { state: window.location.pathname }
                   );
                 }}
                 className="bg-neutral-100 inline-flex items-center justify-center w-[30px] h-[30px] rounded-full transition-all hover:bg-cbc-transparent"

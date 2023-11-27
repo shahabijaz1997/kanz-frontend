@@ -11,6 +11,7 @@ const CURRENCIES = ["USD", "AED"]
 
 const SyndicateDealOverview = ({}: any) => {
 
+  const { state } = useLocation();
   useEffect(() => {
     onGetdeal()
   }, [])
@@ -35,9 +36,9 @@ const SyndicateDealOverview = ({}: any) => {
   
   return deal && (
     deal.category === KanzRoles.STARTUP.toLocaleLowerCase() ?
-    <StartupCase dealToken={dealToken} dealDetail={deal} docs= {selectedDocs} />
+    <StartupCase dealToken={dealToken} dealDetail={deal} docs= {selectedDocs} returnPath={state} />
     :
-    <PropertyOwnerCase dealToken={dealToken} dealDetail={deal} dealDocs= {selectedDocs}  />
+    <PropertyOwnerCase dealToken={dealToken} dealDetail={deal} dealDocs= {selectedDocs} returnPath={state} />
   )
 }
 

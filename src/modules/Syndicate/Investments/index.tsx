@@ -11,20 +11,15 @@ import Table from "../../../shared/components/Table";
 import { RoutesEnums, StartupRoutes } from "../../../enums/routes.enum";
 import Modal from "../../../shared/components/Modal";
 import CrossIcon from "../../../ts-icons/crossIcon.svg";
-import { saveToken } from "../../../redux-toolkit/slicer/auth.slicer";
 import { saveDataHolder } from "../../../redux-toolkit/slicer/dataHolder.slicer";
-import { getDeals, getInvitedDeals, getLiveDeals } from "../../../apis/deal.api";
+import {  getLiveDeals } from "../../../apis/deal.api";
 import { formatDate } from "../../../utils/object.utils";
 import {
-  comaFormattedNumber,
   numberFormatter,
 } from "../../../utils/object.utils";
 import Spinner from "../../../shared/components/Spinner";
-import { ApplicationStatus } from "../../../enums/types.enum";
 import Chevrond from "../../../ts-icons/chevrond.svg";
 import CustomStatus from "../../../shared/components/CustomStatus";
-import { toast } from "react-toastify";
-import { toastUtil } from "../../../utils/toast.utils";
 
 const SyndicateInvestments = ({}: any) => {
   const navigate = useNavigate();
@@ -105,7 +100,7 @@ const SyndicateInvestments = ({}: any) => {
                   e.stopPropagation();
                   navigate(
                     `${RoutesEnums.SYNDICATE_DEAL_DETAIL}/${deal?.token}`,
-                    { state: deal?.deal_type }
+                    { state: window.location.pathname }
                   );
                 }}
                 className="bg-neutral-100 inline-flex items-center justify-center w-[30px] h-[30px] rounded-full transition-all hover:bg-cbc-transparent"
@@ -132,10 +127,7 @@ const SyndicateInvestments = ({}: any) => {
       }
     } catch (error:any) {
       if (error.response && error.response.status === 302) {
-  /*       toast.dismiss()
-        toast.error("Session time out",toastUtil)
-        dispatch(saveToken(""));
-        navigate(RoutesEnums.LOGIN); */
+
       }
     } finally {
       setLoading(false);

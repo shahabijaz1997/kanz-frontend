@@ -78,15 +78,15 @@ const GeneralHeader = ({ responsive = false, showMenu = false, showLanguageDropd
                 <React.Fragment>
                     {authToken ? (
                         <li onClick={onLogout}>
-                            <button className="text-neutral-500 font-medium cursor-pointer text-sm tracking-[0.03em]">{language.buttons.logout}</button>
+                            <button className="text-neutral-500 font-medium cursor-pointer text-sm tracking-[0.03em]">{language?.buttons?.logout}</button>
                         </li>
                     ) : (
                         <React.Fragment>
                             <li onClick={() => navigate(RoutesEnums.LOGIN)}>
-                                <button className="text-neutral-500 cursor-pointer text-sm tracking-[0.03em]">{language.buttons.signin}</button>
+                                <button className="text-neutral-500 cursor-pointer text-sm tracking-[0.03em]">{language?.buttons?.signin}</button>
                             </li>
                             <li onClick={() => navigate(RoutesEnums.SIGNUP, { state: KanzRoles.INVESTOR })}>
-                                <button className="text-white text-sm tracking-[0.03em] bg-cyan-800 rounded-md focus:outline-none focus:shadow-outline w-full h-[38px] px-3">{language.buttons.getStart}</button>
+                                <button className="text-white text-sm tracking-[0.03em] bg-cyan-800 rounded-md focus:outline-none focus:shadow-outline w-full h-[38px] px-3">{language?.buttons?.getStart}</button>
                             </li>
                         </React.Fragment>
                     )}
@@ -158,7 +158,7 @@ const GeneralHeader = ({ responsive = false, showMenu = false, showLanguageDropd
                                 </li>
                             ) : (
                                 <li onClick={() => navigate(RoutesEnums.SIGNUP, { state: KanzRoles.INVESTOR })}>
-                                    <button className="text-white text-sm tracking-[0.03em] bg-cyan-800 rounded-md focus:outline-none focus:shadow-outline w-full h-[38px] px-3">{language.buttons.getStart}</button>
+                                    <button className="text-white text-sm tracking-[0.03em] bg-cyan-800 rounded-md focus:outline-none focus:shadow-outline w-full h-[38px] px-3">{language?.buttons?.getStart}</button>
                                 </li>
                             )}
                         </ul>

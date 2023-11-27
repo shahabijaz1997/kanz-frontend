@@ -48,8 +48,8 @@ const DealActivity = ({dealID}: any) => {
       if (status === 200) {
         let activity = data?.status?.data?.map((dealActivity: any) => {
           return {
-            id: dealActivity?.id,
-            "Name":<span className="capitalize">{dealActivity?.investor_name}</span> ,
+            id: dealActivity?.investor?.id,
+            "Name":<span className="capitalize">{dealActivity?.investor?.name}</span> ,
             ["Date"]:
               dealActivity?.date|| "N/A",
              ["Status"]:

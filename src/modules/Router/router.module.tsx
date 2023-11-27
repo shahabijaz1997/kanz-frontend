@@ -2,6 +2,7 @@ import React, {
   PropsWithChildren,
   Suspense,
   lazy,
+  useEffect,
   useLayoutEffect,
   useState,
 } from "react";
@@ -56,6 +57,7 @@ const StartupInvestment = lazy(() => import("../Syndicate/StartupInvestment"));
 const SyndicateDashboard = lazy(() => import("../Syndicate"));
 const SyndicateDealOverview = lazy(() => import("../SyndicateDealOverview"));
 
+
 /* ---### Static ###--- */
 const PrivacyPolicy = lazy(() => import("../Policies/PrivacyPolicy"));
 const TermsAndConditions = lazy(() => import("../Policies/TermsAndConditions"));
@@ -91,12 +93,22 @@ const GUARD_ROUTE = (props: PropsWithChildren | any) => {
   return <Navigate to={RoutesEnums.WELCOME} replace />;
 };
 
+
 const GUARD_SUBMITTED_ROUTE = (props: PropsWithChildren | any) => {
   const { children, status } = props;
   const user: any = useSelector((state: RootState) => state.user.value);
   if (user && props.role.includes(user.type) && user.status === status)
     return <React.Fragment>{children}</React.Fragment>;
   return <Navigate to={RoutesEnums.WELCOME} replace />;
+};
+
+const CHECK_GUARD_GUEST_ROUTE = (props: PropsWithChildren | any) => {
+  const { children, guestRoute } = props;
+  const user: any = useSelector((state: RootState) => state.user.value);
+  const authToken:any = useSelector((state: RootState)=> state.auth.value);
+  if (user && authToken)
+    return <React.Fragment>{children}</React.Fragment>;
+  return <Navigate to={guestRoute} replace />;
 };
 
 const RouterModule = () => {
@@ -150,11 +162,14 @@ const RouterModule = () => {
           </Suspense>
         }
       />
+
+
+      
       <Route
-        path={`${RoutesEnums.GUEST_DEAL_VIEW}/:dealToken`}
+        path={`${RoutesEnums.SYNDICATE_DEAL_DETAIL}/:dealToken`}
         element={
           <Suspense fallback={<Loader />}>
-            <GuestInvestorOverview/>
+            {authToken ? <SyndicateDealOverview/> : <GuestInvestorOverview/>}
           </Suspense>
         }
       />
@@ -169,18 +184,7 @@ const RouterModule = () => {
         {.##.....................#######..##....##.########...#######..##.....##.##.....##.########..####.##....##..######......##.....##..#######...#######.....##....########..######...............##......
         {*/}
 
-<Route
-        path={RoutesEnums.GUEST_DEAL_VIEW}
-        element={
-          <Suspense fallback={<Loader />}>
-            
-              
-                <GuestInvestorOverview guard={authToken}/>
-              
-            
-          </Suspense>
-        }
-      />
+
       <Route
         path={RoutesEnums.INVESTOR_DETAILS}
         element={
@@ -462,21 +466,23 @@ const RouterModule = () => {
         }
       />
 
-      <Route
+    {/*   <Route
         path={`${RoutesEnums.SYNDICATE_DEAL_DETAIL}/:dealToken`}
         element={
           <Suspense fallback={<Loader />}>
-            <CHECK_LOGGED_IN>
+            <GuestDecider guard={authToken} />
+           {/*  <CHECK_LOGGED_IN>
               <GUARD_SUBMITTED_ROUTE
                 role={[KanzRoles.SYNDICATE,KanzRoles.INVESTOR]}
                 status={ApplicationStatus.APPROVED}
               >
+
                 <SyndicateDealOverview />
               </GUARD_SUBMITTED_ROUTE>
-            </CHECK_LOGGED_IN>
+            </CHECK_LOGGED_IN> 
           </Suspense>
         }
-      />
+      /> */}
 
       <Route
         path={`${RoutesEnums.SYNDICATE_INVESTMENTS}`}
