@@ -31,6 +31,7 @@ import {
 import {
   addCommentOnDeal,
   getDealDetail,
+  requestSyndication,
   signOff,
   syndicateApprove,
 } from "../../apis/deal.api";
@@ -62,6 +63,7 @@ const StartupCase = ({ dealToken, dealDetail, docs, returnPath }: any) => {
   const [modalOpen, setModalOpen]: any = useState(null);
   const [modalOpen2, setModalOpen2]: any = useState(null);
   const [modalOpen3, setModalOpen3]: any = useState(null);
+  const [modalOpen4, setModalOpen4]: any = useState(null);
   const [disableUpload, setdisableUpload]: any = useState(false);
   const [modalOpenComment, setmodalOpenComment]: any = useState(null);
 
@@ -656,6 +658,44 @@ const StartupCase = ({ dealToken, dealDetail, docs, returnPath }: any) => {
     }
   };
 
+  
+  const syndicationRequest = async () => {
+    try {
+      let allFiles = files.map((file: any) => file.file);
+      const formData = new FormData();
+      formData.append("invite[status]", "accepted");
+      for (let i = 0; i < allFiles.length; i++) {
+        const element = allFiles[i];
+        formData.append(
+          `invite[deal_attachments][${i}]file`,
+          element,
+          element?.name
+        );
+        formData.append(
+          `invite[deal_attachments][${i}]attachment_kind`,
+          element?.type.includes("image") ? "image" : "pdf"
+        );
+        formData.append(`invite[deal_attachments][${i}]name`, element?.name);
+      }
+      let  { status, data } = await requestSyndication (
+        formData,
+        deal?.id,
+        deal?.invite?.id,
+        authToken
+      );
+      if (status === 200) {
+        toast.success("Congratulations! Approved", toastUtil);
+        setModalOpen4(false);
+      }
+    } catch (error) {
+      console.log(error);
+    } finally {
+      onGetdeal();
+      setLoading(false);
+      setChanges({ comment: "", action: "", document: null });
+    }
+  };
+
   const onTo = (type: string) => {
     setFileLoading(true);
     let idx: number = deal?.docs?.findIndex(
@@ -971,7 +1011,6 @@ const StartupCase = ({ dealToken, dealDetail, docs, returnPath }: any) => {
             {*/}
             <section className="w-[30%]">
               {/* Show/Hide based on some conditions */}
-            
               {user.type.toLowerCase() === "syndicate" &&
                 deal?.status === DealStatus.LIVE && deal?.invite?.status === DealStatus.ACCEPTED && (
                   <div className="w-full inline-flex justify-end gap-4">
@@ -1329,6 +1368,99 @@ const StartupCase = ({ dealToken, dealDetail, docs, returnPath }: any) => {
             <header className="bg-cbc-grey-sec h-16 py-2 px-3 inline-flex w-full justify-between items-center">
               <h3 className="text-xl font-medium text-neutral-700">
                 Deal Approval
+              </h3>
+            </header>
+
+            <section className="py-3 px-4">
+              <div className="mb-3 w-full">
+                <span className="w-full">
+                  <button
+                    className="bg-cbc-grey-sec rounded-lg inline-flex justify-center gap-2 px-4 py-2 w-full"
+                    onClick={() => {
+                      let elem: any =
+                        document.getElementById("doc_deal_uploader");
+                      elem.click();
+                    }}
+                  >
+                    <UploadIcon />
+                    <small className="text-cyan-800 text-sm font-medium">
+                      Upload a Document
+                    </small>
+                  </button>
+                  <input
+                    type="file"
+                    className="hidden"
+                    id="doc_deal_uploader"
+                    multiple={true}
+                    onChange={handleFileUpload}
+                  />
+                </span>
+              </div>
+              <div className="mb-3 w-full">
+                {React.Children.toArray(
+                  files?.map((doc: any) => {
+                    return (
+                      <section className="rounded-md bg-cbc-grey-sec px-1 py-2 inline-flex items-center justify-between border-[1px] border-neutral-200 w-full">
+                        <span className="inline-flex items-center">
+                          <div className="rounded-[7px] bg-white shadow shadow-cs-3 w-14 h-14 inline-grid place-items-center">
+                            <img src={FileSVG} alt="File" />
+                          </div>
+                          <span className="inline-flex flex-col items-start ml-3">
+                            <h2
+                              className="text-sm font-medium text-neutral-900 max-w-[150px] truncate"
+                              title={doc?.file?.name}
+                            >
+                              {doc?.file?.name}
+                            </h2>
+                          </span>
+                        </span>
+
+                        <small>{doc?.size} MB</small>
+                        <div
+                          className="rounded-lg w-8 h-8 inline-flex items-center flex-row justify-center gap-2 bg-white cursor-pointer"
+                          onClick={() => {
+                            setFiles((pr: any) => {
+                              let files = pr.filter(
+                                (p: any) => p.id !== doc.id
+                              );
+                              return files;
+                            });
+                          }}
+                        >
+                          <BinIcon stroke="#404040" />
+                        </div>
+                      </section>
+                    );
+                  })
+                )}
+              </div>
+            </section>
+
+            <footer className="inline-flex justify-between gap-3 py-2 px-3 w-full">
+              <Button
+                disabled={disableUpload}
+                className="w-full !py-1"
+                divStyle="flex items-center justify-center w-full"
+                onClick={() => {
+                  setdisableUpload(true);
+                  postSignOff();
+                }}
+              >
+                {language.buttons.submit}
+              </Button>
+            </footer>
+          </aside>
+        </div>
+      </Modal>
+      <Modal show={modalOpen4 ? true : false} className="w-full">
+        <div
+          className="rounded-md overflow-hidden inline-grid place-items-center absolute top-1/2 left-1/2 translate-x-[-50%] translate-y-[-50%]"
+          style={{ backgroundColor: "rgba(0, 0, 0, 0.078" }}
+        >
+          <aside className="bg-white w-[400px] rounded-md h-full">
+            <header className="bg-cbc-grey-sec h-16 py-2 px-3 inline-flex w-full justify-between items-center">
+              <h3 className="text-xl font-medium text-neutral-700">
+                Request Syndication
               </h3>
             </header>
 
