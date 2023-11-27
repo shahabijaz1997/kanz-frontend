@@ -71,7 +71,7 @@ const PropertyOwnerCase = ({ dealToken, dealDetail, dealDocs, returnPath }: any)
   const [modalOpenComment, setmodalOpenComment]: any = useState(null);
   const [disableUpload, setdisableUpload]: any = useState(false);
   const [selectedCurrency, setSelectedCurrency] = useState("USD");
-  const [investmentAmount, setAmount] = useState<number>(0);
+  const [investmentAmount, setAmount] = useState<number>();
 
   const handleAmountChange = (event: any) => {
     setAmount(event.target.value);
@@ -209,7 +209,6 @@ const PropertyOwnerCase = ({ dealToken, dealDetail, dealDocs, returnPath }: any)
       let  { status, data } = await requestSyndication (
         formData,
         deal?.id,
-        deal?.invite?.id,
         authToken
       );
       if (status === 200) {
@@ -632,7 +631,7 @@ const PropertyOwnerCase = ({ dealToken, dealDetail, dealDocs, returnPath }: any)
                     </div>
                     <div className="mt-3">
                       <Button
-                        disabled={investmentAmount < 1}
+                        disabled={investmentAmount === undefined || investmentAmount < 1}
                         onClick={() => {
                           syndicateInvestment();
                         }}
@@ -802,7 +801,7 @@ const PropertyOwnerCase = ({ dealToken, dealDetail, dealDocs, returnPath }: any)
                     </div>
                     <div className="mt-4">
                       <Button
-                        disabled={investmentAmount < 1}
+                        disabled={investmentAmount === undefined || investmentAmount < 1}
                         onClick={() => {
                           syndicateInvestment();
                         }}
