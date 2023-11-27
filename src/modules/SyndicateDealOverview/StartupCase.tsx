@@ -57,6 +57,7 @@ const StartupCase = ({ dealToken, dealDetail, docs, returnPath }: any) => {
   const [currency, setCurrency] = useState(0);
   const [deal, setDeal]: any = useState(dealDetail);
   const [selectedDocs, setSelectedDocs]: any = useState(docs);
+  const [invited, setInvited]: any = useState(docs);
   const [loading, setLoading]: any = useState(false);
   const { state } = useLocation();
   const [fileLoading, setFileLoading]: any = useState(false);
@@ -64,15 +65,15 @@ const StartupCase = ({ dealToken, dealDetail, docs, returnPath }: any) => {
   const [modalOpen2, setModalOpen2]: any = useState(null);
   const [modalOpen3, setModalOpen3]: any = useState(null);
   const [modalOpen4, setModalOpen4]: any = useState(null);
+  const [modalOpenSyndication, setModalOpenSyndication]: any = useState(null);
   const [disableUpload, setdisableUpload]: any = useState(false);
   const [modalOpenComment, setmodalOpenComment]: any = useState(null);
 
-  const [investmentAmount, setAmount] = useState<number>(0);
+  const [investmentAmount, setAmount] = useState();
   const [selectedCurrency, setSelectedCurrency] = useState("USD");
 
   const handleAmountChange = (event: any) => {
-    if(event.target.value !== 0)
-    setAmount(event.target.value);
+    if (event.target.value !== 0) setAmount(event.target.value);
   };
 
   const handleCurrencyChange = (event: any) => {
@@ -124,7 +125,10 @@ const StartupCase = ({ dealToken, dealDetail, docs, returnPath }: any) => {
     }, 1000);
   };
 
-
+useEffect (()=>
+{
+  deal && (deal?.invite ? setInvited(true) : setInvited(false)) 
+})
 
   const numberInputUI = () => {
     let placeholder = currency === 0 ? "$ 0.00" : "0.00 د.إ";
@@ -658,7 +662,6 @@ const StartupCase = ({ dealToken, dealDetail, docs, returnPath }: any) => {
     }
   };
 
-  
   const syndicationRequest = async () => {
     try {
       let allFiles = files.map((file: any) => file.file);
@@ -677,10 +680,9 @@ const StartupCase = ({ dealToken, dealDetail, docs, returnPath }: any) => {
         );
         formData.append(`invite[deal_attachments][${i}]name`, element?.name);
       }
-      let  { status, data } = await requestSyndication (
+      let { status, data } = await requestSyndication(
         formData,
         deal?.id,
-        deal?.invite?.id,
         authToken
       );
       if (status === 200) {
@@ -710,8 +712,6 @@ const StartupCase = ({ dealToken, dealDetail, docs, returnPath }: any) => {
       setFileLoading(false);
     }, 500);
   };
-
-
 
   return (
     <main className="h-full relative max-h-full overflow-y-hidden">
@@ -919,7 +919,9 @@ const StartupCase = ({ dealToken, dealDetail, docs, returnPath }: any) => {
                     </div>
                     <div className="mt-3">
                       <Button
-                        disabled={investmentAmount < 1}
+                        disabled={
+                          investmentAmount === undefined || investmentAmount < 1
+                        }
                         onClick={() => {
                           syndicateInvestment();
                         }}
@@ -1012,7 +1014,7 @@ const StartupCase = ({ dealToken, dealDetail, docs, returnPath }: any) => {
             <section className="w-[30%]">
               {/* Show/Hide based on some conditions */}
               {user.type.toLowerCase() === "syndicate" &&
-                deal?.status === DealStatus.LIVE  && (
+                deal?.status === DealStatus.LIVE && (
                   <div className="w-full inline-flex justify-end gap-4">
                     <div className="relative z-10">
                       <InvitesListing
@@ -1035,10 +1037,13 @@ const StartupCase = ({ dealToken, dealDetail, docs, returnPath }: any) => {
                         >
                           {language?.v3?.button?.req_change}
                         </Button>
-                        {deal?.invite?.id}
-                        <Button onClick={() => setModalOpen2(true)}>
-                          {language?.v3?.button?.interested}
-                        </Button>
+                        {deal?.invite ? (
+                          <Button onClick={() => setModalOpen2(true)}>
+                            {language?.v3?.button?.interested}
+                          </Button>
+                        ) :  <Button onClick={() => setModalOpenSyndication(true)}>
+                        {"Request Syndication"}
+                      </Button> }
                       </React.Fragment>
                     )}
                   </div>
@@ -1081,7 +1086,9 @@ const StartupCase = ({ dealToken, dealDetail, docs, returnPath }: any) => {
                         </label>
                       </div>
                       <Button
-                        disabled={investmentAmount < 1}
+                        disabled={
+                          investmentAmount === undefined || investmentAmount < 1
+                        }
                         onClick={() => {
                           syndicateInvestment();
                         }}
@@ -1092,12 +1099,12 @@ const StartupCase = ({ dealToken, dealDetail, docs, returnPath }: any) => {
                     </section>
                   </aside>
                 )}
-                    <h2 className="text-neutral-700 text-xl font-medium">
-                        {language?.v3?.common?.invest_details}
-                      </h2>
-                      <small className="text-neutral-500 text-sm font-normal">
-                        {language?.v3?.common?.end_on} {deal?.end_at}
-                      </small>
+                <h2 className="text-neutral-700 text-xl font-medium">
+                  {language?.v3?.common?.invest_details}
+                </h2>
+                <small className="text-neutral-500 text-sm font-normal">
+                  {language?.v3?.common?.end_on} {deal?.end_at}
+                </small>
                 {getRoleBasedUI()}
               </aside>
               <aside className="border-[1px] border-neutral-200 rounded-md w-full p-3 mt-5 inline-flex items-center gap-3">
@@ -1360,6 +1367,42 @@ const StartupCase = ({ dealToken, dealDetail, docs, returnPath }: any) => {
           </aside>
         </div>
       </Modal>
+      <Modal show={modalOpenSyndication ? true : false} className="w-full">
+        <div
+          className="rounded-md overflow-hidden inline-grid place-items-center absolute top-1/2 left-1/2 translate-x-[-50%] translate-y-[-50%]"
+          style={{ backgroundColor: "rgba(0, 0, 0, 0.078" }}
+        >
+          <aside className="bg-white w-[400px] rounded-md h-full">
+            <section className="py-3 px-10">
+              <div className="mb-6 pt-5 text-center">
+                <label
+                  htmlFor=""
+                  className="text-neutral-900 text-center font-bold text-xl"
+                >
+                  Request for syndication!
+                </label>
+                <p className="pt-5">
+                  You can request for syndication on this deal. You can upload the
+                  required document. Click “Continue” to upload the documents
+                </p>
+              </div>
+            </section>
+
+            <footer className="w-full inline-flex justify-center gap-3 py-2 px-3 w-full">
+              <Button
+                className="w-full !py-1"
+                divStyle="flex items-center justify-center w-6/12"
+                onClick={() => {
+                  setModalOpenSyndication(false);
+                  setModalOpen3(true);
+                }}
+              >
+                Continue
+              </Button>
+            </footer>
+          </aside>
+        </div>
+      </Modal>
       <Modal show={modalOpen3 ? true : false} className="w-full">
         <div
           className="rounded-md overflow-hidden inline-grid place-items-center absolute top-1/2 left-1/2 translate-x-[-50%] translate-y-[-50%]"
@@ -1444,7 +1487,8 @@ const StartupCase = ({ dealToken, dealDetail, docs, returnPath }: any) => {
                 divStyle="flex items-center justify-center w-full"
                 onClick={() => {
                   setdisableUpload(true);
-                  postSignOff();
+                  console.log("Invited", invited)
+                  invited ? postSignOff() : syndicationRequest()
                 }}
               >
                 {language.buttons.submit}
@@ -1453,99 +1497,7 @@ const StartupCase = ({ dealToken, dealDetail, docs, returnPath }: any) => {
           </aside>
         </div>
       </Modal>
-      <Modal show={modalOpen4 ? true : false} className="w-full">
-        <div
-          className="rounded-md overflow-hidden inline-grid place-items-center absolute top-1/2 left-1/2 translate-x-[-50%] translate-y-[-50%]"
-          style={{ backgroundColor: "rgba(0, 0, 0, 0.078" }}
-        >
-          <aside className="bg-white w-[400px] rounded-md h-full">
-            <header className="bg-cbc-grey-sec h-16 py-2 px-3 inline-flex w-full justify-between items-center">
-              <h3 className="text-xl font-medium text-neutral-700">
-                Request Syndication
-              </h3>
-            </header>
-
-            <section className="py-3 px-4">
-              <div className="mb-3 w-full">
-                <span className="w-full">
-                  <button
-                    className="bg-cbc-grey-sec rounded-lg inline-flex justify-center gap-2 px-4 py-2 w-full"
-                    onClick={() => {
-                      let elem: any =
-                        document.getElementById("doc_deal_uploader");
-                      elem.click();
-                    }}
-                  >
-                    <UploadIcon />
-                    <small className="text-cyan-800 text-sm font-medium">
-                      Upload a Document
-                    </small>
-                  </button>
-                  <input
-                    type="file"
-                    className="hidden"
-                    id="doc_deal_uploader"
-                    multiple={true}
-                    onChange={handleFileUpload}
-                  />
-                </span>
-              </div>
-              <div className="mb-3 w-full">
-                {React.Children.toArray(
-                  files?.map((doc: any) => {
-                    return (
-                      <section className="rounded-md bg-cbc-grey-sec px-1 py-2 inline-flex items-center justify-between border-[1px] border-neutral-200 w-full">
-                        <span className="inline-flex items-center">
-                          <div className="rounded-[7px] bg-white shadow shadow-cs-3 w-14 h-14 inline-grid place-items-center">
-                            <img src={FileSVG} alt="File" />
-                          </div>
-                          <span className="inline-flex flex-col items-start ml-3">
-                            <h2
-                              className="text-sm font-medium text-neutral-900 max-w-[150px] truncate"
-                              title={doc?.file?.name}
-                            >
-                              {doc?.file?.name}
-                            </h2>
-                          </span>
-                        </span>
-
-                        <small>{doc?.size} MB</small>
-                        <div
-                          className="rounded-lg w-8 h-8 inline-flex items-center flex-row justify-center gap-2 bg-white cursor-pointer"
-                          onClick={() => {
-                            setFiles((pr: any) => {
-                              let files = pr.filter(
-                                (p: any) => p.id !== doc.id
-                              );
-                              return files;
-                            });
-                          }}
-                        >
-                          <BinIcon stroke="#404040" />
-                        </div>
-                      </section>
-                    );
-                  })
-                )}
-              </div>
-            </section>
-
-            <footer className="inline-flex justify-between gap-3 py-2 px-3 w-full">
-              <Button
-                disabled={disableUpload}
-                className="w-full !py-1"
-                divStyle="flex items-center justify-center w-full"
-                onClick={() => {
-                  setdisableUpload(true);
-                  postSignOff();
-                }}
-              >
-                {language.buttons.submit}
-              </Button>
-            </footer>
-          </aside>
-        </div>
-      </Modal>
+ 
     </main>
   );
 };

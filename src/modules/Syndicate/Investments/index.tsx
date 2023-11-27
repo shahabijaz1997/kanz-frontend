@@ -87,7 +87,7 @@ const SyndicateInvestments = ({}: any) => {
             ["Status"]:
               <CustomStatus options={deal?.status} /> || "N/A",
             [language?.v3?.syndicate?.deals?.table?.end_date]:
-              <span className="px-2">{formatDate(deal?.end_at)}</span>|| " N/A",
+              <span className="px-2">{(deal?.end_at)}</span>|| " N/A",
             ["Raised"]:`$${numberFormatter(Number(deal?.raised))}`,  
             [language?.v3?.syndicate?.deals?.table
               ?.target]: `$${numberFormatter(Number(deal?.target))}`,

@@ -198,11 +198,10 @@ export const syndicateApprove = (
 export const requestSyndication = (
   payload: any,
   dealId: number,
-  id: number,
   token: string
 ) => {
   return axios.post(
-    `${ENV.API_URL}/${ENV.API_VERSION}/deals/${dealId}/invites/${id}`,
+    `${ENV.API_URL}/${ENV.API_VERSION}/deals/${dealId}/invites/request_syndication`,
     payload,
     {
       headers: {
