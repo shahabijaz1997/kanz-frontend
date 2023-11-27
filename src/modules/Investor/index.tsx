@@ -263,9 +263,7 @@ const Investor = ({}: any) => {
                     </ul>
                   </span>
                 </div>
-                <Button onClick={() => setModalOpen("1")} className="w-[170px]">
-                  {language?.v3?.button?.new_deal}
-                </Button>
+              
               </section>
 
               <section className="mt-10">

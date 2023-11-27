@@ -1,4 +1,4 @@
-import React, { useLayoutEffect, useState } from "react";
+import React, { useEffect, useLayoutEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { KanzRoles } from "../../enums/roles.enum";
@@ -54,7 +54,7 @@ import InvestmentCalculator from "./InvestmentCalculator";
 import DealActivity from "./DealActivity";
 import { investSyndicate } from "../../apis/syndicate.api";
 
-const PropertyOwnerCase = ({ dealToken, dealDetail, dealDocs }: any) => {
+const PropertyOwnerCase = ({ dealToken, dealDetail, dealDocs, returnPath }: any) => {
   const navigate = useNavigate();
   const language: any = useSelector((state: RootState) => state.language.value);
   const authToken: any = useSelector((state: RootState) => state.auth.value);
@@ -70,7 +70,7 @@ const PropertyOwnerCase = ({ dealToken, dealDetail, dealDocs }: any) => {
   const [modalOpenComment, setmodalOpenComment]: any = useState(null);
   const [disableUpload, setdisableUpload]: any = useState(false);
   const [selectedCurrency, setSelectedCurrency] = useState("USD");
-  const [investmentAmount, setAmount] = useState<number>();
+  const [investmentAmount, setAmount] = useState<number>(0);
 
   const handleAmountChange = (event: any) => {
     setAmount(event.target.value);
@@ -89,6 +89,13 @@ const PropertyOwnerCase = ({ dealToken, dealDetail, dealDocs }: any) => {
   useLayoutEffect(() => {
     onGetdeal();
   }, [deal?.id]);
+
+
+  const [bgDark, setBgDark] = useState(false);
+  const updateBg = (newBg: any) => {
+    setBgDark(newBg);
+  };
+
 
   const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file: any = e.target.files?.[0];
@@ -180,6 +187,22 @@ const PropertyOwnerCase = ({ dealToken, dealDetail, dealDocs }: any) => {
     }
   };
 
+  const handleButtonClick = () => {
+    const galleryWindow = window.open('', '_blank');
+    if (galleryWindow) {
+      galleryWindow.document.write('<html><head><title>Images</title></head><body>');
+      deal?.docs?.forEach((doc:any, index:number) => {
+        galleryWindow.document.write(
+          `<img style="margin: 10px; border: 1px solid black;" src="${doc.url}" alt="Image ${index + 1}" />`
+        );
+      });
+
+      galleryWindow.document.write('</body></html>');
+      galleryWindow.document.close();
+    }
+  };
+
+
   const onRequestChange = async () => {
     try {
       setLoading(true);
@@ -253,6 +276,9 @@ const PropertyOwnerCase = ({ dealToken, dealDetail, dealDocs }: any) => {
     }
   };
 
+
+
+
   const getRoleBasedUI = () => {
     return (
       <React.Fragment>
@@ -321,8 +347,18 @@ const PropertyOwnerCase = ({ dealToken, dealDetail, dealDocs }: any) => {
     );
   };
 
+
+
   return (
     <main className="h-full max-h-full overflow-y-hidden">
+      {bgDark && (
+        <div
+          className="absolute inset-0 bg-black opacity-50 rounded-md"
+          style={{
+            zIndex: 1, // Ensure the overlay is on top of the content
+          }}
+        />
+      )}
       <section>
         <Header />
       </section>
@@ -352,9 +388,9 @@ const PropertyOwnerCase = ({ dealToken, dealDetail, dealDocs }: any) => {
               <div
                 className="w-full inline-flex pb-4 items-center gap-2 relative top-[-25px] cursor-pointer border-b-[1px] border-b-neutral-200"
                 onClick={() =>
-                  user.type === "Investor"
+                  user.type === KanzRoles.INVESTOR
                     ? navigate(RoutesEnums.INVESTOR_DEALS)
-                    : navigate(RoutesEnums.SYNDICATE_DASHBOARD)
+                    : navigate(returnPath)
                 }
               >
                 <Chevrond stroke="#000" className="rotate-90 w-4 h-4" />
@@ -417,6 +453,7 @@ const PropertyOwnerCase = ({ dealToken, dealDetail, dealDocs }: any) => {
                     </div>
                   </aside>
                   <Button
+                    onClick={handleButtonClick}
                     prefix={<img src={ImgSVG} />}
                     className="absolute right-2 bottom-2 !py-1 bg-white border-[1px] border-gray-900 !text-gray-900 hover:!bg-white !font-normal"
                   >
@@ -521,7 +558,6 @@ const PropertyOwnerCase = ({ dealToken, dealDetail, dealDocs }: any) => {
                   )}
 
                   <section className="mb-4 mt-10">
-              
                     <div className="border-neutral-500 border-[1px] rounded-md min-w-full px-2 justify-between flex bg-white">
                       <label className="w-full">
                         <input
@@ -557,6 +593,7 @@ const PropertyOwnerCase = ({ dealToken, dealDetail, dealDocs }: any) => {
                     </div>
                     <div className="mt-3">
                       <Button
+                        disabled={investmentAmount < 1}
                         onClick={() => {
                           syndicateInvestment();
                         }}
@@ -649,7 +686,7 @@ const PropertyOwnerCase = ({ dealToken, dealDetail, dealDocs }: any) => {
             <section className="w-[30%]">
               {/* Show/Hide based on some conditions */}
               {user.type.toLowerCase() === "syndicate" &&
-                deal?.status === DealStatus.LIVE && (
+                deal?.status === DealStatus.LIVE && deal?.invite?.status === DealStatus.ACCEPTED && (
                   <div className="w-full inline-flex justify-end gap-4">
                     <div className="relative z-10">
                       <InvitesListing
@@ -657,13 +694,13 @@ const PropertyOwnerCase = ({ dealToken, dealDetail, dealDocs }: any) => {
                         dealId={dealToken}
                         type={KanzRoles.SYNDICATE}
                         dealIdReal={deal?.id}
+                        updateBg={updateBg}
                       />
                     </div>
                   </div>
                 )}
-
               {user.type.toLowerCase() === "syndicate" &&
-                deal?.status !== DealStatus.LIVE && (
+                deal?.status !== DealStatus.LIVE &&  (
                   <div className="w-full inline-flex justify-end gap-4">
                     {deal?.invite?.status !== DealStatus.ACCEPTED && (
                       <React.Fragment>
@@ -725,6 +762,7 @@ const PropertyOwnerCase = ({ dealToken, dealDetail, dealDocs }: any) => {
                     </div>
                     <div className="mt-4">
                       <Button
+                        disabled={investmentAmount < 1}
                         onClick={() => {
                           syndicateInvestment();
                         }}

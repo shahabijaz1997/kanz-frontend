@@ -31,6 +31,30 @@ export const getInvitees = (inviteeID:any ,token: string, filters :any) => {
     },
   });
 };
+export const getAllDeals = ( token: string, filters :any) => {
+  const queryParameters = new URLSearchParams();
+  if (filters !== "All"){
+    queryParameters.append("deal_type", filters.toLowerCase());
+  }
+  const apiUrl = `${ENV.API_URL}/${ENV.API_VERSION}/investors/deals?${queryParameters.toString()}`;
+  return axios.get(apiUrl, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+};
+export const getCommitedDeals = ( token: string, filters :any) => {
+  const queryParameters = new URLSearchParams();
+  if (filters !== "All"){
+    queryParameters.append("deal_type", filters.toLowerCase());
+  }
+  const apiUrl = `${ENV.API_URL}/${ENV.API_VERSION}/investors/deals?invested=true${queryParameters.toString()}`;
+  return axios.get(apiUrl, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+};
 
 
 export const getInvites = (token: string, filters :any) => {
