@@ -95,8 +95,8 @@ const Commitments = ({}: any) :any => {
                       e.preventDefault();
                       e.stopPropagation();
                       navigate(
-                        `${RoutesEnums.SYNDICATE_DEAL_DETAIL}/${invitee?.deal?.token}`,
-                        { state: invitee?.invitee?.type }
+                        `${RoutesEnums.SYNDICATE_DEAL_DETAIL}/${invitee?.token}`,
+                        { state: window.location.pathname }
                       );
                     }}
                     className="bg-neutral-100 inline-flex items-center justify-center w-[30px] h-[30px] rounded-full transition-all hover:bg-cbc-transparent"

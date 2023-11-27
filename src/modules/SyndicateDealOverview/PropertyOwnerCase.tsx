@@ -40,6 +40,7 @@ import {
 import {
   addCommentOnDeal,
   getDealDetail,
+  requestSyndication,
   signOff,
   syndicateApprove,
 } from "../../apis/deal.api";
@@ -186,6 +187,44 @@ const PropertyOwnerCase = ({ dealToken, dealDetail, dealDocs, returnPath }: any)
       setChanges({ comment: "", action: "", document: null });
     }
   };
+
+  const syndicationRequest = async () => {
+    try {
+      let allFiles = files.map((file: any) => file.file);
+      const formData = new FormData();
+      formData.append("invite[status]", "accepted");
+      for (let i = 0; i < allFiles.length; i++) {
+        const element = allFiles[i];
+        formData.append(
+          `invite[deal_attachments][${i}]file`,
+          element,
+          element?.name
+        );
+        formData.append(
+          `invite[deal_attachments][${i}]attachment_kind`,
+          element?.type.includes("image") ? "image" : "pdf"
+        );
+        formData.append(`invite[deal_attachments][${i}]name`, element?.name);
+      }
+      let  { status, data } = await requestSyndication (
+        formData,
+        deal?.id,
+        deal?.invite?.id,
+        authToken
+      );
+      if (status === 200) {
+        toast.success("Congratulations! Approved", toastUtil);
+        setModalOpen3(false);
+      }
+    } catch (error) {
+      console.log(error);
+    } finally {
+      onGetdeal();
+      setLoading(false);
+      setChanges({ comment: "", action: "", document: null });
+    }
+  };
+
 
   const handleButtonClick = () => {
     const galleryWindow = window.open('', '_blank');
@@ -710,6 +749,7 @@ const PropertyOwnerCase = ({ dealToken, dealDetail, dealDocs, returnPath }: any)
                         >
                           {language?.v3?.button?.req_change}
                         </Button>
+                        {deal?.invite?.id}
                         <Button onClick={() => setModalOpen2(true)}>
                           {language?.v3?.button?.interested}
                         </Button>

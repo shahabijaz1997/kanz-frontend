@@ -30,14 +30,10 @@ const Deals = ({}: any) => {
     action: React.ReactNode;
   }
 
-  const { id }: any = params;
-  const language: any = useSelector((state: RootState) => state.language.value);
-  const authToken: any = useSelector((state: RootState) => state.auth.value);
   const tabs = [
     { id: 1, title: "Invites" },
     { id: 2, title: "Commitments" },
   ];
-  const [syndicates, setSyndicates] = useState<Syndicate[]>([]);
 
 
   const [selected, setSelected]: any = useState(tabs[0]);
