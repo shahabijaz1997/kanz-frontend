@@ -3,19 +3,17 @@ import { useNavigate } from "react-router-dom";
 import { RootState } from "../../../redux-toolkit/store/store";
 import React, { useEffect, useState } from "react";
 import Table from "../../../shared/components/Table";
-import { RoutesEnums } from "../../../enums/routes.enum";
-import { saveToken } from "../../../redux-toolkit/slicer/auth.slicer";
 import { saveDataHolder } from "../../../redux-toolkit/slicer/dataHolder.slicer";
 import {
   comaFormattedNumber,
 } from "../../../utils/object.utils";
 import Spinner from "../../../shared/components/Spinner";
-import { toast } from "react-toastify";
-import { toastUtil } from "../../../utils/toast.utils";
-import { getDealActivity, getDealInvestors } from "../../../apis/syndicate.api";
+import { getDealInvestors } from "../../../apis/syndicate.api";
+
+
+
 
 const Investors = ({dealID}: any) => {
-  const navigate = useNavigate();
   const dispatch = useDispatch();
   const authToken: any = useSelector((state: RootState) => state.auth.value);
 
@@ -32,7 +30,8 @@ const Investors = ({dealID}: any) => {
     total_pages: 0,
   });
   const [loading, setLoading] = useState(false);
-  const [activity, setDeals] = useState([]);
+  const [activity, setActivity]:any = useState([]);
+
  
   useEffect(() => {
     dispatch(saveDataHolder(""));
@@ -55,7 +54,7 @@ const Investors = ({dealID}: any) => {
             ),
           };
         });
-
+        
         setPagination((prev) => {
           return {
             ...prev,
@@ -65,14 +64,12 @@ const Investors = ({dealID}: any) => {
             data: activity?.slice(0, prev.items_per_page),
           };
         });
-        setDeals(activity);
+        setActivity(activity);
+        
       }
     } catch (error:any) {
       if (error.response && error.response.status === 302) {
-   /*      toast.dismiss()
-        toast.error("Session time out",toastUtil)
-        dispatch(saveToken(""));
-        navigate(RoutesEnums.LOGIN); */
+
       }
     } finally {
       setLoading(false);
@@ -108,12 +105,14 @@ const Investors = ({dealID}: any) => {
     }
   };
 
+ 
+
   return (
     <main className="h-full relative max-h-full">
       <section className="inline-flex justify-between items-center w-full">
         <div className="w-full">
           <h1 className="text-black font-medium text-2xl mb-2">
-            {"Deal Activity"}
+            {"Investors"}
           </h1>
         </div>
       </section>
@@ -132,7 +131,7 @@ const Investors = ({dealID}: any) => {
               removeHref={true}
               noDataNode={
                 <span className="absolute left-1/2 top-1/2 translate-x-[-50%] translate-y-[-50%]">
-                  No activity for now!
+                  No investors for now!
                 </span>
               }
             />

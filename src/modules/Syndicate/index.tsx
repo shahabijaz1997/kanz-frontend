@@ -66,7 +66,7 @@ const SyndicateDashboard = ({}: any) => {
   });
 
   useEffect(() => {
-    dispatch(saveDataHolder(""));
+    console.log(window.location.pathname)
   }, []);
 
   useEffect(() => {
@@ -105,7 +105,7 @@ const SyndicateDashboard = ({}: any) => {
               onClick={() => {
                 navigate(
                   `${RoutesEnums.SYNDICATE_DEAL_DETAIL}/${deal?.token}`,
-                  { state: deal?.type }
+                  { state: window.location.pathname }
                 );
               }}
                 className="bg-neutral-100 inline-flex items-center justify-center w-[30px] h-[30px] rounded-full transition-all hover:bg-cbc-transparent mx-5"
@@ -205,12 +205,6 @@ const SyndicateDashboard = ({}: any) => {
 
               <section className="mt-10">
                 <Table
-                   onclick={(row: any) => {
-                    navigate(
-                      `${RoutesEnums.SYNDICATE_DEAL_DETAIL}/${row?.token}`,
-                      { state: row?.type }
-                    );
-                  }}
                   columns={columns}
                   pagination={pagination}
                   paginate={paginate}

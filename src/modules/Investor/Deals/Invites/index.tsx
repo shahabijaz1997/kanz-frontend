@@ -20,7 +20,7 @@ import EditIcon from "../../../../ts-icons/editIcon.svg";
 import CustomStatus from "../../../../shared/components/CustomStatus";
 import { getSyndicates } from "../../../../apis/syndicate.api";
 import { saveToken } from "../../../../redux-toolkit/slicer/auth.slicer";
-import { getInvitees, getInvites } from "../../../../apis/investor.api";
+import { getAllDeals, getInvitees, getInvites } from "../../../../apis/investor.api";
 import { toast } from "react-toastify";
 import { toastUtil } from "../../../../utils/toast.utils";
 
@@ -69,24 +69,24 @@ const Invites = ({}: any) :any => {
       const getAllInvitees = async () => {
         try {
           setLoading(true);
-          let { status, data } = await getInvitees(user.id, authToken, selectedTab);
+          let { status, data } = await getAllDeals( authToken, selectedTab);
           if (status === 200) {
             let invitees = data?.status?.data?.map((invitee: any) => {
               return {
                 id: invitee?.id,
                 filterStatus: invitee?.status,
-                "Syndicate": <span className=" capitalize">{invitee?.invited_by}</span> ,
+                "Syndicate": <span className=" capitalize">{invitee?.syndicate?.name}</span> ,
                 [language?.v3?.syndicate?.deals?.table?.title]:
-                  invitee?.deal?.title || "N/A",
+                  invitee?.title || "N/A",
                 [language?.v3?.syndicate?.deals?.table?.category]: (
-                  <span className="capitalize">{invitee?.deal?.type}</span>
+                  <span className="capitalize">{invitee?.deal_type}</span>
                 ),
                 ["Status"]:
                   <CustomStatus options={invitee?.status} /> || "N/A",
                 [language?.v3?.syndicate?.deals?.table?.end_date]:
-                  invitee?.deal?.end_at || " N/A",
+                  invitee?.end_at || " N/A",
                 [language?.v3?.syndicate?.deals?.table
-                  ?.target]: `$${numberFormatter(Number(invitee?.deal?.target))}`,
+                  ?.target]: `$${numberFormatter(Number(invitee?.target))}`,
     
                 Steps: invitee?.current_state?.steps,
                 [""]: (

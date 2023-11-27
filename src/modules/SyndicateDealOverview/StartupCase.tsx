@@ -1,6 +1,6 @@
 import React, { useEffect, useLayoutEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { KanzRoles } from "../../enums/roles.enum";
 import { RootState } from "../../redux-toolkit/store/store";
 import Header from "../../shared/components/Header";
@@ -43,10 +43,11 @@ import InvitesListing from "./InvitesListing";
 import DealActivity from "./DealActivity";
 import { RoutesEnums } from "../../enums/routes.enum";
 import { investSyndicate } from "../../apis/syndicate.api";
+import path from "path";
 
 const CURRENCIES = ["USD", "AED"];
 
-const StartupCase = ({ dealToken, dealDetail, docs }: any) => {
+const StartupCase = ({ dealToken, dealDetail, docs, returnPath }: any) => {
   const navigate = useNavigate();
   const language: any = useSelector((state: RootState) => state.language.value);
   const authToken: any = useSelector((state: RootState) => state.auth.value);
@@ -56,6 +57,7 @@ const StartupCase = ({ dealToken, dealDetail, docs }: any) => {
   const [deal, setDeal]: any = useState(dealDetail);
   const [selectedDocs, setSelectedDocs]: any = useState(docs);
   const [loading, setLoading]: any = useState(false);
+  const { state } = useLocation();
   const [fileLoading, setFileLoading]: any = useState(false);
   const [modalOpen, setModalOpen]: any = useState(null);
   const [modalOpen2, setModalOpen2]: any = useState(null);
@@ -63,10 +65,11 @@ const StartupCase = ({ dealToken, dealDetail, docs }: any) => {
   const [disableUpload, setdisableUpload]: any = useState(false);
   const [modalOpenComment, setmodalOpenComment]: any = useState(null);
 
-  const [investmentAmount, setAmount] = useState<number>();
+  const [investmentAmount, setAmount] = useState<number>(0);
   const [selectedCurrency, setSelectedCurrency] = useState("USD");
 
   const handleAmountChange = (event: any) => {
+    if(event.target.value !== 0)
     setAmount(event.target.value);
   };
 
@@ -118,6 +121,8 @@ const StartupCase = ({ dealToken, dealDetail, docs }: any) => {
       clearTimeout(timer);
     }, 1000);
   };
+
+
 
   const numberInputUI = () => {
     let placeholder = currency === 0 ? "$ 0.00" : "0.00 د.إ";
@@ -666,8 +671,10 @@ const StartupCase = ({ dealToken, dealDetail, docs }: any) => {
     }, 500);
   };
 
+
+
   return (
-    <main className="h-full max-h-full overflow-y-hidden">
+    <main className="h-full relative max-h-full overflow-y-hidden">
       <section>
         <Header />
       </section>
@@ -694,13 +701,13 @@ const StartupCase = ({ dealToken, dealDetail, docs }: any) => {
             style={{ width: "calc(100% - 250px)" }}
           >
             {/* Section Left */}
-            <section className="w-[60%]">
+            <section className="w-[60%] relative">
               <div
                 className="w-full inline-flex pb-4 items-center gap-2 relative top-[-25px] cursor-pointer border-b-[1px] border-b-neutral-200"
                 onClick={() =>
                   user.type === "Investor"
-                    ? navigate(RoutesEnums.INVESTOR_DASHBOARD)
-                    : navigate(RoutesEnums.SYNDICATE_DASHBOARD)
+                    ? navigate(RoutesEnums.INVESTOR_DEALS)
+                    : navigate(returnPath)
                 }
               >
                 <Chevrond stroke="#000" className="rotate-90 w-4 h-4" />
@@ -837,7 +844,6 @@ const StartupCase = ({ dealToken, dealDetail, docs }: any) => {
               {deal?.status === DealStatus.LIVE && (
                 <>
                   <section className="mb-4 mt-10">
-                
                     <div className="border-neutral-500 border-[1px] rounded-md min-w-full px-2 justify-between flex bg-white">
                       <label className="w-full">
                         <input
@@ -873,6 +879,7 @@ const StartupCase = ({ dealToken, dealDetail, docs }: any) => {
                     </div>
                     <div className="mt-3">
                       <Button
+                        disabled={investmentAmount < 1}
                         onClick={() => {
                           syndicateInvestment();
                         }}
@@ -964,9 +971,9 @@ const StartupCase = ({ dealToken, dealDetail, docs }: any) => {
             {*/}
             <section className="w-[30%]">
               {/* Show/Hide based on some conditions */}
-
+            
               {user.type.toLowerCase() === "syndicate" &&
-                deal?.status === DealStatus.LIVE && (
+                deal?.status === DealStatus.LIVE && deal?.invite?.status === DealStatus.ACCEPTED && (
                   <div className="w-full inline-flex justify-end gap-4">
                     <div className="relative z-10">
                       <InvitesListing
@@ -996,26 +1003,17 @@ const StartupCase = ({ dealToken, dealDetail, docs }: any) => {
                     )}
                   </div>
                 )}
-
               <aside className="border-[1px] border-neutral-200 rounded-md w-full px-3 pt-3 mt-5 bg-white">
                 {deal?.status === DealStatus.LIVE && (
                   <aside className="">
                     <section className="mb-4 mt-1">
-                      <h2 className="text-neutral-700 text-xl font-medium">
-                        {language?.v3?.common?.invest_details}
-                      </h2>
-                      <small className="text-neutral-500 text-sm font-normal">
-                        {language?.v3?.common?.end_on} {deal?.end_at}
-                      </small>
                       <div className="border-neutral-500 border-[1px] rounded-md min-w-full bg-white px-2 justify-between flex">
                         <label className="w-full">
                           <input
                             className="min-w-full h-9 no-spin-button"
                             pattern="[0-9]*"
                             placeholder={
-                              selectedCurrency === "USD"
-                                ? "$ 0.00"
-                                : "AED 0.00"
+                              selectedCurrency === "USD" ? "$ 0.00" : "AED 0.00"
                             }
                             onKeyDown={(evt) =>
                               ["e", "E", "+", "-"].includes(evt.key) &&
@@ -1043,6 +1041,7 @@ const StartupCase = ({ dealToken, dealDetail, docs }: any) => {
                         </label>
                       </div>
                       <Button
+                        disabled={investmentAmount < 1}
                         onClick={() => {
                           syndicateInvestment();
                         }}
@@ -1053,7 +1052,12 @@ const StartupCase = ({ dealToken, dealDetail, docs }: any) => {
                     </section>
                   </aside>
                 )}
-
+                    <h2 className="text-neutral-700 text-xl font-medium">
+                        {language?.v3?.common?.invest_details}
+                      </h2>
+                      <small className="text-neutral-500 text-sm font-normal">
+                        {language?.v3?.common?.end_on} {deal?.end_at}
+                      </small>
                 {getRoleBasedUI()}
               </aside>
               <aside className="border-[1px] border-neutral-200 rounded-md w-full p-3 mt-5 inline-flex items-center gap-3">

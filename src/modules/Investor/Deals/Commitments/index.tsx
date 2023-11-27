@@ -12,7 +12,6 @@ import { RoutesEnums } from "../../../../enums/routes.enum";
 import Modal from "../../../../shared/components/Modal";
 import CrossIcon from "../../../../ts-icons/crossIcon.svg";
 import { saveDataHolder } from "../../../../redux-toolkit/slicer/dataHolder.slicer";
-import { getDeals, getNoFilterDeals } from "../../../../apis/deal.api";
 import { numberFormatter } from "../../../../utils/object.utils";
 import Spinner from "../../../../shared/components/Spinner";
 import { ApplicationStatus } from "../../../../enums/types.enum";
@@ -21,7 +20,9 @@ import EditIcon from "../../../../ts-icons/editIcon.svg";
 import CustomStatus from "../../../../shared/components/CustomStatus";
 import { getSyndicates } from "../../../../apis/syndicate.api";
 import { saveToken } from "../../../../redux-toolkit/slicer/auth.slicer";
-import { getCommittments } from "../../../../apis/investor.api";
+import { getAllDeals, getCommitedDeals, getInvitees, getInvites } from "../../../../apis/investor.api";
+import { toast } from "react-toastify";
+import { toastUtil } from "../../../../utils/toast.utils";
 
 
 
@@ -34,114 +35,111 @@ const Commitments = ({}: any) :any => {
     const language: any = useSelector((state: RootState) => state.language.value);
     const authToken: any = useSelector((state: RootState) => state.auth.value);
     const user: any = useSelector((state: RootState) => state.user.value);
-
-    const columns = ["Syndicate", "Title", "Category", "End Date", "Commited", "Target", ""];
+   /*  const columns = ["Syndicate", "Title", "Category", "Status", "End Date", "Target", ""]; */         // THis is actual values
+   const columns = [
+    "Syndicate",
+    language?.v3?.syndicate?.deals?.table?.title,
+    language?.v3?.syndicate?.deals?.table?.category,
+    "Status",
+    language?.v3?.syndicate?.deals?.table?.end_date,
+    language?.v3?.syndicate?.deals?.table?.target,
+    "",
+  ];
     const [loading, setLoading]: any = useState(false);
-    const [invites, setInvites]: any = useState([]);
-    const [dealDetail, setDealDetail]: any = useState(null);
-    const [loadDrawer, setLoadingDrawer] = useState(false);
-    const [syndicateInfo, setsyndicateInfo]: any = useState(null);
-    const [isOpen, setOpen]: any = useState(false);
-    const [modalReplyOpen, setmodalReplyOpen]: any = useState(null);
-    const [modalOpen, setModalOpen]: any = useState(null);
-    const [CommentSubmitted, setCommentSubmitted]: any = useState(false);
-    const [currentDealId,setCurrentDealId]:any = useState (null)
-    const [selectedTab, setSelectedTab] = useState("All");
+    const [invitees, setInvitees] = useState([]);
+  const [selectedTab, setSelectedTab] = useState("All");
+
     const [pagination, setPagination] = useState({
-        items_per_page: 5,
+        items_per_page: 10,
         total_items: [],
         current_page: 1,
         total_pages: 0,
       });
-    
       const [tabs] = useState([
         language?.v3?.startup?.overview?.all,
         "Startup",
         "Real Estate",
       ]);
-
+    
       useEffect(() => {
         dispatch(saveDataHolder(""));
-        getAllSyndicates();
+        getAllInvitees();
       }, [selectedTab]);
-      useEffect(() => {
-        dispatch(saveDataHolder(""));
-        getAllSyndicates();
-      }, []);
-
-    const getAllSyndicates = async () => {
+    
+      const getAllInvitees = async () => {
         try {
           setLoading(true);
-          let { status, data } = await getCommittments(authToken, selectedTab);
+          let { status, data } = await getCommitedDeals( authToken, selectedTab);
           if (status === 200) {
-            let deals = data?.status?.data
-              ?.filter((deal: any) => deal?.status !== "pending")
-              .map((deal: any) => {
-                return {
-                  id: deal?.id,
-                  ["Syndicate"]: (
-                    <span className=" capitalize">{deal?.invitee?.name}</span>
-                  ),
-                  ["Total Deals"]: (
-                    <span className=" capitalize">{<CustomStatus options={deal?.status} />}</span>
-                  ),
-                  ["Active Deals"]: (
-                    <span className=" capitalize">{<CustomStatus options={deal?.status} />}</span>
-                  ),
-                  ["Raising Fund"]: (
-                    <span className=" capitalize">{<CustomStatus options={deal?.status} />}</span>
-                  ),
-                  ["Formation Date"]: (
-                    <span className=" capitalize">{<CustomStatus options={deal?.status} />}</span>
-                  ),
-                  [""]: (
-                    <div
-                    onClick={() => {
+            let invitees = data?.status?.data?.map((invitee: any) => {
+              return {
+                id: invitee?.id,
+                filterStatus: invitee?.status,
+                "Syndicate": <span className=" capitalize">{invitee?.syndicate?.name}</span> ,
+                [language?.v3?.syndicate?.deals?.table?.title]:
+                  invitee?.title || "N/A",
+                [language?.v3?.syndicate?.deals?.table?.category]: (
+                  <span className="capitalize">{invitee?.deal_type}</span>
+                ),
+                ["Status"]:
+                  <CustomStatus options={invitee?.status} /> || "N/A",
+                [language?.v3?.syndicate?.deals?.table?.end_date]:
+                  invitee?.end_at || " N/A",
+                [language?.v3?.syndicate?.deals?.table
+                  ?.target]: `$${numberFormatter(Number(invitee?.target))}`,
+    
+                Steps: invitee?.current_state?.steps,
+                [""]: (
+                  <div
+                    onClick={(e) => {
+                      e.preventDefault();
+                      e.stopPropagation();
                       navigate(
-                        `${RoutesEnums.SYNDICATE_DEAL_DETAIL}/${deal?.token}`,
-                        { state: deal?.type }
+                        `${RoutesEnums.SYNDICATE_DEAL_DETAIL}/${invitee?.deal?.token}`,
+                        { state: invitee?.invitee?.type }
                       );
                     }}
-                      className="bg-neutral-100 inline-flex items-center justify-center w-[30px] h-[30px] rounded-full transition-all hover:bg-cbc-transparent mx-7"
-                    >
-                      <Chevrond
-                        className="rotate-[-90deg] w-6 h-6"
-                        stroke={"#737373"}
-                      />
-                    </div>
-                  )
-                   
-                };
-              });
+                    className="bg-neutral-100 inline-flex items-center justify-center w-[30px] h-[30px] rounded-full transition-all hover:bg-cbc-transparent"
+                  >
+                    <Chevrond
+                      className="rotate-[-90deg] w-6 h-6"
+                      stroke={"#737373"}
+                    />
+                  </div>
+                ),
+              };
+            });
     
             setPagination((prev) => {
               return {
                 ...prev,
-                total_items: deals.length,
+                total_items: invitees.length,
                 current_page: 1,
-                total_pages: Math.ceil(deals.length / prev.items_per_page),
-                data: deals?.slice(0, prev.items_per_page),
+                total_pages: Math.ceil(invitees.length / prev.items_per_page),
+                data: invitees?.slice(0, prev.items_per_page),
               };
             });
-            setInvites(deals);
+            setInvitees(invitees);
           }
-        } catch (error: any) {
-          if (error.response && error.response.status === 401) {
-            dispatch(saveToken(""));
-            navigate(RoutesEnums.LOGIN, { state: RoutesEnums.STARTUP_DASHBOARD });
+        } catch (error:any) {
+          if (error.response && error.response.status === 302) {
+         /*    toast.dismiss()
+            toast.error("Session time out",toastUtil)
+            dispatch(saveToken("")); */
+           
           }
         } finally {
           setLoading(false);
         }
       };
-
+    
       const paginate = (type: string) => {
         if (type === "next" && pagination.current_page < pagination.total_pages) {
           setPagination((prev: any) => {
             const nextPage = prev.current_page + 1;
             const startIndex = (nextPage - 1) * prev.items_per_page;
             const endIndex = startIndex + prev.items_per_page;
-            const data = invites.slice(startIndex, endIndex);
+            const data = invitees.slice(startIndex, endIndex);
             return { ...prev, current_page: nextPage, data };
           });
         } else if (type === "previous" && pagination.current_page > 1) {
@@ -149,8 +147,7 @@ const Commitments = ({}: any) :any => {
             const prevPage = prev.current_page - 1;
             const startIndex = (prevPage - 1) * prev.items_per_page;
             const endIndex = startIndex + prev.items_per_page;
-            const data = invites.slice(startIndex, endIndex);
-    
+            const data = invitees.slice(startIndex, endIndex);
             return { ...prev, current_page: prevPage, data };
           });
         } else {
@@ -158,13 +155,12 @@ const Commitments = ({}: any) :any => {
             const prevPage = Number(type) + 1 - 1;
             const startIndex = (prevPage - 1) * prev.items_per_page;
             const endIndex = startIndex + prev.items_per_page;
-            const data = invites.slice(startIndex, endIndex);
+            const data = invitees.slice(startIndex, endIndex);
     
             return { ...prev, current_page: type, data };
           });
         }
       };
-    
       return(
         <>  
            <section className="inline-flex justify-between items-center w-full">
@@ -206,14 +202,14 @@ const Commitments = ({}: any) :any => {
            goToPage={paginate}
            paginate={paginate}
            noDataNode={
-            <div className="absolute left-1/2 top-1/2 translate-x-[-50%] translate-y-[-50%]">
-              <p className="font-medium text-center text-lg text-[#828282]">Follow syndicates to get invites</p>
-              <p className=" font-normal mt-1 text-sm  text-[#828282]">You can see the deals here from the following syndicate</p>
-              <Button
-              onClick={() => navigate(`${RoutesEnums.INVESTOR_SYNDICATES}`)}
-              className="mt-4" type="primary">Find Syndicates to Follow</Button>
-            </div>
-          }
+             <div className="absolute left-1/2 top-1/2 translate-x-[-50%] translate-y-[-50%]">
+               <p className="font-medium text-center text-lg text-[#828282]">Follow syndicates to get invites</p>
+               <p className=" font-normal mt-1 text-sm  text-[#828282]">You can see the invitees here from the following syndicate</p>
+               <Button
+               onClick={() => navigate(`${RoutesEnums.INVESTOR_SYNDICATES}`)}
+               className="mt-4" type="primary">Find Syndicates to Follow</Button>
+             </div>
+           }
          />
        )}
      </section>
