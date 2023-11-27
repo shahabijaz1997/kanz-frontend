@@ -40,8 +40,8 @@ const Commitments = ({}: any) :any => {
     "Syndicate",
     language?.v3?.syndicate?.deals?.table?.title,
     language?.v3?.syndicate?.deals?.table?.category,
-    "Status",
     language?.v3?.syndicate?.deals?.table?.end_date,
+    "Committed",
     language?.v3?.syndicate?.deals?.table?.target,
     "",
   ];
@@ -81,10 +81,9 @@ const Commitments = ({}: any) :any => {
                 [language?.v3?.syndicate?.deals?.table?.category]: (
                   <span className="capitalize">{invitee?.deal_type}</span>
                 ),
-                ["Status"]:
-                  <CustomStatus options={invitee?.status} /> || "N/A",
                 [language?.v3?.syndicate?.deals?.table?.end_date]:
                   invitee?.end_at || " N/A",
+                 ["Committed"] : invitee?.invested_amount, 
                 [language?.v3?.syndicate?.deals?.table
                   ?.target]: `$${numberFormatter(Number(invitee?.target))}`,
     
