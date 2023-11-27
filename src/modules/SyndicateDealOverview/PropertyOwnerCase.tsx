@@ -725,7 +725,7 @@ const PropertyOwnerCase = ({ dealToken, dealDetail, dealDocs, returnPath }: any)
             <section className="w-[30%]">
               {/* Show/Hide based on some conditions */}
               {user.type.toLowerCase() === "syndicate" &&
-                deal?.status === DealStatus.LIVE && deal?.invite?.status === DealStatus.ACCEPTED && (
+                deal?.status === DealStatus.LIVE && (
                   <div className="w-full inline-flex justify-end gap-4">
                     <div className="relative z-10">
                       <InvitesListing
