@@ -44,7 +44,7 @@ const Startup = ({}: any) => {
     current_page: 1,
     total_pages: 0,
   });
-  
+  const [filter, setFilterCounts]:any = useState([]);
   const [selectedTab, setSelectedTab] = useState("All");
   const [modalOpen, setModalOpen]: any = useState(null);
   const [warningModal, setwarningModal]: any = useState(null);
@@ -55,8 +55,43 @@ const Startup = ({}: any) => {
     "Reopened",
     "Submitted",
     "Approved",
-    "Live"
+    "Live",
+    "Verified",
+    "Rejected"
   ]);
+  const getCountvalue = ( value:string ) =>
+  { 
+    let count = 0 ;
+    switch (value) {
+      case  "All" : 
+      count = filter?.all
+      break
+      case  "Draft" : 
+      count = filter?.draft
+      break
+      case  "Reopened" : 
+      count = filter?.reopened
+      break
+      case  "Submitted" : 
+      count = filter?.submitted
+      break
+      case  "Approved" : 
+      count = filter?.approved
+      break
+      case  "Live" : 
+      count = filter?.live
+      break
+      case  "Verified" : 
+      count = filter?.verified
+      break
+      case  "Rejected" : 
+      count = filter?.rejected
+      break
+    } 
+
+    return count
+    
+  }
   const [deals, setDeals]:any = useState([]);
   const [dealId, setDealId]:any = useState(null);
   const [dealStep, setDealStep]:any = useState(null);
@@ -85,7 +120,8 @@ const Startup = ({}: any) => {
       setLoading(true);
       let { status, data } = await getDeals(authToken,selectedTab);
       if (status === 200) {
-        let deals = data?.status?.data?.map((deal: any) => {
+        setFilterCounts(data?.status?.data?.stats)
+        let deals = data?.status?.data?.deals?.map((deal: any) => {
           return {
             id: deal?.id,
             [language?.v3?.table?.title]: deal?.title || "N/A",
@@ -244,7 +280,7 @@ const Startup = ({}: any) => {
                                 : "text-gray-500"
                             } `}
                           >
-                            {tab} &nbsp;(0)
+                            {tab} &nbsp;({getCountvalue(tab)})
                           </li>
                         ))
                       )}
