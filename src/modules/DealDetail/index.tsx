@@ -175,7 +175,7 @@ const DealDetail = ({}: any) => {
               />
             )}
             {selected?.id === 2 && <Usp id={dealDetail?.id} />}
-            {selected?.id === 3 && <DealInvestors id={dealDetail?.id}/>}
+            {selected?.id === 3 && <DealInvestors id={dealDetail?.id} dealCreatorView= {true}/>}
             {selected?.id === 4 && <DocumentDetails dealDocs={dealDocs} />}
             {selected?.id === 5 && <NoteDetails />}
             {selected?.id === 6 && <ActivityDetails  id={dealDetail?.id}/>}

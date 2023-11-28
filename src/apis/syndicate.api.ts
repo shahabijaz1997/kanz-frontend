@@ -13,9 +13,9 @@ export const postSyndicateInformation = (payload: number, token: string) => {
 
 
 
-export const getAllInvestors = (token: string) => {
+export const getAllInvestors = ( dealId:any, token: string) => {
   return axios.get(
-    `${ENV.API_URL}/${ENV.API_VERSION}/investors`,
+    `${ENV.API_URL}/${ENV.API_VERSION}/deals/${dealId}/investors`,
     {
       headers: {
         Authorization: `Bearer ${token}`,

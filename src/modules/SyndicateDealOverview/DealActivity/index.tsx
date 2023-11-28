@@ -15,7 +15,7 @@ import { toastUtil } from "../../../utils/toast.utils";
 import { getDealActivity } from "../../../apis/syndicate.api";
 import CustomStatus from "../../../shared/components/CustomStatus";
 
-const DealActivity = ({dealID}: any) => {
+const DealActivity = ({dealID, dealCreatorView}: any) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const authToken: any = useSelector((state: RootState) => state.auth.value);
@@ -53,7 +53,7 @@ const DealActivity = ({dealID}: any) => {
             ["Date"]:
               dealActivity?.date|| "N/A",
              ["Status"]:
-              <CustomStatus options={dealActivity?.status} /> || "N/A", 
+              <CustomStatus options={dealActivity?.status === "committed_amount" ? "Committed" : dealActivity?.status} /> || "N/A", 
             ["Amount Raised"]: (
               <span>{comaFormattedNumber(dealActivity?.amount)}</span>
             ),
@@ -115,10 +115,10 @@ const DealActivity = ({dealID}: any) => {
   return (
     <main className="h-full relative max-h-full">
       <section className="inline-flex justify-between items-center w-full">
-        <div className="w-full">
-          <h1 className="text-black font-medium text-2xl mb-2">
+        <div className="w-full"> 
+        {!dealCreatorView && (  <h1 className="text-black font-medium text-2xl mb-2">
             {"Deal Activity"}
-          </h1>
+          </h1>) }
         </div>
       </section>
       {loading ? (

@@ -826,6 +826,23 @@ useEffect (()=>
 
                 {getRoleBasedUI()}
               </aside>
+                <div>
+                <aside className="border-[1px] border-neutral-200 rounded-md w-full p-3 mt-5 inline-flex items-center gap-3">
+                <div className="h-8 w-8 rounded-md bg-cbc-grey-sec inline-grid place-items-center">
+                  <img src={CurrencySVG} alt="Currency" />
+                </div>
+
+                <div>
+                  <h2 className="text-neutral-900 font-normal text-sm">
+                    {language?.v3?.common?.am_raised}
+                  </h2>
+                  <p className="text-black font-medium text-lg">
+                    ${numberFormatter(deal?.raised)}
+                  </p>
+                </div>
+              </aside>
+                </div>
+
               {deal?.docs?.length && (
                 <aside className="border-[1px] border-neutral-200 rounded-md w-full p-3 mt-5 bg-cbc-check max-h-[400px] overflow-y-auto custom-scroll mb-4">
                   {React.Children.toArray(
