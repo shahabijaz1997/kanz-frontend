@@ -57,14 +57,13 @@ const StartupCase = ({ dealToken, dealDetail, docs, returnPath }: any) => {
   const [currency, setCurrency] = useState(0);
   const [deal, setDeal]: any = useState(dealDetail);
   const [selectedDocs, setSelectedDocs]: any = useState(docs);
-  const [invited, setInvited]: any = useState(docs);
+  const [invited, setInvited]: any = useState();
   const [loading, setLoading]: any = useState(false);
   const { state } = useLocation();
   const [fileLoading, setFileLoading]: any = useState(false);
   const [modalOpen, setModalOpen]: any = useState(null);
   const [modalOpen2, setModalOpen2]: any = useState(null);
   const [modalOpen3, setModalOpen3]: any = useState(null);
-  const [modalOpen4, setModalOpen4]: any = useState(null);
   const [modalOpenSyndication, setModalOpenSyndication]: any = useState(null);
   const [disableUpload, setdisableUpload]: any = useState(false);
   const [modalOpenComment, setmodalOpenComment]: any = useState(null);
@@ -686,14 +685,14 @@ useEffect (()=>
         authToken
       );
       if (status === 200) {
-        toast.success("Congratulations! Approved", toastUtil);
-        setModalOpen4(false);
+        toast.success("Congratulations! requested", toastUtil);
       }
     } catch (error) {
       console.log(error);
     } finally {
       onGetdeal();
       setLoading(false);
+      setModalOpen3(false)
       setChanges({ comment: "", action: "", document: null });
     }
   };
@@ -1487,7 +1486,6 @@ useEffect (()=>
                 divStyle="flex items-center justify-center w-full"
                 onClick={() => {
                   setdisableUpload(true);
-                  console.log("Invited", invited)
                   invited ? postSignOff() : syndicationRequest()
                 }}
               >

@@ -58,7 +58,7 @@ const Invites = ({}: any) :any => {
       const [tabs] = useState([
         language?.v3?.startup?.overview?.all,
         "Startup",
-        "Real Estate",
+        "Property",
       ]);
     
       useEffect(() => {
