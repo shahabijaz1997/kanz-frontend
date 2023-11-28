@@ -47,6 +47,7 @@ const Invites = ({}: any) :any => {
   ];
     const [loading, setLoading]: any = useState(false);
     const [invitees, setInvitees] = useState([]);
+  const [filter, setFilterCounts]:any = useState([]);
   const [selectedTab, setSelectedTab] = useState("All");
 
     const [pagination, setPagination] = useState({
@@ -60,6 +61,26 @@ const Invites = ({}: any) :any => {
         "Startup",
         "Property",
       ]);
+
+        
+  const getCountvalue = ( value:string ) =>
+  { 
+    let count = 0 ;
+    switch (value) {
+      case  "All" : 
+      count = filter?.all
+      break
+      case  "Startup" : 
+      count = filter?.startup
+      break
+      case  "Property" : 
+      count = filter?.property
+      break
+    } 
+
+    return count
+    
+  }
     
       useEffect(() => {
         dispatch(saveDataHolder(""));
@@ -71,7 +92,8 @@ const Invites = ({}: any) :any => {
           setLoading(true);
           let { status, data } = await getAllDeals( authToken, selectedTab);
           if (status === 200) {
-            let invitees = data?.status?.data?.map((invitee: any) => {
+            setFilterCounts(data?.status?.data?.stats)
+            let invitees = data?.status?.data?.deals?.map((invitee: any) => {
               return {
                 id: invitee?.id,
                 filterStatus: invitee?.status,
@@ -162,133 +184,6 @@ const Invites = ({}: any) :any => {
         }
       };
 
-
-
-
-
-
-
-      /*
-      .......##..............###.....######..########.##.....##....###....##...........######...#######..########..########.................##
-      ......##...##...##....##.##...##....##....##....##.....##...##.##...##..........##....##.##.....##.##.....##.##........##...##.......##.
-      .....##.....##.##....##...##..##..........##....##.....##..##...##..##..........##.......##.....##.##.....##.##.........##.##.......##..
-      ....##....#########.##.....##.##..........##....##.....##.##.....##.##..........##.......##.....##.##.....##.######...#########....##...
-      ...##.......##.##...#########.##..........##....##.....##.#########.##..........##.......##.....##.##.....##.##.........##.##.....##....
-      ..##.......##...##..##.....##.##....##....##....##.....##.##.....##.##..........##....##.##.....##.##.....##.##........##...##...##.....
-      .##.................##.....##..######.....##.....#######..##.....##.########.....######...#######..########..########...........##......
-      */
-
-
-
-
-
-
-
-/*       useEffect(() => {
-        dispatch(saveDataHolder(""));
-        getAllSyndicates();
-      }, []);
-      useEffect(() => {
-        dispatch(saveDataHolder(""));
-        getAllSyndicates();
-      }, [selectedTab]); */
-/* 
-    const getAllSyndicates = async () => {
-        try {
-          setLoading(true);
-          let { status, data } = await getInvites(authToken,selectedTab);
-          if (status === 200) {
-            let invitees = data?.status?.data
-              ?.filter((invitee: any) => invitee?.status !== "pending")
-              .map((invitee: any) => {
-                return {
-                  id: invitee?.id,
-                  ["Syndicate"]: (
-                    <span className=" capitalize">{invitee?.invitee?.name}</span>
-                  ),
-                  ["Total Deals"]: (
-                    <span className=" capitalize">{<CustomStatus options={invitee?.status} />}</span>
-                  ),
-                  ["Active Deals"]: (
-                    <span className=" capitalize">{<CustomStatus options={invitee?.status} />}</span>
-                  ),
-                  ["Raising Fund"]: (
-                    <span className=" capitalize">{<CustomStatus options={invitee?.status} />}</span>
-                  ),
-                  ["Formation Date"]: (
-                    <span className=" capitalize">{<CustomStatus options={invitee?.status} />}</span>
-                  ),
-                  [""]: (
-                    <div
-                    onClick={() => {
-                      navigate(
-                        `${RoutesEnums.SYNDICATE_DEAL_DETAIL}/${invitee?.token}`,
-                        { state: invitee?.type }
-                      );
-                    }}
-                      className="bg-neutral-100 inline-flex items-center justify-center w-[30px] h-[30px] rounded-full transition-all hover:bg-cbc-transparent mx-7"
-                    >
-                      <Chevrond
-                        className="rotate-[-90deg] w-6 h-6"
-                        stroke={"#737373"}
-                      />
-                    </div>
-                  )
-                   
-                };
-              });
-    
-            setPagination((prev) => {
-              return {
-                ...prev,
-                total_items: invitees.length,
-                current_page: 1,
-                total_pages: Math.ceil(invitees.length / prev.items_per_page),
-                data: invitees?.slice(0, prev.items_per_page),
-              };
-            });
-            setInvites(invitees);
-          }
-        } catch (error: any) {
-          if (error.response && error.response.status === 401) {
-            dispatch(saveToken(""));
-            navigate(RoutesEnums.LOGIN, { state: RoutesEnums.STARTUP_DASHBOARD });
-          }
-        } finally {
-          setLoading(false);
-        }
-      };
-
-      const paginate = (type: string) => {
-        if (type === "next" && pagination.current_page < pagination.total_pages) {
-          setPagination((prev: any) => {
-            const nextPage = prev.current_page + 1;
-            const startIndex = (nextPage - 1) * prev.items_per_page;
-            const endIndex = startIndex + prev.items_per_page;
-            const data = invites.slice(startIndex, endIndex);
-            return { ...prev, current_page: nextPage, data };
-          });
-        } else if (type === "previous" && pagination.current_page > 1) {
-          setPagination((prev: any) => {
-            const prevPage = prev.current_page - 1;
-            const startIndex = (prevPage - 1) * prev.items_per_page;
-            const endIndex = startIndex + prev.items_per_page;
-            const data = invites.slice(startIndex, endIndex);
-    
-            return { ...prev, current_page: prevPage, data };
-          });
-        } else {
-          setPagination((prev: any) => {
-            const prevPage = Number(type) + 1 - 1;
-            const startIndex = (prevPage - 1) * prev.items_per_page;
-            const endIndex = startIndex + prev.items_per_page;
-            const data = invites.slice(startIndex, endIndex);
-    
-            return { ...prev, current_page: type, data };
-          });
-        }
-      };
-     */
       return(
         <>  
            <section className="inline-flex justify-between items-center w-full">
@@ -308,7 +203,7 @@ const Invites = ({}: any) :any => {
                                         : "text-gray-500"
                                     } `}
                                 >
-                                    {tab} &nbsp;(0)
+                                    {tab} &nbsp;({getCountvalue(tab)})
                                 </li>
                                 ))
                             )}

@@ -48,6 +48,8 @@ const Commitments = ({}: any) :any => {
     const [loading, setLoading]: any = useState(false);
     const [invitees, setInvitees] = useState([]);
   const [selectedTab, setSelectedTab] = useState("All");
+  const [filter, setFilterCounts]:any = useState([]);
+
 
     const [pagination, setPagination] = useState({
         items_per_page: 10,
@@ -58,8 +60,27 @@ const Commitments = ({}: any) :any => {
       const [tabs] = useState([
         language?.v3?.startup?.overview?.all,
         "Startup",
-        "Real Estate",
+        "Property",
       ]);
+
+      const getCountvalue = ( value:string ) =>
+      { 
+        let count = 0 ;
+        switch (value) {
+          case  "All" : 
+          count = filter?.all
+          break
+          case  "Startup" : 
+          count = filter?.startup
+          break
+          case  "Property" : 
+          count = filter?.property
+          break
+        } 
+    
+        return count
+        
+      }
     
       useEffect(() => {
         dispatch(saveDataHolder(""));
@@ -71,7 +92,9 @@ const Commitments = ({}: any) :any => {
           setLoading(true);
           let { status, data } = await getCommitedDeals( authToken, selectedTab);
           if (status === 200) {
-            let invitees = data?.status?.data?.map((invitee: any) => {
+            setFilterCounts(data?.status?.data?.stats)
+
+            let invitees = data?.status?.data?.deals?.map((invitee: any) => {
               return {
                 id: invitee?.id,
                 filterStatus: invitee?.status,
@@ -179,7 +202,7 @@ const Commitments = ({}: any) :any => {
                                         : "text-gray-500"
                                     } `}
                                 >
-                                    {tab} &nbsp;(0)
+                                    {tab} &nbsp;({getCountvalue(tab)})
                                 </li>
                                 ))
                             )}

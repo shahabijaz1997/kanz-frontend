@@ -11,7 +11,6 @@ import Table from "../../../shared/components/Table";
 import { RoutesEnums, StartupRoutes } from "../../../enums/routes.enum";
 import Modal from "../../../shared/components/Modal";
 import CrossIcon from "../../../ts-icons/crossIcon.svg";
-import { saveToken } from "../../../redux-toolkit/slicer/auth.slicer";
 import { saveDataHolder } from "../../../redux-toolkit/slicer/dataHolder.slicer";
 import { getDeals, getInvitedDeals } from "../../../apis/deal.api";
 import {
@@ -19,11 +18,8 @@ import {
   numberFormatter,
 } from "../../../utils/object.utils";
 import Spinner from "../../../shared/components/Spinner";
-import { ApplicationStatus } from "../../../enums/types.enum";
 import Chevrond from "../../../ts-icons/chevrond.svg";
 import CustomStatus from "../../../shared/components/CustomStatus";
-import { toast } from "react-toastify";
-import { toastUtil } from "../../../utils/toast.utils";
 
 const DealApproval = ({}: any) => {
   const navigate = useNavigate();
@@ -101,7 +97,7 @@ const DealApproval = ({}: any) => {
       let { status, data } = await getInvitedDeals(user.id, authToken, selectedTab);
       if (status === 200) {
         
-        setFilterCounts(data?.status?.data?.filters)
+        setFilterCounts(data?.status?.data?.stats)
         let deals = data?.status?.data?.invites?.map((deal: any) => {
           return {
             id: deal?.id,

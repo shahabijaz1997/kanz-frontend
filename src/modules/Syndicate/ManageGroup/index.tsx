@@ -48,6 +48,8 @@ const ManageGroup = ({  }: any) => {
   const [loading, setLoading] = useState(false);
   const [modalLoading, setmodalLoading] = useState(false);
   const [investors, setInvestors] = useState<any>([]);
+  const [filter, setFilterCounts]:any = useState([]);
+
   const [tabs] = useState(["All", "Added", "Follower"]);
   const columns = [
     "Investor",
@@ -109,7 +111,8 @@ const ManageGroup = ({  }: any) => {
       let { status, data } = await getGroupInvestors(authToken, selectedTab);
 
       if (status === 200) {
-        let investors = data?.status?.data?.map((investor: any) => {
+        setFilterCounts(data?.status?.data?.stats)
+        let investors = data?.status?.data?.members?.map((investor: any) => {  
           return {
             id: investor?.id,
             filterStatus: investor?.status,
@@ -150,6 +153,26 @@ const ManageGroup = ({  }: any) => {
       setLoading(false);
     }
   };
+console.log(filter)
+  
+  const getCountvalue = ( value:string ) =>
+  { 
+    let count = 0 ;
+    switch (value) {
+      case  "All" : 
+      count = filter?.all
+      break
+      case  "Added" : 
+      count = filter?.added
+      break
+      case  "Follower" : 
+      count = filter?.follower
+      break
+    } 
+
+    return count
+    
+  }
 
   const paginate = (type: string) => {
     if (type === "next" && pagination.current_page < pagination.total_pages) {
@@ -323,7 +346,7 @@ const ManageGroup = ({  }: any) => {
                                   : "text-gray-500"
                               } `}
                             >
-                              {tab} &nbsp;()
+                              {tab} &nbsp;({getCountvalue(tab)})
                             </li>
                           ))
                         )}
