@@ -32,6 +32,14 @@ export const getNoFilterDeals = (token: string) => {
     },
   });
 };
+export const getDealsforsyndicate = (token: string) => {
+  const queryParameters = new URLSearchParams();
+  return axios.get(`${ENV.API_URL}/${ENV.API_VERSION}/syndicates/deals`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+};
 
 export const getInvitedDeals = (inviteeId:any, token:any, filters:any) => {
   const queryParameters = new URLSearchParams();
