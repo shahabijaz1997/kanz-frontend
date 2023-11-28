@@ -12,7 +12,7 @@ import { RoutesEnums, StartupRoutes } from "../../enums/routes.enum";
 import Modal from "../../shared/components/Modal";
 import CrossIcon from "../../ts-icons/crossIcon.svg";
 import { saveDataHolder } from "../../redux-toolkit/slicer/dataHolder.slicer";
-import { getDeals, getNoFilterDeals } from "../../apis/deal.api";
+import { getDeals, getDealsforsyndicate, getNoFilterDeals } from "../../apis/deal.api";
 import {
   comaFormattedNumber,
   formatDate,
@@ -75,12 +75,9 @@ const SyndicateDashboard = ({}: any) => {
   const getAllDeals = async () => {
     try {
       setLoading(true);
-      let { status, data } = await getNoFilterDeals(authToken);
+      let { status, data } = await getDealsforsyndicate(authToken);
       if (status === 200) {
         let deals = data?.status?.data?.map((deal: any) => {
-          let features = deal?.features
-            ?.map((f: any) => f?.title || f?.description)
-            ?.join(",");
           return {
             token: deal?.token,
             type: deal?.deal_type,
