@@ -13,7 +13,7 @@ import { getDealInvestors } from "../../../apis/syndicate.api";
 
 
 
-const Investors = ({dealID}: any) => {
+const Investors = ({dealID, dealCreatorView} : any) => {
   const dispatch = useDispatch();
   const authToken: any = useSelector((state: RootState) => state.auth.value);
 
@@ -111,9 +111,9 @@ const Investors = ({dealID}: any) => {
     <main className="h-full relative max-h-full">
       <section className="inline-flex justify-between items-center w-full">
         <div className="w-full">
-          <h1 className="text-black font-medium text-2xl mb-2">
+          {!dealCreatorView && ( <h1 className="text-black font-medium text-2xl mb-2">
             {"Investors"}
-          </h1>
+          </h1>) }
         </div>
       </section>
       {loading ? (

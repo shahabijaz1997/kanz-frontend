@@ -108,7 +108,7 @@ const InvitesListing = ({ dealId, type, dealIdReal}: any) => {
       setLoading(true);
       let results: any;
       if (type === KanzRoles.SYNDICATE)
-        results = await getAllInvestors(authToken);
+        results = await getAllInvestors(dealIdReal, authToken);
       let { status, data } = results;
       if (status === 200) {
         let syndicatesData = data?.status?.data || [];
@@ -116,7 +116,7 @@ const InvitesListing = ({ dealId, type, dealIdReal}: any) => {
           id: investor?.id,
           member_name: <span className=" capitalize">{investor?.name}</span>,
           profileImage: investor?.image,
-          status:false
+          status:investor?.already_invited
         }));
 
         setInvestors(investors);
@@ -196,20 +196,21 @@ const InvitesListing = ({ dealId, type, dealIdReal}: any) => {
                             investments
                           </div>
                         </div>
-                        {!investor?.status ?  <Button
-                divStyle="items-center justify-end max-w-fit"
-                type="outlined"
-                className="!p-3 !py-1 !rounded-full"
-                onClick={() => onShareDeal(investor?.id )}
-              >
-                Share
-              </Button> : <Button
+                  {investor?.status ?  <Button
                 divStyle="items-center justify-end max-w-fit"
                 type="outlined"
                 className="!p-2 !text-black !py-1 !rounded-full !border-black"
               >
                 Shared
-              </Button>  }
+              </Button>  : 
+              <Button
+              divStyle="items-center justify-end max-w-fit"
+              type="outlined"
+              className="!p-3 !py-1 !rounded-full"
+              onClick={() => onShareDeal(investor?.id )}
+            >
+              Share
+            </Button> }
                       </div>
                     ))
                 )
