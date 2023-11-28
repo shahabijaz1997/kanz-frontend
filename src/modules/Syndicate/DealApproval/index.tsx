@@ -49,14 +49,9 @@ const DealApproval = ({}: any) => {
   const [selectedTab, setSelectedTab]: any = useState("all");
   const [modalOpen, setModalOpen]: any = useState(null);
   const [loading, setLoading] = useState(false);
-  const [tabs] = useState([
-    "All",
-    "Pending",
-    "Interested",
-    "Accepted",
-    "Approved",
-  ]);
+
   const [deals, setDeals] = useState([]);
+  const [filter, setFilterCounts]:any = useState([]);
   const [dummyDisclaimers, setDummyDisclaimers] = useState({
     d1: false,
     d2: false,
@@ -69,7 +64,32 @@ const DealApproval = ({}: any) => {
   });
 
 
-  
+  const getCountvalue = ( value:string ) =>
+  { 
+    let count = 0 ;
+    switch (value) {
+      case  "All" : 
+      count = filter?.all
+      break
+      case  "Pending" : 
+      count = filter?.pending
+      break
+      case  "Interested" : 
+      count = filter?.interested
+      break
+      case  "Accepted" : 
+      count = filter?.accepted
+      break
+      case  "Approved" : 
+      count = filter?.approved
+      break
+      
+    } 
+
+    return count
+    
+  }
+
   useEffect(() => {
     dispatch(saveDataHolder(""));
     getAllDeals();
@@ -80,7 +100,9 @@ const DealApproval = ({}: any) => {
       setLoading(true);
       let { status, data } = await getInvitedDeals(user.id, authToken, selectedTab);
       if (status === 200) {
-        let deals = data?.status?.data?.map((deal: any) => {
+        
+        setFilterCounts(data?.status?.data?.filters)
+        let deals = data?.status?.data?.invites?.map((deal: any) => {
           return {
             id: deal?.id,
             filterStatus: deal?.status,
@@ -140,6 +162,17 @@ const DealApproval = ({}: any) => {
       setLoading(false);
     }
   };
+
+  const [tabs] = useState([
+    "All",
+    "Pending",
+    "Interested",
+    "Accepted",
+    "Approved",
+  ]);
+
+
+
 
   const paginate = (type: string) => {
     if (type === "next" && pagination.current_page < pagination.total_pages) {
@@ -205,10 +238,9 @@ const DealApproval = ({}: any) => {
 
                     <ul className="inline-flex items-center">
                       {React.Children.toArray(
-                        tabs.map((tab:any) => (
+                        tabs.map((tab:any, index : number) => (
                           <li
                             onClick={() => {
-                              
                               setSelectedTab(tab)}}
                             className={`py-2 px-3 font-medium cursor-pointer rounded-md transition-all ${
                               selectedTab === tab
@@ -216,7 +248,7 @@ const DealApproval = ({}: any) => {
                                 : "text-gray-500"
                             } `}
                           >
-                            {tab} &nbsp;()
+                            {tab} &nbsp;({getCountvalue(tab)})
                           </li>
                         ))
                       )}
