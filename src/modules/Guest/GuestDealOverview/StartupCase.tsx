@@ -1,6 +1,5 @@
 import React, { useEffect, useLayoutEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
 
 import Header from "../../../shared/components/Header";
 
@@ -19,12 +18,20 @@ import {
 import Button from "../../../shared/components/Button";
 import Spinner from "../../../shared/components/Spinner";
 import { RootState } from "../../../redux-toolkit/store/store";
+import Modal from "../../../shared/components/Modal";
+import CrossIcon from "../../../ts-icons/crossIcon.svg";
+import GuestModalLockIcon from "../../../ts-icons/GuestModalLockIcon.svg";
+import { RoutesEnums } from "../../../enums/routes.enum";
+import { KanzRoles } from "../../../enums/roles.enum";
+import { useNavigate } from "react-router-dom";
 
 const CURRENCIES = ["USD", "AED"];
 
 const StartupCase = ({ id, dealToken, dealDetail }: any) => {
   const language: any = useSelector((state: RootState) => state.language.value);
   const authToken: any = useSelector((state: RootState) => state.auth.value);
+  const [modalOpen, setModalOpen] = useState<boolean>(true);
+  const navigate = useNavigate();
 
   const [deal, setdeal]: any = useState(dealDetail);
   const [loading, setLoading]: any = useState(false);
@@ -33,7 +40,9 @@ const StartupCase = ({ id, dealToken, dealDetail }: any) => {
   useEffect(() => {
     onGetdeal();
   }, []);
- 
+  useLayoutEffect(() => {
+    setTimeout(openModal, 30000);
+  }, []);
 
 
 
@@ -52,6 +61,9 @@ const StartupCase = ({ id, dealToken, dealDetail }: any) => {
   };
 
   
+  function openModal() {
+    setModalOpen(true);
+  }
 
   const getRoleBasedUI = () => {
     return (
@@ -437,6 +449,67 @@ const StartupCase = ({ id, dealToken, dealDetail }: any) => {
           </section>
         )}
       </div>
+      <Modal
+        className={"w-[700px] screen1024:w-[300px]"}
+        show={modalOpen ? true : false}
+      >
+        <div
+          className="rounded-md overflow-hidden inline-grid place-items-center absolute top-1/2 left-1/2 translate-x-[-50%] translate-y-[-50%]"
+          style={{ backgroundColor: "rgba(0, 0, 0, 0.078" }}
+        >
+          <aside className="bg-white w-[700px] rounded-md p-5 h-full">
+            <section>
+              <div className="justify-end inline-flex pt-3 px-3 w-full">
+                <div
+                  className="bg-white h-8 w-8 p-1 cursor-pointer"
+                  onClick={() => {
+                    setModalOpen(false);
+                  }}
+                >
+                  <CrossIcon stroke="#000" />
+                </div>
+              </div>
+            </section>
+            <section className=" mb-6  ">
+              <div className="w-full items-center gap-5">
+                <div className=" overflow-hidden w-full inline-flex justify-center items-center py-7 px-2">
+                  <span className="rounded-full bg-[#E8FAFF] p-3">
+                    <GuestModalLockIcon />
+                  </span>
+                </div>
+                <div className="w-full items-center justify-center flex text-lg font-bold">
+                  Unlock Investment Opportunities!
+                </div>
+                <div className="w-full items-center justify-center flex mt-2  text-[#737373]">
+                  Unlock exclusive deals! Log in for full access and detailed
+                  info.
+                </div>
+                <div className="w-full mt-6">
+                  <Button
+                    className="px-5 w-[80%]"
+                    onClick={() => navigate(RoutesEnums.LOGIN)}
+                  >
+                    Sign In
+                  </Button>
+                </div>
+                <div className="w-full mt-4 items-center justify-center flex">
+                  <span className=" text-[#737373]">Not a Memeber yet?</span>
+                  <span
+                    className="ml-1 font-medium text-[#155E75] cursor-pointer"
+                    onClick={() =>
+                      navigate(RoutesEnums.SIGNUP, {
+                        state: KanzRoles.INVESTOR,
+                      })
+                    }
+                  >
+                    Sign up
+                  </span>
+                </div>
+              </div>
+            </section>
+          </aside>
+        </div>
+      </Modal>
     </main>
   );
 };

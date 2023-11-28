@@ -63,11 +63,13 @@ const PropertyOwnerCase = ({ dealToken, dealDetail, dealDocs, returnPath }: any)
   const [files, setFiles]: any = useState([]);
 
   const [deal, setdeal]: any = useState(dealDetail);
+  const [modalOpenSyndication, setModalOpenSyndication]: any = useState(null);
   const [selectedDocs, setSelectedDocs]: any = useState(dealDocs);
   const [loading, setLoading]: any = useState(false);
   const [modalOpen, setModalOpen]: any = useState(null);
   const [modalOpen2, setModalOpen2]: any = useState(null);
   const [modalOpen3, setModalOpen3]: any = useState(null);
+  const [invited, setInvited]: any = useState();
   const [modalOpenComment, setmodalOpenComment]: any = useState(null);
   const [disableUpload, setdisableUpload]: any = useState(false);
   const [selectedCurrency, setSelectedCurrency] = useState("USD");
@@ -96,6 +98,12 @@ const PropertyOwnerCase = ({ dealToken, dealDetail, dealDocs, returnPath }: any)
   const updateBg = (newBg: any) => {
     setBgDark(newBg);
   };
+
+  
+useEffect (()=>
+{
+  deal && (deal?.invite ? setInvited(true) : setInvited(false)) 
+})
 
 
   const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -741,18 +749,21 @@ const PropertyOwnerCase = ({ dealToken, dealDetail, dealDocs, returnPath }: any)
                 deal?.status !== DealStatus.LIVE &&  (
                   <div className="w-full inline-flex justify-end gap-4">
                     {deal?.invite?.status !== DealStatus.ACCEPTED && (
-                      <React.Fragment>
-                        <Button
-                          type="outlined"
-                          onClick={() => setModalOpen(true)}
-                        >
-                          {language?.v3?.button?.req_change}
-                        </Button>
-                        {deal?.invite?.id}
-                        <Button onClick={() => setModalOpen2(true)}>
-                          {language?.v3?.button?.interested}
-                        </Button>
-                      </React.Fragment>
+                          <React.Fragment>
+                          <Button
+                            type="outlined"
+                            onClick={() => setModalOpen(true)}
+                          >
+                            {language?.v3?.button?.req_change}
+                          </Button>
+                          {deal?.invite ? (
+                            <Button onClick={() => setModalOpen2(true)}>
+                              {language?.v3?.button?.interested}
+                            </Button>
+                          ) :  <Button onClick={() => setModalOpenSyndication(true)}>
+                          {"Request Syndication"}
+                        </Button> }
+                        </React.Fragment>
                     )}
                   </div>
                 )}
@@ -1101,6 +1112,42 @@ const PropertyOwnerCase = ({ dealToken, dealDetail, dealDocs, returnPath }: any)
           </aside>
         </div>
       </Modal>
+      <Modal show={modalOpenSyndication ? true : false} className="w-full">
+        <div
+          className="rounded-md overflow-hidden inline-grid place-items-center absolute top-1/2 left-1/2 translate-x-[-50%] translate-y-[-50%]"
+          style={{ backgroundColor: "rgba(0, 0, 0, 0.078" }}
+        >
+          <aside className="bg-white w-[400px] rounded-md h-full">
+            <section className="py-3 px-10">
+              <div className="mb-6 pt-5 text-center">
+                <label
+                  htmlFor=""
+                  className="text-neutral-900 text-center font-bold text-xl"
+                >
+                  Request for syndication!
+                </label>
+                <p className="pt-5">
+                  You can request for syndication on this deal. You can upload the
+                  required document. Click “Continue” to upload the documents
+                </p>
+              </div>
+            </section>
+
+            <footer className="w-full inline-flex justify-center gap-3 py-2 px-3 w-full">
+              <Button
+                className="w-full !py-1"
+                divStyle="flex items-center justify-center w-6/12"
+                onClick={() => {
+                  setModalOpenSyndication(false);
+                  setModalOpen3(true);
+                }}
+              >
+                Continue
+              </Button>
+            </footer>
+          </aside>
+        </div>
+      </Modal>
       <Modal show={modalOpen3 ? true : false} className="w-full">
         <div
           className="rounded-md overflow-hidden inline-grid place-items-center absolute top-1/2 left-1/2 translate-x-[-50%] translate-y-[-50%]"
@@ -1185,7 +1232,7 @@ const PropertyOwnerCase = ({ dealToken, dealDetail, dealDocs, returnPath }: any)
                 divStyle="flex items-center justify-center w-full"
                 onClick={() => {
                   setdisableUpload(true);
-                  postSignOff();
+                  invited ? postSignOff() : syndicationRequest()
                 }}
               >
                 {language.buttons.submit}
