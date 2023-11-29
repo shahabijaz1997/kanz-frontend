@@ -2,18 +2,20 @@ import { useEffect, useState } from "react";
 import { comaFormattedNumber } from "../../../utils/object.utils";
 
 
-const CURRENCIES = ["USD", "AED"];
 
 const InvestmentCalculator = ({}: any) => {
 
 
   const [investmentAmount, setinvestmentAmount] = useState(0);
-  const [netDividendIncome, setnetDividendIncome] = useState(0);
-  const [avgAnnualisedReturn, setavgAnnualisedReturn] = useState(0);
   const [expectedDividendYield, setexpectedDividendYield] = useState(0);
   const [expectedAnnualAppreciation, setexpectedAnnualAppreciation] = useState(0);
   const [numberOfYears, setNumberOfYears] = useState(5);
-  const [finalValue, setFinalValue] : any = useState(0)
+  const [finalValue, setFinalValue] = useState({
+    finalCapitalAppreciation: 0,
+    dividendComponent: 0,
+    finalTotalReturn: 0,
+    averageAnnualizedReturn: 0,
+  })
 
   const handleSlider1Change = (event: any) => {
     setinvestmentAmount(event.target.value);
@@ -50,8 +52,8 @@ const InvestmentCalculator = ({}: any) => {
 
     const finalTotalReturn = totalReturn - initialInvestment
     const finalCapitalAppreciation = capitalAppreciation - initialInvestment  
-   
-    const averageAnnualizedReturn = (finalTotalReturn / (numberOfYears * initialInvestment)) * 100;
+    
+    const averageAnnualizedReturn = (finalTotalReturn / (numberOfYears * initialInvestment)) * 100 || 0;
     
 
     return {
@@ -173,7 +175,7 @@ const InvestmentCalculator = ({}: any) => {
                       </p>
                       <p className="px-5 pb-5 text-2xl  font-bold text-[#155E75] ">
                         {" "}
-                        <span>AED {comaFormattedNumber(parseFloat(finalValue.finalTotalReturn).toFixed(2))}</span>
+                        <span>AED {comaFormattedNumber(parseFloat(finalValue.finalTotalReturn.toString()).toFixed(2))}</span>
                       </p>
                     </div>
                     <div className=" mb-4 mt-10 font-medium border-[#155E75] border-[1px] rounded-xl w-[45%]">
@@ -182,19 +184,19 @@ const InvestmentCalculator = ({}: any) => {
                       </p>
                       <p className="px-5 pb-5 text-2xl  font-bold text-[#155E75] ">
                         {" "}
-                        <span>{comaFormattedNumber(parseFloat(finalValue.averageAnnualizedReturn).toFixed(2))}%</span>
+                        <span>{parseFloat(finalValue.averageAnnualizedReturn.toString()).toFixed(2)}%</span>
                       </p>
                     </div>
                   </div>
                   <div className="w-full items-center justify-between flex px-3">
                     <div className="grid px-2 ">
                       <p className="text-xl">Net Dividend Income</p>
-                      <p className="text-2xl font-bold">{comaFormattedNumber(parseFloat(finalValue.dividendComponent).toFixed(2))}</p>
+                      <p className="text-2xl font-bold">{comaFormattedNumber(parseFloat(finalValue.dividendComponent.toString()).toFixed(2))}</p>
                     </div>
                     <div className="grid px-2">
                       {" "}
                       <p className="text-xl">Expected Capital Appreciation</p>{" "}
-                      <p className="text-2xl font-bold">{comaFormattedNumber(parseFloat(finalValue.finalCapitalAppreciation).toFixed(2))}</p>
+                      <p className="text-2xl font-bold">{comaFormattedNumber(parseFloat(finalValue.finalCapitalAppreciation.toString()).toFixed(2))}</p>
                     </div>
                   </div>
                 </section>
