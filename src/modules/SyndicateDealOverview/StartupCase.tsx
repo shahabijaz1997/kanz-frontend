@@ -1,4 +1,4 @@
-import React, { useEffect, useLayoutEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { useLocation, useNavigate } from "react-router-dom";
 import { KanzRoles } from "../../enums/roles.enum";
@@ -19,7 +19,6 @@ import CurrencySVG from "../../assets/svg/currency.svg";
 
 import {
   comaFormattedNumber,
-  formatDate,
   numberFormatter,
   timeAgo,
 } from "../../utils/object.utils";
@@ -59,7 +58,6 @@ const StartupCase = ({ dealToken, dealDetail, docs, returnPath }: any) => {
   const [selectedDocs, setSelectedDocs]: any = useState(docs);
   const [invited, setInvited]: any = useState();
   const [loading, setLoading]: any = useState(false);
-  const { state } = useLocation();
   const [fileLoading, setFileLoading]: any = useState(false);
   const [modalOpen, setModalOpen]: any = useState(null);
   const [modalOpen2, setModalOpen2]: any = useState(null);
@@ -342,7 +340,7 @@ useEffect (()=>
             {deal?.safe_type && (
               <div className="w-full inline-flex justify-between items-center border-b-[1px] border-b-neutral-200 py-3">
                 <h3 className="text-neutral-900 font-medium text-sm">
-                  {language?.v3?.deal?.instrument_type}
+                  {"Stage type"}
                 </h3>
                 <p className="text-neutral-900 font-normal text-sm capitalize">
                   {deal?.safe_type || language?.v3?.common?.not_added}
@@ -424,6 +422,20 @@ useEffect (()=>
                 <p className="text-neutral-900 font-normal text-sm capitalize">
                   {deal.terms[4]?.is_enabled
                     ? Object.keys(deal.terms[4]?.value).length > 0
+                      ? "Yes"
+                      : "No"
+                    : "No"}
+                </p>
+              </div>
+            )}
+            {deal?.terms && (
+              <div className="w-full inline-flex justify-between items-center border-b-[1px] border-b-neutral-200 py-3">
+                <h3 className="text-neutral-900 font-medium text-sm">
+                  {"Additional Terms"}
+                </h3>
+                <p className="text-neutral-900 font-normal text-sm capitalize">
+                  {deal.terms[5]?.is_enabled
+                    ? Object.keys(deal.terms[5]?.value).length > 0
                       ? "Yes"
                       : "No"
                     : "No"}
