@@ -43,14 +43,33 @@ const SyndicateInvestments = ({}: any) => {
     current_page: 1,
     total_pages: 0,
   });
-  const [selectedTab, setSelectedTab]: any = useState("all");
+  const [selectedTab, setSelectedTab]: any = useState("All");
   const [modalOpen, setModalOpen]: any = useState(null);
   const [loading, setLoading] = useState(false);
+  const [filter, setFilterCounts]:any = useState([]);
   const [tabs] = useState([
     "All",
     "Startup",
     "Property",
   ]);
+  const getCountvalue = ( value:string ) =>
+  { 
+    let count = 0 ;
+    switch (value) {
+      case  "All" : 
+      count = filter?.all
+      break
+      case  "Property" : 
+      count = filter?.property
+      break
+      case  "Startup" : 
+      count = filter?.startup
+      break
+    } 
+
+    return count
+    
+  }
   const [deals, setDeals] = useState([]);
   const [dummyDisclaimers, setDummyDisclaimers] = useState({
     d1: false,
@@ -75,7 +94,8 @@ const SyndicateInvestments = ({}: any) => {
       setLoading(true);
       let { status, data } = await getLiveDeals(user.id, authToken, selectedTab);
       if (status === 200) {
-        let deals = data?.status?.data?.map((deal: any) => {
+        setFilterCounts(data?.status?.data?.stats)
+        let deals = data?.status?.data?.deals?.map((deal: any) => {
           return {
             id: deal?.id,
             filterStatus: deal?.status,
@@ -209,7 +229,7 @@ const SyndicateInvestments = ({}: any) => {
                                 : "text-gray-500"
                             } `}
                           >
-                            {tab} &nbsp;()
+                            {tab} &nbsp;({getCountvalue(tab)})
                           </li>
                         ))
                       )}

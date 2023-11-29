@@ -28,7 +28,9 @@ const SyndicateDashboard = ({}: any) => {
   const dispatch = useDispatch();
   const language: any = useSelector((state: RootState) => state.language.value);
   const authToken: any = useSelector((state: RootState) => state.auth.value);
+  const [filter, setFilterCounts]:any = useState([]);
 
+  
   const columns = [
     "Title",
     "Type",
@@ -45,13 +47,13 @@ const SyndicateDashboard = ({}: any) => {
     current_page: 1,
     total_pages: 0,
   });
-  const [selectedTab, setSelectedTab] = useState();
+  const [selectedTab, setSelectedTab] = useState("All");
   const [modalOpen, setModalOpen]: any = useState(null);
   const [loading, setLoading] = useState(false);
   const [tabs] = useState([
     language?.v3?.startup?.overview?.all,
-    language?.v3?.startup?.overview?.raising,
-    language?.v3?.startup?.overview?.closed,
+  "Startup",
+  "Property"
   ]);
   const [deals, setDeals] = useState([]);
   const [dummyDisclaimers, setDummyDisclaimers] = useState({
@@ -64,7 +66,25 @@ const SyndicateDashboard = ({}: any) => {
     d2: false,
     d3: false,
   });
+  
+  const getCountvalue = ( value:string ) =>
+  { 
+    let count = 0 ;
+    switch (value) {
+      case  "All" : 
+      count = filter?.all
+      break
+      case  "Startup" : 
+      count = filter?.startup
+      break
+      case  "Property" : 
+      count = filter?.property
+      break
+    } 
 
+    return count
+    
+  }
 
 
   useEffect(() => {
@@ -72,12 +92,17 @@ const SyndicateDashboard = ({}: any) => {
     getAllDeals();
   }, []);
 
+  useEffect(() => {
+    getAllDeals();
+  }, [selectedTab]);
+
   const getAllDeals = async () => {
     try {
       setLoading(true);
-      let { status, data } = await getDealsforsyndicate(authToken);
+      let { status, data } = await getDealsforsyndicate(authToken, selectedTab);
       if (status === 200) {
-        let deals = data?.status?.data?.map((deal: any) => {
+        setFilterCounts(data?.status?.data?.stats)
+        let deals = data?.status?.data?.deals?.map((deal: any) => {
           return {
             token: deal?.token,
             type: deal?.deal_type,
@@ -193,7 +218,24 @@ const SyndicateDashboard = ({}: any) => {
                         placeholder={language?.v3?.common?.search}
                       />
                     </div>
-
+                    <ul className="inline-flex items-center">
+                        {React.Children.toArray(
+                          tabs.map((tab: any) => (
+                            <li
+                              onClick={() => {
+                                setSelectedTab(tab);
+                              }}
+                              className={`py-2 px-3 font-medium cursor-pointer rounded-md transition-all ${
+                                selectedTab === tab
+                                  ? "text-neutral-900 bg-neutral-100"
+                                  : "text-gray-500"
+                              } `}
+                            >
+                              {tab} &nbsp;({getCountvalue(tab)})
+                            </li>
+                          ))
+                        )}
+                      </ul>
                   </span>
                 </div>
               </section>
