@@ -726,6 +726,10 @@ useEffect (()=>
     }, 500);
   };
 
+  useEffect(()=>{
+    console.log(returnPath)
+  })
+
   return (
     <main className="h-full relative max-h-full overflow-y-hidden">
       <section>
@@ -765,7 +769,13 @@ useEffect (()=>
               >
                 <Chevrond stroke="#000" className="rotate-90 w-4 h-4" />
                 <small className="text-neutral-500 text-sm font-medium">
-                  {language?.v3?.common?.investments}
+                  
+                  { returnPath === RoutesEnums.INVESTOR_DEALS && ("Deals")}
+                  { returnPath === RoutesEnums.SYNDICATE_DASHBOARD && ("Dashboard")}
+                  { returnPath === RoutesEnums.SYNDICATE_INVESTMENTS && ("Investments")}
+                  { returnPath === RoutesEnums.DEAL_APPROVAL && ("Deal Approval")}
+                  
+                  
                 </small>
               </div>
               <div className="w-full inline-flex flex-col pb-8 items-start gap-2">
@@ -1005,7 +1015,7 @@ useEffect (()=>
                 )}
               </div>
 
-              {deal && user.type.toLowerCase() === "syndicate" && (
+              {deal && user.type.toLowerCase() === "syndicate" && deal?.current_deal_syndicate && (
                 <div className="w-full mt-8 mb-4">
                 <Investors dealID={deal?.id} dealCreatorView={false}/>
                 </div>
@@ -1027,7 +1037,7 @@ useEffect (()=>
             <section className="w-[30%]">
               {/* Show/Hide based on some conditions */}
               {user.type.toLowerCase() === "syndicate" &&
-                deal?.status === DealStatus.LIVE && (
+                deal?.status === DealStatus.LIVE && deal?.current_deal_syndicate && (
                   <div className="w-full inline-flex justify-end gap-4">
                     <div className="relative z-10">
                       <InvitesListing

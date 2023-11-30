@@ -55,6 +55,7 @@ import InvestmentCalculator from "./InvestmentCalculator";
 import DealActivity from "./DealActivity";
 import { investSyndicate } from "../../apis/syndicate.api";
 import Investors from "./DealInvestors";
+import { set } from "react-hook-form";
 
 const PropertyOwnerCase = ({ dealToken, dealDetail, dealDocs, returnPath }: any) => {
   const navigate = useNavigate();
@@ -703,7 +704,7 @@ useEffect (()=>
                   </ul>
                 </div>
               </section>
-              {user.type.toLowerCase() === "syndicate" && dealDetail && (
+              {user.type.toLowerCase() === "syndicate" && dealDetail && deal?.current_deal_syndicate && (
                 <div className="w-full mt-8 mb-4">
                   <Investors dealID={deal?.id} dealCreatorView={false}/>
                 </div>
@@ -735,7 +736,7 @@ useEffect (()=>
             <section className="w-[30%]">
               {/* Show/Hide based on some conditions */}
               {user.type.toLowerCase() === "syndicate" &&
-                deal?.status === DealStatus.LIVE && (
+                deal?.status === DealStatus.LIVE && deal?.current_deal_syndicate && (
                   <div className="w-full inline-flex justify-end gap-4">
                     <div className="relative z-10">
                       <InvitesListing
@@ -1138,7 +1139,20 @@ useEffect (()=>
           style={{ backgroundColor: "rgba(0, 0, 0, 0.078" }}
         >
           <aside className="bg-white w-[400px] rounded-md h-full">
-            <section className="py-3 px-10">
+            <section className="py-3 px-1">
+            <header className=" px-1 inline-flex w-full justify-end items-center">
+                
+                <div
+                  className="bg-white h-8 w-8 border-[1px] border-black rounded-md shadow shadow-cs-6 p-1 cursor-pointer"
+                  onClick={() => {
+                    setModalOpen2(false);
+                    setChanges({ comment: "", action: "", document: null });
+                    // setFiles([]);
+                  }}
+                >
+                  <CrossIcon stroke="#000" />
+                </div>
+              </header>
               <div className="mb-6 pt-5 text-center">
                 <label
                   htmlFor=""
@@ -1214,6 +1228,16 @@ useEffect (()=>
               <h3 className="text-xl font-medium text-neutral-700">
                 Deal Approval
               </h3>
+              <div
+                  className="bg-white h-8 w-8 border-[1px] border-black rounded-md shadow shadow-cs-6 p-1 cursor-pointer"
+                  onClick={() => {
+                    setModalOpen3(false);
+                    setChanges({ comment: "", action: "", document: null });
+                    // setFiles([]);
+                  }}
+                >
+                  <CrossIcon stroke="#000" />
+                </div>
             </header>
 
             <section className="py-3 px-4">
