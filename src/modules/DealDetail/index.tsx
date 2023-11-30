@@ -33,10 +33,9 @@ const DealDetail = ({}: any) => {
     { id: 1, title: "Details" },
     { id: 3, title: "Investors" },
     { id: 4, title: "Documents" },
-    { id: 5, title: "Existing SAFE/Note Holders" },
-    { id: 6, title: "Activity" },
-    { id: 7, title: "Invited Syndicates" },
-    { id: 8, title: "Interested Syndicates" },
+    { id: 5, title: "Activity" },
+    { id: 6, title: "Invited Syndicates" },
+    { id: 7, title: "Interested Syndicates" },
   ];
 
   if (state === KanzRoles.PROPERTY_OWNER) {
@@ -177,10 +176,9 @@ const DealDetail = ({}: any) => {
             {selected?.id === 2 && <Usp id={dealDetail?.id} />}
             {selected?.id === 3 && <DealInvestors id={dealDetail?.id} dealCreatorView= {true}/>}
             {selected?.id === 4 && <DocumentDetails dealDocs={dealDocs} />}
-            {selected?.id === 5 && <NoteDetails />}
-            {selected?.id === 6 && <ActivityDetails  id={dealDetail?.id}/>}
-            {selected?.id === 7 && <InvitedSyndicates id={dealDetail?.id} />}
-            {selected?.id === 8 && <Requests id={dealDetail?.id} />}
+            {selected?.id === 5 && <ActivityDetails  id={dealDetail?.id}/>}
+            {selected?.id === 6 && <InvitedSyndicates id={dealDetail?.id} />}
+            {selected?.id === 7 && <Requests id={dealDetail?.id} />}
           </section>
         )}
       </aside>
