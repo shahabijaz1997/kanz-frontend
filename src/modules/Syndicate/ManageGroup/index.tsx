@@ -30,10 +30,12 @@ import {
   postAddInvestor,
 } from "../../../apis/syndicate.api";
 
+
+
+
 const ManageGroup = ({  }: any) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const ref: any = useRef();
 
   const [groupInvestors, setGroupInvestors] = useState([]);
 
@@ -66,6 +68,8 @@ const ManageGroup = ({  }: any) => {
     total_pages: 0,
   });
 
+
+
   useEffect(() => {
     dispatch(saveDataHolder(""));
     getMembers();
@@ -73,6 +77,19 @@ const ManageGroup = ({  }: any) => {
 
   const ActionButton = ({ investorID }: any): any => {
     const [openActions, setOpenActions] = useState(false);
+    const ref: any = useRef();
+
+    useEffect(() => {
+      const handleOutsideClick = (event: any) => {
+        if (ref.current && !ref.current.contains(event.target)) {
+          setOpenActions(false);
+        }
+      };
+      window.addEventListener("click", handleOutsideClick);
+      return () => {
+        window.removeEventListener("click", handleOutsideClick);
+      };
+    }, []);
     return (
       <div className="relative">
         <div

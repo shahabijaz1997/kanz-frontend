@@ -634,6 +634,7 @@ useEffect (()=>
         toast.warning(error?.response?.data?.status?.message, toastUtil);
     } finally {
       setLoading(false);
+      onGetdeal()
     }
   };
 
@@ -893,7 +894,7 @@ useEffect (()=>
                 </section>
               )}
 
-              {deal?.status === DealStatus.LIVE && (
+              {deal?.status === DealStatus.LIVE && !deal?.is_invested && (
                 <>
                   <section className="mb-4 mt-10">
                     <div className="border-neutral-500 border-[1px] rounded-md min-w-full px-2 justify-between flex bg-white">
@@ -1067,7 +1068,7 @@ useEffect (()=>
                 <small className="text-neutral-500 text-sm font-normal">
                   {language?.v3?.common?.end_on} {deal?.end_at}
                 </small>
-                {deal?.status === DealStatus.LIVE && (
+                {deal?.status === DealStatus.LIVE && !deal?.is_invested &&(
                   <aside className="">
                     <section className="mb-4 mt-1">
                       <div className="border-neutral-500 border-[1px] rounded-md min-w-full bg-white px-2 justify-between flex">
@@ -1120,7 +1121,38 @@ useEffect (()=>
              
                 {getRoleBasedUI()}
               </aside>
-              <aside className="border-[1px] border-neutral-200 rounded-md w-full p-3 mt-5 inline-flex items-center gap-3">
+              {deal?.is_invested && (   
+                <div className="">
+                <aside className="border-[1px] bg-white border-neutral-200 rounded-md  w-full p-3 mt-5 items-center gap-3">
+                <div className="rounded-md text-md font-semibold inline-grid place-items-center">
+                  {"Your commitment"}
+                </div>
+                <div className="rounded-md text-xs inline-grid place-items-center">
+                  {"You’re not able to reverse the commitment after date"}
+                </div>
+                  <aside className="border-t-[2px] border-neutral-200 w-full p-3 mt-5 inline-flex items-center gap-3">
+                <div className="h-8 w-8 rounded-md bg-cbc-grey-sec inline-grid place-items-center">
+                  <img src={CurrencySVG} alt="Currency" />
+                </div>
+                  <div className="flex items-center justify-between w-full">    
+                <div>
+                  <h2 className="text-neutral-900 font-normal text-sm">
+                    {"Commitment"}
+                  </h2>
+                  <p className="text-black font-medium text-lg">
+                    ${numberFormatter(deal?.my_invested_amount)}
+                  </p>
+                </div>
+                <div>
+                  <Button onClick={()=>{
+
+                  }} className="!py-1 !px-2 !font-medium !rounded-full border-[1px] border-black !text-xs" type="outlined">Reverse</Button>
+                </div>
+                </div>
+              </aside>
+              </aside>
+                </div>)}
+              <aside className="border-[1px] border-neutral-200 rounded-md w-full p-3 mt-5 inline-flex bg-white items-center gap-3 bg-white">
                 <div className="h-8 w-8 rounded-md bg-cbc-grey-sec inline-grid place-items-center">
                   <img src={CurrencySVG} alt="Currency" />
                 </div>
