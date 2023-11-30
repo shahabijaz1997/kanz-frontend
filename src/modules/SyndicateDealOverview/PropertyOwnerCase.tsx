@@ -54,6 +54,7 @@ import { RoutesEnums } from "../../enums/routes.enum";
 import InvestmentCalculator from "./InvestmentCalculator";
 import DealActivity from "./DealActivity";
 import { investSyndicate } from "../../apis/syndicate.api";
+import Investors from "./DealInvestors";
 
 const PropertyOwnerCase = ({ dealToken, dealDetail, dealDocs, returnPath }: any) => {
   const navigate = useNavigate();
@@ -702,7 +703,7 @@ useEffect (()=>
               </section>
               {user.type.toLowerCase() === "syndicate" && dealDetail && (
                 <div className="w-full mt-8 mb-4">
-                  <DealActivity dealID={deal.id} />
+                  <Investors dealID={deal?.id} dealCreatorView={false}/>
                 </div>
               )}
               <div className="mb-4 mt-10">
@@ -850,23 +851,26 @@ useEffect (()=>
                       return (
                         <section className="rounded-md bg-white px-3 py-1 inline-flex items-center justify-between w-full border-[1px] border-neutral-200 mb-2">
                           <span className="inline-flex items-center w-[80%]">
-                            <div className="bg-white w-14 h-14 inline-flex justify-center flex-col w-full">
+                          <div 
+                             onClick={() => {
+                              window.open(doc?.url, "_blank");
+                            }}
+                             className="bg-white  h-14 inline-flex justify-center flex-col  cursor-pointer w-full">
                               <h4
-                                className="inline-flex items-center gap-3 max-w-[200px] cursor-pointer"
-                                onClick={() => {
-                                  window.open(doc?.url, "_blank");
-                                }}
-                              >
-                                <div className="text-sm text-black font-medium ">
-                                  {language?.v3?.button?.view}
-                                </div>
-                                <ArrowIcon stroke="#000" />
+                           className="text-md font-medium  max-w-full truncate"
+                           title={doc?.name}
+                         >
+                           {doc?.name}
                               </h4>
                               <h2
-                                className="text-sm font-medium text-neutral-500 max-w-full truncate"
-                                title={doc?.name}
-                              >
-                                {doc?.name}
+                              className="inline-flex items-center text-sm  gap-1 max-w-[200px] "
+                             
+                            >
+                              <div className="text-xs text-black text-neutral-500 font-medium ">
+                                {language?.v3?.button?.view}
+                              </div>
+                              <ArrowIcon stroke="#000" />
+                               
                               </h2>
                             </div>
                           </span>

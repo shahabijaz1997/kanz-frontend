@@ -44,6 +44,7 @@ import DealActivity from "./DealActivity";
 import { RoutesEnums } from "../../enums/routes.enum";
 import { investSyndicate } from "../../apis/syndicate.api";
 import path from "path";
+import Investors from "./DealInvestors";
 
 const CURRENCIES = ["USD", "AED"];
 
@@ -258,6 +259,16 @@ useEffect (()=>
                 </p>
               </div>
             )}
+            {deal?.instrument_type && (
+              <div className="w-full inline-flex justify-between items-center border-b-[1px] border-b-neutral-200 py-3">
+                <h3 className="text-neutral-900 font-medium text-sm">
+                  {"Equity Type"}
+                </h3>
+                <p className="text-neutral-900 font-normal text-sm capitalize">
+                  {deal?.equity_type || language?.v3?.common?.not_added}
+                </p>
+              </div>
+            )}
             {deal?.stage && (
               <div className="w-full inline-flex justify-between items-center border-b-[1px] border-b-neutral-200 py-3">
                 <h3 className="text-neutral-900 font-medium text-sm">
@@ -274,7 +285,7 @@ useEffect (()=>
                   {"Deal Target"}
                 </h3>
                 <p className="text-neutral-900 font-normal text-sm capitalize">
-                  {comaFormattedNumber(deal?.selling_price) ||
+                  {comaFormattedNumber(parseFloat(deal?.selling_price).toFixed(0)) ||
                     language?.v3?.common?.not_added}
                 </p>
               </div>
@@ -285,17 +296,7 @@ useEffect (()=>
                   {language?.v3?.table?.valuation}
                 </h3>
                 <p className="text-neutral-900 font-normal text-sm capitalize">
-                  ${comaFormattedNumber(deal?.valuation)} ({deal?.equity_type})
-                </p>
-              </div>
-            )}
-            {deal?.valuation_type && (
-              <div className="w-full inline-flex justify-between items-center border-b-[1px] border-b-neutral-200 py-3">
-                <h3 className="text-neutral-900 font-medium text-sm">
-                  {language?.v3?.table?.type}
-                </h3>
-                <p className="text-neutral-900 font-normal text-sm capitalize">
-                  {deal?.valuation_type}
+                  ${comaFormattedNumber(parseFloat(deal?.valuation).toFixed(0))} ({deal?.valuation_type})
                 </p>
               </div>
             )}
@@ -340,7 +341,7 @@ useEffect (()=>
             {deal?.safe_type && (
               <div className="w-full inline-flex justify-between items-center border-b-[1px] border-b-neutral-200 py-3">
                 <h3 className="text-neutral-900 font-medium text-sm">
-                  {"Stage type"}
+                  {"Safe type"}
                 </h3>
                 <p className="text-neutral-900 font-normal text-sm capitalize">
                   {deal?.safe_type || language?.v3?.common?.not_added}
@@ -1005,7 +1006,7 @@ useEffect (()=>
 
               {deal && user.type.toLowerCase() === "syndicate" && (
                 <div className="w-full mt-8 mb-4">
-                  <DealActivity dealID={deal.id} />
+                <Investors dealID={deal?.id} dealCreatorView={false}/>
                 </div>
               )}
             </section>
@@ -1060,6 +1061,12 @@ useEffect (()=>
                   </div>
                 )}
               <aside className="border-[1px] border-neutral-200 rounded-md w-full px-3 pt-3 mt-5 bg-white">
+              <h2 className="text-neutral-700 text-xl font-medium">
+                  {language?.v3?.common?.invest_details}
+                </h2>
+                <small className="text-neutral-500 text-sm font-normal">
+                  {language?.v3?.common?.end_on} {deal?.end_at}
+                </small>
                 {deal?.status === DealStatus.LIVE && (
                   <aside className="">
                     <section className="mb-4 mt-1">
@@ -1110,12 +1117,7 @@ useEffect (()=>
                     </section>
                   </aside>
                 )}
-                <h2 className="text-neutral-700 text-xl font-medium">
-                  {language?.v3?.common?.invest_details}
-                </h2>
-                <small className="text-neutral-500 text-sm font-normal">
-                  {language?.v3?.common?.end_on} {deal?.end_at}
-                </small>
+             
                 {getRoleBasedUI()}
               </aside>
               <aside className="border-[1px] border-neutral-200 rounded-md w-full p-3 mt-5 inline-flex items-center gap-3">
@@ -1139,23 +1141,26 @@ useEffect (()=>
                       return (
                         <section className="rounded-md bg-white px-3 py-1 inline-flex items-center justify-between w-full border-[1px] border-neutral-200 mb-2">
                           <span className="inline-flex items-center w-[80%]">
-                            <div className="bg-white w-14 h-14 inline-flex justify-center flex-col w-full">
+                            <div 
+                             onClick={() => {
+                              window.open(doc?.url, "_blank");
+                            }}
+                             className="bg-white  h-14 inline-flex justify-center flex-col  cursor-pointer w-full">
                               <h4
-                                className="inline-flex items-center gap-3 max-w-[200px] cursor-pointer"
-                                onClick={() => {
-                                  window.open(doc?.url, "_blank");
-                                }}
-                              >
-                                <div className="text-sm text-black font-medium ">
-                                  {language?.v3?.button?.view}
-                                </div>
-                                <ArrowIcon stroke="#000" />
+                           className="text-md font-medium  max-w-full truncate"
+                           title={doc?.name}
+                         >
+                           {doc?.name}
                               </h4>
                               <h2
-                                className="text-sm font-medium text-neutral-500 max-w-full truncate"
-                                title={doc?.name}
-                              >
-                                {doc?.name}
+                              className="inline-flex items-center text-sm  gap-1 max-w-[200px] "
+                             
+                            >
+                              <div className="text-xs text-black text-neutral-500 font-medium ">
+                                {language?.v3?.button?.view}
+                              </div>
+                              <ArrowIcon stroke="#000" />
+                               
                               </h2>
                             </div>
                           </span>
