@@ -116,6 +116,8 @@ const InvitesListing = ({ dealId, type, dealIdReal}: any) => {
           id: investor?.id,
           member_name: <span className=" capitalize">{investor?.name}</span>,
           profileImage: investor?.image,
+          investedAmount:investor?.invested_amount,
+          noOfinvestments: investor?.no_investments,
           status:investor?.already_invited
         }));
 
@@ -190,9 +192,9 @@ const InvitesListing = ({ dealId, type, dealIdReal}: any) => {
                         <div className=" justify-between items-center w-full">
                           <p>{investor.member_name}</p>
                           <div className="font-sm text-xs font-light">
-                            {numberFormatter(investor?.invested_amount)}{" "}
+                            {investor?.investedAmount == 0.0 ? "0": numberFormatter(investor?.investedAmount)}{" "}
                             invested in{" "}
-                            {numberFormatter(investor?.no_investments)}{" "}
+                            {numberFormatter(investor?.noOfinvestments)}{" "}
                             investments
                           </div>
                         </div>
