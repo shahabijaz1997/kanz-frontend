@@ -138,7 +138,7 @@ const PropertyOwner = ({}: any) => {
             ?.join(",");
           return {
             id: deal?.id,
-            [language?.v3?.table?.propertyName]: deal?.building_name || "N/A",
+            [language?.v3?.table?.propertyName]: deal?.title || "N/A",
             [language?.v3?.table?.size]: `${comaFormattedNumber(
               deal?.size
             )} sqft`,

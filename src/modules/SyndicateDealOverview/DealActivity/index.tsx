@@ -16,7 +16,6 @@ import { getDealActivity } from "../../../apis/syndicate.api";
 import CustomStatus from "../../../shared/components/CustomStatus";
 
 const DealActivity = ({dealID, dealCreatorView}: any) => {
-  const navigate = useNavigate();
   const dispatch = useDispatch();
   const authToken: any = useSelector((state: RootState) => state.auth.value);
 

@@ -7,7 +7,7 @@ const ArrowIcon = (props: SVGProps<SVGSVGElement>) => (
         fill="none"
         stroke={props.stroke}
         strokeWidth={1.5}
-        className="w-5 h-5"
+        className="w-4 h-4"
         viewBox="0 0 24 24"
         {...props}
     >

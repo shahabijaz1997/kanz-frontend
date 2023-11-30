@@ -6,7 +6,7 @@ const DealInvestors = ({id , dealCreatorView } :any ) => {
     const language: any = useSelector((state: RootState) => state.language.value);
 
     return (
-        <Investors dealID = {id?.id} dealCreatorView = {dealCreatorView}/>
+        <Investors dealID = {id} dealCreatorView = {dealCreatorView}/>
     )
 };
 export default DealInvestors;
