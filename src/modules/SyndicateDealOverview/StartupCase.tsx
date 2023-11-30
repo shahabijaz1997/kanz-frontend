@@ -726,6 +726,10 @@ useEffect (()=>
     }, 500);
   };
 
+  useEffect(()=>{
+    console.log(returnPath)
+  })
+
   return (
     <main className="h-full relative max-h-full overflow-y-hidden">
       <section>
@@ -765,7 +769,13 @@ useEffect (()=>
               >
                 <Chevrond stroke="#000" className="rotate-90 w-4 h-4" />
                 <small className="text-neutral-500 text-sm font-medium">
-                  {language?.v3?.common?.investments}
+                  
+                  { returnPath === RoutesEnums.INVESTOR_DEALS && ("Deals")}
+                  { returnPath === RoutesEnums.SYNDICATE_DASHBOARD && ("Deals")}
+                  { returnPath === RoutesEnums.SYNDICATE_INVESTMENTS && ("Investments")}
+                  { returnPath === RoutesEnums.DEAL_APPROVAL && ("Deal Approval")}
+                  
+                  
                 </small>
               </div>
               <div className="w-full inline-flex flex-col pb-8 items-start gap-2">
