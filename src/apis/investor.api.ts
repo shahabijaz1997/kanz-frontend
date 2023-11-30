@@ -104,6 +104,14 @@ export const getInvites = (token: string, filters :any) => {
     });
   };
 
+  export const postunFollowSyndicate = ( syndicateID :any, memeberId:any , token: string) => {
+    return axios.delete(`${ENV.API_URL}/${ENV.API_VERSION}/syndicates/${syndicateID}/syndicate_members/${memeberId}`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+  };
+
 export const getInvestor = (investorID:any, token: string) => {
     return axios.get(`${ENV.API_URL}/${ENV.API_VERSION}/investors/${investorID}`, {
         headers: {

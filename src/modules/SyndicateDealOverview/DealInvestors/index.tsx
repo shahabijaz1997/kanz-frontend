@@ -112,7 +112,7 @@ const Investors = ({dealID, dealCreatorView} : any) => {
       <section className="inline-flex justify-between items-center w-full">
         <div className="w-full">
           {!dealCreatorView && ( <h1 className="text-black font-medium text-2xl mb-2">
-            {"Investors"}
+            {"Deal Activity"}
           </h1>) }
         </div>
       </section>

@@ -7,7 +7,7 @@ import Button from "../../../../shared/components/Button";
 import Spinner from "../../../../shared/components/Spinner";
 import { numberFormatter } from "../../../../utils/object.utils";
 import RaiseIcon from "../../../../ts-icons/raiseIcon.svg";
-import { postFollowSyndicate } from "../../../../apis/investor.api";
+import { postFollowSyndicate, postunFollowSyndicate } from "../../../../apis/investor.api";
 import { useSelector } from "react-redux";
 import { RootState } from "../../../../redux-toolkit/store/store";
 import { toast } from "react-toastify";
@@ -65,6 +65,30 @@ const SyndicateInfoDrawer = ({
       sendDataToParent()
     }
   };
+  const onunFollow = async (syndId: any, memberId:any) => {
+    try {
+      setLoading(true)
+      const { status } = await postunFollowSyndicate(
+        syndId,
+        memberId,
+        authToken
+      );
+      if (status === 200) {
+        toast.success("Syndicate Unfollowed", toastUtil);
+        let elem: any = document.getElementById(`synd-${syndId}`);
+        let button = document.createElement("button");
+        button.innerText = "Unfollowed";
+        elem.innerHTML = "";
+        elem.appendChild(button);
+      }
+    } catch (error: any) {
+      if (error?.response?.status === 400)
+        toast.warning(error?.response?.data?.status?.message, toastUtil);
+    } finally {
+      setLoading(false)
+      sendDataToParent()
+    }
+  };
 
 
 
@@ -100,7 +124,9 @@ const SyndicateInfoDrawer = ({
               </div>
               <span className="items-center">
                 {syndicateInfo?.following ? (
-                  <Button type="outlined" onClick={() => {}}>
+                  <Button type="outlined" onClick={() => {
+                    onunFollow(syndicateInfo?.id, syndicateInfo?.membership_id)
+                  }}>
                     {"Following"}
                   </Button>
                 ) : (
