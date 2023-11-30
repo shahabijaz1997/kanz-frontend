@@ -101,20 +101,20 @@ const ManageGroup = ({  }: any) => {
           <ManageGroupActionsIcon />
         </div>
         {openActions && (
-          <div className=" justify justify-center text-center flex-col bg-white border-[1px] border-neutral-200  z-[20] fixed items-center  bg-red w-[130px] h-[100px]">
+          <div className="overflow-hidden justify justify-center shadow-lg  rounded-md  flex-col bg-white border-[1px] border-neutral-200   z-[20] fixed items-center font-normal bg-red text-left">
             <div
               onClick={() => {}}
-              className="w-full items-center py-4 hover:bg-[#F5F5F5]"
+              className="w-full items-center p-3 hover:bg-[#F5F5F5]"
             >
-              View Details
+              View details
             </div>
             <div
               onClick={() => {
                 onDeleteInvestor(user.id, investorID);
               }}
-              className="w-full items-center py-4 hover:bg-[#F5F5F5]"
+              className="w-full items-center p-3 hover:bg-[#F5F5F5]"
             >
-              Delete
+              Remove
             </div>
           </div>
         )}
