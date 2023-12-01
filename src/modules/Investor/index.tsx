@@ -30,7 +30,7 @@ const Investor = ({}: any) => {
   }
 
   const tabs = [
-    { id: 1, title: "Perforamnce" },
+    { id: 1, title: "Performance" },
     { id: 2, title: "Activity" },
     { id: 3, title: "Insights" },
     

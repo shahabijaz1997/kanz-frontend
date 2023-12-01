@@ -8,7 +8,9 @@ import React, { useEffect, useState } from "react";
 
 const Insights = ({}: any) :any => {
 
-    
+    return( 
+        <h1>Insights</h1>
+    )
 
 };
 export default Insights;

@@ -8,7 +8,9 @@ import React, { useEffect, useState } from "react";
 
 const Activity = ({}: any) :any => {
 
-    
+    return( 
+        <h1>Activity</h1>
+    )
 
 };
 export default Activity;
