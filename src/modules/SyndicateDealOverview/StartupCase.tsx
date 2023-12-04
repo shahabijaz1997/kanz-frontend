@@ -726,9 +726,6 @@ useEffect (()=>
     }, 500);
   };
 
-  useEffect(()=>{
-    console.log(returnPath)
-  })
 
   return (
     <main className="h-full relative max-h-full overflow-y-hidden">
