@@ -997,22 +997,17 @@ useEffect (()=>
                 </div>
               </section>
               <div className="mb-4 mt-10">
-                {deal?.status === DealStatus.LIVE ? (
-                  <React.Fragment></React.Fragment>
-                ) : (
-                  <React.Fragment>
-                    {deal?.invite?.status !== DealStatus.ACCEPTED && (
-                      <Button
-                        onClick={() => {
-                          setModalOpen2(true);
-                        }}
-                        className="w-full"
-                      >
-                        Approve
-                      </Button>
+              {deal?.invite?.status !== DealStatus.ACCEPTED && (
+                          <React.Fragment>  
+                          {deal?.invite ? (
+                            <Button  className="w-full" onClick={() => setModalOpen2(true)}>
+                              {language?.v3?.button?.interested}
+                            </Button>
+                          ) :  <Button className="w-full" onClick={() => setModalOpenSyndication(true)}>
+                          {"Request Syndication"}
+                        </Button> }
+                        </React.Fragment>
                     )}
-                  </React.Fragment>
-                )}
               </div>
 
               {deal && user.type.toLowerCase() === "syndicate" && deal?.current_deal_syndicate && (
