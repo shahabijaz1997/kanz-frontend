@@ -1,17 +1,12 @@
 import { useDispatch, useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
 import { RootState } from "../../../redux-toolkit/store/store";
 import React, { useEffect, useState } from "react";
 import Table from "../../../shared/components/Table";
-import { RoutesEnums } from "../../../enums/routes.enum";
-import { saveToken } from "../../../redux-toolkit/slicer/auth.slicer";
 import { saveDataHolder } from "../../../redux-toolkit/slicer/dataHolder.slicer";
 import {
   comaFormattedNumber,
 } from "../../../utils/object.utils";
 import Spinner from "../../../shared/components/Spinner";
-import { toast } from "react-toastify";
-import { toastUtil } from "../../../utils/toast.utils";
 import { getDealActivity } from "../../../apis/syndicate.api";
 import CustomStatus from "../../../shared/components/CustomStatus";
 
@@ -21,6 +16,7 @@ const DealActivity = ({dealID, dealCreatorView}: any) => {
 
   const columns = [
     "Name",
+    "User Type",
     "Date",
     "Status",
     "Amount Raised",
@@ -49,6 +45,7 @@ const DealActivity = ({dealID, dealCreatorView}: any) => {
           return {
             id: dealActivity?.investor?.id,
             "Name":<span className="capitalize">{dealActivity?.investor?.name}</span> ,
+            ["User Type"]:<span className="capitalize">{dealActivity?.type}</span> ,
             ["Date"]:
               dealActivity?.date|| "N/A",
              ["Status"]:
