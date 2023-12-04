@@ -1362,7 +1362,15 @@ const CreateDeal = () => {
                                   <div className="w-full inline-flex justify-center items-center gap-2">
                                     <Button
                                       className="w-[100px] border-2 border-cyan-800"
-                                      onClick={() => setShowCustomBox(false)}
+                                      onClick={() => {
+                                        dispatch(
+                                          onResetFields({
+                                            secIndex: section?.index,
+                                            lang: event,
+                                            step: dealData[step - 1],
+                                          })
+                                        );
+                                        setShowCustomBox(false)}}
                                     >
                                       {language?.v3?.button?.cancel}
                                     </Button>
