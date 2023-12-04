@@ -170,7 +170,6 @@ const ManageGroup = ({  }: any) => {
       setLoading(false);
     }
   };
-console.log(filter)
   
   const getCountvalue = ( value:string ) =>
   { 
