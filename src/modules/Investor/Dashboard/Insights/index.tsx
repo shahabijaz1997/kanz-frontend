@@ -1,16 +1,21 @@
-
-import { useDispatch, useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
-import SearchIcon from "../../../../ts-icons/searchIcon.svg";
-import React, { useEffect, useState } from "react";
-
+import ComparedToOther from "./ComparedToOther";
+import TopMarketKanz from "./TopMarketsKanz";
+import YourTopMarkets from "./YourTopMarkets";
+import YourTopSyndicate from "./YourTopSyndicate";
 
 
-const Insights = ({}: any) :any => {
-
-    return( 
-        <h1>Insights</h1>
-    )
-
+const Insights = ({}: any): any => {
+  return (
+    <main className="py-3">
+      <section className="w-full flex gap-4 justify-between items-stretch">
+        <YourTopSyndicate/>
+        <ComparedToOther/>
+      </section>
+      <section className="w-full flex gap-4 justify-between items-center mt-5">
+        <YourTopMarkets/>
+        <TopMarketKanz/>
+      </section>
+    </main>
+  );
 };
 export default Insights;

@@ -20,14 +20,8 @@ const Investor = ({}: any) => {
   const dispatch = useDispatch();
 
 
-  const { state } = useLocation();
 
-  interface Syndicate {
-    id: number;
-    title: React.ReactNode;
-    handle: string;
-    action: React.ReactNode;
-  }
+
 
   const tabs = [
     { id: 1, title: "Performance" },
@@ -35,11 +29,19 @@ const Investor = ({}: any) => {
     { id: 3, title: "Insights" },
     
   ];
+  const [tabSelector, settabSelector]: any = useState(0);
+
+  const changeTabtoInsights = () => {
+    setSelected(tabs[2])
+  };
+  const changeTabtoActivity = () => {
+    setSelected(tabs[1])
+  };
+
 
 
   const [selected, setSelected]: any = useState(tabs[0]);
   const [loading, setLoading]: any = useState(false);
-
   return (
     <main className="h-full max-h-full overflow-y-hidden">
       <section>
@@ -90,7 +92,7 @@ const Investor = ({}: any) => {
               <div className="mt-10 mb-4">
               </div>
             </section>
-            {selected?.id === 1 && <Performance/>}
+            {selected?.id === 1 && <Performance changeTabtoInsights={changeTabtoInsights} changeTabtoActivity={changeTabtoActivity} />}
             {selected?.id === 2 && <Activity />}
             {selected?.id === 3 && <Insights />}
           </section>
