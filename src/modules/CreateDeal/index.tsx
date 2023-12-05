@@ -487,12 +487,14 @@ const CreateDeal = () => {
                 value={comaFormattedNumber(ques?.value)}
                 onInput={(e: any) => {
                   const enteredValue = e.target.value;
-                  const numericValue = enteredValue.replace(
+                  let numericValue = (ques?.id == 49 || ques?.id == 5) ? enteredValue.replace(
                     /[^0-9]|(\.(?=.*\.))/g,
                     ""
-                  );
+                  ) : enteredValue.replace(
+                    /[^0-9.]|(\.(?=.*\.))/g,
+                    "");
                   
-                  if ( (ques?.id == 49 || ques?.id ==5)  && (numericValue == undefined || numericValue == 0.0 || numericValue == 0))
+                  if ( (ques?.id == 49 || ques?.id == 5)  && (numericValue == undefined || numericValue == 0.0 || numericValue == 0))
                   {
                     setShowZeroWarning(true)
                   }

@@ -31,10 +31,13 @@ export const getInvitees = (inviteeID:any ,token: string, filters :any) => {
     },
   });
 };
-export const getAllDeals = ( token: string, filters :any) => {
+export const getAllDeals = ( token: string, filters :any, searchQuery:string) => {
   const queryParameters = new URLSearchParams();
   if (filters !== "All"){
     queryParameters.append("deal_type", filters.toLowerCase());
+  }
+  if (searchQuery.trim() !== "") {
+    queryParameters.append("search", searchQuery);
   }
   const apiUrl = `${ENV.API_URL}/${ENV.API_VERSION}/investors/deals?${queryParameters.toString()}`;
   return axios.get(apiUrl, {
@@ -43,12 +46,15 @@ export const getAllDeals = ( token: string, filters :any) => {
     },
   });
 };
-export const getCommitedDeals = ( token: string, filters :any) => {
+export const getCommitedDeals = ( token: string, filters :any, searchQuery:string) => {
   const queryParameters = new URLSearchParams();
   if (filters !== "All"){
     queryParameters.append("deal_type", filters.toLowerCase());
   }
-  const apiUrl = `${ENV.API_URL}/${ENV.API_VERSION}/investors/deals?invested=true${queryParameters.toString()}`;
+  if (searchQuery.trim() !== "") {
+    queryParameters.append("search", searchQuery);
+  }
+  const apiUrl = `${ENV.API_URL}/${ENV.API_VERSION}/investors/deals?invested=true&${queryParameters.toString()}`;
   return axios.get(apiUrl, {
     headers: {
       Authorization: `Bearer ${token}`,

@@ -43,6 +43,7 @@ const DealApproval = ({}: any) => {
     total_pages: 0,
   });
   const [selectedTab, setSelectedTab]: any = useState("all");
+  const [searchQuery, setSearchQuery]: any = useState("");
   const [modalOpen, setModalOpen]: any = useState(null);
   const [loading, setLoading] = useState(false);
 
@@ -94,7 +95,7 @@ const DealApproval = ({}: any) => {
   const getAllDeals = async () => {
     try {
       setLoading(true);
-      let { status, data } = await getInvitedDeals(user.id, authToken, selectedTab);
+      let { status, data } = await getInvitedDeals(user.id, authToken, selectedTab,searchQuery);
       if (status === 200) {
         
         setFilterCounts(data?.status?.data?.stats)
@@ -170,6 +171,7 @@ const DealApproval = ({}: any) => {
 
 
 
+
   const paginate = (type: string) => {
     if (type === "next" && pagination.current_page < pagination.total_pages) {
       setPagination((prev: any) => {
@@ -224,20 +226,27 @@ const DealApproval = ({}: any) => {
 
                   <span className="w-full flex items-center gap-5">
                     <div className="rounded-md shadow-cs-6 bg-white border-[1px] border-gray-200 h-9 overflow-hidden max-w-[310px] inline-flex items-center px-2">
-                      <SearchIcon />
+                      <SearchIcon
+                        onClick={() => {
+                          getAllDeals();
+                        }}
+                      />
                       <input
+                        value={searchQuery}
+                        onChange={(e) => setSearchQuery(e.target.value)}
                         type="search"
-                        className="h-full w-full outline-none pl-2 pr-[6.5rem] text-sm font-normal text-gray-400"
+                        className="h-full w-full outline-none pl-2 text-sm font-normal text-gray-400"
                         placeholder={language?.v3?.common?.search}
                       />
                     </div>
 
                     <ul className="inline-flex items-center">
                       {React.Children.toArray(
-                        tabs.map((tab:any, index : number) => (
+                        tabs.map((tab: any, index: number) => (
                           <li
                             onClick={() => {
-                              setSelectedTab(tab)}}
+                              setSelectedTab(tab);
+                            }}
                             className={`py-2 px-3 font-medium cursor-pointer rounded-md transition-all ${
                               selectedTab === tab
                                 ? "text-neutral-900 bg-neutral-100"

@@ -49,6 +49,8 @@ const Invites = ({}: any) :any => {
     const [invitees, setInvitees] = useState([]);
   const [filter, setFilterCounts]:any = useState([]);
   const [selectedTab, setSelectedTab] = useState("All");
+  const [searchQuery, setSearchQuery]: any = useState("");
+
 
     const [pagination, setPagination] = useState({
         items_per_page: 10,
@@ -90,7 +92,7 @@ const Invites = ({}: any) :any => {
       const getAllInvitees = async () => {
         try {
           setLoading(true);
-          let { status, data } = await getAllDeals( authToken, selectedTab);
+          let { status, data } = await getAllDeals( authToken, selectedTab,searchQuery);
           if (status === 200) {
             setFilterCounts(data?.status?.data?.stats)
             let invitees = data?.status?.data?.deals?.map((invitee: any) => {
@@ -188,10 +190,20 @@ const Invites = ({}: any) :any => {
         <>  
            <section className="inline-flex justify-between items-center w-full">
                         <span className="w-full flex items-center gap-5">
-                            <div className="rounded-md shadow-cs-6 bg-white border-[1px] border-gray-200 h-9 overflow-hidden min-w-[350px] inline-flex items-center px-2">
-                                <SearchIcon />
-                                <input type="search" className="h-full w-full outline-none pl-2 text-sm font-normal text-gray-400" placeholder={language?.v3?.common?.search} />
-                            </div>
+                        <div className="rounded-md shadow-cs-6 bg-white border-[1px] border-gray-200 h-9 overflow-hidden max-w-[310px] inline-flex items-center px-2">
+                      <SearchIcon
+                        onClick={() => {
+                          getAllInvitees();
+                        }}
+                      />
+                      <input
+                        value={searchQuery}
+                        onChange={(e) => setSearchQuery(e.target.value)}
+                        type="search"
+                        className="h-full w-full outline-none pl-2 text-sm font-normal text-gray-400"
+                        placeholder={language?.v3?.common?.search}
+                      />
+                    </div>
                             <ul className="inline-flex items-center">
                             {React.Children.toArray(
                                 tabs.map((tab:any) => (
