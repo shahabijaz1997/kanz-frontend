@@ -49,10 +49,15 @@ export const getDealsforsyndicate = (token: string, filters:any ) => {
 
 };
 
-export const getInvitedDeals = (inviteeId:any, token:any, filters:any) => {
+export const getInvitedDeals = (inviteeId: any, token: any, filters: any, searchQuery: string) => {
   const queryParameters = new URLSearchParams();
-  if (filters !== "All")
-  queryParameters.append("status", filters.toLowerCase());
+
+  if (filters !== "All") {
+    queryParameters.append("status", filters.toLowerCase());
+  }
+  if (searchQuery.trim() !== "") {
+    queryParameters.append("search", searchQuery);
+  }
   const apiUrl = `${ENV.API_URL}/${ENV.API_VERSION}/invitees/${inviteeId}/invites?${queryParameters.toString()}`;
   return axios.get(apiUrl, {
     headers: {

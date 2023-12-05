@@ -322,6 +322,16 @@ useEffect (()=>
                 </p>
               </div>
             )}
+            {deal?.terms && (
+              <div className="w-full inline-flex justify-between items-center border-b-[1px] border-b-neutral-200 py-3">
+                <h3 className="text-neutral-900 font-medium text-sm">
+                  {"Additional Terms"}
+                </h3>
+                <p className="text-neutral-900 font-normal text-sm capitalize">
+                  {deal.terms[2]?.is_enabled ? "Yes" : "No"}
+                </p>
+              </div>
+            )}
           </>
         )}
 
