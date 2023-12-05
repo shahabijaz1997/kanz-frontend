@@ -195,10 +195,15 @@ const Commitments = ({}: any) :any => {
                         }}
                       />
                       <input
+                        onKeyDown={(e) => {
+                          if (e.key === 'Enter') {
+                            getAllInvitees();
+                          }
+                        }}
                         value={searchQuery}
                         onChange={(e) => setSearchQuery(e.target.value)}
                         type="search"
-                        className="h-full w-full outline-none pl-2 text-sm font-normal text-gray-400"
+                        className="h-full w-full outline-none pl-2 text-sm font-normal "
                         placeholder={language?.v3?.common?.search}
                       />
                     </div>
