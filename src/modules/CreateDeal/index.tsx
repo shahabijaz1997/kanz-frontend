@@ -347,7 +347,6 @@ const CreateDeal = () => {
       setLoading(false);
     }
   };
-
   /* UI Components */
   const multipleChoice = (ques: any, secIndex: number, section: any) => {
     let flag = false;
@@ -492,14 +491,15 @@ const CreateDeal = () => {
                     /[^0-9]|(\.(?=.*\.))/g,
                     ""
                   );
-                  if ( ques?.id == 49 && (numericValue == undefined || numericValue == 0.0 || numericValue == 0))
+                  
+                  if ( (ques?.id == 49 || ques?.id ==5)  && (numericValue == undefined || numericValue == 0.0 || numericValue == 0))
                   {
                     setShowZeroWarning(true)
                   }
                   else{
                     setShowZeroWarning(false)
                   }
-        
+                  
                   if (
                     ques?.input_type === InputType.PERCENT &&
                     Number(e.target.value) > 100
@@ -1135,6 +1135,7 @@ const CreateDeal = () => {
 
   /* Validations */
   const checkValidation = () => {
+    console.log("DEAL DATA",dealData)
     if (
       !dealData ||
       !dealData[step - 1] ||
@@ -1324,6 +1325,13 @@ const CreateDeal = () => {
                                       <div
                                         className="w-full inline-flex justify-end cursor-pointer"
                                         onClick={() => {
+                                          dispatch(
+                                            onResetFields({
+                                              secIndex: section?.index,
+                                              lang: event,
+                                              step: dealData[step - 1],
+                                            })
+                                          );
                                           setMultipleFieldsPayload(
                                             (prev: any) => {
                                               const secs = prev.filter(
@@ -1376,7 +1384,15 @@ const CreateDeal = () => {
                                   <div className="w-full inline-flex justify-center items-center gap-2">
                                     <Button
                                       className="w-[100px] border-2 border-cyan-800"
-                                      onClick={() => setShowCustomBox(false)}
+                                      onClick={() =>{
+                                        dispatch(
+                                          onResetFields({
+                                            secIndex: section?.index,
+                                            lang: event,
+                                            step: dealData[step - 1],
+                                          })
+                                        );
+                                        setShowCustomBox(false)}}
                                     >
                                       {language?.v3?.button?.cancel}
                                     </Button>
