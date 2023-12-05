@@ -51,6 +51,9 @@ const ManageGroup = ({  }: any) => {
   const [modalLoading, setmodalLoading] = useState(false);
   const [investors, setInvestors] = useState<any>([]);
   const [filter, setFilterCounts]:any = useState([]);
+  const [searchQuery, setSearchQuery]: any = useState("");
+  const [searchModalQuery, setModalSearchQuery]: any = useState("");
+
 
   const [tabs] = useState(["All", "Added", "Follower"]);
   const columns = [
@@ -125,7 +128,7 @@ const ManageGroup = ({  }: any) => {
   const getMembers = async () => {
     try {
       setLoading(true);
-      let { status, data } = await getGroupInvestors(authToken, selectedTab);
+      let { status, data } = await getGroupInvestors(authToken, selectedTab,searchQuery);
 
       if (status === 200) {
         setFilterCounts(data?.status?.data?.stats)
@@ -274,7 +277,7 @@ const ManageGroup = ({  }: any) => {
   const getAllUserListings = async () => {
     try {
       setmodalLoading(true);
-      let { status, data } = await getNonAddedInvestors(authToken);
+      let { status, data } = await getNonAddedInvestors(authToken, searchModalQuery);
       if (status === 200) {
         let investorData = data?.status?.data || [];
         let investors: any = investorData.map((investor: any) => ({
@@ -340,14 +343,20 @@ const ManageGroup = ({  }: any) => {
                     </h1>
 
                     <span className="w-full flex items-center gap-5">
-                      <div className="rounded-md shadow-cs-6 bg-white border-[1px] border-gray-200 h-9 overflow-hidden max-w-[310px] inline-flex items-center px-2">
-                        <SearchIcon />
-                        <input
-                          type="search"
-                          className="h-full w-full outline-none pl-2 pr-[6.5rem] text-sm font-normal text-gray-400"
-                          placeholder={language?.v3?.common?.search}
-                        />
-                      </div>
+                    <div className="rounded-md shadow-cs-6 bg-white border-[1px] border-gray-200 h-9 overflow-hidden max-w-[310px] inline-flex items-center px-2">
+                      <SearchIcon
+                        onClick={() => {
+                          getMembers();
+                        }}
+                      />
+                      <input
+                        value={searchQuery}
+                        onChange={(e) => setSearchQuery(e.target.value)}
+                        type="search"
+                        className="h-full w-full outline-none pl-2 text-sm font-normal text-gray-400"
+                        placeholder={language?.v3?.common?.search}
+                      />
+                    </div>
 
                       <ul className="inline-flex items-center">
                         {React.Children.toArray(
@@ -420,7 +429,7 @@ const ManageGroup = ({  }: any) => {
                 <div
                   className="bg-white h-8 w-8 border-[1px] border-black rounded-md  shadow-cs-6 p-1 cursor-pointer"
                   onClick={() => {
-                    setSearchText("")
+                    setModalSearchQuery("")
                     setModalOpen(false);
                   }}
                 >
@@ -430,16 +439,20 @@ const ManageGroup = ({  }: any) => {
             </section>
             <section className="inline-flex justify-between items-center mt-2 w-full">
               <span className="w-full flex items-center gap-5">
-                <div className="rounded-md shadow-cs-6 bg-white border-[1px] border-gray-200 h-9 overflow-hidden w-full inline-flex items-center px-2">
-                  <SearchIcon />
-                  <input
-                    type="search"
-                    className="h-full w-full outline-none pl-2 text-sm font-normal text-gray-400"
-                    placeholder={language?.v3?.common?.search}
-                    value={searchText}
-                    onChange={(e) => setSearchText(e.target.value)}
-                  />
-                </div>
+              <div className="rounded-md shadow-cs-6 bg-white border-[1px] border-gray-200 h-9 overflow-hidden max-w-[310px] inline-flex items-center px-2">
+                      <SearchIcon
+                        onClick={() => {
+                          getAllUserListings();
+                        }}
+                      />
+                      <input
+                        value={searchModalQuery}
+                        onChange={(e) => setModalSearchQuery(e.target.value)}
+                        type="search"
+                        className="h-full w-full outline-none pl-2 text-sm font-normal text-gray-400"
+                        placeholder={language?.v3?.common?.search}
+                      />
+                    </div>
               </span>
             </section>
             {modalLoading ? (

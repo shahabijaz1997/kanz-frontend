@@ -12,10 +12,13 @@ export const getDealQuestion = (params: any, token: string) => {
   });
 };
 
-export const getDeals = (token: string, filters : any) => {
+export const getDeals = (token: string, filters : any, searchQuery:string) => {
   const queryParameters = new URLSearchParams();
   if (filters !== "All"){
     queryParameters.append("status", filters.toLowerCase());
+  }
+  if (searchQuery.trim() !== "") {
+    queryParameters.append("search", searchQuery);
   }
   const apiUrl = `${ENV.API_URL}/${ENV.API_VERSION}/deals?${queryParameters.toString()}`;
   return axios.get(apiUrl, {
@@ -32,11 +35,14 @@ export const getNoFilterDeals = (token: string) => {
     },
   });
 };
-export const getDealsforsyndicate = (token: string, filters:any ) => {
+export const getDealsforsyndicate = (token: string, filters:any, searchQuery:any ) => {
 
   const queryParameters = new URLSearchParams();
   if (filters !== "All"){
     queryParameters.append("deal_type", filters.toLowerCase());
+  }
+  if (searchQuery.trim() !== "") {
+    queryParameters.append("search", searchQuery);
   }
   const apiUrl = `${ENV.API_URL}/${ENV.API_VERSION}/syndicates/deals?${queryParameters.toString()}`;
   return axios.get(apiUrl, {
@@ -67,10 +73,13 @@ export const getInvitedDeals = (inviteeId: any, token: any, filters: any, search
 };
 
 
-export const getLiveDeals = (inviteeId:any, token:any, filters:any) => {
+export const getLiveDeals = (inviteeId:any, token:any, filters:any, searchQuery:string) => {
   const queryParameters = new URLSearchParams();
   if (filters !== "All")
   queryParameters.append("deal_type", filters.toLowerCase());
+  if (searchQuery.trim() !== "") {
+    queryParameters.append("search", searchQuery);
+  }
   const apiUrl = `${ENV.API_URL}/${ENV.API_VERSION}/syndicates/deals?status=live&${queryParameters.toString()}`;
   return axios.get(apiUrl, {
     headers: {

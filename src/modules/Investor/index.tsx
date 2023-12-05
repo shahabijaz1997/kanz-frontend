@@ -59,6 +59,7 @@ const Investor = ({}: any) => {
   const [dealId, setDealId]:any = useState(null);
   const [dealStep, setDealStep]:any = useState(null);
   const [dealStatus, setDealStatus]:any = useState(null);
+  const [searchQuery, setSearchQuery]: any = useState("");
   const [dummyDisclaimers, setDummyDisclaimers] = useState({
     d1: false,
     d2: false,
@@ -92,7 +93,7 @@ const Investor = ({}: any) => {
   const getAllDeals = async () => {
     try {
       setLoading(true);
-      let { status, data } = await getDeals(authToken,selectedTab);
+      let { status, data } = await getDeals(authToken,selectedTab,searchQuery);
       if (status === 200) {
         let deals = data?.status?.data?.map((deal: any) => {
           let features = deal?.features
@@ -236,9 +237,15 @@ const Investor = ({}: any) => {
                   </h1>
 
                   <span className="w-full flex items-center gap-5">
-                    <div className="rounded-md shadow-cs-6 bg-white border-[1px] border-gray-200 h-9 overflow-hidden max-w-[310px] inline-flex items-center px-2">
-                      <SearchIcon />
+                  <div className="rounded-md shadow-cs-6 bg-white border-[1px] border-gray-200 h-9 overflow-hidden max-w-[310px] inline-flex items-center px-2">
+                      <SearchIcon
+                        onClick={() => {
+                          getAllDeals();
+                        }}
+                      />
                       <input
+                        value={searchQuery}
+                        onChange={(e) => setSearchQuery(e.target.value)}
                         type="search"
                         className="h-full w-full outline-none pl-2 text-sm font-normal text-gray-400"
                         placeholder={language?.v3?.common?.search}

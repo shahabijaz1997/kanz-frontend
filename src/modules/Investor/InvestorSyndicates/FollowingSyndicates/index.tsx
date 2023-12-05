@@ -41,14 +41,11 @@ const FollowingSyndicates = (): any => {
   ];
   const [loading, setLoading]: any = useState(false);
   const [invites, setInvites]: any = useState([]);
-  const [dealDetail, setDealDetail]: any = useState(null);
-  const [loadDrawer, setLoadingDrawer] = useState(false);
   const [syndicateInfo, setsyndicateInfo]: any = useState(null);
   const [isOpen, setOpen]: any = useState(false);
-  const [modalReplyOpen, setmodalReplyOpen]: any = useState(null);
-  const [modalOpen, setModalOpen]: any = useState(null);
-  const [CommentSubmitted, setCommentSubmitted]: any = useState(false);
-  const [currentDealId, setCurrentDealId]: any = useState(null);
+
+  const [searchQuery, setSearchQuery]: any = useState("");
+
   const [pagination, setPagination] = useState({
     items_per_page: 5,
     total_items: [],
@@ -86,7 +83,7 @@ const FollowingSyndicates = (): any => {
   const getFollowingSynds = async () => {
     try {
       setLoading(true);
-      let { status, data } = await getFollowedSyndicates(authToken);
+      let { status, data } = await getFollowedSyndicates(authToken, searchQuery);
       if (status === 200) {
         let syndicates = data?.status?.data
           ?.filter((syndicate: any) => syndicate?.status !== "pending")
@@ -187,14 +184,20 @@ const FollowingSyndicates = (): any => {
     <>
       <section className="inline-flex justify-between items-center w-full">
         <span className="w-full flex items-center gap-5">
-          <div className="rounded-md shadow-cs-6 bg-white border-[1px] border-gray-200 h-9 overflow-hidden min-w-[350px] inline-flex items-center px-2">
-            <SearchIcon />
-            <input
-              type="search"
-              className="h-full w-full outline-none pl-2 text-sm font-normal text-gray-400"
-              placeholder={language?.v3?.common?.search}
-            />
-          </div>
+        <div className="rounded-md shadow-cs-6 bg-white border-[1px] border-gray-200 h-9 overflow-hidden max-w-[310px] inline-flex items-center px-2">
+                      <SearchIcon
+                        onClick={() => {
+                          getFollowingSynds();
+                        }}
+                      />
+                      <input
+                        value={searchQuery}
+                        onChange={(e) => setSearchQuery(e.target.value)}
+                        type="search"
+                        className="h-full w-full outline-none pl-2 text-sm font-normal text-gray-400"
+                        placeholder={language?.v3?.common?.search}
+                      />
+                    </div>
         </span>
       </section>
       <section className="mt-5 relative">
