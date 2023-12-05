@@ -162,8 +162,13 @@ const InvitesListing = ({ dealId, type, dealIdReal}: any) => {
           <div className="rounded-md shadow-cs-6 bg-white border-[1px] border-gray-200 h-9 overflow-hidden w-full inline-flex items-center px-2">
             <SearchIcon />
             <input
+             onKeyDown={(e) => {
+              if (e.key === 'Enter') {
+                getAllUserListings();
+              }
+            }}
               type="search"
-              className="h-full w-full outline-none pl-2  text-sm font-normal text-gray-400"
+              className="h-full w-full outline-none pl-2  text-sm font-normal"
               placeholder={"Search for Investors"}
               value={searchText}
               onChange={(e) => setSearchText(e.target.value)}

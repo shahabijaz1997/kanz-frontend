@@ -350,10 +350,15 @@ const ManageGroup = ({  }: any) => {
                         }}
                       />
                       <input
+                       onKeyDown={(e) => {
+                        if (e.key === 'Enter') {
+                          getMembers();
+                        }
+                      }}
                         value={searchQuery}
                         onChange={(e) => setSearchQuery(e.target.value)}
                         type="search"
-                        className="h-full w-full outline-none pl-2 text-sm font-normal text-gray-400"
+                        className="h-full w-full outline-none pl-2 text-sm font-normal "
                         placeholder={language?.v3?.common?.search}
                       />
                     </div>
@@ -446,10 +451,15 @@ const ManageGroup = ({  }: any) => {
                         }}
                       />
                       <input
+                       onKeyDown={(e) => {
+                        if (e.key === 'Enter') {
+                          getAllUserListings();
+                        }
+                      }}
                         value={searchModalQuery}
                         onChange={(e) => setModalSearchQuery(e.target.value)}
                         type="search"
-                        className="h-full w-full outline-none pl-2 text-sm font-normal text-gray-400"
+                        className="h-full w-full outline-none pl-2 text-sm font-normal "
                         placeholder={language?.v3?.common?.search}
                       />
                     </div>
