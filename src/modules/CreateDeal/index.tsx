@@ -347,7 +347,6 @@ const CreateDeal = () => {
       setLoading(false);
     }
   };
-
   /* UI Components */
   const multipleChoice = (ques: any, secIndex: number, section: any) => {
     let flag = false;
@@ -492,14 +491,15 @@ const CreateDeal = () => {
                     /[^0-9]|(\.(?=.*\.))/g,
                     ""
                   );
-                  if ( ques?.id == 49 && (numericValue == undefined || numericValue == 0.0 || numericValue == 0))
+                  
+                  if ( (ques?.id == 49 || ques?.id ==5)  && (numericValue == undefined || numericValue == 0.0 || numericValue == 0))
                   {
                     setShowZeroWarning(true)
                   }
                   else{
                     setShowZeroWarning(false)
                   }
-        
+                  
                   if (
                     ques?.input_type === InputType.PERCENT &&
                     Number(e.target.value) > 100
