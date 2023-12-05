@@ -72,9 +72,11 @@ const CreateDeal = () => {
   const [dependencies, setDependencies]: any = useState(null);
   const [totalSteps, setTotalSteps]: any = useState(null);
   const [showCustomBox, setShowCustomBox]: any = useState(true);
+  const [showZeroWarning, setShowZeroWarning]: any = useState(false);
   const [open, setOpen]: any = useState(false);
   const [loading, setLoading] = useState(false);
   const [modalOpen, setModalOpen]: any = useState(null);
+  
 
   useEffect(() => {
     setStep(Number(params?.id) || 1);
@@ -82,6 +84,7 @@ const CreateDeal = () => {
   }, [params, step]);
 
   /* UI Actions */
+
   const getDealStepDetails = async () => {
     try {
       setLoading(true);
@@ -486,9 +489,17 @@ const CreateDeal = () => {
                 onInput={(e: any) => {
                   const enteredValue = e.target.value;
                   const numericValue = enteredValue.replace(
-                    /[^0-9.]|(\.(?=.*\.))/g,
+                    /[^0-9]|(\.(?=.*\.))/g,
                     ""
                   );
+                  if ( ques?.id == 49 && (numericValue == undefined || numericValue == 0.0 || numericValue == 0))
+                  {
+                    setShowZeroWarning(true)
+                  }
+                  else{
+                    setShowZeroWarning(false)
+                  }
+        
                   if (
                     ques?.input_type === InputType.PERCENT &&
                     Number(e.target.value) > 100
@@ -540,6 +551,9 @@ const CreateDeal = () => {
                 </span>
               )}
             </div>
+            {showZeroWarning && (
+            <span className="text-xs text-red-600">Amount cannot be zero.</span>
+            )}
             <ul className="inline-flex items-center gap-6 mt-3">
               {React.Children.toArray(
                 ques?.suggestions.map((suggestion: any) => (
@@ -1121,6 +1135,7 @@ const CreateDeal = () => {
 
   /* Validations */
   const checkValidation = () => {
+    console.log("DEAL DATA",dealData)
     if (
       !dealData ||
       !dealData[step - 1] ||
@@ -1369,7 +1384,7 @@ const CreateDeal = () => {
                                   <div className="w-full inline-flex justify-center items-center gap-2">
                                     <Button
                                       className="w-[100px] border-2 border-cyan-800"
-                                      onClick={() => {
+                                      onClick={() =>{
                                         dispatch(
                                           onResetFields({
                                             secIndex: section?.index,
@@ -1601,7 +1616,7 @@ const CreateDeal = () => {
                     </Button>
                     <Button
                       className="h-[38px] w-[140px]"
-                      disabled={!checkValidation()}
+                      disabled={!checkValidation() || showZeroWarning}
                       htmlType="submit"
                       loading={loading}
                       onClick={onSetNext}
