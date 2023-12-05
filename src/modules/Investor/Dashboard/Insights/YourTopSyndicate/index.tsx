@@ -2,7 +2,7 @@ import LinearProgressBar from ".././LinearProgressBar";
 
 const YourTopSyndicate = ({}: any): any => {
   return (
-    <main className="">
+    <main className="w-1/2">
       <aside className="border-[1px] bg-white w-full border-neutral-200 rounded-md  p-3">
         <div>
           <h1 className="font-bold text-sm"> Your Top Syndicates</h1>
