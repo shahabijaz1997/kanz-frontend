@@ -1,23 +1,14 @@
 
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { KanzRoles } from "../../../../enums/roles.enum";
-import Header from "../../../../shared/components/Header";
-import Sidebar from "../../../../shared/components/Sidebar";
 import { RootState } from "../../../../redux-toolkit/store/store";
 import SearchIcon from "../../../../ts-icons/searchIcon.svg";
 import React, { useEffect, useState } from "react";
-import Button from "../../../../shared/components/Button";
 import Table from "../../../../shared/components/Table";
 import { RoutesEnums } from "../../../../enums/routes.enum";
-import Modal from "../../../../shared/components/Modal";
-import CrossIcon from "../../../../ts-icons/crossIcon.svg";
 import { saveDataHolder } from "../../../../redux-toolkit/slicer/dataHolder.slicer";
-import { numberFormatter } from "../../../../utils/object.utils";
 import Spinner from "../../../../shared/components/Spinner";
-import { ApplicationStatus } from "../../../../enums/types.enum";
 import Chevrond from "../../../../ts-icons/chevrond.svg";
-import EditIcon from "../../../../ts-icons/editIcon.svg";
 import CustomStatus from "../../../../shared/components/CustomStatus";
 import { getSyndicates } from "../../../../apis/syndicate.api";
 import { saveToken } from "../../../../redux-toolkit/slicer/auth.slicer";
@@ -39,13 +30,14 @@ const AllSyndicates = ({}: any) :any => {
     const dispatch = useDispatch();
     const language: any = useSelector((state: RootState) => state.language.value);
     const authToken: any = useSelector((state: RootState) => state.auth.value);
-    const user: any = useSelector((state: RootState) => state.user.value);
 
     const columns = ["Syndicate", "Total Deals", "Active Deals", "Raising Fund", "Formation Date", ""];
     const [loading, setLoading]: any = useState(false);
     const [invites, setInvites]: any = useState([]);
     const [syndicateInfo, setsyndicateInfo]: any = useState(null);
     const [isOpen, setOpen]: any = useState(false);
+  const [searchQuery, setSearchQuery]: any = useState("");
+
     
     const [pagination, setPagination] = useState({
         items_per_page: 5,
@@ -80,7 +72,7 @@ const AllSyndicates = ({}: any) :any => {
     const getAllSyndicates = async () => {
         try {
           setLoading(true);
-          let { status, data } = await getSyndicates(authToken);
+          let { status, data } = await getSyndicates(authToken,searchQuery);
           if (status === 200) {
             let deals = data?.status?.data
               ?.filter((syndicate: any) => syndicate?.status !== "pending")
@@ -176,10 +168,21 @@ const AllSyndicates = ({}: any) :any => {
         <>  
            <section className="inline-flex justify-between items-center w-full">
                         <span className="w-full flex items-center gap-5">
-                            <div className="rounded-md shadow-cs-6 bg-white border-[1px] border-gray-200 h-9 overflow-hidden min-w-[350px] inline-flex items-center px-2">
-                                <SearchIcon />
-                                <input type="search" className="h-full w-full outline-none pl-2 text-sm font-normal text-gray-400" placeholder={language?.v3?.common?.search} />
-                            </div>
+                        <div className="rounded-md shadow-cs-6 bg-white border-[1px] border-gray-200 h-9 overflow-hidden max-w-[310px] inline-flex items-center px-2">
+                      <SearchIcon
+                        onClick={() => {
+                          getAllSyndicates();
+                        }}
+                      />
+                      <input
+                        value={searchQuery}
+                        onChange={(e) => setSearchQuery(e.target.value)}
+                        type="search"
+                        className="h-full w-full outline-none pl-2 text-sm font-normal text-gray-400"
+                        placeholder={language?.v3?.common?.search}
+                      />
+                    </div>
+
                         </span>
                     </section>
         <section className="mt-5 relative">

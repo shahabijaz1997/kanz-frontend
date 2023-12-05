@@ -24,10 +24,13 @@ export const getAllInvestors = ( dealId:any, token: string) => {
   );
 };
 
-export const getGroupInvestors = ( token:any, filters:any) => {
+export const getGroupInvestors = ( token:any, filters:any, searchQuery:string) => {
   const queryParameters = new URLSearchParams();
   if (filters !== "all")
   queryParameters.append("connection", filters.toLowerCase());
+  if (searchQuery.trim() !== "") {
+    queryParameters.append("search", searchQuery);
+  }
   const apiUrl = `${ENV.API_URL}/${ENV.API_VERSION}/syndicate_members?${queryParameters.toString()}`;
   return axios.get(apiUrl, {
     headers: {
@@ -47,9 +50,14 @@ export const getAllSyndicates = (dealId: any, token: string) => {
   );
 };
 
-export const getSyndicatetoInvite = (dealId: any, token: string) => {
+export const getSyndicatetoInvite = (dealId: any , searchQuery:string, token: string) => {
+  const queryParameters = new URLSearchParams();
+  if (searchQuery.trim() !== "") {
+    queryParameters.append("search", searchQuery);
+  }
+  const apiUrl = `${ENV.API_URL}/${ENV.API_VERSION}/deals/${dealId}/syndicates?${queryParameters.toString()}`;
   return axios.get(
-    `${ENV.API_URL}/${ENV.API_VERSION}/deals/${dealId}/syndicates`,
+   apiUrl,
     {
       headers: {
         Authorization: `Bearer ${token}`,
@@ -113,10 +121,14 @@ export const postInviteSyn = ( dealId: any, token: string) => {
     }
   );
 };
-export const getSyndicates = (token: string) => {
+export const getSyndicates = (token: string, searchQuery:string) => {
+  const queryParameters = new URLSearchParams();
+  if (searchQuery.trim() !== "") {
+    queryParameters.append("search", searchQuery);
+  }
+  const apiUrl = `${ENV.API_URL}/${ENV.API_VERSION}/syndicates/all?${queryParameters.toString()}`;
   return axios.get(
-    `${ENV.API_URL}/${ENV.API_VERSION}/syndicates/all`,
-    {
+      apiUrl,    {
       headers: {
         Authorization: `Bearer ${token}`,
       },
@@ -124,8 +136,11 @@ export const getSyndicates = (token: string) => {
   );
 };
 
-export const getNonAddedInvestors = (token: string) => {
+export const getNonAddedInvestors = (token: string, searchQuery:any) => {
   const queryParameters = new URLSearchParams();
+  if (searchQuery.trim() !== "") {
+    queryParameters.append("search", searchQuery);
+  }
   queryParameters.append("filter", "not_a_member");
   const apiUrl = `${ENV.API_URL}/${ENV.API_VERSION}/investors?${queryParameters.toString()}`;
   return axios.get(apiUrl, {
@@ -135,9 +150,14 @@ export const getNonAddedInvestors = (token: string) => {
   });
 };
 
-export const getInvitedSyndicates = (userId: any, token: string) => {
+export const getInvitedSyndicates = (userId: any, searchQuery:string, token: string) => {
+  const queryParameters = new URLSearchParams();
+  if (searchQuery.trim() !== "") {
+    queryParameters.append("search", searchQuery);
+  }
+  const apiUrl = `${ENV.API_URL}/${ENV.API_VERSION}/users/${userId}/invites?${queryParameters.toString()}`;
   return axios.get(
-    `${ENV.API_URL}/${ENV.API_VERSION}/users/${userId}/invites`,
+    apiUrl,
     {
       headers: {
         Authorization: `Bearer ${token}`,

@@ -44,6 +44,7 @@ const SyndicateInvestments = ({}: any) => {
     total_pages: 0,
   });
   const [selectedTab, setSelectedTab]: any = useState("All");
+  const [searchQuery, setSearchQuery]: any = useState("");
   const [modalOpen, setModalOpen]: any = useState(null);
   const [loading, setLoading] = useState(false);
   const [filter, setFilterCounts]:any = useState([]);
@@ -92,7 +93,7 @@ const SyndicateInvestments = ({}: any) => {
   const getAllDeals = async () => {
     try {
       setLoading(true);
-      let { status, data } = await getLiveDeals(user.id, authToken, selectedTab);
+      let { status, data } = await getLiveDeals(user.id, authToken, selectedTab, searchQuery);
       if (status === 200) {
         setFilterCounts(data?.status?.data?.stats)
         let deals = data?.status?.data?.deals?.map((deal: any) => {
@@ -207,11 +208,17 @@ const SyndicateInvestments = ({}: any) => {
                   </h1>
 
                   <span className="w-full flex items-center gap-5">
-                    <div className="rounded-md shadow-cs-6 bg-white border-[1px] border-gray-200 h-9 overflow-hidden max-w-[310px] inline-flex items-center px-2">
-                      <SearchIcon />
+                  <div className="rounded-md shadow-cs-6 bg-white border-[1px] border-gray-200 h-9 overflow-hidden max-w-[310px] inline-flex items-center px-2">
+                      <SearchIcon
+                        onClick={() => {
+                          getAllDeals();
+                        }}
+                      />
                       <input
+                        value={searchQuery}
+                        onChange={(e) => setSearchQuery(e.target.value)}
                         type="search"
-                        className="h-full w-full outline-none pl-2 pr-[6.5rem] text-sm font-normal text-gray-400"
+                        className="h-full w-full outline-none pl-2 text-sm font-normal text-gray-400"
                         placeholder={language?.v3?.common?.search}
                       />
                     </div>

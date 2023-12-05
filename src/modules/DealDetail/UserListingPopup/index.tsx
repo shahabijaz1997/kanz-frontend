@@ -31,6 +31,8 @@ const UserListingPopup = ({ approve, dealId, type, dealIdReal, setLoader }: any)
   const [loading, setLoading] = useState<boolean>(false);
   const [syndicates, setSyndicates] = useState<Syndicate[]>([]);
   const [showInviteSyndicate, setShowInviteSyndicate] = useState(false);
+  const [searchQuery, setSearchQuery]: any = useState("");
+
 
   useEffect(() => {
     const handleOutsideClick = (event: any) => {
@@ -90,7 +92,7 @@ const UserListingPopup = ({ approve, dealId, type, dealIdReal, setLoader }: any)
       setLoading(true);
       let results: any;
       if (type === KanzRoles.SYNDICATE)
-        results = await getSyndicatetoInvite(dealIdReal, authToken);
+        results = await getSyndicatetoInvite(dealIdReal, searchQuery, authToken);
       let { status, data } = results;
       if (status === 200) {
         let syndicatesData = data?.status?.data || [];
@@ -148,14 +150,20 @@ const UserListingPopup = ({ approve, dealId, type, dealIdReal, setLoader }: any)
       </Button>
       {showInviteSyndicate ? (
         <section className="absolute p-5 bg-white border-[1px] border-neutral-200 rounded-md w-[400px] right-0 top-[100%]">
-          <div className="rounded-md shadow-cs-6 bg-white border-[1px] border-gray-200 h-9 overflow-hidden w-full inline-flex items-center px-2">
-            <SearchIcon />
-            <input
-              type="search"
-              className="h-full w-full outline-none pl-2 pr-[6.5rem] text-sm font-normal text-gray-400"
-              placeholder={language?.v3?.common?.search}
-            />
-          </div>
+                <div className="rounded-md shadow-cs-6 bg-white border-[1px] border-gray-200 h-9 overflow-hidden max-w-[310px] inline-flex items-center px-2">
+                      <SearchIcon
+                        onClick={() => {
+                          getAllUserListings();
+                        }}
+                      />
+                      <input
+                        value={searchQuery}
+                        onChange={(e) => setSearchQuery(e.target.value)}
+                        type="search"
+                        className="h-full w-full outline-none pl-2 text-sm font-normal text-gray-400"
+                        placeholder={language?.v3?.common?.search}
+                      />
+                    </div>
 
           {loading ? (
             <div
