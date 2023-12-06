@@ -17,8 +17,14 @@ import { getAllInvestors, sharewithGroup } from "../../../apis/syndicate.api";
 import SharewithGroupIcon from "../../../ts-icons/SharewithGroupIcon.svg";
 import CopyInviteLinkIcon from "../../../ts-icons/CopyInviteLinkIcon.svg";
 import { numberFormatter } from "../../../utils/object.utils";
+import { DealPromotionType } from "../../../enums/types.enum";
 
-const InvitesListing = ({ dealId, type, dealIdReal}: any) => {
+const InvitesListing = ({
+  dealPromotionType,
+  dealId,
+  type,
+  dealIdReal,
+}: any) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const ref: any = useRef();
@@ -60,7 +66,6 @@ const InvitesListing = ({ dealId, type, dealIdReal}: any) => {
     getAllUserListings();
   }, [type]);
 
-
   const onShareDeal = async (investorID: any) => {
     try {
       const { status } = await postInviteSyn(
@@ -73,10 +78,10 @@ const InvitesListing = ({ dealId, type, dealIdReal}: any) => {
       );
       if (status === 200) {
         toast.success("Investor Invited", toastUtil);
-        const dataCopy = [...investors]
-        const index = dataCopy.findIndex(item => item.id === investorID);
-        dataCopy[index].status = true
-        setInvestors(dataCopy)
+        const dataCopy = [...investors];
+        const index = dataCopy.findIndex((item) => item.id === investorID);
+        dataCopy[index].status = true;
+        setInvestors(dataCopy);
       }
     } catch (error: any) {
       if (error?.response?.status === 400)
@@ -116,9 +121,9 @@ const InvitesListing = ({ dealId, type, dealIdReal}: any) => {
           id: investor?.id,
           member_name: <span className=" capitalize">{investor?.name}</span>,
           profileImage: investor?.image,
-          investedAmount:investor?.invested_amount,
+          investedAmount: investor?.invested_amount,
           noOfinvestments: investor?.no_investments,
-          status:investor?.already_invited
+          status: investor?.already_invited,
         }));
 
         setInvestors(investors);
@@ -143,8 +148,6 @@ const InvitesListing = ({ dealId, type, dealIdReal}: any) => {
     }
   };
 
-
-
   return (
     <div ref={ref}>
       <Button
@@ -162,11 +165,11 @@ const InvitesListing = ({ dealId, type, dealIdReal}: any) => {
           <div className="rounded-md shadow-cs-6 bg-white border-[1px] border-gray-200 h-9 overflow-hidden w-full inline-flex items-center px-2">
             <SearchIcon />
             <input
-             onKeyDown={(e) => {
-              if (e.key === 'Enter') {
-                getAllUserListings();
-              }
-            }}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") {
+                  getAllUserListings();
+                }
+              }}
               type="search"
               className="h-full w-full outline-none pl-2  text-sm font-normal"
               placeholder={"Search for Investors"}
@@ -197,27 +200,32 @@ const InvitesListing = ({ dealId, type, dealIdReal}: any) => {
                         <div className=" justify-between items-center w-full">
                           <p>{investor.member_name}</p>
                           <div className="font-sm text-xs font-light">
-                            {investor?.investedAmount == 0.0 ? "0": numberFormatter(investor?.investedAmount)}{" "}
+                            {investor?.investedAmount == 0.0
+                              ? "0"
+                              : numberFormatter(investor?.investedAmount)}{" "}
                             invested in{" "}
                             {numberFormatter(investor?.noOfinvestments)}{" "}
                             investments
                           </div>
                         </div>
-                  {investor?.status ?  <Button
-                divStyle="items-center justify-end max-w-fit"
-                type="outlined"
-                className="!p-2 !text-black !py-1 !rounded-full !border-black"
-              >
-                Shared
-              </Button>  : 
-              <Button
-              divStyle="items-center justify-end max-w-fit"
-              type="outlined"
-              className="!p-3 !py-1 !rounded-full"
-              onClick={() => onShareDeal(investor?.id )}
-            >
-              Share
-            </Button> }
+                        {investor?.status ? (
+                          <Button
+                            divStyle="items-center justify-end max-w-fit"
+                            type="outlined"
+                            className="!p-2 !text-black !py-1 !rounded-full !border-black"
+                          >
+                            Shared
+                          </Button>
+                        ) : (
+                          <Button
+                            divStyle="items-center justify-end max-w-fit"
+                            type="outlined"
+                            className="!p-3 !py-1 !rounded-full"
+                            onClick={() => onShareDeal(investor?.id)}
+                          >
+                            Share
+                          </Button>
+                        )}
                       </div>
                     ))
                 )
@@ -230,20 +238,23 @@ const InvitesListing = ({ dealId, type, dealIdReal}: any) => {
           )}
           <span
             id={`group-${user.id}`}
-            className="inline-flex justify-between w-full mt-2"
+            className="inline-flex justify-center items-center w-full mt-2"
           >
-            <Button
-              type="outlined"
-              onClick={() => {
-                inviteAllGroup();
-              }}
-              className="w-full mx-1 px-[15px]"
-            >
-              <span className="mr-3">
-                <SharewithGroupIcon />
-              </span>
-              {"Share with group"}
-            </Button>
+            {dealPromotionType === DealPromotionType.SYNDICATE && (
+              <Button
+                type="outlined"
+                onClick={() => {
+                  inviteAllGroup();
+                }}
+                className="w-full mx-1 px-[15px]"
+              >
+                <span className="mr-3">
+                  <SharewithGroupIcon />
+                </span>
+                {"Share with group"}
+              </Button>
+            )}
+
             <Button
               type="outlined"
               onClick={() => {

@@ -30,6 +30,7 @@ const PropertyOwner = ({}: any) => {
     language?.v3?.table?.propertyName,
     language?.v3?.table?.size,
     language?.v3?.table?.status,
+    "Model",
     language?.v3?.table?.features,
     language?.v3?.table?.sellingPrice,
     language?.v3?.table?.rentalAmount,
@@ -150,6 +151,7 @@ const PropertyOwner = ({}: any) => {
             [language?.v3?.table?.status]: (
               <CustomStatus options={deal?.status} />
             ),
+            ["Model"]: (<span className="capitalize">{deal?.model}</span>),
             [language?.v3?.table?.rentalAmount]: `$${numberFormatter(
               Number(deal?.rental_amount)
             )}`,

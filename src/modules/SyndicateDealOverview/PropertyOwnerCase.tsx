@@ -739,7 +739,6 @@ useEffect (()=>
                         dealId={dealToken}
                         type={KanzRoles.SYNDICATE}
                         dealIdReal={deal?.id}
-                        updateBg={updateBg}
                       />
                     </div>
                   </div>
