@@ -52,12 +52,17 @@ const CreateDeal = () => {
   const event: any = useSelector((state: RootState) => state.event.value);
   const authToken: any = useSelector((state: RootState) => state.auth.value);
   const metadata: any = useSelector((state: RootState) => state.metadata.value);
+
   const orientation: any = useSelector(
     (state: RootState) => state.orientation.value
   );
   const dataHolder: any = useSelector(
     (state: RootState) => state.dataHolder.value
   );
+
+  console.log('Data Holder', metadata)
+
+
   const dealData: any = useSelector(
     (state: RootState) => state.questionnaire.value
   );
@@ -90,7 +95,7 @@ const CreateDeal = () => {
       setLoading(true);
       const queryParams: any = {
         type:
-          metadata.role === KanzRoles.STARTUP
+          metadata.dealType === KanzRoles.STARTUP
             ? DealType.STARTUP
             : DealType.PROPERTY_OWNER,
       };
@@ -281,7 +286,7 @@ const CreateDeal = () => {
       let payload: any = {
         deal: {
           deal_type:
-            metadata.role === KanzRoles.STARTUP ? "startup" : "property",
+            metadata.dealType === KanzRoles.STARTUP ? "startup" : "property",
           step: questions[step - 1]?.id,
           fields,
         },
@@ -315,7 +320,7 @@ const CreateDeal = () => {
 
   const onSetPrev = () => {
     if (step > 1) navigate(`/create-deal/${step - 1}`);
-    else navigate(`/${kebabCase(metadata?.role)}`);
+    else navigate(`/${kebabCase(metadata?.dealType)}`);
   };
 
   const tieUpRestrictions = (as: any) => {
@@ -1265,7 +1270,7 @@ const CreateDeal = () => {
           data={{
             leftMenu: language?.v3?.deal?.create_deal,
             button: (
-              <button onClick={() => navigate(`/${kebabCase(metadata.role)}`)}>
+              <button onClick={() => navigate(`/${kebabCase(metadata.dealType)}`)}>
                 {" "}
                 <CrossIcon stroke="#171717" className="w-6 h-6" />
               </button>
@@ -1665,7 +1670,7 @@ const CreateDeal = () => {
                   className="w-6 h-6"
                   onClick={() => {
                     setModalOpen(false);
-                    navigate(`/${kebabCase(metadata?.role)}`);
+                    navigate(`/${kebabCase(metadata?.dealType)}`);
                   }}
                 />
               </div>

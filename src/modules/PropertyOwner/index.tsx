@@ -19,12 +19,15 @@ import { ApplicationStatus } from "../../enums/types.enum";
 import Chevrond from "../../ts-icons/chevrond.svg";
 import EditIcon from "../../ts-icons/editIcon.svg";
 import CustomStatus from "../../shared/components/CustomStatus";
+import { saveUserData } from "../../redux-toolkit/slicer/user.slicer";
+import { saveUserMetaData } from "../../redux-toolkit/slicer/metadata.slicer";
 
 const PropertyOwner = ({}: any) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const language: any = useSelector((state: RootState) => state.language.value);
   const authToken: any = useSelector((state: RootState) => state.auth.value);
+  const metadata: any = useSelector((state: RootState) => state.metadata);
 
   const columns = [
     language?.v3?.table?.propertyName,
@@ -62,6 +65,7 @@ const PropertyOwner = ({}: any) => {
   const [filter, setFilterCounts]:any = useState([]);
   const [dealStatus, setDealStatus]:any = useState(null);
   const [searchQuery, setSearchQuery]: any = useState("");
+  const [dealTypeCheck,setDealTypeCheck]:any = useState("")
   const [dummyDisclaimers, setDummyDisclaimers] = useState({
     d1: false,
     d2: false,
@@ -258,20 +262,21 @@ const PropertyOwner = ({}: any) => {
       </section>
       <aside className="w-full h-full flex items-start justify-start">
         <Sidebar type={KanzRoles.PROPERTY_OWNER} />
-        <section
-          className="bg-cbc-auth h-full p-[5rem] relative"
-          style={{ width: "calc(100% - 250px)" }}
-        >
-          {loading ? (
+        {loading ? (
             <div className="absolute left-0 top-0 w-full h-full grid place-items-center">
               <Spinner />
             </div>
           ) : (
-            <React.Fragment>
+        <section
+          className="bg-cbc-auth h-auto p-[5rem] relative"
+          style={{ width: "calc(100% - 250px)" }}
+        >
+          
+              <React.Fragment>
               <section className="inline-flex justify-between items-center w-full">
                 <div className="w-full">
                   <h1 className="text-black font-medium text-2xl mb-2">
-                    {language?.v3?.startup?.overview?.heading}
+                    {"Startup Deals"}
                   </h1>
 
                   <span className="w-full flex items-center gap-5">
@@ -300,7 +305,7 @@ const PropertyOwner = ({}: any) => {
                         tabs.map((tab:any) => (
                           <li
                             onClick={() => setSelectedTab(tab)}
-                            className={`py-2 px-3 font-medium cursor-pointer rounded-md transition-all ${
+                            className={`py-2 px-3 font-medium cursor-pointer text-xs rounded-md transition-all ${
                               selectedTab === tab
                                 ? "text-neutral-900 bg-neutral-100"
                                 : "text-gray-500"
@@ -313,8 +318,12 @@ const PropertyOwner = ({}: any) => {
                     </ul>
                   </span>
                 </div>
-                <Button onClick={() => setModalOpen("1")} className="w-[170px]">
-                  {language?.v3?.button?.new_deal}
+                <Button onClick={() => {
+                  dispatch(saveUserMetaData({...metadata.value, dealType: KanzRoles.STARTUP}));
+                  setModalOpen("1")
+                }}
+                  className="w-[120px]">    
+                  {"+  Create deal"}
                 </Button>
               </section>
 
@@ -325,18 +334,90 @@ const PropertyOwner = ({}: any) => {
                   pagination={pagination}
                   paginate={paginate}
                   noDataNode={
-                    <Button
-                      onClick={() => setModalOpen("1")}
-                      className="absolute left-1/2 top-1/2 translate-x-[-50%] translate-y-[-50%]"
-                    >
-                      {language?.v3?.button?.new_deal}
+                    <Button onClick={() => {
+                      dispatch(saveUserMetaData({...metadata.value, dealType: KanzRoles.STARTUP}));
+                      setModalOpen("1")
+                    }}
+                      className="w-[120px]">    
+                      {"+  Create deal"}
+                    </Button>
+                  }
+                />
+              </section>
+              <section className="inline-flex justify-between items-center w-full mt-6">
+                <div className="w-full">
+                  <h1 className="text-black font-medium text-2xl mb-2">
+                    {"Property Deals"}
+                  </h1>
+
+                  <span className="w-full flex items-center gap-5">
+                  <div className="rounded-md shadow-cs-6 bg-white border-[1px] border-gray-200 h-9  overflow-hidden max-w-[310px] inline-flex items-center px-2">
+                      <SearchIcon
+                        onClick={() => {
+                          getAllDeals();
+                        }}
+                      />
+                      <input
+                       onKeyDown={(e) => {
+                        if (e.key === 'Enter') {
+                          getAllDeals();
+                        }
+                      }}
+                        value={searchQuery}
+                        onChange={(e) => setSearchQuery(e.target.value)}
+                        type="search"
+                        className="h-full w-full outline-none pl-2 text-sm font-normal "
+                        placeholder={language?.v3?.common?.search}
+                      />
+                    </div>
+
+                    <ul className="inline-flex items-center">
+                      {React.Children.toArray(
+                        tabs.map((tab:any) => (
+                          <li
+                            onClick={() => setSelectedTab(tab)}
+                            className={`py-2 px-3 font-medium cursor-pointer text-xs rounded-md transition-all ${
+                              selectedTab === tab
+                                ? "text-neutral-900 bg-neutral-100"
+                                : "text-gray-500"
+                            } `}
+                          >
+                            {tab} &nbsp;({getCountvalue(tab)})
+                          </li>
+                        ))
+                      )}
+                    </ul>
+                  </span>
+                </div>
+                <Button onClick={() => {
+                  dispatch(saveUserMetaData({...metadata.value, dealType: KanzRoles.STARTUP}));
+                  setModalOpen("1")
+                }}
+                  className="w-[120px]">    
+                  {"+  Create deal"}
+                </Button>
+              </section>
+
+              <section className="mt-10">
+                <Table
+                  columns={columns}
+                  goToPage={paginate}
+                  pagination={pagination}
+                  paginate={paginate}
+                  noDataNode={
+                    <Button onClick={() => {
+                      dispatch(saveUserMetaData({...metadata.value, dealType: KanzRoles.STARTUP}));
+                      setModalOpen("1")
+                    }}
+                      className="w-[120px]">    
+                      {"+  Create deal"}
                     </Button>
                   }
                 />
               </section>
             </React.Fragment>
-          )}
         </section>
+          )}
       </aside>
 
       <Modal
