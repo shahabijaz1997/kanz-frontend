@@ -26,7 +26,7 @@ const ReviewDeal = ({
       setLoading(true);
       const queryParams: any = {
         type:
-          metadata.role === KanzRoles.STARTUP
+          metadata.dealType === KanzRoles.STARTUP
             ? DealType.STARTUP
             : DealType.PROPERTY_OWNER,
       };
