@@ -1,26 +1,19 @@
-import { useSelector } from "react-redux";
-import { saveDataHolder } from "../../../redux-toolkit/slicer/dataHolder.slicer";
-import Button from "../../../shared/components/Button";
-import Header from "../../../shared/components/Header";
+import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../../redux-toolkit/store/store";
 import { useNavigate } from "react-router-dom";
-import { RoutesEnums } from "../../../enums/routes.enum";
 import CrossIcon from "../../../ts-icons/crossIcon.svg";
 import CurrencySVG from "../../../assets/svg/currency.svg";
-
 import { useState } from "react";
-import InvestorHomeIcon from "../../../ts-icons/InvestorHomeIcon.svg";
 import SelectPropertyHomeIcon from "../../../ts-icons/SelectPropertyHomeIcon.svg";
 import SelectDealArrowIcon from "../../../ts-icons/SelectDealArrowIcon.svg";
+import { saveUserMetaData } from "../../../redux-toolkit/slicer/metadata.slicer";
+import { KanzRoles } from "../../../enums/roles.enum";
 
-const SelectDealTypeModal = ({ handleCloseModal }: any) => {
-  function dispatch(arg0: {
-    payload: String;
-    type: "datHolder/saveDataHolder";
-  }) {
-    throw new Error("Function not implemented.");
-  }
+const SelectDealTypeModal = ({ handleCloseModal , handleDiscModal }: any) => {
+  const metadata: any = useSelector((state: RootState) => state.metadata);
   const language: any = useSelector((state: RootState) => state.language.value);
+  const dispatch = useDispatch()
+  
   const navigate = useNavigate();
   const [startupborderColor, setStartupBorderColor] =
     useState<string>("##E0E0E0");
@@ -29,11 +22,25 @@ const SelectDealTypeModal = ({ handleCloseModal }: any) => {
   const handleStartupClick = () => {
     setStartupBorderColor("#155E75");
     setPropertyBorderColor("#E0E0E0");
+
   };
   const handlePropertyClick = () => {
     setStartupBorderColor("#E0E0E0");
     setPropertyBorderColor("#155E75");
   };
+
+  const handleStartupDealType = () => {
+    dispatch(saveUserMetaData({...metadata.value, dealType: KanzRoles.STARTUP}));
+    handleCloseModal()
+    handleDiscModal()
+    console.log(metadata)
+  }
+  const handlePropertyDealType = () =>{
+    dispatch(saveUserMetaData({...metadata.value, dealType: KanzRoles.PROPERTY_OWNER}));
+    handleCloseModal()
+    handleDiscModal()
+    console.log(metadata)
+  }
   return (
     <div
       className="rounded-md overflow-hidden inline-grid place-items-center absolute top-1/2 left-1/2 translate-x-[-50%] translate-y-[-50%]"
@@ -67,7 +74,7 @@ const SelectDealTypeModal = ({ handleCloseModal }: any) => {
                     <img src={CurrencySVG} alt="" />
                   </span>
                   <span className="font-bold">For Startup</span>
-                  <span className="ml-12 p-2 bg-[#F5F5F5] rounded-full"><SelectDealArrowIcon/></span>
+                  <span className="ml-12 p-2 bg-[#F5F5F5] rounded-full cursor-pointer" onClick={handleStartupDealType}><SelectDealArrowIcon/></span>
                 </div>
               </div>
               <div
@@ -79,7 +86,7 @@ const SelectDealTypeModal = ({ handleCloseModal }: any) => {
                     <SelectPropertyHomeIcon/>
                   </span>
                   <span className="font-bold">{"For Property"}</span>
-                  <span className="ml-10 p-2 bg-[#F5F5F5] rounded-full"><SelectDealArrowIcon/></span>
+                  <span className="ml-10 p-2 bg-[#F5F5F5] rounded-full cursor-pointer" onClick={handlePropertyDealType}><SelectDealArrowIcon/></span>
                 </div>
               </div>
             </div>

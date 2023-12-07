@@ -22,6 +22,8 @@ import Chevrond from "../../ts-icons/chevrond.svg";
 import EditIcon from "../../ts-icons/editIcon.svg";
 import CustomStatus from "../../shared/components/CustomStatus";
 import SelectDealTypeModal from "./SelectDealTypeModal";
+import { saveUserData } from "../../redux-toolkit/slicer/user.slicer";
+import { saveUserMetaData } from "../../redux-toolkit/slicer/metadata.slicer";
 
 const FundRaiser = ({}: any) => {
   const navigate = useNavigate();
@@ -45,11 +47,13 @@ const FundRaiser = ({}: any) => {
     current_page: 1,
     total_pages: 0,
   });
+  const metadata: any = useSelector((state: RootState) => state.metadata);
   const [filter, setFilterCounts]:any = useState([]);
   const [selectedTab, setSelectedTab] = useState("All");
   const [modalOpen, setModalOpen]: any = useState(null);
   const [warningModal, setwarningModal]: any = useState(null);
   const [selectTypeModal, setSelectTypeModal]: any = useState(null);
+  const [dealTypeCheck,setDealTypeCheck]:any = useState("")
   const [loading, setLoading] = useState(false);
   const [tabs] = useState([
     language?.v3?.startup?.overview?.all,
@@ -120,6 +124,9 @@ const FundRaiser = ({}: any) => {
 
   const handleCloseModal = () =>{
     setSelectTypeModal(false)
+  }
+  const handleDiscModal = () =>{
+    setModalOpen("1")
   }
   const getAllDeals = async () => {
     try {
@@ -642,7 +649,7 @@ const FundRaiser = ({}: any) => {
         )}
       </Modal>
       <Modal show={selectTypeModal ? true : false} className="w-full">
-        <SelectDealTypeModal handleCloseModal={handleCloseModal}/>
+        <SelectDealTypeModal handleCloseModal={handleCloseModal} handleDiscModal={handleDiscModal}/>
       </Modal>
       <Modal show={warningModal ? true : false} className="w-full">
         <div
