@@ -17,11 +17,9 @@ import { getInvitedSyndicates } from "../../../apis/syndicate.api";
 import { getViewDealSyndicates, signOff } from "../../../apis/deal.api";
 import { addCommentOnDeal } from "../../../apis/deal.api";
 import { saveToken } from "../../../redux-toolkit/slicer/auth.slicer";
-import { ApplicationStatus } from "../../../enums/types.enum";
 import Chevrond from "../../../ts-icons/chevrond.svg";
 import CustomStatus from "../../../shared/components/CustomStatus";
 import Drawer from "../../../shared/components/Drawer";
-import UploadIcon from "../../../ts-icons/uploadIcon.svg";
 import ArrowIcon from "../../../ts-icons/arrowIcon.svg";
 import DownloadIcon from "../../../ts-icons/downloadIcon.svg";
 import { fileSize, handleFileRead } from "../../../utils/files.utils";
@@ -57,7 +55,6 @@ const SyndicateRequest = ({}: any) => {
   const [loadDrawer, setLoadingDrawer] = useState(false);
 
   const [syndicates, setsyndicates]: any = useState([]);
-  const [syndicatesInformation, setsyndicatesInformation] = useState([]);
   const [dealDetail, setDealDetail]: any = useState(null);
   const [searchQuery, setSearchQuery]: any = useState("");
 
@@ -200,7 +197,7 @@ const SyndicateRequest = ({}: any) => {
     } catch (error: any) {
       if (error.response && error.response.status === 401) {
         dispatch(saveToken(""));
-        navigate(RoutesEnums.LOGIN, { state: RoutesEnums.STARTUP_DASHBOARD });
+        navigate(RoutesEnums.LOGIN, { state: RoutesEnums.FUNDRAISER_DASHBOARD });
       }
     } finally {
       setLoading(false);
@@ -220,7 +217,7 @@ const SyndicateRequest = ({}: any) => {
     } catch (error: any) {
       if (error.response && error.response.status === 401) {
         dispatch(saveToken(""));
-        navigate(RoutesEnums.LOGIN, { state: RoutesEnums.STARTUP_DASHBOARD });
+        navigate(RoutesEnums.LOGIN, { state: RoutesEnums.FUNDRAISER_DASHBOARD });
       }
     } finally {
       setLoadingDrawer(false);
@@ -263,7 +260,7 @@ const SyndicateRequest = ({}: any) => {
         <Header />
       </section>
       <aside className="w-full h-full flex items-start justify-start">
-        <Sidebar type={user?.role} />
+        <Sidebar type={KanzRoles.FUNDRAISER} />
         <section
           className="bg-cbc-auth h-full p-[5rem] relative"
           style={{ width: "calc(100% - 250px)" }}

@@ -31,7 +31,7 @@ const ClippedBanner = () => {
                     <div>{language?.v2?.investor?.onboardSub_3}</div>
                 </React.Fragment>
             )
-        } else if (state === KanzRoles.STARTUP) {
+        } else if (state === KanzRoles.FUNDRAISER) {
             return (
                 <React.Fragment>
                     <div>{language?.v2?.startup?.onboardSub_2}</div>

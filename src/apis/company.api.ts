@@ -4,7 +4,7 @@ import { getEnv } from "../env";
 const ENV = getEnv();
 
 export const postCompanyInformation = (payload: number, token: string) => {
-    return axios.post(`${ENV.API_URL}/${ENV.API_VERSION}/startups`, payload, {
+    return axios.post(`${ENV.API_URL}/${ENV.API_VERSION}/fund_raisers`, payload, {
         headers: {
             Authorization: `Bearer ${token}`
         },
@@ -12,7 +12,7 @@ export const postCompanyInformation = (payload: number, token: string) => {
 };
 
 export const getCompanyInformation = (stepId: number, token: string) => {
-    return axios.get(`${ENV.API_URL}/${ENV.API_VERSION}/startups/${stepId}`, {
+    return axios.get(`${ENV.API_URL}/${ENV.API_VERSION}/fund_raisers/${stepId}`, {
         headers: {
             Authorization: `Bearer ${token}`
         },

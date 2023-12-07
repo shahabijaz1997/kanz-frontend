@@ -36,19 +36,17 @@ const InvestorOnboarding = lazy(() => import("../Onboarding/InvestorFlow"));
 const CompleteDetails = lazy(() => import("../Onboarding/CompleteDetails"));
 const CompleteGoals = lazy(() => import("../Onboarding/CompleteGoals"));
 const PhilosophyGoals = lazy(() => import("../Onboarding/PhilosophyGoals"));
-const StartupOnboarding = lazy(() => import("../Onboarding/StartupFlow"));
-const PropertyOwnerOnboarding = lazy(() => import("../Onboarding/PropertyOwnersFlow"));
+const FundRaiserOnboarding = lazy(() => import("../Onboarding/FundRaiserFlow"));
 const SyndicateOnboarding = lazy(() => import("../Onboarding/SyndicateFlow"));
 const AddAttachments = lazy(() => import("../Onboarding/AddAttachments"));
 
 /* ---### Post Onboarding ###--- */
-const StartupDashboard = lazy(() => import("../Startup"));
-const PropertyOwnerDashboard = lazy(() => import("../PropertyOwner"));
+const FundRaiserDashboard = lazy(() => import("../FundRaiser"));
 const InvestorDashboard = lazy(() => import("../Investor"));
 const CreateDeal = lazy(() => import("../CreateDeal"));
 const DealDetail = lazy(() => import("../DealDetail"));
 const DealApproval = lazy(() => import("../Syndicate/DealApproval"));
-const SyndicateRequest = lazy(() => import("../PropertyOwner/SyndicateRequest"));
+const SyndicateRequest = lazy(() => import("../FundRaiser/SyndicateRequest"));
 const InvestorUpdates = lazy(() => import("../InvestorUpdates"));
 const DataRooms = lazy(() => import("../DataRooms"));
 const Contacts = lazy(() => import("../Contacts"));
@@ -198,12 +196,12 @@ const RouterModule = () => {
       />
 
       <Route
-        path={`${RoutesEnums.STARTUP_DETAILS}/:id`}
+        path={`${RoutesEnums.FUNDRAISER_DETAILS}/:id`}
         element={
           <Suspense fallback={<Loader />}>
             <CHECK_LOGGED_IN>
-              <GUARD_ROUTE role={KanzRoles.STARTUP}>
-                <StartupOnboarding guard={authToken} />
+              <GUARD_ROUTE role={KanzRoles.FUNDRAISER}>
+                <FundRaiserOnboarding guard={authToken} />
               </GUARD_ROUTE>
             </CHECK_LOGGED_IN>
           </Suspense>
@@ -216,18 +214,6 @@ const RouterModule = () => {
             <CHECK_LOGGED_IN>
               <GUARD_ROUTE role={KanzRoles.SYNDICATE}>
                 <SyndicateOnboarding guard={authToken} />
-              </GUARD_ROUTE>
-            </CHECK_LOGGED_IN>
-          </Suspense>
-        }
-      />
-      <Route
-        path={RoutesEnums.PROPERTY_OWNER_DETAILS}
-        element={
-          <Suspense fallback={<Loader />}>
-            <CHECK_LOGGED_IN>
-              <GUARD_ROUTE role={KanzRoles.PROPERTY_OWNER}>
-                <PropertyOwnerOnboarding guard={authToken} />
               </GUARD_ROUTE>
             </CHECK_LOGGED_IN>
           </Suspense>
@@ -290,12 +276,12 @@ const RouterModule = () => {
 
       {/* Authentication Routes */}
       <Route
-        path={`${RoutesEnums.STARTUP_DETAILS}/:id`}
+        path={`${RoutesEnums.FUNDRAISER_DETAILS}/:id`}
         element={
           <Suspense fallback={<Loader />}>
             <CHECK_LOGGED_IN>
-              <GUARD_ROUTE role={KanzRoles.STARTUP}>
-                <StartupOnboarding guard={authToken} />
+              <GUARD_ROUTE role={KanzRoles.FUNDRAISER}>
+                <FundRaiserOnboarding guard={authToken} />
               </GUARD_ROUTE>
             </CHECK_LOGGED_IN>
           </Suspense>
@@ -345,35 +331,21 @@ const RouterModule = () => {
 
       {/* Dashboard */}
       <Route
-        path={`${RoutesEnums.STARTUP_DASHBOARD}`}
+        path={`${RoutesEnums.FUNDRAISER_DASHBOARD}`}
         element={
           <Suspense fallback={<Loader />}>
             <CHECK_LOGGED_IN>
               <GUARD_SUBMITTED_ROUTE
-                role={[KanzRoles.STARTUP]}
+                role={[KanzRoles.FUNDRAISER]}
                 status={ApplicationStatus.APPROVED}
               >
-                <StartupDashboard />
+                <FundRaiserDashboard />
               </GUARD_SUBMITTED_ROUTE>
             </CHECK_LOGGED_IN>
           </Suspense>
         }
       />
-      <Route
-        path={`${RoutesEnums.PROPERTY_OWNER_DASHBOARD}`}
-        element={
-          <Suspense fallback={<Loader />}>
-            <CHECK_LOGGED_IN>
-              <GUARD_SUBMITTED_ROUTE
-                role={[KanzRoles.PROPERTY_OWNER]}
-                status={ApplicationStatus.APPROVED}
-              >
-                <PropertyOwnerDashboard />
-              </GUARD_SUBMITTED_ROUTE>
-            </CHECK_LOGGED_IN>
-          </Suspense>
-        }
-      />
+
       <Route
         path={`${RoutesEnums.INVESTOR_DASHBOARD}`}
         element={
@@ -440,7 +412,7 @@ const RouterModule = () => {
           <Suspense fallback={<Loader />}>
             <CHECK_LOGGED_IN>
               <GUARD_SUBMITTED_ROUTE
-                role={[KanzRoles.STARTUP, KanzRoles.PROPERTY_OWNER]}
+                role={[KanzRoles.FUNDRAISER, KanzRoles.PROPERTY_OWNER]}
                 status={ApplicationStatus.APPROVED}
               >
                 <CreateDeal />
@@ -455,7 +427,7 @@ const RouterModule = () => {
           <Suspense fallback={<Loader />}>
             <CHECK_LOGGED_IN>
               <GUARD_SUBMITTED_ROUTE
-                role={[KanzRoles.STARTUP, KanzRoles.PROPERTY_OWNER]}
+                role={[KanzRoles.FUNDRAISER, KanzRoles.PROPERTY_OWNER]}
                 status={ApplicationStatus.APPROVED}
               >
                 <DealDetail />
@@ -563,7 +535,7 @@ const RouterModule = () => {
           <Suspense fallback={<Loader />}>
             <CHECK_LOGGED_IN>
               <GUARD_SUBMITTED_ROUTE
-                role={[KanzRoles.PROPERTY_OWNER, KanzRoles.STARTUP]}
+                role={[KanzRoles.FUNDRAISER]}
                 status={ApplicationStatus.APPROVED}
               >
                 <SyndicateRequest guard={authToken} />

@@ -23,7 +23,7 @@ const Home = ({ }: any) => {
   const longSecContent = () => {
     return (
       <React.Fragment>
-        <aside id={language.header.startup}>
+        <aside id={"Raise"}>
           <h3 className="text-cyan-800 text-xl tracking-[0.03em] font-bold">
             {language.landing.startup}
           </h3>
@@ -41,7 +41,7 @@ const Home = ({ }: any) => {
               style={{ fontSize: "1.125rem", fontWeight: 500 }}
               className="bg-cyan-800 h-[56px] w-[173px] font-medium text-lg mt-6"
               htmlType="submit"
-              onClick={() => navigate(RoutesEnums.SIGNUP, { state: KanzRoles.STARTUP })}
+              onClick={() => navigate(RoutesEnums.SIGNUP, { state: KanzRoles.FUNDRAISER })}
             >
               {language.buttons.getStart}
             </Button>

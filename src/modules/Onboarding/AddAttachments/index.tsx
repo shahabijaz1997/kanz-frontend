@@ -138,8 +138,8 @@ const AddAttachments = (props: any) => {
       navigate(RoutesEnums.PROPERTY_OWNER_DETAILS);
     } else if (metadata.role === KanzRoles.SYNDICATE) {
       navigate(`${RoutesEnums.SYNIDCATE_DETAILS}/2`);
-    } else if (metadata.role === KanzRoles.STARTUP) {
-      navigate(`${RoutesEnums.STARTUP_DETAILS}/2`);
+    } else if (metadata.role === KanzRoles.FUNDRAISER) {
+      navigate(`${RoutesEnums.FUNDRAISER_DETAILS}/2`);
     } else {
       navigate(-1);
     }
@@ -282,7 +282,7 @@ const AddAttachments = (props: any) => {
         </header>
         {user?.type === KanzRoles.INVESTOR && <p className="text-neutral-700 font-normal text-sm text-justify">{language?.drawer?.attachments}</p>}
         {user?.type === KanzRoles.PROPERTY_OWNER && <p className="text-neutral-700 font-normal text-sm text-justify">{language?.drawer?.attachPropertyOwner}</p>}
-        {user?.type === KanzRoles.STARTUP && <p className="text-neutral-700 font-normal text-sm text-justify">{language?.drawer?.attach_startup}</p>}
+        {user?.type === KanzRoles.FUNDRAISER && <p className="text-neutral-700 font-normal text-sm text-justify">{language?.drawer?.attach_startup}</p>}
         {user?.type === KanzRoles.SYNDICATE && <p className="text-neutral-700 font-normal text-sm text-justify">{language?.drawer?.attach_syndicate}</p>}
       </Drawer>
       <Modal show={modalOpen ? true : false}>
