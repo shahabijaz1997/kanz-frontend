@@ -116,6 +116,7 @@ const FundRaiser = ({}: any) => {
   });
   useEffect(() => {
     dispatch(saveDataHolder(""));
+    dispatch(saveUserMetaData(""))
   }, []);
   useEffect(() => {
     dispatch(saveDataHolder(""));
