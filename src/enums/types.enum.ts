@@ -32,7 +32,13 @@ export enum DealStatus {
   PENDING = "pending",
 }
 
+
 export enum DealType {
   STARTUP = "startup_deal",
   PROPERTY_OWNER = "property_deal",
+}
+
+export enum DealPromotionType {
+  CLASSIC = "classic",
+  SYNDICATE = "syndicate",
 }

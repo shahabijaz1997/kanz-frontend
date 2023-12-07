@@ -1670,7 +1670,7 @@ const CreateDeal = () => {
                   className="w-6 h-6"
                   onClick={() => {
                     setModalOpen(false);
-                    navigate(`/${kebabCase(metadata?.dealType)}`);
+                    navigate(`${RoutesEnums.FUNDRAISER_DASHBOARD}`);
                   }}
                 />
               </div>

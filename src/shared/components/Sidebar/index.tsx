@@ -15,7 +15,7 @@ import SyndicateInvestorUpdates from "../../../ts-icons/SyndicateInvestorUpdates
 import { kebabCase } from "../../../utils/string.utils";
 
 const Sidebar = ({ type }: any) => {
- 
+ console.log("TYPE IS ",type)
   const navigate = useNavigate();
   const { pathname } = useLocation();
   const language: any = useSelector((state: RootState) => state.language.value);
@@ -59,7 +59,7 @@ const Sidebar = ({ type }: any) => {
     renderRoleBasedSidebar();
   }, [type]);
 
-
+  console.log("type inSIDEBAR",type)
   useLayoutEffect(() => {
     setSelected(window.location.pathname)
   },[window.location.pathname]);
@@ -68,8 +68,6 @@ const Sidebar = ({ type }: any) => {
     let route;
     switch (type) {
       case KanzRoles.FUNDRAISER:
-        
-
         setSidebarData({
           title: language?.v3?.startup?.sidebar?.sidebar_title,
           icon: <BagIcon />,
