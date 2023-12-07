@@ -37,6 +37,10 @@ export enum DealType {
   STARTUP = "startup_deal",
   PROPERTY_OWNER = "property_deal",
 }
+export enum DealCheckType {
+  STARTUP = "startup",
+  PROPERTY = "property",
+}
 
 export enum DealPromotionType {
   CLASSIC = "classic",

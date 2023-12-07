@@ -86,7 +86,7 @@ const DealDetail = ({}: any) => {
     else if (selected.id === 4) onGetDealFiles();
   }, [selected]);
 
-  console.log("Deal Detail", dealDetail?.model);
+  console.log("State passed from fundraiser page", state);
 
   return (
     <main className="h-full max-h-full overflow-y-hidden">
@@ -123,9 +123,7 @@ const DealDetail = ({}: any) => {
 
             <section className="inline-flex justify-between items-center w-full mb-4">
               <h1 className="text-black font-medium text-2xl">
-                {state === KanzRoles.STARTUP
-                  ? dealDetail?.title
-                  : language?.v3?.deal?.deal_detail}
+                {dealDetail?.title}
               </h1>
               <div className="inline-flex items-center gap-2">
                 
