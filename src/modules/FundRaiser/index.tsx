@@ -21,6 +21,7 @@ import { ApplicationStatus } from "../../enums/types.enum";
 import Chevrond from "../../ts-icons/chevrond.svg";
 import EditIcon from "../../ts-icons/editIcon.svg";
 import CustomStatus from "../../shared/components/CustomStatus";
+import SelectDealTypeModal from "./SelectDealTypeModal";
 
 const FundRaiser = ({}: any) => {
   const navigate = useNavigate();
@@ -48,6 +49,7 @@ const FundRaiser = ({}: any) => {
   const [selectedTab, setSelectedTab] = useState("All");
   const [modalOpen, setModalOpen]: any = useState(null);
   const [warningModal, setwarningModal]: any = useState(null);
+  const [selectTypeModal, setSelectTypeModal]: any = useState(null);
   const [loading, setLoading] = useState(false);
   const [tabs] = useState([
     language?.v3?.startup?.overview?.all,
@@ -116,6 +118,9 @@ const FundRaiser = ({}: any) => {
     getAllDeals();
   }, [selectedTab]);
 
+  const handleCloseModal = () =>{
+    setSelectTypeModal(false)
+  }
   const getAllDeals = async () => {
     try {
       setLoading(true);
@@ -299,7 +304,7 @@ const FundRaiser = ({}: any) => {
                     </ul>
                   </span>
                 </div>
-                <Button onClick={() => setModalOpen("1")} className="w-[170px]">
+                <Button onClick={() => setSelectTypeModal(true)} className="w-[170px]">
                   {language?.v3?.button?.new_deal}
                 </Button>
               </section>
@@ -635,6 +640,9 @@ const FundRaiser = ({}: any) => {
             </div>
           </aside>
         )}
+      </Modal>
+      <Modal show={selectTypeModal ? true : false} className="w-full">
+        <SelectDealTypeModal handleCloseModal={handleCloseModal}/>
       </Modal>
       <Modal show={warningModal ? true : false} className="w-full">
         <div
