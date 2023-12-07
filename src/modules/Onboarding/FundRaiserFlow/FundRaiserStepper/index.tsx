@@ -14,7 +14,7 @@ import Loader from "../../../../shared/views/Loader";
 
 const currencies = [{ label: "AED", value: "AED" }, { label: "USD", value: "USD" }];
 
-const StartupStepper = ({ load, event, countries, orientation, language, file, payload, onSetPayload, step, removeFile, setFile, setModalOpen, setFileType, authToken }: any) => {
+const FundRaiserStepper = ({ load, event, countries, orientation, language, file, payload, onSetPayload, step, removeFile, setFile, setModalOpen, setFileType, authToken }: any) => {
   const refInd: any = useRef(null);
   const [showHoverModal, setShowHoverModal] = useState(false);
   const [search, setSearch] = useState("");
@@ -62,7 +62,7 @@ const StartupStepper = ({ load, event, countries, orientation, language, file, p
     });
   }
 
-  const startupUI = () => {
+  const fundraiserUI = () => {
     return step === 1 ? (
       <section className="flex items-start justify-center flex-col">
         <form className="pt-8 mb-4 w-full">
@@ -431,8 +431,8 @@ const StartupStepper = ({ load, event, countries, orientation, language, file, p
     );
   };
   return (
-    load ? <Loader /> : startupUI()
+    load ? <Loader /> : fundraiserUI()
   )
 }
 
-export default StartupStepper;
+export default FundRaiserStepper;

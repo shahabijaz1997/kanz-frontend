@@ -26,7 +26,7 @@ const Sidebar = ({ type }: any) => {
     {
       id: 1,
       title: language?.v3?.startup?.sidebar?.overview,
-      route: `/${kebabCase(type)}`,
+      route: `${RoutesEnums.FUNDRAISER_DASHBOARD}`,
     },
     {
       id: 2,
@@ -67,7 +67,7 @@ const Sidebar = ({ type }: any) => {
   const renderRoleBasedSidebar = () => {
     let route;
     switch (type) {
-      case KanzRoles.STARTUP:
+      case KanzRoles.FUNDRAISER:
         
 
         setSidebarData({

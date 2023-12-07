@@ -22,7 +22,7 @@ import Chevrond from "../../ts-icons/chevrond.svg";
 import EditIcon from "../../ts-icons/editIcon.svg";
 import CustomStatus from "../../shared/components/CustomStatus";
 
-const Startup = ({}: any) => {
+const FundRaiser = ({}: any) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
@@ -199,7 +199,7 @@ const Startup = ({}: any) => {
     } catch (error: any) {
       if (error.response && error.response.status === 401) {
         dispatch(saveToken(""));
-        navigate(RoutesEnums.LOGIN, { state: RoutesEnums.STARTUP_DASHBOARD });
+        navigate(RoutesEnums.LOGIN, { state: RoutesEnums.FUNDRAISER_DASHBOARD });
       }
     } finally {
       setLoading(false);
@@ -242,7 +242,7 @@ const Startup = ({}: any) => {
         <Header />
       </section>
       <aside className="w-full h-full flex items-start justify-start">
-        <Sidebar type={KanzRoles.STARTUP} />
+        <Sidebar type={KanzRoles.FUNDRAISER} />
         <section
           className="bg-cbc-auth h-full p-[5rem] relative"
           style={{ width: "calc(100% - 250px)" }}
@@ -699,4 +699,4 @@ const Startup = ({}: any) => {
     </main>
   );
 };
-export default Startup;
+export default FundRaiser;

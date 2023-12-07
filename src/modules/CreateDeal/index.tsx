@@ -1270,7 +1270,7 @@ const CreateDeal = () => {
           data={{
             leftMenu: language?.v3?.deal?.create_deal,
             button: (
-              <button onClick={() => navigate(`/${kebabCase(metadata.dealType)}`)}>
+              <button onClick={() => navigate(RoutesEnums.FUNDRAISER_DASHBOARD)}>
                 {" "}
                 <CrossIcon stroke="#171717" className="w-6 h-6" />
               </button>

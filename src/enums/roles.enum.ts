@@ -4,5 +4,5 @@ export enum KanzRoles {
     SYNDICATE = "Syndicate",
     PROPERTY_OWNER = "PropertyOwner",
     STARTUP = "Startup",
-    DEAL_CREATOR="DealCreator"
+    FUNDRAISER= "FundRaiser"
 }
