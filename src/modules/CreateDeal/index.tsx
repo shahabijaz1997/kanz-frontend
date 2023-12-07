@@ -320,7 +320,7 @@ const CreateDeal = () => {
 
   const onSetPrev = () => {
     if (step > 1) navigate(`/create-deal/${step - 1}`);
-    else navigate(`/${kebabCase(metadata?.dealType)}`);
+    else navigate(`${RoutesEnums.FUNDRAISER_DASHBOARD}`);
   };
 
   const tieUpRestrictions = (as: any) => {
