@@ -17,7 +17,7 @@ import { saveDataHolder } from "../../redux-toolkit/slicer/dataHolder.slicer";
 import { getDeals } from "../../apis/deal.api";
 import { numberFormatter } from "../../utils/object.utils";
 import { saveToken } from "../../redux-toolkit/slicer/auth.slicer";
-import { ApplicationStatus } from "../../enums/types.enum";
+import { ApplicationStatus, DealCheckType } from "../../enums/types.enum";
 import Chevrond from "../../ts-icons/chevrond.svg";
 import EditIcon from "../../ts-icons/editIcon.svg";
 import CustomStatus from "../../shared/components/CustomStatus";
@@ -147,7 +147,7 @@ const FundRaiser = ({}: any) => {
             [language?.v3?.table?.status]: (
               <CustomStatus options={deal?.status} />
             ),
-            [language?.v3?.table?.type]: deal?.instrument_type,
+            [language?.v3?.table?.type]: (<span className=" capitalize">{deal?.deal_type}</span>),
             State: deal?.current_state,
             token: deal?.token,
             Steps: deal?.current_state?.steps,
@@ -184,7 +184,7 @@ const FundRaiser = ({}: any) => {
                     e.preventDefault();
                     e.stopPropagation();
                     navigate(`${RoutesEnums.DEAL_DETAIL}/${deal?.token}`, {
-                      state: KanzRoles.STARTUP,
+                      state: deal?.deal_type === DealCheckType.PROPERTY ? KanzRoles.PROPERTY_OWNER : KanzRoles.STARTUP,
                     });
                   }}
                   className="ml-2 bg-neutral-100 inline-flex items-center justify-center w-[26px] h-[26px] rounded-full transition-all hover:bg-cbc-transparent"
@@ -299,7 +299,7 @@ const FundRaiser = ({}: any) => {
                         tabs.map((tab:any) => (
                           <li
                             onClick={() => setSelectedTab(tab)}
-                            className={`py-2 px-3 font-medium cursor-pointer rounded-md transition-all ${
+                            className={`py-2 px-1 font-medium text-xs cursor-pointer rounded-md transition-all ${
                               selectedTab === tab
                                 ? "text-neutral-900 bg-neutral-100"
                                 : "text-gray-500"
