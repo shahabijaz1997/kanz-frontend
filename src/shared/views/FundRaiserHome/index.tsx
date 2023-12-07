@@ -6,20 +6,21 @@ import Button from "../../components/Button";
 import { ApplicationStatus } from "../../../enums/types.enum";
 import { isEmpty } from "../../../utils/object.utils";
 import { RoutesEnums } from "../../../enums/routes.enum";
-import { KanzRoles } from "../../../enums/roles.enum";
 
-const StartupHome = ({ loading, language }: any) => {
+const FundRaiserHome = ({ loading, language }: any) => {
   const navigate = useNavigate();
   const user: any = useSelector((state: RootState) => state.user.value);
   const metadata: any = useSelector((state: RootState) => state.metadata.value);
-
+  console.log("User", user)
+  console.log("Metadata", metadata)
   const onPress = () => {
     const { profile_states } = metadata;
+    console.log("Profile States", profile_states)
     if (profile_states?.profile_completed) {
       navigate(RoutesEnums.ADD_ATTACHMENTS);
     } else {
       navigate(
-        `${RoutesEnums.STARTUP_DETAILS}/${profile_states?.profile_current_step}`
+        `${RoutesEnums.FUNDRAISER_DETAILS}/${profile_states?.profile_current_step}`
       );
     }
   };
@@ -28,10 +29,10 @@ const StartupHome = ({ loading, language }: any) => {
   useEffect(()=>{
     if (user.status === ApplicationStatus.APPROVED)
     {
-      navigate(RoutesEnums.STARTUP_DASHBOARD)
+      navigate(RoutesEnums.FUNDRAISER_DASHBOARD)
       return
     }
-  })
+  }) 
 
   const render = () => {
     if (
@@ -41,7 +42,7 @@ const StartupHome = ({ loading, language }: any) => {
       return (
         <React.Fragment>
           <h2 className="text-2xl font-bold text-neutral-900 mb-4 screen500:text-[20px]">
-            {language?.onboarding?.addCompanyDetails}
+            {"Add Deals"}
           </h2>
           <h3 className="text-base font-normal text-neutral-700 screen500:text-[12px]">
             {language?.v2?.startup?.home_sub}
@@ -102,7 +103,7 @@ const StartupHome = ({ loading, language }: any) => {
               {language?.buttons?.continue}
             </Button>
           )}
-          {user.status === ApplicationStatus.APPROVED && <Button className="mt-[30px] h-[38px] min-w-[160px]" disabled={loading} htmlType="submit" loading={loading} onClick={() => navigate(RoutesEnums.STARTUP_DASHBOARD)} >
+          {user.status === ApplicationStatus.APPROVED && <Button className="mt-[30px] h-[38px] min-w-[160px]" disabled={loading} htmlType="submit" loading={loading} onClick={() => navigate(RoutesEnums.FUNDRAISER_DASHBOARD)} >
             {language?.buttons?.gotoDashboard}
           </Button>}
         </React.Fragment>
@@ -111,4 +112,4 @@ const StartupHome = ({ loading, language }: any) => {
   };
   return render();
 };
-export default StartupHome;
+export default FundRaiserHome;

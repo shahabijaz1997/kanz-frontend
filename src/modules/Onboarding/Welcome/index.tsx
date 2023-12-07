@@ -16,8 +16,7 @@ import { getCompanyInformation } from "../../../apis/company.api";
 import { getPropertyOwnerInformation } from "../../../apis/propertyOwner.api";
 import InvestorHome from "../../../shared/views/InvestorHome";
 import SyndicateHome from "../../../shared/views/SyndicateHome";
-import PropertyOwnerHome from "../../../shared/views/PropertyOwnerHome";
-import StartupHome from "../../../shared/views/StartupHome";
+import FundRaiserHome from "../../../shared/views/FundRaiserHome";
 import { RoutesEnums } from "../../../enums/routes.enum";
 
 const Welcome = ({ }: any) => {
@@ -59,9 +58,9 @@ const Welcome = ({ }: any) => {
                 results = await getInvestor(user?.id, authToken);
             else if (user.type === KanzRoles.SYNDICATE)
                 results = await getSyndicateInformation(user.id, authToken);
-            else if (user.type === KanzRoles.STARTUP)
+            else if (user.type === KanzRoles.FUNDRAISER)
                 results = await getCompanyInformation(user.id, authToken);
-            else if (user.type === KanzRoles.PROPERTY_OWNER)
+            else if (user.type === KanzRoles.FUNDRAISER)
                 results = await getPropertyOwnerInformation(user.id, authToken);
             let { status, data } = results;
             if (status === 200) {
@@ -82,10 +81,8 @@ const Welcome = ({ }: any) => {
             return <InvestorHome loading={loading} language={language} />
         } else if (user.type === KanzRoles.SYNDICATE) {
             return <SyndicateHome loading={loading} language={language} />
-        } else if (user.type === KanzRoles.PROPERTY_OWNER) {
-            return <PropertyOwnerHome loading={loading} language={language} />
-        } else if (user.type === KanzRoles.STARTUP) {
-            return <StartupHome loading={loading} language={language} />
+        } else if (user.type === KanzRoles.FUNDRAISER) {
+            return <FundRaiserHome loading={loading} language={language} />
         }
     };
 

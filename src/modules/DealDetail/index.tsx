@@ -1,4 +1,4 @@
-import React, {  useLayoutEffect, useState } from "react";
+import React, { useLayoutEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { KanzRoles } from "../../enums/roles.enum";
@@ -20,6 +20,8 @@ import InvitedSyndicates from "./InvitedSyndicates";
 import UserListingPopup from "./UserListingPopup";
 import Requests from "./Requests";
 import Usp from "./Usp";
+import { DealPromotionType } from "../../enums/types.enum";
+import InvitesListing from "../SyndicateDealOverview/InvitesListing";
 
 const DealDetail = ({}: any) => {
   const params = useParams();
@@ -29,29 +31,10 @@ const DealDetail = ({}: any) => {
   const { id }: any = params;
   const language: any = useSelector((state: RootState) => state.language.value);
   const authToken: any = useSelector((state: RootState) => state.auth.value);
-  const tabs = [
-    { id: 1, title: "Details" },
-    { id: 3, title: "Investors" },
-    { id: 4, title: "Documents" },
-    { id: 5, title: "Activity" },
-    { id: 6, title: "Invited Syndicates" },
-    { id: 7, title: "Interested Syndicates" },
-  ];
 
-  if (state === KanzRoles.PROPERTY_OWNER) {
-    const newTab = { id: 2, title: "Unique Selling Points" };
-    tabs.splice(1, 0, newTab);
-  }
-
-  const [selected, setSelected]: any = useState(tabs[0]);
   const [loading, setLoading]: any = useState(false);
   const [dealDetail, setDealDetail]: any = useState(null);
   const [dealDocs, setDealDocs] = useState(null);
-
-  useLayoutEffect(() => {
-    if (selected.id === 1) onGetDealDetail();
-    else if (selected.id === 4) onGetDealFiles();
-  }, [selected]);
 
   const onGetDealDetail = async () => {
     try {
@@ -75,6 +58,35 @@ const DealDetail = ({}: any) => {
       setLoading(false);
     }
   };
+  const tabs =
+    dealDetail?.model === DealPromotionType.SYNDICATE
+      ? [
+          { id: 1, title: "Details" },
+          { id: 3, title: "Investors" },
+          { id: 4, title: "Documents" },
+          { id: 5, title: "Activity" },
+          { id: 6, title: "Invited Syndicates" },
+          { id: 7, title: "Interested Syndicates" },
+        ]
+      : [
+          { id: 1, title: "Details" },
+          { id: 3, title: "Investors" },
+          { id: 4, title: "Documents" },
+          { id: 5, title: "Activity" },
+          { id: 6, title: "Invited Investors" },
+        ];
+  if (state === KanzRoles.PROPERTY_OWNER) {
+    const newTab = { id: 2, title: "Unique Selling Points" };
+    tabs.splice(1, 0, newTab);
+  }
+
+  const [selected, setSelected]: any = useState(tabs[0]);
+  useLayoutEffect(() => {
+    if (selected.id === 1) onGetDealDetail();
+    else if (selected.id === 4) onGetDealFiles();
+  }, [selected]);
+
+  console.log("Deal Detail", dealDetail?.model);
 
   return (
     <main className="h-full max-h-full overflow-y-hidden">
@@ -84,7 +96,7 @@ const DealDetail = ({}: any) => {
       <aside className="w-full h-full flex items-start justify-start">
         <Sidebar
           type={
-            state === KanzRoles.STARTUP ? KanzRoles.STARTUP : KanzRoles.PROPERTY_OWNER
+          KanzRoles.FUNDRAISER
           }
         />
         {loading ? (
@@ -116,14 +128,28 @@ const DealDetail = ({}: any) => {
                   : language?.v3?.deal?.deal_detail}
               </h1>
               <div className="inline-flex items-center gap-2">
-                <div className="relative z-10">
-                  <UserListingPopup
-                    approve={dealDetail?.status}
-                    dealId={id}
-                    type={KanzRoles.SYNDICATE}
-                    dealIdReal={dealDetail?.id}
-                  />
-                </div>
+                
+                {dealDetail?.model === DealPromotionType.SYNDICATE ? (
+                  <div className="relative z-10">
+                    <UserListingPopup
+                      approve={dealDetail?.status}
+                      dealId={id}
+                      type={KanzRoles.SYNDICATE}
+                      dealIdReal={dealDetail?.id}
+                    />
+                  </div>
+                ) : (
+                  <div className="relative z-10">
+                    
+                    <InvitesListing
+                      approve={dealDetail?.status}
+                      dealPromotionType={dealDetail?.model}
+                      dealId={dealDetail?.token}
+                      type={KanzRoles.SYNDICATE}
+                      dealIdReal={dealDetail?.id}
+                    />
+                  </div>
+                )}
 
                 <div className="bg-white rounded-md border-neutral-300 border-[1px] inline-flex items-center justify-center">
                   <CustomDropdown
@@ -133,11 +159,14 @@ const DealDetail = ({}: any) => {
                 </div>
               </div>
             </section>
-            
-              <section className="mt-1 mb-16">
-                <DealTable targetSize={dealDetail?.selling_price} committed={dealDetail?.committed} investors={dealDetail?.investors}   />
-              </section>
-            
+
+            <section className="mt-1 mb-16">
+              <DealTable
+                targetSize={dealDetail?.selling_price}
+                committed={dealDetail?.committed}
+                investors={dealDetail?.investors}
+              />
+            </section>
 
             <section>
               <ul className="flex border-neutral-200 border-b-[1px]">
@@ -163,7 +192,6 @@ const DealDetail = ({}: any) => {
                 </h2>
               </div>
             </section>
-            
 
             {selected?.id === 1 && (
               <DealViewDetails
@@ -174,9 +202,11 @@ const DealDetail = ({}: any) => {
               />
             )}
             {selected?.id === 2 && <Usp id={dealDetail?.id} />}
-            {selected?.id === 3 && <DealInvestors id={dealDetail?.id} dealCreatorView= {true}/>}
+            {selected?.id === 3 && (
+              <DealInvestors id={dealDetail?.id} dealCreatorView={true} />
+            )}
             {selected?.id === 4 && <DocumentDetails dealDocs={dealDocs} />}
-            {selected?.id === 5 && <ActivityDetails  id={dealDetail?.id}/>}
+            {selected?.id === 5 && <ActivityDetails id={dealDetail?.id} />}
             {selected?.id === 6 && <InvitedSyndicates id={dealDetail?.id} />}
             {selected?.id === 7 && <Requests id={dealDetail?.id} />}
           </section>
