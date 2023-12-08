@@ -1,4 +1,4 @@
-import React, { useEffect, useLayoutEffect, useState } from "react";
+import React, {  useLayoutEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { RootState } from "../../../redux-toolkit/store/store";
 import { useLocation, useNavigate } from "react-router-dom";
@@ -12,10 +12,8 @@ import InvestorPortfolioIcon from "../../../ts-icons/InvestorPortfolioIcon.svg";
 import InvestorInvitesIcon from "../../../ts-icons/InvestorInvitesIcon.svg";
 import SyndicateDealApprovalIcon from "../../../ts-icons/SyndicateDealApprovalIcon.svg";
 import SyndicateInvestorUpdates from "../../../ts-icons/SyndicateInvestorUpdates.svg";
-import { kebabCase } from "../../../utils/string.utils";
 
 const Sidebar = ({ type }: any) => {
- console.log("TYPE IS ",type)
   const navigate = useNavigate();
   const { pathname } = useLocation();
   const language: any = useSelector((state: RootState) => state.language.value);
@@ -59,7 +57,6 @@ const Sidebar = ({ type }: any) => {
     renderRoleBasedSidebar();
   }, [type]);
 
-  console.log("type inSIDEBAR",type)
   useLayoutEffect(() => {
     setSelected(window.location.pathname)
   },[window.location.pathname]);

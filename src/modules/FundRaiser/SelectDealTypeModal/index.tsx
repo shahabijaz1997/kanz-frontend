@@ -33,13 +33,11 @@ const SelectDealTypeModal = ({ handleCloseModal , handleDiscModal }: any) => {
     dispatch(saveUserMetaData({...metadata.value, dealType: KanzRoles.STARTUP}));
     handleCloseModal()
     handleDiscModal()
-    console.log(metadata)
   }
   const handlePropertyDealType = () =>{
     dispatch(saveUserMetaData({...metadata.value, dealType: KanzRoles.PROPERTY_OWNER}));
     handleCloseModal()
     handleDiscModal()
-    console.log(metadata)
   }
   return (
     <div

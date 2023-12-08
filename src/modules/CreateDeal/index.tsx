@@ -87,6 +87,8 @@ const CreateDeal = () => {
     getDealStepDetails();
   }, [params, step]);
 
+
+
   /* UI Actions */
 
   const getDealStepDetails = async () => {
@@ -1141,6 +1143,7 @@ const CreateDeal = () => {
 
   /* Validations */
   const checkValidation = () => {
+    debugger
     if (
       !dealData ||
       !dealData[step - 1] ||
