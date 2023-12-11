@@ -80,7 +80,6 @@ const StartupCase = ({ dealToken, dealDetail, docs, returnPath, pitchDeck }: any
     document: null,
   });
 
-  console.log("Pitch Deack: ", pitchDeck)
 
   const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file: any = e.target.files?.[0];
@@ -175,19 +174,6 @@ useEffect (()=>
       </section>
     );
   };
-
-  const zoomin = () => {
-    let imgElem: any = document.getElementById("deal-file");
-    let currWidth = imgElem.clientWidth;
-    imgElem.style.width = currWidth + 50 + "px";
-  };
-
-  const zoomout = () => {
-    let imgElem: any = document.getElementById("deal-file");
-    let currWidth = imgElem.clientWidth;
-    if (currWidth > 150) imgElem.style.width = currWidth - 50 + "px";
-  };
-
   const onGetdeal = async () => {
     try {
       setLoading(true);
@@ -743,21 +729,6 @@ useEffect (()=>
       setModalOpen3(false)
       setChanges({ comment: "", action: "", document: null });
     }
-  };
-
-  const onTo = (type: string) => {
-    setFileLoading(true);
-    let idx: number = deal?.docs?.findIndex(
-      (f: any) => f.id === selectedDocs?.id
-    );
-    if (type === "++" && idx < deal?.docs?.length - 1)
-      setSelectedDocs(deal?.docs[idx + 1]);
-    else if (type === "--" && idx > 0) setSelectedDocs(deal?.docs[idx - 1]);
-
-    let timer = setTimeout(() => {
-      clearTimeout(timer);
-      setFileLoading(false);
-    }, 500);
   };
 
 
