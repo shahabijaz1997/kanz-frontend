@@ -1,4 +1,4 @@
-import React, {  useLayoutEffect, useState } from "react";
+import React, { useLayoutEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { RootState } from "../../../redux-toolkit/store/store";
 import { useLocation, useNavigate } from "react-router-dom";
@@ -28,9 +28,8 @@ const Sidebar = ({ type }: any) => {
     },
     {
       id: 2,
-      title:
-        language?.v3?.startup?.sidebar
-          ?.investor_updates /* RoutesEnums.INVESTOR_UPDATES  */,
+      title: language?.v3?.startup?.sidebar?.investor_updates,
+      route: RoutesEnums.INVESTOR_UPDATES,
     },
     {
       id: 3,
@@ -58,8 +57,8 @@ const Sidebar = ({ type }: any) => {
   }, [type]);
 
   useLayoutEffect(() => {
-    setSelected(window.location.pathname)
-  },[window.location.pathname]);
+    setSelected(window.location.pathname);
+  }, [window.location.pathname]);
 
   const renderRoleBasedSidebar = () => {
     let route;
@@ -102,32 +101,30 @@ const Sidebar = ({ type }: any) => {
           items: [
             {
               id: 1,
-              icon:<InvestorHomeIcon />,
+              icon: <InvestorHomeIcon />,
               title: language?.v3?.startup?.sidebar?.dashboard,
               route: "/syndicate",
             },
             {
               id: 2,
-              icon: <InvestorInvestmentIcon/>,
+              icon: <InvestorInvestmentIcon />,
               title: "Investments",
-              route: RoutesEnums.SYNDICATE_INVESTMENTS
-
+              route: RoutesEnums.SYNDICATE_INVESTMENTS,
             },
             {
               id: 3,
-              icon: <SyndicateInvestorUpdates/>,
+              icon: <SyndicateInvestorUpdates />,
               title: "Investor Updates",
-         
             },
             {
               id: 4,
-              icon: <SyndicateDealApprovalIcon/>,
+              icon: <SyndicateDealApprovalIcon />,
               title: language?.v3?.startup?.sidebar?.deal_approval,
               route: RoutesEnums.DEAL_APPROVAL,
             },
             {
               id: 5,
-              icon: <InvestorSyndicateIcon/>,
+              icon: <InvestorSyndicateIcon />,
               title: "Manage Group",
               route: RoutesEnums.SYNDICATE_MANAGE_GROUP,
             },
@@ -141,34 +138,29 @@ const Sidebar = ({ type }: any) => {
               id: 1,
               icon: <InvestorHomeIcon />,
               title: language?.v3?.startup?.sidebar?.dashboard,
-              route: RoutesEnums.INVESTOR_DASHBOARD
-              
+              route: RoutesEnums.INVESTOR_DASHBOARD,
             },
             {
               id: 2,
-              icon: <InvestorInvestmentIcon/>,
+              icon: <InvestorInvestmentIcon />,
               title: "Investments",
-              
             },
             {
               id: 3,
-              icon: <InvestorSyndicateIcon/>,
+              icon: <InvestorSyndicateIcon />,
               title: "Syndicates",
-              route: RoutesEnums.INVESTOR_SYNDICATES
-              
+              route: RoutesEnums.INVESTOR_SYNDICATES,
             },
             {
               id: 4,
-              icon: <InvestorInvitesIcon/>,
+              icon: <InvestorInvitesIcon />,
               title: "Deals",
-              route: RoutesEnums.INVESTOR_DEALS
-              
+              route: RoutesEnums.INVESTOR_DEALS,
             },
             {
               id: 5,
-              icon: <InvestorPortfolioIcon/>,
+              icon: <InvestorPortfolioIcon />,
               title: "Portfolio",
-              
             },
           ],
         });
@@ -209,10 +201,10 @@ const Sidebar = ({ type }: any) => {
                     "bg-sidebar-item-hover border-l-4 border-l-cyan-800 hover:!border-l-cyan-800"
                   }`}
                 >
-             <span>{item?.icon}</span>
-          <p className="text-black font-medium text-sm ml-1 mt-1">
-            {item?.title}
-          </p>
+                  <span>{item?.icon}</span>
+                  <p className="text-black font-medium text-sm ml-1 mt-1">
+                    {item?.title}
+                  </p>
                 </li>
               );
             })

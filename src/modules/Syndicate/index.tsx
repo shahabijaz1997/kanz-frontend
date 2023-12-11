@@ -129,11 +129,12 @@ const SyndicateDashboard = ({}: any) => {
                   { state: window.location.pathname }
                 );
               }}
-                className="bg-neutral-100 inline-flex items-center justify-center w-[30px] h-[30px] rounded-full transition-all hover:bg-cbc-transparent mx-5"
+                className="bg-neutral-100 inline-flex items-center justify-center w-[24px] h-[24px] rounded-full transition-all hover:bg-cbc-transparent mx-5"
               >
                 <Chevrond
-                  className="rotate-[-90deg] w-6 h-6"
-                  stroke={"#737373"}
+                  className="rotate-[-90deg] w-3 h-3"
+                  strokeWidth={3}
+                  stroke={"#000"}
                 />
               </div>
             )

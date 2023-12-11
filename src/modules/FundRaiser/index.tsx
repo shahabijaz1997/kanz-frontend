@@ -43,9 +43,6 @@ const FundRaiser = ({}: any) => {
     dispatch(saveUserMetaData(""));
   }, []);
 
-  console.log(metadata)
-
-
   return (
     <main className="h-full max-h-full overflow-y-auto">
       <section>
@@ -112,7 +109,6 @@ const FundRaiser = ({}: any) => {
           </React.Fragment>
         </section>
       </aside>
-
       <Modal
         show={modalOpen ? true : false}
         className={"w-[700px] screen1024:w-[300px]"}

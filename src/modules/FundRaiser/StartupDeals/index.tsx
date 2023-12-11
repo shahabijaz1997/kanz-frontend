@@ -165,7 +165,7 @@ const StartupDeals = ({ }: any) => {
                       dispatch(
                         saveUserMetaData({
                           ...metadata.value,
-                          dealType: KanzRoles.PROPERTY_OWNER,
+                          dealType: KanzRoles.STARTUP,
                         })
                       );
                       if (deal?.status === ApplicationStatus.APPROVED) {

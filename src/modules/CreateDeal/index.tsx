@@ -60,7 +60,7 @@ const CreateDeal = () => {
     (state: RootState) => state.dataHolder.value
   );
 
-
+  console.log("METADATA",metadata)
 
   const dealData: any = useSelector(
     (state: RootState) => state.questionnaire.value
@@ -1143,7 +1143,6 @@ const CreateDeal = () => {
 
   /* Validations */
   const checkValidation = () => {
-    debugger
     if (
       !dealData ||
       !dealData[step - 1] ||
