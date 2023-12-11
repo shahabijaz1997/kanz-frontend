@@ -13,7 +13,7 @@ import { RoutesEnums } from "../../../enums/routes.enum";
 import Modal from "../../../shared/components/Modal";
 import CrossIcon from "../../../ts-icons/crossIcon.svg";
 import { saveDataHolder } from "../../../redux-toolkit/slicer/dataHolder.slicer";
-import { getInvitedSyndicates } from "../../../apis/syndicate.api";
+import { getInvitedInvestors, getInvitedSyndicates } from "../../../apis/syndicate.api";
 import { getViewDealSyndicates, signOff } from "../../../apis/deal.api";
 import { addCommentOnDeal } from "../../../apis/deal.api";
 import { saveToken } from "../../../redux-toolkit/slicer/auth.slicer";
@@ -27,7 +27,7 @@ import { FileType } from "../../../enums/types.enum";
 import { toast } from "react-toastify";
 import { toastUtil } from "../../../utils/toast.utils";
 
-const SyndicateRequest = ({}: any) => {
+const InvestorUpdates = ({}: any) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [isOpen, setOpen]: any = useState(false);
@@ -178,7 +178,7 @@ const SyndicateRequest = ({}: any) => {
   const getAllDeals = async () => {
     try {
       setLoading(true);
-      let { status, data } = await getInvitedSyndicates(
+      let { status, data } = await getInvitedInvestors(
         user.id,
         searchQuery,
         authToken
@@ -305,8 +305,8 @@ const SyndicateRequest = ({}: any) => {
           ) : (
             <React.Fragment>
               <section className="inline-flex justify-between items-center w-full">
-                <h1 className="text-black font-medium text-2xl mb-2">
-                  {language?.v3?.startup?.overview?.heading_4}
+                <h1 className="text-black font-medium text-2xl mb-5">
+                  {"Investor Updates"}
                 </h1>
               </section>
               <section className="inline-flex justify-between items-center w-full">
@@ -794,4 +794,4 @@ const SyndicateRequest = ({}: any) => {
     </main>
   );
 };
-export default SyndicateRequest;
+export default InvestorUpdates;

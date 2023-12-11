@@ -113,6 +113,7 @@ const ManageGroup = ({  }: any) => {
             </div>
             <div
               onClick={() => {
+                setLoading(true)
                 onDeleteInvestor(user.id, investorID);
               }}
               className="w-full items-center p-3 hover:bg-[#F5F5F5]"
@@ -343,7 +344,7 @@ const ManageGroup = ({  }: any) => {
                     </h1>
 
                     <span className="w-full flex items-center gap-5">
-                    <div className="rounded-md shadow-cs-6 bg-white border-[1px] border-gray-200 h-9 overflow-hidden max-w-[310px] inline-flex items-center px-2">
+                    <div className="rounded-md shadow-cs-6 bg-white border-[1px] border-gray-200 h-9 overflow-hidden min-w-[300px] inline-flex items-center px-2">
                       <SearchIcon
                         onClick={() => {
                           getMembers();
@@ -359,7 +360,7 @@ const ManageGroup = ({  }: any) => {
                         onChange={(e) => setSearchQuery(e.target.value)}
                         type="search"
                         className="h-full w-full outline-none pl-2 text-sm font-normal "
-                        placeholder={language?.v3?.common?.search}
+                        placeholder={"Search for investors"}
                       />
                     </div>
 
@@ -422,13 +423,14 @@ const ManageGroup = ({  }: any) => {
 
       <Modal
         className={"w-[700px] screen1024:w-[300px]"}
+        
         show={modalOpen ? true : false}
       >
         <div
           className="rounded-md overflow-hidden inline-grid place-items-center absolute top-1/2 left-1/2 translate-x-[-50%] translate-y-[-50%]"
           style={{ backgroundColor: "rgba(0, 0, 0, 0.078" }}
         >
-          <aside className="bg-white w-[700px] rounded-md p-5 h-full">
+          <aside className="bg-white w-[500px] rounded-md p-5 h-full">
             <section>
               <div className="justify-end inline-flex pt-3 px-3 w-full">
                 <div
@@ -444,7 +446,7 @@ const ManageGroup = ({  }: any) => {
             </section>
             <section className="inline-flex justify-between items-center mt-2 w-full">
               <span className="w-full flex items-center gap-5">
-              <div className="rounded-md shadow-cs-6 bg-white border-[1px] border-gray-200 h-9 overflow-hidden max-w-[310px] inline-flex items-center px-2">
+              <div className="rounded-md shadow-cs-6 bg-white border-[1px] border-gray-200 h-9 overflow-hidden min-w-full inline-flex items-center px-2">
                       <SearchIcon
                         onClick={() => {
                           getAllUserListings();
@@ -460,7 +462,7 @@ const ManageGroup = ({  }: any) => {
                         onChange={(e) => setModalSearchQuery(e.target.value)}
                         type="search"
                         className="h-full w-full outline-none pl-2 text-sm font-normal "
-                        placeholder={language?.v3?.common?.search}
+                        placeholder={"Search for investors"}
                       />
                     </div>
               </span>

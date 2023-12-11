@@ -27,6 +27,38 @@ export const getDeals = (token: string, filters : any, searchQuery:string) => {
     },
   });
 };
+export const getStartupDeals = (token: string, filters : any, searchQuery:string) => {
+  const queryParameters = new URLSearchParams();
+  queryParameters.append("deal_type", "startup");
+  if (filters !== "All"){
+    queryParameters.append("status", filters.toLowerCase());
+  }
+  if (searchQuery.trim() !== "") {
+    queryParameters.append("search", searchQuery);
+  }
+  const apiUrl = `${ENV.API_URL}/${ENV.API_VERSION}/deals?${queryParameters.toString()}`;
+  return axios.get(apiUrl, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+};
+export const getPropertyDeals = (token: string, filters : any, searchQuery:string) => {
+  const queryParameters = new URLSearchParams();
+  queryParameters.append("deal_type", "property");
+  if (filters !== "All"){
+    queryParameters.append("status", filters.toLowerCase());
+  }
+  if (searchQuery.trim() !== "") {
+    queryParameters.append("search", searchQuery);
+  }
+  const apiUrl = `${ENV.API_URL}/${ENV.API_VERSION}/deals?${queryParameters.toString()}`;
+  return axios.get(apiUrl, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+};
 export const getNoFilterDeals = (token: string) => {
   const queryParameters = new URLSearchParams();
   return axios.get(`${ENV.API_URL}/${ENV.API_VERSION}/deals`, {

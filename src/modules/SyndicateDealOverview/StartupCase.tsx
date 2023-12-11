@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import { useLocation, useNavigate } from "react-router-dom";
+import {  useNavigate } from "react-router-dom";
 import { KanzRoles } from "../../enums/roles.enum";
 import { RootState } from "../../redux-toolkit/store/store";
 import Header from "../../shared/components/Header";
@@ -23,7 +23,6 @@ import {
   timeAgo,
 } from "../../utils/object.utils";
 import {
-  ApplicationStatus,
   DealStatus,
   FileType,
 } from "../../enums/types.enum";
@@ -31,7 +30,6 @@ import {
   addCommentOnDeal,
   getDealDetail,
   requestSyndication,
-  signOff,
   syndicateApprove,
 } from "../../apis/deal.api";
 import { toast } from "react-toastify";
@@ -40,10 +38,8 @@ import UploadIcon from "../../ts-icons/uploadIcon.svg";
 import BinIcon from "../../ts-icons/binIcon.svg";
 import { fileSize, handleFileRead } from "../../utils/files.utils";
 import InvitesListing from "./InvitesListing";
-import DealActivity from "./DealActivity";
 import { RoutesEnums } from "../../enums/routes.enum";
 import { investSyndicate } from "../../apis/syndicate.api";
-import path from "path";
 import Investors from "./DealInvestors";
 
 const CURRENCIES = ["USD", "AED"];
@@ -85,8 +81,17 @@ const StartupCase = ({ dealToken, dealDetail, docs, returnPath }: any) => {
 
   const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file: any = e.target.files?.[0];
-    setFileInformation(file);
-    e.target.value = "";
+    if (file) {
+      const fileSizeInMB = fileSize(file.size, "mb");
+  
+      if (fileSizeInMB > 10) {
+        toast.error("File size should be less than 10MB", toastUtil);
+        navigator.vibrate(1000);
+        return;
+      }
+      setFileInformation(file);
+      e.target.value = "";
+    }
   };
 
   const setFileInformation = async (file: File) => {
@@ -1499,6 +1504,7 @@ useEffect (()=>
                     onChange={handleFileUpload}
                   />
                 </span>
+                <span className={`px-2 text-[0.55rem] font-light`}>Upload a file PNG, JPG, PDF up to 10MB</span>
               </div>
               <div className="mb-3 w-full">
                 {React.Children.toArray(
