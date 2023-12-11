@@ -39,12 +39,12 @@ import BinIcon from "../../ts-icons/binIcon.svg";
 import { fileSize, handleFileRead } from "../../utils/files.utils";
 import InvitesListing from "./InvitesListing";
 import { RoutesEnums } from "../../enums/routes.enum";
-import { investSyndicate } from "../../apis/syndicate.api";
+import { getDownloadDocument, investSyndicate } from "../../apis/syndicate.api";
 import Investors from "./DealInvestors";
 
 const CURRENCIES = ["USD", "AED"];
 
-const StartupCase = ({ dealToken, dealDetail, docs, returnPath }: any) => {
+const StartupCase = ({ dealToken, dealDetail, docs, returnPath, pitchDeck }: any) => {
   const navigate = useNavigate();
   const language: any = useSelector((state: RootState) => state.language.value);
   const authToken: any = useSelector((state: RootState) => state.auth.value);
@@ -63,6 +63,7 @@ const StartupCase = ({ dealToken, dealDetail, docs, returnPath }: any) => {
   const [disableUpload, setdisableUpload]: any = useState(false);
   const [modalOpenComment, setmodalOpenComment]: any = useState(null);
 
+
   const [investmentAmount, setAmount] = useState();
   const [selectedCurrency, setSelectedCurrency] = useState("USD");
 
@@ -79,6 +80,7 @@ const StartupCase = ({ dealToken, dealDetail, docs, returnPath }: any) => {
     document: null,
   });
 
+
   const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file: any = e.target.files?.[0];
     if (file) {
@@ -93,6 +95,8 @@ const StartupCase = ({ dealToken, dealDetail, docs, returnPath }: any) => {
       e.target.value = "";
     }
   };
+
+
 
   const setFileInformation = async (file: File) => {
     let size = fileSize(file.size, "mb");
@@ -170,19 +174,6 @@ useEffect (()=>
       </section>
     );
   };
-
-  const zoomin = () => {
-    let imgElem: any = document.getElementById("deal-file");
-    let currWidth = imgElem.clientWidth;
-    imgElem.style.width = currWidth + 50 + "px";
-  };
-
-  const zoomout = () => {
-    let imgElem: any = document.getElementById("deal-file");
-    let currWidth = imgElem.clientWidth;
-    if (currWidth > 150) imgElem.style.width = currWidth - 50 + "px";
-  };
-
   const onGetdeal = async () => {
     try {
       setLoading(true);
@@ -190,6 +181,18 @@ useEffect (()=>
       if (status === 200) {
         setDeal(data?.status?.data);
         setSelectedDocs(data?.status?.data?.docs[0]);
+      }
+    } catch (error) {
+    } finally {
+      setLoading(false);
+    }
+  };
+  const onDownloadDocument = async (documentID:any, authToken:any) => {
+    try {
+      setLoading(true);
+      let { status, data } = await getDownloadDocument(documentID, authToken);
+      if (status === 200) {
+        window.open(data?.status?.data)
       }
     } catch (error) {
     } finally {
@@ -629,6 +632,8 @@ useEffect (()=>
     );
   };
 
+
+
   const syndicateInvestment = async () => {
     try {
       setLoading(true);
@@ -671,7 +676,7 @@ useEffect (()=>
         );
         formData.append(`invite[deal_attachments][${i}]name`, element?.name);
       }
-      let { status, data } = await syndicateApprove(
+      let { status } = await syndicateApprove(
         formData,
         deal?.id,
         deal?.invite?.id,
@@ -724,21 +729,6 @@ useEffect (()=>
       setModalOpen3(false)
       setChanges({ comment: "", action: "", document: null });
     }
-  };
-
-  const onTo = (type: string) => {
-    setFileLoading(true);
-    let idx: number = deal?.docs?.findIndex(
-      (f: any) => f.id === selectedDocs?.id
-    );
-    if (type === "++" && idx < deal?.docs?.length - 1)
-      setSelectedDocs(deal?.docs[idx + 1]);
-    else if (type === "--" && idx > 0) setSelectedDocs(deal?.docs[idx - 1]);
-
-    let timer = setTimeout(() => {
-      clearTimeout(timer);
-      setFileLoading(false);
-    }, 500);
   };
 
 
@@ -801,50 +791,17 @@ useEffect (()=>
               <div
                 className="inline-flex justify-between w-full mb-4"
                 onClick={() => {
-                  window.open(selectedDocs?.url, "_blank");
+                  window.open(pitchDeck?.attributes?.url, "_blank");
                 }}
               >
                 <h1 className="text-black font-medium text-2xl">
-                  {selectedDocs?.name}
+                  {"Deck"}
                 </h1>
                 <Button type="outlined">{language?.v3?.button?.new_tab}</Button>
               </div>
               {/* If Image or PDF */}
-              {selectedDocs?.attachment_kind === FileType.IMAGE ? (
-                <section className="h-[500px] rounded-[8px] overflow-hidden border-[1px] border-neutral-200 relative">
-                  <div className="bg-white w-full h-16 inline-flex items-center px-4 border-b-[1px] border-b-neutral-200">
-                    <Zoomin onClick={zoomin} className="cursor-pointer mr-3" />
-
-                    <hr className="w-[1px] h-full bg-neutral-200" />
-                    <Zoomout
-                      onClick={zoomout}
-                      className="cursor-pointer mx-3"
-                    />
-
-                    <hr className="w-[1px] h-full bg-neutral-200" />
-                    <Chevrond
-                      onClick={() => onTo("--")}
-                      className={`mx-3 h-8 w-8 rotate-90 ${
-                        deal?.docs?.length > 1
-                          ? "cursor-pointer"
-                          : "cursor-not-allowed"
-                      }`}
-                      stroke="#404040"
-                    />
-
-                    <hr className="w-[1px] h-full bg-neutral-200" />
-                    <Chevrond
-                      onClick={() => onTo("++")}
-                      className={`mx-3 h-8 w-8 rotate-[-90deg] ${
-                        deal?.docs?.length > 1
-                          ? "cursor-pointer"
-                          : "cursor-not-allowed"
-                      }`}
-                      stroke="#404040"
-                    />
-
-                    <hr className="w-[1px] h-full bg-neutral-200" />
-                  </div>
+              {pitchDeck?.attributes?.attachment_kind === FileType.IMAGE ? (
+                <section className="h-[700px] rounded-[8px] overflow-hidden border-[1px] border-neutral-200 relative">
                   <aside
                     className="w-full overflow-y-auto bg-cbc-grey-sec p-4"
                     style={{ height: "calc(100% - 60px)" }}
@@ -861,8 +818,8 @@ useEffect (()=>
                       </div>
                     ) : (
                       <img
-                        src={selectedDocs?.url}
-                        alt={selectedDocs?.name}
+                        src={pitchDeck?.attributes?.url}
+                        alt={pitchDeck?.attributes?.name}
                         id="deal-file"
                         className="bg-white mx-auto"
                         style={{ maxWidth: "unset", objectFit: "contain" }}
@@ -871,31 +828,7 @@ useEffect (()=>
                   </aside>
                 </section>
               ) : (
-                <section className="w-full h-[500px] rounded-[8px] overflow-hidden border-[1px] border-neutral-200 bg-cbc-grey-sec p-4 relative">
-                  <div className="bg-white w-full h-16 inline-flex items-center px-4 border-b-[1px] border-b-neutral-200">
-                    <Chevrond
-                      onClick={() => onTo("--")}
-                      className={`mr-3 h-8 w-8 rotate-90 ${
-                        deal?.docs?.length > 1
-                          ? "cursor-pointer"
-                          : "cursor-not-allowed"
-                      }`}
-                      stroke="#404040"
-                    />
-
-                    <hr className="w-[1px] h-full bg-neutral-200" />
-                    <Chevrond
-                      onClick={() => onTo("++")}
-                      className={`mx-3 h-8 w-8 rotate-[-90deg] ${
-                        deal?.docs?.length > 1
-                          ? "cursor-pointer"
-                          : "cursor-not-allowed"
-                      }`}
-                      stroke="#404040"
-                    />
-
-                    <hr className="w-[1px] h-full bg-neutral-200" />
-                  </div>
+                <section className="w-full h-[700px] rounded-[8px] overflow-hidden border-[1px] border-neutral-200 bg-cbc-grey-sec p-4 relative">
                   {fileLoading ? (
                     <div
                       className="absolute left-0 top-0 w-full h-full grid place-items-center"
@@ -908,7 +841,7 @@ useEffect (()=>
                     </div>
                   ) : (
                     <embed
-                      src={selectedDocs?.url}
+                      src={pitchDeck?.attributes?.url}
                       className="w-full h-full"
                       id="deal-file"
                     />
@@ -1209,7 +1142,6 @@ useEffect (()=>
                                 {language?.v3?.button?.view}
                               </div>
                               <ArrowIcon stroke="#000" />
-                               
                               </h2>
                             </div>
                           </span>
@@ -1217,12 +1149,7 @@ useEffect (()=>
                           <div
                             className="h-10 w-10 rounded-lg inline-flex items-center flex-row justify-center gap-2 bg-white cursor-pointer border-[1px] border-neutral-200"
                             onClick={() => {
-                              const downloadLink = document.createElement("a");
-                              downloadLink.href = doc?.url;
-                              downloadLink.target = "_blank";
-                              downloadLink.download = doc?.name;
-                              downloadLink.click();
-                              downloadLink.remove();
+                              onDownloadDocument(doc?.id, authToken)
                             }}
                           >
                             <DownloadIcon />

@@ -22,7 +22,7 @@ import SearchIcon from "../../../ts-icons/searchIcon.svg";
 import EditDealWarningModal from "../EditDealWarningModal";
 import { saveUserMetaData } from "../../../redux-toolkit/slicer/metadata.slicer";
 
-const StartupDeals = ({ }: any) => {
+const StartupDeals = ({openRiskDiscModal }: any) => {
   const [loading, setLoading] = useState(false);
   const language: any = useSelector((state: RootState) => state.language.value);
   const authToken: any = useSelector((state: RootState) => state.auth.value);
@@ -325,10 +325,19 @@ const StartupDeals = ({ }: any) => {
                  
                   noDataNode={
                     <Button
+                    onClick={()=>{
+                      dispatch(
+                        saveUserMetaData({
+                          ...metadata.value,
+                          dealType: KanzRoles.STARTUP,
+                        })
+                      );
+                      openRiskDiscModal()
+                    }}
                       
                       className="absolute left-1/2 top-1/2 translate-x-[-50%] translate-y-[-50%]"
                     >
-                      {language?.v3?.button?.new_deal}
+                      {"Create Startup Deal"}
                     </Button>
                   }
                 />

@@ -53,7 +53,7 @@ import InvitesListing from "./InvitesListing";
 import { RoutesEnums } from "../../enums/routes.enum";
 import InvestmentCalculator from "./InvestmentCalculator";
 import DealActivity from "./DealActivity";
-import { investSyndicate } from "../../apis/syndicate.api";
+import { getDownloadDocument, investSyndicate } from "../../apis/syndicate.api";
 import Investors from "./DealInvestors";
 import { set } from "react-hook-form";
 
@@ -71,6 +71,7 @@ const PropertyOwnerCase = ({ dealToken, dealDetail, dealDocs, returnPath }: any)
   const [modalOpen, setModalOpen]: any = useState(null);
   const [modalOpen2, setModalOpen2]: any = useState(null);
   const [modalOpen3, setModalOpen3]: any = useState(null);
+  const [currentDocumentDownload, setcurrentDocumentDownload]: any = useState(null);
   const [invited, setInvited]: any = useState();
   const [modalOpenComment, setmodalOpenComment]: any = useState(null);
   const [disableUpload, setdisableUpload]: any = useState(false);
@@ -135,6 +136,18 @@ useEffect (()=>
     /* const fileData: any = await handleFileRead(file); */
     doUploadUtil(file, size, type);
     setLoading(false);
+  };
+  const onDownloadDocument = async (documentID:any, authToken:any) => {
+    try {
+      setLoading(true);
+      let { status, data } = await getDownloadDocument(documentID, authToken);
+      if (status === 200) {
+        window.open(data?.status?.data)
+      }
+    } catch (error) {
+    } finally {
+      setLoading(false);
+    }
   };
 
   const doUploadUtil = (file: any, size: any, type: string) => {
@@ -909,12 +922,7 @@ useEffect (()=>
                           <div
                             className="h-10 w-10 rounded-lg inline-flex items-center flex-row justify-center gap-2 bg-white cursor-pointer border-[1px] border-neutral-200"
                             onClick={() => {
-                              const downloadLink = document.createElement("a");
-                              downloadLink.href = doc?.url;
-                              downloadLink.target = "_blank";
-                              downloadLink.download = doc?.name;
-                              downloadLink.click();
-                              downloadLink.remove();
+                              onDownloadDocument(doc?.id, authToken)
                             }}
                           >
                             <DownloadIcon />

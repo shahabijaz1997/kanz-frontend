@@ -42,7 +42,9 @@ const FundRaiser = ({}: any) => {
     dispatch(saveDataHolder(""));
     dispatch(saveUserMetaData(""));
   }, []);
-
+  const openRiskDiscModal = () =>{
+    setModalOpen("1")
+  }
   return (
     <main className="h-full max-h-full overflow-y-auto">
       <section>
@@ -103,8 +105,8 @@ const FundRaiser = ({}: any) => {
               </ul>
             </section>
             <section className="mt-5">
-              {selected?.id === 1 && <StartupDeals />}
-              {selected?.id === 2 && <PropertyDeals />}
+              {selected?.id === 1 && <StartupDeals openRiskDiscModal={openRiskDiscModal}/>}
+              {selected?.id === 2 && <PropertyDeals openRiskDiscModal={openRiskDiscModal} />}
             </section>
           </React.Fragment>
         </section>

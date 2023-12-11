@@ -13,7 +13,7 @@ import { RoutesEnums } from "../../../enums/routes.enum";
 import Modal from "../../../shared/components/Modal";
 import CrossIcon from "../../../ts-icons/crossIcon.svg";
 import { saveDataHolder } from "../../../redux-toolkit/slicer/dataHolder.slicer";
-import { getInvitedSyndicates } from "../../../apis/syndicate.api";
+import { getDownloadDocument, getInvitedSyndicates } from "../../../apis/syndicate.api";
 import { getViewDealSyndicates, signOff } from "../../../apis/deal.api";
 import { addCommentOnDeal } from "../../../apis/deal.api";
 import { saveToken } from "../../../redux-toolkit/slicer/auth.slicer";
@@ -121,13 +121,28 @@ const SyndicateRequest = ({}: any) => {
     }
   };
 
+  const onDownloadDocument = async (documentID:any, authToken:any) => {
+    try {
+      setLoading(true);
+      let { status, data } = await getDownloadDocument(documentID, authToken);
+      if (status === 200) {
+        window.open(data?.status?.data)
+      }
+    } catch (error) {
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const newComment = async () => {
     try {
       setLoading(true);
       let payload = {
-        message: changes.comment,
-        invite_id: dealDetail?.invite_id,
-      };
+        comment : {
+            message: changes.comment,
+            invite_id: dealDetail?.invite_id,
+          }
+      }
       let { status, data } = await addCommentOnDeal(
         Number(dealDetail?.deal?.id),
         authToken,
@@ -512,12 +527,7 @@ const SyndicateRequest = ({}: any) => {
                           <div
                             className="h-10 w-10 rounded-lg inline-flex items-center flex-row justify-center gap-2 bg-white cursor-pointer border-[1px] border-neutral-200"
                             onClick={() => {
-                              const downloadLink = document.createElement("a");
-                              downloadLink.href = documents?.url;
-                              downloadLink.target = "_blank";
-                              downloadLink.download = documents?.name;
-                              downloadLink.click();
-                              downloadLink.remove();
+                              onDownloadDocument(documents?.id,authToken)
                             }}
                           >
                             <DownloadIcon />
