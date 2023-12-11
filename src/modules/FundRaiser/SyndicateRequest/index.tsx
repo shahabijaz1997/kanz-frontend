@@ -138,9 +138,11 @@ const SyndicateRequest = ({}: any) => {
     try {
       setLoading(true);
       let payload = {
-        message: changes.comment,
-        invite_id: dealDetail?.invite_id,
-      };
+        comment : {
+            message: changes.comment,
+            invite_id: dealDetail?.invite_id,
+          }
+      }
       let { status, data } = await addCommentOnDeal(
         Number(dealDetail?.deal?.id),
         authToken,
