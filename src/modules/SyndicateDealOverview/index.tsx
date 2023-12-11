@@ -36,7 +36,7 @@ const SyndicateDealOverview = ({}: any) => {
   
   return deal && (
     deal.category === KanzRoles.STARTUP.toLocaleLowerCase() ?
-    <StartupCase dealToken={dealToken} dealDetail={deal} docs= {selectedDocs} returnPath={state} />
+    <StartupCase dealToken={dealToken} dealDetail={deal} docs= {selectedDocs} returnPath={state} pitchDeck={deal?.pitch_deck} />
     :
     <PropertyOwnerCase dealToken={dealToken} dealDetail={deal} dealDocs= {selectedDocs} returnPath={state} />
   )

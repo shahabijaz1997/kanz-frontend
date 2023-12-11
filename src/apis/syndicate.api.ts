@@ -87,6 +87,16 @@ export const getDealActivity = (dealId: any, token: string) => {
     }
   );
 };
+export const getDownloadDocument = (documentID: any, token: string) => {
+  return axios.get(
+    `${ENV.API_URL}/${ENV.API_VERSION}/attachments/${documentID}/download`,
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    }
+  );
+};
 
 export const investSyndicate = (dealId:any, payload: any, token: string) => {
   return axios.post(`${ENV.API_URL}/${ENV.API_VERSION}/deals/${dealId}/investments`, payload, {
