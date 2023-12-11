@@ -152,6 +152,24 @@ export const getNonAddedInvestors = (token: string, searchQuery:any) => {
 
 export const getInvitedSyndicates = (userId: any, searchQuery:string, token: string) => {
   const queryParameters = new URLSearchParams();
+  queryParameters.append("invite_type", "syndication");
+  if (searchQuery.trim() !== "") {
+    queryParameters.append("search", searchQuery);
+  }
+  const apiUrl = `${ENV.API_URL}/${ENV.API_VERSION}/users/${userId}/invites?${queryParameters.toString()}`;
+  return axios.get(
+    apiUrl,
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    }
+  );
+};
+export const getInvitedInvestors = (userId: any, searchQuery:string, token: string) => {
+  const queryParameters = new URLSearchParams();
+  queryParameters.append("invite_type", "investment");
+
   if (searchQuery.trim() !== "") {
     queryParameters.append("search", searchQuery);
   }

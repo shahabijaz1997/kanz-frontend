@@ -86,7 +86,6 @@ const DealDetail = ({}: any) => {
     else if (selected.id === 4) onGetDealFiles();
   }, [selected]);
 
-  console.log("State passed from fundraiser page", state);
 
   return (
     <main className="h-full max-h-full overflow-y-hidden">

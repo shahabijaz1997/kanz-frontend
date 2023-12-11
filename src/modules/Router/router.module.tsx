@@ -47,7 +47,7 @@ const CreateDeal = lazy(() => import("../CreateDeal"));
 const DealDetail = lazy(() => import("../DealDetail"));
 const DealApproval = lazy(() => import("../Syndicate/DealApproval"));
 const SyndicateRequest = lazy(() => import("../FundRaiser/SyndicateRequest"));
-const InvestorUpdates = lazy(() => import("../InvestorUpdates"));
+const InvestorUpdates = lazy(() => import("../FundRaiser/InvestorUpdates"));
 const DataRooms = lazy(() => import("../DataRooms"));
 const Contacts = lazy(() => import("../Contacts"));
 const MarketInsights = lazy(() => import("../MarketInsights"));
@@ -436,25 +436,6 @@ const RouterModule = () => {
           </Suspense>
         }
       />
-
-    {/*   <Route
-        path={`${RoutesEnums.SYNDICATE_DEAL_DETAIL}/:dealToken`}
-        element={
-          <Suspense fallback={<Loader />}>
-            <GuestDecider guard={authToken} />
-           {/*  <CHECK_LOGGED_IN>
-              <GUARD_SUBMITTED_ROUTE
-                role={[KanzRoles.SYNDICATE,KanzRoles.INVESTOR]}
-                status={ApplicationStatus.APPROVED}
-              >
-
-                <SyndicateDealOverview />
-              </GUARD_SUBMITTED_ROUTE>
-            </CHECK_LOGGED_IN> 
-          </Suspense>
-        }
-      /> */}
-
       <Route
         path={`${RoutesEnums.SYNDICATE_INVESTMENTS}`}
         element={
@@ -485,22 +466,7 @@ const RouterModule = () => {
           </Suspense>
         }
       />
-{/* 
-      <Route
-        path={`${RoutesEnums.SYNDICATE_INVESTMENTS_DEALDETAILS}/:dealToken`}
-        element={
-          <Suspense fallback={<Loader />}>
-            <CHECK_LOGGED_IN>
-              <GUARD_SUBMITTED_ROUTE
-                role={[KanzRoles.SYNDICATE]}
-                status={ApplicationStatus.APPROVED}
-              >
-                <SyndicateInvestments />
-              </GUARD_SUBMITTED_ROUTE>
-            </CHECK_LOGGED_IN>
-          </Suspense>
-        }
-      /> */}
+
 
       {/*
         {.......##...............######..##....##.##....##.########..####..######.....###....########.########....########...#######..##.....##.########.########..######.....................##
@@ -546,19 +512,21 @@ const RouterModule = () => {
       />
 
 
-      <Route
-        path={`${RoutesEnums.INVESTOR_UPDATES}`}
+<Route
+        path={RoutesEnums.INVESTOR_UPDATES}
         element={
           <Suspense fallback={<Loader />}>
             <CHECK_LOGGED_IN>
-              <GUARD_ROUTE role={KanzRoles.STARTUP}>
-                <InvestorUpdates />
-              </GUARD_ROUTE>
+              <GUARD_SUBMITTED_ROUTE
+                role={[KanzRoles.FUNDRAISER]}
+                status={ApplicationStatus.APPROVED}
+              >
+              <InvestorUpdates guard={authToken}/>
+              </GUARD_SUBMITTED_ROUTE>
             </CHECK_LOGGED_IN>
           </Suspense>
         }
       />
-
       <Route
         path={`${RoutesEnums.DATA_ROOMS}`}
         element={

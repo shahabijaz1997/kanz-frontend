@@ -48,7 +48,7 @@ const DealApproval = ({}: any) => {
   const [loading, setLoading] = useState(false);
 
   const [deals, setDeals] = useState([]);
-  const [filter, setFilterCounts]:any = useState([]);
+  const [filter, setFilterCounts]: any = useState([]);
   const [dummyDisclaimers, setDummyDisclaimers] = useState({
     d1: false,
     d2: false,
@@ -60,32 +60,28 @@ const DealApproval = ({}: any) => {
     d3: false,
   });
 
-
-  const getCountvalue = ( value:string ) =>
-  { 
-    let count = 0 ;
+  const getCountvalue = (value: string) => {
+    let count = 0;
     switch (value) {
-      case  "All" : 
-      count = filter?.all
-      break
-      case  "Pending" : 
-      count = filter?.pending
-      break
-      case  "Interested" : 
-      count = filter?.interested
-      break
-      case  "Accepted" : 
-      count = filter?.accepted
-      break
-      case  "Approved" : 
-      count = filter?.approved
-      break
-      
-    } 
+      case "All":
+        count = filter?.all;
+        break;
+      case "Pending":
+        count = filter?.pending;
+        break;
+      case "Interested":
+        count = filter?.interested;
+        break;
+      case "Accepted":
+        count = filter?.accepted;
+        break;
+      case "Approved":
+        count = filter?.approved;
+        break;
+    }
 
-    return count
-    
-  }
+    return count;
+  };
 
   useEffect(() => {
     dispatch(saveDataHolder(""));
@@ -95,10 +91,14 @@ const DealApproval = ({}: any) => {
   const getAllDeals = async () => {
     try {
       setLoading(true);
-      let { status, data } = await getInvitedDeals(user.id, authToken, selectedTab,searchQuery);
+      let { status, data } = await getInvitedDeals(
+        user.id,
+        authToken,
+        selectedTab,
+        searchQuery
+      );
       if (status === 200) {
-        
-        setFilterCounts(data?.status?.data?.stats)
+        setFilterCounts(data?.status?.data?.stats);
         let deals = data?.status?.data?.invites?.map((deal: any) => {
           return {
             id: deal?.id,
@@ -108,8 +108,7 @@ const DealApproval = ({}: any) => {
             [language?.v3?.syndicate?.deals?.table?.category]: (
               <span className="capitalize">{deal?.deal?.type}</span>
             ),
-            ["Invite Status"]:
-              <CustomStatus options={deal?.status} /> || "N/A",
+            ["Invite Status"]: <CustomStatus options={deal?.status} /> || "N/A",
             [language?.v3?.syndicate?.deals?.table?.end_date]:
               deal?.deal?.end_at || " N/A",
             [language?.v3?.syndicate?.deals?.table
@@ -126,11 +125,12 @@ const DealApproval = ({}: any) => {
                     { state: window.location.pathname }
                   );
                 }}
-                className="bg-neutral-100 inline-flex items-center justify-center w-[30px] h-[30px] rounded-full transition-all hover:bg-cbc-transparent"
+                className="bg-neutral-100 inline-flex items-center justify-center w-[24px] h-[24px] rounded-full transition-all hover:bg-cbc-transparent mx-5"
               >
                 <Chevrond
-                  className="rotate-[-90deg] w-6 h-6"
-                  stroke={"#737373"}
+                  className="rotate-[-90deg] w-3 h-3"
+                  strokeWidth={3}
+                  stroke={"#000"}
                 />
               </div>
             ),
@@ -148,9 +148,9 @@ const DealApproval = ({}: any) => {
         });
         setDeals(deals);
       }
-    } catch (error:any) {
+    } catch (error: any) {
       if (error.response && error.response.status === 302) {
-    /*     toast.dismiss()
+        /*     toast.dismiss()
         toast.error("Session time out",toastUtil)
         dispatch(saveToken(""));
         navigate(RoutesEnums.LOGIN); */
@@ -167,10 +167,6 @@ const DealApproval = ({}: any) => {
     "Accepted",
     "Approved",
   ]);
-
-
-
-
 
   const paginate = (type: string) => {
     if (type === "next" && pagination.current_page < pagination.total_pages) {
@@ -232,11 +228,11 @@ const DealApproval = ({}: any) => {
                         }}
                       />
                       <input
-                       onKeyDown={(e) => {
-                        if (e.key === 'Enter') {
-                          getAllDeals();
-                        }
-                      }}
+                        onKeyDown={(e) => {
+                          if (e.key === "Enter") {
+                            getAllDeals();
+                          }
+                        }}
                         value={searchQuery}
                         onChange={(e) => setSearchQuery(e.target.value)}
                         type="search"

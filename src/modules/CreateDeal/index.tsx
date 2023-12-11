@@ -60,7 +60,7 @@ const CreateDeal = () => {
     (state: RootState) => state.dataHolder.value
   );
 
-
+  console.log("METADATA",metadata)
 
   const dealData: any = useSelector(
     (state: RootState) => state.questionnaire.value
@@ -86,6 +86,8 @@ const CreateDeal = () => {
     setStep(Number(params?.id) || 1);
     getDealStepDetails();
   }, [params, step]);
+
+
 
   /* UI Actions */
 
