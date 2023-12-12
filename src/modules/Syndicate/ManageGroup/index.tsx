@@ -53,6 +53,8 @@ const ManageGroup = ({  }: any) => {
   const [filter, setFilterCounts]:any = useState([]);
   const [searchQuery, setSearchQuery]: any = useState("");
   const [searchModalQuery, setModalSearchQuery]: any = useState("");
+  const [openedActionDiv, setOpenedActionDiv] = useState<number | null>(null);
+
 
 
   const [tabs] = useState(["All", "Added", "Follower"]);
@@ -71,7 +73,9 @@ const ManageGroup = ({  }: any) => {
     total_pages: 0,
   });
 
-
+  useEffect(()=>{
+    getMembers()
+  },[openedActionDiv])
 
   useEffect(() => {
     dispatch(saveDataHolder(""));
@@ -81,29 +85,34 @@ const ManageGroup = ({  }: any) => {
   const ActionButton = ({ investorID }: any): any => {
     const [openActions, setOpenActions] = useState(false);
     const ref: any = useRef();
-
+  
     useEffect(() => {
       const handleOutsideClick = (event: any) => {
         if (ref.current && !ref.current.contains(event.target)) {
-          setOpenActions(false);
+          setOpenedActionDiv(null);
         }
       };
+  
       window.addEventListener("click", handleOutsideClick);
+  
       return () => {
         window.removeEventListener("click", handleOutsideClick);
       };
     }, []);
+    const handleButtonClick = (event: React.MouseEvent<HTMLDivElement>) => {
+      event.stopPropagation();
+      setOpenedActionDiv((prev) => (prev === investorID ? null : investorID));
+    };
     return (
       <div className="relative">
         <div
-          onClick={() => {
-            setOpenActions((current) => !current);
-          }}
+          onClick={handleButtonClick}
           className="inline-flex items-center  justify-center  w-[30px] h-[30px] rounded-full transition-all hover:bg-cbc-transparent"
+          ref={ref}
         >
           <ManageGroupActionsIcon />
         </div>
-        {openActions && (
+        {openedActionDiv === investorID && (
           <div className="overflow-hidden justify justify-center shadow-lg  rounded-md  flex-col bg-white border-[1px] border-neutral-200   z-[20] fixed items-center font-normal bg-red text-left">
             <div
               onClick={() => {}}
@@ -113,7 +122,7 @@ const ManageGroup = ({  }: any) => {
             </div>
             <div
               onClick={() => {
-                setLoading(true)
+                setLoading(true);
                 onDeleteInvestor(user.id, investorID);
               }}
               className="w-full items-center p-3 hover:bg-[#F5F5F5]"
@@ -125,10 +134,8 @@ const ManageGroup = ({  }: any) => {
       </div>
     );
   };
-
   const getMembers = async () => {
     try {
-      setLoading(true);
       let { status, data } = await getGroupInvestors(authToken, selectedTab,searchQuery);
 
       if (status === 200) {

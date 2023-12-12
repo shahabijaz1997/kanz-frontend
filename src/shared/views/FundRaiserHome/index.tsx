@@ -11,11 +11,8 @@ const FundRaiserHome = ({ loading, language }: any) => {
   const navigate = useNavigate();
   const user: any = useSelector((state: RootState) => state.user.value);
   const metadata: any = useSelector((state: RootState) => state.metadata.value);
-  console.log("User", user)
-  console.log("Metadata", metadata)
   const onPress = () => {
     const { profile_states } = metadata;
-    console.log("Profile States", profile_states)
     if (profile_states?.profile_completed) {
       navigate(RoutesEnums.ADD_ATTACHMENTS);
     } else {
