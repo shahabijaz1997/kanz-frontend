@@ -981,7 +981,7 @@ useEffect (()=>
                   <div className="w-full inline-flex justify-end gap-4">
                     <div className="relative z-10">
                       <InvitesListing
-                        approve={true}
+                        approve={deal?.status}
                         dealId={dealToken}
                         type={KanzRoles.SYNDICATE}
                         dealIdReal={deal?.id}

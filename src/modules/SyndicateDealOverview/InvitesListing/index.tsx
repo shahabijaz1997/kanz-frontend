@@ -148,7 +148,6 @@ const InvitesListing = ({
       setLoading(false);
     }
   };
-
   return (
     <div ref={ref}>
       <Button
