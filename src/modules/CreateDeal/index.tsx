@@ -79,7 +79,7 @@ const CreateDeal = () => {
   const [open, setOpen]: any = useState(false);
   const [loading, setLoading] = useState(false);
   const [modalOpen, setModalOpen]: any = useState(null);
-  const [uspAdded, setUspAdded]: any = useState(false);
+  /* const [uspAdded, setUspAdded]: any = useState(false); */
   
 
 
@@ -87,7 +87,7 @@ const CreateDeal = () => {
     setStep(Number(params?.id) || 1);
     getDealStepDetails();
   }, [params, step]);
-
+  
 
 
   /* UI Actions */
@@ -1333,7 +1333,7 @@ const CreateDeal = () => {
                                       <div
                                         className="w-full inline-flex justify-end cursor-pointer"
                                         onClick={() => {
-                                          setUspAdded(false)
+                                          /* setUspAdded(false) */
                                           dispatch(
                                             onResetFields({
                                               secIndex: section?.index,
@@ -1411,7 +1411,7 @@ const CreateDeal = () => {
                                       )}
                                       className="w-[100px] bg-transparent border-2 border-cyan-800 !text-cyan-800 hover:!text-white"
                                       onClick={() => {
-                                        setUspAdded(true)
+                                        /* setUspAdded(true) */
                                         setShowCustomBox(false);
                                         setMultipleFieldsPayload(
                                           (prev: any) => {
@@ -1626,7 +1626,7 @@ const CreateDeal = () => {
                     </Button>
                     <Button
                       className="h-[38px] w-[140px]"
-                      disabled={!checkValidation() || showZeroWarning || !uspAdded}
+                      disabled={!checkValidation() || showZeroWarning}
                       htmlType="submit"
                       loading={loading}
                       onClick={onSetNext}
