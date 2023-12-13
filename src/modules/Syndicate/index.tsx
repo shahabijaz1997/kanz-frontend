@@ -110,15 +110,12 @@ const SyndicateDashboard = ({}: any) => {
             id: deal?.id,
             ["Title"]: deal?.title || "N/A",
             ["Type"]: <span className=" capitalize">{deal?.deal_type}</span>,
-            [language?.v3?.table?.sellingPrice]: `$${numberFormatter(
+            [language?.v3?.table?.sellingPrice]: `${numberFormatter(
               Number(deal?.target)
-            )}`,
+            , deal?.deal_type)}`,
             [language?.v3?.table?.status]: (
               <CustomStatus options={deal?.status} />
             ),
-            [language?.v3?.table?.rentalAmount]: `$${numberFormatter(
-              Number(deal?.rental_amount)
-            )}`,
             ["Start At"]: (deal?.start_at),
             ["End At"]: (deal?.end_at),
             [""]: (
