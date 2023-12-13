@@ -1,3 +1,5 @@
+import { DealCheckType } from "../enums/types.enum";
+
 export const isEmpty = (value: any) => {
   if (typeof value === "object" && value !== null) {
     if (Array.isArray(value)) {
@@ -18,17 +20,41 @@ export const filterObjectsByTrueValue = (objectsArray: any, key: any) => {
     .map((obj1: any) => obj1.id);
 };
 
-export const numberFormatter = (number: number) => {
+export const numberFormatter = (number: number, dealType: string | null = null) => {
+  console.log("DealTYPE CHECKING HERE IN THE OBJECT UTILS", dealType)
   if (isNaN(number) || !number) return 0;
-  if (number >= 1000000000) return (number / 1000000000).toFixed(1) + "B";
-  else if (number >= 1000000) return (number / 1000000).toFixed(1) + "M";
-  else if (number >= 1000) return (number / 1000).toFixed(1) + "K";
-  else return number.toString();
-};
+  let formattedNumber = "";
+  if (number >= 1000000000) {
+    formattedNumber = (number / 1000000000).toFixed(1) + "B";
+  } else if (number >= 1000000) {
+    formattedNumber = (number / 1000000).toFixed(1) + "M";
+  } else if (number >= 1000) {
+    formattedNumber = (number / 1000).toFixed(1) + "K";
+  } else {
+    formattedNumber = number.toString();
+  }
 
-export const comaFormattedNumber = (value: any) => {
+  if (dealType !== null || dealType!==undefined || dealType!== '') {
+    if (dealType === DealCheckType.STARTUP) {
+      formattedNumber = `$${formattedNumber}`;
+    } else {
+      formattedNumber = `AED ${formattedNumber}`;
+    }
+  }
+
+  return formattedNumber;
+};
+export const comaFormattedNumber = (value: any, dealType: string | null = null) => {
   if (!value || isNaN(Number(value))) return value;
-  return String(value).replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+  const formattedValue = String(value).replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+  if (dealType !== null) {
+    if (dealType === DealCheckType.STARTUP) {
+      return `$${formattedValue}`;
+    } else {
+      return `AED ${formattedValue}`;
+    }
+  }
+  return formattedValue;
 };
 
 export const formatDate = (value: string = "") => {

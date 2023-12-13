@@ -11,6 +11,7 @@ import { KanzRoles } from "../../../enums/roles.enum";
 import { toastUtil } from "../../../utils/toast.utils";
 import { toast } from "react-toastify";
 import Spinner from "../../../shared/components/Spinner";
+import ActionButton from "./ActionButton"
 
 import {
   comaFormattedNumber,
@@ -22,13 +23,13 @@ import Header from "../../../shared/components/Header";
 import Sidebar from "../../../shared/components/Sidebar";
 import CustomStatus from "../../../shared/components/CustomStatus";
 import CrossIcon from "../../../ts-icons/crossIcon.svg";
-import ManageGroupActionsIcon from "../../../ts-icons/ManageGroupActionsIcon.svg";
 import {
   delRemoveInvestor,
   getGroupInvestors,
   getNonAddedInvestors,
   postAddInvestor,
 } from "../../../apis/syndicate.api";
+import { DealCheckType } from "../../../enums/types.enum";
 
 
 
@@ -53,9 +54,13 @@ const ManageGroup = ({  }: any) => {
   const [filter, setFilterCounts]:any = useState([]);
   const [searchQuery, setSearchQuery]: any = useState("");
   const [searchModalQuery, setModalSearchQuery]: any = useState("");
-  const [openedActionDiv, setOpenedActionDiv] = useState<number | null>(null);
 
-
+  const setLoadingFalse = () =>{
+    setLoading(false)
+  }
+  const setLoadingTrue = () =>{
+    setLoading(true)
+  }
 
   const [tabs] = useState(["All", "Added", "Follower"]);
   const columns = [
@@ -73,68 +78,13 @@ const ManageGroup = ({  }: any) => {
     total_pages: 0,
   });
 
-  useEffect(()=>{
-    getMembers()
-  },[openedActionDiv])
-
   useEffect(() => {
     dispatch(saveDataHolder(""));
     getMembers();
   }, [selectedTab]);
 
-  const ActionButton = ({ investorID }: any): any => {
-    const [openActions, setOpenActions] = useState(false);
-    const ref: any = useRef();
-  
-    useEffect(() => {
-      const handleOutsideClick = (event: any) => {
-        if (ref.current && !ref.current.contains(event.target)) {
-          setOpenedActionDiv(null);
-        }
-      };
-  
-      window.addEventListener("click", handleOutsideClick);
-  
-      return () => {
-        window.removeEventListener("click", handleOutsideClick);
-      };
-    }, []);
-    const handleButtonClick = (event: React.MouseEvent<HTMLDivElement>) => {
-      event.stopPropagation();
-      setOpenedActionDiv((prev) => (prev === investorID ? null : investorID));
-    };
-    return (
-      <div className="relative">
-        <div
-          onClick={handleButtonClick}
-          className="inline-flex items-center  justify-center  w-[30px] h-[30px] rounded-full transition-all hover:bg-cbc-transparent"
-          ref={ref}
-        >
-          <ManageGroupActionsIcon />
-        </div>
-        {openedActionDiv === investorID && (
-          <div className="overflow-hidden justify justify-center shadow-lg  rounded-md  flex-col bg-white border-[1px] border-neutral-200   z-[20] fixed items-center font-normal bg-red text-left">
-            <div
-              onClick={() => {}}
-              className="w-full items-center p-3 hover:bg-[#F5F5F5]"
-            >
-              View details
-            </div>
-            <div
-              onClick={() => {
-                setLoading(true);
-                onDeleteInvestor(user.id, investorID);
-              }}
-              className="w-full items-center p-3 hover:bg-[#F5F5F5]"
-            >
-              Remove
-            </div>
-          </div>
-        )}
-      </div>
-    );
-  };
   const getMembers = async () => {
+    setLoading(true)
     try {
       let { status, data } = await getGroupInvestors(authToken, selectedTab,searchQuery);
 
@@ -148,13 +98,13 @@ const ManageGroup = ({  }: any) => {
             ["Invested"]: `$${comaFormattedNumber(investor?.invested_amount)}`,
             ["Investments"]: `${numberFormatter(
               Number(investor?.no_investments)
-            )}`,
+            , DealCheckType.STARTUP)}`,
             ["Join Status"]:
               <CustomStatus options={investor?.connection} /> || "N/A",
             ["Join Date"]:
               <span className="px-2">{investor?.joining_date}</span> || " N/A",
             Steps: investor?.current_state?.steps,
-            ["Action"]: <ActionButton investorID={Number(investor?.id)} />,
+            ["Action"]: <ActionButton investorID={Number(investor?.id)} setLoading={setLoading} setLoadingTrue={setLoadingTrue} setLoadingFalse={setLoadingFalse} getMembers={getMembers} />,
           };
         });
 
@@ -233,25 +183,6 @@ const ManageGroup = ({  }: any) => {
   useEffect(() => {
     getAllUserListings();
   }, []);
-
-  const onDeleteInvestor = async (currSyndId: any, investorID: any) => {
-    try {
-      const { status } = await delRemoveInvestor(
-        currSyndId,
-        investorID,
-        authToken
-      );
-      if (status === 200) {
-        toast.dismiss();
-        toast.success("Investor Deleted", toastUtil);
-      }
-    } catch (error: any) {
-      if (error?.response?.status === 400)
-        toast.warning(error?.response?.data?.status?.message, toastUtil);
-    } finally {
-      getMembers();
-    }
-  };
 
   const onAddInvestor = async (currSyndId: any, investorID: any ) => {
 

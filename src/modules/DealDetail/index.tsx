@@ -159,6 +159,7 @@ const DealDetail = ({}: any) => {
 
             <section className="mt-1 mb-16">
               <DealTable
+                dealType={dealDetail?.category}
                 targetSize={dealDetail?.selling_price}
                 committed={dealDetail?.committed}
                 investors={dealDetail?.investors}
