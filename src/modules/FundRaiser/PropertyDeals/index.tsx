@@ -126,8 +126,8 @@ const PropertyDeals = ({openRiskDiscModal}: any) => {
           return {
             id: deal?.id,
             [language?.v3?.table?.title]: deal?.title || "N/A",
-            [language?.v3?.table?.target]: `$${numberFormatter(
-              Number(deal?.target)
+            [language?.v3?.table?.target]: `${numberFormatter(
+              Number(deal?.target),DealCheckType.PROPERTY
             )}`,
             [language?.v3?.table?.stage]: deal?.title || "N/A",
             [language?.v3?.table?.round]: deal?.round,

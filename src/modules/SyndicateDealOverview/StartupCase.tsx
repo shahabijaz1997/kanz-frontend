@@ -293,7 +293,7 @@ useEffect (()=>
                   {"Deal Target"}
                 </h3>
                 <p className="text-neutral-900 font-normal text-sm capitalize">
-                  {comaFormattedNumber(parseFloat(deal?.selling_price).toFixed(0)) ||
+                  {numberFormatter(deal?.selling_price) ||
                     language?.v3?.common?.not_added}
                 </p>
               </div>
@@ -304,7 +304,7 @@ useEffect (()=>
                   {language?.v3?.table?.valuation}
                 </h3>
                 <p className="text-neutral-900 font-normal text-sm capitalize">
-                  ${comaFormattedNumber(parseFloat(deal?.valuation).toFixed(0))} ({deal?.valuation_type})
+                  ${numberFormatter((deal?.valuation))} ({deal?.valuation_type})
                 </p>
               </div>
             )}
@@ -373,7 +373,7 @@ useEffect (()=>
                   {language?.v3?.table?.target}
                 </h3>
                 <p className="text-neutral-900 font-normal text-sm capitalize">
-                  {numberFormatter(deal?.selling_price) ||
+                  ${comaFormattedNumber(deal?.selling_price) ||
                     language?.v3?.common?.not_added}
                 </p>
               </div>
@@ -386,7 +386,7 @@ useEffect (()=>
                 </h3>
                 <p className="text-neutral-900 font-normal text-sm capitalize">
                   {deal.terms[0]?.is_enabled
-                    ? deal.terms[0]?.value || "Yes"
+                    ? `$${comaFormattedNumber(deal.terms[0]?.value)}` || "Yes"
                     : "No"}
                 </p>
               </div>
@@ -470,7 +470,7 @@ useEffect (()=>
               {language?.v3?.table?.sellingPrice}
             </h3>
             <p className="text-neutral-900 font-normal text-sm capitalize">
-              {numberFormatter(deal?.selling_price) ||
+              ${comaFormattedNumber(deal?.selling_price) ||
                 language?.v3?.common?.not_added}
             </p>
           </div>
@@ -511,7 +511,7 @@ useEffect (()=>
               {language?.v3?.deal?.committed}
             </h3>
             <p className="text-neutral-900 font-normal text-sm capitalize">
-              {numberFormatter(deal?.committed)}
+              ${comaFormattedNumber(deal?.committed)}
             </p>
           </div>
         )}
@@ -531,7 +531,7 @@ useEffect (()=>
               {language?.v3?.deal?.raised}
             </h3>
             <p className="text-neutral-900 font-normal text-sm capitalize">
-              ${numberFormatter(deal?.raised)}
+              ${comaFormattedNumber(deal?.raised)}
             </p>
           </div>
         )}
@@ -1090,7 +1090,7 @@ useEffect (()=>
                     {"Commitment"}
                   </h2>
                   <p className="text-black font-medium text-lg">
-                    ${numberFormatter(deal?.my_invested_amount)}
+                    ${comaFormattedNumber(deal?.my_invested_amount)}
                   </p>
                 </div>
                 <div>
@@ -1112,7 +1112,7 @@ useEffect (()=>
                     {language?.v3?.common?.am_raised}
                   </h2>
                   <p className="text-black font-medium text-lg">
-                    ${numberFormatter(deal?.raised)}
+                    ${comaFormattedNumber(deal?.raised)}
                   </p>
                 </div>
               </aside>

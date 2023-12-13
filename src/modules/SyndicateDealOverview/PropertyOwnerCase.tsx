@@ -354,7 +354,7 @@ useEffect (()=>
                 Selling Price
               </h3>
               <p className="text-neutral-900 font-normal text-sm capitalize">
-                ${numberFormatter(deal?.selling_price)}
+                AED {comaFormattedNumber(deal?.selling_price)}
               </p>
             </div>
           </div>
@@ -399,7 +399,7 @@ useEffect (()=>
                 Property on a Rent
               </h3>
               <p className="text-neutral-900 font-normal text-sm capitalize">
-                ${numberFormatter(deal?.features?.rental_amount)} (
+                AED {comaFormattedNumber(deal?.features?.rental_amount)} (
                 {deal?.features?.rental_period})
               </p>
             </div>
@@ -857,7 +857,7 @@ useEffect (()=>
                     {"Commitment"}
                   </h2>
                   <p className="text-black font-medium text-lg">
-                    ${numberFormatter(deal?.my_invested_amount)}
+                    AED {comaFormattedNumber(deal?.my_invested_amount)}
                   </p>
                 </div>
                 <div>
@@ -882,7 +882,7 @@ useEffect (()=>
                     {language?.v3?.common?.am_raised}
                   </h2>
                   <p className="text-black font-medium text-lg">
-                    ${numberFormatter(deal?.raised)}
+                    AED {comaFormattedNumber(deal?.raised)}
                   </p>
                 </div>
               </aside>

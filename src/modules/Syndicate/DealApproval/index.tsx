@@ -112,7 +112,7 @@ const DealApproval = ({}: any) => {
             [language?.v3?.syndicate?.deals?.table?.end_date]:
               deal?.deal?.end_at || " N/A",
             [language?.v3?.syndicate?.deals?.table
-              ?.target]: `$${numberFormatter(Number(deal?.deal?.target))}`,
+              ?.target]: `${numberFormatter(Number(deal?.deal?.target), deal?.deal?.type)}`,
 
             Steps: deal?.current_state?.steps,
             [language?.v3?.table?.action]: (
