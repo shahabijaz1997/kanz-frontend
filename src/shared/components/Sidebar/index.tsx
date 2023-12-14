@@ -28,7 +28,7 @@ const Sidebar = ({ type }: any) => {
     },
     {
       id: 2,
-      title: language?.v3?.startup?.sidebar?.investor_updates,
+      title: "Investors",
       route: RoutesEnums.INVESTOR_UPDATES,
     },
     {

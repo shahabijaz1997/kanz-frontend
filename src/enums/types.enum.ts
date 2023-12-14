@@ -46,3 +46,8 @@ export enum DealPromotionType {
   CLASSIC = "classic",
   SYNDICATE = "syndicate",
 }
+export enum InputType {
+  CURRENCY = "currency",
+  PERCENT = "percent",
+  NUMERIC="numeric"
+}

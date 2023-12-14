@@ -3,7 +3,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
 import { RootState } from "../../redux-toolkit/store/store";
 import { getDealQuestion, postDealStep, submitDeal } from "../../apis/deal.api";
-import { DealType, FileType } from "../../enums/types.enum";
+import { DealCheckType, DealType, FileType } from "../../enums/types.enum";
 import {
   onResetFields,
   onResetOptions,
@@ -41,7 +41,6 @@ import CalendarIcon from "../../ts-icons/calendarIcon.svg";
 import { isValidUrl } from "../../utils/regex.utils";
 import { kebabCase } from "../../utils/string.utils";
 
-
 const CURRENCIES = ["USD", "AED"];
 
 const CreateDeal = () => {
@@ -59,7 +58,6 @@ const CreateDeal = () => {
   const dataHolder: any = useSelector(
     (state: RootState) => state.dataHolder.value
   );
-
 
   const dealData: any = useSelector(
     (state: RootState) => state.questionnaire.value
@@ -79,17 +77,20 @@ const CreateDeal = () => {
   const [open, setOpen]: any = useState(false);
   const [loading, setLoading] = useState(false);
   const [modalOpen, setModalOpen]: any = useState(null);
-  /* const [uspAdded, setUspAdded]: any = useState(false); */
-  
-
+  const [uspAdded, setUspAdded]: any = useState(false);
 
   useEffect(() => {
     setStep(Number(params?.id) || 1);
     getDealStepDetails();
   }, [params, step]);
-  
-
-
+  useEffect(() => {
+    if (step === 2) setUspAdded(false);
+    console.log("STEP", step);
+    console.log("PARAMs", params);
+    console.log("PAge was rerendere on basis of step and params");
+  }, [params, step]);
+/*   useEffect(()=>{
+  }) */
   /* UI Actions */
 
   const getDealStepDetails = async () => {
@@ -494,21 +495,22 @@ const CreateDeal = () => {
                 value={comaFormattedNumber(ques?.value)}
                 onInput={(e: any) => {
                   const enteredValue = e.target.value;
-                  let numericValue = (ques?.id == 49 || ques?.id == 5) ? enteredValue.replace(
-                    /[^0-9]|(\.(?=.*\.))/g,
-                    ""
-                  ) : enteredValue.replace(
-                    /[^0-9.]|(\.(?=.*\.))/g,
-                    "");
-                  
-                  if ( (ques?.id == 49 || ques?.id == 5)  && (numericValue == undefined || numericValue == 0.0 || numericValue == 0))
-                  {
-                    setShowZeroWarning(true)
+                  let numericValue =
+                    ques?.id == 49 || ques?.id == 5
+                      ? enteredValue.replace(/[^0-9]|(\.(?=.*\.))/g, "")
+                      : enteredValue.replace(/[^0-9.]|(\.(?=.*\.))/g, "");
+
+                  if (
+                    (ques?.id == 49 || ques?.id == 5) &&
+                    (numericValue == undefined ||
+                      numericValue == 0.0 ||
+                      numericValue == 0)
+                  ) {
+                    setShowZeroWarning(true);
+                  } else {
+                    setShowZeroWarning(false);
                   }
-                  else{
-                    setShowZeroWarning(false)
-                  }
-                  
+
                   if (
                     ques?.input_type === InputType.PERCENT &&
                     Number(e.target.value) > 100
@@ -561,32 +563,51 @@ const CreateDeal = () => {
               )}
             </div>
             {showZeroWarning && (
-            <span className="text-xs text-red-600">Amount cannot be zero.</span>
+              <span className="text-xs text-red-600">
+                Amount cannot be zero.
+              </span>
             )}
-            <ul className="inline-flex items-center gap-6 mt-3">
+            <ul className="inline-flex justify-between w-full items-center gap-6 mt-3">
               {React.Children.toArray(
-                ques?.suggestions.map((suggestion: any) => (
-                  <li
-                    onClick={() => {
-                      let elem: HTMLInputElement | any =
-                        document.getElementById(`num-${ques.id}`);
-                      elem.value = String(suggestion);
-                      dispatch(
-                        saveDealSelection({
-                          option: String(suggestion),
-                          question: ques,
-                          fields: dealData,
-                          lang: event,
-                          secIndex,
-                          step: dealData[step - 1],
-                        })
-                      );
-                    }}
-                    className="cursor-pointer py-2 px-3 h-9 w-24 bg-cbc-grey-sec rounded-md text-center text-sm font-normal text-neutral-900"
-                  >
-                    {numberFormatter(Number(suggestion))}&nbsp;{symbol}
-                  </li>
-                ))
+                ques?.suggestions.map((suggestion: any) => {
+                  let formattedNumber;
+                  if (ques.input_type === InputType.CURRENCY && metadata.dealType === KanzRoles.PROPERTY_OWNER) {
+                    formattedNumber = numberFormatter(
+                      suggestion,
+                      DealCheckType.PROPERTY
+                    );
+                  } else if (ques.input_type === InputType.CURRENCY && metadata.dealType === KanzRoles.STARTUP) {
+                    formattedNumber = numberFormatter(
+                      suggestion,
+                      DealCheckType.STARTUP
+                    );
+                  } else {
+                    formattedNumber = (suggestion) + '%';
+                  }
+
+                  return (
+                    <li
+                      onClick={() => {
+                        let elem: HTMLInputElement | any =
+                          document.getElementById(`num-${ques.id}`);
+                        elem.value = String(suggestion);
+                        dispatch(
+                          saveDealSelection({
+                            option: String(suggestion),
+                            question: ques,
+                            fields: dealData,
+                            lang: event,
+                            secIndex,
+                            step: dealData[step - 1],
+                          })
+                        );
+                      }}
+                      className="cursor-pointer py-2 px-3 h-9 w-30 bg-cbc-grey-sec rounded-md text-center text-sm font-normal text-neutral-900"
+                    >
+                      {formattedNumber}
+                    </li>
+                  );
+                })
               )}
             </ul>
           </section>
@@ -1271,7 +1292,9 @@ const CreateDeal = () => {
           data={{
             leftMenu: language?.v3?.deal?.create_deal,
             button: (
-              <button onClick={() => navigate(RoutesEnums.FUNDRAISER_DASHBOARD)}>
+              <button
+                onClick={() => navigate(RoutesEnums.FUNDRAISER_DASHBOARD)}
+              >
                 {" "}
                 <CrossIcon stroke="#171717" className="w-6 h-6" />
               </button>
@@ -1333,8 +1356,8 @@ const CreateDeal = () => {
                                       <div
                                         className="w-full inline-flex justify-end cursor-pointer"
                                         onClick={() => {
-                                          /* setUspAdded(false) */
-                                          dispatch(
+                                          /* setUspAdded(false)
+                                           */ dispatch(
                                             onResetFields({
                                               secIndex: section?.index,
                                               lang: event,
@@ -1393,7 +1416,7 @@ const CreateDeal = () => {
                                   <div className="w-full inline-flex justify-center items-center gap-2">
                                     <Button
                                       className="w-[100px] border-2 border-cyan-800"
-                                      onClick={() =>{
+                                      onClick={() => {
                                         dispatch(
                                           onResetFields({
                                             secIndex: section?.index,
@@ -1401,7 +1424,8 @@ const CreateDeal = () => {
                                             step: dealData[step - 1],
                                           })
                                         );
-                                        setShowCustomBox(false)}}
+                                        setShowCustomBox(false);
+                                      }}
                                     >
                                       {language?.v3?.button?.cancel}
                                     </Button>
@@ -1626,7 +1650,10 @@ const CreateDeal = () => {
                     </Button>
                     <Button
                       className="h-[38px] w-[140px]"
-                      disabled={!checkValidation() || showZeroWarning}
+                      disabled={
+                        !checkValidation() ||
+                        showZeroWarning /*  || !uspAdded */
+                      }
                       htmlType="submit"
                       loading={loading}
                       onClick={onSetNext}
