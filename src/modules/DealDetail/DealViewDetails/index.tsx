@@ -395,7 +395,7 @@ const DealViewDetails = ({ dealDetail, state }: any) => {
                     </h2>
                   </div>
 
-                  <div className="py-6 border-b-[2px]  border-b-neutral-200 border-t-[2px]  border-t-neutral-200 w-full inline-flex items-center justify-between">
+                  <div className="py-6 border-b-neutral-200 border-t-[2px]  border-t-neutral-200 w-full inline-flex items-center justify-between">
                     <h3 className="text-neutral-900 font-medium text-sm">
                       Price
                     </h3>
@@ -405,10 +405,9 @@ const DealViewDetails = ({ dealDetail, state }: any) => {
                   </div>
                 </div>
               )}
-              {dealDetail?.expected_dividend_yield &&
-                dealDetail?.expected_annual_return && (
-                  <div>
-                    {" "}
+              {dealDetail?.expected_dividend_yield !== 0.0 && dealDetail?.expected_dividend_yield &&
+                dealDetail?.expected_annual_return !== 0.0 && dealDetail?.expected_annual_return && (
+                  <div className="border-t-[2px]  border-b-neutral-200">
                     <div className="mt-10 mb-4">
                       <h2 className="text-black text-xl font-medium">
                         Expected Return

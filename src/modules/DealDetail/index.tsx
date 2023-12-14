@@ -210,6 +210,7 @@ const DealDetail = ({}: any) => {
           </section>
         )}
       </aside>
+      
     </main>
   );
 };
