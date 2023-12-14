@@ -169,7 +169,8 @@ const InvestmentCalculator = ({}: any) => {
                 </div>
                 <section>
                   <div className="flex justify-between">
-                    <div className=" mb-4 mt-10 font-medium border-[#155E75] border-[1px] rounded-xl w-[45%]">
+                    <div className=" mb-4 mt-10 font-medium w-[45%]">
+                      <div className=" border-[#155E75] border-[1px] rounded-xl">
                       <p className="px-5 pt-5 text-xl text-[#155E75] ">
                         Total return on investment
                       </p>
@@ -177,8 +178,14 @@ const InvestmentCalculator = ({}: any) => {
                         {" "}
                         <span>AED {comaFormattedNumber(parseFloat(finalValue.finalTotalReturn.toString()).toFixed(2))}</span>
                       </p>
+                      </div>
+                      <div className="grid px-2 mt-3 ">
+                      <p className="text-xl font-normal">Net Dividend Income</p>
+                      <p className="text-2xl font-bold">{comaFormattedNumber(parseFloat(finalValue.dividendComponent.toString()).toFixed(2))}</p>
                     </div>
-                    <div className=" mb-4 mt-10 font-medium border-[#155E75] border-[1px] rounded-xl w-[45%]">
+                    </div>
+                    <div className=" mb-4 mt-10 font-medium  w-[45%]">
+                      <div className="border-[#155E75] border-[1px] rounded-xl">
                       <p className="px-5 pt-5 text-xl text-[#155E75] ">
                       Average Annualised Return
                       </p>
@@ -186,18 +193,17 @@ const InvestmentCalculator = ({}: any) => {
                         {" "}
                         <span>{parseFloat(finalValue.averageAnnualizedReturn.toString()).toFixed(2)}%</span>
                       </p>
-                    </div>
-                  </div>
-                  <div className="w-full items-center justify-between flex px-3">
-                    <div className="grid px-2 ">
-                      <p className="text-xl">Net Dividend Income</p>
-                      <p className="text-2xl font-bold">{comaFormattedNumber(parseFloat(finalValue.dividendComponent.toString()).toFixed(2))}</p>
-                    </div>
-                    <div className="grid px-2">
+                      </div>
+                      <div className="grid mt-3 px-2">
                       {" "}
-                      <p className="text-xl">Expected Capital Appreciation</p>{" "}
+                      <p className="text-xl font-normal">Expected Capital Appreciation</p>{" "}
                       <p className="text-2xl font-bold">{comaFormattedNumber(parseFloat(finalValue.finalCapitalAppreciation.toString()).toFixed(2))}</p>
                     </div>
+                    </div>
+                  </div>
+                  <div className="w-full items-center justify-between flex">
+                    
+                   
                   </div>
                 </section>
               </section>
