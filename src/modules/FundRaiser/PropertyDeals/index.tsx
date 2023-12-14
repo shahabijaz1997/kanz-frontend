@@ -32,12 +32,13 @@ const PropertyDeals = ({openPropertyRiskModal}: any) => {
   const dispatch = useDispatch();
   const columns = [
     language?.v3?.table?.title,
-    "Model",
     language?.v3?.table?.status,
+    "Model",
     "Size",
     "State",
     "City",
     "Selling Price",
+    "End Date",
     language?.v3?.table?.action,
   ];
   const [pagination, setPagination] = useState({
@@ -131,6 +132,7 @@ const PropertyDeals = ({openPropertyRiskModal}: any) => {
             ["Size"]: `${deal?.size ? `${deal.size} SQFT` : "N/A"}`,
             ["State"]: deal?.state || "N/A",
             ["City"]: deal?.city || "N/A",
+            ["End Date"]: deal?.end_at || "N/A",
             [language?.v3?.table?.status]: (
               <CustomStatus options={deal?.status} />
             ),

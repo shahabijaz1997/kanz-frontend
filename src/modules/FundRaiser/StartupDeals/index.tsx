@@ -35,11 +35,12 @@ const StartupDeals = ({openRiskDiscModal }: any) => {
 
   const columns = [
     language?.v3?.table?.title,
-    "Model",
     language?.v3?.table?.status,
+    "Model",
     language?.v3?.table?.stage,
     language?.v3?.table?.round,
     language?.v3?.table?.target,
+    "End Date",
     language?.v3?.table?.action,
   ];
 
@@ -147,10 +148,11 @@ const StartupDeals = ({openRiskDiscModal }: any) => {
               Number(deal?.target), DealCheckType.STARTUP
             )}`,
             [language?.v3?.table?.stage]: deal?.title || "N/A",
-            [language?.v3?.table?.round]: deal?.round,
+            [language?.v3?.table?.round]: deal?.round || "N/A",
             [language?.v3?.table?.status]: (
               <CustomStatus options={deal?.status} />
             ),
+            ["End Date"]:deal?.end_at || "N/A",
             [language?.v3?.table?.type]: (<span className=" capitalize">{deal?.deal_type}</span>),
             State: deal?.current_state,
             token: deal?.token,
