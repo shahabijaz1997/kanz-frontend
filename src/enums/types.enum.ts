@@ -49,5 +49,6 @@ export enum DealPromotionType {
 export enum InputType {
   CURRENCY = "currency",
   PERCENT = "percent",
-  NUMERIC="numeric"
+  NUMERIC="numeric",
+  SQFT="sqft"
 }

@@ -34,7 +34,8 @@ const FundRaiserFlow = ({ }: any) => {
   const [payload, setPayload]: any = useState({
     company: "",
     legal: "",
-    country: "",
+    residence: "",
+    nationality:"",
     market: [],
     web: "",
     address: "",
@@ -94,6 +95,12 @@ const FundRaiserFlow = ({ }: any) => {
       setLoad(false);
     }
   };
+  useEffect(()=>{
+    console.log("COUNTRIES", countries)
+    console.log("MetaDATA", metadata)
+    console.log("payload", payload)
+
+  }, [payload])
 
   useLayoutEffect(() => {
     setStep(Number(params?.id) || 1);
@@ -104,8 +111,11 @@ const FundRaiserFlow = ({ }: any) => {
       ...payload,
       company: metadata?.profile?.company_name,
       legal: metadata?.profile?.legal_name,
-      country: {
-        name: metadata?.profile ? metadata?.profile[event]?.country : null,
+      residence: {
+        name: metadata?.profile ? metadata?.profile[event]?.residence : null,
+      },
+      nationality: {
+        name: metadata?.profile ? metadata?.profile[event]?.nationality : null,
       },
       market: metadata?.profile?.industry_ids || [],
       web: metadata?.profile?.website,
@@ -151,14 +161,14 @@ const FundRaiserFlow = ({ }: any) => {
   const ontoNextStep = () => {
     if (step === 1) {
       let errors = [];
-      if (!payload.company || !payload.legal || !payload.market.length || !payload.web || !payload.address || !payload.country)
+      if (!payload.company || !payload.legal || !payload.market.length || !payload.web || !payload.address || !payload.residence || !payload.nationality)
         errors.push(language.promptMessages.pleaseSelectAllData)
       if (!isValidUrl(payload.web)) errors.push(language.promptMessages.validComp);
       toast.dismiss();
       if (errors.length) return errors?.forEach(e => toast.warning(e, toastUtil));
     } else {
       let errors = [];
-      if (!payload.company || !payload.legal || !payload.country || !payload.market.length || !payload.address || !payload.web || !payload.name || !payload.email || !payload.logo || !payload.business || !payload.raised || !payload.target) {
+      if (!payload.company || !payload.legal || !payload.residence || !payload.nationality || !payload.market.length || !payload.address || !payload.web || !payload.name || !payload.email || !payload.logo || !payload.business || !payload.raised || !payload.target) {
         errors.push(language.promptMessages.pleaseSelectAllData);
       }
       if (!isValidEmail(payload.email)) errors.push(language.promptMessages.invalidEmailCeo)
@@ -177,14 +187,16 @@ const FundRaiserFlow = ({ }: any) => {
   const onPostCompanyData = async () => {
     try {
       setLoading(true);
-      let _country: any = countries.all.find((x: any) => x[event].name === payload.country.name);
-
+      let _residence: any = countries.all.find((x: any) => x[event].name === payload.residence.name);
+      let _nationality: any = countries.all.find((x: any) => x[event].name === payload.nationality.name);
+      console.log("COUNTRY CHECKING HERE", _residence)
       const form: any = new FormData();
       if (Number(step) === 1) {
         form.append("fund_raiser_profile[step]", step);
         form.append("fund_raiser_profile[company_name]", payload.company);
         form.append("fund_raiser_profile[legal_name]", payload.legal);
-        form.append("fund_raiser_profile[residence_id]", payload.country?.id || _country?.id);
+        form.append("fund_raiser_profile[residence_id]", payload.residence?.id || _residence?.id);
+        form.append("fund_raiser_profile[nationality_id]", payload.nationality?.id || _nationality?.id);
         payload.market?.forEach((val: any) => {
           form.append("fund_raiser_profile[industry_ids][]", val);
         });
@@ -194,7 +206,8 @@ const FundRaiserFlow = ({ }: any) => {
         form.append("fund_raiser_profile[step]", step);
         form.append("fund_raiser_profile[company_name]", payload.company);
         form.append("fund_raiser_profile[legal_name]", payload.legal);
-        form.append("fund_raiser_profile[residence_id]", payload.country?.id || _country?.id);
+        form.append("fund_raiser_profile[residence_id]", payload.residence?.id || _residence?.id);
+        form.append("fund_raiser_profile[nationality_id]", payload.nationality?.id || _nationality?.id);
         payload.market?.forEach((val: any) => {
           form.append("fund_raiser[industry_ids][]", val);
         });
