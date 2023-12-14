@@ -444,7 +444,7 @@ const ManageGroup = ({  }: any) => {
               </Button> : <Button
                 divStyle="items-center justify-end max-w-fit"
                 type="outlined"
-                className="!p-3 !py-1 !rounded-full"
+                className="!p-2 !py-[1px] !border-[#D4D4D4] !border-[1px] !text-[#737373]  !shadow-none !rounded-full"
               >
                 Added
               </Button>  }

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import {  useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { KanzRoles } from "../../enums/roles.enum";
 import { RootState } from "../../redux-toolkit/store/store";
 import Header from "../../shared/components/Header";
@@ -22,10 +22,7 @@ import {
   numberFormatter,
   timeAgo,
 } from "../../utils/object.utils";
-import {
-  DealStatus,
-  FileType,
-} from "../../enums/types.enum";
+import { DealStatus, FileType } from "../../enums/types.enum";
 import {
   addCommentOnDeal,
   getDealDetail,
@@ -44,7 +41,13 @@ import Investors from "./DealInvestors";
 
 const CURRENCIES = ["USD", "AED"];
 
-const StartupCase = ({ dealToken, dealDetail, docs, returnPath, pitchDeck }: any) => {
+const StartupCase = ({
+  dealToken,
+  dealDetail,
+  docs,
+  returnPath,
+  pitchDeck,
+}: any) => {
   const navigate = useNavigate();
   const language: any = useSelector((state: RootState) => state.language.value);
   const authToken: any = useSelector((state: RootState) => state.auth.value);
@@ -63,7 +66,6 @@ const StartupCase = ({ dealToken, dealDetail, docs, returnPath, pitchDeck }: any
   const [disableUpload, setdisableUpload]: any = useState(false);
   const [modalOpenComment, setmodalOpenComment]: any = useState(null);
 
-
   const [investmentAmount, setAmount] = useState();
   const [selectedCurrency, setSelectedCurrency] = useState("USD");
 
@@ -80,12 +82,11 @@ const StartupCase = ({ dealToken, dealDetail, docs, returnPath, pitchDeck }: any
     document: null,
   });
 
-
   const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file: any = e.target.files?.[0];
     if (file) {
       const fileSizeInMB = fileSize(file.size, "mb");
-  
+
       if (fileSizeInMB > 10) {
         toast.error("File size should be less than 10MB", toastUtil);
         navigator.vibrate(1000);
@@ -95,8 +96,6 @@ const StartupCase = ({ dealToken, dealDetail, docs, returnPath, pitchDeck }: any
       e.target.value = "";
     }
   };
-
-
 
   const setFileInformation = async (file: File) => {
     let size = fileSize(file.size, "mb");
@@ -132,10 +131,9 @@ const StartupCase = ({ dealToken, dealDetail, docs, returnPath, pitchDeck }: any
     }, 1000);
   };
 
-useEffect (()=>
-{
-  deal && (deal?.invite ? setInvited(true) : setInvited(false)) 
-})
+  useEffect(() => {
+    deal && (deal?.invite ? setInvited(true) : setInvited(false));
+  });
 
   const numberInputUI = () => {
     let placeholder = currency === 0 ? "$ 0.00" : "0.00 د.إ";
@@ -187,12 +185,12 @@ useEffect (()=>
       setLoading(false);
     }
   };
-  const onDownloadDocument = async (documentID:any, authToken:any) => {
+  const onDownloadDocument = async (documentID: any, authToken: any) => {
     try {
       setLoading(true);
       let { status, data } = await getDownloadDocument(documentID, authToken);
       if (status === 200) {
-        window.open(data?.status?.data)
+        window.open(data?.status?.data);
       }
     } catch (error) {
     } finally {
@@ -304,7 +302,7 @@ useEffect (()=>
                   {language?.v3?.table?.valuation}
                 </h3>
                 <p className="text-neutral-900 font-normal text-sm capitalize">
-                  ${numberFormatter((deal?.valuation))} ({deal?.valuation_type})
+                  ${numberFormatter(deal?.valuation)} ({deal?.valuation_type})
                 </p>
               </div>
             )}
@@ -373,7 +371,8 @@ useEffect (()=>
                   {language?.v3?.table?.target}
                 </h3>
                 <p className="text-neutral-900 font-normal text-sm capitalize">
-                  ${comaFormattedNumber(deal?.selling_price) ||
+                  $
+                  {comaFormattedNumber(deal?.selling_price) ||
                     language?.v3?.common?.not_added}
                 </p>
               </div>
@@ -470,7 +469,8 @@ useEffect (()=>
               {language?.v3?.table?.sellingPrice}
             </h3>
             <p className="text-neutral-900 font-normal text-sm capitalize">
-              ${comaFormattedNumber(deal?.selling_price) ||
+              $
+              {comaFormattedNumber(deal?.selling_price) ||
                 language?.v3?.common?.not_added}
             </p>
           </div>
@@ -632,8 +632,6 @@ useEffect (()=>
     );
   };
 
-
-
   const syndicateInvestment = async () => {
     try {
       setLoading(true);
@@ -654,7 +652,7 @@ useEffect (()=>
         toast.warning(error?.response?.data?.status?.message, toastUtil);
     } finally {
       setLoading(false);
-      onGetdeal()
+      onGetdeal();
     }
   };
 
@@ -726,11 +724,10 @@ useEffect (()=>
     } finally {
       onGetdeal();
       setLoading(false);
-      setModalOpen3(false)
+      setModalOpen3(false);
       setChanges({ comment: "", action: "", document: null });
     }
   };
-
 
   return (
     <main className="h-full relative max-h-full overflow-y-hidden">
@@ -771,13 +768,12 @@ useEffect (()=>
               >
                 <Chevrond stroke="#000" className="rotate-90 w-4 h-4" />
                 <small className="text-neutral-500 text-sm font-medium">
-                  
-                  { returnPath === RoutesEnums.INVESTOR_DEALS && ("Deals")}
-                  { returnPath === RoutesEnums.SYNDICATE_DASHBOARD && ("Dashboard")}
-                  { returnPath === RoutesEnums.SYNDICATE_INVESTMENTS && ("Investments")}
-                  { returnPath === RoutesEnums.DEAL_APPROVAL && ("Deal Approval")}
-                  
-                  
+                  {returnPath === RoutesEnums.INVESTOR_DEALS && "Deals"}
+                  {returnPath === RoutesEnums.SYNDICATE_DASHBOARD &&
+                    "Dashboard"}
+                  {returnPath === RoutesEnums.SYNDICATE_INVESTMENTS &&
+                    "Investments"}
+                  {returnPath === RoutesEnums.DEAL_APPROVAL && "Deal Approval"}
                 </small>
               </div>
               <div className="w-full inline-flex flex-col pb-8 items-start gap-2">
@@ -795,7 +791,7 @@ useEffect (()=>
                 }}
               >
                 <h1 className="text-black font-medium text-2xl">
-                  {"Deck"}
+                  {"Investor Presentation or Pitch Deck"}
                 </h1>
                 <Button type="outlined">{language?.v3?.button?.new_tab}</Button>
               </div>
@@ -942,24 +938,33 @@ useEffect (()=>
                 </div>
               </section>
               <div className="mb-4 mt-10">
-              {deal?.invite?.status !== DealStatus.ACCEPTED && (
-                          <React.Fragment>  
-                          {deal?.invite ? (
-                            <Button  className="w-full" onClick={() => setModalOpen2(true)}>
-                              {language?.v3?.button?.interested}
-                            </Button>
-                          ) :  <Button className="w-full" onClick={() => setModalOpenSyndication(true)}>
-                          {"Request Syndication"}
-                        </Button> }
-                        </React.Fragment>
+              {user.type.toLowerCase() === "syndicate" &&
+                deal?.status !== DealStatus.LIVE && (
+                  <div className="w-full inline-flex justify-end gap-4">
+                    {deal?.invite?.status !== DealStatus.ACCEPTED && (
+                      <div className="w-full">
+                        {deal?.invite ? (
+                          <Button className="w-full" onClick={() => setModalOpen2(true)}>
+                            {language?.v3?.button?.interested}
+                          </Button>
+                        ) : (
+                          <Button className="w-full" onClick={() => setModalOpenSyndication(true)}>
+                            {"Request Syndication"}
+                          </Button>
+                        )}
+                      </div>
                     )}
+                  </div>
+                )}
               </div>
 
-              {deal && user.type.toLowerCase() === "syndicate" && deal?.current_deal_syndicate && (
-                <div className="w-full mt-8 mb-4">
-                <Investors dealID={deal?.id} dealCreatorView={false}/>
-                </div>
-              )}
+              {deal &&
+                user.type.toLowerCase() === "syndicate" &&
+                deal?.current_deal_syndicate && (
+                  <div className="w-full mt-8 mb-4">
+                    <Investors dealID={deal?.id} dealCreatorView={false} />
+                  </div>
+                )}
             </section>
 
             {/* Invisible Section */}
@@ -977,7 +982,8 @@ useEffect (()=>
             <section className="w-[30%]">
               {/* Show/Hide based on some conditions */}
               {user.type.toLowerCase() === "syndicate" &&
-                deal?.status === DealStatus.LIVE && deal?.current_deal_syndicate && (
+                deal?.status === DealStatus.LIVE &&
+                deal?.current_deal_syndicate && (
                   <div className="w-full inline-flex justify-end gap-4">
                     <div className="relative z-10">
                       <InvitesListing
@@ -994,31 +1000,35 @@ useEffect (()=>
                   <div className="w-full inline-flex justify-end gap-4">
                     {deal?.invite?.status !== DealStatus.ACCEPTED && (
                       <React.Fragment>
-                        <Button
-                          type="outlined"
-                          onClick={() => setModalOpen(true)}
-                        >
-                          {language?.v3?.button?.req_change}
-                        </Button>
                         {deal?.invite ? (
-                          <Button onClick={() => setModalOpen2(true)}>
-                            {language?.v3?.button?.interested}
+                          <>
+                            <Button
+                              type="outlined"
+                              onClick={() => setModalOpen(true)}
+                            >
+                              {language?.v3?.button?.req_change}
+                            </Button>
+                            <Button onClick={() => setModalOpen2(true)}>
+                              {language?.v3?.button?.interested}
+                            </Button>
+                          </>
+                        ) : (
+                          <Button onClick={() => setModalOpenSyndication(true)}>
+                            {"Request Syndication"}
                           </Button>
-                        ) :  <Button onClick={() => setModalOpenSyndication(true)}>
-                        {"Request Syndication"}
-                      </Button> }
+                        )}
                       </React.Fragment>
                     )}
                   </div>
                 )}
               <aside className="border-[1px] border-neutral-200 rounded-md w-full px-3 pt-3 mt-5 bg-white">
-              <h2 className="text-neutral-700 text-xl font-medium">
+                <h2 className="text-neutral-700 text-xl font-medium">
                   {language?.v3?.common?.invest_details}
                 </h2>
                 <small className="text-neutral-500 text-sm font-normal">
                   {language?.v3?.common?.end_on} {deal?.end_at}
                 </small>
-                {deal?.status === DealStatus.LIVE && !deal?.is_invested &&(
+                {deal?.status === DealStatus.LIVE && !deal?.is_invested && (
                   <aside className="">
                     <section className="mb-4 mt-1">
                       <div className="border-neutral-500 border-[1px] rounded-md min-w-full bg-white px-2 justify-between flex">
@@ -1068,40 +1078,45 @@ useEffect (()=>
                     </section>
                   </aside>
                 )}
-             
+
                 {getRoleBasedUI()}
               </aside>
-              {deal?.is_invested && (   
+              {deal?.is_invested && (
                 <div className="">
-                <aside className="border-[1px] bg-white border-neutral-200 rounded-md  w-full p-3 mt-5 items-center gap-3">
-                <div className="rounded-md text-md font-semibold inline-grid place-items-center">
-                  {"Your commitment"}
+                  <aside className="border-[1px] bg-white border-neutral-200 rounded-md  w-full p-3 mt-5 items-center gap-3">
+                    <div className="rounded-md text-md font-semibold inline-grid place-items-center">
+                      {"Your commitment"}
+                    </div>
+                    <div className="rounded-md text-xs inline-grid place-items-center">
+                      {"You’re not able to reverse the commitment after date"}
+                    </div>
+                    <aside className="border-t-[2px] border-neutral-200 w-full p-3 mt-5 inline-flex items-center gap-3">
+                      <div className="h-8 w-8 rounded-md bg-cbc-grey-sec inline-grid place-items-center">
+                        <img src={CurrencySVG} alt="Currency" />
+                      </div>
+                      <div className="flex items-center justify-between w-full">
+                        <div>
+                          <h2 className="text-neutral-900 font-normal text-sm">
+                            {"Commitment"}
+                          </h2>
+                          <p className="text-black font-medium text-lg">
+                            ${comaFormattedNumber(deal?.my_invested_amount)}
+                          </p>
+                        </div>
+                        <div>
+                          <Button
+                            onClick={() => {}}
+                            className="!py-1 !px-2 !font-medium !rounded-full border-[1px] border-black !text-xs"
+                            type="outlined"
+                          >
+                            Reverse
+                          </Button>
+                        </div>
+                      </div>
+                    </aside>
+                  </aside>
                 </div>
-                <div className="rounded-md text-xs inline-grid place-items-center">
-                  {"You’re not able to reverse the commitment after date"}
-                </div>
-                  <aside className="border-t-[2px] border-neutral-200 w-full p-3 mt-5 inline-flex items-center gap-3">
-                <div className="h-8 w-8 rounded-md bg-cbc-grey-sec inline-grid place-items-center">
-                  <img src={CurrencySVG} alt="Currency" />
-                </div>
-                  <div className="flex items-center justify-between w-full">    
-                <div>
-                  <h2 className="text-neutral-900 font-normal text-sm">
-                    {"Commitment"}
-                  </h2>
-                  <p className="text-black font-medium text-lg">
-                    ${comaFormattedNumber(deal?.my_invested_amount)}
-                  </p>
-                </div>
-                <div>
-                  <Button onClick={()=>{
-
-                  }} className="!py-1 !px-2 !font-medium !rounded-full border-[1px] border-black !text-xs" type="outlined">Reverse</Button>
-                </div>
-                </div>
-              </aside>
-              </aside>
-                </div>)}
+              )}
               <aside className="border-[1px] border-neutral-200 rounded-md w-full p-3 mt-5 inline-flex bg-white items-center gap-3 bg-white">
                 <div className="h-8 w-8 rounded-md bg-cbc-grey-sec inline-grid place-items-center">
                   <img src={CurrencySVG} alt="Currency" />
@@ -1123,25 +1138,23 @@ useEffect (()=>
                       return (
                         <section className="rounded-md bg-white px-3 py-1 inline-flex items-center justify-between w-full border-[1px] border-neutral-200 mb-2">
                           <span className="inline-flex items-center w-[80%]">
-                            <div 
-                             onClick={() => {
-                              window.open(doc?.url, "_blank");
-                            }}
-                             className="bg-white  h-14 inline-flex justify-center flex-col  cursor-pointer w-full">
-                              <h4
-                           className="text-md font-medium  max-w-full truncate"
-                           title={doc?.name}
-                         >
-                           {doc?.name}
-                              </h4>
-                              <h2
-                              className="inline-flex items-center text-sm  gap-1 max-w-[200px] "
-                             
+                            <div
+                              onClick={() => {
+                                window.open(doc?.url, "_blank");
+                              }}
+                              className="bg-white  h-14 inline-flex justify-center flex-col  cursor-pointer w-full"
                             >
-                              <div className="text-xs text-black text-neutral-500 font-medium ">
-                                {language?.v3?.button?.view}
-                              </div>
-                              <ArrowIcon stroke="#000" />
+                              <h4
+                                className="text-md font-medium  max-w-full truncate"
+                                title={doc?.name}
+                              >
+                                {doc?.name}
+                              </h4>
+                              <h2 className="inline-flex items-center text-sm  gap-1 max-w-[200px] ">
+                                <div className="text-xs text-black text-neutral-500 font-medium ">
+                                  {language?.v3?.button?.view}
+                                </div>
+                                <ArrowIcon stroke="#000" />
                               </h2>
                             </div>
                           </span>
@@ -1149,7 +1162,7 @@ useEffect (()=>
                           <div
                             className="h-10 w-10 rounded-lg inline-flex items-center flex-row justify-center gap-2 bg-white cursor-pointer border-[1px] border-neutral-200"
                             onClick={() => {
-                              onDownloadDocument(doc?.id, authToken)
+                              onDownloadDocument(doc?.id, authToken);
                             }}
                           >
                             <DownloadIcon />
@@ -1329,8 +1342,20 @@ useEffect (()=>
           style={{ backgroundColor: "rgba(0, 0, 0, 0.078" }}
         >
           <aside className="bg-white w-[400px] rounded-md h-full">
-            <section className="py-3 px-10">
-              <div className="mb-6 pt-5 text-center">
+          <header className=" inline-flex w-full justify-end items-center py-1 px-2">
+                <div
+                  className="bg-white h-8 w-8 border-[1px] border-black rounded-md shadow  cursor-pointer"
+                  onClick={() => {
+                    setModalOpen2(false);
+                    setChanges({ comment: "", action: "", document: null });
+                    // setFiles([]);
+                  }}
+                >
+                  <CrossIcon stroke="#000" />
+                </div>
+              </header>
+            <section className="py-2 px-10">
+              <div className="mb-6  text-center">
                 <label
                   htmlFor=""
                   className="text-neutral-900 text-center font-bold text-xl"
@@ -1374,8 +1399,9 @@ useEffect (()=>
                   Request for syndication!
                 </label>
                 <p className="pt-5">
-                  You can request for syndication on this deal. You can upload the
-                  required document. Click “Continue” to upload the documents
+                  You can request for syndication on this deal. You can upload
+                  the required document. Click “Continue” to upload the
+                  documents
                 </p>
               </div>
             </section>
@@ -1405,6 +1431,16 @@ useEffect (()=>
               <h3 className="text-xl font-medium text-neutral-700">
                 Deal Approval
               </h3>
+              <div
+                className="bg-white h-8 w-8 border-[1px] border-black rounded-md shadow shadow-cs-6 p-1 cursor-pointer"
+                onClick={() => {
+                  setModalOpen3(false);
+                  setChanges({ comment: "", action: "", document: null });
+                  // setFiles([]);
+                }}
+              >
+                <CrossIcon stroke="#000" />
+              </div>
             </header>
 
             <section className="py-3 px-4">
@@ -1431,7 +1467,9 @@ useEffect (()=>
                     onChange={handleFileUpload}
                   />
                 </span>
-                <span className={`px-2 text-[0.55rem] font-light`}>Upload a file PNG, JPG, PDF up to 10MB</span>
+                <span className={`px-2 text-[0.55rem] font-light`}>
+                  Upload a file PNG, JPG, PDF up to 10MB
+                </span>
               </div>
               <div className="mb-3 w-full">
                 {React.Children.toArray(
@@ -1480,7 +1518,7 @@ useEffect (()=>
                 divStyle="flex items-center justify-center w-full"
                 onClick={() => {
                   setdisableUpload(true);
-                  invited ? postSignOff() : syndicationRequest()
+                  invited ? postSignOff() : syndicationRequest();
                 }}
               >
                 {language.buttons.submit}
@@ -1489,7 +1527,6 @@ useEffect (()=>
           </aside>
         </div>
       </Modal>
- 
     </main>
   );
 };

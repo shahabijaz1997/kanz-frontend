@@ -35,7 +35,7 @@ const StartupDeals = ({openRiskDiscModal }: any) => {
 
   const columns = [
     language?.v3?.table?.title,
-    language?.v3?.table?.type,
+    "Model",
     language?.v3?.table?.status,
     language?.v3?.table?.stage,
     language?.v3?.table?.round,
@@ -60,8 +60,6 @@ const StartupDeals = ({openRiskDiscModal }: any) => {
   const [filter, setFilterCounts]:any = useState([]);
   const [selectedTab, setSelectedTab] = useState("All");
   const [warningModal, setwarningModal]: any = useState(null);
-  const [selected, setSelected]: any = useState(sectionTabs[0]);
-  const [dealTypeCheck,setDealTypeCheck]:any = useState("")
   const [tabs] = useState([
     language?.v3?.startup?.overview?.all,
     "Draft",
@@ -144,6 +142,7 @@ const StartupDeals = ({openRiskDiscModal }: any) => {
           return {
             id: deal?.id,
             [language?.v3?.table?.title]: deal?.title || "N/A",
+            ["Model"]: (<span className=" capitalize">{deal?.model}</span>) || "N/A",
             [language?.v3?.table?.target]: `${numberFormatter(
               Number(deal?.target), DealCheckType.STARTUP
             )}`,

@@ -164,10 +164,12 @@ const SyndicateRequest = ({}: any) => {
   const onAddCommentOnDeal = async (id: any) => {
     try {
       setLoading(true);
-      let payload = {
-        message: changes.comment,
-        thread_id: dealDetail?.comments[0]?.id,
-      };
+      let payload ={
+        comment: {
+          message: changes.comment,
+          thread_id: dealDetail?.comments[0]?.id,
+        }
+      } ;
       let { status, data } = await addCommentOnDeal(id, authToken, payload);
       if (status === 200) {
         setModalOpen(false);
@@ -507,6 +509,7 @@ const SyndicateRequest = ({}: any) => {
                               >
                                 <div
                                   onClick={() => {
+                                    console.log("Open in new tab")
                                     window.open(documents?.url, "_blank");
                                   }}
                                   className="text-sm text-black font-medium "
@@ -527,6 +530,7 @@ const SyndicateRequest = ({}: any) => {
                           <div
                             className="h-10 w-10 rounded-lg inline-flex items-center flex-row justify-center gap-2 bg-white cursor-pointer border-[1px] border-neutral-200"
                             onClick={() => {
+                              console.log("Download Clicked")
                               onDownloadDocument(documents?.id,authToken)
                             }}
                           >

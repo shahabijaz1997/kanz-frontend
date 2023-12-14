@@ -20,8 +20,10 @@ export const filterObjectsByTrueValue = (objectsArray: any, key: any) => {
     .map((obj1: any) => obj1.id);
 };
 
-export const numberFormatter = (number: number, dealType: string | null = null) => {
-  console.log("DealTYPE CHECKING HERE IN THE OBJECT UTILS", dealType)
+export const numberFormatter = (
+  number: number,
+  dealType: string | null = null
+) => {
   if (isNaN(number) || !number) return 0;
   let formattedNumber = "";
   if (number >= 1000000000) {
@@ -33,18 +35,23 @@ export const numberFormatter = (number: number, dealType: string | null = null) 
   } else {
     formattedNumber = number.toString();
   }
-
-  if (dealType !== null || dealType!==undefined || dealType!== '') {
+  if (dealType === null || dealType === undefined) {
+    return formattedNumber;
+  }
+  if (dealType !== null || dealType !== undefined) {
     if (dealType === DealCheckType.STARTUP) {
       formattedNumber = `$${formattedNumber}`;
     } else {
       formattedNumber = `AED ${formattedNumber}`;
     }
   }
-
+  console.log("Deal Type", dealType);
   return formattedNumber;
 };
-export const comaFormattedNumber = (value: any, dealType: string | null = null) => {
+export const comaFormattedNumber = (
+  value: any,
+  dealType: string | null = null
+) => {
   if (!value || isNaN(Number(value))) return value;
   const formattedValue = String(value).replace(/\B(?=(\d{3})+(?!\d))/g, ",");
   if (dealType !== null) {
@@ -116,7 +123,6 @@ export const timeAgo = (created_at: string) => {
   const hours = Math.floor(minutes / 60);
   const days = Math.floor(hours / 24);
   const months = Math.floor(days / 30);
- 
 
   if (months >= 1) {
     return months + " month" + (months > 1 ? "s" : "") + " ago";

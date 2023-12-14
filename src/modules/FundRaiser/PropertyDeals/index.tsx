@@ -22,7 +22,7 @@ import SearchIcon from "../../../ts-icons/searchIcon.svg";
 import EditDealWarningModal from "../EditDealWarningModal";
 import { saveUserMetaData } from "../../../redux-toolkit/slicer/metadata.slicer";
 
-const PropertyDeals = ({openRiskDiscModal}: any) => {
+const PropertyDeals = ({openPropertyRiskModal}: any) => {
   const [loading, setLoading] = useState(false);
   const language: any = useSelector((state: RootState) => state.language.value);
   const authToken: any = useSelector((state: RootState) => state.auth.value);
@@ -32,11 +32,12 @@ const PropertyDeals = ({openRiskDiscModal}: any) => {
   const dispatch = useDispatch();
   const columns = [
     language?.v3?.table?.title,
-    language?.v3?.table?.type,
+    "Model",
     language?.v3?.table?.status,
-    language?.v3?.table?.stage,
-    language?.v3?.table?.round,
-    language?.v3?.table?.target,
+    "Size",
+    "State",
+    "City",
+    "Selling Price",
     language?.v3?.table?.action,
   ];
   const [pagination, setPagination] = useState({
@@ -126,18 +127,17 @@ const PropertyDeals = ({openRiskDiscModal}: any) => {
           return {
             id: deal?.id,
             [language?.v3?.table?.title]: deal?.title || "N/A",
-            [language?.v3?.table?.target]: `${numberFormatter(
-              Number(deal?.target),DealCheckType.PROPERTY
-            )}`,
-            [language?.v3?.table?.stage]: deal?.title || "N/A",
-            [language?.v3?.table?.round]: deal?.round,
+            ["Selling Price"]: `${numberFormatter(deal.target,DealCheckType.PROPERTY)}`,
+            ["Size"]: `${deal?.size ? `${deal.size} SQFT` : "N/A"}`,
+            ["State"]: deal?.state || "N/A",
+            ["City"]: deal?.city || "N/A",
             [language?.v3?.table?.status]: (
               <CustomStatus options={deal?.status} />
             ),
-            [language?.v3?.table?.type]: (
-              <span className=" capitalize">{deal?.deal_type}</span>
+            ["Model"]: (
+              <span className=" capitalize">{deal?.model}</span>
             ),
-            State: deal?.current_state,
+            
             token: deal?.token,
             Steps: deal?.current_state?.steps,
             [language?.v3?.table?.action]: (
@@ -324,7 +324,7 @@ const PropertyDeals = ({openRiskDiscModal}: any) => {
                       dealType: KanzRoles.PROPERTY_OWNER,
                     })
                   );
-                  openRiskDiscModal()
+                  openPropertyRiskModal()
                 }}
                 
                  className="absolute left-1/2 top-1/2 translate-x-[-50%] translate-y-[-50%]">
