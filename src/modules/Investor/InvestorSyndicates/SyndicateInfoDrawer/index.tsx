@@ -174,7 +174,7 @@ const SyndicateInfoDrawer = ({
                 <div className="rounded-md border-[1.75px] border-[#404040] w-full pl-3 py-3">
                   <div className=" text-[#737373]">Total deals</div>
                   <div className="mt-2 font-bold text-xl">
-                    {syndicateInfo?.total_deals}
+                    {syndicateInfo?.total_deals || "N/A"}
                   </div>
                 </div>
                 <div className="rounded-md border-[1.75px] border-[#404040] w-full pl-3 ml-16 py-3">
@@ -189,7 +189,7 @@ const SyndicateInfoDrawer = ({
                     </span>
                   </div>
                   <div className="mt-2 font-bold text-xl">
-                    {syndicateInfo?.active_deals}
+                    {syndicateInfo?.active_deals || "N/A"}
                   </div>
                 </div>
                 
@@ -198,7 +198,7 @@ const SyndicateInfoDrawer = ({
                 <div className="rounded-md border-[1.75px] border-[#404040] w-full pl-3 py-3">
                   <div className=" text-[#737373]">Raised Amount</div>
                   <div className="mt-2 font-bold text-xl">
-                    ${numberFormatter(syndicateInfo?.profile?.raised_amount)}
+                    ${numberFormatter(syndicateInfo?.raised_amount) || "N/A"}
                   </div>
                 </div>
                 <div className="rounded-md border-[1.75px] border-[#404040] w-full pl-3 ml-16 py-3">
@@ -206,7 +206,7 @@ const SyndicateInfoDrawer = ({
                     <span className="text-[#737373]">Number of times raised</span>
                   </div>
                   <div className="mt-2 font-bold text-xl">
-                    {syndicateInfo?.profile?.no_times_raised}
+                    {syndicateInfo?.no_times_raised || "N/A"}
                   </div>
                 </div>
                 

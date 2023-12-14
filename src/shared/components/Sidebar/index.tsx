@@ -101,7 +101,9 @@ const Sidebar = ({ type }: any) => {
           items: [
             {
               id: 1,
-              icon: <InvestorHomeIcon />,
+              icon: (
+                <InvestorHomeIcon />
+              ),
               title: language?.v3?.startup?.sidebar?.dashboard,
               route: "/syndicate",
             },
@@ -136,7 +138,10 @@ const Sidebar = ({ type }: any) => {
           items: [
             {
               id: 1,
-              icon: <InvestorHomeIcon />,
+              icon: (
+                <InvestorHomeIcon
+                />
+              ),
               title: language?.v3?.startup?.sidebar?.dashboard,
               route: RoutesEnums.INVESTOR_DASHBOARD,
             },
@@ -186,6 +191,7 @@ const Sidebar = ({ type }: any) => {
         <ul>
           {React.Children.toArray(
             sidebarData?.items?.map((item: any) => {
+              const isSelected = selected === item?.route;
               return (
                 <li
                   onClick={() => {
@@ -201,7 +207,16 @@ const Sidebar = ({ type }: any) => {
                     "bg-sidebar-item-hover border-l-4 border-l-cyan-800 hover:!border-l-cyan-800"
                   }`}
                 >
-                  <span>{item?.icon}</span>
+                  <span>
+                    {item?.icon
+                      ? React.cloneElement(item?.icon, {
+                          stroke: isSelected ? "black" : undefined,
+                          fill: isSelected ? "black" : undefined,
+                          strokeWidth: isSelected ? 0.1 : undefined,
+                        })
+                      : item?.icon}
+                    {}
+                  </span>
                   <p className="text-black font-medium text-sm ml-1 mt-1">
                     {item?.title}
                   </p>
