@@ -83,12 +83,7 @@ const CreateDeal = () => {
     setStep(Number(params?.id) || 1);
     getDealStepDetails();
   }, [params, step]);
-  useEffect(() => {
-    if (step === 2) setUspAdded(false);
-    console.log("STEP", step);
-    console.log("PARAMs", params);
-    console.log("PAge was rerendere on basis of step and params");
-  }, [params, step]);
+ 
 /*   useEffect(()=>{
   }) */
   /* UI Actions */

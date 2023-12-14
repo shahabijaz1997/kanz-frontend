@@ -162,12 +162,12 @@ const FundRaiserStepper = ({ load, event, countries, orientation, language, file
             )}
           </div>
 
-          <div className="mb-8 w-full relative" style={{ zIndex: 90 }}>
+          <div className="mb-8 w-full relative" style={{ zIndex: 2 }}>
             <label
               className="block text-neutral-700 text-sm font-medium mb-1"
               htmlFor="full-name"
             >
-              {language?.company?.country}
+              {"Residence"}
             </label>
 
             <CountrySelector
@@ -175,17 +175,44 @@ const FundRaiserStepper = ({ load, event, countries, orientation, language, file
                 let c = countries.all.find(
                   (c: any) => c[event].name === v.value
                 );
-                onSetPayload(c, "country");
+                onSetPayload(c, "residence");
               }}
               selectedValue={{
-                label: payload?.country?.name,
-                value: payload?.country?.name,
+                label: payload?.residence?.name,
+                value: payload?.residence?.name,
               }}
               allCountries={countries.names}
-              value={payload?.country?.name}
+              value={payload?.residence?.name}
               defaultValue={{
-                label: payload?.country?.name,
-                value: payload?.country?.name,
+                label: payload?.residence?.name,
+                value: payload?.residence?.name,
+              }}
+            />
+          </div>
+          <div className="mb-8 w-full relative" style={{ zIndex: 1 }}>
+            <label
+              className="block text-neutral-700 text-sm font-medium mb-1"
+              htmlFor="full-name"
+            >
+              {"Nationality"}
+            </label>
+
+            <CountrySelector
+              onChange={(v: any) => {
+                let c = countries.all.find(
+                  (c: any) => c[event].name === v.value
+                );
+                onSetPayload(c, "nationality");
+              }}
+              selectedValue={{
+                label: payload?.nationality?.name,
+                value: payload?.nationality?.name,
+              }}
+              allCountries={countries.names}
+              value={payload?.nationality?.name}
+              defaultValue={{
+                label: payload?.nationality?.name,
+                value: payload?.nationality?.name,
               }}
             />
           </div>
