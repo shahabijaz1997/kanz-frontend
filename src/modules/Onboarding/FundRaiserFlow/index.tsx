@@ -95,13 +95,6 @@ const FundRaiserFlow = ({ }: any) => {
       setLoad(false);
     }
   };
-  useEffect(()=>{
-    console.log("COUNTRIES", countries)
-    console.log("MetaDATA", metadata)
-    console.log("payload", payload)
-
-  }, [payload])
-
   useLayoutEffect(() => {
     setStep(Number(params?.id) || 1);
   }, [params]);
@@ -189,7 +182,6 @@ const FundRaiserFlow = ({ }: any) => {
       setLoading(true);
       let _residence: any = countries.all.find((x: any) => x[event].name === payload.residence.name);
       let _nationality: any = countries.all.find((x: any) => x[event].name === payload.nationality.name);
-      console.log("COUNTRY CHECKING HERE", _residence)
       const form: any = new FormData();
       if (Number(step) === 1) {
         form.append("fund_raiser_profile[step]", step);

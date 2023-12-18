@@ -45,7 +45,6 @@ export const numberFormatter = (
       formattedNumber = `AED ${formattedNumber}`;
     }
   }
-  console.log("Deal Type", dealType);
   return formattedNumber;
 };
 export const comaFormattedNumber = (
