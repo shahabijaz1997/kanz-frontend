@@ -16,11 +16,12 @@ import { KanzRoles } from "../../enums/roles.enum";
 import { ApplicationStatus } from "../../enums/types.enum";
 import { RoutesEnums, StartupRoutes } from "../../enums/routes.enum";
 import { LinkedInCallback } from "react-linkedin-login-oauth2";
-import InvestorSyndicates from "../Investor/InvestorSyndicates" ;
+import InvestorSyndicates from "../Investor/InvestorSyndicates";
 import Deals from "../Investor/Deals";
 import SyndicateInvestments from "../Syndicate/Investments";
 import ManageGroup from "../Syndicate/ManageGroup";
 import GuestInvestorOverview from "../Guest/GuestDealOverview";
+import LoggingOut from "../../shared/LoggingOut";
 
 /* --- Modules --- */
 
@@ -53,7 +54,6 @@ const Contacts = lazy(() => import("../Contacts"));
 const MarketInsights = lazy(() => import("../MarketInsights"));
 const SyndicateDashboard = lazy(() => import("../Syndicate"));
 const SyndicateDealOverview = lazy(() => import("../SyndicateDealOverview"));
-
 
 /* ---### Static ###--- */
 const PrivacyPolicy = lazy(() => import("../Policies/PrivacyPolicy"));
@@ -90,7 +90,6 @@ const GUARD_ROUTE = (props: PropsWithChildren | any) => {
   return <Navigate to={RoutesEnums.WELCOME} replace />;
 };
 
-
 const GUARD_SUBMITTED_ROUTE = (props: PropsWithChildren | any) => {
   const { children, status } = props;
   const user: any = useSelector((state: RootState) => state.user.value);
@@ -102,9 +101,8 @@ const GUARD_SUBMITTED_ROUTE = (props: PropsWithChildren | any) => {
 const CHECK_GUARD_GUEST_ROUTE = (props: PropsWithChildren | any) => {
   const { children, guestRoute } = props;
   const user: any = useSelector((state: RootState) => state.user.value);
-  const authToken:any = useSelector((state: RootState)=> state.auth.value);
-  if (user && authToken)
-    return <React.Fragment>{children}</React.Fragment>;
+  const authToken: any = useSelector((state: RootState) => state.auth.value);
+  if (user && authToken) return <React.Fragment>{children}</React.Fragment>;
   return <Navigate to={guestRoute} replace />;
 };
 
@@ -160,27 +158,22 @@ const RouterModule = () => {
         }
       />
 
-
-      
       <Route
         path={`${RoutesEnums.SYNDICATE_DEAL_DETAIL}/:dealToken`}
         element={
           <Suspense fallback={<Loader />}>
-            {authToken ? <SyndicateDealOverview/> : <GuestInvestorOverview/>}
+            {authToken ? <SyndicateDealOverview /> : <GuestInvestorOverview />}
           </Suspense>
         }
       />
-
-      {/*
-        {.......##...............#######..##....##.########...#######.....###....########..########..####.##....##..######......########...#######..##.....##.########.########..######.....................##
-        {......##...##...##.....##.....##.###...##.##.....##.##.....##...##.##...##.....##.##.....##..##..###...##.##....##.....##.....##.##.....##.##.....##....##....##.......##....##.....##...##.......##.
-        {.....##.....##.##......##.....##.####..##.##.....##.##.....##..##...##..##.....##.##.....##..##..####..##.##...........##.....##.##.....##.##.....##....##....##.......##............##.##.......##..
-        {....##....#########....##.....##.##.##.##.########..##.....##.##.....##.########..##.....##..##..##.##.##.##...####....########..##.....##.##.....##....##....######....######.....#########....##...
-        {...##.......##.##......##.....##.##..####.##.....##.##.....##.#########.##...##...##.....##..##..##..####.##....##.....##...##...##.....##.##.....##....##....##.............##......##.##.....##....
-        {..##.......##...##.....##.....##.##...###.##.....##.##.....##.##.....##.##....##..##.....##..##..##...###.##....##.....##....##..##.....##.##.....##....##....##.......##....##.....##...##...##.....
-        {.##.....................#######..##....##.########...#######..##.....##.##.....##.########..####.##....##..######......##.....##..#######...#######.....##....########..######...............##......
-        {*/}
-
+      <Route
+        path={`${RoutesEnums.LOADING_LOGOUT}`}
+        element={
+          <Suspense fallback={<Loader />}>
+            <LoggingOut />
+          </Suspense>
+        }
+      />
 
       <Route
         path={RoutesEnums.INVESTOR_DETAILS}
@@ -219,7 +212,7 @@ const RouterModule = () => {
           </Suspense>
         }
       />
-    <Route
+      <Route
         path={RoutesEnums.LINKEDIN}
         element={
           <Suspense fallback={<Loader />}>
@@ -376,7 +369,7 @@ const RouterModule = () => {
           </Suspense>
         }
       />
-       <Route
+      <Route
         path={`${RoutesEnums.INVESTOR_DEALS}`}
         element={
           <Suspense fallback={<Loader />}>
@@ -467,7 +460,6 @@ const RouterModule = () => {
         }
       />
 
-
       {/*
         {.......##...............######..##....##.##....##.########..####..######.....###....########.########....########...#######..##.....##.########.########..######.....................##
         {......##...##...##.....##....##..##..##..###...##.##.....##..##..##....##...##.##......##....##..........##.....##.##.....##.##.....##....##....##.......##....##.....##...##.......##.
@@ -511,8 +503,7 @@ const RouterModule = () => {
         }
       />
 
-
-<Route
+      <Route
         path={RoutesEnums.INVESTOR_UPDATES}
         element={
           <Suspense fallback={<Loader />}>
@@ -521,7 +512,7 @@ const RouterModule = () => {
                 role={[KanzRoles.FUNDRAISER]}
                 status={ApplicationStatus.APPROVED}
               >
-              <InvestorUpdates guard={authToken}/>
+                <InvestorUpdates guard={authToken} />
               </GUARD_SUBMITTED_ROUTE>
             </CHECK_LOGGED_IN>
           </Suspense>

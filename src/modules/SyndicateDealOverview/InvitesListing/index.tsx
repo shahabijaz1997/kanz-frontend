@@ -17,7 +17,7 @@ import { getAllInvestors, sharewithGroup } from "../../../apis/syndicate.api";
 import SharewithGroupIcon from "../../../ts-icons/SharewithGroupIcon.svg";
 import CopyInviteLinkIcon from "../../../ts-icons/CopyInviteLinkIcon.svg";
 import { numberFormatter } from "../../../utils/object.utils";
-import { ApplicationStatus, DealPromotionType, DealStatus } from "../../../enums/types.enum";
+import { ApplicationStatus, DealCheckType, DealPromotionType, DealStatus } from "../../../enums/types.enum";
 
 const InvitesListing = ({
   approve,
@@ -203,9 +203,9 @@ const InvitesListing = ({
                           <div className="font-sm text-xs font-light">
                             {investor?.investedAmount == 0.0
                               ? "0"
-                              : numberFormatter(investor?.investedAmount)}{" "}
+                              : numberFormatter(investor?.investedAmount,DealCheckType.STARTUP)}{" "}
                             invested in{" "}
-                            {numberFormatter(investor?.noOfinvestments)}{" "}
+                            {investor?.noOfinvestments}{" "}
                             investments
                           </div>
                         </div>

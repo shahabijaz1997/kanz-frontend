@@ -71,7 +71,7 @@ const ReviewDeal = ({
           )}
 
           {field?.unit && field?.value && (
-            <small className="uppercase ml-2 text-neutral-500 font-normal text-sm">
+            <small className="uppercase ml-1 text-neutral-500 font-normal text-sm">
               {field?.unit}
             </small>
           )}

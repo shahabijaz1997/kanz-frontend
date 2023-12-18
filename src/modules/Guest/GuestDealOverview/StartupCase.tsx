@@ -36,29 +36,12 @@ const StartupCase = ({ id, dealToken, dealDetail }: any) => {
   const [deal, setdeal]: any = useState(dealDetail);
   const [loading, setLoading]: any = useState(false);
 
-
-  useEffect(() => {
-    onGetdeal();
-  }, []);
   useLayoutEffect(() => {
     setTimeout(openModal, 30000);
   }, []);
 
 
 
-
-  const onGetdeal = async () => {
-    try {
-      setLoading(true);
-      let { status, data } = await getDealDetail(dealToken, "");
-      if (status === 200) {
-        setdeal(data?.status?.data);
-      }
-    } catch (error) {
-    } finally {
-      setLoading(false);
-    }
-  };
 
   
   function openModal() {

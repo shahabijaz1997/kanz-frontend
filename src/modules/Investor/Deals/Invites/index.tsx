@@ -14,7 +14,7 @@ import CrossIcon from "../../../../ts-icons/crossIcon.svg";
 import { saveDataHolder } from "../../../../redux-toolkit/slicer/dataHolder.slicer";
 import { numberFormatter } from "../../../../utils/object.utils";
 import Spinner from "../../../../shared/components/Spinner";
-import { ApplicationStatus } from "../../../../enums/types.enum";
+import { ApplicationStatus, DealCheckType } from "../../../../enums/types.enum";
 import Chevrond from "../../../../ts-icons/chevrond.svg";
 import EditIcon from "../../../../ts-icons/editIcon.svg";
 import CustomStatus from "../../../../shared/components/CustomStatus";
@@ -110,7 +110,7 @@ const Invites = ({}: any) :any => {
                 [language?.v3?.syndicate?.deals?.table?.end_date]:
                   invitee?.end_at || " N/A",
                 [language?.v3?.syndicate?.deals?.table
-                  ?.target]: `$${numberFormatter(Number(invitee?.target))}`,
+                  ?.target]: `${numberFormatter(Number(invitee?.target),invitee?.deal_type)}`,
     
                 Steps: invitee?.current_state?.steps,
                 [""]: (
