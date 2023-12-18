@@ -45,6 +45,7 @@ export const getStartupDeals = (token: string, filters : any, searchQuery:string
 };
 export const getPropertyDeals = (token: string, filters : any, searchQuery:string) => {
   const queryParameters = new URLSearchParams();
+  queryParameters.append("page", "3");
   queryParameters.append("deal_type", "property");
   if (filters !== "All"){
     queryParameters.append("status", filters.toLowerCase());

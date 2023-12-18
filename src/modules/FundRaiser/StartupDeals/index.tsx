@@ -57,6 +57,7 @@ const StartupDeals = ({openRiskDiscModal }: any) => {
     current_page: 1,
     total_pages: 0,
   });
+  const [paginationData, setpaginationData] = useState(null);
   const metadata: any = useSelector((state: RootState) => state.metadata);
   const [filter, setFilterCounts]:any = useState([]);
   const [selectedTab, setSelectedTab] = useState("All");
@@ -138,6 +139,7 @@ const StartupDeals = ({openRiskDiscModal }: any) => {
       setLoading(true);
       let { status, data } = await getStartupDeals(authToken,selectedTab,searchQuery);
       if (status === 200) {
+        setpaginationData(data?.status?.data?.pagy)
         setFilterCounts(data?.status?.data?.stats)
         let deals = data?.status?.data?.deals?.map((deal: any) => {
           return {
@@ -319,6 +321,7 @@ const StartupDeals = ({openRiskDiscModal }: any) => {
 
               <section className="mt-10">
                 <Table
+                  paginationData={paginationData}
                   columns={columns}
                   pagination={pagination}
                   paginate={paginate}

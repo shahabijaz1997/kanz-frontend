@@ -36,6 +36,7 @@ export const getAllDeals = ( token: string, filters :any, searchQuery:string) =>
   if (filters !== "All"){
     queryParameters.append("deal_type", filters.toLowerCase());
   }
+  queryParameters.append("\u0026page", "1")
   if (searchQuery.trim() !== "") {
     queryParameters.append("search", searchQuery);
   }

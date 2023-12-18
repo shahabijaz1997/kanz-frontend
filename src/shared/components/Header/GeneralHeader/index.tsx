@@ -35,7 +35,13 @@ const GeneralHeader = ({ responsive = false, showMenu = false, showLanguageDropd
             await logout(authToken);
         } catch (error: any) {
         } finally {
-            navigate(RoutesEnums.LOADING_LOGOUT);
+            dispatch(saveToken(""));
+            navigate(RoutesEnums.LOGIN);
+            localStorage.clear();
+            dispatch(saveUserData(""));
+            dispatch(saveUserMetaData(""));
+            dispatch(saveLogo(""));
+            dispatch(saveDataHolder(""));
         }
     };
 

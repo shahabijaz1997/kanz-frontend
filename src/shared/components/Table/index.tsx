@@ -4,6 +4,7 @@ import { RootState } from "../../../redux-toolkit/store/store";
 import Chevrond from "../../../ts-icons/chevrond.svg";
 
 const Table = ({
+  paginationData,
   columns,
   noDataNode,
   onclick = () => {},
@@ -15,10 +16,10 @@ const Table = ({
   const orientation: any = useSelector(
     (state: RootState) => state.orientation.value
   );
-
+ console.log("PAGINATION DATA INSIDE TABLE COMPONSNENT ",paginationData)
   const renderPaginationUI = () => {
     let pages: number[] = [];
-    for (let i = 1; i <= pagination?.total_pages; i++) pages.push(i);
+    for (let i = 1; i <= paginationData?.pages; i++) pages.push(i);
     return React.Children.toArray(
       pages?.map((page, index) => {
         return (
