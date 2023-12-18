@@ -732,7 +732,10 @@ const StartupCase = ({
   return (
     <main className="h-full relative max-h-full overflow-y-hidden">
       <section>
-        <Header />
+        <Header
+        onSuperLogout={(e:boolean) => {
+          setLoading(e)
+        }} />
       </section>
       <aside
         className="w-full flex items-start justify-start"

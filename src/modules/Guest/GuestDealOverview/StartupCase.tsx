@@ -393,7 +393,9 @@ const StartupCase = ({ id, dealToken, dealDetail }: any) => {
   return (
     <main className="h-full max-h-full overflow-y-hidden">
          <section>
-        <Header showMenu={false} showLanguageDropdown={!authToken ? true : false} />
+        <Header showMenu={false} showLanguageDropdown={!authToken ? true : false}  onSuperLogout={(e:boolean) => {
+          setLoading(e)
+        }} />
       </section>
       <div className="w-full h-full flex justify-center" style={{ height: "calc(100% - 70px)"}}>
         {loading ? (
