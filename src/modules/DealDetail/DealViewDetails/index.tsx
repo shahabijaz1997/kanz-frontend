@@ -115,7 +115,7 @@ const DealViewDetails = ({ dealDetail, state }: any) => {
               {language?.v3?.table?.valuation}
             </h3>
             <p className="text-neutral-900 font-normal text-sm capitalize">
-              {dealDetail?.valuation || language?.v3?.common?.not_added}
+              {comaFormattedNumber(dealDetail?.valuation, DealCheckType.STARTUP) || language?.v3?.common?.not_added}
             </p>
           </div>
           <div className="py-4 border-b-[1px] border-b-neutral-200 w-full inline-flex items-center justify-between">
@@ -162,7 +162,8 @@ const DealViewDetails = ({ dealDetail, state }: any) => {
               {"Discount"}
             </h3>
             <p className="text-neutral-900 font-normal text-sm capitalize">
-              {dealDetail?.terms[1]?.value + "%" || "No"}
+            {dealDetail?.terms[1]?.value !== null ? `${dealDetail?.terms[1]?.value}%` : "No"}
+
             </p>
           </div>
           <div className="py-4  border-b-neutral-200 w-full inline-flex items-center justify-between">
@@ -207,7 +208,7 @@ const DealViewDetails = ({ dealDetail, state }: any) => {
               {"Minimum Check Size"}
             </h3>
             <p className="text-neutral-900 font-normal text-sm capitalize">
-              {dealDetail?.terms[0]?.value || "No"}
+              {comaFormattedNumber(dealDetail?.terms[0]?.value, DealCheckType.STARTUP) || "No"}
             </p>
           </div>
           <div className="py-4  border-b-neutral-200 w-full inline-flex items-center justify-between">

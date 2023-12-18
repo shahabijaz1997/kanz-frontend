@@ -96,9 +96,7 @@ const ManageGroup = ({  }: any) => {
             filterStatus: investor?.status,
             ["Investor"]: investor?.member_name || "N/A",
             ["Invested"]: `$${comaFormattedNumber(investor?.invested_amount)}`,
-            ["Investments"]: `${numberFormatter(
-              Number(investor?.no_investments)
-            , DealCheckType.STARTUP)}`,
+            ["Investments"]: investor?.no_investments,
             ["Join Status"]:
               <CustomStatus options={investor?.connection} /> || "N/A",
             ["Join Date"]:

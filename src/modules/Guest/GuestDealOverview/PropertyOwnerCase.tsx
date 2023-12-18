@@ -30,24 +30,11 @@ const PropertyOwnerCase = ({ id, dealToken, dealDetail }: any) => {
   const [deal, setdeal]: any = useState(dealDetail);
   const [loading, setLoading]: any = useState(false);
   const [modalOpen, setModalOpen] = useState<boolean>(true);
-  useLayoutEffect(() => {
-    onGetdeal();
-  }, [deal?.id]);
+
   useLayoutEffect(() => {
     setTimeout(openModal, 30000);
   }, []);
-  const onGetdeal = async () => {
-    try {
-      setLoading(true);
-      let { status, data } = await getDealDetail(dealToken, authToken);
-      if (status === 200) {
-        setdeal(data?.status?.data);
-      }
-    } catch (error) {
-    } finally {
-      setLoading(false);
-    }
-  };
+
 
   function openModal() {
     setModalOpen(true);
