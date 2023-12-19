@@ -3,23 +3,20 @@ import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import Table from "../../../shared/components/Table";
 import { RootState } from "../../../redux-toolkit/store/store";
-import { ApplicationStatus } from "../../../enums/types.enum";
 import { saveDataHolder } from "../../../redux-toolkit/slicer/dataHolder.slicer";
-import { getDealSyndicates } from "../../../apis/deal.api";
-import Button from "../../../shared/components/Button";
+import { getSharedInvestors } from "../../../apis/deal.api";
 import { saveToken } from "../../../redux-toolkit/slicer/auth.slicer";
 import { RoutesEnums } from "../../../enums/routes.enum";
 import CustomStatus from "../../../shared/components/CustomStatus";
-import { numberFormatter } from "../../../utils/object.utils";
 import Spinner from "../../../shared/components/Spinner";
 
-const InvitedSyndicates = ({ id }: any) => {
+const InvitedInvestors = ({ id }: any) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const language: any = useSelector((state: RootState) => state.language.value);
   const authToken: any = useSelector((state: RootState) => state.auth.value);
   const columns = [
-    "Syndicate",
+    "Investor",
     "Status",
     "Invitation Sent On",
     "Invite Expiration Date",
@@ -35,16 +32,16 @@ const InvitedSyndicates = ({ id }: any) => {
 
   useEffect(() => {
     dispatch(saveDataHolder(""));
-    getAllDeals();
+    getInvitedInvestors();
   }, []);
  
 
-  const getAllDeals = async () => {
+  const getInvitedInvestors = async () => {
     try {
       setLoading(true);
-      let { status, data } = await getDealSyndicates(id, authToken);
+      let { status, data } = await getSharedInvestors(id, authToken);
       if (status === 200) {
-        let deals = data?.status?.data
+        let invites = data?.status?.data
           ?.filter((deal: any) => deal?.status === "pending")
           ?.map((deal: any) => {
             return {
@@ -66,13 +63,13 @@ const InvitedSyndicates = ({ id }: any) => {
         setPagination((prev) => {
           return {
             ...prev,
-            total_items: deals.length,
+            total_items: invites.length,
             current_page: 1,
-            total_pages: Math.ceil(deals.length / prev.items_per_page),
-            data: deals?.slice(0, prev.items_per_page),
+            total_pages: Math.ceil(invites.length / prev.items_per_page),
+            data: invites?.slice(0, prev.items_per_page),
           };
         });
-        setInvites(deals);
+        setInvites(invites);
       }
     } catch (error: any) {
       if (error.response && error.response.status === 401) {
@@ -140,4 +137,4 @@ const InvitedSyndicates = ({ id }: any) => {
     </section>
   );
 };
-export default InvitedSyndicates;
+export default InvitedInvestors;

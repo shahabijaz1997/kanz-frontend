@@ -160,9 +160,10 @@ export const getNonAddedInvestors = (token: string, searchQuery:any) => {
   });
 };
 
-export const getInvitedSyndicates = (userId: any, searchQuery:string, token: string) => {
+export const getInvitedSyndicates = (userId: any, searchQuery:string, token: string, currentPage:number) => {
   const queryParameters = new URLSearchParams();
   queryParameters.append("invite_type", "syndication");
+  queryParameters.append("page", currentPage.toString());
   if (searchQuery.trim() !== "") {
     queryParameters.append("search", searchQuery);
   }

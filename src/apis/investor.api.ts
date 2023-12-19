@@ -31,12 +31,12 @@ export const getInvitees = (inviteeID:any ,token: string, filters :any) => {
     },
   });
 };
-export const getAllDeals = ( token: string, filters :any, searchQuery:string) => {
+export const getAllDeals = ( token: string, filters :any, searchQuery:string, currentPage:number) => {
   const queryParameters = new URLSearchParams();
   if (filters !== "All"){
     queryParameters.append("deal_type", filters.toLowerCase());
   }
-  queryParameters.append("\u0026page", "1")
+  queryParameters.append("page", currentPage.toString())
   if (searchQuery.trim() !== "") {
     queryParameters.append("search", searchQuery);
   }
@@ -47,10 +47,11 @@ export const getAllDeals = ( token: string, filters :any, searchQuery:string) =>
     },
   });
 };
-export const getCommitedDeals = ( token: string, filters :any, searchQuery:string) => {
+export const getCommitedDeals = ( token: string, filters :any, searchQuery:string, currentPage:number) => {
   const queryParameters = new URLSearchParams();
+  queryParameters.append("page", currentPage.toString())
   if (filters !== "All"){
-    queryParameters.append("deal_type", filters.toLowerCase());
+    queryParameters.append("deal_type", filters.toLowerCase());    
   }
   if (searchQuery.trim() !== "") {
     queryParameters.append("search", searchQuery);

@@ -27,9 +27,10 @@ export const getDeals = (token: string, filters : any, searchQuery:string) => {
     },
   });
 };
-export const getStartupDeals = (token: string, filters : any, searchQuery:string) => {
+export const getStartupDeals = (token: string, filters : any, searchQuery:string, currentPage:number) => {
   const queryParameters = new URLSearchParams();
   queryParameters.append("deal_type", "startup");
+  queryParameters.append("page", currentPage.toString());
   if (filters !== "All"){
     queryParameters.append("status", filters.toLowerCase());
   }
@@ -43,9 +44,9 @@ export const getStartupDeals = (token: string, filters : any, searchQuery:string
     },
   });
 };
-export const getPropertyDeals = (token: string, filters : any, searchQuery:string) => {
+export const getPropertyDeals = (token: string, filters : any, searchQuery:string, currentPage:number) => {
   const queryParameters = new URLSearchParams();
-  queryParameters.append("page", "3");
+  queryParameters.append("page", currentPage.toString());
   queryParameters.append("deal_type", "property");
   if (filters !== "All"){
     queryParameters.append("status", filters.toLowerCase());
@@ -140,6 +141,16 @@ export const getDealDocuments = (dealId: number, token: string) => {
   );
 };
 export const getDealSyndicates = (dealId: number, token: string) => {
+  return axios.get(
+    `${ENV.API_URL}/${ENV.API_VERSION}/deals/${dealId}/invites`,
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    }
+  );
+};
+export const getSharedInvestors = (dealId: number, token: string) => {
   return axios.get(
     `${ENV.API_URL}/${ENV.API_VERSION}/deals/${dealId}/invites`,
     {

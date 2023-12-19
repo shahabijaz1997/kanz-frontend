@@ -166,7 +166,7 @@ const UserListingPopup = ({ approve, dealId, type, dealIdReal, setLoader }: any)
                         onChange={(e) => setSearchQuery(e.target.value)}
                         type="search"
                         className="h-full w-full outline-none pl-2 text-sm font-normal"
-                        placeholder={language?.v3?.common?.search}
+                        placeholder={"Search for Syndicates"}
                       />
                     </div>
 

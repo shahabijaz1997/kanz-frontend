@@ -22,6 +22,7 @@ import Requests from "./Requests";
 import Usp from "./Usp";
 import { DealPromotionType } from "../../enums/types.enum";
 import InvitesListing from "../SyndicateDealOverview/InvitesListing";
+import InvitedInvestors from "./InvitedInvestors";
 
 const DealDetail = ({}: any) => {
   const params = useParams();
@@ -205,7 +206,8 @@ const DealDetail = ({}: any) => {
             )}
             {selected?.id === 4 && <DocumentDetails dealDocs={dealDocs} />}
             {selected?.id === 5 && <ActivityDetails id={dealDetail?.id} />}
-            {selected?.id === 6 && <InvitedSyndicates id={dealDetail?.id} />}
+            {selected?.id === 6 && dealDetail?.model === DealPromotionType.SYNDICATE && <InvitedSyndicates id={dealDetail?.id} />}
+            {selected?.id === 6 && dealDetail?.model === DealPromotionType.CLASSIC && <InvitedInvestors id={dealDetail?.id} />}
             {selected?.id === 7 && <Requests id={dealDetail?.id} />}
           </section>
         )}
