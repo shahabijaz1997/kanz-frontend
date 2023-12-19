@@ -3,53 +3,51 @@ import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import Table from "../../../shared/components/Table";
 import { RootState } from "../../../redux-toolkit/store/store";
-import { ApplicationStatus } from "../../../enums/types.enum";
 import { saveDataHolder } from "../../../redux-toolkit/slicer/dataHolder.slicer";
-import { getInvitedDealSyndicates } from "../../../apis/deal.api";
-import Button from "../../../shared/components/Button";
+import { getSharedInvestors } from "../../../apis/deal.api";
 import { saveToken } from "../../../redux-toolkit/slicer/auth.slicer";
 import { RoutesEnums } from "../../../enums/routes.enum";
 import CustomStatus from "../../../shared/components/CustomStatus";
-import { numberFormatter } from "../../../utils/object.utils";
 import Spinner from "../../../shared/components/Spinner";
 
-const InvitedSyndicates = ({ id }: any) => {
+const InvitedInvestors = ({ id }: any) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const language: any = useSelector((state: RootState) => state.language.value);
   const authToken: any = useSelector((state: RootState) => state.auth.value);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [paginationData, setpaginationData] = useState(null);
   const columns = [
-    "Syndicate",
+    "Investor",
     "Status",
     "Invitation Sent On",
     "Invite Expiration Date",
   ];
   const [loading, setLoading]: any = useState(false);
   const [invites, setInvites]: any = useState([]);
-  const [currentPage, setCurrentPage] = useState(1);
-  const [paginationData, setpaginationData] = useState(null);
+  const [pagination, setPagination] = useState({
+    items_per_page: 5,
+    total_items: [],
+    current_page: 1,
+    total_pages: 0,
+  });
 
   useEffect(() => {
     dispatch(saveDataHolder(""));
-    getAllDeals();
-  }, []);
-  useEffect(() => {
-    dispatch(saveDataHolder(""));
-    getAllDeals();
+    getInvitedInvestors();
   }, [currentPage]);
- 
 
-  const getAllDeals = async () => {
+
+  const getInvitedInvestors = async () => {
     try {
       setLoading(true);
-      let { status, data } = await getInvitedDealSyndicates(id, authToken, currentPage);
+      let { status, data } = await getSharedInvestors(id, authToken);
       if (status === 200) {
         setpaginationData(data?.status?.data?.pagy)
-        let deals = data?.status?.data?.invites
+        let invites = data?.status?.data?.invites
           ?.map((deal: any) => {
             return {
               id: deal?.id,
-              ["Syndicate"]: (
+              ["Investor"]: (
                 <span className=" capitalize">{deal?.invitee?.name}</span>
               ),
               ["Status"]: (
@@ -62,7 +60,7 @@ const InvitedSyndicates = ({ id }: any) => {
               ["Invite Expiration Date"]: deal?.invite_expiry || "N/A",
             };
           });
-        setInvites(deals);
+        setInvites(invites);
       }
     } catch (error: any) {
       if (error.response && error.response.status === 401) {
@@ -73,7 +71,35 @@ const InvitedSyndicates = ({ id }: any) => {
       setLoading(false);
     }
   };
- 
+  const paginate = (type: string) => {
+    if (type === "next" && pagination.current_page < pagination.total_pages) {
+      setPagination((prev: any) => {
+        const nextPage = prev.current_page + 1;
+        const startIndex = (nextPage - 1) * prev.items_per_page;
+        const endIndex = startIndex + prev.items_per_page;
+        const data = invites.slice(startIndex, endIndex);
+        return { ...prev, current_page: nextPage, data };
+      });
+    } else if (type === "previous" && pagination.current_page > 1) {
+      setPagination((prev: any) => {
+        const prevPage = prev.current_page - 1;
+        const startIndex = (prevPage - 1) * prev.items_per_page;
+        const endIndex = startIndex + prev.items_per_page;
+        const data = invites.slice(startIndex, endIndex);
+
+        return { ...prev, current_page: prevPage, data };
+      });
+    } else {
+      setPagination((prev: any) => {
+        const prevPage = Number(type) + 1 - 1;
+        const startIndex = (prevPage - 1) * prev.items_per_page;
+        const endIndex = startIndex + prev.items_per_page;
+        const data = invites.slice(startIndex, endIndex);
+
+        return { ...prev, current_page: type, data };
+      });
+    }
+  };
 
   return (
     <section className="mt-10 relative">
@@ -102,4 +128,4 @@ const InvitedSyndicates = ({ id }: any) => {
     </section>
   );
 };
-export default InvitedSyndicates;
+export default InvitedInvestors;

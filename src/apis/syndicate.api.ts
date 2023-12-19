@@ -24,8 +24,9 @@ export const getAllInvestors = ( dealId:any, token: string) => {
   );
 };
 
-export const getGroupInvestors = ( token:any, filters:any, searchQuery:string) => {
+export const getGroupInvestors = ( token:any, filters:any, searchQuery:string, currentPage:number) => {
   const queryParameters = new URLSearchParams();
+  queryParameters.append("page", currentPage.toString());
   if (filters !== "all")
   queryParameters.append("connection", filters.toLowerCase());
   if (searchQuery.trim() !== "") {
@@ -65,9 +66,12 @@ export const getSyndicatetoInvite = (dealId: any , searchQuery:string, token: st
     }
   );
 };
-export const getDealInvestors = (dealId: any, token: string) => {
+export const getDealInvestors = (dealId: any, token: string, currentPage:number) => {
+  const queryParameters = new URLSearchParams();
+  queryParameters.append("page", currentPage.toString());
+  const apiUrl = `${ENV.API_URL}/${ENV.API_VERSION}/deals/${dealId}/investments?${queryParameters.toString()}`;
   return axios.get(
-    `${ENV.API_URL}/${ENV.API_VERSION}/deals/${dealId}/investments`,
+    apiUrl,
     {
       headers: {
         Authorization: `Bearer ${token}`,
@@ -77,9 +81,12 @@ export const getDealInvestors = (dealId: any, token: string) => {
 };
 
 
-export const getDealActivity = (dealId: any, token: string) => {
+export const getDealActivity = (dealId: any, token: string, currentPage:number) => {
+  const queryParameters = new URLSearchParams();
+  queryParameters.append("page", currentPage.toString());
+  const apiUrl = `${ENV.API_URL}/${ENV.API_VERSION}/deals/${dealId}/activities?${queryParameters.toString()}`;
   return axios.get(
-    `${ENV.API_URL}/${ENV.API_VERSION}/deals/${dealId}/activities`,
+    apiUrl,
     {
       headers: {
         Authorization: `Bearer ${token}`,
@@ -160,9 +167,10 @@ export const getNonAddedInvestors = (token: string, searchQuery:any) => {
   });
 };
 
-export const getInvitedSyndicates = (userId: any, searchQuery:string, token: string) => {
+export const getInvitedSyndicates = (userId: any, searchQuery:string, token: string, currentPage:number) => {
   const queryParameters = new URLSearchParams();
   queryParameters.append("invite_type", "syndication");
+  queryParameters.append("page", currentPage.toString());
   if (searchQuery.trim() !== "") {
     queryParameters.append("search", searchQuery);
   }

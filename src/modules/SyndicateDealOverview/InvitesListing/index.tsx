@@ -64,7 +64,7 @@ const InvitesListing = ({
 
   useEffect(() => {
     dispatch(saveDataHolder(""));
-    getAllUserListings();
+    dealId && getAllUserListings();
   }, [type]);
 
   const onShareDeal = async (investorID: any) => {

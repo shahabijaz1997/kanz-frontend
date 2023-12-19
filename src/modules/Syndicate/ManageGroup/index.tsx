@@ -53,6 +53,8 @@ const ManageGroup = ({  }: any) => {
   const [investors, setInvestors] = useState<any>([]);
   const [filter, setFilterCounts]:any = useState([]);
   const [searchQuery, setSearchQuery]: any = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
+  const [paginationData, setpaginationData] = useState(null);
   const [searchModalQuery, setModalSearchQuery]: any = useState("");
 
   const setLoadingFalse = () =>{
@@ -71,26 +73,26 @@ const ManageGroup = ({  }: any) => {
     "Join Date",
     "Action",
   ];
-  const [pagination, setPagination] = useState({
-    items_per_page: 10,
-    total_items: [],
-    current_page: 1,
-    total_pages: 0,
-  });
 
   useEffect(() => {
     dispatch(saveDataHolder(""));
+    setCurrentPage(1)
     getMembers();
   }, [selectedTab]);
+  useEffect(() => {
+    dispatch(saveDataHolder(""));
+    getMembers();
+  }, [currentPage]);
 
   const getMembers = async () => {
     setLoading(true)
     try {
-      let { status, data } = await getGroupInvestors(authToken, selectedTab,searchQuery);
+      let { status, data } = await getGroupInvestors(authToken, selectedTab,searchQuery,currentPage);
 
       if (status === 200) {
+        setpaginationData(data?.status?.data?.pagy)
         setFilterCounts(data?.status?.data?.stats)
-        let investors = data?.status?.data?.members?.map((investor: any) => {  
+        let investors = data?.status?.data?.records?.map((investor: any) => {  
           return {
             id: investor?.id,
             filterStatus: investor?.status,
@@ -105,17 +107,6 @@ const ManageGroup = ({  }: any) => {
             ["Action"]: <ActionButton investorID={Number(investor?.id)} setLoading={setLoading} setLoadingTrue={setLoadingTrue} setLoadingFalse={setLoadingFalse} getMembers={getMembers} />,
           };
         });
-
-        setPagination((prev) => {
-          return {
-            ...prev,
-            total_items: investors.length,
-            current_page: 1,
-            total_pages: Math.ceil(investors.length / prev.items_per_page),
-            data: investors?.slice(0, prev.items_per_page),
-          };
-        });
-
         setGroupInvestors(investors);
       }
     } catch (error: any) {
@@ -149,34 +140,6 @@ const ManageGroup = ({  }: any) => {
     
   }
 
-  const paginate = (type: string) => {
-    if (type === "next" && pagination.current_page < pagination.total_pages) {
-      setPagination((prev: any) => {
-        const nextPage = prev.current_page + 1;
-        const startIndex = (nextPage - 1) * prev.items_per_page;
-        const endIndex = startIndex + prev.items_per_page;
-        const data = groupInvestors.slice(startIndex, endIndex);
-        return { ...prev, current_page: nextPage, data };
-      });
-    } else if (type === "previous" && pagination.current_page > 1) {
-      setPagination((prev: any) => {
-        const prevPage = prev.current_page - 1;
-        const startIndex = (prevPage - 1) * prev.items_per_page;
-        const endIndex = startIndex + prev.items_per_page;
-        const data = groupInvestors.slice(startIndex, endIndex);
-        return { ...prev, current_page: prevPage, data };
-      });
-    } else {
-      setPagination((prev: any) => {
-        const prevPage = Number(type) + 1 - 1;
-        const startIndex = (prevPage - 1) * prev.items_per_page;
-        const endIndex = startIndex + prev.items_per_page;
-        const data = groupInvestors.slice(startIndex, endIndex);
-
-        return { ...prev, current_page: type, data };
-      });
-    }
-  };
 
   useEffect(() => {
     getAllUserListings();
@@ -251,7 +214,7 @@ const ManageGroup = ({  }: any) => {
 
   return (
     <>
-      <main className="h-full max-h-full overflow-y-auto">
+      <main className="h-full max-h-full">
         <section>
           <Header />
         </section>
@@ -333,9 +296,9 @@ const ManageGroup = ({  }: any) => {
                 <section className="mt-10">
                   <Table
                     columns={columns}
-                    pagination={pagination}
-                    paginate={paginate}
-                    goToPage={paginate}
+                    tableData={groupInvestors}
+                    setCurrentPage={setCurrentPage}
+                    paginationData={paginationData}
                     noDataNode={
                       <div className="absolute left-1/2 top-1/2 translate-x-[-50%] translate-y-[-50%]">
                         <div className="mb-4 font-medium  text-[#828282]">

@@ -27,9 +27,10 @@ export const getDeals = (token: string, filters : any, searchQuery:string) => {
     },
   });
 };
-export const getStartupDeals = (token: string, filters : any, searchQuery:string) => {
+export const getStartupDeals = (token: string, filters : any, searchQuery:string, currentPage:number) => {
   const queryParameters = new URLSearchParams();
   queryParameters.append("deal_type", "startup");
+  queryParameters.append("page", currentPage.toString());
   if (filters !== "All"){
     queryParameters.append("status", filters.toLowerCase());
   }
@@ -43,8 +44,9 @@ export const getStartupDeals = (token: string, filters : any, searchQuery:string
     },
   });
 };
-export const getPropertyDeals = (token: string, filters : any, searchQuery:string) => {
+export const getPropertyDeals = (token: string, filters : any, searchQuery:string, currentPage:number) => {
   const queryParameters = new URLSearchParams();
+  queryParameters.append("page", currentPage.toString());
   queryParameters.append("deal_type", "property");
   if (filters !== "All"){
     queryParameters.append("status", filters.toLowerCase());
@@ -67,9 +69,10 @@ export const getNoFilterDeals = (token: string) => {
     },
   });
 };
-export const getDealsforsyndicate = (token: string, filters:any, searchQuery:any ) => {
+export const getDealsforsyndicate = (token: string, filters:any, searchQuery:any, currentPage:number ) => {
 
   const queryParameters = new URLSearchParams();
+  queryParameters.append("page", currentPage.toString());
   if (filters !== "All"){
     queryParameters.append("deal_type", filters.toLowerCase());
   }
@@ -87,9 +90,9 @@ export const getDealsforsyndicate = (token: string, filters:any, searchQuery:any
 
 };
 
-export const getInvitedDeals = (inviteeId: any, token: any, filters: any, searchQuery: string) => {
+export const getInvitedDeals = (inviteeId: any, token: any, filters: any, searchQuery: string, currentPage:number) => {
   const queryParameters = new URLSearchParams();
-
+  queryParameters.append("page", currentPage.toString());
   if (filters !== "All") {
     queryParameters.append("status", filters.toLowerCase());
   }
@@ -105,8 +108,9 @@ export const getInvitedDeals = (inviteeId: any, token: any, filters: any, search
 };
 
 
-export const getLiveDeals = (inviteeId:any, token:any, filters:any, searchQuery:string) => {
+export const getLiveDeals = ( token:any, filters:any, searchQuery:string, currentPage:number) => {
   const queryParameters = new URLSearchParams();
+  queryParameters.append("page", currentPage.toString());
   if (filters !== "All")
   queryParameters.append("deal_type", filters.toLowerCase());
   if (searchQuery.trim() !== "") {
@@ -127,6 +131,16 @@ export const getDealDetail = (dealToken: string, token: string) => {
     },
   });
 };
+export const getFundraiserInvestors = (token: string, currentPage:number) => {
+  const queryParameters = new URLSearchParams();
+  queryParameters.append("page", currentPage.toString());
+  const apiUrl = `${ENV.API_URL}/${ENV.API_VERSION}/fund_raisers/investors?${queryParameters.toString()}`;
+  return axios.get(apiUrl, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+};
 
 export const getDealDocuments = (dealId: number, token: string) => {
   return axios.get(
@@ -138,9 +152,36 @@ export const getDealDocuments = (dealId: number, token: string) => {
     }
   );
 };
-export const getDealSyndicates = (dealId: number, token: string) => {
+export const getInterestedDealSyndicates = (dealId: number, token: string, currentPage:number) => {
+  const queryParameters = new URLSearchParams();
+  queryParameters.append("page", currentPage.toString());
+  const apiUrl = `${ENV.API_URL}/${ENV.API_VERSION}deals/${dealId}/invites?status=interested?${queryParameters.toString()}`;
   return axios.get(
-    `${ENV.API_URL}/${ENV.API_VERSION}/deals/${dealId}/invites`,
+    apiUrl,
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    }
+  );
+};
+export const getInvitedDealSyndicates = (dealId: number, token: string, currentPage:number) => {
+  const queryParameters = new URLSearchParams();
+  queryParameters.append("page", currentPage.toString());
+  const apiUrl = `${ENV.API_URL}/${ENV.API_VERSION}/deals/${dealId}/invites?${queryParameters.toString()}`;
+  return axios.get(
+    apiUrl,
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    }
+  );
+};
+export const getSharedInvestors = (dealId: number, token: string) => {
+  
+  return axios.get(
+    `${ENV.API_URL}/${ENV.API_VERSION}/deals/${dealId}/invites?invite_type=investment`,
     {
       headers: {
         Authorization: `Bearer ${token}`,
@@ -162,7 +203,7 @@ export const getSellingPoints = (dealId: number, token: string) => {
 export const getViewDealSyndicates = (
   dealId: number,
   syndicateId: number,
-  token: string
+  token: string,
 ) => {
   return axios.get(
     `${ENV.API_URL}/${ENV.API_VERSION}/deals/${dealId}/syndicates/${syndicateId}`,

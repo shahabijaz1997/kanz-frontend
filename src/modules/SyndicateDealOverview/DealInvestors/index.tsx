@@ -23,27 +23,26 @@ const Investors = ({dealID, dealCreatorView} : any) => {
     "Amount Raised",
     
   ];
-  const [pagination, setPagination] = useState({
-    items_per_page: 10,
-    total_items: [],
-    current_page: 1,
-    total_pages: 0,
-  });
   const [loading, setLoading] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [paginationData, setpaginationData] = useState(null);
   const [activity, setActivity]:any = useState([]);
-
- 
   useEffect(() => {
     dispatch(saveDataHolder(""));
     dealID && getInvestorsforDeal();
   }, []);
+  useEffect(() => {
+    dispatch(saveDataHolder(""));
+    getInvestorsforDeal();
+  }, [currentPage]);
 
   const getInvestorsforDeal = async () => {
     try {
       setLoading(true);
-      let { status, data } = await getDealInvestors(dealID, authToken);
+      let { status, data } = await getDealInvestors(dealID, authToken, currentPage);
       if (status === 200) {
-        let activity = data?.status?.data?.map((dealActivity: any) => {
+        setpaginationData(data?.status?.data?.pagy)
+        let activity = data?.status?.data?.records?.map((dealActivity: any) => {
           return {
             id: dealActivity?.id,
             "Name":<span className="capitalize">{dealActivity?.investor_name}</span> ,
@@ -52,16 +51,6 @@ const Investors = ({dealID, dealCreatorView} : any) => {
             ["Amount Raised"]: (
               <span>{comaFormattedNumber(dealActivity?.amount)}</span>
             ),
-          };
-        });
-        
-        setPagination((prev) => {
-          return {
-            ...prev,
-            total_items: activity.length,
-            current_page: 1,
-            total_pages: Math.ceil(activity.length / prev.items_per_page),
-            data: activity?.slice(0, prev.items_per_page),
           };
         });
         setActivity(activity);
@@ -73,35 +62,6 @@ const Investors = ({dealID, dealCreatorView} : any) => {
       }
     } finally {
       setLoading(false);
-    }
-  };
-
-  const paginate = (type: string) => {
-    if (type === "next" && pagination.current_page < pagination.total_pages) {
-      setPagination((prev: any) => {
-        const nextPage = prev.current_page + 1;
-        const startIndex = (nextPage - 1) * prev.items_per_page;
-        const endIndex = startIndex + prev.items_per_page;
-        const data = activity.slice(startIndex, endIndex);
-        return { ...prev, current_page: nextPage, data };
-      });
-    } else if (type === "previous" && pagination.current_page > 1) {
-      setPagination((prev: any) => {
-        const prevPage = prev.current_page - 1;
-        const startIndex = (prevPage - 1) * prev.items_per_page;
-        const endIndex = startIndex + prev.items_per_page;
-        const data = activity.slice(startIndex, endIndex);
-        return { ...prev, current_page: prevPage, data };
-      });
-    } else {
-      setPagination((prev: any) => {
-        const prevPage = Number(type) + 1 - 1;
-        const startIndex = (prevPage - 1) * prev.items_per_page;
-        const endIndex = startIndex + prev.items_per_page;
-        const data = activity.slice(startIndex, endIndex);
-
-        return { ...prev, current_page: type, data };
-      });
     }
   };
 
@@ -125,9 +85,9 @@ const Investors = ({dealID, dealCreatorView} : any) => {
           <section className="mt-5 shadow-lg">
             <Table
               columns={columns}
-              pagination={pagination}
-              paginate={paginate}
-              goToPage={paginate}
+              tableData={activity}
+              setCurrentPage={setCurrentPage}
+              paginationData={paginationData}
               removeHref={true}
               noDataNode={
                 <span className="absolute left-1/2 top-1/2 translate-x-[-50%] translate-y-[-50%]">

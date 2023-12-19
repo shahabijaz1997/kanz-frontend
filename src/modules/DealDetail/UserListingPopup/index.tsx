@@ -150,7 +150,7 @@ const UserListingPopup = ({ approve, dealId, type, dealIdReal, setLoader }: any)
       </Button>
       {showInviteSyndicate ? (
         <section className="absolute p-5 bg-white border-[1px] border-neutral-200 rounded-md w-[400px] right-0 top-[100%]">
-                <div className="rounded-md shadow-cs-6 bg-white border-[1px] border-gray-200 h-9 overflow-hidden max-w-[310px] inline-flex items-center px-2">
+                <div className="rounded-md shadow-cs-6 bg-white border-[1px] border-gray-200 h-9 overflow-hidden w-full inline-flex items-center px-2">
                       <SearchIcon
                         onClick={() => {
                           getAllUserListings();
@@ -166,7 +166,7 @@ const UserListingPopup = ({ approve, dealId, type, dealIdReal, setLoader }: any)
                         onChange={(e) => setSearchQuery(e.target.value)}
                         type="search"
                         className="h-full w-full outline-none pl-2 text-sm font-normal"
-                        placeholder={language?.v3?.common?.search}
+                        placeholder={"Search for Syndicates"}
                       />
                     </div>
 

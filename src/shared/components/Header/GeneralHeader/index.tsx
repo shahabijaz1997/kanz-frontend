@@ -16,7 +16,7 @@ import { languageDropdownItems } from "../../../../utils/dropdown-items.utils";
 import { RoutesEnums } from "../../../../enums/routes.enum";
 import { saveDataHolder } from "../../../../redux-toolkit/slicer/dataHolder.slicer";
 
-const GeneralHeader = ({ responsive = false, showMenu = false, showLanguageDropdown = false }: any) => {
+const GeneralHeader = ({ responsive = false, showMenu = false, showLanguageDropdown = false, onSuperLogout = ()=>{} }: any) => {
     const navigate = useNavigate();
     const dispatch = useDispatch();
     const language: any = useSelector((state: RootState) => state.language.value);
@@ -32,10 +32,21 @@ const GeneralHeader = ({ responsive = false, showMenu = false, showLanguageDropd
 
     const onLogout = async () => {
         try {
+            onSuperLogout(true);
+            dispatch(saveToken(""));
+            localStorage.clear();
+            dispatch(saveUserData(""));
+            dispatch(saveUserMetaData(""));
+            dispatch(saveLogo(""));
+            dispatch(saveDataHolder(""));
+            navigate(RoutesEnums.LOGIN);
             await logout(authToken);
         } catch (error: any) {
         } finally {
-            navigate(RoutesEnums.LOADING_LOGOUT);
+            let timer = setTimeout(() => {
+                clearTimeout(timer);
+                onSuperLogout(false);
+            }, 500)
         }
     };
 

@@ -22,7 +22,7 @@ import SearchIcon from "../../../ts-icons/searchIcon.svg";
 import EditDealWarningModal from "../EditDealWarningModal";
 import { saveUserMetaData } from "../../../redux-toolkit/slicer/metadata.slicer";
 
-const PropertyDeals = ({openPropertyRiskModal}: any) => {
+const PropertyDeals = ({ openPropertyRiskModal }: any) => {
   const [loading, setLoading] = useState(false);
   const language: any = useSelector((state: RootState) => state.language.value);
   const authToken: any = useSelector((state: RootState) => state.auth.value);
@@ -41,15 +41,11 @@ const PropertyDeals = ({openPropertyRiskModal}: any) => {
     "End Date",
     language?.v3?.table?.action,
   ];
-  const [pagination, setPagination] = useState({
-    items_per_page: 10,
-    total_items: [],
-    current_page: 1,
-    total_pages: 0,
-  });
   const [filter, setFilterCounts]: any = useState([]);
   const [selectedTab, setSelectedTab] = useState("All");
   const [warningModal, setwarningModal]: any = useState(null);
+  const [paginationData, setpaginationData] = useState(null);
+  const [currentPage, setCurrentPage] = useState(1);
   const [tabs] = useState([
     language?.v3?.startup?.overview?.all,
     "Draft",
@@ -98,8 +94,13 @@ const PropertyDeals = ({openPropertyRiskModal}: any) => {
   const [selectTypeModal, setSelectTypeModal]: any = useState(null);
   useEffect(() => {
     dispatch(saveDataHolder(""));
+    setCurrentPage(1)
     getAllDeals();
   }, [selectedTab]);
+  useEffect(() => {
+    dispatch(saveDataHolder(""));
+    getAllDeals();
+  }, [currentPage]);
   useEffect(() => {
     dispatch(saveDataHolder(""));
     dispatch(saveUserMetaData(""));
@@ -120,15 +121,20 @@ const PropertyDeals = ({openPropertyRiskModal}: any) => {
       let { status, data } = await getPropertyDeals(
         authToken,
         selectedTab,
-        searchQuery
+        searchQuery,
+        currentPage
       );
       if (status === 200) {
         setFilterCounts(data?.status?.data?.stats);
+        setpaginationData(data?.status?.data?.pagy);
         let deals = data?.status?.data?.deals?.map((deal: any) => {
           return {
             id: deal?.id,
             [language?.v3?.table?.title]: deal?.title || "N/A",
-            ["Selling Price"]: `${numberFormatter(deal.target,DealCheckType.PROPERTY)}`,
+            ["Selling Price"]: `${numberFormatter(
+              deal.target,
+              DealCheckType.PROPERTY
+            )}`,
             ["Size"]: `${deal?.size ? `${deal.size} SQFT` : "N/A"}`,
             ["State"]: deal?.state || "N/A",
             ["City"]: deal?.city || "N/A",
@@ -136,10 +142,8 @@ const PropertyDeals = ({openPropertyRiskModal}: any) => {
             [language?.v3?.table?.status]: (
               <CustomStatus options={deal?.status} />
             ),
-            ["Model"]: (
-              <span className=" capitalize">{deal?.model}</span>
-            ),
-            
+            ["Model"]: <span className=" capitalize">{deal?.model}</span>,
+
             token: deal?.token,
             Steps: deal?.current_state?.steps,
             [language?.v3?.table?.action]: (
@@ -182,8 +186,8 @@ const PropertyDeals = ({openPropertyRiskModal}: any) => {
                       }
                     }}
                     className="bg-neutral-100 inline-flex items-center justify-center w-[26px] h-[26px] p-1 rounded-full transition-all hover:bg-cbc-transparent"
-                  >
-                    <EditIcon className="w-6 h-6" stroke={"#737373"} />
+                    >
+                      <EditIcon className="w-4 h-4" stroke={"#737373"} />
                   </div>
                 )}
                 <div
@@ -197,24 +201,16 @@ const PropertyDeals = ({openPropertyRiskModal}: any) => {
                           : KanzRoles.STARTUP,
                     });
                   }}
-                  className="ml-2 bg-neutral-100 inline-flex items-center justify-center w-[26px] h-[26px] rounded-full transition-all hover:bg-cbc-transparent"
-                >
-                  <Chevrond
-                    className="rotate-[-90deg] w-6 h-6"
-                    stroke={"#737373"}
-                  />
+                  className="bg-neutral-100 inline-flex items-center justify-center w-[26px] h-[26px] rounded-full transition-all hover:bg-cbc-transparent mx-2"
+                  >
+                    <Chevrond
+                      className="rotate-[-90deg] w-4 h-4"
+                      strokeWidth={2}
+                      stroke={"#000"}
+                    />
                 </div>
               </React.Fragment>
             ),
-          };
-        });
-        setPagination((prev) => {
-          return {
-            ...prev,
-            total_items: deals.length,
-            current_page: 1,
-            total_pages: Math.ceil(deals.length / prev.items_per_page),
-            data: deals?.slice(0, prev.items_per_page),
           };
         });
         setDeals(deals);
@@ -228,35 +224,6 @@ const PropertyDeals = ({openPropertyRiskModal}: any) => {
       }
     } finally {
       setLoading(false);
-    }
-  };
-  const paginate = (type: string) => {
-    if (type === "next" && pagination.current_page < pagination.total_pages) {
-      setPagination((prev: any) => {
-        const nextPage = prev.current_page + 1;
-        const startIndex = (nextPage - 1) * prev.items_per_page;
-        const endIndex = startIndex + prev.items_per_page;
-        const data = deals.slice(startIndex, endIndex);
-        return { ...prev, current_page: nextPage, data };
-      });
-    } else if (type === "previous" && pagination.current_page > 1) {
-      setPagination((prev: any) => {
-        const prevPage = prev.current_page - 1;
-        const startIndex = (prevPage - 1) * prev.items_per_page;
-        const endIndex = startIndex + prev.items_per_page;
-        const data = deals.slice(startIndex, endIndex);
-
-        return { ...prev, current_page: prevPage, data };
-      });
-    } else {
-      setPagination((prev: any) => {
-        const prevPage = Number(type) + 1 - 1;
-        const startIndex = (prevPage - 1) * prev.items_per_page;
-        const endIndex = startIndex + prev.items_per_page;
-        const data = deals.slice(startIndex, endIndex);
-
-        return { ...prev, current_page: type, data };
-      });
     }
   };
 
@@ -314,24 +281,26 @@ const PropertyDeals = ({openPropertyRiskModal}: any) => {
           <section className="mt-10">
             <Table
               columns={columns}
-              pagination={pagination}
-              paginate={paginate}
-              goToPage={paginate}
+              tableData={deals}
+              setCurrentPage={setCurrentPage}
+              paginationData={paginationData}
               noDataNode={
-                <Button
-                onClick={()=>{
-                  dispatch(
-                    saveUserMetaData({
-                      ...metadata.value,
-                      dealType: KanzRoles.PROPERTY_OWNER,
-                    })
-                  );
-                  openPropertyRiskModal()
-                }}
                 
-                 className="absolute left-1/2 top-1/2 translate-x-[-50%] translate-y-[-50%]">
+                      <Button
+                  onClick={() => {
+                    dispatch(
+                      saveUserMetaData({
+                        ...metadata.value,
+                        dealType: KanzRoles.PROPERTY_OWNER,
+                      })
+                    );
+                    openPropertyRiskModal();
+                  }}
+                  className="absolute left-1/2 top-1/2 translate-x-[-50%] translate-y-[-50%]"
+                >
                   {"Create Property Deal"}
                 </Button>
+          
               }
             />
           </section>

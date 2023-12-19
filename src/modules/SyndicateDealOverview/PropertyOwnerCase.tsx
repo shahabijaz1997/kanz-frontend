@@ -421,7 +421,9 @@ const PropertyOwnerCase = ({
         />
       )}
       <section>
-        <Header />
+        <Header onSuperLogout={(e:boolean) => {
+          setLoading(e)
+        }} />
       </section>
       <aside
         className="w-full h-full flex items-start justify-start"
