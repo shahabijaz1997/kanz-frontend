@@ -43,20 +43,10 @@ const GeneralHeader = ({ responsive = false, showMenu = false, showLanguageDropd
             await logout(authToken);
         } catch (error: any) {
         } finally {
-<<<<<<< HEAD
-            dispatch(saveToken(""));
-            navigate(RoutesEnums.LOGIN);
-            localStorage.clear();
-            dispatch(saveUserData(""));
-            dispatch(saveUserMetaData(""));
-            dispatch(saveLogo(""));
-            dispatch(saveDataHolder(""));
-=======
             let timer = setTimeout(() => {
                 clearTimeout(timer);
                 onSuperLogout(false);
             }, 500)
->>>>>>> combinePropertyStartup
         }
     };
 

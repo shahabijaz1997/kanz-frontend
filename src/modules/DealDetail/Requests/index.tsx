@@ -136,8 +136,9 @@ const Requests = ({ id }: any) => {
   const getAllDeals = async () => {
     try {
       setLoading(true);
-      let { status, data } = await getInterestedDealSyndicates(id, authToken);
+      let { status, data } = await getInterestedDealSyndicates(id, authToken, currentPage);
       if (status === 200) {
+        setpaginationData(data?.status?.data?.pagy)
         let deals = data?.status?.data?.invites
           .map((deal: any) => {
             return {

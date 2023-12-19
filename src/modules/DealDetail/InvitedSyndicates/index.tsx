@@ -26,24 +26,25 @@ const InvitedSyndicates = ({ id }: any) => {
   ];
   const [loading, setLoading]: any = useState(false);
   const [invites, setInvites]: any = useState([]);
-  const [pagination, setPagination] = useState({
-    items_per_page: 5,
-    total_items: [],
-    current_page: 1,
-    total_pages: 0,
-  });
+  const [currentPage, setCurrentPage] = useState(1);
+  const [paginationData, setpaginationData] = useState(null);
 
   useEffect(() => {
     dispatch(saveDataHolder(""));
     getAllDeals();
   }, []);
+  useEffect(() => {
+    dispatch(saveDataHolder(""));
+    getAllDeals();
+  }, [currentPage]);
  
 
   const getAllDeals = async () => {
     try {
       setLoading(true);
-      let { status, data } = await getInvitedDealSyndicates(id, authToken);
+      let { status, data } = await getInvitedDealSyndicates(id, authToken, currentPage);
       if (status === 200) {
+        setpaginationData(data?.status?.data?.pagy)
         let deals = data?.status?.data?.invites
           ?.map((deal: any) => {
             return {
@@ -61,16 +62,6 @@ const InvitedSyndicates = ({ id }: any) => {
               ["Invite Expiration Date"]: deal?.invite_expiry || "N/A",
             };
           });
-
-        setPagination((prev) => {
-          return {
-            ...prev,
-            total_items: deals.length,
-            current_page: 1,
-            total_pages: Math.ceil(deals.length / prev.items_per_page),
-            data: deals?.slice(0, prev.items_per_page),
-          };
-        });
         setInvites(deals);
       }
     } catch (error: any) {
@@ -96,6 +87,9 @@ const InvitedSyndicates = ({ id }: any) => {
       ) : (
         <Table
           columns={columns}
+          tableData={invites}
+          setCurrentPage={setCurrentPage}
+          paginationData={paginationData}
           noDataNode={
             <span className="absolute left-1/2 top-1/2 translate-x-[-50%] translate-y-[-50%]">
               No invites sent! Click on the{" "}
