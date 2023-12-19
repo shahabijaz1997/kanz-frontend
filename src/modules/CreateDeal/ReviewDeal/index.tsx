@@ -56,7 +56,7 @@ const ReviewDeal = ({
           {(typeof field?.value === "string" ||
             typeof field?.value === "number") && (
             <p className="capitalize text-neutral-500 font-normal text-sm">
-              {comaFormattedNumber(field?.value)}
+              {field?.value}
             </p>
           )}
           {typeof field?.value === "boolean" && (
