@@ -1,14 +1,9 @@
-import React, {  useEffect, useLayoutEffect, useState } from "react";
-import { useSelector } from "react-redux";
-import { useLocation, useNavigate, useParams } from "react-router-dom";
+import React, {   useState } from "react";
+import { useLocation, useParams } from "react-router-dom";
 import { KanzRoles } from "../../../enums/roles.enum";
-import { RootState } from "../../../redux-toolkit/store/store";
 import Header from "../../../shared/components/Header";
 import Sidebar from "../../../shared/components/Sidebar";
 import Spinner from "../../../shared/components/Spinner";
-import AllSyndicates from ".././InvestorSyndicates/AllSyndicates";
-import FollowingSyndicates from ".././InvestorSyndicates/FollowingSyndicates";
-import { useDispatch } from "react-redux";
 import Commitments from "./Commitments";
 import Invites from "./Invites";
 
@@ -17,8 +12,6 @@ import Invites from "./Invites";
 
 const Deals = ({}: any) => {
   const params = useParams();
-  const navigate = useNavigate();
-  const dispatch = useDispatch();
 
 
   const { state } = useLocation();

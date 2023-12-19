@@ -111,6 +111,9 @@ const PropertyOwnerCase = ({ id, dealToken, dealDetail }: any) => {
     <main className="h-full max-h-full overflow-y-hidden">
       <section>
         <Header
+         onSuperLogout={(e:boolean) => {
+          setLoading(e)
+        }}
           showMenu={false}
           showLanguageDropdown={!authToken ? true : false}
         />

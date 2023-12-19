@@ -50,6 +50,8 @@ const SyndicateDashboard = ({}: any) => {
   const [selectedTab, setSelectedTab] = useState("All");
   const [modalOpen, setModalOpen]: any = useState(null);
   const [searchQuery, setSearchQuery]: any = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
+  const [paginationData, setpaginationData] = useState(null);
   const [loading, setLoading] = useState(false);
   const [tabs] = useState([
     language?.v3?.startup?.overview?.all,
@@ -95,14 +97,20 @@ const SyndicateDashboard = ({}: any) => {
 
   useEffect(() => {
     getAllDeals();
+  }, [currentPage]);
+
+  useEffect(() => {
+    setCurrentPage(1)
+    getAllDeals();
   }, [selectedTab]);
 
   const getAllDeals = async () => {
     try {
       setLoading(true);
-      let { status, data } = await getDealsforsyndicate(authToken, selectedTab,searchQuery);
+      let { status, data } = await getDealsforsyndicate(authToken, selectedTab,searchQuery, currentPage);
       if (status === 200) {
         setFilterCounts(data?.status?.data?.stats)
+        setpaginationData(data?.status?.data?.pagy)
         let deals = data?.status?.data?.deals?.map((deal: any) => {
           return {
             token: deal?.token,
@@ -253,9 +261,9 @@ const SyndicateDashboard = ({}: any) => {
               <section className="mt-10">
                 <Table
                   columns={columns}
-                  pagination={pagination}
-                  paginate={paginate}
-                  goToPage={paginate}
+                  tableData={deals}
+                  setCurrentPage={setCurrentPage}
+                  paginationData={paginationData}
                 />
               </section>
             </React.Fragment>

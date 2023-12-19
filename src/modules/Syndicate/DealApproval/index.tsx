@@ -46,6 +46,8 @@ const DealApproval = ({}: any) => {
   const [searchQuery, setSearchQuery]: any = useState("");
   const [modalOpen, setModalOpen]: any = useState(null);
   const [loading, setLoading] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [paginationData, setpaginationData] = useState(null);
 
   const [deals, setDeals] = useState([]);
   const [filter, setFilterCounts]: any = useState([]);
@@ -86,6 +88,11 @@ const DealApproval = ({}: any) => {
   useEffect(() => {
     dispatch(saveDataHolder(""));
     getAllDeals();
+  }, [currentPage]);
+  useEffect(() => {
+    dispatch(saveDataHolder(""));
+    setCurrentPage(1)
+    getAllDeals();
   }, [selectedTab]);
 
   const getAllDeals = async () => {
@@ -95,10 +102,12 @@ const DealApproval = ({}: any) => {
         user.id,
         authToken,
         selectedTab,
-        searchQuery
+        searchQuery, 
+        currentPage
       );
       if (status === 200) {
         setFilterCounts(data?.status?.data?.stats);
+        setpaginationData(data?.status?.data?.pagy);
         let deals = data?.status?.data?.invites?.map((deal: any) => {
           return {
             id: deal?.id,
@@ -266,9 +275,9 @@ const DealApproval = ({}: any) => {
               <section className="mt-10">
                 <Table
                   columns={columns}
-                  pagination={pagination}
-                  paginate={paginate}
-                  goToPage={paginate}
+                  tableData={deals}
+                  setCurrentPage={setCurrentPage}
+                  paginationData={paginationData}
                 />
               </section>
             </React.Fragment>

@@ -54,7 +54,8 @@ const SyndicateRequest = ({}: any) => {
   const [modalAddComment, setmodalAddComment]: any = useState(null);
   const [loading, setLoading] = useState(false);
   const [loadDrawer, setLoadingDrawer] = useState(false);
-
+  const [currentPage, setCurrentPage] = useState(1);
+  const [paginationData, setpaginationData] = useState(null);
   const [syndicates, setsyndicates]: any = useState([]);
   const [dealDetail, setDealDetail]: any = useState(null);
   const [searchQuery, setSearchQuery]: any = useState("");
@@ -63,6 +64,9 @@ const SyndicateRequest = ({}: any) => {
     dispatch(saveDataHolder(""));
     getAllDeals();
   }, []);
+  useEffect(() => {
+    getAllDeals();
+  }, [currentPage]);
 
   const setFileInformation = async (file: File) => {
     let size = fileSize(file.size, "mb");
@@ -198,10 +202,12 @@ const SyndicateRequest = ({}: any) => {
       let { status, data } = await getInvitedSyndicates(
         user.id,
         searchQuery,
-        authToken
+        authToken,
+        currentPage
       );
       if (status === 200) {
-        let syndicates = data?.status?.data?.map((syndicate: any) => {
+        setpaginationData(data?.status?.data?.pagy);
+        let syndicates = data?.status?.data?.invites?.map((syndicate: any) => {
           return {
             id: syndicate?.id,
             [language?.v3?.deal?.syndicate]: syndicate?.invitee?.name,
@@ -218,24 +224,16 @@ const SyndicateRequest = ({}: any) => {
                   );
                   setOpen(true);
                 }}
-                className="bg-neutral-100 inline-flex items-center justify-center w-[30px] h-[30px] rounded-full transition-all hover:bg-cbc-transparent"
-              >
-                <Chevrond
-                  className="rotate-[-90deg] w-6 h-6"
-                  stroke={"#737373"}
-                />
+                className="bg-neutral-100 inline-flex items-center justify-center w-[24px] h-[24px] rounded-full transition-all hover:bg-cbc-transparent mx-5"
+                >
+                  <Chevrond
+                    className="rotate-[-90deg] w-3 h-3"
+                    strokeWidth={3}
+                    stroke={"#000"}
+                  />
               </div>
             ),
             dealId: syndicate?.deal?.id,
-          };
-        });
-        setPagination((prev) => {
-          return {
-            ...prev,
-            total_items: syndicates.length,
-            current_page: 1,
-            total_pages: Math.ceil(syndicates.length / prev.items_per_page),
-            data: syndicates?.slice(0, prev.items_per_page),
           };
         });
         setsyndicates(syndicates);
@@ -271,36 +269,6 @@ const SyndicateRequest = ({}: any) => {
       }
     } finally {
       setLoadingDrawer(false);
-    }
-  };
-
-  const paginate = (type: string) => {
-    if (type === "next" && pagination.current_page < pagination.total_pages) {
-      setPagination((prev: any) => {
-        const nextPage = prev.current_page + 1;
-        const startIndex = (nextPage - 1) * prev.items_per_page;
-        const endIndex = startIndex + prev.items_per_page;
-        const data = syndicates.slice(startIndex, endIndex);
-        return { ...prev, current_page: nextPage, data };
-      });
-    } else if (type === "previous" && pagination.current_page > 1) {
-      setPagination((prev: any) => {
-        const prevPage = prev.current_page - 1;
-        const startIndex = (prevPage - 1) * prev.items_per_page;
-        const endIndex = startIndex + prev.items_per_page;
-        const data = syndicates.slice(startIndex, endIndex);
-
-        return { ...prev, current_page: prevPage, data };
-      });
-    } else {
-      setPagination((prev: any) => {
-        const prevPage = Number(type) + 1 - 1;
-        const startIndex = (prevPage - 1) * prev.items_per_page;
-        const endIndex = startIndex + prev.items_per_page;
-        const data = syndicates.slice(startIndex, endIndex);
-
-        return { ...prev, current_page: type, data };
-      });
     }
   };
 
@@ -355,9 +323,9 @@ const SyndicateRequest = ({}: any) => {
               <section className="mt-10">
                 <Table
                   columns={columns}
-                  pagination={pagination}
-                  paginate={paginate}
-                  goToPage={paginate}
+                  tableData={syndicates}
+                  setCurrentPage={setCurrentPage}
+                  paginationData={paginationData}
                   noDataNode={
                     <span className="absolute left-1/2 top-1/2 translate-x-[-50%] translate-y-[-50%]">
                       No Data

@@ -30,18 +30,25 @@ const DealActivity = ({dealID, dealCreatorView}: any) => {
   });
   const [loading, setLoading] = useState(false);
   const [activity, setDeals] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [paginationData, setpaginationData] = useState(null);
  
   useEffect(() => {
     dispatch(saveDataHolder(""));
     dealID && getAllDeals();
   }, []);
+  useEffect(() => {
+    dispatch(saveDataHolder(""));
+     getAllDeals();
+  }, [currentPage]);
 
   const getAllDeals = async () => {
     try {
       setLoading(true);
-      let { status, data } = await getDealActivity(dealID, authToken);
+      let { status, data } = await getDealActivity(dealID, authToken, currentPage);
       if (status === 200) {
-        let activity = data?.status?.data?.map((dealActivity: any) => {
+        setpaginationData(data?.status?.data?.pagy)
+        let activity = data?.status?.data?.records?.map((dealActivity: any) => {
           return {
             id: dealActivity?.investor?.id,
             "Name":<span className="capitalize">{dealActivity?.investor?.name}</span> ,
@@ -53,16 +60,6 @@ const DealActivity = ({dealID, dealCreatorView}: any) => {
             ["Amount Raised"]: (
               <span>{comaFormattedNumber(dealActivity?.amount)}</span>
             ),
-          };
-        });
-
-        setPagination((prev) => {
-          return {
-            ...prev,
-            total_items: activity.length,
-            current_page: 1,
-            total_pages: Math.ceil(activity.length / prev.items_per_page),
-            data: activity?.slice(0, prev.items_per_page),
           };
         });
         setDeals(activity);
@@ -126,9 +123,9 @@ const DealActivity = ({dealID, dealCreatorView}: any) => {
           <section className="mt-5 shadow-lg">
             <Table
               columns={columns}
-              pagination={pagination}
-              paginate={paginate}
-              goToPage={paginate}
+              tableData={activity}
+              setCurrentPage={setCurrentPage}
+              paginationData={paginationData}
               removeHref={true}
               noDataNode={
                 <span className="absolute left-1/2 top-1/2 translate-x-[-50%] translate-y-[-50%]">

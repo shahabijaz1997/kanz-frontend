@@ -4,33 +4,32 @@ import { RootState } from "../../../redux-toolkit/store/store";
 import Chevrond from "../../../ts-icons/chevrond.svg";
 
 const Table = ({
+  tableData,
+  paginationData,
+  setCurrentPage,
   columns,
   noDataNode,
   onclick = () => {},
-  pagination,
-  paginate,
-  goToPage = () => {},
   removeHref = false
 }: any) => {
   const orientation: any = useSelector(
     (state: RootState) => state.orientation.value
   );
-
   const renderPaginationUI = () => {
     let pages: number[] = [];
-    for (let i = 1; i <= pagination?.total_pages; i++) pages.push(i);
+    for (let i = 1; i <= paginationData?.pages; i++) pages.push(i);
     return React.Children.toArray(
       pages?.map((page, index) => {
         return (
           <li
-            className={`${index !== pages.length - 1 ? "" : "mr-0"}`}
+            className={`${index !== pages?.length  ? "" : "mr-0"}`}
             onClick={() => {
-              goToPage(page);
+              setCurrentPage(page)
             }}
           >
             <a
               className={`${
-                page === pagination?.current_page
+                page === paginationData?.page
                   ? "border-[1px] border-l-[1px]  border-r-[1px] border-[#155E75] bg-[#F5F5F5] text-[#155E75]"
                   : "bg-transparent text-[#737373] border-[1px] border-l-[#D4D4D4]border-r-[#D4D4D4]"
               } transition-all block   px-3 py-1.5 text-sm font-medium`}
@@ -45,8 +44,8 @@ const Table = ({
   };
 
   return (
-    <section className="rounded-lg shadow-xl overflow-hidden border-[1px] border-neutral-200 w-full">
-      <table className="min-w-full overflow-hidden bg-white">
+    <section className="rounded-lg shadow-xl overflow-hidden border-[1px] min-h-full border-neutral-200 w-full">
+      <table className="min-w-full overflow-hidden min-h-full bg-white">
         <thead className="bg-neutral-50">
           <tr>
             {React.Children.toArray(
@@ -67,12 +66,12 @@ const Table = ({
         </thead>
         <tbody
           className={`relative divide-y divide-gray-200 ${
-            (!pagination?.data || !pagination?.data?.length) && "h-[13rem]"
+            (!tableData || !tableData) && "h-[13rem]"
           }`}
         >
-          {pagination?.data?.length > 0
+          {tableData?.length > 0
             ? React.Children.toArray(
-                pagination?.data.map((row: any) => (
+                tableData?.map((row: any) => (
                   <tr
                     onClick={() => onclick(row)}
                     className="cursor-pointer transition-all hover:bg-cbc-transparent border-none"
@@ -108,23 +107,28 @@ const Table = ({
                   </tr>
                 ))
               )
-            : noDataNode}
+            :
+            <div className="min-h-[100px]">
+              {noDataNode}
+            </div> 
+            }
         </tbody>
       </table>
-      {pagination?.data?.length > 0 && (
-        <nav className="py-2 flex justify-end bg-white border-t-[1px] border-[#D4D4D4]">
+      {tableData?.length > 0 && (
+        <nav className="py-2 flex justify-between items-center bg-white border-t-[1px] border-[#D4D4D4]">
+          <span className="mx-10 font-semibold text-sm">Showing {paginationData?.from} to {paginationData?.to} of {paginationData?.count} results</span>
           <ul className="list-style-none  flex items-center justify-center border-[#D4D4D4] border-[1px] rounded-md w-fit mx-10">
             <li
               className="pr-2"
               onClick={() => {
-                if (pagination?.current_page === 1) return;
-                paginate("previous");
+                if (paginationData?.prev===null) return;
+                setCurrentPage(paginationData?.prev);
               }}
             >
               {" "}
               <a
                 className={`${
-                  pagination?.current_page === 1
+                  paginationData?.page === 1
                     ? "cursor-not-allowed"
                     : "cursor-pointer"
                 } text-cyan-800 w-fit pl-2 h-fit flex`}
@@ -136,15 +140,14 @@ const Table = ({
             <li
               className="pl-2"
               onClick={() => {
-                if (pagination?.current_page === pagination?.total_pages)
+                if (paginationData?.next === null)
                   return;
-
-                paginate("next");
+                setCurrentPage(paginationData?.next);
               }}
             >
               <a
                 className={`${
-                  pagination?.current_page === pagination?.total_pages
+                  paginationData?.page === paginationData?.pages
                     ? "cursor-not-allowed"
                     : "cursor-pointer"
                 } text-cyan-800  w-fit  h-fit flex pr-2 `}

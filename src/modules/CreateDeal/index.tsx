@@ -220,6 +220,7 @@ const CreateDeal = () => {
       }, 500);
     }
   };
+  console.log("METADATA DEAL TYPE", metadata.dealType)
 
   const onSetNext = async () => {
     try {
@@ -529,17 +530,13 @@ const CreateDeal = () => {
                 className="outline-none w-full h-full placeholder-neutral-500"
               />
               {ques?.input_type === InputType.CURRENCY && (
-                <span
-                  className="cursor-pointer inline-flex items-center"
-                  onClick={() =>
-                    setCurrency((prev) => {
-                      return prev === 0 ? 1 : 0;
-                    })
-                  }
-                >
-                  <button className="font-normal text-lg text-neutral-500">
-                    {CURRENCIES[currency]}
-                  </button>
+                <span className="inline-flex items-center">
+                  <span className="font-normal text-lg text-neutral-500">
+                    {metadata.dealType === KanzRoles.PROPERTY_OWNER
+                      ? CURRENCIES[1]
+                      : CURRENCIES[0]
+                      }
+                  </span>
                 </span>
               )}
               {ques?.input_type === InputType.SQFT && (
@@ -566,18 +563,24 @@ const CreateDeal = () => {
               {React.Children.toArray(
                 ques?.suggestions.map((suggestion: any) => {
                   let formattedNumber;
-                  if (ques.input_type === InputType.CURRENCY && metadata.dealType === KanzRoles.PROPERTY_OWNER) {
+                  if (
+                    ques.input_type === InputType.CURRENCY &&
+                    metadata.dealType === KanzRoles.PROPERTY_OWNER
+                  ) {
                     formattedNumber = numberFormatter(
                       suggestion,
                       DealCheckType.PROPERTY
                     );
-                  } else if (ques.input_type === InputType.CURRENCY && metadata.dealType === KanzRoles.STARTUP) {
+                  } else if (
+                    ques.input_type === InputType.CURRENCY &&
+                    metadata.dealType === KanzRoles.STARTUP
+                  ) {
                     formattedNumber = numberFormatter(
                       suggestion,
                       DealCheckType.STARTUP
                     );
                   } else {
-                    formattedNumber = (suggestion) + '%';
+                    formattedNumber = suggestion + "%";
                   }
 
                   return (
