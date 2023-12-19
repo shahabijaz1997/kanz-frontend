@@ -13,7 +13,6 @@ import Modal from "../../../shared/components/Modal";
 import CrossIcon from "../../../ts-icons/crossIcon.svg";
 import { saveDataHolder } from "../../../redux-toolkit/slicer/dataHolder.slicer";
 import {  getLiveDeals } from "../../../apis/deal.api";
-import { formatDate } from "../../../utils/object.utils";
 import {
   numberFormatter,
 } from "../../../utils/object.utils";
@@ -37,15 +36,12 @@ const SyndicateInvestments = ({}: any) => {
     language?.v3?.syndicate?.deals?.table?.target,
     "",
   ];
-  const [pagination, setPagination] = useState({
-    items_per_page: 10,
-    total_items: [],
-    current_page: 1,
-    total_pages: 0,
-  });
+
   const [selectedTab, setSelectedTab]: any = useState("All");
   const [searchQuery, setSearchQuery]: any = useState("");
   const [modalOpen, setModalOpen]: any = useState(null);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [paginationData, setpaginationData] = useState(null);
   const [loading, setLoading] = useState(false);
   const [filter, setFilterCounts]:any = useState([]);
   const [tabs] = useState([
@@ -88,14 +84,20 @@ const SyndicateInvestments = ({}: any) => {
   useEffect(() => {
     dispatch(saveDataHolder(""));
     getAllDeals();
+  }, [currentPage]);
+  useEffect(() => {
+    dispatch(saveDataHolder(""));
+    setCurrentPage(1)
+    getAllDeals();
   }, [selectedTab]);
 
   const getAllDeals = async () => {
     try {
       setLoading(true);
-      let { status, data } = await getLiveDeals(user.id, authToken, selectedTab, searchQuery);
+      let { status, data } = await getLiveDeals(authToken, selectedTab, searchQuery, currentPage);
       if (status === 200) {
         setFilterCounts(data?.status?.data?.stats)
+        setpaginationData(data?.status?.data?.pagy)
         let deals = data?.status?.data?.deals?.map((deal: any) => {
           return {
             id: deal?.id,
@@ -124,24 +126,15 @@ const SyndicateInvestments = ({}: any) => {
                     { state: window.location.pathname }
                   );
                 }}
-                className="bg-neutral-100 inline-flex items-center justify-center w-[30px] h-[30px] rounded-full transition-all hover:bg-cbc-transparent"
+                className="bg-neutral-100 inline-flex items-center justify-center w-[24px] h-[24px] rounded-full transition-all hover:bg-cbc-transparent mx-5"
               >
                 <Chevrond
-                  className="rotate-[-90deg] w-6 h-6"
-                  stroke={"#737373"}
+                  className="rotate-[-90deg] w-3 h-3"
+                  strokeWidth={3}
+                  stroke={"#000"}
                 />
               </div>
             ),
-          };
-        });
-
-        setPagination((prev) => {
-          return {
-            ...prev,
-            total_items: deals.length,
-            current_page: 1,
-            total_pages: Math.ceil(deals.length / prev.items_per_page),
-            data: deals?.slice(0, prev.items_per_page),
           };
         });
         setDeals(deals);
@@ -155,34 +148,6 @@ const SyndicateInvestments = ({}: any) => {
     }
   };
 
-  const paginate = (type: string) => {
-    if (type === "next" && pagination.current_page < pagination.total_pages) {
-      setPagination((prev: any) => {
-        const nextPage = prev.current_page + 1;
-        const startIndex = (nextPage - 1) * prev.items_per_page;
-        const endIndex = startIndex + prev.items_per_page;
-        const data = deals.slice(startIndex, endIndex);
-        return { ...prev, current_page: nextPage, data };
-      });
-    } else if (type === "previous" && pagination.current_page > 1) {
-      setPagination((prev: any) => {
-        const prevPage = prev.current_page - 1;
-        const startIndex = (prevPage - 1) * prev.items_per_page;
-        const endIndex = startIndex + prev.items_per_page;
-        const data = deals.slice(startIndex, endIndex);
-        return { ...prev, current_page: prevPage, data };
-      });
-    } else {
-      setPagination((prev: any) => {
-        const prevPage = Number(type) + 1 - 1;
-        const startIndex = (prevPage - 1) * prev.items_per_page;
-        const endIndex = startIndex + prev.items_per_page;
-        const data = deals.slice(startIndex, endIndex);
-
-        return { ...prev, current_page: type, data };
-      });
-    }
-  };
 
   return (
     <main className="h-full max-h-full overflow-y-auto">
@@ -253,9 +218,9 @@ const SyndicateInvestments = ({}: any) => {
               <section className="mt-10">
                 <Table
                   columns={columns}
-                  pagination={pagination}
-                  paginate={paginate}
-                  goToPage={paginate}
+                  tableData={deals}
+                  setCurrentPage={setCurrentPage}
+                  paginationData={paginationData}
                 />
               </section>
             </React.Fragment>

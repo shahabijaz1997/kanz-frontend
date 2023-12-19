@@ -94,8 +94,13 @@ const PropertyDeals = ({ openPropertyRiskModal }: any) => {
   const [selectTypeModal, setSelectTypeModal]: any = useState(null);
   useEffect(() => {
     dispatch(saveDataHolder(""));
+    setCurrentPage(1)
     getAllDeals();
-  }, [selectedTab,currentPage]);
+  }, [selectedTab]);
+  useEffect(() => {
+    dispatch(saveDataHolder(""));
+    getAllDeals();
+  }, [currentPage]);
   useEffect(() => {
     dispatch(saveDataHolder(""));
     dispatch(saveUserMetaData(""));
@@ -280,7 +285,8 @@ const PropertyDeals = ({ openPropertyRiskModal }: any) => {
               setCurrentPage={setCurrentPage}
               paginationData={paginationData}
               noDataNode={
-                <Button
+                
+                      <Button
                   onClick={() => {
                     dispatch(
                       saveUserMetaData({
@@ -294,6 +300,7 @@ const PropertyDeals = ({ openPropertyRiskModal }: any) => {
                 >
                   {"Create Property Deal"}
                 </Button>
+          
               }
             />
           </section>

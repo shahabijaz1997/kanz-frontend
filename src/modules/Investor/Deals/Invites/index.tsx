@@ -61,8 +61,13 @@ const Invites = ({}: any): any => {
 
   useEffect(() => {
     dispatch(saveDataHolder(""));
+    setCurrentPage(1)
     getAllInvitees();
-  }, [selectedTab, currentPage]);
+  }, [selectedTab]);
+  useEffect(() => {
+    dispatch(saveDataHolder(""));
+    getAllInvitees();
+  }, [currentPage]);
 
   const getAllInvitees = async () => {
     try {

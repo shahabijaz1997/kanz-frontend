@@ -5,7 +5,7 @@ import Table from "../../../shared/components/Table";
 import { RootState } from "../../../redux-toolkit/store/store";
 import { ApplicationStatus } from "../../../enums/types.enum";
 import { saveDataHolder } from "../../../redux-toolkit/slicer/dataHolder.slicer";
-import { getDealSyndicates } from "../../../apis/deal.api";
+import { getInvitedDealSyndicates } from "../../../apis/deal.api";
 import Button from "../../../shared/components/Button";
 import { saveToken } from "../../../redux-toolkit/slicer/auth.slicer";
 import { RoutesEnums } from "../../../enums/routes.enum";
@@ -42,10 +42,9 @@ const InvitedSyndicates = ({ id }: any) => {
   const getAllDeals = async () => {
     try {
       setLoading(true);
-      let { status, data } = await getDealSyndicates(id, authToken);
+      let { status, data } = await getInvitedDealSyndicates(id, authToken);
       if (status === 200) {
-        let deals = data?.status?.data
-          ?.filter((deal: any) => deal?.status === "pending")
+        let deals = data?.status?.data?.invites
           ?.map((deal: any) => {
             return {
               id: deal?.id,
@@ -83,35 +82,7 @@ const InvitedSyndicates = ({ id }: any) => {
       setLoading(false);
     }
   };
-  const paginate = (type: string) => {
-    if (type === "next" && pagination.current_page < pagination.total_pages) {
-      setPagination((prev: any) => {
-        const nextPage = prev.current_page + 1;
-        const startIndex = (nextPage - 1) * prev.items_per_page;
-        const endIndex = startIndex + prev.items_per_page;
-        const data = invites.slice(startIndex, endIndex);
-        return { ...prev, current_page: nextPage, data };
-      });
-    } else if (type === "previous" && pagination.current_page > 1) {
-      setPagination((prev: any) => {
-        const prevPage = prev.current_page - 1;
-        const startIndex = (prevPage - 1) * prev.items_per_page;
-        const endIndex = startIndex + prev.items_per_page;
-        const data = invites.slice(startIndex, endIndex);
-
-        return { ...prev, current_page: prevPage, data };
-      });
-    } else {
-      setPagination((prev: any) => {
-        const prevPage = Number(type) + 1 - 1;
-        const startIndex = (prevPage - 1) * prev.items_per_page;
-        const endIndex = startIndex + prev.items_per_page;
-        const data = invites.slice(startIndex, endIndex);
-
-        return { ...prev, current_page: type, data };
-      });
-    }
-  };
+ 
 
   return (
     <section className="mt-10 relative">
@@ -125,9 +96,6 @@ const InvitedSyndicates = ({ id }: any) => {
       ) : (
         <Table
           columns={columns}
-          pagination={pagination}
-          paginate={paginate}
-          goToPage={paginate}
           noDataNode={
             <span className="absolute left-1/2 top-1/2 translate-x-[-50%] translate-y-[-50%]">
               No invites sent! Click on the{" "}

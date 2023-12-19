@@ -13,8 +13,7 @@ import { RoutesEnums } from "../../../enums/routes.enum";
 import Modal from "../../../shared/components/Modal";
 import CrossIcon from "../../../ts-icons/crossIcon.svg";
 import { saveDataHolder } from "../../../redux-toolkit/slicer/dataHolder.slicer";
-import { getInvitedInvestors, getInvitedSyndicates } from "../../../apis/syndicate.api";
-import { getViewDealSyndicates, signOff } from "../../../apis/deal.api";
+import { getFundraiserInvestors, getViewDealSyndicates, signOff } from "../../../apis/deal.api";
 import { addCommentOnDeal } from "../../../apis/deal.api";
 import { saveToken } from "../../../redux-toolkit/slicer/auth.slicer";
 import Chevrond from "../../../ts-icons/chevrond.svg";
@@ -23,9 +22,10 @@ import Drawer from "../../../shared/components/Drawer";
 import ArrowIcon from "../../../ts-icons/arrowIcon.svg";
 import DownloadIcon from "../../../ts-icons/downloadIcon.svg";
 import { fileSize, handleFileRead } from "../../../utils/files.utils";
-import { FileType } from "../../../enums/types.enum";
+import { DealCheckType, FileType } from "../../../enums/types.enum";
 import { toast } from "react-toastify";
 import { toastUtil } from "../../../utils/toast.utils";
+import { numberFormatter } from "../../../utils/object.utils";
 
 const InvestorUpdates = ({}: any) => {
   const navigate = useNavigate();
@@ -54,8 +54,10 @@ const InvestorUpdates = ({}: any) => {
   const [modalAddComment, setmodalAddComment]: any = useState(null);
   const [loading, setLoading] = useState(false);
   const [loadDrawer, setLoadingDrawer] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [paginationData, setpaginationData] = useState(null);
 
-  const [syndicates, setsyndicates]: any = useState([]);
+  const [investors, setInvestors]: any = useState([]);
   const [dealDetail, setDealDetail]: any = useState(null);
   const [searchQuery, setSearchQuery]: any = useState("");
 
@@ -171,36 +173,38 @@ const InvestorUpdates = ({}: any) => {
   };
 
   const columns = [
-    language?.v3?.deal?.syndicate,
-    language?.v3?.common?.deal,
+    "Name",
+    "Type",
+    /* "Deal", */
+    "Invested Amount",
     "Invite Status",
     language?.v3?.deal?.comments,
-    language?.v3?.table?.view,
     "",
   ];
   const getAllDeals = async () => {
     try {
       setLoading(true);
-      let { status, data } = await getInvitedInvestors(
-        user.id,
-        searchQuery,
-        authToken
+      let { status, data } = await getFundraiserInvestors(
+        authToken,
+        currentPage,
       );
       if (status === 200) {
-        let syndicates = data?.status?.data?.map((syndicate: any) => {
+        setpaginationData(data?.status?.data?.pagy)
+        let investors = data?.status?.data?.records?.map((investor: any) => {
           return {
-            id: syndicate?.id,
-            [language?.v3?.deal?.syndicate]: syndicate?.invitee?.name,
-            [language?.v3?.common?.deal]: syndicate?.deal?.title || "N/A",
-            [language?.v3?.deal?.comments]: syndicate?.deal?.comment || "N/A",
-            ["Invite Status"]: <CustomStatus options={syndicate?.status} />,
+            id: investor?.id,
+            ["Name"]: investor?.name,
+            ["Type"]: investor?.type || "N/A",
+            ["Deal"]: investor?.deal,
+            ["Invested Amount"]: numberFormatter(investor?.invested_amount,DealCheckType.STARTUP) || "N/A",
+            ["Invite Status"]: <CustomStatus options={investor?.status} />,
             "": (
               <div
                 onClick={() => {
-                  setsyndicateInfo(syndicate);
+                  setsyndicateInfo(investor);
                   viewDealSyndicate(
-                    syndicate?.deal?.id,
-                    syndicate?.invitee?.id
+                    investor?.deal?.id,
+                    investor?.invitee?.id
                   );
                   setOpen(true);
                 }}
@@ -212,19 +216,19 @@ const InvestorUpdates = ({}: any) => {
                 />
               </div>
             ),
-            dealId: syndicate?.deal?.id,
+            dealId: investor?.deal?.id,
           };
         });
         setPagination((prev) => {
           return {
             ...prev,
-            total_items: syndicates.length,
+            total_items: investors.length,
             current_page: 1,
-            total_pages: Math.ceil(syndicates.length / prev.items_per_page),
-            data: syndicates?.slice(0, prev.items_per_page),
+            total_pages: Math.ceil(investors.length / prev.items_per_page),
+            data: investors?.slice(0, prev.items_per_page),
           };
         });
-        setsyndicates(syndicates);
+        setInvestors(investors);
       }
     } catch (error: any) {
       if (error.response && error.response.status === 401) {
@@ -266,7 +270,7 @@ const InvestorUpdates = ({}: any) => {
         const nextPage = prev.current_page + 1;
         const startIndex = (nextPage - 1) * prev.items_per_page;
         const endIndex = startIndex + prev.items_per_page;
-        const data = syndicates.slice(startIndex, endIndex);
+        const data = investors.slice(startIndex, endIndex);
         return { ...prev, current_page: nextPage, data };
       });
     } else if (type === "previous" && pagination.current_page > 1) {
@@ -274,7 +278,7 @@ const InvestorUpdates = ({}: any) => {
         const prevPage = prev.current_page - 1;
         const startIndex = (prevPage - 1) * prev.items_per_page;
         const endIndex = startIndex + prev.items_per_page;
-        const data = syndicates.slice(startIndex, endIndex);
+        const data = investors.slice(startIndex, endIndex);
 
         return { ...prev, current_page: prevPage, data };
       });
@@ -283,7 +287,7 @@ const InvestorUpdates = ({}: any) => {
         const prevPage = Number(type) + 1 - 1;
         const startIndex = (prevPage - 1) * prev.items_per_page;
         const endIndex = startIndex + prev.items_per_page;
-        const data = syndicates.slice(startIndex, endIndex);
+        const data = investors.slice(startIndex, endIndex);
 
         return { ...prev, current_page: type, data };
       });
@@ -309,7 +313,7 @@ const InvestorUpdates = ({}: any) => {
             <React.Fragment>
               <section className="inline-flex justify-between items-center w-full">
                 <h1 className="text-black font-medium text-2xl mb-5">
-                  {"Investor Updates"}
+                  {"Investors"}
                 </h1>
               </section>
               <section className="inline-flex justify-between items-center w-full">
@@ -341,9 +345,9 @@ const InvestorUpdates = ({}: any) => {
               <section className="mt-10">
                 <Table
                   columns={columns}
-                  pagination={pagination}
-                  paginate={paginate}
-                  goToPage={paginate}
+                  tableData={investors}
+                  setCurrentPage={setCurrentPage}
+                  paginationData={paginationData}
                   noDataNode={
                     <span className="absolute left-1/2 top-1/2 translate-x-[-50%] translate-y-[-50%]">
                       No Data
@@ -438,7 +442,7 @@ const InvestorUpdates = ({}: any) => {
                       <div className="w-full">
                         {dealDetail?.thread_id === null ? (
                           <section className="w-full  flex items-center justify-center h-56 text-[#828282] font-medium text-lg text-justify">
-                            No comments from syndicate yet
+                            No comments from investor yet
                           </section>
                         ) : (
                           <p className=" overflow-y-auto custom-scroll rounded-md  w-full opacity-80 max-h-56 text-neutral-700 font-normal text-sm text-justify">

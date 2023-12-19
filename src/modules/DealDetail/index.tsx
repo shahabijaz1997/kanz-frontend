@@ -60,21 +60,28 @@ const DealDetail = ({}: any) => {
     }
   };
   const tabs =
-    dealDetail?.model === DealPromotionType.SYNDICATE
-      ? [
-          { id: 1, title: "Details" },
-          { id: 3, title: "Investors" },
-          { id: 4, title: "Documents" },
-          { id: 5, title: "Activity" },
-          { id: 6, title: "Invited Syndicates" },
-          { id: 7, title: "Interested Syndicates" },
-        ]
+    dealDetail?.model !== "_"
+      ? dealDetail?.model === DealPromotionType.SYNDICATE
+        ? [
+            { id: 1, title: "Details" },
+            { id: 3, title: "Investors" },
+            { id: 4, title: "Documents" },
+            { id: 5, title: "Activity" },
+            { id: 6, title: "Invited Syndicates" },
+            { id: 7, title: "Interested Syndicates" },
+          ]
+        : [
+            { id: 1, title: "Details" },
+            { id: 3, title: "Investors" },
+            { id: 4, title: "Documents" },
+            { id: 5, title: "Activity" },
+            { id: 6, title: "Invited Investors" },
+          ]
       : [
           { id: 1, title: "Details" },
           { id: 3, title: "Investors" },
           { id: 4, title: "Documents" },
           { id: 5, title: "Activity" },
-          { id: 6, title: "Invited Investors" },
         ];
   if (state === KanzRoles.PROPERTY_OWNER) {
     const newTab = { id: 2, title: "Unique Selling Points" };
@@ -87,18 +94,13 @@ const DealDetail = ({}: any) => {
     else if (selected.id === 4) onGetDealFiles();
   }, [selected]);
 
-
   return (
     <main className="h-full max-h-full overflow-y-hidden">
       <section>
         <Header />
       </section>
       <aside className="w-full h-full flex items-start justify-start">
-        <Sidebar
-          type={
-          KanzRoles.FUNDRAISER
-          }
-        />
+        <Sidebar type={KanzRoles.FUNDRAISER} />
         {loading ? (
           <div
             className="absolute left-0 top-0 w-full h-full grid place-items-center"
@@ -126,7 +128,6 @@ const DealDetail = ({}: any) => {
                 {dealDetail?.title}
               </h1>
               <div className="inline-flex items-center gap-2">
-                
                 {dealDetail?.model === DealPromotionType.SYNDICATE ? (
                   <div className="relative z-10">
                     <UserListingPopup
@@ -138,7 +139,6 @@ const DealDetail = ({}: any) => {
                   </div>
                 ) : (
                   <div className="relative z-10">
-                    
                     <InvitesListing
                       approve={dealDetail?.status}
                       dealPromotionType={dealDetail?.model}
@@ -206,13 +206,18 @@ const DealDetail = ({}: any) => {
             )}
             {selected?.id === 4 && <DocumentDetails dealDocs={dealDocs} />}
             {selected?.id === 5 && <ActivityDetails id={dealDetail?.id} />}
-            {selected?.id === 6 && dealDetail?.model === DealPromotionType.SYNDICATE && <InvitedSyndicates id={dealDetail?.id} />}
-            {selected?.id === 6 && dealDetail?.model === DealPromotionType.CLASSIC && <InvitedInvestors id={dealDetail?.id} />}
+            {selected?.id === 6 &&
+              dealDetail?.model === DealPromotionType.SYNDICATE && (
+                <InvitedSyndicates id={dealDetail?.id} />
+              )}
+            {selected?.id === 6 &&
+              dealDetail?.model === DealPromotionType.CLASSIC && (
+                <InvitedInvestors id={dealDetail?.id} />
+              )}
             {selected?.id === 7 && <Requests id={dealDetail?.id} />}
           </section>
         )}
       </aside>
-      
     </main>
   );
 };

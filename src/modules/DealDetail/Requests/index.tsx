@@ -5,7 +5,7 @@ import Table from "../../../shared/components/Table";
 import { RootState } from "../../../redux-toolkit/store/store";
 import { ApplicationStatus } from "../../../enums/types.enum";
 import { saveDataHolder } from "../../../redux-toolkit/slicer/dataHolder.slicer";
-import { addCommentOnDeal, getDealSyndicates, getViewDealSyndicates, signOff } from "../../../apis/deal.api";
+import { addCommentOnDeal, getInterestedDealSyndicates, getViewDealSyndicates, signOff } from "../../../apis/deal.api";
 import { numberFormatter } from "../../../utils/object.utils";
 import Button from "../../../shared/components/Button";
 import { saveToken } from "../../../redux-toolkit/slicer/auth.slicer";
@@ -41,6 +41,8 @@ const Requests = ({ id }: any) => {
   const [modalOpen, setModalOpen]: any = useState(null);
   const [CommentSubmitted, setCommentSubmitted]: any = useState(false);
   const [currentDealId,setCurrentDealId]:any = useState (null)
+  const [currentPage, setCurrentPage] = useState(1)
+  const [paginationData, setpaginationData] = useState(null)
 
 
   const [changes, setChanges]: any = useState({
@@ -110,7 +112,7 @@ const Requests = ({ id }: any) => {
       let { status, data } = await getViewDealSyndicates(
         dealId,
         syndicateId,
-        authToken
+        authToken,
       );
       if (status === 200) {
         setDealDetail(data?.status?.data);
@@ -134,10 +136,9 @@ const Requests = ({ id }: any) => {
   const getAllDeals = async () => {
     try {
       setLoading(true);
-      let { status, data } = await getDealSyndicates(id, authToken);
+      let { status, data } = await getInterestedDealSyndicates(id, authToken);
       if (status === 200) {
-        let deals = data?.status?.data
-          ?.filter((deal: any) => deal?.status !== "pending")
+        let deals = data?.status?.data?.invites
           .map((deal: any) => {
             return {
               id: deal?.id,
@@ -236,9 +237,9 @@ const Requests = ({ id }: any) => {
     ) : (
       <Table
         columns={columns}
-        pagination={pagination}
-        goToPage={paginate}
-        paginate={paginate}
+        tableData={invites}
+        setCurrentPage={setCurrentPage}
+        paginationData={paginationData}
         noDataNode={
           <span className="absolute left-1/2 top-1/2 translate-x-[-50%] translate-y-[-50%]">
             No invites sent! Click on the{" "}
@@ -249,17 +250,7 @@ const Requests = ({ id }: any) => {
       />
     )}
   </section>
-  
 
-  {/*
-  {.......##..............########..########.....###....##......##.########.########.....................##
-  {......##...##...##.....##.....##.##.....##...##.##...##..##..##.##.......##.....##.....##...##.......##.
-  {.....##.....##.##......##.....##.##.....##..##...##..##..##..##.##.......##.....##......##.##.......##..
-  {....##....#########....##.....##.########..##.....##.##..##..##.######...########.....#########....##...
-  {...##.......##.##......##.....##.##...##...#########.##..##..##.##.......##...##........##.##.....##....
-  {..##.......##...##.....##.....##.##....##..##.....##.##..##..##.##.......##....##......##...##...##.....
-  {.##....................########..##.....##.##.....##..###..###..########.##.....##..............##......
-  {*/}
   
   <Drawer
         drawerWidth="w-[700px]"

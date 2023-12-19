@@ -13,8 +13,9 @@ import Spinner from "../../../shared/components/Spinner";
 const InvitedInvestors = ({ id }: any) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const language: any = useSelector((state: RootState) => state.language.value);
   const authToken: any = useSelector((state: RootState) => state.auth.value);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [paginationData, setpaginationData] = useState(null);
   const columns = [
     "Investor",
     "Status",
@@ -33,20 +34,20 @@ const InvitedInvestors = ({ id }: any) => {
   useEffect(() => {
     dispatch(saveDataHolder(""));
     getInvitedInvestors();
-  }, []);
- 
+  }, [currentPage]);
+
 
   const getInvitedInvestors = async () => {
     try {
       setLoading(true);
       let { status, data } = await getSharedInvestors(id, authToken);
       if (status === 200) {
-        let invites = data?.status?.data
-          ?.filter((deal: any) => deal?.status === "pending")
+        setpaginationData(data?.status?.data?.pagy)
+        let invites = data?.status?.data?.invites
           ?.map((deal: any) => {
             return {
               id: deal?.id,
-              ["Syndicate"]: (
+              ["Investor"]: (
                 <span className=" capitalize">{deal?.invitee?.name}</span>
               ),
               ["Status"]: (
@@ -59,16 +60,6 @@ const InvitedInvestors = ({ id }: any) => {
               ["Invite Expiration Date"]: deal?.invite_expiry || "N/A",
             };
           });
-
-        setPagination((prev) => {
-          return {
-            ...prev,
-            total_items: invites.length,
-            current_page: 1,
-            total_pages: Math.ceil(invites.length / prev.items_per_page),
-            data: invites?.slice(0, prev.items_per_page),
-          };
-        });
         setInvites(invites);
       }
     } catch (error: any) {
@@ -122,9 +113,9 @@ const InvitedInvestors = ({ id }: any) => {
       ) : (
         <Table
           columns={columns}
-          pagination={pagination}
-          paginate={paginate}
-          goToPage={paginate}
+          tableData={invites}
+          setCurrentPage={setCurrentPage}
+          paginationData={paginationData}
           noDataNode={
             <span className="absolute left-1/2 top-1/2 translate-x-[-50%] translate-y-[-50%]">
               No invites sent! Click on the{" "}

@@ -44,8 +44,8 @@ const Table = ({
   };
 
   return (
-    <section className="rounded-lg shadow-xl overflow-hidden border-[1px] border-neutral-200 w-full">
-      <table className="min-w-full overflow-hidden bg-white">
+    <section className="rounded-lg shadow-xl overflow-hidden border-[1px] min-h-full border-neutral-200 w-full">
+      <table className="min-w-full overflow-hidden min-h-full bg-white">
         <thead className="bg-neutral-50">
           <tr>
             {React.Children.toArray(
@@ -107,7 +107,11 @@ const Table = ({
                   </tr>
                 ))
               )
-            : noDataNode}
+            :
+            <div className="min-h-[100px]">
+              {noDataNode}
+            </div> 
+            }
         </tbody>
       </table>
       {tableData?.length > 0 && (
