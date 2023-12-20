@@ -819,7 +819,30 @@
       "showing":"عرض",
       "to":"ل",
       "of":"من",
-      "results":"نتائج"
+      "results":"نتائج",
+      "deal_status":"حالة الصفقة",
+      "customer_rep":"ممثل العملاء",
+      "compliance_officer":"موظف الشكاوى",
+      "detials":"تفاصيل",
+      "documents":"وثائق",
+      "activity":"نشاط",
+      "invited_investors":"المستثمرين المدعوين",
+      "safe_type":"النوع الآمن",
+      "startup_title":"عنوان بدء التشغيل",
+      "startup_desc":"وصف بدء التشغيل",
+      "deal_target":"هدف الصفقة",
+      "start_date":"تاريخ البدء",
+      "valuation_cap":"سقف التقييم",
+      "discount":"تخفيض",
+      "mfn_only":"الدولة الأولى بالرعاية فقط",
+      "min_check_size":"الحد الأدنى لحجم الشيك",
+      "pro_rata":"تناسبي",
+      "additional_terms":"شروط إضافية",
+      "instrument":"أداة",
+      "deal_timeline":"الجدول الزمني للصفقة",
+      "terms":"شروط",
+      "no":"لا",
+      "yes":"نعم"
     }
   }
 }

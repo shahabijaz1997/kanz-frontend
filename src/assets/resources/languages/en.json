@@ -880,11 +880,13 @@
       "mfn_only":"MFN only",
       "min_check_size":"Minimum Check Size",
       "pro_rata":"Pro Rata",
-      "additional_terms":"",
-      "instrument":"",
-      "":"",
-      "":"",
-      "":""
+      "additional_terms":"Addtional Terms",
+      "instrument":"Instrument",
+      "deal_timeline":"Deal Timeline",
+      "terms":"Terms",
+      "no":"No",
+      "yes":"Yes"
+      
          
     },
     "dealOverview": {
