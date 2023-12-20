@@ -114,7 +114,7 @@ const Table = ({
             }
         </tbody>
       </table>
-      {tableData?.length > 0 && (
+      {tableData?.length > 0 && JSON.stringify(paginationData) !== "{}" && (
         <nav className="py-2 flex justify-between items-center bg-white border-t-[1px] border-[#D4D4D4]">
           <span className="mx-10 font-semibold text-sm">Showing {paginationData?.from} to {paginationData?.to} of {paginationData?.count} results</span>
           <ul className="list-style-none  flex items-center justify-center border-[#D4D4D4] border-[1px] rounded-md w-fit mx-10">
