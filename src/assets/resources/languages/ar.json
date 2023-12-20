@@ -703,7 +703,7 @@
     },
     "deal": {
       "create_deal": "إنشاء حملة لجمع التبرعات",
-      "status": "Deal Status",
+      "status": "حالة الصفقةd",
       "submitted": "لقد تم تقديم صفقتك!",
       "re_opened": "تم إعادة فتح صفقتك!",
       "title": "عنوان",

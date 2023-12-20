@@ -450,7 +450,7 @@ const DealViewDetails = ({ dealDetail, state }: any) => {
       {dealDetail && getRoleBasedUI()}
       <section className="bg-white rounded-md border-[1px] border-neutral-200 px-6 py-4 w-1/4 min-h-[250px]">
         <h3 className="font-medium text-xl text-neutral-900 mb-4">
-          {"Deal Status"}
+          {language.v3.deal.status}
         </h3>
         <div className="relative flex flex-col justify-center">
           {React.Children.toArray(
