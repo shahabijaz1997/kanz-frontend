@@ -35,6 +35,8 @@ const AllSyndicates = ({}: any) :any => {
     const [loading, setLoading]: any = useState(false);
     const [invites, setInvites]: any = useState([]);
     const [syndicateInfo, setsyndicateInfo]: any = useState(null);
+    const [paginationData, setpaginationData] = useState(null);
+    const [currentPage, setCurrentPage] = useState(1);
     const [isOpen, setOpen]: any = useState(false);
   const [searchQuery, setSearchQuery]: any = useState("");
 
@@ -72,10 +74,10 @@ const AllSyndicates = ({}: any) :any => {
     const getAllSyndicates = async () => {
         try {
           setLoading(true);
-          let { status, data } = await getSyndicates(authToken,searchQuery);
+          let { status, data } = await getSyndicates(authToken,searchQuery,currentPage);
           if (status === 200) {
-            let deals = data?.status?.data
-              ?.filter((syndicate: any) => syndicate?.status !== "pending")
+            setpaginationData(data?.status?.data?.pagy)
+            let deals = data?.status?.data?.records
               .map((syndicate: any) => {
                 return {
                   id: syndicate?.id,
@@ -101,27 +103,19 @@ const AllSyndicates = ({}: any) :any => {
                       setOpen(true)
                      
                     }}
-                      className="bg-neutral-100 inline-flex items-center justify-center w-[30px] h-[30px] rounded-full transition-all hover:bg-cbc-transparent mr-10"
-                    >
-                      <Chevrond
-                        className="rotate-[-90deg] w-6 h-6"
-                        stroke={"#737373"}
-                      />
+                    className="bg-neutral-100 inline-flex items-center justify-center w-[26px] h-[26px] rounded-full transition-all hover:bg-cbc-transparent mx-2"
+                  >
+                    <Chevrond
+                      className="rotate-[-90deg] w-4 h-4"
+                      strokeWidth={2}
+                      stroke={"#000"}
+                    />
                     </div>
                   )
                    
                 };
               });
-    
-            setPagination((prev) => {
-              return {
-                ...prev,
-                total_items: deals.length,
-                current_page: 1,
-                total_pages: Math.ceil(deals.length / prev.items_per_page),
-                data: deals?.slice(0, prev.items_per_page),
-              };
-            });
+
             setInvites(deals);
           }
         } catch (error: any) {
@@ -134,36 +128,6 @@ const AllSyndicates = ({}: any) :any => {
         }
       };
 
-      const paginate = (type: string) => {
-        if (type === "next" && pagination.current_page < pagination.total_pages) {
-          setPagination((prev: any) => {
-            const nextPage = prev.current_page + 1;
-            const startIndex = (nextPage - 1) * prev.items_per_page;
-            const endIndex = startIndex + prev.items_per_page;
-            const data = invites.slice(startIndex, endIndex);
-            return { ...prev, current_page: nextPage, data };
-          });
-        } else if (type === "previous" && pagination.current_page > 1) {
-          setPagination((prev: any) => {
-            const prevPage = prev.current_page - 1;
-            const startIndex = (prevPage - 1) * prev.items_per_page;
-            const endIndex = startIndex + prev.items_per_page;
-            const data = invites.slice(startIndex, endIndex);
-    
-            return { ...prev, current_page: prevPage, data };
-          });
-        } else {
-          setPagination((prev: any) => {
-            const prevPage = Number(type) + 1 - 1;
-            const startIndex = (prevPage - 1) * prev.items_per_page;
-            const endIndex = startIndex + prev.items_per_page;
-            const data = invites.slice(startIndex, endIndex);
-    
-            return { ...prev, current_page: type, data };
-          });
-        }
-      };
-    
       return(
         <>  
            <section className="inline-flex justify-between items-center w-full">
@@ -201,9 +165,9 @@ const AllSyndicates = ({}: any) :any => {
        ) : (
          <Table
            columns={columns}
-           pagination={pagination}
-           goToPage={paginate}
-           paginate={paginate}
+           tableData={invites}
+           setCurrentPage={setCurrentPage}
+           paginationData={paginationData}
            noDataNode={
              <span className="absolute left-1/2 top-1/2 translate-x-[-50%] translate-y-[-50%]">
                No invites sent! Click on the{" "}

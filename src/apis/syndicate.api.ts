@@ -138,8 +138,9 @@ export const postInviteSyn = ( dealId: any, token: string) => {
     }
   );
 };
-export const getSyndicates = (token: string, searchQuery:string) => {
+export const getSyndicates = (token: string, searchQuery:string, currentPage:number) => {
   const queryParameters = new URLSearchParams();
+  queryParameters.append("page", currentPage.toString());
   if (searchQuery.trim() !== "") {
     queryParameters.append("search", searchQuery);
   }

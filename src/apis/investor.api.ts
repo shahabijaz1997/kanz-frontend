@@ -90,8 +90,9 @@ export const getInvites = (token: string, filters :any) => {
     });
   };
 
-  export const getFollowedSyndicates = (token: string, searchQuery:string) => {
+  export const getFollowedSyndicates = (token: string, searchQuery:string, currentPage:number) => {
   const queryParameters = new URLSearchParams();
+  queryParameters.append("page", currentPage.toString())
   queryParameters.append("followed", "true");
   if (searchQuery.trim() !== "") {
     queryParameters.append("search", searchQuery);
