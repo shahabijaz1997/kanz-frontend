@@ -63,25 +63,25 @@ const DealDetail = ({}: any) => {
     dealDetail?.model !== "_"
       ? dealDetail?.model === DealPromotionType.SYNDICATE
         ? [
-            { id: 1, title: "Details" },
-            { id: 3, title: "Investors" },
-            { id: 4, title: "Documents" },
-            { id: 5, title: "Activity" },
-            { id: 6, title: "Invited Syndicates" },
-            { id: 7, title: "Interested Syndicates" },
+            { id: 1, title: language?.v3?.fundraiser?.details },
+            { id: 3, title: language?.v3?.fundraiser?.investors },
+            { id: 4, title: language?.v3?.fundraiser?.documents },
+            { id: 5, title: language?.v3?.fundraiser?.activity },
+            { id: 6, title: language?.v3?.fundraiser?.invited_syndicates },
+            { id: 7, title: language?.v3?.fundraiser?.interested_syndicates },
           ]
         : [
-            { id: 1, title: "Details" },
-            { id: 3, title: "Investors" },
-            { id: 4, title: "Documents" },
-            { id: 5, title: "Activity" },
-            { id: 6, title: "Invited Investors" },
+            { id: 1, title: language?.v3?.fundraiser?.details },
+            { id: 3, title: language?.v3?.fundraiser?.investors },
+            { id: 4, title: language?.v3?.fundraiser?.documents },
+            { id: 5, title: language?.v3?.fundraiser?.activity },
+            { id: 6, title:  language?.v3?.fundraiser?.invited_investors},
           ]
       : [
-          { id: 1, title: "Details" },
-          { id: 3, title: "Investors" },
-          { id: 4, title: "Documents" },
-          { id: 5, title: "Activity" },
+          { id: 1, title: language?.v3?.fundraiser?.details },
+          { id: 3, title: language?.v3?.fundraiser?.investors },
+          { id: 4, title: language?.v3?.fundraiser?.documents },
+          { id: 5, title: language?.v3?.fundraiser?.activity },
         ];
   if (state === KanzRoles.PROPERTY_OWNER) {
     const newTab = { id: 2, title: "Unique Selling Points" };

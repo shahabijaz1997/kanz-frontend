@@ -15,7 +15,7 @@ const DealTable = ({ dealType, targetSize, committed, investors }: any) => {
         <div className="inline-block align-middle w-[33%] relative">
           <span className="inline-flex flex-col gap-2">
             <small className="uppercase text-neutral-500 font-medium text-sm">
-              Target Size
+              {language?.v3?.fundraiser?.target_size}
             </small>
             <p className="uppercase text-neutral-900 font-semibold text-2xl">
               {comaFormattedNumber(targetSize, dealType)}

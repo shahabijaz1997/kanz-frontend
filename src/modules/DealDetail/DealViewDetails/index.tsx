@@ -23,7 +23,9 @@ const DealViewDetails = ({ dealDetail, state }: any) => {
     { id: 3, title: language?.v3?.fundraiser?.approved, completed: false, ongoing: false },
     { id: 4, title: language?.v3?.fundraiser?.live, completed: false, ongoing: false },
   ];
-
+  const orientation: any = useSelector(
+    (state: RootState) => state.orientation.value
+  );
   const getRoleBasedUI = () => {
     if (state === KanzRoles.STARTUP)
       return (
@@ -142,7 +144,7 @@ const DealViewDetails = ({ dealDetail, state }: any) => {
           </div>
           <div className="py-4  border-b-neutral-200 w-full inline-flex items-center justify-between">
             <h3 className="text-neutral-900 font-medium text-sm">
-              {language?.v3?.fundraiser?.state_date}
+              {language?.v3?.fundraiser?.start_date}
             </h3>
             <p className="text-neutral-900 font-normal text-sm capitalize">
               {dealDetail?.start_at || language?.v3?.common?.not_added}
@@ -567,7 +569,7 @@ const DealViewDetails = ({ dealDetail, state }: any) => {
                       <div className="h-[55px] w-1 bg-neutral-300"></div>
                     )}
                   </span>
-                  <small className="absolute top-[2px] left-[80%] whitespace-nowrap text-xs font-medium text-neutral-500">
+                  <small className={`absolute top-[2px] ${orientation === "rtl" ? "right-[80%]" : "left-[80%]"} whitespace-nowrap text-xs font-medium text-neutral-500`}>
                     {item.title}
                   </small>
                 </div>

@@ -696,9 +696,14 @@
         "overview": "ملخص",
         "investor_updates": "تحديثات المستثمر",
         "data_rooms": "غرف البيانات",
+        "dashboard":"لوحة القيادة",
         "market_insights": "رؤى السوق",
         "syndicate_requests": "طلبات النقابة",
-        "contacts": "جهات الاتصال"
+        "contacts": "جهات الاتصال",
+        "investments":"الاستثمارات",
+        "deal_approval":"الموافقة على الصفقة",
+        "manage_group":"إدارة المجموعة",
+        "investors":"المستثمرين"
       }
     },
     "deal": {
@@ -842,7 +847,17 @@
       "deal_timeline":"الجدول الزمني للصفقة",
       "terms":"شروط",
       "no":"لا",
-      "yes":"نعم"
+      "yes":"نعم",
+      "target_size":"الحجم المستهدف",
+      "amount_raised":"المبلغ المرفوع",
+      "date":"تاريخ",
+      "details": "تفاصيل",
+      "invited_syndicates": "النقابات المدعوة",
+      "interested-syndicates": "النقابات المهتمة",
+      "no_investors_for_now": "لا يوجد مستثمرين في الوقت الراهن",
+      "no_activity_for_now": "لا يوجد نشاط في الوقت الراهن",
+      "user_type":"نوع المستخدم",
+      "status":"حالة"
     }
   }
 }
