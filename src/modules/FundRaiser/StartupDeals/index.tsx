@@ -27,6 +27,9 @@ const StartupDeals = ({ openStartupRiskModal }: any) => {
   const language: any = useSelector((state: RootState) => state.language.value);
   const authToken: any = useSelector((state: RootState) => state.auth.value);
   const [modalOpen, setModalOpen]: any = useState(null);
+  const orientation: any = useSelector(
+    (state: RootState) => state.orientation.value
+  );
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -34,11 +37,11 @@ const StartupDeals = ({ openStartupRiskModal }: any) => {
   const columns = [
     language?.v3?.table?.title,
     language?.v3?.table?.status,
-    "Model",
+    language?.v3?.fundraiser?.model,
     language?.v3?.table?.stage,
     language?.v3?.table?.round,
     language?.v3?.table?.target,
-    "End Date",
+    language.v3.fundraiser.end_date,
     language?.v3?.table?.action,
   ];
   const [paginationData, setpaginationData] = useState(null);
@@ -49,13 +52,13 @@ const StartupDeals = ({ openStartupRiskModal }: any) => {
   const [warningModal, setwarningModal]: any = useState(null);
   const [tabs] = useState([
     language?.v3?.startup?.overview?.all,
-    "Draft",
-    "Reopened",
-    "Submitted",
-    "Approved",
-    "Live",
-    "Verified",
-    "Rejected",
+    language?.v3?.fundraiser?.draft,
+    language?.v3?.fundraiser?.reopened,
+    language?.v3?.fundraiser?.submitted,
+    language?.v3?.fundraiser?.approved,
+    language?.v3?.fundraiser?.live,
+    language?.v3?.fundraiser?.verified,
+    language?.v3?.fundraiser?.rejected,
   ]);
   const getCountvalue = (value: string) => {
     let count = 0;
@@ -146,7 +149,7 @@ const StartupDeals = ({ openStartupRiskModal }: any) => {
             [language?.v3?.table?.status]: (
               <CustomStatus options={deal?.status} />
             ),
-            ["End Date"]: deal?.end_at || "N/A",
+            [language.v3.fundraiser.end_date]: deal?.end_at || "N/A",
             [language?.v3?.table?.type]: (
               <span className=" capitalize">{deal?.deal_type}</span>
             ),
@@ -209,7 +212,7 @@ const StartupDeals = ({ openStartupRiskModal }: any) => {
                   className="bg-neutral-100 inline-flex items-center justify-center w-[26px] h-[26px] rounded-full transition-all hover:bg-cbc-transparent mx-2"
                 >
                   <Chevrond
-                    className="rotate-[-90deg] w-4 h-4"
+                    className={`${orientation === "rtl" ? "rotate-[-270deg]" : "rotate-[-90deg]"} w-4 h-4`}
                     strokeWidth={2}
                     stroke={"#000"}
                   />
@@ -302,7 +305,7 @@ const StartupDeals = ({ openStartupRiskModal }: any) => {
                   }}
                   className="absolute left-1/2 top-1/2 translate-x-[-50%] translate-y-[-50%]"
                 >
-                  {"Create Startup Deal"}
+                  {language.v3.fundraiser.create_startup_deal}
                 </Button>
               }
             />

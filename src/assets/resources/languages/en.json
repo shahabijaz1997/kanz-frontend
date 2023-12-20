@@ -10,7 +10,8 @@
     "switchPara1": "Anim aute id magna aliqua ad ad non deserunt sunt. Qui irure qui lorem cupidatat commodo. Elit sunt amet fugiat veniam occaecat fugiat aliqua.",
     "switchPara2": "Anim aute id magna aliqua ad ad non deserunt sunt. Qui irure qui lorem cupidatat commodo. Elit sunt amet fugiat veniam occaecat fugiat aliqua. Anim aute id magna aliqua ad ad non deserunt sunt. Qui irure qui lorem cupidatat commodo. Elit sunt amet fugiat veniam occaecat fugiat aliqua.",
     "kanzNetworkBank": "Kanz networked banking provides increased customer access to FDIC insurance and mitigates single-bank risk.",
-    "invest": "Investor",
+    "invest": "Invest",
+    "raise":"Raise",
     "startup": "Startups",
     "syndicate": "Syndicate",
     "propertyOwner": "Propert Owners"
@@ -142,6 +143,8 @@
     "national": "Nationality",
     "location": "Location",
     "residence": "Country of Residence",
+    "residence2": "Residence",
+    "nationality":"Nationality",
     "NoOfProperty": "No. of Properties",
     "attachmentPending": "Your attachment is pending. Add attachments for account approval",
     "aed": "AED",
@@ -827,18 +830,70 @@
           "end_date": "End Date",
           "target": "Target"
         }
-        
       }
-
     },
-
-    "dealOverview":{
-      "title":"Risk and Disclaimer",
+    "fundraiser": {
+      "startup": "Startup",
+      "property": "Property",
+      "investors": "Investors",
+      "draft": "Draft",
+      "reopened": "Reopened",
+      "submitted": "Submitted",
+      "approved": "Approved",
+      "live": "Live",
+      "verified": "Verified",
+      "rejected": "Rejected",
+      "create_startup_deal":"Create Startup Deal",
+      "create_property_deal":"Create Property Deal",
+      "model":"Model",
+      "end_date":"End Date",
+      "name":"Name",
+      "type":"Type",
+      "invested_amount":"Invested Amount",
+      "invite_status":"Invite Status",
+      "create":"Create",
+      "deal":"Deal",
+      "size":"Size",
+      "state":"State",
+      "city":"City",
+      "selling_price":"Selling Price",
+      "no_data":"No Data",
+      "amount_cannot_be_zero":"Amount cannot be zero",
+      "showing":"Showing",
+      "to":"to",
+      "of":"of",
+      "results":"results",
+      "deal_status":"",
+      "customer_rep":"",
+      "":"",
+      "":"",
+      "":"",
+      "":"",
+      "":"",
+      "":"",
+      "":"",
+      "":"",
+      "":"",
+      "":"",
+      "":"",
+      "":"",
+      "":"",
+      "":"",
+      "":"",
+      "":"",
+      "":"",
+      "":"",
+      "":"",
+      "":""
+         
+    },
+    "dealOverview": {
+      "title": "Risk and Disclaimer",
       "heading1": "Eligibility and Registration:",
       "h1bullet1": "Requirements for users to be eligible to use the platform.",
       "h1bullet2": "The registration process, including identity verification procedures.",
       "h1bullet3": "Restrictions on who can invest, such as accredited investors.",
-      "heading2": "Who can invest?",  
+      "heading2": "Who can invest?",
       "h2bullet1": "Lorem Ipsum is a great library for dummy text.",
       "h2bullet2": "sunt in culpa qui officia deserunt mollit anim id est laborum.",
       "h2bullet3": "Excepteur sint occaecat cupidatat non proident.",
@@ -846,7 +901,6 @@
       "h3bullet1": "Duis aute irure dolor in reprehenderit in voluptate velit esse cillum.",
       "h3bullet2": "eiusmod tempor incididunt ut labore et dolore magna aliqua.",
       "h3bullet3": "quis nostrud exercitation ullamco laboris nisi ut."
-
     }
   }
 }

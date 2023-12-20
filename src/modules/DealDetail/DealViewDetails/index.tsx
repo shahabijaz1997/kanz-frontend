@@ -149,56 +149,60 @@ const DealViewDetails = ({ dealDetail, state }: any) => {
           </div>
         {dealDetail?.safe_type && (
           <React.Fragment>
-              <div className="py-4  border-b-neutral-200 w-full inline-flex items-center justify-between">
+          <div className="py-4 border-b-neutral-200 w-full inline-flex items-center justify-between">
             <h3 className="text-neutral-900 font-medium text-sm">
               {"Valuation Cap"}
             </h3>
             <p className="text-neutral-900 font-normal text-sm capitalize">
-              {comaFormattedNumber(dealDetail?.terms[0]?.value, DealCheckType.STARTUP) || "No"}
+              {dealDetail.terms[0]?.value !== null ? comaFormattedNumber(dealDetail.terms[0]?.value, DealCheckType.STARTUP) : "No"}
             </p>
           </div>
-          <div className="py-4  border-b-neutral-200 w-full inline-flex items-center justify-between">
+        
+          <div className="py-4 border-b-neutral-200 w-full inline-flex items-center justify-between">
             <h3 className="text-neutral-900 font-medium text-sm">
               {"Discount"}
             </h3>
             <p className="text-neutral-900 font-normal text-sm capitalize">
-            {dealDetail?.terms[1]?.value !== null ? `${dealDetail?.terms[1]?.value}%` : "No"}
-
+              {dealDetail.terms[1]?.value !== null ? `${dealDetail.terms[1]?.value}%` : "No"}
             </p>
           </div>
-          <div className="py-4  border-b-neutral-200 w-full inline-flex items-center justify-between">
+        
+          <div className="py-4 border-b-neutral-200 w-full inline-flex items-center justify-between">
             <h3 className="text-neutral-900 font-medium text-sm">
               {"MFN Only"}
             </h3>
             <p className="text-neutral-900 font-normal text-sm capitalize">
-              {dealDetail?.terms[2]?.is_enabled ? "Yes" : "No"}
+              {dealDetail.terms[2]?.value !== null && typeof dealDetail.terms[2]?.value === 'object' ? "No" : dealDetail.terms[2]?.value ? "Yes" : "No"}
             </p>
           </div>
-          <div className="py-4  border-b-neutral-200 w-full inline-flex items-center justify-between">
+        
+          <div className="py-4 border-b-neutral-200 w-full inline-flex items-center justify-between">
             <h3 className="text-neutral-900 font-medium text-sm">
               {"Minimum Check Size"}
             </h3>
             <p className="text-neutral-900 font-normal text-sm capitalize">
-              {comaFormattedNumber(dealDetail?.terms[3]?.value,DealCheckType.STARTUP) || "No"}
+              {dealDetail.terms[3]?.value !== null ? comaFormattedNumber(dealDetail.terms[3]?.value, DealCheckType.STARTUP) : "No"}
             </p>
           </div>
-          <div className="py-4  border-b-neutral-200 w-full inline-flex items-center justify-between">
+        
+          <div className="py-4 border-b-neutral-200 w-full inline-flex items-center justify-between">
             <h3 className="text-neutral-900 font-medium text-sm">
               {"Pro rata"}
             </h3>
             <p className="text-neutral-900 font-normal text-sm capitalize">
-            {dealDetail?.terms[4]?.is_enabled ? "Yes" : "No"}
+              {dealDetail.terms[4]?.value !== null && typeof dealDetail.terms[4]?.value === 'object' ? "No" : dealDetail.terms[4]?.value ? "Yes" : "No"}
             </p>
           </div>
-          <div className="py-4  border-b-neutral-200 w-full inline-flex items-center justify-between">
+        
+          <div className="py-4 border-b-neutral-200 w-full inline-flex items-center justify-between">
             <h3 className="text-neutral-900 font-medium text-sm">
               {"Additional Terms"}
             </h3>
             <p className="text-neutral-900 font-normal text-sm capitalize">
-            {dealDetail?.terms[5]?.value || "No"}
+              {dealDetail.terms[5]?.value !== null && typeof dealDetail.terms[5]?.value === 'object' ? "No" : dealDetail.terms[5]?.value || "No"}
             </p>
-          </div> 
-          </React.Fragment>
+          </div>
+        </React.Fragment>
         )}
 
         {dealDetail?.equity_type && (

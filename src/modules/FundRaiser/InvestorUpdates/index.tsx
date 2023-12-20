@@ -173,11 +173,10 @@ const InvestorUpdates = ({}: any) => {
   };
 
   const columns = [
-    "Name",
-    "Type",
-    /* "Deal", */
-    "Invested Amount",
-    "Invite Status",
+    language?.v3?.fundraiser?.name,
+    language?.v3?.fundraiser?.type,
+    language?.v3?.fundraiser?.invested_amount,
+    language?.v3?.fundraiser?.invite_status,
     language?.v3?.deal?.comments,
     "",
   ];
@@ -193,11 +192,11 @@ const InvestorUpdates = ({}: any) => {
         let investors = data?.status?.data?.records?.map((investor: any) => {
           return {
             id: investor?.id,
-            ["Name"]: investor?.name,
-            ["Type"]: investor?.type || "N/A",
-            ["Deal"]: investor?.deal,
-            ["Invested Amount"]: numberFormatter(investor?.invested_amount,DealCheckType.STARTUP) || "N/A",
-            ["Invite Status"]: <CustomStatus options={investor?.status} />,
+            [language?.v3?.fundraiser?.name]: investor?.name,
+            [language?.v3?.fundraiser?.type]: investor?.type || "N/A",
+            [language?.v3?.fundraiser?.invested_amount]: investor?.deal,
+            [language?.v3?.fundraiser?.invested_amount]: numberFormatter(investor?.invested_amount,DealCheckType.STARTUP) || "N/A",
+            [language?.v3?.fundraiser?.invite_status]: <CustomStatus options={investor?.status} />,
             "": (
               <div
                 onClick={() => {
@@ -313,7 +312,7 @@ const InvestorUpdates = ({}: any) => {
             <React.Fragment>
               <section className="inline-flex justify-between items-center w-full">
                 <h1 className="text-black font-medium text-2xl mb-5">
-                  {"Investors"}
+                  {language?.v3?.fundraiser?.investors}
                 </h1>
               </section>
               <section className="inline-flex justify-between items-center w-full">
@@ -350,7 +349,7 @@ const InvestorUpdates = ({}: any) => {
                   paginationData={paginationData}
                   noDataNode={
                     <span className="absolute left-1/2 top-1/2 translate-x-[-50%] translate-y-[-50%]">
-                      No Data
+                      {language?.v3?.fundraiser?.no_data}
                     </span>
                   }
                 />

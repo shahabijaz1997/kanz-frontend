@@ -191,7 +191,7 @@ const SyndicateRequest = ({}: any) => {
   const columns = [
     language?.v3?.deal?.syndicate,
     language?.v3?.common?.deal,
-    "Invite Status",
+    language?.v3?.fundraiser?.selling_price,
     language?.v3?.deal?.comments,
     language?.v3?.table?.view,
     "",
@@ -213,7 +213,7 @@ const SyndicateRequest = ({}: any) => {
             [language?.v3?.deal?.syndicate]: syndicate?.invitee?.name,
             [language?.v3?.common?.deal]: syndicate?.deal?.title || "N/A",
             [language?.v3?.deal?.comments]: syndicate?.deal?.comment || "N/A",
-            ["Invite Status"]: <CustomStatus options={syndicate?.status} />,
+            [language?.v3?.fundraiser?.invite_status]: <CustomStatus options={syndicate?.status} />,
             "": (
               <div
                 onClick={() => {
@@ -328,7 +328,7 @@ const SyndicateRequest = ({}: any) => {
                   paginationData={paginationData}
                   noDataNode={
                     <span className="absolute left-1/2 top-1/2 translate-x-[-50%] translate-y-[-50%]">
-                      No Data
+                      {language?.v3?.fundraiser?.no_data}
                     </span>
                   }
                 />
