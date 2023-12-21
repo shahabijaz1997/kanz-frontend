@@ -39,33 +39,21 @@ const SyndicateInvestments = ({}: any) => {
     "",
   ];
 
-  const [selectedTab, setSelectedTab]: any = useState("All");
+  const [selectedTab, setSelectedTab]: any = useState("all");
   const [searchQuery, setSearchQuery]: any = useState("");
   const [modalOpen, setModalOpen]: any = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [paginationData, setpaginationData] = useState(null);
   const [loading, setLoading] = useState(false);
   const [filter, setFilterCounts]:any = useState([]);
-  const [tabs] = useState([
-    language?.v3?.startup?.overview?.all,
-    language?.v3?.syndicate?.startup,
-    language?.v3?.syndicate?.property
-  ]);
+  const [tabs] = useState<any>({
+    'all': language?.v3?.startup?.overview?.all,
+    'startup': language?.v3?.fundraiser?.startup,
+    'property': language?.v3?.fundraiser?.property,
+  });
   const getCountvalue = ( value:string ) =>
   { 
-    let count = 0 ;
-    switch (value) {
-      case   language?.v3?.startup?.overview?.all : 
-      count = filter?.all
-      break
-      case  language?.v3?.syndicate?.startup : 
-      count = filter?.startup
-      break
-      case  language?.v3?.syndicate?.property : 
-      count = filter?.property
-      break
-    } 
-    return count
+    return filter[value] || 0
   }
   const [deals, setDeals] = useState([]);
   const [dummyDisclaimers, setDummyDisclaimers] = useState({
@@ -195,7 +183,7 @@ const SyndicateInvestments = ({}: any) => {
 
                     <ul className="inline-flex items-center">
                       {React.Children.toArray(
-                        tabs.map((tab:any) => (
+                         Object.keys(tabs).map((tab: any) => (
                           <li
                             onClick={() => {
                               
@@ -206,7 +194,7 @@ const SyndicateInvestments = ({}: any) => {
                                 : "text-gray-500"
                             } `}
                           >
-                            {tab} &nbsp;({getCountvalue(tab)})
+                             {tabs[tab]} &nbsp;({getCountvalue(tab)})
                           </li>
                         ))
                       )}

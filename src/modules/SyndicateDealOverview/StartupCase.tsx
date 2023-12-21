@@ -50,6 +50,9 @@ const StartupCase = ({
   const language: any = useSelector((state: RootState) => state.language.value);
   const authToken: any = useSelector((state: RootState) => state.auth.value);
   const user: any = useSelector((state: RootState) => state.user.value);
+  const orientation: any = useSelector(
+    (state: RootState) => state.orientation.value
+  );
   const [files, setFiles]: any = useState([]);
   const [deal, setDeal]: any = useState(dealDetail);
   const [selectedDocs, setSelectedDocs]: any = useState(docs);
@@ -730,7 +733,15 @@ const StartupCase = ({
                     : navigate(returnPath)
                 }
               >
-                <Chevrond stroke="#000" className="rotate-90 w-4 h-4" />
+                <Chevrond
+                    className={`${
+                      orientation === "rtl"
+                        ? "rotate-[-90deg]"
+                        : "rotate-[90deg]"
+                    } w-4 h-4`}
+                    strokeWidth={2}
+                    stroke={"#000"}
+                  />
                 <small className="text-neutral-500 text-sm font-medium">
                   {returnPath === RoutesEnums.INVESTOR_DEALS && language?.v3?.syndicate?.dealsSidebar}
                   {returnPath === RoutesEnums.SYNDICATE_DASHBOARD &&

@@ -42,12 +42,7 @@ const InvestorUpdates = ({}: any) => {
     action: "",
     document: null,
   });
-  const [pagination, setPagination] = useState({
-    items_per_page: 10,
-    total_items: [],
-    current_page: 1,
-    total_pages: 0,
-  });
+
   const [modalOpen, setModalOpen]: any = useState(null);
   const [syndicateInfo, setsyndicateInfo]: any = useState(null);
   const [modalReplyOpen, setmodalReplyOpen]: any = useState(null);
@@ -218,15 +213,7 @@ const InvestorUpdates = ({}: any) => {
             dealId: investor?.deal?.id,
           };
         });
-        setPagination((prev) => {
-          return {
-            ...prev,
-            total_items: investors.length,
-            current_page: 1,
-            total_pages: Math.ceil(investors.length / prev.items_per_page),
-            data: investors?.slice(0, prev.items_per_page),
-          };
-        });
+       
         setInvestors(investors);
       }
     } catch (error: any) {
@@ -263,36 +250,7 @@ const InvestorUpdates = ({}: any) => {
     }
   };
 
-  const paginate = (type: string) => {
-    if (type === "next" && pagination.current_page < pagination.total_pages) {
-      setPagination((prev: any) => {
-        const nextPage = prev.current_page + 1;
-        const startIndex = (nextPage - 1) * prev.items_per_page;
-        const endIndex = startIndex + prev.items_per_page;
-        const data = investors.slice(startIndex, endIndex);
-        return { ...prev, current_page: nextPage, data };
-      });
-    } else if (type === "previous" && pagination.current_page > 1) {
-      setPagination((prev: any) => {
-        const prevPage = prev.current_page - 1;
-        const startIndex = (prevPage - 1) * prev.items_per_page;
-        const endIndex = startIndex + prev.items_per_page;
-        const data = investors.slice(startIndex, endIndex);
-
-        return { ...prev, current_page: prevPage, data };
-      });
-    } else {
-      setPagination((prev: any) => {
-        const prevPage = Number(type) + 1 - 1;
-        const startIndex = (prevPage - 1) * prev.items_per_page;
-        const endIndex = startIndex + prev.items_per_page;
-        const data = investors.slice(startIndex, endIndex);
-
-        return { ...prev, current_page: type, data };
-      });
-    }
-  };
-
+ 
   return (
     <main className="h-full max-h-full overflow-y-auto">
       <section>

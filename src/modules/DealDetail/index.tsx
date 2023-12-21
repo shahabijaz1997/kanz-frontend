@@ -87,7 +87,7 @@ const DealDetail = ({}: any) => {
           { id: 5, title: language?.v3?.fundraiser?.activity },
         ];
   if (state === KanzRoles.PROPERTY_OWNER) {
-    const newTab = { id: 2, title: "Unique Selling Points" };
+    const newTab = { id: 2, title: language?.v3?.fundraiser?.unique_selling_points };
     tabs.splice(1, 0, newTab);
   }
 console.log(tabs)

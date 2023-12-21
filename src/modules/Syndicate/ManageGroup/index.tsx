@@ -59,11 +59,11 @@ const ManageGroup = ({}: any) => {
     setLoading(true);
   };
 
-  const [tabs] = useState([
-    language?.v3?.syndicate?.all,
-    language?.v3?.syndicate?.added,
-    language?.v3?.syndicate?.follower,
-  ]);
+  const [tabs] = useState<any>({
+    'all': language?.v3?.startup?.overview?.all,
+    'added': language?.v3?.syndicate?.added,
+    'follower': language?.v3?.syndicate?.follower,
+  });
   const columns = [
     language?.v3?.syndicate?.investor,
     language?.v3?.syndicate?.invested,
@@ -132,22 +132,8 @@ const ManageGroup = ({}: any) => {
       setLoading(false);
     }
   };
-
   const getCountvalue = (value: string) => {
-    let count = 0;
-    switch (value) {
-      case language?.v3?.syndicate?.all:
-        count = filter?.all;
-        break;
-      case language?.v3?.syndicate?.added:
-        count = filter?.added;
-        break;
-      case language?.v3?.syndicate?.follower:
-        count = filter?.follower;
-        break;
-    }
-
-    return count;
+    return filter[value] || 0
   };
 
   useEffect(() => {
@@ -276,7 +262,7 @@ const ManageGroup = ({}: any) => {
 
                       <ul className="inline-flex items-center">
                         {React.Children.toArray(
-                          tabs.map((tab: any) => (
+                         Object.keys(tabs).map((tab: any) => (
                             <li
                               onClick={() => {
                                 setSelectedTab(tab);
@@ -287,7 +273,7 @@ const ManageGroup = ({}: any) => {
                                   : "text-gray-500"
                               } `}
                             >
-                              {tab} &nbsp;({getCountvalue(tab)})
+                              {tabs[tab]} &nbsp;({getCountvalue(tab)})
                             </li>
                           ))
                         )}

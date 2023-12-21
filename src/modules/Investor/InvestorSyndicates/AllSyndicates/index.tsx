@@ -33,20 +33,13 @@ const AllSyndicates = ({}: any) :any => {
 
     const columns = ["Syndicate", "Total Deals", "Active Deals", "Raising Fund", "Formation Date", ""];
     const [loading, setLoading]: any = useState(false);
+    const [currentPage, setCurrentPage] = useState(1);
+    const [paginationData, setpaginationData] = useState(null);
     const [invites, setInvites]: any = useState([]);
     const [syndicateInfo, setsyndicateInfo]: any = useState(null);
     const [isOpen, setOpen]: any = useState(false);
   const [searchQuery, setSearchQuery]: any = useState("");
-
-    
-    const [pagination, setPagination] = useState({
-        items_per_page: 5,
-        total_items: [],
-        current_page: 1,
-        total_pages: 0,
-      });
-    
-   
+  
       
       useEffect(() => {
         dispatch(saveDataHolder(""));
@@ -74,8 +67,8 @@ const AllSyndicates = ({}: any) :any => {
           setLoading(true);
           let { status, data } = await getSyndicates(authToken,searchQuery);
           if (status === 200) {
+            setpaginationData(data?.status?.pagy)
             let deals = data?.status?.data
-              ?.filter((syndicate: any) => syndicate?.status !== "pending")
               .map((syndicate: any) => {
                 return {
                   id: syndicate?.id,
@@ -112,16 +105,6 @@ const AllSyndicates = ({}: any) :any => {
                    
                 };
               });
-    
-            setPagination((prev) => {
-              return {
-                ...prev,
-                total_items: deals.length,
-                current_page: 1,
-                total_pages: Math.ceil(deals.length / prev.items_per_page),
-                data: deals?.slice(0, prev.items_per_page),
-              };
-            });
             setInvites(deals);
           }
         } catch (error: any) {
@@ -131,36 +114,6 @@ const AllSyndicates = ({}: any) :any => {
           }
         } finally {
           setLoading(false);
-        }
-      };
-
-      const paginate = (type: string) => {
-        if (type === "next" && pagination.current_page < pagination.total_pages) {
-          setPagination((prev: any) => {
-            const nextPage = prev.current_page + 1;
-            const startIndex = (nextPage - 1) * prev.items_per_page;
-            const endIndex = startIndex + prev.items_per_page;
-            const data = invites.slice(startIndex, endIndex);
-            return { ...prev, current_page: nextPage, data };
-          });
-        } else if (type === "previous" && pagination.current_page > 1) {
-          setPagination((prev: any) => {
-            const prevPage = prev.current_page - 1;
-            const startIndex = (prevPage - 1) * prev.items_per_page;
-            const endIndex = startIndex + prev.items_per_page;
-            const data = invites.slice(startIndex, endIndex);
-    
-            return { ...prev, current_page: prevPage, data };
-          });
-        } else {
-          setPagination((prev: any) => {
-            const prevPage = Number(type) + 1 - 1;
-            const startIndex = (prevPage - 1) * prev.items_per_page;
-            const endIndex = startIndex + prev.items_per_page;
-            const data = invites.slice(startIndex, endIndex);
-    
-            return { ...prev, current_page: type, data };
-          });
         }
       };
     
@@ -201,9 +154,9 @@ const AllSyndicates = ({}: any) :any => {
        ) : (
          <Table
            columns={columns}
-           pagination={pagination}
-           goToPage={paginate}
-           paginate={paginate}
+           tableData={invites}
+           paginationData={paginationData}
+           setCurrentPage={setCurrentPage}
            noDataNode={
              <span className="absolute left-1/2 top-1/2 translate-x-[-50%] translate-y-[-50%]">
                No invites sent! Click on the{" "}

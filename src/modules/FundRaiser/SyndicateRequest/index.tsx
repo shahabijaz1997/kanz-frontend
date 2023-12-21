@@ -43,12 +43,6 @@ const SyndicateRequest = ({}: any) => {
     action: "",
     document: null,
   });
-  const [pagination, setPagination] = useState({
-    items_per_page: 10,
-    total_items: [],
-    current_page: 1,
-    total_pages: 0,
-  });
   const [modalOpen, setModalOpen]: any = useState(null);
   const [syndicateInfo, setsyndicateInfo]: any = useState(null);
   const [modalReplyOpen, setmodalReplyOpen]: any = useState(null);
@@ -117,7 +111,7 @@ const SyndicateRequest = ({}: any) => {
       };
       let { status, data } = await signOff(payload, id, authToken);
       if (status === 200) {
-        toast.success("Congratulations! Deal Signed Off");
+        toast.success(language?.v3?.syndicate?.congrats_deal_sign_off);
         setModalOpen(false);
       }
     } catch (error) {
@@ -367,7 +361,7 @@ const SyndicateRequest = ({}: any) => {
                 <div className="inline-flex items-center">
                   <span>
                     <img
-                      className=" h-9 w-9 mr-2.5 rounded-full"
+                      className=" h-9 w-9 mr-2.5 ml-2.5 rounded-full"
                       src={dealDetail?.profile?.logo}
                     ></img>
                   </span>
@@ -378,7 +372,7 @@ const SyndicateRequest = ({}: any) => {
                   {dealDetail?.status === "accepted" &&
                     dealDetail?.deal?.status === "approved" && (
                       <Button onClick={() => postSignOff(dealDetail?.deal?.id)}>
-                        {"Approve"}
+                        {language?.v3?.fundraiser?.approve}
                       </Button>
                     )}
                 </span>
@@ -404,7 +398,7 @@ const SyndicateRequest = ({}: any) => {
                   {
                     <div className="justify-between  pr-2 pb-2 w-full">
                       <div className="w-full inline-flex justify-between items-center pb-4">
-                        <div className="text-lg font-bold">Comments</div>
+                        <div className="text-lg font-bold">{language?.v3?.fundraiser?.comments}</div>
                         <div>
                           <span className="h-[50px] w-[125px] ">
                             {dealDetail?.thread_id === null ? (<Button type="outlined">
@@ -412,14 +406,14 @@ const SyndicateRequest = ({}: any) => {
                                 onClick={() => setmodalAddComment(true)}
                                 className="text-md font-semibold"
                               >
-                                Add Comment
+                               {language?.v3?.fundraiser?.add_comment}
                               </span>
                             </Button>) : (<Button type="outlined">
                               <span
                                 onClick={() => setmodalReplyOpen(true)}
                                 className="text-md font-semibold"
                               >
-                                Add Reply
+                                {language?.v3?.fundraiser?.add_reply}
                               </span>
                             </Button>)}
                             
@@ -429,7 +423,7 @@ const SyndicateRequest = ({}: any) => {
                       <div className="w-full">
                         {dealDetail?.thread_id === null ? (
                           <section className="w-full  flex items-center justify-center h-56 text-[#828282] font-medium text-lg text-justify">
-                            No comments from syndicate yet
+                            {language?.v3?.fundraiser?.no_comments_from_syndicate_yet}
                           </section>
                         ) : (
                           <p className=" overflow-y-auto custom-scroll rounded-md  w-full opacity-80 max-h-56 text-neutral-700 font-normal text-sm text-justify">
@@ -449,7 +443,7 @@ const SyndicateRequest = ({}: any) => {
                                     <span className="ml-2 mr-4">
                                       <h1 className="font-medium capitalize text-xl">
                                         {comments?.author_id === user?.id
-                                          ? "You"
+                                          ? language?.v3?.fundraiser?.you
                                           : comments?.author_name}
                                       </h1>
                                       <p className="pt-1 overflow-auto custom-scroll">
@@ -471,7 +465,7 @@ const SyndicateRequest = ({}: any) => {
             {dealDetail?.attachments?.length > 0 && (
               <section className="pt-8">
                 <aside>
-                  <h1 className="text-lg font-bold">Documents</h1>
+                  <h1 className="text-lg font-bold">{language?.v3?.fundraiser?.documents}</h1>
                   <aside className="overflow-y-auto custom-scroll max-h-56 border-[1px] border-neutral-200 rounded-md w-full p-3 mt-5 bg-cbc-check">
                     {React.Children.toArray(
                       dealDetail?.attachments?.map((documents: any) => (
@@ -490,7 +484,7 @@ const SyndicateRequest = ({}: any) => {
                                   }}
                                   className="text-sm text-black font-medium "
                                 >
-                                  View Doc
+                                  {language?.v3?.fundraiser?.view_doc}
                                 </div>
                                 <ArrowIcon stroke="#000" />
                               </h4>
@@ -530,7 +524,7 @@ const SyndicateRequest = ({}: any) => {
             <aside className="bg-white w-[700px] rounded-md h-full">
               <header className="bg-cbc-grey-sec h-16 py-2 px-3 inline-flex w-full justify-between items-center">
                 <h3 className="text-xl font-medium text-neutral-700">
-                  Deal Approval
+                {language?.v3?.fundraiser?.deal_approval}
                 </h3>
                 <div
                   className="bg-white h-8 w-8 border-[1px] border-black rounded-md  shadow-cs-6 p-1 cursor-pointer"
@@ -544,7 +538,7 @@ const SyndicateRequest = ({}: any) => {
               </header>
               <section>
                 <div className="justify-between  px-4 pt-2 w-full">
-                  <div className="text-lg font-bold">Comment</div>
+                  <div className="text-lg font-bold">{language?.v3?.fundraiser?.comment}</div>
                   <p className="w-full pt-2 opacity-80 max-h-24 text-neutral-700  font-lg text-sm text-justify">
                     {dealDetail?.comments && dealDetail.comments.length > 0 && (
                       <p>
@@ -562,7 +556,7 @@ const SyndicateRequest = ({}: any) => {
                     htmlFor=""
                     className="text-neutral-900 font-medium text-sm"
                   >
-                    Add Comment
+                    {language?.v3?.fundraiser?.add_comment}
                   </label>
                   <textarea
                     value={changes?.comment}
@@ -571,7 +565,7 @@ const SyndicateRequest = ({}: any) => {
                         return { ...prev, comment: e.target.value };
                       })
                     }
-                    placeholder="Add Comment"
+                    placeholder={language?.v3?.fundraiser?.add_comment}
                     className=" h-[100px] mt-1 shadow-sm appearance-none border border-neutral-300 rounded-md w-full py-2 px-3 text-gray-500 leading-tight focus:outline-none focus:shadow-outline"
                   ></textarea>
                 </div>
@@ -587,7 +581,7 @@ const SyndicateRequest = ({}: any) => {
                     setCommentSubmitted(0);
                   }}
                 >
-                  Submit
+                  {language?.v3?.fundraiser?.submit}
                 </Button>
               </footer>
             </aside>
@@ -625,7 +619,7 @@ const SyndicateRequest = ({}: any) => {
             <aside className="bg-white w-[700px] rounded-md p-5 h-full">
               <section>
                 <div className="justify-between inline-flex pt-3 px-3 w-full">
-                  <div className="text-lg font-bold">Latest Comment</div>
+                  <div className="text-lg font-bold">{language?.v3?.fundraiser?.latest_comment}</div>
                   <div
                     className="bg-white h-8 w-8 border-[1px] border-black rounded-md  shadow-cs-6 p-1 cursor-pointer"
                     onClick={() => {
@@ -657,7 +651,7 @@ const SyndicateRequest = ({}: any) => {
                     htmlFor=""
                     className="text-neutral-900 font-medium text-sm"
                   >
-                    Reply:
+                   {language?.v3?.fundraiser?.reply}
                   </label>
                   <textarea
                     value={changes?.comment}
@@ -666,7 +660,7 @@ const SyndicateRequest = ({}: any) => {
                         return { ...prev, comment: e.target.value };
                       })
                     }
-                    placeholder="Add Reply"
+                    placeholder={language?.v3?.fundraiser?.add_reply}
                     className=" h-[100px] mt-1 shadow-sm appearance-none border border-neutral-300 rounded-md w-full py-2 px-3 text-gray-500 leading-tight focus:outline-none focus:shadow-outline"
                   ></textarea>
                 </div>
@@ -683,7 +677,7 @@ const SyndicateRequest = ({}: any) => {
                     setCommentSubmitted(0);
                   }}
                 >
-                  Submit
+                 {language?.v3?.fundraiser?.submit}
                 </Button>
               </footer>
             </aside>
@@ -725,7 +719,7 @@ const SyndicateRequest = ({}: any) => {
                     htmlFor=""
                     className="text-neutral-900 font-medium text-lg"
                   >
-                    Add Comment
+                    {language?.v3?.fundraiser?.add_comment}
                   </label>
                   <textarea
                     value={changes?.comment}
@@ -734,7 +728,7 @@ const SyndicateRequest = ({}: any) => {
                         return { ...prev, comment: e.target.value };
                       })
                     }
-                    placeholder="Add new Comment"
+                    placeholder={language?.v3?.fundraiser?.add_comment}
                     className=" h-[100px] mt-1 shadow-sm appearance-none border border-neutral-300 rounded-md w-full py-2 px-3 text-gray-500 leading-tight focus:outline-none focus:shadow-outline"
                   ></textarea>
                 </div>
@@ -751,7 +745,7 @@ const SyndicateRequest = ({}: any) => {
                     setCommentSubmitted(0);
                   }}
                 >
-                  Submit
+                  {language?.v3?.fundraiser?.submit}
                 </Button>
               </footer>
             </aside>

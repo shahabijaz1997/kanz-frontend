@@ -49,58 +49,19 @@ const StartupDeals = ({ openStartupRiskModal }: any) => {
   const metadata: any = useSelector((state: RootState) => state.metadata);
   const [filter, setFilterCounts]: any = useState([]);
   const [selectedTab, setSelectedTab] = useState("All");
-  const [selectedTabApi, setSelectedTabApi] = useState("All");
   const [warningModal, setwarningModal]: any = useState(null);
-  const [tabs] = useState([
-    language?.v3?.startup?.overview?.all,
-    language?.v3?.fundraiser?.draft,
-    language?.v3?.fundraiser?.reopened,
-    language?.v3?.fundraiser?.submitted,
-    language?.v3?.fundraiser?.approved,
-    language?.v3?.fundraiser?.live,
-    language?.v3?.fundraiser?.verified,
-    language?.v3?.fundraiser?.rejected,
-  ]);
-  const backendTabs : any = {
-    [language?.v3?.startup?.overview?.all]: 'All',
-    [language?.v3?.fundraiser?.draft]: 'Draft',
-    [language?.v3?.fundraiser?.reopened]: 'Reopened',
-    [language?.v3?.fundraiser?.submitted]: 'Submitted',
-    [language?.v3?.fundraiser?.approved]: 'Approved',
-    [language?.v3?.fundraiser?.live]: 'Live',
-    [language?.v3?.fundraiser?.verified]: 'Verified',
-    [language?.v3?.fundraiser?.rejected]: 'Rejected',
-  };
+  const [tabs] = useState<any>({
+    'all': language?.v3?.startup?.overview?.all,
+    'draft': language?.v3?.fundraiser?.draft,
+    'reopened': language?.v3?.fundraiser?.reopened,
+    'submitted': language?.v3?.fundraiser?.submitted,
+    'approved': language?.v3?.fundraiser?.approved,
+    'live': language?.v3?.fundraiser?.live,
+    'verified': language?.v3?.fundraiser?.verified,
+    'rejected': language?.v3?.fundraiser?.rejected,
+  });
   const getCountvalue = (value: string) => {
-    let count = 0;
-    switch (value) {
-      case language?.v3?.startup?.overview?.all:
-        count = filter?.all;
-        break;
-      case language?.v3?.fundraiser?.draft:
-        count = filter?.draft;
-        break;
-      case language?.v3?.fundraiser?.reopened:
-        count = filter?.reopened;
-        break;
-      case language?.v3?.fundraiser?.submitted:
-        count = filter?.submitted;
-        break;
-      case language?.v3?.fundraiser?.approved:
-        count = filter?.approved;
-        break;
-      case language?.v3?.fundraiser?.live:
-        count = filter?.live;
-        break;
-      case language?.v3?.fundraiser?.verified:
-        count = filter?.verified;
-        break;
-      case language?.v3?.fundraiser?.rejected:
-        count = filter?.rejected;
-        break;
-    }
-
-    return count;
+    return filter[value] || 0
   };
   const [deals, setDeals]: any = useState([]);
   const [dealId, setDealId]: any = useState(null);
@@ -138,7 +99,7 @@ const StartupDeals = ({ openStartupRiskModal }: any) => {
       setLoading(true);
       let { status, data } = await getStartupDeals(
         authToken,
-        selectedTabApi,
+        selectedTab,
         searchQuery,
         currentPage
       );
@@ -283,18 +244,18 @@ const StartupDeals = ({ openStartupRiskModal }: any) => {
 
                 <ul className="inline-flex items-center">
                   {React.Children.toArray(
-                    tabs.map((tab: any) => (
+                    Object.keys(tabs).map((tab: any) => (
                       <li
                         onClick={() => {
-                          setSelectedTabApi(backendTabs[tab])
-                          setSelectedTab(tab)}}
+                          setSelectedTab(tab)}
+                        }
                         className={`py-2 px-4 font-medium text-xs cursor-pointer rounded-md transition-all ${
                           selectedTab === tab
                             ? "text-neutral-900 bg-neutral-100"
                             : "text-gray-500"
                         } `}
                       >
-                        {tab} &nbsp;({getCountvalue(tab)})
+                        {tabs[tab]} &nbsp;({getCountvalue(tab)})
                       </li>
                     ))
                   )}

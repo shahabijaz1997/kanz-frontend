@@ -26,12 +26,7 @@ const InvitedInvestors = ({ id }: any) => {
   ];
   const [loading, setLoading]: any = useState(false);
   const [invites, setInvites]: any = useState([]);
-  const [pagination, setPagination] = useState({
-    items_per_page: 5,
-    total_items: [],
-    current_page: 1,
-    total_pages: 0,
-  });
+
 
   useEffect(() => {
     dispatch(saveDataHolder(""));
@@ -73,36 +68,7 @@ const InvitedInvestors = ({ id }: any) => {
       setLoading(false);
     }
   };
-  const paginate = (type: string) => {
-    if (type === "next" && pagination.current_page < pagination.total_pages) {
-      setPagination((prev: any) => {
-        const nextPage = prev.current_page + 1;
-        const startIndex = (nextPage - 1) * prev.items_per_page;
-        const endIndex = startIndex + prev.items_per_page;
-        const data = invites.slice(startIndex, endIndex);
-        return { ...prev, current_page: nextPage, data };
-      });
-    } else if (type === "previous" && pagination.current_page > 1) {
-      setPagination((prev: any) => {
-        const prevPage = prev.current_page - 1;
-        const startIndex = (prevPage - 1) * prev.items_per_page;
-        const endIndex = startIndex + prev.items_per_page;
-        const data = invites.slice(startIndex, endIndex);
-
-        return { ...prev, current_page: prevPage, data };
-      });
-    } else {
-      setPagination((prev: any) => {
-        const prevPage = Number(type) + 1 - 1;
-        const startIndex = (prevPage - 1) * prev.items_per_page;
-        const endIndex = startIndex + prev.items_per_page;
-        const data = invites.slice(startIndex, endIndex);
-
-        return { ...prev, current_page: type, data };
-      });
-    }
-  };
-
+ 
   return (
     <section className="mt-10 relative">
       {loading ? (

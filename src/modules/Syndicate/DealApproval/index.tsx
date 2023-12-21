@@ -14,7 +14,6 @@ import CrossIcon from "../../../ts-icons/crossIcon.svg";
 import { saveDataHolder } from "../../../redux-toolkit/slicer/dataHolder.slicer";
 import { getDeals, getInvitedDeals } from "../../../apis/deal.api";
 import {
-  comaFormattedNumber,
   numberFormatter,
 } from "../../../utils/object.utils";
 import Spinner from "../../../shared/components/Spinner";
@@ -27,6 +26,9 @@ const DealApproval = ({}: any) => {
   const language: any = useSelector((state: RootState) => state.language.value);
   const authToken: any = useSelector((state: RootState) => state.auth.value);
   const user: any = useSelector((state: RootState) => state.user.value);
+  const orientation: any = useSelector(
+    (state: RootState) => state.orientation.value
+  );
 
   const columns = [
     language?.v3?.syndicate?.deals?.table?.title,
@@ -36,12 +38,7 @@ const DealApproval = ({}: any) => {
     language?.v3?.syndicate?.deals?.table?.target,
     language?.v3?.table?.action,
   ];
-  const [pagination, setPagination] = useState({
-    items_per_page: 10,
-    total_items: [],
-    current_page: 1,
-    total_pages: 0,
-  });
+
   const [selectedTab, setSelectedTab]: any = useState("all");
   const [searchQuery, setSearchQuery]: any = useState("");
   const [modalOpen, setModalOpen]: any = useState(null);
@@ -61,29 +58,19 @@ const DealApproval = ({}: any) => {
     d2: false,
     d3: false,
   });
+  const [tabs] = useState<any>({
+    'all': language?.v3?.startup?.overview?.all,
+    'pending': language?.v3?.syndicate?.pending,
+    'interested': language?.v3?.syndicate?.interested,
+    'accepted': language?.v3?.syndicate?.accepted,
+    'approved': language?.v3?.syndicate?.approved,
+  });
 
-  const getCountvalue = (value: string) => {
-    let count = 0;
-    switch (value) {
-      case language?.v3?.syndicate?.all:
-        count = filter?.all;
-        break;
-      case language?.v3?.syndicate?.pending:
-        count = filter?.pending;
-        break;
-      case language?.v3?.syndicate?.interested:
-        count = filter?.interested;
-        break;
-      case language?.v3?.syndicate?.accepted:
-        count = filter?.accepted;
-        break;
-      case language?.v3?.syndicate?.approved:
-        count = filter?.approved;
-        break;
-    }
 
-    return count;
-  };
+  const getCountvalue = ( value:string ) =>
+  { 
+    return filter[value] || 0
+  }
 
   useEffect(() => {
     dispatch(saveDataHolder(""));
@@ -139,25 +126,16 @@ const DealApproval = ({}: any) => {
                 }}
                 className="bg-neutral-100 inline-flex items-center justify-center w-[24px] h-[24px] rounded-full transition-all hover:bg-cbc-transparent mx-5"
               >
-                <Chevrond
-                  className="rotate-[-90deg] w-3 h-3"
-                  strokeWidth={3}
-                  stroke={"#000"}
-                />
+               <Chevrond
+                    className={`${orientation === "rtl" ? "rotate-[-270deg]" : "rotate-[-90deg]"} w-4 h-4`}
+                    strokeWidth={2}
+                    stroke={"#000"}
+                  />
               </div>
             ),
           };
         });
 
-        setPagination((prev) => {
-          return {
-            ...prev,
-            total_items: deals.length,
-            current_page: 1,
-            total_pages: Math.ceil(deals.length / prev.items_per_page),
-            data: deals?.slice(0, prev.items_per_page),
-          };
-        });
         setDeals(deals);
       }
     } catch (error: any) {
@@ -171,14 +149,6 @@ const DealApproval = ({}: any) => {
       setLoading(false);
     }
   };
-
-  const [tabs] = useState([
-    language?.v3?.syndicate?.all,
-    language?.v3?.syndicate?.pending,
-    language?.v3?.syndicate?.interested,
-    language?.v3?.syndicate?.accepted,
-    language?.v3?.syndicate?.approved,
-  ]);
 
 
   return (
@@ -227,7 +197,7 @@ const DealApproval = ({}: any) => {
 
                     <ul className="inline-flex items-center">
                       {React.Children.toArray(
-                        tabs.map((tab: any, index: number) => (
+                       Object.keys(tabs).map((tab: any) => (
                           <li
                             onClick={() => {
                               setSelectedTab(tab);
@@ -238,7 +208,7 @@ const DealApproval = ({}: any) => {
                                 : "text-gray-500"
                             } `}
                           >
-                            {tab} &nbsp;({getCountvalue(tab)})
+                            {tabs[tab]} &nbsp;({getCountvalue(tab)})
                           </li>
                         ))
                       )}

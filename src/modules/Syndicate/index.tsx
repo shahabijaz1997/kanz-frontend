@@ -14,12 +14,9 @@ import CrossIcon from "../../ts-icons/crossIcon.svg";
 import { saveDataHolder } from "../../redux-toolkit/slicer/dataHolder.slicer";
 import { getDeals, getDealsforsyndicate, getNoFilterDeals } from "../../apis/deal.api";
 import {
-  comaFormattedNumber,
-  formatDate,
   numberFormatter,
 } from "../../utils/object.utils";
 import Spinner from "../../shared/components/Spinner";
-import { ApplicationStatus } from "../../enums/types.enum";
 import CustomStatus from "../../shared/components/CustomStatus";
 import Chevrond from "../../ts-icons/chevrond.svg";
 
@@ -51,17 +48,23 @@ const SyndicateDashboard = ({}: any) => {
     current_page: 1,
     total_pages: 0,
   });
-  const [selectedTab, setSelectedTab] = useState("All");
+  const [selectedTab, setSelectedTab] = useState("all");
   const [modalOpen, setModalOpen]: any = useState(null);
   const [searchQuery, setSearchQuery]: any = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const [paginationData, setpaginationData] = useState(null);
   const [loading, setLoading] = useState(false);
-  const [tabs] = useState([
+/*   const [tabs] = useState([
     language?.v3?.startup?.overview?.all,
     language?.v3?.syndicate?.startup,
     language?.v3?.syndicate?.property
-  ]);
+  ]); */
+
+  const [tabs] = useState<any>({
+    'all': language?.v3?.startup?.overview?.all,
+    'startup': language?.v3?.fundraiser?.startup,
+    'property': language?.v3?.fundraiser?.property,
+  });
   const [deals, setDeals] = useState([]);
   const [dummyDisclaimers, setDummyDisclaimers] = useState({
     d1: false,
@@ -76,21 +79,7 @@ const SyndicateDashboard = ({}: any) => {
   
   const getCountvalue = ( value:string ) =>
   { 
-    let count = 0 ;
-    switch (value) {
-      case   language?.v3?.startup?.overview?.all : 
-      count = filter?.all
-      break
-      case  language?.v3?.syndicate?.startup : 
-      count = filter?.startup
-      break
-      case  language?.v3?.syndicate?.property : 
-      count = filter?.property
-      break
-    } 
-
-    return count
-    
+    return filter[value] || 0
   }
 
 
@@ -242,7 +231,7 @@ const SyndicateDashboard = ({}: any) => {
                     </div>
                     <ul className="inline-flex items-center">
                         {React.Children.toArray(
-                          tabs.map((tab: any) => (
+                          Object.keys(tabs).map((tab: any) => (
                             <li
                               onClick={() => {
                                 setSelectedTab(tab);
@@ -253,7 +242,7 @@ const SyndicateDashboard = ({}: any) => {
                                   : "text-gray-500"
                               } `}
                             >
-                              {tab} &nbsp;({getCountvalue(tab)})
+                              {tabs[tab]} &nbsp;({getCountvalue(tab)})
                             </li>
                           ))
                         )}
