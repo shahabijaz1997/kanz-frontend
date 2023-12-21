@@ -537,7 +537,7 @@ const PropertyOwnerCase = ({
                     prefix={<img src={ImgSVG} />}
                     className="absolute right-2 bottom-2 !py-1 bg-white border-[1px] border-gray-900 !text-gray-900 hover:!bg-white !font-normal"
                   >
-                    {language.v3.deal.view_all_photos}
+                    {language?.v3?.deal?.view_all_photos}
                   </Button>
                 </section>
               )}

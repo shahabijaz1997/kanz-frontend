@@ -18,12 +18,15 @@ const Invites = ({}: any): any => {
   const dispatch = useDispatch();
   const language: any = useSelector((state: RootState) => state.language.value);
   const authToken: any = useSelector((state: RootState) => state.auth.value);
+  const orientation: any = useSelector(
+    (state: RootState) => state.orientation.value
+  );
 
   const columns = [
-    "Syndicate",
+    language?.v3?.investor?.syndicate,
     language?.v3?.syndicate?.deals?.table?.title,
     language?.v3?.syndicate?.deals?.table?.category,
-    "Status",
+    language?.v3?.investor?.status,
     language?.v3?.syndicate?.deals?.table?.end_date,
     language?.v3?.syndicate?.deals?.table?.target,
     "",
@@ -31,34 +34,20 @@ const Invites = ({}: any): any => {
   const [loading, setLoading]: any = useState(false);
   const [invitees, setInvitees] = useState([]);
   const [filter, setFilterCounts]: any = useState([]);
-  const [selectedTab, setSelectedTab] = useState("All");
+  const [selectedTab, setSelectedTab] = useState("all");
   const [searchQuery, setSearchQuery]: any = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const [paginationData, setpaginationData] = useState(null);
 
-  const [tabs] = useState([
-    language?.v3?.startup?.overview?.all,
-    "Startup",
-    "Property",
-  ]);
-
-  const getCountvalue = (value: string) => {
-    let count = 0;
-    switch (value) {
-      case "All":
-        count = filter?.all;
-        break;
-      case "Startup":
-        count = filter?.startup;
-        break;
-      case "Property":
-        count = filter?.property;
-        break;
-    }
-
-    return count;
-  };
-
+  const [tabs] = useState<any>({
+    'all': language?.v3?.startup?.overview?.all,
+    'startup': language?.v3?.fundraiser?.startup,
+    'property': language?.v3?.fundraiser?.property,
+  });
+  const getCountvalue = ( value:string ) =>
+  { 
+    return filter[value] || 0
+  }
   useEffect(() => {
     dispatch(saveDataHolder(""));
     setCurrentPage(1)
@@ -85,7 +74,7 @@ const Invites = ({}: any): any => {
           return {
             id: invitee?.id,
             filterStatus: invitee?.status,
-            Syndicate: (
+           [language?.v3?.investor?.syndicate]: (
               <span className=" capitalize">{invitee?.syndicate?.name}</span>
             ),
             [language?.v3?.syndicate?.deals?.table?.title]:
@@ -93,7 +82,7 @@ const Invites = ({}: any): any => {
             [language?.v3?.syndicate?.deals?.table?.category]: (
               <span className="capitalize">{invitee?.deal_type}</span>
             ),
-            ["Status"]: <CustomStatus options={invitee?.status} /> || "N/A",
+            [language?.v3?.investor?.status]: <CustomStatus options={invitee?.status} /> || "N/A",
             [language?.v3?.syndicate?.deals?.table?.end_date]:
               invitee?.end_at || " N/A",
             [language?.v3?.syndicate?.deals?.table?.target]: `${numberFormatter(
@@ -115,8 +104,8 @@ const Invites = ({}: any): any => {
                 className="bg-neutral-100 inline-flex items-center justify-center w-[24px] h-[24px] rounded-full transition-all hover:bg-cbc-transparent mx-5"
                 >
                   <Chevrond
-                    className="rotate-[-90deg] w-3 h-3"
-                    strokeWidth={3}
+                    className={`${orientation === "rtl" ? "rotate-[-270deg]" : "rotate-[-90deg]"} w-4 h-4`}
+                    strokeWidth={2}
                     stroke={"#000"}
                   />
               </div>
@@ -161,7 +150,7 @@ const Invites = ({}: any): any => {
           </div>
           <ul className="inline-flex items-center">
             {React.Children.toArray(
-              tabs.map((tab: any) => (
+               Object.keys(tabs).map((tab: any) => (
                 <li
                   onClick={() => setSelectedTab(tab)}
                   className={`py-2 px-3 font-medium cursor-pointer rounded-md transition-all ${
@@ -170,7 +159,7 @@ const Invites = ({}: any): any => {
                       : "text-gray-500"
                   } `}
                 >
-                  {tab} &nbsp;({getCountvalue(tab)})
+                 {tabs[tab]} &nbsp;({getCountvalue(tab)})
                 </li>
               ))
             )}
@@ -192,21 +181,23 @@ const Invites = ({}: any): any => {
             paginationData={paginationData}
             columns={columns}
             noDataNode={
-              <div className="absolute left-1/2 top-1/2 translate-x-[-50%] translate-y-[-50%]">
+              <div className="min-h-[300px]">
+                    <div className="absolute left-1/2 top-1/2 translate-x-[-50%] translate-y-[-50%]">
                 <p className="font-medium text-center text-lg text-[#828282]">
-                  Follow syndicates to get invites
+                  {language?.v3?.investor?.follow_syndicates_to_get_invites}
                 </p>
                 <p className=" font-normal mt-1 text-sm  text-[#828282]">
-                  You can see the invitees here from the following syndicate
+                  {language?.v3?.investor?.you_can_see_invitees_here_from_the_following_syndicate}
                 </p>
                 <Button
                   onClick={() => navigate(`${RoutesEnums.INVESTOR_SYNDICATES}`)}
                   className="mt-4"
                   type="primary"
                 >
-                  Find Syndicates to Follow
+                {language?.v3?.investor?.find_syndicates_to_follow}
                 </Button>
-              </div>
+              </div></div>
+        
             }
           />
         )}

@@ -41,11 +41,11 @@ const PropertyDeals = ({ openPropertyRiskModal }: any) => {
     language?.v3?.fundraiser?.state,
     language?.v3?.fundraiser?.city,
     language?.v3?.fundraiser?.selling_price,
-    language.v3.fundraiser.end_date,
+    language?.v3?.fundraiser.end_date,
     language?.v3?.table?.action,
   ];
   const [filter, setFilterCounts]: any = useState([]);
-  const [selectedTab, setSelectedTab] = useState("All");
+  const [selectedTab, setSelectedTab] = useState("all");
   const [warningModal, setwarningModal]: any = useState(null);
   const [paginationData, setpaginationData] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
@@ -114,7 +114,7 @@ const PropertyDeals = ({ openPropertyRiskModal }: any) => {
             [language?.v3?.fundraiser?.size]: `${deal?.size ? `${deal.size} SQFT` : "N/A"}`,
             [language?.v3?.fundraiser?.state]: deal?.state || "N/A",
             [language?.v3?.fundraiser?.city]: deal?.city || "N/A",
-            [language.v3.fundraiser.end_date]: deal?.end_at || "N/A",
+            [language.v3?.fundraiser.end_date]: deal?.end_at || "N/A",
             [language?.v3?.table?.status]: (
               <CustomStatus options={deal?.status} />
             ),
@@ -276,7 +276,7 @@ const PropertyDeals = ({ openPropertyRiskModal }: any) => {
                   }}
                   className="absolute left-1/2 top-1/2 translate-x-[-50%] translate-y-[-50%]"
                 >
-                  {language.v3.fundraiser.create_property_deal}
+                  {language?.v3?.fundraiser?.create_property_deal}
                 </Button>
           
               }

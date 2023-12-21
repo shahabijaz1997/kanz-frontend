@@ -22,6 +22,10 @@ const SyndicateInfoDrawer = ({
   };
   const user: any = useSelector((state: RootState) => state.user.value);
   const authToken: any = useSelector((state: RootState) => state.auth.value);
+  const language: any = useSelector((state: RootState) => state.language.value);
+  const orientation: any = useSelector(
+    (state: RootState) => state.orientation.value
+  );
 
   const [loading, setLoading] = useState(false);
   const [buttonDisableTemp, setButtonDisableTemp]=useState(false)
@@ -63,12 +67,7 @@ const SyndicateInfoDrawer = ({
         authToken
       );
       if (status === 200) {
-        toast.success("Syndicate Followed", toastUtil);
-        let elem: any = document.getElementById(`synd-${syndId}`);
-        let button = document.createElement("button");
-        button.innerText = "Followed";
-        elem.innerHTML = "";
-        elem.appendChild(button);
+        toast.success("Syndicate Followed", toastUtil);                                //TODO
       }
       removeSpinning()
     } catch (error: any) {
@@ -91,11 +90,7 @@ const SyndicateInfoDrawer = ({
       );
       if (status === 200) {
         toast.success("Syndicate Unfollowed", toastUtil);
-        let elem: any = document.getElementById(`synd-${syndId}`);
-        let button = document.createElement("button");
-        button.innerText = "Unfollowed";
-        elem.innerHTML = "";
-        elem.appendChild(button);
+  
       }
       removeSpinning()
     } catch (error: any) {
@@ -111,7 +106,7 @@ const SyndicateInfoDrawer = ({
   const getButtonStatus = () => {
     if (buttonDisableTemp) return
 
-    return syndicateInfo?.following ? "Following" : "Follow"
+    return syndicateInfo?.following ? language?.v3?.investor?.following : language?.v3?.investor?.follow
   }
 
 
@@ -170,7 +165,7 @@ const SyndicateInfoDrawer = ({
           <section className="items-center">
             <aside className=" justify-end flex">
               <span className="font-semibold text-neutral-400 text-xs">
-                Formation date:
+                {language?.v3?.investor?.formation_date}
               </span>
               <span className="pr-2 pl-1 text-xs">
                 {syndicateInfo?.created_at}
@@ -178,7 +173,7 @@ const SyndicateInfoDrawer = ({
             </aside>
             <aside>
               <div className=" pr-2 flex items-center">
-                <span className="font-bold mb-2">About</span>
+                <span className="font-bold mb-2">{language?.v3?.investor?.about}</span>
               </div>
               <div className="fading-text-container text-sm">
                 <p className={showFullText ? "" : "masked"}>{displayText}</p>
@@ -187,30 +182,35 @@ const SyndicateInfoDrawer = ({
                     className=" text-xs text-neutral-500"
                     onClick={toggleText}
                   >
-                    {showFullText ? "See Less" : "See More"}
+                    {showFullText ? language?.v3?.investor?.see_less : language?.v3?.investor?.see_more}
                   </button>
                 )}
               </div>
             </aside>
             <aside className="mt-4">
               <div className=" pr-2 flex items-center">
-                <span className="font-bold mb-4">Portfolio Stats</span>
+                <span className="font-bold mb-4">{language?.v3?.investor?.portfolio_stats}</span>
               </div>
               <aside className="flex justify-between items-center text-sm px-6">
-                <div className="rounded-md border-[1.75px] border-[#404040] w-full pl-3 py-3">
-                  <div className=" text-[#737373]">Total deals</div>
+                <div className="rounded-md border-[1.75px] border-[#404040] w-full pl-3 pr-3 py-3">
+                  <div className=" text-[#737373]">{language?.v3?.investor?.total_deals_label}</div>
                   <div className="mt-2 font-bold text-xl">
                     {syndicateInfo?.total_deals || "N/A"}
                   </div>
                 </div>
-                <div className="rounded-md border-[1.75px] border-[#404040] w-full pl-3 ml-16 py-3">
+                <div className={`${
+                      orientation === "rtl"
+                        ? "mr-16"
+                        : "ml-16"
+                    } rounded-md border-[1.75px] border-[#404040] w-full pl-3 pr-3 py-3`}>
+               
                   <div>
-                    <span className="text-[#737373]">Active deals</span>
+                    <span className="text-[#737373]">{language?.v3?.investor?.active_deals_label}</span>
                     
                     <span className=" bottom-1 ml-3 inline-flex items-center justify-around bg-green-100 py-1 px-1.5 rounded-[9px] h-[20px] gap-1">
                       <RaiseIcon />
                       <span className="text-green-800 text-sm font-medium">
-                        {"Raising"}
+                        {language?.v3?.investor?.raising_label}
                       </span>
                     </span>
                   </div>
@@ -221,15 +221,19 @@ const SyndicateInfoDrawer = ({
                 
               </aside>
               <aside className="flex justify-between items-center text-sm px-6 mt-4">
-                <div className="rounded-md border-[1.75px] border-[#404040] w-full pl-3 py-3">
-                  <div className=" text-[#737373]">Raised Amount</div>
+                <div className="rounded-md border-[1.75px] border-[#404040] w-full pl-3 pr-3 py-3">
+                  <div className=" text-[#737373]">{language?.v3?.investor?.total_deals_label}</div>
                   <div className="mt-2 font-bold text-xl">
                     {comaFormattedNumber(syndicateInfo?.raised_amount, DealCheckType.STARTUP) || "N/A"}
                   </div>
                 </div>
-                <div className="rounded-md border-[1.75px] border-[#404040] w-full pl-3 ml-16 py-3">
+                <div  className={`${
+                      orientation === "rtl"
+                        ? "mr-16"
+                        : "ml-16"
+                    } rounded-md border-[1.75px] border-[#404040] w-full pl-3 pr-3 py-3`}>
                   <div>
-                    <span className="text-[#737373]">Number of times raised</span>
+                    <span className="text-[#737373]">{language?.v3?.investor?.times_raised}</span>
                   </div>
                   <div className="mt-2 font-bold text-xl">
                     {syndicateInfo?.no_times_raised || "N/A"}
@@ -241,7 +245,7 @@ const SyndicateInfoDrawer = ({
             </aside>
             <aside className="mt-6">
               <div className=" pr-2 flex items-center">
-                <span className="font-bold ">Disclaimers</span>
+                <span className="font-bold ">{language?.v3?.investor?.disclaimers}</span>
               </div>
               <aside className="flex justify-between items-center text-sm  overflow-y-auto">
                 <p className="text-xs">{text.slice(0, 600)}</p>

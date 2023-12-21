@@ -19,10 +19,10 @@ const InvitedInvestors = ({ id }: any) => {
   const language: any = useSelector((state: RootState) => state.language.value);
 
   const columns = [
-    "Investor",
-    "Status",
-    "Invitation Sent On",
-    "Invite Expiration Date",
+    language?.v3?.syndicate?.investor,
+    language?.v3?.fundraiser?.status,
+    language?.v3?.fundraiser?.invitation_sent_on,
+    language?.v3?.fundraiser?.invite_expiration_date,
   ];
   const [loading, setLoading]: any = useState(false);
   const [invites, setInvites]: any = useState([]);
@@ -31,30 +31,31 @@ const InvitedInvestors = ({ id }: any) => {
   useEffect(() => {
     dispatch(saveDataHolder(""));
     getInvitedInvestors();
+    console.log(currentPage)
   }, [currentPage]);
 
 
   const getInvitedInvestors = async () => {
     try {
       setLoading(true);
-      let { status, data } = await getSharedInvestors(id, authToken);
+      let { status, data } = await getSharedInvestors(id, authToken, currentPage);
       if (status === 200) {
         setpaginationData(data?.status?.data?.pagy)
         let invites = data?.status?.data?.invites
           ?.map((deal: any) => {
             return {
               id: deal?.id,
-              ["Investor"]: (
+              [language?.v3?.syndicate?.investor]: (
                 <span className=" capitalize">{deal?.invitee?.name}</span>
               ),
-              ["Status"]: (
+              [language?.v3?.fundraiser?.status]: (
                 <span className="capitalize">
                   {" "}
                   <CustomStatus options={deal?.status} />
                 </span>
               ),
-              ["Invitation Sent On"]: deal?.sent_at,
-              ["Invite Expiration Date"]: deal?.invite_expiry || "N/A",
+              [language?.v3?.fundraiser?.invitation_sent_on]: deal?.sent_at,
+              [ language?.v3?.fundraiser?.invite_expiration_date]: deal?.invite_expiry || "N/A",
             };
           });
         setInvites(invites);
@@ -80,6 +81,7 @@ const InvitedInvestors = ({ id }: any) => {
         </div>
       ) : (
         <Table
+        removeHref
           columns={columns}
           tableData={invites}
           setCurrentPage={setCurrentPage}

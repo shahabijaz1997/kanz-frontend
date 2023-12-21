@@ -28,7 +28,7 @@ const Sidebar = ({ type }: any) => {
     },
     {
       id: 2,
-      title: language.v3.fundraiser.investors,
+      title: language?.v3?.fundraiser.investors,
       route: RoutesEnums.INVESTOR_UPDATES,
     },
     {
@@ -148,24 +148,24 @@ const Sidebar = ({ type }: any) => {
             {
               id: 2,
               icon: <InvestorInvestmentIcon />,
-              title: "Investments",
+              title: language?.v3?.investor?.investments,
             },
             {
               id: 3,
               icon: <InvestorSyndicateIcon />,
-              title: "Syndicates",
+              title:  language?.v3?.investor?.syndicates,
               route: RoutesEnums.INVESTOR_SYNDICATES,
             },
             {
               id: 4,
               icon: <InvestorInvitesIcon />,
-              title: "Deals",
+              title:  language?.v3?.investor?.deals,
               route: RoutesEnums.INVESTOR_DEALS,
             },
             {
               id: 5,
               icon: <InvestorPortfolioIcon />,
-              title: "Portfolio",
+              title: language?.v3?.investor?.portfolio,
             },
           ],
         });
