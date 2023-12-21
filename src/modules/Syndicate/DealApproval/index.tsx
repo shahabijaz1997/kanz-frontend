@@ -31,7 +31,7 @@ const DealApproval = ({}: any) => {
   const columns = [
     language?.v3?.syndicate?.deals?.table?.title,
     language?.v3?.syndicate?.deals?.table?.category,
-    "Invite Status",
+    language?.v3?.syndicate?.invite_status,
     language?.v3?.syndicate?.deals?.table?.end_date,
     language?.v3?.syndicate?.deals?.table?.target,
     language?.v3?.table?.action,
@@ -65,19 +65,19 @@ const DealApproval = ({}: any) => {
   const getCountvalue = (value: string) => {
     let count = 0;
     switch (value) {
-      case "All":
+      case language?.v3?.syndicate?.all:
         count = filter?.all;
         break;
-      case "Pending":
+      case language?.v3?.syndicate?.pending:
         count = filter?.pending;
         break;
-      case "Interested":
+      case language?.v3?.syndicate?.interested:
         count = filter?.interested;
         break;
-      case "Accepted":
+      case language?.v3?.syndicate?.accepted:
         count = filter?.accepted;
         break;
-      case "Approved":
+      case language?.v3?.syndicate?.approved:
         count = filter?.approved;
         break;
     }
@@ -91,7 +91,7 @@ const DealApproval = ({}: any) => {
   }, [currentPage]);
   useEffect(() => {
     dispatch(saveDataHolder(""));
-    setCurrentPage(1)
+    setCurrentPage(1);
     getAllDeals();
   }, [selectedTab]);
 
@@ -102,7 +102,7 @@ const DealApproval = ({}: any) => {
         user.id,
         authToken,
         selectedTab,
-        searchQuery, 
+        searchQuery,
         currentPage
       );
       if (status === 200) {
@@ -117,11 +117,14 @@ const DealApproval = ({}: any) => {
             [language?.v3?.syndicate?.deals?.table?.category]: (
               <span className="capitalize">{deal?.deal?.type}</span>
             ),
-            ["Invite Status"]: <CustomStatus options={deal?.status} /> || "N/A",
+            [language?.v3?.syndicate?.invite_status]:
+              <CustomStatus options={deal?.status} /> || "N/A",
             [language?.v3?.syndicate?.deals?.table?.end_date]:
               deal?.deal?.end_at || " N/A",
-            [language?.v3?.syndicate?.deals?.table
-              ?.target]: `${numberFormatter(Number(deal?.deal?.target), deal?.deal?.type)}`,
+            [language?.v3?.syndicate?.deals?.table?.target]: `${numberFormatter(
+              Number(deal?.deal?.target),
+              deal?.deal?.type
+            )}`,
 
             Steps: deal?.current_state?.steps,
             [language?.v3?.table?.action]: (
@@ -170,41 +173,13 @@ const DealApproval = ({}: any) => {
   };
 
   const [tabs] = useState([
-    "All",
-    "Pending",
-    "Interested",
-    "Accepted",
-    "Approved",
+    language?.v3?.syndicate?.all,
+    language?.v3?.syndicate?.pending,
+    language?.v3?.syndicate?.interested,
+    language?.v3?.syndicate?.accepted,
+    language?.v3?.syndicate?.approved,
   ]);
 
-  const paginate = (type: string) => {
-    if (type === "next" && pagination.current_page < pagination.total_pages) {
-      setPagination((prev: any) => {
-        const nextPage = prev.current_page + 1;
-        const startIndex = (nextPage - 1) * prev.items_per_page;
-        const endIndex = startIndex + prev.items_per_page;
-        const data = deals.slice(startIndex, endIndex);
-        return { ...prev, current_page: nextPage, data };
-      });
-    } else if (type === "previous" && pagination.current_page > 1) {
-      setPagination((prev: any) => {
-        const prevPage = prev.current_page - 1;
-        const startIndex = (prevPage - 1) * prev.items_per_page;
-        const endIndex = startIndex + prev.items_per_page;
-        const data = deals.slice(startIndex, endIndex);
-        return { ...prev, current_page: prevPage, data };
-      });
-    } else {
-      setPagination((prev: any) => {
-        const prevPage = Number(type) + 1 - 1;
-        const startIndex = (prevPage - 1) * prev.items_per_page;
-        const endIndex = startIndex + prev.items_per_page;
-        const data = deals.slice(startIndex, endIndex);
-
-        return { ...prev, current_page: type, data };
-      });
-    }
-  };
 
   return (
     <main className="h-full max-h-full overflow-y-auto">

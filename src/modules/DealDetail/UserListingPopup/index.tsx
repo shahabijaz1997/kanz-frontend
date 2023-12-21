@@ -32,6 +32,9 @@ const UserListingPopup = ({ approve, dealId, type, dealIdReal, setLoader }: any)
   const [syndicates, setSyndicates] = useState<Syndicate[]>([]);
   const [showInviteSyndicate, setShowInviteSyndicate] = useState(false);
   const [searchQuery, setSearchQuery]: any = useState("");
+  const orientation: any = useSelector(
+    (state: RootState) => state.orientation.value
+  );
 
 
   useEffect(() => {
@@ -74,10 +77,10 @@ const UserListingPopup = ({ approve, dealId, type, dealIdReal, setLoader }: any)
         authToken
       );
       if (status === 200) {
-        toast.success("Syndicate Invited", toastUtil);
+        toast.success(language?.v3?.fundraiser?.syndicate_invited, toastUtil);
         let elem: any = document.getElementById(`synd-${syndId}`);
         let button = document.createElement("button");
-        button.innerText = "Invited";
+        button.innerText = language?.v3?.fundraiser?.invited;
         elem.innerHTML = "";
         elem.appendChild(button);
       }
@@ -108,7 +111,7 @@ const UserListingPopup = ({ approve, dealId, type, dealIdReal, setLoader }: any)
                 className="!p-3 !py-1 !rounded-full"
                 onClick={() => {onSendInvite(syndicate?.id)}}
               >
-                Invite
+                {language?.v3?.fundraiser?.invite}
               </Button>
             </span>
           ),
@@ -149,7 +152,12 @@ const UserListingPopup = ({ approve, dealId, type, dealIdReal, setLoader }: any)
         {language?.v3?.button?.invite}
       </Button>
       {showInviteSyndicate ? (
-        <section className="absolute p-5 bg-white border-[1px] border-neutral-200 rounded-md w-[400px] right-0 top-[100%]">
+        <section className={`${
+          orientation === "rtl"
+            ? "left-0"
+            : "right-0"
+        } absolute p-5 bg-white border-[1px] border-neutral-200 rounded-md w-[400px] left-0 top-[100%]`}>
+           
                 <div className="rounded-md shadow-cs-6 bg-white border-[1px] border-gray-200 h-9 overflow-hidden w-full inline-flex items-center px-2">
                       <SearchIcon
                         onClick={() => {
@@ -166,7 +174,7 @@ const UserListingPopup = ({ approve, dealId, type, dealIdReal, setLoader }: any)
                         onChange={(e) => setSearchQuery(e.target.value)}
                         type="search"
                         className="h-full w-full outline-none pl-2 text-sm font-normal"
-                        placeholder={"Search for Syndicates"}
+                        placeholder={language?.v3?.fundraiser?.search_for_syndicates}
                       />
                     </div>
 

@@ -33,6 +33,9 @@ const InvitesListing = ({
   const language: any = useSelector((state: RootState) => state.language.value);
   const authToken: any = useSelector((state: RootState) => state.auth.value);
   const user: any = useSelector((state: RootState) => state.user.value);
+  const orientation: any = useSelector(
+    (state: RootState) => state.orientation.value
+  );
 
   const [loading, setLoading] = useState<boolean>(false);
   const [investors, setInvestors] = useState<any>([]);

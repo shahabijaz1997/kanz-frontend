@@ -30,7 +30,7 @@ const Requests = ({ id }: any) => {
   const authToken: any = useSelector((state: RootState) => state.auth.value);
   const user: any = useSelector((state: RootState) => state.user.value);
 
-  const columns = ["Syndicate", "Status", "Comments", ""];
+  const columns = [language?.v3?.fundraiser?.syndicate, language?.v3?.fundraiser?.status, language?.v3?.syndicate?.comments, ""];
   const [loading, setLoading]: any = useState(false);
   const [invites, setInvites]: any = useState([]);
   const [dealDetail, setDealDetail]: any = useState(null);
@@ -143,13 +143,13 @@ const Requests = ({ id }: any) => {
           .map((deal: any) => {
             return {
               id: deal?.id,
-              ["Syndicate"]: (
+              [language?.v3?.fundraiser?.syndicate]: (
                 <span className=" capitalize">{deal?.invitee?.name}</span>
               ),
-              ["Status"]: (
+              [language?.v3?.fundraiser?.status]: (
                 <span className=" capitalize">{<CustomStatus options={deal?.status} />}</span>
               ),
-              ["Comments"]: deal?.deal?.comment || " ",
+              [language?.v3?.syndicate?.comments]: deal?.deal?.comment || " ",
               "":
               (
                 <div
@@ -243,10 +243,10 @@ const Requests = ({ id }: any) => {
         paginationData={paginationData}
         noDataNode={
           <span className="absolute left-1/2 top-1/2 translate-x-[-50%] translate-y-[-50%]">
-            No invites sent! Click on the{" "}
-            <span className=" font-bold">invite button on top right</span> to
-            invite a syndicate
-          </span>
+              {language?.v3?.fundraiser?.no_invites_sent}{" "}
+              <span className=" font-bold">{language?.v3?.fundraiser?.invite_button_on_top_right}</span> to
+              {language?.v3?.fundraiser?.to_invite_a_syndicate}
+            </span>
         }
       />
     )}

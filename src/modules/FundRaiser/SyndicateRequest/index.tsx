@@ -26,6 +26,7 @@ import { fileSize, handleFileRead } from "../../../utils/files.utils";
 import { FileType } from "../../../enums/types.enum";
 import { toast } from "react-toastify";
 import { toastUtil } from "../../../utils/toast.utils";
+import { numberFormatter } from "../../../utils/object.utils";
 
 const SyndicateRequest = ({}: any) => {
   const navigate = useNavigate();
@@ -59,6 +60,9 @@ const SyndicateRequest = ({}: any) => {
   const [syndicates, setsyndicates]: any = useState([]);
   const [dealDetail, setDealDetail]: any = useState(null);
   const [searchQuery, setSearchQuery]: any = useState("");
+  const orientation: any = useSelector(
+    (state: RootState) => state.orientation.value
+  );
 
   useEffect(() => {
     dispatch(saveDataHolder(""));
@@ -212,6 +216,7 @@ const SyndicateRequest = ({}: any) => {
             id: syndicate?.id,
             [language?.v3?.deal?.syndicate]: syndicate?.invitee?.name,
             [language?.v3?.common?.deal]: syndicate?.deal?.title || "N/A",
+            [language?.v3?.fundraiser?.selling_price]: numberFormatter(syndicate?.deal?.target, syndicate?.deal?.type) || "N/A",
             [language?.v3?.deal?.comments]: syndicate?.deal?.comment || "N/A",
             [language?.v3?.fundraiser?.invite_status]: <CustomStatus options={syndicate?.status} />,
             "": (
@@ -227,7 +232,11 @@ const SyndicateRequest = ({}: any) => {
                 className="bg-neutral-100 inline-flex items-center justify-center w-[24px] h-[24px] rounded-full transition-all hover:bg-cbc-transparent mx-5"
                 >
                   <Chevrond
-                    className="rotate-[-90deg] w-3 h-3"
+                    className={`${
+                      orientation === "rtl"
+                        ? "rotate-[-270deg]"
+                        : "rotate-[-90deg]"
+                    } w-3 h-3`}
                     strokeWidth={3}
                     stroke={"#000"}
                   />

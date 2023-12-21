@@ -16,6 +16,8 @@ const InvitedInvestors = ({ id }: any) => {
   const authToken: any = useSelector((state: RootState) => state.auth.value);
   const [currentPage, setCurrentPage] = useState(1);
   const [paginationData, setpaginationData] = useState(null);
+  const language: any = useSelector((state: RootState) => state.language.value);
+
   const columns = [
     "Investor",
     "Status",
@@ -118,9 +120,9 @@ const InvitedInvestors = ({ id }: any) => {
           paginationData={paginationData}
           noDataNode={
             <span className="absolute left-1/2 top-1/2 translate-x-[-50%] translate-y-[-50%]">
-              No invites sent! Click on the{" "}
-              <span className=" font-bold">invite button on top right</span> to
-              invite a syndicate
+              {language?.v3?.fundraiser?.no_invites_sent}{" "}
+              <span className=" font-bold">{language?.v3?.fundraiser?.invite_button_on_top_right}</span> to
+              {language?.v3?.fundraiser?.to_invite_a_syndicate}
             </span>
           }
         />

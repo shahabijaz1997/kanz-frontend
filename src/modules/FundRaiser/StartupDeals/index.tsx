@@ -49,6 +49,7 @@ const StartupDeals = ({ openStartupRiskModal }: any) => {
   const metadata: any = useSelector((state: RootState) => state.metadata);
   const [filter, setFilterCounts]: any = useState([]);
   const [selectedTab, setSelectedTab] = useState("All");
+  const [selectedTabApi, setSelectedTabApi] = useState("All");
   const [warningModal, setwarningModal]: any = useState(null);
   const [tabs] = useState([
     language?.v3?.startup?.overview?.all,
@@ -60,31 +61,41 @@ const StartupDeals = ({ openStartupRiskModal }: any) => {
     language?.v3?.fundraiser?.verified,
     language?.v3?.fundraiser?.rejected,
   ]);
+  const backendTabs : any = {
+    [language?.v3?.startup?.overview?.all]: 'All',
+    [language?.v3?.fundraiser?.draft]: 'Draft',
+    [language?.v3?.fundraiser?.reopened]: 'Reopened',
+    [language?.v3?.fundraiser?.submitted]: 'Submitted',
+    [language?.v3?.fundraiser?.approved]: 'Approved',
+    [language?.v3?.fundraiser?.live]: 'Live',
+    [language?.v3?.fundraiser?.verified]: 'Verified',
+    [language?.v3?.fundraiser?.rejected]: 'Rejected',
+  };
   const getCountvalue = (value: string) => {
     let count = 0;
     switch (value) {
-      case "All":
+      case language?.v3?.startup?.overview?.all:
         count = filter?.all;
         break;
-      case "Draft":
+      case language?.v3?.fundraiser?.draft:
         count = filter?.draft;
         break;
-      case "Reopened":
+      case language?.v3?.fundraiser?.reopened:
         count = filter?.reopened;
         break;
-      case "Submitted":
+      case language?.v3?.fundraiser?.submitted:
         count = filter?.submitted;
         break;
-      case "Approved":
+      case language?.v3?.fundraiser?.approved:
         count = filter?.approved;
         break;
-      case "Live":
+      case language?.v3?.fundraiser?.live:
         count = filter?.live;
         break;
-      case "Verified":
+      case language?.v3?.fundraiser?.verified:
         count = filter?.verified;
         break;
-      case "Rejected":
+      case language?.v3?.fundraiser?.rejected:
         count = filter?.rejected;
         break;
     }
@@ -100,7 +111,7 @@ const StartupDeals = ({ openStartupRiskModal }: any) => {
 
   useEffect(() => {
     dispatch(saveDataHolder(""));
-    setCurrentPage(1)
+    setCurrentPage(1);
     getAllDeals();
   }, [selectedTab]);
   useEffect(() => {
@@ -127,7 +138,7 @@ const StartupDeals = ({ openStartupRiskModal }: any) => {
       setLoading(true);
       let { status, data } = await getStartupDeals(
         authToken,
-        selectedTab,
+        selectedTabApi,
         searchQuery,
         currentPage
       );
@@ -212,7 +223,11 @@ const StartupDeals = ({ openStartupRiskModal }: any) => {
                   className="bg-neutral-100 inline-flex items-center justify-center w-[26px] h-[26px] rounded-full transition-all hover:bg-cbc-transparent mx-2"
                 >
                   <Chevrond
-                    className={`${orientation === "rtl" ? "rotate-[-270deg]" : "rotate-[-90deg]"} w-4 h-4`}
+                    className={`${
+                      orientation === "rtl"
+                        ? "rotate-[-270deg]"
+                        : "rotate-[-90deg]"
+                    } w-4 h-4`}
                     strokeWidth={2}
                     stroke={"#000"}
                   />
@@ -270,7 +285,9 @@ const StartupDeals = ({ openStartupRiskModal }: any) => {
                   {React.Children.toArray(
                     tabs.map((tab: any) => (
                       <li
-                        onClick={() => setSelectedTab(tab)}
+                        onClick={() => {
+                          setSelectedTabApi(backendTabs[tab])
+                          setSelectedTab(tab)}}
                         className={`py-2 px-4 font-medium text-xs cursor-pointer rounded-md transition-all ${
                           selectedTab === tab
                             ? "text-neutral-900 bg-neutral-100"
@@ -293,7 +310,7 @@ const StartupDeals = ({ openStartupRiskModal }: any) => {
               paginationData={paginationData}
               columns={columns}
               noDataNode={
-                   <Button
+                <Button
                   onClick={() => {
                     dispatch(
                       saveUserMetaData({

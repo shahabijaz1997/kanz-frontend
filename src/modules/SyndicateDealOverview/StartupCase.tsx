@@ -13,8 +13,6 @@ import DownloadIcon from "../../ts-icons/downloadIcon.svg";
 import Modal from "../../shared/components/Modal";
 import CrossIcon from "../../ts-icons/crossIcon.svg";
 import FileSVG from "../../assets/svg/file.svg";
-import Zoomin from "../../ts-icons/zoominIcon.svg";
-import Zoomout from "../../ts-icons/ZoomoutIcon.svg";
 import CurrencySVG from "../../assets/svg/currency.svg";
 
 import {
@@ -22,7 +20,7 @@ import {
   numberFormatter,
   timeAgo,
 } from "../../utils/object.utils";
-import { DealStatus, FileType } from "../../enums/types.enum";
+import { DealCheckType, DealStatus, FileType } from "../../enums/types.enum";
 import {
   addCommentOnDeal,
   getDealDetail,
@@ -53,7 +51,6 @@ const StartupCase = ({
   const authToken: any = useSelector((state: RootState) => state.auth.value);
   const user: any = useSelector((state: RootState) => state.user.value);
   const [files, setFiles]: any = useState([]);
-  const [currency, setCurrency] = useState(0);
   const [deal, setDeal]: any = useState(dealDetail);
   const [selectedDocs, setSelectedDocs]: any = useState(docs);
   const [invited, setInvited]: any = useState();
@@ -88,7 +85,7 @@ const StartupCase = ({
       const fileSizeInMB = fileSize(file.size, "mb");
 
       if (fileSizeInMB > 10) {
-        toast.error("File size should be less than 10MB", toastUtil);
+        toast.error(language?.v3?.fundraiser?.file_size_err, toastUtil);
         navigator.vibrate(1000);
         return;
       }
@@ -135,43 +132,6 @@ const StartupCase = ({
     deal && (deal?.invite ? setInvited(true) : setInvited(false));
   });
 
-  const numberInputUI = () => {
-    let placeholder = currency === 0 ? "$ 0.00" : "0.00 د.إ";
-
-    return (
-      <section className="flex items-start justify-center flex-col mt-3 w-full">
-        <section className="mb-2 w-full relative">
-          <div className="relative rounded-md w-full h-10 border-[1px] border-neutral-300 bg-white overflow-hidden inline-flex items-center px-3">
-            <input
-              value={comaFormattedNumber("")}
-              onInput={(e: any) => {
-                const enteredValue = e.target.value;
-                const numericValue = enteredValue.replace(
-                  /[^0-9.]|(\.(?=.*\.))/g,
-                  ""
-                );
-              }}
-              placeholder={placeholder}
-              type="text"
-              className="outline-none w-full h-full placeholder-neutral-500"
-            />
-            <span
-              className="cursor-pointer inline-flex items-center"
-              onClick={() =>
-                setCurrency((prev) => {
-                  return prev === 0 ? 1 : 0;
-                })
-              }
-            >
-              <button className="font-normal text-lg text-neutral-500">
-                {CURRENCIES[currency]}
-              </button>
-            </span>
-          </div>
-        </section>
-      </section>
-    );
-  };
   const onGetdeal = async () => {
     try {
       setLoading(true);
@@ -268,7 +228,7 @@ const StartupCase = ({
             {deal?.instrument_type && (
               <div className="w-full inline-flex justify-between items-center border-b-[1px] border-b-neutral-200 py-3">
                 <h3 className="text-neutral-900 font-medium text-sm">
-                  {"Equity Type"}
+                  {language?.v3?.deal?.equity_type}
                 </h3>
                 <p className="text-neutral-900 font-normal text-sm capitalize">
                   {deal?.equity_type || language?.v3?.common?.not_added}
@@ -288,10 +248,10 @@ const StartupCase = ({
             {deal?.selling_price && (
               <div className="w-full inline-flex justify-between items-center border-b-[1px] border-b-neutral-200 py-3">
                 <h3 className="text-neutral-900 font-medium text-sm">
-                  {"Deal Target"}
+                  {language?.v3?.fundraiser?.deal_target}
                 </h3>
                 <p className="text-neutral-900 font-normal text-sm capitalize">
-                  {numberFormatter(deal?.selling_price) ||
+                  {comaFormattedNumber(deal?.selling_price,DealCheckType.STARTUP) ||
                     language?.v3?.common?.not_added}
                 </p>
               </div>
@@ -302,39 +262,39 @@ const StartupCase = ({
                   {language?.v3?.table?.valuation}
                 </h3>
                 <p className="text-neutral-900 font-normal text-sm capitalize">
-                  ${numberFormatter(deal?.valuation)} ({deal?.valuation_type})
+                  {comaFormattedNumber(deal?.valuation, DealCheckType.STARTUP)} ({deal?.valuation_type})
                 </p>
               </div>
             )}
             {deal?.terms && (
               <div className="w-full inline-flex justify-between items-center border-b-[1px] border-b-neutral-200 py-3">
                 <h3 className="text-neutral-900 font-medium text-sm">
-                  {"Minimum Check Size"}
+                  {language?.v3?.fundraiser?.min_check_size}
                 </h3>
                 <p className="text-neutral-900 font-normal text-sm capitalize">
                   {deal.terms[0]?.is_enabled
-                    ? numberFormatter(deal.terms[0]?.value) || "Yes"
-                    : "No"}
+                    ? comaFormattedNumber(deal.terms[0]?.value, DealCheckType.STARTUP) || language?.v3?.fundraiser?.yes
+                    : language?.v3?.fundraiser?.no}
                 </p>
               </div>
             )}
             {deal?.terms && (
               <div className="w-full inline-flex justify-between items-center border-b-[1px] border-b-neutral-200 py-3">
                 <h3 className="text-neutral-900 font-medium text-sm">
-                  {"Pro Rata"}
+                  {language?.v3?.fundraiser?.pro_rata}
                 </h3>
                 <p className="text-neutral-900 font-normal text-sm capitalize">
-                  {deal.terms[1]?.is_enabled ? "Yes" : "No"}
+                  {deal.terms[1]?.is_enabled ? language?.v3?.fundraiser?.yes : language?.v3?.fundraiser?.no}
                 </p>
               </div>
             )}
             {deal?.terms && (
               <div className="w-full inline-flex justify-between items-center border-b-[1px] border-b-neutral-200 py-3">
                 <h3 className="text-neutral-900 font-medium text-sm">
-                  {"Additional Terms"}
+                  {language?.v3?.fundraiser?.additional_terms}
                 </h3>
                 <p className="text-neutral-900 font-normal text-sm capitalize">
-                  {deal.terms[2]?.is_enabled ? "Yes" : "No"}
+                  {deal.terms[2]?.is_enabled ? language?.v3?.fundraiser?.yes : language?.v3?.fundraiser?.no}
                 </p>
               </div>
             )}
@@ -357,7 +317,7 @@ const StartupCase = ({
             {deal?.safe_type && (
               <div className="w-full inline-flex justify-between items-center border-b-[1px] border-b-neutral-200 py-3">
                 <h3 className="text-neutral-900 font-medium text-sm">
-                  {"Safe type"}
+                  {language?.v3?.fundraiser?.safe_type}
                 </h3>
                 <p className="text-neutral-900 font-normal text-sm capitalize">
                   {deal?.safe_type || language?.v3?.common?.not_added}
@@ -371,8 +331,8 @@ const StartupCase = ({
                   {language?.v3?.table?.target}
                 </h3>
                 <p className="text-neutral-900 font-normal text-sm capitalize">
-                  $
-                  {comaFormattedNumber(deal?.selling_price) ||
+                  
+                  {comaFormattedNumber(deal?.selling_price, DealCheckType.STARTUP) ||
                     language?.v3?.common?.not_added}
                 </p>
               </div>
@@ -381,12 +341,12 @@ const StartupCase = ({
             {deal?.terms && (
               <div className="w-full inline-flex justify-between items-center border-b-[1px] border-b-neutral-200 py-3">
                 <h3 className="text-neutral-900 font-medium text-sm">
-                  {"Valuation Cap"}
+                  {language?.v3?.fundraiser?.valuation_cap}
                 </h3>
                 <p className="text-neutral-900 font-normal text-sm capitalize">
                   {deal.terms[0]?.is_enabled
-                    ? `$${comaFormattedNumber(deal.terms[0]?.value)}` || "Yes"
-                    : "No"}
+                    ? `$${comaFormattedNumber(deal.terms[0]?.value)}` || language?.v3?.fundraiser?.yes
+                    : language?.v3?.fundraiser?.no}
                 </p>
               </div>
             )}
@@ -394,12 +354,12 @@ const StartupCase = ({
             {deal?.terms && (
               <div className="w-full inline-flex justify-between items-center border-b-[1px] border-b-neutral-200 py-3">
                 <h3 className="text-neutral-900 font-medium text-sm">
-                  {"Discount"}
+                  {language?.v3?.fundraiser?.discount}
                 </h3>
                 <p className="text-neutral-900 font-normal text-sm capitalize">
                   {deal.terms[1]?.is_enabled
-                    ? deal.terms[1]?.value || "Yes"
-                    : "No"}
+                    ? deal.terms[1]?.value || language?.v3?.fundraiser?.yes
+                    : language?.v3?.fundraiser?.no}
                 </p>
               </div>
             )}
@@ -407,14 +367,14 @@ const StartupCase = ({
             {deal?.terms && (
               <div className="w-full inline-flex justify-between items-center border-b-[1px] border-b-neutral-200 py-3">
                 <h3 className="text-neutral-900 font-medium text-sm">
-                  {"MFN Only"}
+                  {language?.v3?.fundraiser?.mfn_only}
                 </h3>
                 <p className="text-neutral-900 font-normal text-sm capitalize">
                   {deal.terms[2]?.is_enabled
                     ? Object.keys(deal.terms[2]?.value).length > 0
-                      ? "Yes"
-                      : "No"
-                    : "No"}
+                      ? language?.v3?.fundraiser?.yes
+                      : language?.v3?.fundraiser?.no
+                    :language?.v3?.fundraiser?.no}
                 </p>
               </div>
             )}
@@ -422,12 +382,12 @@ const StartupCase = ({
             {deal?.terms && (
               <div className="w-full inline-flex justify-between items-center border-b-[1px] border-b-neutral-200 py-3">
                 <h3 className="text-neutral-900 font-medium text-sm">
-                  {"Minimum Check Size"}
+                  {language?.v3?.fundraiser?.min_check_size}
                 </h3>
                 <p className="text-neutral-900 font-normal text-sm capitalize">
                   {deal.terms[3]?.is_enabled
-                    ? deal.terms[3]?.value || "Yes"
-                    : "No"}
+                    ? deal.terms[3]?.value || language?.v3?.fundraiser?.yes
+                    : language?.v3?.fundraiser?.no}
                 </p>
               </div>
             )}
@@ -435,28 +395,28 @@ const StartupCase = ({
             {deal?.terms && (
               <div className="w-full inline-flex justify-between items-center border-b-[1px] border-b-neutral-200 py-3">
                 <h3 className="text-neutral-900 font-medium text-sm">
-                  {"Pro Rata"}
+                  {language?.v3?.fundraiser?.pro_rata}
                 </h3>
                 <p className="text-neutral-900 font-normal text-sm capitalize">
                   {deal.terms[4]?.is_enabled
                     ? Object.keys(deal.terms[4]?.value).length > 0
-                      ? "Yes"
-                      : "No"
-                    : "No"}
+                      ?language?.v3?.fundraiser?.yes
+                      : language?.v3?.fundraiser?.no
+                    :language?.v3?.fundraiser?.no}
                 </p>
               </div>
             )}
             {deal?.terms && (
               <div className="w-full inline-flex justify-between items-center border-b-[1px] border-b-neutral-200 py-3">
                 <h3 className="text-neutral-900 font-medium text-sm">
-                  {"Additional Terms"}
+                  {language?.v3?.fundraiser?.additional_terms}
                 </h3>
                 <p className="text-neutral-900 font-normal text-sm capitalize">
                   {deal.terms[5]?.is_enabled
                     ? Object.keys(deal.terms[5]?.value).length > 0
-                      ? "Yes"
-                      : "No"
-                    : "No"}
+                      ? language?.v3?.fundraiser?.yes
+                      : language?.v3?.fundraiser?.no
+                    : language?.v3?.fundraiser?.no}
                 </p>
               </div>
             )}
@@ -645,7 +605,7 @@ const StartupCase = ({
         authToken
       );
       if (status === 200) {
-        toast.success("Invested", toastUtil);
+        toast.success(language?.v3?.syndicate?.invested, toastUtil);
       }
     } catch (error: any) {
       if (error?.response?.status === 400)
@@ -681,7 +641,7 @@ const StartupCase = ({
         authToken
       );
       if (status === 200) {
-        toast.success("Congratulations! Deal Approved", toastUtil);
+        toast.success(language?.v3?.syndicate?.congrats_deal_approval, toastUtil);
         setModalOpen3(false);
       }
     } catch (error) {
@@ -717,7 +677,7 @@ const StartupCase = ({
         authToken
       );
       if (status === 200) {
-        toast.success("Congratulations! requested", toastUtil);
+        toast.success(language?.v3?.syndicate?.congrats_requested, toastUtil);
       }
     } catch (error) {
       console.log(error);
@@ -733,9 +693,10 @@ const StartupCase = ({
     <main className="h-full relative max-h-full overflow-y-hidden">
       <section>
         <Header
-        onSuperLogout={(e:boolean) => {
-          setLoading(e)
-        }} />
+          onSuperLogout={(e: boolean) => {
+            setLoading(e);
+          }}
+        />
       </section>
       <aside
         className="w-full flex items-start justify-start"
@@ -771,12 +732,12 @@ const StartupCase = ({
               >
                 <Chevrond stroke="#000" className="rotate-90 w-4 h-4" />
                 <small className="text-neutral-500 text-sm font-medium">
-                  {returnPath === RoutesEnums.INVESTOR_DEALS && "Deals"}
+                  {returnPath === RoutesEnums.INVESTOR_DEALS && language?.v3?.syndicate?.dealsSidebar}
                   {returnPath === RoutesEnums.SYNDICATE_DASHBOARD &&
-                    "Dashboard"}
+                     language?.v3?.syndicate?.dashboard}
                   {returnPath === RoutesEnums.SYNDICATE_INVESTMENTS &&
-                    "Investments"}
-                  {returnPath === RoutesEnums.DEAL_APPROVAL && "Deal Approval"}
+                     language?.v3?.syndicate?.investments}
+                  {returnPath === RoutesEnums.DEAL_APPROVAL &&  language?.v3?.syndicate?.deal_approval}
                 </small>
               </div>
               <div className="w-full inline-flex flex-col pb-8 items-start gap-2">
@@ -794,7 +755,7 @@ const StartupCase = ({
                 }}
               >
                 <h1 className="text-black font-medium text-2xl">
-                  {"Investor Presentation or Pitch Deck"}
+                  { language?.v3?.syndicate?.investor_pitch}
                 </h1>
                 <Button type="outlined">{language?.v3?.button?.new_tab}</Button>
               </div>
@@ -894,7 +855,7 @@ const StartupCase = ({
                         }}
                         className="w-full"
                       >
-                        Invest Now
+                        {language?.v3?.syndicate?.invest_now}
                       </Button>
                     </div>
                   </section>
@@ -941,24 +902,30 @@ const StartupCase = ({
                 </div>
               </section>
               <div className="mb-4 mt-10">
-              {user.type.toLowerCase() === "syndicate" &&
-                deal?.status !== DealStatus.LIVE && (
-                  <div className="w-full inline-flex justify-end gap-4">
-                    {deal?.invite?.status !== DealStatus.ACCEPTED && (
-                      <div className="w-full">
-                        {deal?.invite ? (
-                          <Button className="w-full" onClick={() => setModalOpen2(true)}>
-                            {language?.v3?.button?.interested}
-                          </Button>
-                        ) : (
-                          <Button className="w-full" onClick={() => setModalOpenSyndication(true)}>
-                            {"Request Syndication"}
-                          </Button>
-                        )}
-                      </div>
-                    )}
-                  </div>
-                )}
+                {user.type.toLowerCase() === "syndicate" &&
+                  deal?.status !== DealStatus.LIVE && (
+                    <div className="w-full inline-flex justify-end gap-4">
+                      {deal?.invite?.status !== DealStatus.ACCEPTED && (
+                        <div className="w-full">
+                          {deal?.invite ? (
+                            <Button
+                              className="w-full"
+                              onClick={() => setModalOpen2(true)}
+                            >
+                              {language?.v3?.button?.interested}
+                            </Button>
+                          ) : (
+                            <Button
+                              className="w-full"
+                              onClick={() => setModalOpenSyndication(true)}
+                            >
+                              {language?.v3?.syndicate?.req_syndication}
+                            </Button>
+                          )}
+                        </div>
+                      )}
+                    </div>
+                  )}
               </div>
 
               {deal &&
@@ -972,16 +939,6 @@ const StartupCase = ({
 
             {/* Invisible Section */}
             <section className="w-[10%]"></section>
-
-            {/*
-            {.......##...............######..########..######..########.####..#######..##....##....########..####..######...##.....##.########....................##
-            {......##...##...##.....##....##.##.......##....##....##.....##..##.....##.###...##....##.....##..##..##....##..##.....##....##........##...##.......##.
-            {.....##.....##.##......##.......##.......##..........##.....##..##.....##.####..##....##.....##..##..##........##.....##....##.........##.##.......##..
-            {....##....#########.....######..######...##..........##.....##..##.....##.##.##.##....########...##..##...####.#########....##.......#########....##...
-            {...##.......##.##............##.##.......##..........##.....##..##.....##.##..####....##...##....##..##....##..##.....##....##.........##.##.....##....
-            {..##.......##...##.....##....##.##.......##....##....##.....##..##.....##.##...###....##....##...##..##....##..##.....##....##........##...##...##.....
-            {.##.....................######..########..######.....##....####..#######..##....##....##.....##.####..######...##.....##....##.................##......
-            {*/}
             <section className="w-[30%]">
               {/* Show/Hide based on some conditions */}
               {user.type.toLowerCase() === "syndicate" &&
@@ -1017,7 +974,7 @@ const StartupCase = ({
                           </>
                         ) : (
                           <Button onClick={() => setModalOpenSyndication(true)}>
-                            {"Request Syndication"}
+                            {language?.v3?.syndicate?.req_syndication}
                           </Button>
                         )}
                       </React.Fragment>
@@ -1076,7 +1033,7 @@ const StartupCase = ({
                         }}
                         className="w-full mt-4"
                       >
-                        Invest Now
+                        {language?.v3?.syndicate?.invest_now}
                       </Button>
                     </section>
                   </aside>
@@ -1088,10 +1045,10 @@ const StartupCase = ({
                 <div className="">
                   <aside className="border-[1px] bg-white border-neutral-200 rounded-md  w-full p-3 mt-5 items-center gap-3">
                     <div className="rounded-md text-md font-semibold inline-grid place-items-center">
-                      {"Your commitment"}
+                      {language?.v3?.syndicate?.your_commitment}
                     </div>
                     <div className="rounded-md text-xs inline-grid place-items-center">
-                      {"You’re not able to reverse the commitment after date"}
+                      {language?.v3?.syndicate?.not_able_to_rev}
                     </div>
                     <aside className="border-t-[2px] border-neutral-200 w-full p-3 mt-5 inline-flex items-center gap-3">
                       <div className="h-8 w-8 rounded-md bg-cbc-grey-sec inline-grid place-items-center">
@@ -1100,7 +1057,7 @@ const StartupCase = ({
                       <div className="flex items-center justify-between w-full">
                         <div>
                           <h2 className="text-neutral-900 font-normal text-sm">
-                            {"Commitment"}
+                            {language?.v3?.syndicate?.commitment}
                           </h2>
                           <p className="text-black font-medium text-lg">
                             ${comaFormattedNumber(deal?.my_invested_amount)}
@@ -1112,7 +1069,7 @@ const StartupCase = ({
                             className="!py-1 !px-2 !font-medium !rounded-full border-[1px] border-black !text-xs"
                             type="outlined"
                           >
-                            Reverse
+                            {language.v3.syndicate.reverse}
                           </Button>
                         </div>
                       </div>
@@ -1182,14 +1139,14 @@ const StartupCase = ({
                   <div className="justify-between mb-4 w-full border-[1px]  rounded-md border-b-neutral-200 bg-white ">
                     <div className="inline-flex justify-between items-center w-full  border-b-[1px] border-b-neutral-200 ">
                       <div className="pb-1 m-4  text-lg font-bold ">
-                        Comments
+                       {language?.v3?.syndicate?.comments}
                       </div>
                       <Button
                         className="mr-4"
                         onClick={() => setmodalOpenComment(true)}
                         type="outlined"
                       >
-                        Add Reply
+                        {language?.v3?.syndicate?.add_reply}
                       </Button>
                     </div>
                     <p className=" overflow-auto custom-scroll rounded-md  w-full opacity-80 max-h-56 text-neutral-700 font-normal text-sm text-justify">
@@ -1207,7 +1164,7 @@ const StartupCase = ({
                               <span className="ml-2 mr-4">
                                 <h1 className="font-medium capitalize text-lg">
                                   {comments?.author_id === user?.id
-                                    ? "You"
+                                    ? language?.v3?.syndicate?.you
                                     : comments?.author_name}
                                   <span className="text-xs font-neutral-700 ml-5 font-normal">
                                     {timeAgo(comments?.created_at)}
@@ -1238,7 +1195,7 @@ const StartupCase = ({
           <aside className="bg-white w-[400px] rounded-md h-full">
             <section className="py-3 px-4">
               <header className="h-16 py-2 px-3 inline-flex w-full justify-between items-center">
-                <h3 className="text-xl font-medium text-neutral-700">Reply</h3>
+                <h3 className="text-xl font-medium text-neutral-700">{language?.v3?.syndicate?.reply}</h3>
                 <div
                   className="bg-white h-8 w-8 border-[1px] border-black rounded-md shadow shadow-cs-6 p-1 cursor-pointer"
                   onClick={() => {
@@ -1258,7 +1215,7 @@ const StartupCase = ({
                       return { ...prev, comment: e.target.value };
                     })
                   }
-                  placeholder="Add Reply"
+                  placeholder={language?.v3?.syndicate?.add_reply}
                   className=" h-[100px] mt-1 shadow-sm appearance-none border border-neutral-300 rounded-md w-full py-2 px-3 text-gray-500 leading-tight focus:outline-none focus:shadow-outline"
                 ></textarea>
               </div>
@@ -1274,7 +1231,7 @@ const StartupCase = ({
                   setmodalOpenComment(false);
                 }}
               >
-                {"Reply"}
+                {language?.v3?.syndicate?.reply}
               </Button>
             </footer>
           </aside>
@@ -1289,7 +1246,7 @@ const StartupCase = ({
           <aside className="bg-white w-[400px] rounded-md h-full">
             <header className="bg-cbc-grey-sec h-16 py-2 px-3 inline-flex w-full justify-between items-center">
               <h3 className="text-xl font-medium text-neutral-700">
-                Request Changes
+                {language?.v3?.syndicate?.req_changes}
               </h3>
               <div
                 className="bg-white h-8 w-8 border-[1px] border-black rounded-md shadow shadow-cs-6 p-1 cursor-pointer"
@@ -1309,7 +1266,7 @@ const StartupCase = ({
                   htmlFor=""
                   className="text-neutral-900 font-medium text-sm"
                 >
-                  Add Comment
+                  {language?.v3?.syndicate?.add_comment}
                 </label>
                 <textarea
                   value={changes?.comment}
@@ -1318,7 +1275,7 @@ const StartupCase = ({
                       return { ...prev, comment: e.target.value };
                     })
                   }
-                  placeholder="Add Comment"
+                  placeholder={language?.v3?.syndicate?.add_comment}
                   className=" h-[100px] mt-1 shadow-sm appearance-none border border-neutral-300 rounded-md w-full py-2 px-3 text-gray-500 leading-tight focus:outline-none focus:shadow-outline"
                 ></textarea>
               </div>
@@ -1345,29 +1302,28 @@ const StartupCase = ({
           style={{ backgroundColor: "rgba(0, 0, 0, 0.078" }}
         >
           <aside className="bg-white w-[400px] rounded-md h-full">
-          <header className=" inline-flex w-full justify-end items-center py-1 px-2">
-                <div
-                  className="bg-white h-8 w-8 border-[1px] border-black rounded-md shadow  cursor-pointer"
-                  onClick={() => {
-                    setModalOpen2(false);
-                    setChanges({ comment: "", action: "", document: null });
-                    // setFiles([]);
-                  }}
-                >
-                  <CrossIcon stroke="#000" />
-                </div>
-              </header>
+            <header className=" inline-flex w-full justify-end items-center py-1 px-2">
+              <div
+                className="bg-white h-8 w-8 border-[1px] border-black rounded-md shadow  cursor-pointer"
+                onClick={() => {
+                  setModalOpen2(false);
+                  setChanges({ comment: "", action: "", document: null });
+                  // setFiles([]);
+                }}
+              >
+                <CrossIcon stroke="#000" />
+              </div>
+            </header>
             <section className="py-2 px-10">
               <div className="mb-6  text-center">
                 <label
                   htmlFor=""
                   className="text-neutral-900 text-center font-bold text-xl"
                 >
-                  Deal Approved by You!
+                  {language?.v3?.syndicate?.deal_approved_by_you}
                 </label>
                 <p className="pt-5">
-                  You've successfully approved the deal. Now you can upload the
-                  required document. Click “Continue” to upload the documents
+                  {language?.v3?.syndicate?.deal_approved_para}
                 </p>
               </div>
             </section>
@@ -1381,7 +1337,7 @@ const StartupCase = ({
                   setModalOpen3(true);
                 }}
               >
-                Continue
+                {language?.v3?.syndicate?.continue}
               </Button>
             </footer>
           </aside>
@@ -1399,12 +1355,10 @@ const StartupCase = ({
                   htmlFor=""
                   className="text-neutral-900 text-center font-bold text-xl"
                 >
-                  Request for syndication!
+                  {language?.v3?.syndicate?.req_for_syndication}
                 </label>
                 <p className="pt-5">
-                  You can request for syndication on this deal. You can upload
-                  the required document. Click “Continue” to upload the
-                  documents
+                  {language?.v3?.syndicate?.req_changes_para}
                 </p>
               </div>
             </section>
@@ -1418,7 +1372,7 @@ const StartupCase = ({
                   setModalOpen3(true);
                 }}
               >
-                Continue
+                {language?.v3?.syndicate?.continue}
               </Button>
             </footer>
           </aside>
@@ -1432,7 +1386,7 @@ const StartupCase = ({
           <aside className="bg-white w-[400px] rounded-md h-full">
             <header className="bg-cbc-grey-sec h-16 py-2 px-3 inline-flex w-full justify-between items-center">
               <h3 className="text-xl font-medium text-neutral-700">
-                Deal Approval
+                {language?.v3?.syndicate?.deal_approval}
               </h3>
               <div
                 className="bg-white h-8 w-8 border-[1px] border-black rounded-md shadow shadow-cs-6 p-1 cursor-pointer"
@@ -1459,7 +1413,7 @@ const StartupCase = ({
                   >
                     <UploadIcon />
                     <small className="text-cyan-800 text-sm font-medium">
-                      Upload a Document
+                      {language?.v3?.syndicate?.upload_a_doc}
                     </small>
                   </button>
                   <input
@@ -1471,7 +1425,7 @@ const StartupCase = ({
                   />
                 </span>
                 <span className={`px-2 text-[0.55rem] font-light`}>
-                  Upload a file PNG, JPG, PDF up to 10MB
+                 {language?.v3?.syndicate?.upload_size}
                 </span>
               </div>
               <div className="mb-3 w-full">

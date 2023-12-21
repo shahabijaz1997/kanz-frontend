@@ -32,6 +32,9 @@ const DealDetail = ({}: any) => {
   const { id }: any = params;
   const language: any = useSelector((state: RootState) => state.language.value);
   const authToken: any = useSelector((state: RootState) => state.auth.value);
+  const orientation: any = useSelector(
+    (state: RootState) => state.orientation.value
+  );
 
   const [loading, setLoading]: any = useState(false);
   const [dealDetail, setDealDetail]: any = useState(null);
@@ -87,7 +90,7 @@ const DealDetail = ({}: any) => {
     const newTab = { id: 2, title: "Unique Selling Points" };
     tabs.splice(1, 0, newTab);
   }
-
+console.log(tabs)
   const [selected, setSelected]: any = useState(tabs[0]);
   useLayoutEffect(() => {
     if (selected.id === 1) onGetDealDetail();
@@ -117,7 +120,15 @@ const DealDetail = ({}: any) => {
               className="inline-flex items-center gap-2 relative top-[-25px] cursor-pointer"
               onClick={() => navigate(-1)}
             >
-              <Chevrond stroke="#000" className="rotate-90 w-4 h-4" />
+              <Chevrond
+                    className={`${
+                      orientation === "rtl"
+                        ? "rotate-[-90deg]"
+                        : "rotate-[90deg]"
+                    } w-4 h-4`}
+                    strokeWidth={2}
+                    stroke={"#000"}
+                  />
               <small className="text-neutral-500 text-sm font-medium">
                 {language?.v3?.common?.deal}
               </small>
