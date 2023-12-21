@@ -39,16 +39,7 @@ const AllSyndicates = ({}: any) :any => {
     const [currentPage, setCurrentPage] = useState(1);
     const [isOpen, setOpen]: any = useState(false);
   const [searchQuery, setSearchQuery]: any = useState("");
-
-    
-    const [pagination, setPagination] = useState({
-        items_per_page: 5,
-        total_items: [],
-        current_page: 1,
-        total_pages: 0,
-      });
-    
-   
+  
       
       useEffect(() => {
         dispatch(saveDataHolder(""));
@@ -115,7 +106,6 @@ const AllSyndicates = ({}: any) :any => {
                    
                 };
               });
-
             setInvites(deals);
           }
         } catch (error: any) {
@@ -127,7 +117,6 @@ const AllSyndicates = ({}: any) :any => {
           setLoading(false);
         }
       };
-
       return(
         <>  
            <section className="inline-flex justify-between items-center w-full">

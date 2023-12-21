@@ -23,7 +23,7 @@ const Home = ({ }: any) => {
   const longSecContent = () => {
     return (
       <React.Fragment>
-        <aside id={"Raise"}>
+        <aside id={language.landing.raise}>
           <h3 className="text-cyan-800 text-xl tracking-[0.03em] font-bold">
             {language.landing.startup}
           </h3>

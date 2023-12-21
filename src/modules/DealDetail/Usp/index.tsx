@@ -18,12 +18,6 @@ const Usp = ({ id }: any) => {
 
   const [loading, setLoading]: any = useState(false);
   const [uniqueSP, setuniqueSP]: any = useState(null);
-  const [pagination, setPagination] = useState({
-    items_per_page: 5,
-    total_items: [],
-    current_page: 1,
-    total_pages: 0,
-  });
 
   useEffect(() => {
     dispatch(saveDataHolder(""));
@@ -64,7 +58,7 @@ const Usp = ({ id }: any) => {
               uniqueSP?.map((usp: any) => {
                 return (
                   <div className="mb-4 border-[1px] rounded-xl border-neutral-300 bg-white overflow-hidden py-10 px-5">
-                    <div className="bg-cyan-800 rounded-full h-10 w-10 overflow-hidden inline-grid place-items-center inline-block align-top mr-4">
+                    <div className="bg-cyan-800 rounded-full h-10 w-10 overflow-hidden inline-grid place-items-center inline-block align-top mr-4 ml-4">
                       <img src={BagSVG} alt="Bag" />
                     </div>
                     <div className="inline-block w-[80%] align-top">

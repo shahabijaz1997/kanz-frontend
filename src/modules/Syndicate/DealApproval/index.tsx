@@ -14,7 +14,6 @@ import CrossIcon from "../../../ts-icons/crossIcon.svg";
 import { saveDataHolder } from "../../../redux-toolkit/slicer/dataHolder.slicer";
 import { getDeals, getInvitedDeals } from "../../../apis/deal.api";
 import {
-  comaFormattedNumber,
   numberFormatter,
 } from "../../../utils/object.utils";
 import Spinner from "../../../shared/components/Spinner";
@@ -27,21 +26,19 @@ const DealApproval = ({}: any) => {
   const language: any = useSelector((state: RootState) => state.language.value);
   const authToken: any = useSelector((state: RootState) => state.auth.value);
   const user: any = useSelector((state: RootState) => state.user.value);
+  const orientation: any = useSelector(
+    (state: RootState) => state.orientation.value
+  );
 
   const columns = [
     language?.v3?.syndicate?.deals?.table?.title,
     language?.v3?.syndicate?.deals?.table?.category,
-    "Invite Status",
+    language?.v3?.syndicate?.invite_status,
     language?.v3?.syndicate?.deals?.table?.end_date,
     language?.v3?.syndicate?.deals?.table?.target,
     language?.v3?.table?.action,
   ];
-  const [pagination, setPagination] = useState({
-    items_per_page: 10,
-    total_items: [],
-    current_page: 1,
-    total_pages: 0,
-  });
+
   const [selectedTab, setSelectedTab]: any = useState("all");
   const [searchQuery, setSearchQuery]: any = useState("");
   const [modalOpen, setModalOpen]: any = useState(null);
@@ -61,29 +58,19 @@ const DealApproval = ({}: any) => {
     d2: false,
     d3: false,
   });
+  const [tabs] = useState<any>({
+    'all': language?.v3?.startup?.overview?.all,
+    'pending': language?.v3?.syndicate?.pending,
+    'interested': language?.v3?.syndicate?.interested,
+    'accepted': language?.v3?.syndicate?.accepted,
+    'approved': language?.v3?.syndicate?.approved,
+  });
 
-  const getCountvalue = (value: string) => {
-    let count = 0;
-    switch (value) {
-      case "All":
-        count = filter?.all;
-        break;
-      case "Pending":
-        count = filter?.pending;
-        break;
-      case "Interested":
-        count = filter?.interested;
-        break;
-      case "Accepted":
-        count = filter?.accepted;
-        break;
-      case "Approved":
-        count = filter?.approved;
-        break;
-    }
 
-    return count;
-  };
+  const getCountvalue = ( value:string ) =>
+  { 
+    return filter[value] || 0
+  }
 
   useEffect(() => {
     dispatch(saveDataHolder(""));
@@ -91,7 +78,7 @@ const DealApproval = ({}: any) => {
   }, [currentPage]);
   useEffect(() => {
     dispatch(saveDataHolder(""));
-    setCurrentPage(1)
+    setCurrentPage(1);
     getAllDeals();
   }, [selectedTab]);
 
@@ -102,7 +89,7 @@ const DealApproval = ({}: any) => {
         user.id,
         authToken,
         selectedTab,
-        searchQuery, 
+        searchQuery,
         currentPage
       );
       if (status === 200) {
@@ -117,11 +104,14 @@ const DealApproval = ({}: any) => {
             [language?.v3?.syndicate?.deals?.table?.category]: (
               <span className="capitalize">{deal?.deal?.type}</span>
             ),
-            ["Invite Status"]: <CustomStatus options={deal?.status} /> || "N/A",
+            [language?.v3?.syndicate?.invite_status]:
+              <CustomStatus options={deal?.status} /> || "N/A",
             [language?.v3?.syndicate?.deals?.table?.end_date]:
               deal?.deal?.end_at || " N/A",
-            [language?.v3?.syndicate?.deals?.table
-              ?.target]: `${numberFormatter(Number(deal?.deal?.target), deal?.deal?.type)}`,
+            [language?.v3?.syndicate?.deals?.table?.target]: `${numberFormatter(
+              Number(deal?.deal?.target),
+              deal?.deal?.type
+            )}`,
 
             Steps: deal?.current_state?.steps,
             [language?.v3?.table?.action]: (
@@ -136,25 +126,16 @@ const DealApproval = ({}: any) => {
                 }}
                 className="bg-neutral-100 inline-flex items-center justify-center w-[24px] h-[24px] rounded-full transition-all hover:bg-cbc-transparent mx-5"
               >
-                <Chevrond
-                  className="rotate-[-90deg] w-3 h-3"
-                  strokeWidth={3}
-                  stroke={"#000"}
-                />
+               <Chevrond
+                    className={`${orientation === "rtl" ? "rotate-[-270deg]" : "rotate-[-90deg]"} w-4 h-4`}
+                    strokeWidth={2}
+                    stroke={"#000"}
+                  />
               </div>
             ),
           };
         });
 
-        setPagination((prev) => {
-          return {
-            ...prev,
-            total_items: deals.length,
-            current_page: 1,
-            total_pages: Math.ceil(deals.length / prev.items_per_page),
-            data: deals?.slice(0, prev.items_per_page),
-          };
-        });
         setDeals(deals);
       }
     } catch (error: any) {
@@ -169,42 +150,6 @@ const DealApproval = ({}: any) => {
     }
   };
 
-  const [tabs] = useState([
-    "All",
-    "Pending",
-    "Interested",
-    "Accepted",
-    "Approved",
-  ]);
-
-  const paginate = (type: string) => {
-    if (type === "next" && pagination.current_page < pagination.total_pages) {
-      setPagination((prev: any) => {
-        const nextPage = prev.current_page + 1;
-        const startIndex = (nextPage - 1) * prev.items_per_page;
-        const endIndex = startIndex + prev.items_per_page;
-        const data = deals.slice(startIndex, endIndex);
-        return { ...prev, current_page: nextPage, data };
-      });
-    } else if (type === "previous" && pagination.current_page > 1) {
-      setPagination((prev: any) => {
-        const prevPage = prev.current_page - 1;
-        const startIndex = (prevPage - 1) * prev.items_per_page;
-        const endIndex = startIndex + prev.items_per_page;
-        const data = deals.slice(startIndex, endIndex);
-        return { ...prev, current_page: prevPage, data };
-      });
-    } else {
-      setPagination((prev: any) => {
-        const prevPage = Number(type) + 1 - 1;
-        const startIndex = (prevPage - 1) * prev.items_per_page;
-        const endIndex = startIndex + prev.items_per_page;
-        const data = deals.slice(startIndex, endIndex);
-
-        return { ...prev, current_page: type, data };
-      });
-    }
-  };
 
   return (
     <main className="h-full max-h-full overflow-y-auto">
@@ -252,7 +197,7 @@ const DealApproval = ({}: any) => {
 
                     <ul className="inline-flex items-center">
                       {React.Children.toArray(
-                        tabs.map((tab: any, index: number) => (
+                       Object.keys(tabs).map((tab: any) => (
                           <li
                             onClick={() => {
                               setSelectedTab(tab);
@@ -263,7 +208,7 @@ const DealApproval = ({}: any) => {
                                 : "text-gray-500"
                             } `}
                           >
-                            {tab} &nbsp;({getCountvalue(tab)})
+                            {tabs[tab]} &nbsp;({getCountvalue(tab)})
                           </li>
                         ))
                       )}
