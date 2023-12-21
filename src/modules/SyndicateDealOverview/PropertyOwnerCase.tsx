@@ -1109,8 +1109,8 @@ const PropertyOwnerCase = ({
                 className="w-full !py-1"
                 divStyle="flex items-center justify-center w-full"
                 onClick={() => {
-                  onRequestChange();
                   setModalOpen(false);
+                  onRequestChange();
                 }}
               >
                 {language.buttons.submit}

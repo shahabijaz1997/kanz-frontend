@@ -37,6 +37,8 @@ const AllSyndicates = ({}: any) :any => {
     const [paginationData, setpaginationData] = useState(null);
     const [invites, setInvites]: any = useState([]);
     const [syndicateInfo, setsyndicateInfo]: any = useState(null);
+    const [paginationData, setpaginationData] = useState(null);
+    const [currentPage, setCurrentPage] = useState(1);
     const [isOpen, setOpen]: any = useState(false);
   const [searchQuery, setSearchQuery]: any = useState("");
   
@@ -65,10 +67,10 @@ const AllSyndicates = ({}: any) :any => {
     const getAllSyndicates = async () => {
         try {
           setLoading(true);
-          let { status, data } = await getSyndicates(authToken,searchQuery);
+          let { status, data } = await getSyndicates(authToken,searchQuery,currentPage);
           if (status === 200) {
-            setpaginationData(data?.status?.pagy)
-            let deals = data?.status?.data
+            setpaginationData(data?.status?.data?.pagy)
+            let deals = data?.status?.data?.records
               .map((syndicate: any) => {
                 return {
                   id: syndicate?.id,
@@ -94,12 +96,13 @@ const AllSyndicates = ({}: any) :any => {
                       setOpen(true)
                      
                     }}
-                      className="bg-neutral-100 inline-flex items-center justify-center w-[30px] h-[30px] rounded-full transition-all hover:bg-cbc-transparent mr-10"
-                    >
-                      <Chevrond
-                        className="rotate-[-90deg] w-6 h-6"
-                        stroke={"#737373"}
-                      />
+                    className="bg-neutral-100 inline-flex items-center justify-center w-[26px] h-[26px] rounded-full transition-all hover:bg-cbc-transparent mx-2"
+                  >
+                    <Chevrond
+                      className="rotate-[-90deg] w-4 h-4"
+                      strokeWidth={2}
+                      stroke={"#000"}
+                    />
                     </div>
                   )
                    
@@ -116,7 +119,6 @@ const AllSyndicates = ({}: any) :any => {
           setLoading(false);
         }
       };
-    
       return(
         <>  
            <section className="inline-flex justify-between items-center w-full">
@@ -155,8 +157,13 @@ const AllSyndicates = ({}: any) :any => {
          <Table
            columns={columns}
            tableData={invites}
+<<<<<<< HEAD
            paginationData={paginationData}
            setCurrentPage={setCurrentPage}
+=======
+           setCurrentPage={setCurrentPage}
+           paginationData={paginationData}
+>>>>>>> paginationImplementation
            noDataNode={
              <span className="absolute left-1/2 top-1/2 translate-x-[-50%] translate-y-[-50%]">
                No invites sent! Click on the{" "}

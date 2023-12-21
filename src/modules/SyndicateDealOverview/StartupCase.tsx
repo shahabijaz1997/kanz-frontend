@@ -254,7 +254,7 @@ const StartupCase = ({
                   {language?.v3?.fundraiser?.deal_target}
                 </h3>
                 <p className="text-neutral-900 font-normal text-sm capitalize">
-                  {comaFormattedNumber(deal?.selling_price,DealCheckType.STARTUP) ||
+                  {comaFormattedNumber(deal?.selling_price, DealCheckType.STARTUP) ||
                     language?.v3?.common?.not_added}
                 </p>
               </div>
@@ -265,7 +265,7 @@ const StartupCase = ({
                   {language?.v3?.table?.valuation}
                 </h3>
                 <p className="text-neutral-900 font-normal text-sm capitalize">
-                  {comaFormattedNumber(deal?.valuation, DealCheckType.STARTUP)} ({deal?.valuation_type})
+                  {comaFormattedNumber(deal?.valuation,DealCheckType.STARTUP)} ({deal?.valuation_type})
                 </p>
               </div>
             )}
@@ -348,7 +348,7 @@ const StartupCase = ({
                 </h3>
                 <p className="text-neutral-900 font-normal text-sm capitalize">
                   {deal.terms[0]?.is_enabled
-                    ? `$${comaFormattedNumber(deal.terms[0]?.value)}` || language?.v3?.fundraiser?.yes
+                    ? `${comaFormattedNumber(deal.terms[0]?.value, DealCheckType.STARTUP)}` || language?.v3?.fundraiser?.yes
                     : language?.v3?.fundraiser?.no}
                 </p>
               </div>
@@ -361,7 +361,7 @@ const StartupCase = ({
                 </h3>
                 <p className="text-neutral-900 font-normal text-sm capitalize">
                   {deal.terms[1]?.is_enabled
-                    ? deal.terms[1]?.value || language?.v3?.fundraiser?.yes
+                    ? deal.terms[1]?.value+"%" || language?.v3?.fundraiser?.yes
                     : language?.v3?.fundraiser?.no}
                 </p>
               </div>
@@ -389,7 +389,7 @@ const StartupCase = ({
                 </h3>
                 <p className="text-neutral-900 font-normal text-sm capitalize">
                   {deal.terms[3]?.is_enabled
-                    ? deal.terms[3]?.value || language?.v3?.fundraiser?.yes
+                    ? comaFormattedNumber(deal.terms[3]?.value, DealCheckType.STARTUP) || language?.v3?.fundraiser?.yes
                     : language?.v3?.fundraiser?.no}
                 </p>
               </div>
@@ -432,8 +432,8 @@ const StartupCase = ({
               {language?.v3?.table?.sellingPrice}
             </h3>
             <p className="text-neutral-900 font-normal text-sm capitalize">
-              $
-              {comaFormattedNumber(deal?.selling_price) ||
+              
+              {comaFormattedNumber(deal?.selling_price, DealCheckType.STARTUP) ||
                 language?.v3?.common?.not_added}
             </p>
           </div>
@@ -474,7 +474,7 @@ const StartupCase = ({
               {language?.v3?.deal?.committed}
             </h3>
             <p className="text-neutral-900 font-normal text-sm capitalize">
-              ${comaFormattedNumber(deal?.committed)}
+              {comaFormattedNumber(deal?.committed, DealCheckType.STARTUP)}
             </p>
           </div>
         )}
@@ -494,7 +494,7 @@ const StartupCase = ({
               {language?.v3?.deal?.raised}
             </h3>
             <p className="text-neutral-900 font-normal text-sm capitalize">
-              ${comaFormattedNumber(deal?.raised)}
+              {comaFormattedNumber(deal?.raised,DealCheckType.STARTUP)}
             </p>
           </div>
         )}
@@ -586,7 +586,7 @@ const StartupCase = ({
               {language?.v3?.deal?.por_2}
             </h3>
             <p className="text-neutral-900 font-normal text-sm capitalize">
-              ${numberFormatter(deal?.features?.rental_amount)} (
+              {comaFormattedNumber(deal?.features?.rental_amount)} (
               {deal?.features?.rental_period})
             </p>
           </div>
@@ -1298,6 +1298,7 @@ const StartupCase = ({
                 className="w-full !py-1"
                 divStyle="flex items-center justify-center w-full"
                 onClick={() => {
+                  setModalOpen(false)
                   onRequestChange();
                 }}
               >

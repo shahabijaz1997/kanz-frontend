@@ -1,17 +1,15 @@
 import React, { useEffect, useState } from "react";
 import Drawer from "../../../../shared/components/Drawer";
-import ArrowIcon from "../../../../ts-icons/arrowIcon.svg";
-import DownloadIcon from "../../../../ts-icons/downloadIcon.svg";
-import CustomStatus from "../../../../shared/components/CustomStatus";
 import Button from "../../../../shared/components/Button";
 import Spinner from "../../../../shared/components/Spinner";
-import { numberFormatter } from "../../../../utils/object.utils";
+import { comaFormattedNumber, numberFormatter } from "../../../../utils/object.utils";
 import RaiseIcon from "../../../../ts-icons/raiseIcon.svg";
 import { postFollowSyndicate, postunFollowSyndicate } from "../../../../apis/investor.api";
 import { useSelector } from "react-redux";
 import { RootState } from "../../../../redux-toolkit/store/store";
 import { toast } from "react-toastify";
 import { toastUtil } from "../../../../utils/toast.utils";
+import { DealCheckType } from "../../../../enums/types.enum";
 
 const SyndicateInfoDrawer = ({
   syndicateInfo,
@@ -20,14 +18,13 @@ const SyndicateInfoDrawer = ({
   onData,
 }: any) => {
   const sendDataToParent = () => {
-    let loadfromParent = true;
     onData(true);
   };
   const user: any = useSelector((state: RootState) => state.user.value);
   const authToken: any = useSelector((state: RootState) => state.auth.value);
 
   const [loading, setLoading] = useState(false);
-
+  const [buttonDisableTemp, setButtonDisableTemp]=useState(false)
 
   let text =
     "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.";
@@ -37,8 +34,24 @@ const SyndicateInfoDrawer = ({
     setShowFullText(!showFullText);
   };
 
+  useEffect(() => {
+
+    if(syndicateInfo !== null){
+      setButtonDisableTemp(false)
+    }else{
+      setButtonDisableTemp(true)
+    }
+
+  }, [syndicateInfo])
+
+  const removeSpinning = () => {
+    setTimeout(() => {
+      setButtonDisableTemp(false)
+    }, 1000);
+  }
 
   const onFollow = async (syndId: any) => {
+    setButtonDisableTemp(true)
     try {
       setLoading(true)
       const { status } = await postFollowSyndicate(
@@ -57,7 +70,9 @@ const SyndicateInfoDrawer = ({
         elem.innerHTML = "";
         elem.appendChild(button);
       }
+      removeSpinning()
     } catch (error: any) {
+      removeSpinning()
       if (error?.response?.status === 400)
         toast.warning(error?.response?.data?.status?.message, toastUtil);
     } finally {
@@ -66,6 +81,7 @@ const SyndicateInfoDrawer = ({
     }
   };
   const onunFollow = async (syndId: any, memberId:any) => {
+    setButtonDisableTemp(true)
     try {
       setLoading(true)
       const { status } = await postunFollowSyndicate(
@@ -81,7 +97,9 @@ const SyndicateInfoDrawer = ({
         elem.innerHTML = "";
         elem.appendChild(button);
       }
+      removeSpinning()
     } catch (error: any) {
+      removeSpinning()
       if (error?.response?.status === 400)
         toast.warning(error?.response?.data?.status?.message, toastUtil);
     } finally {
@@ -90,18 +108,23 @@ const SyndicateInfoDrawer = ({
     }
   };
 
+  const getButtonStatus = () => {
+    if (buttonDisableTemp) return
+
+    return syndicateInfo?.following ? "Following" : "Follow"
+  }
 
 
   const displayText = showFullText ? text : text.slice(0, 800);
   return (
     <main>
-        
-
-        
       <Drawer
         drawerWidth="w-[700px]"
         isOpen={openDrawer}
-        setIsOpen={(val: boolean) => isDrawerOpen(val)}
+        setIsOpen={(val: boolean) => {
+          setButtonDisableTemp(true)
+          isDrawerOpen(val)
+        }}
       >
          {loading ? (
           <aside className="relative h-full">
@@ -123,21 +146,24 @@ const SyndicateInfoDrawer = ({
                 <span className="items-center">{syndicateInfo?.name}</span>
               </div>
               <span className="items-center">
-                {syndicateInfo?.following ? (
-                  <Button type="outlined" onClick={() => {
-                    onunFollow(syndicateInfo?.id, syndicateInfo?.membership_id)
-                  }}>
-                    {"Following"}
-                  </Button>
-                ) : (
-                  <Button
+                <Button
+                    type={
+                      syndicateInfo?.following && !buttonDisableTemp ? "outlined": "primary"
+                    }
+                    centeredSpinner
+                    className="!min-w-[90px]"
                     onClick={() => {
-                      onFollow(syndicateInfo?.id);
+                      if(syndicateInfo?.following) {
+                        onunFollow(syndicateInfo?.id, syndicateInfo?.membership_id)
+                      }else{
+                        onFollow(syndicateInfo?.id);
+                      }
                     }}
+                    loading={buttonDisableTemp}
                   >
-                    {"Follow"}
+                    {getButtonStatus()}
                   </Button>
-                )}
+
               </span>
             </section>
           </header>
@@ -198,7 +224,7 @@ const SyndicateInfoDrawer = ({
                 <div className="rounded-md border-[1.75px] border-[#404040] w-full pl-3 py-3">
                   <div className=" text-[#737373]">Raised Amount</div>
                   <div className="mt-2 font-bold text-xl">
-                    ${numberFormatter(syndicateInfo?.raised_amount) || "N/A"}
+                    {comaFormattedNumber(syndicateInfo?.raised_amount, DealCheckType.STARTUP) || "N/A"}
                   </div>
                 </div>
                 <div className="rounded-md border-[1.75px] border-[#404040] w-full pl-3 ml-16 py-3">
