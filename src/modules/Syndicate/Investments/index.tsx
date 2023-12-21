@@ -26,46 +26,34 @@ const SyndicateInvestments = ({}: any) => {
   const language: any = useSelector((state: RootState) => state.language.value);    
   const authToken: any = useSelector((state: RootState) => state.auth.value);
   const user: any = useSelector((state: RootState) => state.user.value);
-
+  const orientation: any = useSelector(
+    (state: RootState) => state.orientation.value
+  );
   const columns = [
     language?.v3?.syndicate?.deals?.table?.title,
     language?.v3?.syndicate?.deals?.table?.category,
-    "Status",
+    language?.v3?.syndicate?.status,
     language?.v3?.syndicate?.deals?.table?.end_date,
-    "Raised",
+    language?.v3?.syndicate?.raised,
     language?.v3?.syndicate?.deals?.table?.target,
     "",
   ];
 
-  const [selectedTab, setSelectedTab]: any = useState("All");
+  const [selectedTab, setSelectedTab]: any = useState("all");
   const [searchQuery, setSearchQuery]: any = useState("");
   const [modalOpen, setModalOpen]: any = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [paginationData, setpaginationData] = useState(null);
   const [loading, setLoading] = useState(false);
   const [filter, setFilterCounts]:any = useState([]);
-  const [tabs] = useState([
-    "All",
-    "Startup",
-    "Property",
-  ]);
+  const [tabs] = useState<any>({
+    'all': language?.v3?.startup?.overview?.all,
+    'startup': language?.v3?.fundraiser?.startup,
+    'property': language?.v3?.fundraiser?.property,
+  });
   const getCountvalue = ( value:string ) =>
   { 
-    let count = 0 ;
-    switch (value) {
-      case  "All" : 
-      count = filter?.all
-      break
-      case  "Property" : 
-      count = filter?.property
-      break
-      case  "Startup" : 
-      count = filter?.startup
-      break
-    } 
-
-    return count
-    
+    return filter[value] || 0
   }
   const [deals, setDeals] = useState([]);
   const [dummyDisclaimers, setDummyDisclaimers] = useState({
@@ -107,11 +95,11 @@ const SyndicateInvestments = ({}: any) => {
             [language?.v3?.syndicate?.deals?.table?.category]: (
               <span className="capitalize">{deal?.deal_type}</span>
             ),
-            ["Status"]:
+            [language?.v3?.syndicate?.status]:
               <CustomStatus options={deal?.status} /> || "N/A",
             [language?.v3?.syndicate?.deals?.table?.end_date]:
               <span className="px-2">{(deal?.end_at)}</span>|| " N/A",
-            ["Raised"]:`$${numberFormatter(Number(deal?.raised))}`,  
+            [language?.v3?.syndicate?.raised]:`$${numberFormatter(Number(deal?.raised))}`,  
             [language?.v3?.syndicate?.deals?.table
               ?.target]: `$${numberFormatter(Number(deal?.target))}`,
 
@@ -128,11 +116,11 @@ const SyndicateInvestments = ({}: any) => {
                 }}
                 className="bg-neutral-100 inline-flex items-center justify-center w-[24px] h-[24px] rounded-full transition-all hover:bg-cbc-transparent mx-5"
               >
-                <Chevrond
-                  className="rotate-[-90deg] w-3 h-3"
-                  strokeWidth={3}
-                  stroke={"#000"}
-                />
+                 <Chevrond
+                    className={`${orientation === "rtl" ? "rotate-[-270deg]" : "rotate-[-90deg]"} w-4 h-4`}
+                    strokeWidth={2}
+                    stroke={"#000"}
+                  />
               </div>
             ),
           };
@@ -169,7 +157,7 @@ const SyndicateInvestments = ({}: any) => {
               <section className="inline-flex justify-between items-center w-full">
                 <div className="w-full">
                   <h1 className="text-black font-medium text-2xl mb-2">
-                    {"Investments"}
+                    {language?.v3?.syndicate?.investments}
                   </h1>
 
                   <span className="w-full flex items-center gap-5">
@@ -195,7 +183,7 @@ const SyndicateInvestments = ({}: any) => {
 
                     <ul className="inline-flex items-center">
                       {React.Children.toArray(
-                        tabs.map((tab:any) => (
+                         Object.keys(tabs).map((tab: any) => (
                           <li
                             onClick={() => {
                               
@@ -206,7 +194,7 @@ const SyndicateInvestments = ({}: any) => {
                                 : "text-gray-500"
                             } `}
                           >
-                            {tab} &nbsp;({getCountvalue(tab)})
+                             {tabs[tab]} &nbsp;({getCountvalue(tab)})
                           </li>
                         ))
                       )}

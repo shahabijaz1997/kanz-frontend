@@ -33,13 +33,6 @@ const Commitments = ({}: any): any => {
   const [filter, setFilterCounts]: any = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [paginationData, setpaginationData] = useState(null);
-
-  const [pagination, setPagination] = useState({
-    items_per_page: 10,
-    total_items: [],
-    current_page: 1,
-    total_pages: 0,
-  });
   const [tabs] = useState([
     language?.v3?.startup?.overview?.all,
     "Startup",

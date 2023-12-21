@@ -11,6 +11,7 @@ const ActionButton = ({ investorID, setLoading, getMembers }: any): any => {
     const ref: any = useRef()
     const authToken: any = useSelector((state: RootState) => state.auth.value)
     const user: any = useSelector((state: RootState) => state.user.value)
+  const language: any = useSelector((state: RootState) => state.language.value);
 
     useEffect(() => {
         const handleOutsideClick = (event: any) => {
@@ -41,7 +42,7 @@ const ActionButton = ({ investorID, setLoading, getMembers }: any): any => {
             )
             if (status === 200) {
             toast.dismiss()
-            toast.success("Investor Deleted", toastUtil)
+            toast.success(language?.v3?.syndicate?.investor_deleted, toastUtil)
             }
         } catch (error: any) {
             if (error?.response?.status === 400)
@@ -66,7 +67,7 @@ const ActionButton = ({ investorID, setLoading, getMembers }: any): any => {
                     onClick={() => {}}
                     className="w-full items-center p-3 hover:bg-[#F5F5F5]"
                     >
-                    View details
+                    {language?.v3?.syndicate?.view_details}
                     </div>
                     <div
                     onClick={() => {
@@ -74,7 +75,7 @@ const ActionButton = ({ investorID, setLoading, getMembers }: any): any => {
                     }}
                     className="w-full items-center p-3 hover:bg-[#F5F5F5]"
                     >
-                    Remove
+                    {language?.v3?.syndicate?.remove}
                     </div>
                 </div>
             )}

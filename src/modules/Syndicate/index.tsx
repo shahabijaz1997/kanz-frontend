@@ -14,12 +14,9 @@ import CrossIcon from "../../ts-icons/crossIcon.svg";
 import { saveDataHolder } from "../../redux-toolkit/slicer/dataHolder.slicer";
 import { getDeals, getDealsforsyndicate, getNoFilterDeals } from "../../apis/deal.api";
 import {
-  comaFormattedNumber,
-  formatDate,
   numberFormatter,
 } from "../../utils/object.utils";
 import Spinner from "../../shared/components/Spinner";
-import { ApplicationStatus } from "../../enums/types.enum";
 import CustomStatus from "../../shared/components/CustomStatus";
 import Chevrond from "../../ts-icons/chevrond.svg";
 
@@ -29,15 +26,19 @@ const SyndicateDashboard = ({}: any) => {
   const language: any = useSelector((state: RootState) => state.language.value);
   const authToken: any = useSelector((state: RootState) => state.auth.value);
   const [filter, setFilterCounts]:any = useState([]);
+  const orientation: any = useSelector(
+    (state: RootState) => state.orientation.value
+  );
+
 
   
   const columns = [
-    "Title",
-    "Type",
+    language?.v3?.syndicate?.title,
+    language?.v3?.syndicate?.type,
     language?.v3?.table?.status,
     language?.v3?.table?.sellingPrice,
-    "Start At",
-    "End At",
+    language?.v3?.syndicate?.start_at,
+    language?.v3?.syndicate?.end_at,
     "",
 
   ];
@@ -47,17 +48,23 @@ const SyndicateDashboard = ({}: any) => {
     current_page: 1,
     total_pages: 0,
   });
-  const [selectedTab, setSelectedTab] = useState("All");
+  const [selectedTab, setSelectedTab] = useState("all");
   const [modalOpen, setModalOpen]: any = useState(null);
   const [searchQuery, setSearchQuery]: any = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const [paginationData, setpaginationData] = useState(null);
   const [loading, setLoading] = useState(false);
-  const [tabs] = useState([
+/*   const [tabs] = useState([
     language?.v3?.startup?.overview?.all,
-  "Startup",
-  "Property"
-  ]);
+    language?.v3?.syndicate?.startup,
+    language?.v3?.syndicate?.property
+  ]); */
+
+  const [tabs] = useState<any>({
+    'all': language?.v3?.startup?.overview?.all,
+    'startup': language?.v3?.fundraiser?.startup,
+    'property': language?.v3?.fundraiser?.property,
+  });
   const [deals, setDeals] = useState([]);
   const [dummyDisclaimers, setDummyDisclaimers] = useState({
     d1: false,
@@ -72,21 +79,7 @@ const SyndicateDashboard = ({}: any) => {
   
   const getCountvalue = ( value:string ) =>
   { 
-    let count = 0 ;
-    switch (value) {
-      case  "All" : 
-      count = filter?.all
-      break
-      case  "Startup" : 
-      count = filter?.startup
-      break
-      case  "Property" : 
-      count = filter?.property
-      break
-    } 
-
-    return count
-    
+    return filter[value] || 0
   }
 
 
@@ -116,16 +109,16 @@ const SyndicateDashboard = ({}: any) => {
             token: deal?.token,
             type: deal?.deal_type,
             id: deal?.id,
-            ["Title"]: deal?.title || "N/A",
-            ["Type"]: <span className=" capitalize">{deal?.deal_type}</span>,
+            [language?.v3?.syndicate?.title]: deal?.title || "N/A",
+            [language?.v3?.syndicate?.type]: <span className=" capitalize">{deal?.deal_type}</span>,
             [language?.v3?.table?.sellingPrice]: `${numberFormatter(
               Number(deal?.target)
             , deal?.deal_type)}`,
             [language?.v3?.table?.status]: (
               <CustomStatus options={deal?.status} />
             ),
-            ["Start At"]: (deal?.start_at),
-            ["End At"]: (deal?.end_at),
+            [language?.v3?.syndicate?.start_at]: (deal?.start_at),
+            [language?.v3?.syndicate?.end_at]: (deal?.end_at),
             [""]: (
               <div
               onClick={() => {
@@ -136,11 +129,11 @@ const SyndicateDashboard = ({}: any) => {
               }}
                 className="bg-neutral-100 inline-flex items-center justify-center w-[24px] h-[24px] rounded-full transition-all hover:bg-cbc-transparent mx-5"
               >
-                <Chevrond
-                  className="rotate-[-90deg] w-3 h-3"
-                  strokeWidth={3}
-                  stroke={"#000"}
-                />
+               <Chevrond
+                    className={`${orientation === "rtl" ? "rotate-[-270deg]" : "rotate-[-90deg]"} w-4 h-4`}
+                    strokeWidth={2}
+                    stroke={"#000"}
+                  />
               </div>
             )
           };
@@ -238,7 +231,7 @@ const SyndicateDashboard = ({}: any) => {
                     </div>
                     <ul className="inline-flex items-center">
                         {React.Children.toArray(
-                          tabs.map((tab: any) => (
+                          Object.keys(tabs).map((tab: any) => (
                             <li
                               onClick={() => {
                                 setSelectedTab(tab);
@@ -249,7 +242,7 @@ const SyndicateDashboard = ({}: any) => {
                                   : "text-gray-500"
                               } `}
                             >
-                              {tab} &nbsp;({getCountvalue(tab)})
+                              {tabs[tab]} &nbsp;({getCountvalue(tab)})
                             </li>
                           ))
                         )}

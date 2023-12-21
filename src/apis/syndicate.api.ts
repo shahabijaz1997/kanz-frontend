@@ -73,7 +73,7 @@ export const getDealInvestors = (dealId: any, token: string, currentPage:number)
   return axios.get(
     apiUrl,
     {
-      headers: {
+      headers: {  
         Authorization: `Bearer ${token}`,
       },
     }

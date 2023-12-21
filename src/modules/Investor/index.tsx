@@ -36,12 +36,7 @@ const Investor = ({}: any) => {
     language?.v3?.table?.rentalAmount,
     language?.v3?.table?.action,
   ];
-  const [pagination, setPagination] = useState({
-    items_per_page: 10,
-    total_items: [],
-    current_page: 1,
-    total_pages: 0,
-  });
+
   const [selectedTab, setSelectedTab] = useState("All");
   const [modalOpen, setModalOpen]: any = useState(null);
   const [warningModal, setwarningModal]: any = useState(null);
@@ -166,16 +161,7 @@ const Investor = ({}: any) => {
           };
         });
 
-        setPagination((prev) => {
-          return {
-            ...prev,
-            total_items: deals.length,
-            current_page: 1,
-            total_pages: Math.ceil(deals.length / prev.items_per_page),
-            data: deals?.slice(0, prev.items_per_page),
-          };
-        });
-        setDeals(deals);
+          setDeals(deals);
       }
     } catch (error) {
     } finally {
@@ -183,35 +169,7 @@ const Investor = ({}: any) => {
     }
   };
 
-  const paginate = (type: string) => {
-    if (type === "next" && pagination.current_page < pagination.total_pages) {
-      setPagination((prev: any) => {
-        const nextPage = prev.current_page + 1;
-        const startIndex = (nextPage - 1) * prev.items_per_page;
-        const endIndex = startIndex + prev.items_per_page;
-        const data = deals.slice(startIndex, endIndex);
-        return { ...prev, current_page: nextPage, data };
-      });
-    } else if (type === "previous" && pagination.current_page > 1) {
-      setPagination((prev: any) => {
-        const prevPage = prev.current_page - 1;
-        const startIndex = (prevPage - 1) * prev.items_per_page;
-        const endIndex = startIndex + prev.items_per_page;
-        const data = deals.slice(startIndex, endIndex);
-
-        return { ...prev, current_page: prevPage, data };
-      });
-    } else {
-      setPagination((prev: any) => {
-        const prevPage = Number(type) + 1 - 1;
-        const startIndex = (prevPage - 1) * prev.items_per_page;
-        const endIndex = startIndex + prev.items_per_page;
-        const data = deals.slice(startIndex, endIndex);
-
-        return { ...prev, current_page: type, data };
-      });
-    }
-  };
+  
 
   return (
     <main className="h-full max-h-full overflow-y-auto">
@@ -281,9 +239,6 @@ const Investor = ({}: any) => {
               <section className="mt-10">
                 <Table
                   columns={columns}
-                  goToPage={paginate}
-                  pagination={pagination}
-                  paginate={paginate}
                   noDataNode={
                     <h1
                       

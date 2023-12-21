@@ -12,6 +12,7 @@ const Table = ({
   onclick = () => {},
   removeHref = false,
 }: any) => {
+  const language: any = useSelector((state: RootState) => state.language.value);
   const orientation: any = useSelector(
     (state: RootState) => state.orientation.value
   );
@@ -114,11 +115,7 @@ const Table = ({
       </table>
       {tableData?.length > 0 && JSON.stringify(paginationData) !== "{}" && (
         <nav className="py-2 flex justify-between items-center bg-white border-t-[1px] border-[#D4D4D4]">
-          <span className="mx-10 font-normal text-sm">
-            Showing <span className="font-medium">{paginationData?.from}</span>{" "}
-            to <span className="font-medium">{paginationData?.to}</span> of{" "}
-            <span className="font-medium">{paginationData?.count}</span> results
-          </span>
+          <span className="mx-10  font-normal text-sm">{language?.v3?.fundraiser?.showing} <span  className="font-medium"> {paginationData?.from}</span> {language?.v3?.fundraiser?.to} <span  className="font-medium">{paginationData?.to}</span>  {language?.v3?.fundraiser?.of} <span className="font-medium">{paginationData?.count}</span> {language?.v3?.fundraiser?.results}</span>
           <ul className="list-style-none  flex items-center justify-center border-[#D4D4D4] border-[1px] rounded-md w-fit mx-10">
             <li
               className="pr-2"
@@ -135,13 +132,7 @@ const Table = ({
                     : "cursor-pointer"
                 } text-cyan-800 w-fit pl-2 h-fit flex`}
               >
-                <span className=" flex h-fit" aria-hidden="true">
-                  <Chevrond
-                    strokeWidth={3}
-                    stroke="#000"
-                    className="rotate-90 w-3 h-3"
-                  />
-                </span>
+                <span className=" flex h-fit" aria-hidden="true"><Chevrond strokeWidth={3} stroke="#000"  className={`${orientation === "rtl" ? "rotate-[-90deg]" : "rotate-[90deg]"} w-3 h-3`} /></span>
               </a>
             </li>
             {renderPaginationUI()}
@@ -160,13 +151,7 @@ const Table = ({
                 } text-cyan-800  w-fit  h-fit flex pr-2 `}
                 href={removeHref ? undefined : "#!"}
               >
-                <span aria-hidden="true" className="flex h-fit">
-                  <Chevrond
-                    stroke="#000"
-                    className="w-3 h-3"
-                    style={{ transform: "rotate(270deg)", strokeWidth: "3" }}
-                  />
-                </span>
+                <span aria-hidden="true" className="flex h-fit"><Chevrond stroke="#000" className={`${orientation === "rtl" ? "rotate-[-270deg]" : "rotate-[270deg]"} w-3 h-3`} style={{ strokeWidth: '3' }} /></span>
               </a>
             </li>
           </ul>

@@ -15,11 +15,6 @@ import { useDispatch } from "react-redux";
 
 const InvestorSyndicates = ({}: any) => {
   const params = useParams();
-  const navigate = useNavigate();
-  const dispatch = useDispatch();
-
-
-  const { state } = useLocation();
 
   interface Syndicate {
     id: number;

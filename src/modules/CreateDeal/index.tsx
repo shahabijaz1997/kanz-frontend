@@ -556,7 +556,7 @@ const CreateDeal = () => {
             </div>
             {showZeroWarning && (
               <span className="text-xs text-red-600">
-                Amount cannot be zero.
+                {language?.v3?.fundraiser?.amount_cannot_be_zero}
               </span>
             )}
             <ul className="inline-flex justify-between w-full items-center gap-6 mt-3">

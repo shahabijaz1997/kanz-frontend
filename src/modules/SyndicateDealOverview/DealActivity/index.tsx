@@ -13,13 +13,15 @@ import CustomStatus from "../../../shared/components/CustomStatus";
 const DealActivity = ({dealID, dealCreatorView}: any) => {
   const dispatch = useDispatch();
   const authToken: any = useSelector((state: RootState) => state.auth.value);
+  const language: any = useSelector((state: RootState) => state.language.value);
+
 
   const columns = [
-    "Name",
-    "User Type",
-    "Date",
-    "Status",
-    "Amount Raised",
+    language?.v3?.fundraiser?.name,
+    language?.v3?.fundraiser?.user_type,
+    language?.v3?.fundraiser?.date,
+    language?.v3?.fundraiser?.status,
+    language?.v3?.fundraiser?.amount_raised,
     
   ];
   const [pagination, setPagination] = useState({
@@ -51,13 +53,13 @@ const DealActivity = ({dealID, dealCreatorView}: any) => {
         let activity = data?.status?.data?.records?.map((dealActivity: any) => {
           return {
             id: dealActivity?.investor?.id,
-            "Name":<span className="capitalize">{dealActivity?.investor?.name}</span> ,
-            ["User Type"]:<span className="capitalize">{dealActivity?.type}</span> ,
-            ["Date"]:
+            [ language?.v3?.fundraiser?.name]:<span className="capitalize">{dealActivity?.investor?.name}</span> ,
+            [language?.v3?.fundraiser?.user_type]:<span className="capitalize">{dealActivity?.type}</span> ,
+            [language?.v3?.fundraiser?.date]:
               dealActivity?.date|| "N/A",
-             ["Status"]:
+             [language?.v3?.fundraiser?.status]:
               <CustomStatus options={dealActivity?.status === "committed_amount" ? "Committed" : dealActivity?.status} /> || "N/A", 
-            ["Amount Raised"]: (
+            [language?.v3?.fundraiser?.amount_raised]: (
               <span>{comaFormattedNumber(dealActivity?.amount)}</span>
             ),
           };
@@ -129,7 +131,7 @@ const DealActivity = ({dealID, dealCreatorView}: any) => {
               removeHref={true}
               noDataNode={
                 <span className="absolute left-1/2 top-1/2 translate-x-[-50%] translate-y-[-50%]">
-                  No activity for now!
+                  {language?.v3?.fundraiser?.no_activity_for_now}
                 </span>
               }
             />
