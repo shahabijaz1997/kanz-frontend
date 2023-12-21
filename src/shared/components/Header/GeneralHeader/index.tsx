@@ -23,7 +23,7 @@ const GeneralHeader = ({ responsive = false, showMenu = false, showLanguageDropd
     const orientation: any = useSelector((state: RootState) => state.orientation.value);
     const authToken: any = useSelector((state: RootState) => state.auth.value);
     const event: any = useSelector((state: RootState) => state.event.value);
-    const navigationMenu = [{id: 1, title:language.landing.invest }, { id: 2, title: language.landing.raise }, { id: 3, title: language.header?.syndicate }]
+    const navigationMenu = [{id: 1, title:language.landing?.invest }, { id: 2, title: language.landing?.raise }, { id: 3, title: language.header?.syndicate }]
     const [isMenuOpen, setIsMenuOpen] = useState(false);
    
     const toggleMenu = () => {

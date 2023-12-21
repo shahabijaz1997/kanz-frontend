@@ -12,7 +12,7 @@ import { RoutesEnums, StartupRoutes } from "../../../enums/routes.enum";
 import Modal from "../../../shared/components/Modal";
 import CrossIcon from "../../../ts-icons/crossIcon.svg";
 import { saveDataHolder } from "../../../redux-toolkit/slicer/dataHolder.slicer";
-import { getDeals, getInvitedDeals } from "../../../apis/deal.api";
+import {  getInvitedDeals } from "../../../apis/deal.api";
 import {
   numberFormatter,
 } from "../../../utils/object.utils";

@@ -27,10 +27,9 @@ const InvestorSyndicates = ({}: any) => {
   const language: any = useSelector((state: RootState) => state.language.value);
   const authToken: any = useSelector((state: RootState) => state.auth.value);
   const tabs = [
-    { id: 1, title: "All Syndicates" },
-    { id: 2, title: "Following Syndicates" },
+    { id: 1, title: language?.v3?.investor?.all_syndicates },
+    { id: 2, title: language?.v3?.investor?.following_syndicates },
   ];
-  const [syndicates, setSyndicates] = useState<Syndicate[]>([]);
 
 
   const [selected, setSelected]: any = useState(tabs[0]);
@@ -61,7 +60,7 @@ const InvestorSyndicates = ({}: any) => {
           >
             <section className="inline-flex justify-between items-center w-full mb-4">
               <h1 className="text-black font-medium text-2xl">
-                {"Syndicates"}
+                {language?.v3?.investor?.syndicates}
               </h1>
           
             </section>

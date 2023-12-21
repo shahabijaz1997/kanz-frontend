@@ -32,29 +32,23 @@ const FollowingSyndicates = (): any => {
   const user: any = useSelector((state: RootState) => state.user.value);
   const [paginationData, setpaginationData] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
+  const orientation: any = useSelector(
+    (state: RootState) => state.orientation.value
+  );
 
   const columns = [
-    "Syndicate",
-    "Total Deals",
-    "Active Deals",
-    "Raising Fund",
-    "Formation Date",
+    language?.v3?.investor?.syndicate,
+    language?.v3?.investor?.total_deals,
+    language?.v3?.investor?.active_deals,
+    language?.v3?.investor?.raising_fund,
+    language?.v3?.investor?.formation_date,
     "",
   ];
   const [loading, setLoading]: any = useState(false);
   const [invites, setInvites]: any = useState([]);
   const [syndicateInfo, setsyndicateInfo]: any = useState(null);
   const [isOpen, setOpen]: any = useState(false);
-
   const [searchQuery, setSearchQuery]: any = useState("");
-
-  const [pagination, setPagination] = useState({
-    items_per_page: 5,
-    total_items: [],
-    current_page: 1,
-    total_pages: 0,
-  });
-
   const [childData, setChildData]: any = useState(null);
 
   const handleChildData = (data: any) => {
@@ -95,16 +89,16 @@ const FollowingSyndicates = (): any => {
         let syndicates = data?.status?.data?.records?.map((syndicate: any) => {
           return {
             id: syndicate?.id,
-            ["Syndicate"]: (
+            [ language?.v3?.investor?.syndicate]: (
               <span className=" capitalize">{syndicate?.name}</span>
             ),
-            ["Total Deals"]: (
+            [ language?.v3?.investor?.total_deals]: (
               <span className=" capitalize">{syndicate?.total_deals}</span>
             ),
-            ["Active Deals"]: (
+            [ language?.v3?.investor?.active_deals]: (
               <span className=" capitalize">{syndicate?.active_deals}</span>
             ),
-            ["Raising Fund"]: (
+            [ language?.v3?.investor?.raising_fund]: (
               <span className=" capitalize">
                 {syndicate?.raising_fund ? (
                   <CustomStatus options={"Yes"} />
@@ -113,7 +107,7 @@ const FollowingSyndicates = (): any => {
                 )}
               </span>
             ),
-            ["Formation Date"]: (
+            [language?.v3?.investor?.formation_date]: (
               <span className=" capitalize">{syndicate?.created_at}</span>
             ),
             [""]: (
@@ -123,24 +117,13 @@ const FollowingSyndicates = (): any => {
                   setOpen(true);
                 }}
                 className="bg-neutral-100 inline-flex items-center justify-center w-[26px] h-[26px] rounded-full transition-all hover:bg-cbc-transparent mx-2"
-                >
-                  <Chevrond
-                    className="rotate-[-90deg] w-4 h-4"
-                    strokeWidth={2}
-                    stroke={"#000"}
-                  />
+                > <Chevrond
+                className={`${orientation === "rtl" ? "rotate-[-270deg]" : "rotate-[-90deg]"} w-4 h-4`}
+                strokeWidth={2}
+                stroke={"#000"}
+              />
               </div>
             ),
-          };
-        });
-
-        setPagination((prev) => {
-          return {
-            ...prev,
-            total_items: syndicates.length,
-            current_page: 1,
-            total_pages: Math.ceil(syndicates.length / prev.items_per_page),
-            data: syndicates?.slice(0, prev.items_per_page),
           };
         });
         setInvites(syndicates);
@@ -198,10 +181,10 @@ const FollowingSyndicates = (): any => {
             paginationData={paginationData}
             noDataNode={
               <span className="absolute left-1/2 top-1/2 translate-x-[-50%] translate-y-[-50%]">
-                No invites sent! Click on the{" "}
-                <span className=" font-bold">invite button on top right</span>
-                invite a syndicate
-              </span>
+              {language?.v3?.investor?.no_syndicates_followed}{" "}
+              <span className=" font-bold">{language?.v3?.investor?.follow_button_on_top_left}</span>{" "}
+              {language?.v3?.investor?.to_follow_a_syndicate}
+            </span>
             }
           />
         )}

@@ -1080,7 +1080,7 @@ const StartupCase = ({
                             className="!py-1 !px-2 !font-medium !rounded-full border-[1px] border-black !text-xs"
                             type="outlined"
                           >
-                            {language.v3.syndicate.reverse}
+                            {language?.v3?.syndicate.reverse}
                           </Button>
                         </div>
                       </div>

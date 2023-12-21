@@ -12,7 +12,7 @@ import { RoutesEnums, StartupRoutes } from "../../enums/routes.enum";
 import Modal from "../../shared/components/Modal";
 import CrossIcon from "../../ts-icons/crossIcon.svg";
 import { saveDataHolder } from "../../redux-toolkit/slicer/dataHolder.slicer";
-import { getDeals, getDealsforsyndicate, getNoFilterDeals } from "../../apis/deal.api";
+import {  getDealsforsyndicate, getNoFilterDeals } from "../../apis/deal.api";
 import {
   numberFormatter,
 } from "../../utils/object.utils";
@@ -42,23 +42,12 @@ const SyndicateDashboard = ({}: any) => {
     "",
 
   ];
-  const [pagination, setPagination] = useState({
-    items_per_page: 10,
-    total_items: [],
-    current_page: 1,
-    total_pages: 0,
-  });
   const [selectedTab, setSelectedTab] = useState("all");
   const [modalOpen, setModalOpen]: any = useState(null);
   const [searchQuery, setSearchQuery]: any = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const [paginationData, setpaginationData] = useState(null);
   const [loading, setLoading] = useState(false);
-/*   const [tabs] = useState([
-    language?.v3?.startup?.overview?.all,
-    language?.v3?.syndicate?.startup,
-    language?.v3?.syndicate?.property
-  ]); */
 
   const [tabs] = useState<any>({
     'all': language?.v3?.startup?.overview?.all,
@@ -138,16 +127,6 @@ const SyndicateDashboard = ({}: any) => {
             )
           };
         });
-
-        setPagination((prev) => {
-          return {
-            ...prev,
-            total_items: deals.length,
-            current_page: 1,
-            total_pages: Math.ceil(deals.length / prev.items_per_page),
-            data: deals?.slice(0, prev.items_per_page),
-          };
-        });
         setDeals(deals);
       }
     } catch (error) {
@@ -155,37 +134,6 @@ const SyndicateDashboard = ({}: any) => {
       setLoading(false);
     }
   };
-
-  const paginate = (type: string) => {
-    if (type === "next" && pagination.current_page < pagination.total_pages) {
-      setPagination((prev: any) => {
-        const nextPage = prev.current_page + 1;
-        const startIndex = (nextPage - 1) * prev.items_per_page;
-        const endIndex = startIndex + prev.items_per_page;
-        const data = deals.slice(startIndex, endIndex);
-        return { ...prev, current_page: nextPage, data };
-      });
-    } else if (type === "previous" && pagination.current_page > 1) {
-      setPagination((prev: any) => {
-        const prevPage = prev.current_page - 1;
-        const startIndex = (prevPage - 1) * prev.items_per_page;
-        const endIndex = startIndex + prev.items_per_page;
-        const data = deals.slice(startIndex, endIndex);
-
-        return { ...prev, current_page: prevPage, data };
-      });
-    } else {
-      setPagination((prev: any) => {
-        const prevPage = Number(type) + 1 - 1;
-        const startIndex = (prevPage - 1) * prev.items_per_page;
-        const endIndex = startIndex + prev.items_per_page;
-        const data = deals.slice(startIndex, endIndex);
-
-        return { ...prev, current_page: type, data };
-      });
-    }
-  };
-
   return (
     <main className="h-full max-h-full overflow-y-auto">
       <section>
