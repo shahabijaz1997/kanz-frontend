@@ -1,32 +1,20 @@
 import React, {   useState } from "react";
-import { useLocation, useParams } from "react-router-dom";
 import { KanzRoles } from "../../../enums/roles.enum";
 import Header from "../../../shared/components/Header";
 import Sidebar from "../../../shared/components/Sidebar";
 import Spinner from "../../../shared/components/Spinner";
 import Commitments from "./Commitments";
 import Invites from "./Invites";
-
-
-
+import { useSelector } from "react-redux";
+import { RootState } from "../../../redux-toolkit/store/store";
 
 const Deals = ({}: any) => {
-  const params = useParams();
-
-
-  const { state } = useLocation();
-
-  interface Syndicate {
-    id: number;
-    title: React.ReactNode;
-    handle: string;
-    action: React.ReactNode;
-  }
-
+  const language: any = useSelector((state: RootState) => state.language.value);
   const tabs = [
-    { id: 1, title: "Invites" },
-    { id: 2, title: "Commitments" },
+    { id: 1, title: language?.v3?.investor?.invites },
+    { id: 2, title: language?.v3?.investor?.commitments},
   ];
+
 
 
   const [selected, setSelected]: any = useState(tabs[0]);
@@ -57,7 +45,7 @@ const Deals = ({}: any) => {
           >
             <section className="inline-flex justify-between items-center w-full mb-4">
               <h1 className="text-black font-medium text-2xl">
-                {"Deals"}
+                {language?.v3?.investor?.deals}
               </h1>
           
             </section>

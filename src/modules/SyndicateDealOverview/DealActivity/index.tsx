@@ -24,12 +24,6 @@ const DealActivity = ({dealID, dealCreatorView}: any) => {
     language?.v3?.fundraiser?.amount_raised,
     
   ];
-  const [pagination, setPagination] = useState({
-    items_per_page: 10,
-    total_items: [],
-    current_page: 1,
-    total_pages: 0,
-  });
   const [loading, setLoading] = useState(false);
   const [activity, setDeals] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
@@ -78,41 +72,12 @@ const DealActivity = ({dealID, dealCreatorView}: any) => {
     }
   };
 
-  const paginate = (type: string) => {
-    if (type === "next" && pagination.current_page < pagination.total_pages) {
-      setPagination((prev: any) => {
-        const nextPage = prev.current_page + 1;
-        const startIndex = (nextPage - 1) * prev.items_per_page;
-        const endIndex = startIndex + prev.items_per_page;
-        const data = activity.slice(startIndex, endIndex);
-        return { ...prev, current_page: nextPage, data };
-      });
-    } else if (type === "previous" && pagination.current_page > 1) {
-      setPagination((prev: any) => {
-        const prevPage = prev.current_page - 1;
-        const startIndex = (prevPage - 1) * prev.items_per_page;
-        const endIndex = startIndex + prev.items_per_page;
-        const data = activity.slice(startIndex, endIndex);
-        return { ...prev, current_page: prevPage, data };
-      });
-    } else {
-      setPagination((prev: any) => {
-        const prevPage = Number(type) + 1 - 1;
-        const startIndex = (prevPage - 1) * prev.items_per_page;
-        const endIndex = startIndex + prev.items_per_page;
-        const data = activity.slice(startIndex, endIndex);
-
-        return { ...prev, current_page: type, data };
-      });
-    }
-  };
-
   return (
     <main className="h-full relative max-h-full">
       <section className="inline-flex justify-between items-center w-full">
         <div className="w-full"> 
         {!dealCreatorView && (  <h1 className="text-black font-medium text-2xl mb-2">
-            {"Deal Activity"}
+            {language?.v3?.investor?.deal_activity}
           </h1>) }
         </div>
       </section>

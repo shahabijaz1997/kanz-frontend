@@ -41,14 +41,14 @@ const StartupDeals = ({ openStartupRiskModal }: any) => {
     language?.v3?.table?.stage,
     language?.v3?.table?.round,
     language?.v3?.table?.target,
-    language.v3.fundraiser.end_date,
+    language?.v3?.fundraiser.end_date,
     language?.v3?.table?.action,
   ];
   const [paginationData, setpaginationData] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
   const metadata: any = useSelector((state: RootState) => state.metadata);
   const [filter, setFilterCounts]: any = useState([]);
-  const [selectedTab, setSelectedTab] = useState("All");
+  const [selectedTab, setSelectedTab] = useState("all");
   const [warningModal, setwarningModal]: any = useState(null);
   const [tabs] = useState<any>({
     'all': language?.v3?.startup?.overview?.all,
@@ -110,7 +110,7 @@ const StartupDeals = ({ openStartupRiskModal }: any) => {
           return {
             id: deal?.id,
             [language?.v3?.table?.title]: deal?.title || "N/A",
-            ["Model"]:
+            [language?.v3?.fundraiser?.model]:
               <span className=" capitalize">{deal?.model}</span> || "N/A",
             [language?.v3?.table?.target]: `${numberFormatter(
               Number(deal?.target),
@@ -121,7 +121,7 @@ const StartupDeals = ({ openStartupRiskModal }: any) => {
             [language?.v3?.table?.status]: (
               <CustomStatus options={deal?.status} />
             ),
-            [language.v3.fundraiser.end_date]: deal?.end_at || "N/A",
+            [language?.v3?.fundraiser?.end_date]: deal?.end_at || "N/A",
             [language?.v3?.table?.type]: (
               <span className=" capitalize">{deal?.deal_type}</span>
             ),
@@ -283,7 +283,7 @@ const StartupDeals = ({ openStartupRiskModal }: any) => {
                   }}
                   className="absolute left-1/2 top-1/2 translate-x-[-50%] translate-y-[-50%]"
                 >
-                  {language.v3.fundraiser.create_startup_deal}
+                  {language?.v3?.fundraiser?.create_startup_deal}
                 </Button>
               }
             />
