@@ -156,7 +156,7 @@ const UserListingPopup = ({ approve, dealId, type, dealIdReal, setLoader }: any)
           orientation === "rtl"
             ? "left-0"
             : "right-0"
-        } absolute p-5 bg-white border-[1px] border-neutral-200 rounded-md w-[400px] left-0 top-[100%]`}>
+        } absolute p-5 bg-white border-[1px] border-neutral-200 rounded-md w-[400px] top-[100%]`}>
            
                 <div className="rounded-md shadow-cs-6 bg-white border-[1px] border-gray-200 h-9 overflow-hidden w-full inline-flex items-center px-2">
                       <SearchIcon
