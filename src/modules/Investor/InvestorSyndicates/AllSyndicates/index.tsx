@@ -33,8 +33,6 @@ const AllSyndicates = ({}: any) :any => {
 
     const columns = ["Syndicate", "Total Deals", "Active Deals", "Raising Fund", "Formation Date", ""];
     const [loading, setLoading]: any = useState(false);
-    const [currentPage, setCurrentPage] = useState(1);
-    const [paginationData, setpaginationData] = useState(null);
     const [invites, setInvites]: any = useState([]);
     const [syndicateInfo, setsyndicateInfo]: any = useState(null);
     const [paginationData, setpaginationData] = useState(null);
@@ -157,13 +155,8 @@ const AllSyndicates = ({}: any) :any => {
          <Table
            columns={columns}
            tableData={invites}
-<<<<<<< HEAD
-           paginationData={paginationData}
-           setCurrentPage={setCurrentPage}
-=======
            setCurrentPage={setCurrentPage}
            paginationData={paginationData}
->>>>>>> paginationImplementation
            noDataNode={
              <span className="absolute left-1/2 top-1/2 translate-x-[-50%] translate-y-[-50%]">
                No invites sent! Click on the{" "}

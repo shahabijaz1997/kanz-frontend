@@ -996,11 +996,15 @@
       "comment":"Comment",
       "latest_comment": "Latest Comment",
       "reply": "Reply:",
-      "add_comment_submit": "Add Comment Submit",
-      "create_comment_submit": "Create Comment Submit",
-      "": "",
-      "": "",
-      "": ""
+      "create_comment_submit": "Create Comment",
+      "invested_in": "Invested in",
+      "investments": "Investments",
+      "shared": "Shared",
+      "share": "Share",
+      "all_investors_invited": "All investors invited",
+      "share_deal": "Share Deal",
+      "share_with_group": "Share with group",
+      "copy_invite_link": "Copy Invite Link"
     },
     "dealOverview": {
       "title": "Risk and Disclaimer",

@@ -989,7 +989,15 @@
       "reply": "الرد:",
       "add_comment_submit": "إضافة تعليق إرسال",
       "create_comment_submit": "إنشاء تعليق إرسال",
-      "comment": "تعليق"
+      "comment": "تعليق",
+      "invested_in": "استثمر في",
+      "investments": "الاستثمارات",
+      "shared": "مشترك",
+      "share": "مشاركة",
+      "all_investors_invited": "تمت دعوة جميع المستثمرين",
+      "share_deal": "مشاركة الصفقة",
+      "share_with_group": "مشاركة مع المجموعة",
+      "copy_invite_link": "نسخ رابط الدعوة"
     },
     "dealOverview": {
       "title": "المخاطر وتنصل المسؤولية",

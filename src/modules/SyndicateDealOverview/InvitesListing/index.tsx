@@ -161,11 +161,15 @@ const InvitesListing = ({
         }}
         className="w-full  px-5"
       >
-        <span className="mr-2 font-light">Share Deal</span>{" "}
+        <span className="mr-2 ml-2 font-light">{language?.v3?.fundraiser?.share_deal}</span>{" "}
         <DropDownShareDeal />
       </Button>
       {showInvestors ? (
-        <section className="absolute p-5 mt-2 shadow-2xl bg-white border-[1px] border-neutral-300 rounded-md w-[400px] right-0 top-[100%]">
+       <section className={`${
+        orientation === "rtl"
+          ? "left-0"
+          : "right-0"
+      } absolute p-5 bg-white border-[1px] border-neutral-200 rounded-md w-[400px] left-0 top-[100%]`}>
           <div className="rounded-md shadow-cs-6 bg-white border-[1px] border-gray-200 h-9 overflow-hidden w-full inline-flex items-center px-2">
             <SearchIcon />
             <input
@@ -176,7 +180,7 @@ const InvitesListing = ({
               }}
               type="search"
               className="h-full w-full outline-none pl-2  text-sm font-normal"
-              placeholder={"Search for Investors"}
+              placeholder={language?.v3?.syndicate?.search_for_investors}
               value={searchText}
               onChange={(e) => setSearchText(e.target.value)}
             />
@@ -207,9 +211,9 @@ const InvitesListing = ({
                             {investor?.investedAmount == 0.0
                               ? "0"
                               : numberFormatter(investor?.investedAmount,DealCheckType.STARTUP)}{" "}
-                            invested in{" "}
+                            {language?.v3?.fundraiser?.invested_in}{" "}
                             {investor?.noOfinvestments}{" "}
-                            investments
+                            {language?.v3?.fundraiser?.investments}
                           </div>
                         </div>
                         {investor?.status ? (
@@ -218,7 +222,7 @@ const InvitesListing = ({
                             type="outlined"
                             className="!p-2 !text-black !py-1 !rounded-full !border-black"
                           >
-                            Shared
+                           {language?.v3?.fundraiser?.shared}
                           </Button>
                         ) : (
                           <Button
@@ -227,7 +231,7 @@ const InvitesListing = ({
                             className="!p-3 !py-1 !rounded-full"
                             onClick={() => onShareDeal(investor?.id)}
                           >
-                            Share
+                            {language?.v3?.fundraiser?.share}
                           </Button>
                         )}
                       </div>
@@ -235,7 +239,7 @@ const InvitesListing = ({
                 )
               ) : (
                 <div className="flex flex-col items-center justify-start mt-8 space-y-4">
-                  All investors invited
+                  {language?.v3?.fundraiser?.all_investors_invited}
                 </div>
               )}
             </div>
@@ -252,10 +256,10 @@ const InvitesListing = ({
                 }}
                 className="w-full mx-1 px-[15px]"
               >
-                <span className="mr-3">
+                <span className="mr-3 ml-3">
                   <SharewithGroupIcon />
                 </span>
-                {"Share with group"}
+                {language?.v3?.fundraiser?.share_with_group}
               </Button>
             )}
 
@@ -266,10 +270,10 @@ const InvitesListing = ({
               }}
               className="w-full mx-1  px-[15px]"
             >
-              <span className="mr-3">
+              <span className="mr-3 ml-3">
                 <CopyInviteLinkIcon />
               </span>
-              {"Copy Invite Link"}
+              {language?.v3?.fundraiser?.copy_invite_link}
             </Button>
           </span>
         </section>
