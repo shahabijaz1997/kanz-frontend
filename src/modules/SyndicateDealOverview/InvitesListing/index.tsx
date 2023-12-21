@@ -17,7 +17,7 @@ import { getAllInvestors, sharewithGroup } from "../../../apis/syndicate.api";
 import SharewithGroupIcon from "../../../ts-icons/SharewithGroupIcon.svg";
 import CopyInviteLinkIcon from "../../../ts-icons/CopyInviteLinkIcon.svg";
 import { numberFormatter } from "../../../utils/object.utils";
-import { ApplicationStatus, DealCheckType, DealPromotionType, DealStatus } from "../../../enums/types.enum";
+import {  DealCheckType, DealPromotionType, DealStatus } from "../../../enums/types.enum";
 
 const InvitesListing = ({
   approve,
@@ -36,7 +36,7 @@ const InvitesListing = ({
   const orientation: any = useSelector(
     (state: RootState) => state.orientation.value
   );
-
+console.log(orientation)
   const [loading, setLoading] = useState<boolean>(false);
   const [investors, setInvestors] = useState<any>([]);
   const [showInvestors, setShowInvestors] = useState(false);
@@ -169,7 +169,7 @@ const InvitesListing = ({
         orientation === "rtl"
           ? "left-0"
           : "right-0"
-      } absolute p-5 bg-white border-[1px] border-neutral-200 rounded-md w-[400px] left-0 top-[100%]`}>
+      } absolute p-5 bg-white border-[1px] border-neutral-200 rounded-md w-[400px]  top-[100%]`}>
           <div className="rounded-md shadow-cs-6 bg-white border-[1px] border-gray-200 h-9 overflow-hidden w-full inline-flex items-center px-2">
             <SearchIcon />
             <input
