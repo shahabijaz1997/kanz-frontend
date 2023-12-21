@@ -398,7 +398,7 @@ const ManageGroup = ({  }: any) => {
                         {!investor?.status ?  <Button
                 divStyle="items-center justify-end max-w-fit"
                 type="outlined"
-                className="!p-3 !py-1 !rounded-full"
+                className="!p-2 !py-[1px] !border-[#D4D4D4] !shadow-none !border-[1px] !hover:shadow-lg !rounded-full"
                 onClick={() => onAddInvestor(user.id, investor?.id )}
               >
                 Add

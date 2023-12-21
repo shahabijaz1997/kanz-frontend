@@ -22,7 +22,7 @@ import {
   numberFormatter,
   timeAgo,
 } from "../../utils/object.utils";
-import { DealStatus, FileType } from "../../enums/types.enum";
+import { DealCheckType, DealStatus, FileType } from "../../enums/types.enum";
 import {
   addCommentOnDeal,
   getDealDetail,
@@ -291,7 +291,7 @@ const StartupCase = ({
                   {"Deal Target"}
                 </h3>
                 <p className="text-neutral-900 font-normal text-sm capitalize">
-                  {numberFormatter(deal?.selling_price) ||
+                  {comaFormattedNumber(deal?.selling_price, DealCheckType.STARTUP) ||
                     language?.v3?.common?.not_added}
                 </p>
               </div>
@@ -302,7 +302,7 @@ const StartupCase = ({
                   {language?.v3?.table?.valuation}
                 </h3>
                 <p className="text-neutral-900 font-normal text-sm capitalize">
-                  ${numberFormatter(deal?.valuation)} ({deal?.valuation_type})
+                  {comaFormattedNumber(deal?.valuation,DealCheckType.STARTUP)} ({deal?.valuation_type})
                 </p>
               </div>
             )}
@@ -313,7 +313,7 @@ const StartupCase = ({
                 </h3>
                 <p className="text-neutral-900 font-normal text-sm capitalize">
                   {deal.terms[0]?.is_enabled
-                    ? numberFormatter(deal.terms[0]?.value) || "Yes"
+                    ? comaFormattedNumber(deal.terms[0]?.value, DealCheckType.STARTUP) || "Yes"
                     : "No"}
                 </p>
               </div>
@@ -371,8 +371,8 @@ const StartupCase = ({
                   {language?.v3?.table?.target}
                 </h3>
                 <p className="text-neutral-900 font-normal text-sm capitalize">
-                  $
-                  {comaFormattedNumber(deal?.selling_price) ||
+                  
+                  {comaFormattedNumber(deal?.selling_price, DealCheckType.STARTUP) ||
                     language?.v3?.common?.not_added}
                 </p>
               </div>
@@ -385,7 +385,7 @@ const StartupCase = ({
                 </h3>
                 <p className="text-neutral-900 font-normal text-sm capitalize">
                   {deal.terms[0]?.is_enabled
-                    ? `$${comaFormattedNumber(deal.terms[0]?.value)}` || "Yes"
+                    ? `${comaFormattedNumber(deal.terms[0]?.value, DealCheckType.STARTUP)}` || "Yes"
                     : "No"}
                 </p>
               </div>
@@ -398,7 +398,7 @@ const StartupCase = ({
                 </h3>
                 <p className="text-neutral-900 font-normal text-sm capitalize">
                   {deal.terms[1]?.is_enabled
-                    ? deal.terms[1]?.value || "Yes"
+                    ? deal.terms[1]?.value+"%" || "Yes"
                     : "No"}
                 </p>
               </div>
@@ -411,7 +411,7 @@ const StartupCase = ({
                 </h3>
                 <p className="text-neutral-900 font-normal text-sm capitalize">
                   {deal.terms[2]?.is_enabled
-                    ? Object.keys(deal.terms[2]?.value).length > 0
+                    ? Object.keys((deal.terms[2]?.value)).length > 0
                       ? "Yes"
                       : "No"
                     : "No"}
@@ -426,7 +426,7 @@ const StartupCase = ({
                 </h3>
                 <p className="text-neutral-900 font-normal text-sm capitalize">
                   {deal.terms[3]?.is_enabled
-                    ? deal.terms[3]?.value || "Yes"
+                    ? comaFormattedNumber(deal.terms[3]?.value, DealCheckType.STARTUP) || "Yes"
                     : "No"}
                 </p>
               </div>
@@ -469,8 +469,8 @@ const StartupCase = ({
               {language?.v3?.table?.sellingPrice}
             </h3>
             <p className="text-neutral-900 font-normal text-sm capitalize">
-              $
-              {comaFormattedNumber(deal?.selling_price) ||
+              
+              {comaFormattedNumber(deal?.selling_price, DealCheckType.STARTUP) ||
                 language?.v3?.common?.not_added}
             </p>
           </div>
@@ -511,7 +511,7 @@ const StartupCase = ({
               {language?.v3?.deal?.committed}
             </h3>
             <p className="text-neutral-900 font-normal text-sm capitalize">
-              ${comaFormattedNumber(deal?.committed)}
+              {comaFormattedNumber(deal?.committed, DealCheckType.STARTUP)}
             </p>
           </div>
         )}
@@ -531,7 +531,7 @@ const StartupCase = ({
               {language?.v3?.deal?.raised}
             </h3>
             <p className="text-neutral-900 font-normal text-sm capitalize">
-              ${comaFormattedNumber(deal?.raised)}
+              {comaFormattedNumber(deal?.raised,DealCheckType.STARTUP)}
             </p>
           </div>
         )}
@@ -623,7 +623,7 @@ const StartupCase = ({
               {language?.v3?.deal?.por_2}
             </h3>
             <p className="text-neutral-900 font-normal text-sm capitalize">
-              ${numberFormatter(deal?.features?.rental_amount)} (
+              {comaFormattedNumber(deal?.features?.rental_amount)} (
               {deal?.features?.rental_period})
             </p>
           </div>
@@ -1330,6 +1330,7 @@ const StartupCase = ({
                 className="w-full !py-1"
                 divStyle="flex items-center justify-center w-full"
                 onClick={() => {
+                  setModalOpen(false)
                   onRequestChange();
                 }}
               >
