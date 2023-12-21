@@ -1153,7 +1153,7 @@ const StartupCase = ({
                        {language?.v3?.syndicate?.comments}
                       </div>
                       <Button
-                        className="mr-4"
+                        className="mr-4 ml-4"
                         onClick={() => setmodalOpenComment(true)}
                         type="outlined"
                       >

@@ -81,7 +81,7 @@ console.log(orientation)
         authToken
       );
       if (status === 200) {
-        toast.success("Investor Invited", toastUtil);
+        toast.success(language?.v3?.fundraiser?.investor_invited, toastUtil);
         const dataCopy = [...investors];
         const index = dataCopy.findIndex((item) => item.id === investorID);
         dataCopy[index].status = true;

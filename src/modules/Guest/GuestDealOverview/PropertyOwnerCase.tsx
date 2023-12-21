@@ -11,23 +11,19 @@ import PiChartSVG from "../../../assets/svg/pichart.svg";
 
 import {
   comaFormattedNumber,
-  numberFormatter,
 } from "../../../utils/object.utils";
-import { getDealDetail } from "../../../apis/deal.api";
 import Modal from "../../../shared/components/Modal";
 import CrossIcon from "../../../ts-icons/crossIcon.svg";
 import GuestModalLockIcon from "../../../ts-icons/GuestModalLockIcon.svg";
 import { useNavigate } from "react-router-dom";
 import { RoutesEnums } from "../../../enums/routes.enum";
 import { KanzRoles } from "../../../enums/roles.enum";
+import { DealCheckType } from "../../../enums/types.enum";
 
-const PropertyOwnerCase = ({ id, dealToken, dealDetail }: any) => {
+const PropertyOwnerCase = ({  dealDetail }: any) => {
   const language: any = useSelector((state: RootState) => state.language.value);
   const authToken: any = useSelector((state: RootState) => state.auth.value);
-  const user: any = useSelector((state: RootState) => state.user.value);
   const navigate = useNavigate();
-
-  const [deal, setdeal]: any = useState(dealDetail);
   const [loading, setLoading]: any = useState(false);
   const [modalOpen, setModalOpen] = useState<boolean>(true);
 
@@ -35,71 +31,70 @@ const PropertyOwnerCase = ({ id, dealToken, dealDetail }: any) => {
     setTimeout(openModal, 30000);
   }, []);
 
-
   function openModal() {
     setModalOpen(true);
   }
-  const formattedAddress = `${deal?.address?.street_address}, ${deal?.address?.building_name}, ${deal?.address?.area}, ${deal?.address?.city}, ${deal?.address?.state}, ${deal?.address?.country_name}`;
+  const formattedAddress = `${dealDetail?.address?.street_address}, ${dealDetail?.address?.building_name}, ${dealDetail?.address?.area}, ${dealDetail?.address?.city}, ${dealDetail?.address?.state}, ${dealDetail?.address?.country_name}`;
   const getRoleBasedUI = () => {
     return (
       <React.Fragment>
-        {deal?.selling_price && (
+        {dealDetail?.selling_price && (
           <div className="w-full inline-flex justify-between items-center border-b-[1px] border-b-neutral-200 py-3">
             <div className="bg-cbc-grey-sec rounded-md h-8 w-8 inline-block align-start inline-grid place-items-center">
               <img src={DollarSVG} alt="" />
             </div>
             <div className="w-[80%] inline-block align-start">
               <h3 className="text-neutral-900 font-medium text-sm pb-1">
-                Selling Price
+              {language?.v3?.fundraiser?.selling_price}
               </h3>
               <p className="text-neutral-900 font-normal text-sm capitalize">
-                ${numberFormatter(deal?.selling_price)}
+                {comaFormattedNumber(dealDetail?.selling_price, DealCheckType.PROPERTY)}
               </p>
             </div>
           </div>
         )}
-        {deal?.expected_dividend_yield && (
+        {dealDetail?.expected_dividend_yield && (
           <div className="w-full inline-flex justify-between items-center border-b-[1px] border-b-neutral-200 py-3">
             <div className="bg-cbc-grey-sec rounded-md h-8 w-8 inline-block align-start inline-grid place-items-center">
               <img src={ChartSVG} alt="" />
             </div>
             <div className="w-[80%] inline-block align-start">
               <h3 className="text-neutral-900 font-medium text-sm pb-1">
-                Expected Dividend Yield
+              {language?.v3?.dealDetail?.expected_dividend_yield}
               </h3>
               <p className="text-neutral-900 font-normal text-sm capitalize">
-                {comaFormattedNumber(deal?.expected_dividend_yield)}%
+                {comaFormattedNumber(dealDetail?.expected_dividend_yield)}%
               </p>
             </div>
           </div>
         )}
-        {deal?.expected_annual_return && (
+        {dealDetail?.expected_annual_return && (
           <div className="w-full inline-flex justify-between items-center border-b-[1px] border-b-neutral-200 py-3">
             <div className="bg-cbc-grey-sec rounded-md h-8 w-8 inline-block align-start inline-grid place-items-center">
               <img src={PiChartSVG} alt="" />
             </div>
             <div className="w-[80%] inline-block align-start">
               <h3 className="text-neutral-900 font-medium text-sm pb-1">
-                Expected Annual Appreciation
+                {language?.v3?.dealDetail?.exp_ann}
               </h3>
               <p className="text-neutral-900 font-normal text-sm capitalize">
-                {comaFormattedNumber(deal?.expected_annual_return)}%
+                {comaFormattedNumber(dealDetail?.expected_annual_return)}%
               </p>
             </div>
           </div>
         )}
-        {deal?.features?.rental_amount && (
+        {dealDetail?.features?.rental_amount && (
           <div className="w-full inline-flex justify-between items-center border-b-[1px] border-b-neutral-200 py-3">
             <div className="bg-cbc-grey-sec rounded-md h-8 w-8 inline-block align-start inline-grid place-items-center">
               <img src={CurrencySVG} alt="" />
             </div>
             <div className="w-[80%] inline-block align-start">
               <h3 className="text-neutral-900 font-medium text-sm pb-1">
-                Property on a Rent
+              {language?.v3?.dealDetail?.por}
               </h3>
               <p className="text-neutral-900 font-normal text-sm capitalize">
-                ${numberFormatter(deal?.features?.rental_amount)} (
-                {deal?.features?.rental_period})
+                {comaFormattedNumber(dealDetail?.features?.rental_amoun, DealCheckType.PROPERTY)} (
+                {dealDetail?.features?.rental_period})
               </p>
             </div>
           </div>
@@ -134,17 +129,17 @@ const PropertyOwnerCase = ({ id, dealToken, dealDetail }: any) => {
             <section className="w-[60%]">
               <div className="inline-flex justify-between w-full">
                 <h1 className="text-black font-medium text-2xl">
-                  {deal?.title}
+                  {dealDetail?.title}
                 </h1>
                 <Button
                   type="outlined"
                   className="!cursor-default !hover:border-none"
                 >
-                  {comaFormattedNumber(deal?.size)}&nbsp;SQFT
+                  {comaFormattedNumber(dealDetail?.size)}&nbsp;SQFT
                 </Button>
               </div>
-              <p className="text-black">{deal?.description}</p>
-              {deal?.address && (
+              <p className="text-black">{dealDetail?.description}</p>
+              {dealDetail?.address && (
                 <div className="mb-4 mt-4 text-sm">{formattedAddress}</div>
               )}
 
@@ -153,7 +148,7 @@ const PropertyOwnerCase = ({ id, dealToken, dealDetail }: any) => {
                   {language?.v3?.common?.invest_details}
                 </h2>
                 <small className="text-neutral-500 text-sm font-normal">
-                  {language?.v3?.common?.end_on} {deal?.end_at}
+                  {language?.v3?.common?.end_on} {dealDetail?.end_at}
                 </small>
 
                 {getRoleBasedUI()}
@@ -170,7 +165,7 @@ const PropertyOwnerCase = ({ id, dealToken, dealDetail }: any) => {
           className="rounded-md overflow-hidden inline-grid place-items-center absolute top-1/2 left-1/2 translate-x-[-50%] translate-y-[-50%]"
           style={{ backgroundColor: "rgba(0, 0, 0, 0.078" }}
         >
-          <aside className="bg-white w-[700px] rounded-md p-5 h-full">
+         <aside className="bg-white w-[700px] rounded-md p-5 h-full">
             <section>
               <div className="justify-end inline-flex pt-3 px-3 w-full">
                 <div
@@ -191,22 +186,25 @@ const PropertyOwnerCase = ({ id, dealToken, dealDetail }: any) => {
                   </span>
                 </div>
                 <div className="w-full items-center justify-center flex text-lg font-bold">
-                  Unlock Investment Opportunities!
+                  {language?.v3?.fundraiser?.unlock_investment_opportunities}
                 </div>
                 <div className="w-full items-center justify-center flex mt-2  text-[#737373]">
-                  Unlock exclusive deals! Log in for full access and detailed
-                  info.
+                  {language?.v3?.fundraiser?.unlock_exclusive_deals}
                 </div>
                 <div className="w-full mt-6">
                   <Button
                     className="px-5 w-[80%]"
                     onClick={() => navigate(RoutesEnums.LOGIN)}
                   >
-                    Sign In
+                  {language?.v3?.fundraiser?.sign_in}
+
                   </Button>
                 </div>
                 <div className="w-full mt-4 items-center justify-center flex">
-                  <span className=" text-[#737373]">Not a Memeber yet?</span>
+                  <span className=" text-[#737373]">
+                    {" "}
+                    {language?.v3?.fundraiser?.not_a_member_yet}
+                  </span>
                   <span
                     className="ml-1 font-medium text-[#155E75] cursor-pointer"
                     onClick={() =>
@@ -215,7 +213,8 @@ const PropertyOwnerCase = ({ id, dealToken, dealDetail }: any) => {
                       })
                     }
                   >
-                    Sign up
+                    {language?.v3?.fundraiser?.sign_up}
+
                   </span>
                 </div>
               </div>

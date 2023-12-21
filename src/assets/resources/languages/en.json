@@ -1002,7 +1002,22 @@
       "all_investors_invited": "All investors invited",
       "share_deal": "Share Deal",
       "share_with_group": "Share with group",
-      "copy_invite_link": "Copy Invite Link"
+      "copy_invite_link": "Copy Invite Link",
+      "what_round_is_this": "What round is this?",
+      "location": "Location",
+      "country": "Country",
+      "area": "Area",
+      "building_name": "Building Name",
+      "street_address": "Street Address",
+      "property_description": "Property Description",
+      "price": "Price",
+      "expected_return": "Expected Return",
+      "investor_invited": "Investor Invited",
+      "unlock_investment_opportunities": "Unlock Investment Opportunities!",
+      "unlock_exclusive_deals": "Unlock exclusive deals! Log in for full access and detailed info.",
+      "not_a_member_yet": "Not a Member yet?",
+      "sign_in": "Sign In",
+      "sign_up": "Sign Up"
     },
     "investor": {
       "investments": "Investments",
