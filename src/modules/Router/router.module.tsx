@@ -166,7 +166,7 @@ const RouterModule = () => {
         path={`${RoutesEnums.SYNDICATE_DEAL_DETAIL}/:dealToken`}
         element={
           <Suspense fallback={<Loader />}>
-            {<SyndicateDealOverview/>}
+            {authToken? <SyndicateDealOverview/>: <GuestInvestorOverview/>}
           </Suspense>
         }
       />

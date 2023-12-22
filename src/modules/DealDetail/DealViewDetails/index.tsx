@@ -37,7 +37,7 @@ const DealViewDetails = ({ dealDetail, state }: any) => {
             <h3 className="text-neutral-900 font-medium text-sm">
               {language?.v3?.deal?.instrument_type}
             </h3>
-            <p className="text-neutral-900 font-normal text-sm capitalize">
+            <p className="text-neutral-900 font-normal text-sm capitalize px-4">
               {dealDetail?.instrument_type || language?.v3?.common?.not_added}
             </p>
           </div>
@@ -46,7 +46,7 @@ const DealViewDetails = ({ dealDetail, state }: any) => {
               <h3 className="text-neutral-900 font-medium text-sm">
                 {language?.v3?.deal?.equity_type}
               </h3>
-              <p className="text-neutral-900 font-normal text-sm capitalize">
+              <p className="text-neutral-900 font-normal text-sm capitalize px-4">
                 {dealDetail?.equity_type || language?.v3?.common?.not_added}
               </p>
             </div>
@@ -55,7 +55,7 @@ const DealViewDetails = ({ dealDetail, state }: any) => {
               <h3 className="text-neutral-900 font-medium text-sm">
                 {language?.v3?.fundraiser?.safe_type}
               </h3>
-              <p className="text-neutral-900 font-normal text-sm capitalize">
+              <p className="text-neutral-900 font-normal text-sm capitalize px-4">
                 {dealDetail?.safe_type || language?.v3?.common?.not_added}
               </p>
             </div>
@@ -70,7 +70,7 @@ const DealViewDetails = ({ dealDetail, state }: any) => {
                 <h3 className="text-neutral-900 font-medium text-sm">
                   {"What round is this?"}
                 </h3>
-                <p className="text-neutral-900 font-normal text-sm capitalize">
+                <p className="text-neutral-900 font-normal text-sm capitalize px-4">
                   {dealDetail?.stage || language?.v3?.common?.not_added}
                 </p>
               </div>
@@ -86,7 +86,7 @@ const DealViewDetails = ({ dealDetail, state }: any) => {
             <h3 className="text-neutral-900 font-medium text-sm">
               {language?.v3?.fundraiser?.startup_title}
             </h3>
-            <p className="text-neutral-900 font-normal text-sm capitalize">
+            <p className="text-neutral-900 font-normal text-sm capitalize px-4">
               {dealDetail?.title || language?.v3?.common?.not_added}
             </p>
           </div>
@@ -105,7 +105,7 @@ const DealViewDetails = ({ dealDetail, state }: any) => {
             <h3 className="text-neutral-900 font-medium text-sm">
               {language?.v3?.fundraiser?.deal_target}
             </h3>
-            <p className="text-neutral-900 font-normal text-sm capitalize">
+            <p className="text-neutral-900 font-normal text-sm capitalize px-4">
               {comaFormattedNumber(
                 dealDetail?.selling_price,
                 DealCheckType.STARTUP
@@ -121,7 +121,7 @@ const DealViewDetails = ({ dealDetail, state }: any) => {
                 <h3 className="text-neutral-900 font-medium text-sm">
                   {language?.v3?.table?.valuation}
                 </h3>
-                <p className="text-neutral-900 font-normal text-sm capitalize">
+                <p className="text-neutral-900 font-normal text-sm capitalize px-4">
                   {comaFormattedNumber(
                     dealDetail?.valuation,
                     DealCheckType.STARTUP
@@ -132,7 +132,7 @@ const DealViewDetails = ({ dealDetail, state }: any) => {
                 <h3 className="text-neutral-900 font-medium text-sm">
                   {language?.v3?.fundraiser?.type}
                 </h3>
-                <p className="text-neutral-900 font-normal text-sm capitalize">
+                <p className="text-neutral-900 font-normal text-sm capitalize px-4">
                   {dealDetail?.valuation_type ||
                     language?.v3?.common?.not_added}
                 </p>
@@ -146,7 +146,7 @@ const DealViewDetails = ({ dealDetail, state }: any) => {
             <h3 className="text-neutral-900 font-medium text-sm">
               {language?.v3?.fundraiser?.start_date}
             </h3>
-            <p className="text-neutral-900 font-normal text-sm capitalize">
+            <p className="text-neutral-900 font-normal text-sm capitalize px-4">
               {dealDetail?.start_at || language?.v3?.common?.not_added}
             </p>
           </div>
@@ -154,7 +154,7 @@ const DealViewDetails = ({ dealDetail, state }: any) => {
             <h3 className="text-neutral-900 font-medium text-sm">
               {language?.v3?.fundraiser?.end_date}
             </h3>
-            <p className="text-neutral-900 font-normal text-sm capitalize">
+            <p className="text-neutral-900 font-normal text-sm capitalize px-4">
               {dealDetail?.end_at || language?.v3?.common?.not_added}
             </p>
           </div>
@@ -167,7 +167,7 @@ const DealViewDetails = ({ dealDetail, state }: any) => {
                 <h3 className="text-neutral-900 font-medium text-sm">
                   {language?.v3?.fundraiser?.valuation_cap}
                 </h3>
-                <p className="text-neutral-900 font-normal text-sm capitalize">
+                <p className="text-neutral-900 font-normal text-sm capitalize px-4">
                   {dealDetail.terms[0]?.value !== null
                     ? comaFormattedNumber(
                         dealDetail.terms[0]?.value,
@@ -181,7 +181,7 @@ const DealViewDetails = ({ dealDetail, state }: any) => {
                 <h3 className="text-neutral-900 font-medium text-sm">
                   {language?.v3?.fundraiser?.discount}
                 </h3>
-                <p className="text-neutral-900 font-normal text-sm capitalize">
+                <p className="text-neutral-900 font-normal text-sm capitalize px-4">
                   {dealDetail.terms[1]?.value !== null
                     ? `${dealDetail.terms[1]?.value}%`
                     : language?.v3?.fundraiser?.no}
@@ -192,7 +192,7 @@ const DealViewDetails = ({ dealDetail, state }: any) => {
                 <h3 className="text-neutral-900 font-medium text-sm">
                   {language?.v3?.fundraiser?.mfn_only}
                 </h3>
-                <p className="text-neutral-900 font-normal text-sm capitalize">
+                <p className="text-neutral-900 font-normal text-sm capitalize px-4">
                   {dealDetail.terms[2]?.value !== null &&
                   typeof dealDetail.terms[2]?.value === "object"
                     ? language?.v3?.fundraiser?.no
@@ -206,7 +206,7 @@ const DealViewDetails = ({ dealDetail, state }: any) => {
                 <h3 className="text-neutral-900 font-medium text-sm">
                   {language?.v3?.fundraiser?.min_check_size}
                 </h3>
-                <p className="text-neutral-900 font-normal text-sm capitalize">
+                <p className="text-neutral-900 font-normal text-sm capitalize px-4">
                   {dealDetail.terms[3]?.value !== null
                     ? comaFormattedNumber(
                         dealDetail.terms[3]?.value,
@@ -220,7 +220,7 @@ const DealViewDetails = ({ dealDetail, state }: any) => {
                 <h3 className="text-neutral-900 font-medium text-sm">
                   {language?.v3?.fundraiser?.pro_rata}
                 </h3>
-                <p className="text-neutral-900 font-normal text-sm capitalize">
+                <p className="text-neutral-900 font-normal text-sm capitalize px-4">
                   {dealDetail.terms[4]?.value !== null &&
                   typeof dealDetail.terms[4]?.value === "object"
                     ?language?.v3?.fundraiser?.no
@@ -234,7 +234,7 @@ const DealViewDetails = ({ dealDetail, state }: any) => {
                 <h3 className="text-neutral-900 font-medium text-sm">
                   {language?.v3?.fundraiser?.additional_terms}
                 </h3>
-                <p className="text-neutral-900 font-normal text-sm capitalize">
+                <p className="text-neutral-900 font-normal text-sm capitalize px-4">
                   {dealDetail.terms[5]?.value !== null &&
                   typeof dealDetail.terms[5]?.value === "object"
                     ? language?.v3?.fundraiser?.no
@@ -250,7 +250,7 @@ const DealViewDetails = ({ dealDetail, state }: any) => {
                 <h3 className="text-neutral-900 font-medium text-sm">
                   {language?.v3?.fundraiser?.min_check_size}
                 </h3>
-                <p className="text-neutral-900 font-normal text-sm capitalize">
+                <p className="text-neutral-900 font-normal text-sm capitalize px-4">
                   {comaFormattedNumber(
                     dealDetail?.terms[0]?.value,
                     DealCheckType.STARTUP
@@ -261,7 +261,7 @@ const DealViewDetails = ({ dealDetail, state }: any) => {
                 <h3 className="text-neutral-900 font-medium text-sm">
                   {language?.v3?.fundraiser?.pro_rata}
                 </h3>
-                <p className="text-neutral-900 font-normal text-sm capitalize">
+                <p className="text-neutral-900 font-normal text-sm capitalize px-4">
                   {dealDetail?.terms[1]?.is_enabled ? language?.v3?.fundraiser?.yes : language?.v3?.fundraiser?.no}
                 </p>
               </div>
@@ -269,7 +269,7 @@ const DealViewDetails = ({ dealDetail, state }: any) => {
                 <h3 className="text-neutral-900 font-medium text-sm">
                   {language?.v3?.fundraiser?.additional_terms}
                 </h3>
-                <p className="text-neutral-900 font-normal text-sm capitalize">
+                <p className="text-neutral-900 font-normal text-sm capitalize px-4" >
                   {dealDetail?.terms[2]?.value || language?.v3?.fundraiser?.no}
                 </p>
               </div>
@@ -284,50 +284,50 @@ const DealViewDetails = ({ dealDetail, state }: any) => {
             <h3 className="text-neutral-900 font-medium text-sm">
               {language?.v3?.table?.title}
             </h3>
-            <p className="text-neutral-900 font-normal text-sm capitalize">
+            <p className="text-neutral-900 font-normal text-sm capitalize px-4">
               {dealDetail?.title || language?.v3?.common?.not_added}
             </p>
           </div>
           <div className="mt-10 mb-4">
-            <h2 className="text-black text-xl font-medium">Location</h2>
+            <h2 className="text-black text-xl font-medium">{language?.v3?.fundraiser?.location}</h2>
           </div>
           <div className="py-4  w-full inline-flex items-center justify-between">
-            <h3 className="text-neutral-900 font-medium text-sm">Country</h3>
-            <p className="text-neutral-900 font-normal text-sm capitalize">
+            <h3 className="text-neutral-900 font-medium text-sm">{language?.v3?.fundraiser?.country}</h3>
+            <p className="text-neutral-900 font-normal text-sm capitalize px-4">
               {dealDetail?.address?.country_name}
             </p>
           </div>
           <div className="py-4  w-full inline-flex items-center justify-between">
-            <h3 className="text-neutral-900 font-medium text-sm">State</h3>
-            <p className="text-neutral-900 font-normal text-sm capitalize">
+            <h3 className="text-neutral-900 font-medium text-sm">{language?.v3?.fundraiser?.state}</h3>
+            <p className="text-neutral-900 font-normal text-sm capitalize px-4">
               {dealDetail?.address?.state}
             </p>
           </div>
           <div className="py-4  w-full inline-flex items-center justify-between">
-            <h3 className="text-neutral-900 font-medium text-sm">City</h3>
-            <p className="text-neutral-900 font-normal text-sm capitalize">
+            <h3 className="text-neutral-900 font-medium text-sm">{language?.v3?.fundraiser?.city}</h3>
+            <p className="text-neutral-900 font-normal text-sm capitalize px-4">
               {dealDetail?.address?.city}
             </p>
           </div>
           <div className="py-4  w-full inline-flex items-center justify-between">
-            <h3 className="text-neutral-900 font-medium text-sm">Area</h3>
-            <p className="text-neutral-900 font-normal text-sm capitalize">
+            <h3 className="text-neutral-900 font-medium text-sm">{language?.v3?.fundraiser?.area}</h3>
+            <p className="text-neutral-900 font-normal text-sm capitalize px-4">
               {dealDetail?.address?.area}
             </p>
           </div>
           <div className="py-4 w-full inline-flex items-center justify-between">
             <h3 className="text-neutral-900 font-medium text-sm">
-              Building Name
+              {language?.v3?.fundraiser?.building_name}
             </h3>
-            <p className="text-neutral-900 font-normal text-sm capitalize">
+            <p className="text-neutral-900 font-normal text-sm capitalize px-4">
               {dealDetail?.address?.building_name}
             </p>
           </div>
           <div className="py-4  w-full inline-flex items-center justify-between">
             <h3 className="text-neutral-900 font-medium text-sm">
-              Street Address
+             {language?.v3?.fundraiser?.street_address}
             </h3>
-            <p className="text-neutral-900 font-normal text-sm capitalize">
+            <p className="text-neutral-900 font-normal text-sm capitalize px-4">
               {dealDetail?.address?.street_address}
             </p>
           </div>
@@ -335,7 +335,7 @@ const DealViewDetails = ({ dealDetail, state }: any) => {
             <h3 className="text-neutral-900 font-medium text-sm">
               {language?.v3?.table?.size}
             </h3>
-            <p className="text-neutral-900 font-normal text-sm capitalize">
+            <p className="text-neutral-900 font-normal text-sm capitalize px-4">
               {comaFormattedNumber(dealDetail?.size)} sqft
             </p>
           </div>
@@ -349,7 +349,7 @@ const DealViewDetails = ({ dealDetail, state }: any) => {
                   <h3 className="text-neutral-900 font-medium text-sm">
                     {language?.v3?.deal?.beds}
                   </h3>
-                  <p className="text-neutral-900 font-normal text-sm capitalize">
+                  <p className="text-neutral-900 font-normal text-sm capitalize px-4">
                     {dealDetail?.features?.bedrooms}
                   </p>
                 </div>
@@ -359,7 +359,7 @@ const DealViewDetails = ({ dealDetail, state }: any) => {
                   <h3 className="text-neutral-900 font-medium text-sm">
                     {language?.v3?.deal?.kitchen}
                   </h3>
-                  <p className="text-neutral-900 font-normal text-sm capitalize">
+                  <p className="text-neutral-900 font-normal text-sm capitalize px-4">
                     {dealDetail?.features?.kitchen}
                   </p>
                 </div>
@@ -369,7 +369,7 @@ const DealViewDetails = ({ dealDetail, state }: any) => {
                   <h3 className="text-neutral-900 font-medium text-sm">
                     {language?.v3?.deal?.washroom}
                   </h3>
-                  <p className="text-neutral-900 font-normal text-sm capitalize">
+                  <p className="text-neutral-900 font-normal text-sm capitalize px-4">
                     {dealDetail?.features?.washroom}
                   </p>
                 </div>
@@ -379,7 +379,7 @@ const DealViewDetails = ({ dealDetail, state }: any) => {
                   <h3 className="text-neutral-900 font-medium text-sm">
                     {language?.v3?.deal?.parking}
                   </h3>
-                  <p className="text-neutral-900 font-normal text-sm capitalize">
+                  <p className="text-neutral-900 font-normal text-sm capitalize px-4">
                     {dealDetail?.features?.parking}
                   </p>
                 </div>
@@ -389,7 +389,7 @@ const DealViewDetails = ({ dealDetail, state }: any) => {
                   <h3 className="text-neutral-900 font-medium text-sm">
                     {language?.v3?.deal?.swim}
                   </h3>
-                  <p className="text-neutral-900 font-normal text-sm capitalize">
+                  <p className="text-neutral-900 font-normal text-sm capitalize px-4">
                     {dealDetail?.features?.swimming_pool}
                   </p>
                 </div>
@@ -399,7 +399,7 @@ const DealViewDetails = ({ dealDetail, state }: any) => {
                   <h3 className="text-neutral-900 font-medium text-sm">
                     {language?.v3?.deal?.por_2}
                   </h3>
-                  <p className="text-neutral-900 font-normal text-sm capitalize">
+                  <p className="text-neutral-900 font-normal text-sm capitalize px-4">
                     ${numberFormatter(dealDetail?.features?.rental_amount)} (
                     {dealDetail?.features?.rental_period})
                   </p>
@@ -408,7 +408,7 @@ const DealViewDetails = ({ dealDetail, state }: any) => {
               {dealDetail?.description && (
                 <div className="py-6 border-b-[2px]  border-b-neutral-200 border-t-[2px]  border-t-neutral-200 w-full inline-flex items-center justify-between">
                   <h3 className="text-neutral-900 font-medium text-sm">
-                    Property Description
+                    {language?.v3?.fundraiser?.property_description}
                   </h3>
                   <p className="text-neutral-900 font-normal ml-3 text-sm capitalize text-justify ">
                     {dealDetail?.description}
@@ -417,14 +417,14 @@ const DealViewDetails = ({ dealDetail, state }: any) => {
               )}
               <div className="mt-10 mb-4">
                 <h2 className="text-black text-xl font-bold">
-                  {"Deal Timeline"}
+                  {language?.v3?.fundraiser?.deal_timeline}
                 </h2>
               </div>
               <div className="py-4  border-b-neutral-200 w-full inline-flex items-center justify-between">
                 <h3 className="text-neutral-900 font-medium text-sm">
                   {language?.v3?.fundraiser?.start_date}
                 </h3>
-                <p className="text-neutral-900 font-normal text-sm capitalize">
+                <p className="text-neutral-900 font-normal text-sm capitalize px-4">
                   {dealDetail?.start_at || language?.v3?.common?.not_added}
                 </p>
               </div>
@@ -432,7 +432,7 @@ const DealViewDetails = ({ dealDetail, state }: any) => {
                 <h3 className="text-neutral-900 font-medium text-sm">
                   {language?.v3?.fundraiser?.end_date}
                 </h3>
-                <p className="text-neutral-900 font-normal text-sm capitalize">
+                <p className="text-neutral-900 font-normal text-sm capitalize px-4">
                   {dealDetail?.end_at || language?.v3?.common?.not_added}
                 </p>
               </div>
@@ -440,15 +440,15 @@ const DealViewDetails = ({ dealDetail, state }: any) => {
                 <div>
                   <div className="mt-10 mb-4">
                     <h2 className="text-black text-xl font-medium">
-                      Selling Price
+                     {language?.v3?.fundraiser?.selling_price}
                     </h2>
                   </div>
 
                   <div className="py-6 border-b-neutral-200 border-t-[2px]  border-t-neutral-200 w-full inline-flex items-center justify-between">
                     <h3 className="text-neutral-900 font-medium text-sm">
-                      Price
+                      {language?.v3?.fundraiser?.price}
                     </h3>
-                    <p className="text-neutral-900 font-normal text-sm capitalize">
+                    <p className="text-neutral-900 font-normal text-sm capitalize px-4">
                       {comaFormattedNumber(
                         dealDetail?.selling_price,
                         DealCheckType.PROPERTY
@@ -464,14 +464,14 @@ const DealViewDetails = ({ dealDetail, state }: any) => {
                   <div className="border-t-[2px]  border-b-neutral-200">
                     <div className="mt-10 mb-4">
                       <h2 className="text-black text-xl font-medium">
-                        Expected Return
+                        {language?.v3?.fundraiser?.expected_return}
                       </h2>
                     </div>
                     <div className="py-4  w-full inline-flex items-center justify-between">
                       <h3 className="text-neutral-900 font-medium text-sm">
                         {language?.v3?.deal?.expected_dividend_yield}
                       </h3>
-                      <p className="text-neutral-900 font-normal text-sm capitalize">
+                      <p className="text-neutral-900 font-normal text-sm capitalize px-4">
                         {dealDetail?.expected_dividend_yield + "%" ||
                           language?.v3?.common?.not_added}
                       </p>
@@ -480,7 +480,7 @@ const DealViewDetails = ({ dealDetail, state }: any) => {
                       <h3 className="text-neutral-900 font-medium text-sm">
                         {language?.v3?.deal?.expected_annual_return}
                       </h3>
-                      <p className="text-neutral-900 font-normal text-sm capitalize">
+                      <p className="text-neutral-900 font-normal text-sm capitalize px-4">
                         {dealDetail?.expected_annual_return + "%" ||
                           language?.v3?.common?.not_added}
                       </p>
