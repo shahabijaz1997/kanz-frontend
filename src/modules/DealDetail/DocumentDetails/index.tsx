@@ -20,7 +20,7 @@ const DocumentDetails = ({ dealDocs }: any) => {
                                 <div className="rounded-[7px] bg-white shadow shadow-cs-3 w-14 h-14 inline-grid place-items-center">
                                     <img src={FileSVG} alt="File" />
                                 </div>
-                                <span className="inline-flex flex-col items-start ml-3">
+                                <span className="inline-flex flex-col items-start ml-3 mr-3">
                                     <h2 className="text-sm font-medium text-neutral-900 max-w-[150px] truncate" title={doc?.name}>{doc?.name}</h2>
                                 </span>
                             </span>

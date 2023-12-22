@@ -438,7 +438,7 @@ const PropertyOwnerCase = ({
         className="w-full h-full flex items-start justify-start"
         style={{ height: "calc(100% - 70px)" }}
       >
-        {user.type?.toLowerCase() === "investor" ? (
+        {user?.type?.toLowerCase() === "investor" ? (
           <Sidebar type={KanzRoles.INVESTOR} />
         ) : (
           <Sidebar type={KanzRoles.SYNDICATE} />
@@ -737,7 +737,7 @@ const PropertyOwnerCase = ({
                   </ul>
                 </div>
               </section>
-              {user.type.toLowerCase() === "syndicate" &&
+              {user?.type?.toLowerCase() === "syndicate" &&
                 deal?.status !== DealStatus.LIVE && (
                   <div className="w-full inline-flex justify-end gap-4 mb-3">
                     {deal?.invite?.status !== DealStatus.ACCEPTED && (
@@ -768,7 +768,7 @@ const PropertyOwnerCase = ({
             {/* Section Right */}
             <section className="w-[30%]">
               {/* Show/Hide based on some conditions */}
-              {user.type.toLowerCase() === "syndicate" &&
+              {user?.type?.toLowerCase() === "syndicate" &&
                 deal?.status === DealStatus.LIVE &&
                 deal?.current_deal_syndicate && (
                   <div className="w-full inline-flex justify-end gap-4">
@@ -783,7 +783,7 @@ const PropertyOwnerCase = ({
                     </div>
                   </div>
                 )}
-              {user.type.toLowerCase() === "syndicate" &&
+              {user?.type?.toLowerCase() === "syndicate" &&
                 deal?.status !== DealStatus.LIVE && (
                   <div className="w-full inline-flex justify-end gap-4">
                     {deal?.invite?.status !== DealStatus.ACCEPTED && (

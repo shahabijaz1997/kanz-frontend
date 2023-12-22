@@ -220,7 +220,6 @@ const CreateDeal = () => {
       }, 500);
     }
   };
-  console.log("METADATA DEAL TYPE", metadata.dealType)
 
   const onSetNext = async () => {
     try {

@@ -36,7 +36,6 @@ const InvitesListing = ({
   const orientation: any = useSelector(
     (state: RootState) => state.orientation.value
   );
-console.log(orientation)
   const [loading, setLoading] = useState<boolean>(false);
   const [investors, setInvestors] = useState<any>([]);
   const [showInvestors, setShowInvestors] = useState(false);
@@ -81,7 +80,7 @@ console.log(orientation)
         authToken
       );
       if (status === 200) {
-        toast.success("Investor Invited", toastUtil);
+        toast.success(language?.v3?.fundraiser?.investor_invited, toastUtil);
         const dataCopy = [...investors];
         const index = dataCopy.findIndex((item) => item.id === investorID);
         dataCopy[index].status = true;

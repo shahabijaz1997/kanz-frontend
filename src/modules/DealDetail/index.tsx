@@ -90,7 +90,6 @@ const DealDetail = ({}: any) => {
     const newTab = { id: 2, title: language?.v3?.fundraiser?.unique_selling_points };
     tabs.splice(1, 0, newTab);
   }
-console.log(tabs)
   const [selected, setSelected]: any = useState(tabs[0]);
   useLayoutEffect(() => {
     if (selected.id === 1) onGetDealDetail();
