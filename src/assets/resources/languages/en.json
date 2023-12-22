@@ -873,7 +873,7 @@
       "congrats_deal_sign_off": "Congratulations! Deal Signed Off",
       "congrats_deal_requested": "Congratulations! Requested",
       "dashboard": "Dashboard",
-      "dealsSidebar": "Deals",
+      "dealsSidebar": "Deals",  
       "deal_approval": "Deal Approval",
       "investor_pitch": "Investor Presentation or Pitch Deck",
       "invest_now": "Invest Now",
@@ -1017,7 +1017,8 @@
       "unlock_exclusive_deals": "Unlock exclusive deals! Log in for full access and detailed info.",
       "not_a_member_yet": "Not a Member yet?",
       "sign_in": "Sign In",
-      "sign_up": "Sign Up"
+      "sign_up": "Sign Up",
+      "edit_approved_deal_confirmation": "Editing an approved deal will impact its status and would require re-approval. Are you sure you want to proceed with editing?"
     },
     "investor": {
       "investments": "Investments",
