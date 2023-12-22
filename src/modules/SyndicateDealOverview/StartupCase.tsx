@@ -65,6 +65,8 @@ const StartupCase = ({
   const [modalOpenSyndication, setModalOpenSyndication]: any = useState(null);
   const [disableUpload, setdisableUpload]: any = useState(false);
   const [modalOpenComment, setmodalOpenComment]: any = useState(null);
+  const [InvestButtonDisable, setInvestButtonDisable]: any = useState(false);
+
 
   const [investmentAmount, setAmount] = useState();
   const [selectedCurrency, setSelectedCurrency] = useState("USD");
@@ -608,6 +610,7 @@ const StartupCase = ({
         authToken
       );
       if (status === 200) {
+        setInvestButtonDisable(false)
         toast.success(language?.v3?.syndicate?.invested, toastUtil);
       }
     } catch (error: any) {
@@ -615,6 +618,7 @@ const StartupCase = ({
         toast.warning(error?.response?.data?.status?.message, toastUtil);
     } finally {
       setLoading(false);
+      setInvestButtonDisable(false)
       onGetdeal();
     }
   };
@@ -859,9 +863,10 @@ const StartupCase = ({
                     <div className="mt-3">
                       <Button
                         disabled={
-                          investmentAmount === undefined || investmentAmount < 1
+                          investmentAmount === undefined || investmentAmount < 1 || InvestButtonDisable
                         }
                         onClick={() => {
+                          setInvestButtonDisable(true)
                           syndicateInvestment();
                         }}
                         className="w-full"
@@ -1037,9 +1042,10 @@ const StartupCase = ({
                       </div>
                       <Button
                         disabled={
-                          investmentAmount === undefined || investmentAmount < 1
+                          investmentAmount === undefined || investmentAmount < 1 || InvestButtonDisable
                         }
                         onClick={() => {
+                          setInvestButtonDisable(true)
                           syndicateInvestment();
                         }}
                         className="w-full mt-4"
