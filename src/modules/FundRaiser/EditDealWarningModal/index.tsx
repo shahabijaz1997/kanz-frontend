@@ -27,7 +27,7 @@ const EditDealWarningModal = ({
               htmlFor=""
               className="text-neutral-900 text-center font-bold text-xl"
             >
-              Warning!
+              {language?.v3?.fundraiser?.warning}
             </label>
             <p className="pt-5">
           {language?.v3?.fundraiser?.edit_approved_deal_confirmation}
