@@ -1018,7 +1018,8 @@
       "not_a_member_yet": "Not a Member yet?",
       "sign_in": "Sign In",
       "sign_up": "Sign Up",
-      "edit_approved_deal_confirmation": "Editing an approved deal will impact its status and would require re-approval. Are you sure you want to proceed with editing?"
+      "edit_approved_deal_confirmation": "Editing an approved deal will impact its status and would require re-approval. Are you sure you want to proceed with editing?",
+      "warning":"Warning!"
     },
     "investor": {
       "investments": "Investments",
