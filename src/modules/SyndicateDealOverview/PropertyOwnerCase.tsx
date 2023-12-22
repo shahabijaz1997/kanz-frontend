@@ -886,7 +886,7 @@ const PropertyOwnerCase = ({
                       <div className="flex items-center justify-between w-full">
                         <div>
                           <h2 className="text-neutral-900 font-normal text-sm">
-                            {"Commitment"}
+                            {language?.v3?.syndicate?.commitment}
                           </h2>
                           <p className="text-black font-medium text-lg">
                             AED {comaFormattedNumber(deal?.my_invested_amount)}
