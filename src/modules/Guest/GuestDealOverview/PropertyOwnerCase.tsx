@@ -60,7 +60,7 @@ const PropertyOwnerCase = ({  dealDetail }: any) => {
             </div>
             <div className="w-[80%] inline-block align-start">
               <h3 className="text-neutral-900 font-medium text-sm pb-1">
-              {language?.v3?.dealDetail?.expected_dividend_yield}
+              {language?.v3?.deal?.expected_dividend_yield}
               </h3>
               <p className="text-neutral-900 font-normal text-sm capitalize">
                 {comaFormattedNumber(dealDetail?.expected_dividend_yield)}%
