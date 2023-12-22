@@ -82,6 +82,7 @@ const PropertyOwnerCase = ({
   const [invited, setInvited]: any = useState();
   const [modalOpenComment, setmodalOpenComment]: any = useState(null);
   const [disableUpload, setdisableUpload]: any = useState(false);
+  const [InvestButtonDisable, setInvestButtonDisable]: any = useState(false);
   const [selectedCurrency, setSelectedCurrency] = useState("USD");
   const [investmentAmount, setAmount] = useState<number>();
 
@@ -341,10 +342,14 @@ const PropertyOwnerCase = ({
         toast.success(language?.v3?.syndicate?.invested, toastUtil);
       }
     } catch (error: any) {
-      if (error?.response?.status === 400)
+      if (error?.response?.status === 400){
+        setInvestButtonDisable(false)
         toast.warning(error?.response?.data?.status?.message, toastUtil);
+      }
+        
     } finally {
       onGetdeal();
+      setInvestButtonDisable(false)
       setLoading(false);
     }
   };
@@ -675,10 +680,11 @@ const PropertyOwnerCase = ({
                     <div className="mt-3">
                       <Button
                         disabled={
-                          investmentAmount === undefined || investmentAmount < 1
+                          investmentAmount === undefined || investmentAmount < 1 || InvestButtonDisable
                         }
                         onClick={() => {
                           syndicateInvestment();
+                          setInvestButtonDisable(true)
                         }}
                         className="w-full"
                       >
@@ -855,9 +861,10 @@ const PropertyOwnerCase = ({
                     <div className="mt-4">
                       <Button
                         disabled={
-                          investmentAmount === undefined || investmentAmount < 1
+                          investmentAmount === undefined || investmentAmount < 1 || InvestButtonDisable
                         }
                         onClick={() => {
+                          setInvestButtonDisable(true)
                           syndicateInvestment();
                         }}
                         className="w-full"
