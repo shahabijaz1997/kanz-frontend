@@ -31,7 +31,6 @@ const InvitedInvestors = ({ id }: any) => {
   useEffect(() => {
     dispatch(saveDataHolder(""));
     getInvitedInvestors();
-    console.log(currentPage)
   }, [currentPage]);
 
 

@@ -31,10 +31,6 @@ const GuestInvestorOverview = ({}: any) => {
       console.log(error)
     }
   }
-  console.log("AuthToken",authToken)
-  console.log('====================================');
-  console.log(deal);
-  console.log('====================================');
   return deal && (
     deal.category === KanzRoles?.STARTUP?.toLocaleLowerCase() ?
     <StartupCase dealToken={dealToken} dealDetail={deal} docs= {selectedDocs} />

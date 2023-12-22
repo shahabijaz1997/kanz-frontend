@@ -36,7 +36,6 @@ const InvitesListing = ({
   const orientation: any = useSelector(
     (state: RootState) => state.orientation.value
   );
-console.log(orientation)
   const [loading, setLoading] = useState<boolean>(false);
   const [investors, setInvestors] = useState<any>([]);
   const [showInvestors, setShowInvestors] = useState(false);
