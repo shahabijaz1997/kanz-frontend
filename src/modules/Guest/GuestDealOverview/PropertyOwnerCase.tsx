@@ -40,7 +40,7 @@ const PropertyOwnerCase = ({  dealDetail }: any) => {
       <React.Fragment>
         {dealDetail?.selling_price && (
           <div className="w-full inline-flex justify-between items-center border-b-[1px] border-b-neutral-200 py-3">
-            <div className="bg-cbc-grey-sec rounded-md h-8 w-8 inline-block align-start place-items-center">
+            <div className="bg-cbc-grey-sec rounded-md h-8 w-8 inline-block align-start inline-grid place-items-center">
               <img src={DollarSVG} alt="" />
             </div>
             <div className="w-[80%] inline-block align-start">
@@ -55,12 +55,12 @@ const PropertyOwnerCase = ({  dealDetail }: any) => {
         )}
         {dealDetail?.expected_dividend_yield && (
           <div className="w-full inline-flex justify-between items-center border-b-[1px] border-b-neutral-200 py-3">
-            <div className="bg-cbc-grey-sec rounded-md h-8 w-8 inline-block align-start place-items-center">
+            <div className="bg-cbc-grey-sec rounded-md h-8 w-8 inline-block align-start inline-grid place-items-center">
               <img src={ChartSVG} alt="" />
             </div>
             <div className="w-[80%] inline-block align-start">
               <h3 className="text-neutral-900 font-medium text-sm pb-1">
-              {language?.v3?.deal?.expected_dividend_yield}
+              {language?.v3?.dealDetail?.expected_dividend_yield}
               </h3>
               <p className="text-neutral-900 font-normal text-sm capitalize">
                 {comaFormattedNumber(dealDetail?.expected_dividend_yield)}%
@@ -70,7 +70,7 @@ const PropertyOwnerCase = ({  dealDetail }: any) => {
         )}
         {dealDetail?.expected_annual_return && (
           <div className="w-full inline-flex justify-between items-center border-b-[1px] border-b-neutral-200 py-3">
-            <div className="bg-cbc-grey-sec rounded-md h-8 w-8 inline-block align-start place-items-center">
+            <div className="bg-cbc-grey-sec rounded-md h-8 w-8 inline-block align-start inline-grid place-items-center">
               <img src={PiChartSVG} alt="" />
             </div>
             <div className="w-[80%] inline-block align-start">
@@ -85,7 +85,7 @@ const PropertyOwnerCase = ({  dealDetail }: any) => {
         )}
         {dealDetail?.features?.rental_amount && (
           <div className="w-full inline-flex justify-between items-center border-b-[1px] border-b-neutral-200 py-3">
-            <div className="bg-cbc-grey-sec rounded-md h-8 w-8 inline-block align-start place-items-center">
+            <div className="bg-cbc-grey-sec rounded-md h-8 w-8 inline-block align-start inline-grid place-items-center">
               <img src={CurrencySVG} alt="" />
             </div>
             <div className="w-[80%] inline-block align-start">
