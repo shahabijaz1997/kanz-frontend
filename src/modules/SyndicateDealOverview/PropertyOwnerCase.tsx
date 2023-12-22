@@ -819,7 +819,7 @@ const PropertyOwnerCase = ({
 
                 {deal?.status === DealStatus.LIVE && !deal?.is_invested && (
                   <section className="mb-4 mt-1">
-                    <div className="border-neutral-500 border-[1px] rounded-md min-w-full px-2 pr-10 justify-between flex bg-white">
+                    <div  className={`${orientation === "rtl" ? "pl-7" : "pr-10"} "border-neutral-500 border-[1px] rounded-md min-w-full px-2 justify-between flex bg-white`}>
                       <label className="w-full">
                         <input
                           className="min-w-full h-9 no-spin-button"
