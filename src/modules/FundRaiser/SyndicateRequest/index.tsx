@@ -189,6 +189,7 @@ const SyndicateRequest = ({}: any) => {
   const columns = [
     language?.v3?.deal?.syndicate,
     language?.v3?.common?.deal,
+    language?.v3?.fundraiser?.invite_status,
     language?.v3?.fundraiser?.selling_price,
     language?.v3?.deal?.comments,
     language?.v3?.table?.view,
