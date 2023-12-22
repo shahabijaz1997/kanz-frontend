@@ -51,6 +51,7 @@ const ManageGroup = ({}: any) => {
   const [currentPage, setCurrentPage] = useState(1);
   const [paginationData, setpaginationData] = useState(null);
   const [searchModalQuery, setModalSearchQuery]: any = useState("");
+  const [buttonDisable, setButtonDisable]: any = useState(false);
 
   const setLoadingFalse = () => {
     setLoading(false);
@@ -162,7 +163,9 @@ const ManageGroup = ({}: any) => {
     } catch (error: any) {
       if (error?.response?.status === 400)
         toast.warning(error?.response?.data?.status?.message, toastUtil);
+        setButtonDisable(false)
     } finally {
+      setButtonDisable(false)
       getMembers();
     }
   };
@@ -393,16 +396,23 @@ const ManageGroup = ({}: any) => {
                       <div>
                         {!investor?.status ? (
                           <Button
+                          disabled={buttonDisable}
                             divStyle="items-center justify-end max-w-fit"
                             type="outlined"
                             className="!p-3 !py-1 !rounded-full"
-                            onClick={() => onAddInvestor(user.id, investor?.id)}
+                            onClick={() =>{
+                              setButtonDisable(true)
+                              onAddInvestor(user.id, investor?.id)
+                            }}
                           >
                             {language?.v3?.syndicate?.add}
                           </Button>
                         ) : (
                           <Button
                             divStyle="items-center justify-end max-w-fit"
+                            onClick={()=>{
+
+                            }}
                             type="outlined"
                             className="!p-2 !py-[1px] !border-[#D4D4D4] !border-[1px] !text-[#737373]  !shadow-none !rounded-full"
                           >
@@ -415,7 +425,7 @@ const ManageGroup = ({}: any) => {
               )
             ) : (
               <div className="flex flex-col items-center justify-start mt-8 space-y-4 font-semibold pb-5">
-                All investors invited!
+                {language?.v3?.fundraiser?.all_investors_invited}
               </div>
             )}
           </aside>
