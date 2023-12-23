@@ -1055,7 +1055,19 @@
       "you_can_see_invitees_here_from_the_following_syndicate": "You can see invitees here from the following syndicate",
       "find_syndicates_to_follow": "Find Syndicates to Follow",
       "committed":"Committed",
-      "deal_activity":"Deal Activity"
+      "deal_activity":"Deal Activity",
+      "group_members": "Group Members",
+      "applications": "Applications",
+      "add_deals": "Add Deals",
+      "pending": "Pending",
+      "approved": "Approved",
+      "syndicate_followed": "Syndicate Followed",
+      "cancel": "Cancel",
+      "approve": "Approve",
+      "invested": "Invested",
+      "team": "Team",
+      "syndicate_deals": "Syndicate Deals",
+      "total_raised_amount": "Total Raised Amount"
     },
     "dealOverview": {
       "title": "Risk and Disclaimer",

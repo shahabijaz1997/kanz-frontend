@@ -21,6 +21,7 @@ import Deals from "../Investor/Deals";
 import SyndicateInvestments from "../Syndicate/Investments";
 import ManageGroup from "../Syndicate/ManageGroup";
 import GuestInvestorOverview from "../Guest/GuestDealOverview";
+import SyndicateFullView from "../Investor/InvestorSyndicates/SyndicateFullView";
 
 /* --- Modules --- */
 
@@ -386,6 +387,21 @@ const RouterModule = () => {
                 status={ApplicationStatus.APPROVED}
               >
                 <Deals />
+              </GUARD_SUBMITTED_ROUTE>
+            </CHECK_LOGGED_IN>
+          </Suspense>
+        }
+      />
+       <Route
+        path={`${RoutesEnums.SYNDICATE_DETAILED_VIEW}`}
+        element={
+          <Suspense fallback={<Loader />}>
+            <CHECK_LOGGED_IN>
+              <GUARD_SUBMITTED_ROUTE
+                role={[KanzRoles.INVESTOR]}
+                status={ApplicationStatus.APPROVED}
+              >
+                <SyndicateFullView/>
               </GUARD_SUBMITTED_ROUTE>
             </CHECK_LOGGED_IN>
           </Suspense>

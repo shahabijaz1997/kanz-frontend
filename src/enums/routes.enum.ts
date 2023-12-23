@@ -26,6 +26,7 @@ export enum RoutesEnums {
   INVESTOR_DASHBOARD = "/investor",
   INVESTOR_SYNDICATES = "/investor-syndicates",
   INVESTOR_DEALS = "/investors-deals",
+  SYNDICATE_DETAILED_VIEW = "/syndicate-detailed-vew",
   SYNDICATE_DASHBOARD = "/syndicate",
   DEAL_APPROVAL = "/deal-approval",
   STARTUP_INVESTMENTS = "/startup-investments",

@@ -1051,7 +1051,19 @@
       "you_can_see_invitees_here_from_the_following_syndicate": "يمكنك رؤية الدعوات هنا من التكتل التالي",
       "find_syndicates_to_follow": "ابحث عن تكتلات للمتابعة",
       "committed": "ملتزم",
-      "deal_activity": "نشاط الصفقة"
+      "deal_activity": "نشاط الصفقة",
+      "group_members": "أعضاء المجموعة",
+      "applications": "التطبيقات",
+      "add_deals": "إضافة صفقات",
+      "pending": "قيد الانتظار",
+      "approved": "تمت الموافقة عليه",
+      "syndicate_followed": "تتبع التكتل",
+      "cancel": "إلغاء",
+      "approve": "الموافقة",
+      "invested": "تم الاستثمار",
+      "team": "الفريق",
+      "syndicate_deals": "صفقات التكتل",
+      "total_raised_amount": "إجمالي المبلغ المجموع"
     },
     "dealOverview": {
       "title": "المخاطر وتنصل المسؤولية",
