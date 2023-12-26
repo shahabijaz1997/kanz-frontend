@@ -2,10 +2,6 @@ export const APP_ENV = process.env.REACT_APP_ENV || "STAGING";
 
 export const getEnv = () => {
     const env = APP_ENV.trim().toUpperCase();
-    // console.log(APP_ENV);
-    console.log(process.env.REACT_APP_ENV);
-    console.log(process.env.REACT_API_URL);
-    console.log("hello");
     switch (env) {
         case "DEV":
             return {
@@ -23,7 +19,7 @@ export const getEnv = () => {
             };
         case "QA":
             return {
-                API_URL: process.env.REACT_API_URL,
+                API_URL: 'https://kanz-financial-qa-655742173b06.herokuapp.com',
                 GOOGLE_API_KEY: process.env.REACT_APP_GOOGLE_API_KEY,
                 LINKEDIN_API_KEY: process.env.REACT_APP_LINKEDIN_API_KEY,
                 API_VERSION: '1.0'
