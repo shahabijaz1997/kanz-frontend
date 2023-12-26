@@ -1,3 +1,4 @@
+
 import { useDispatch, useSelector } from "react-redux";
 import { saveDataHolder } from "../../../redux-toolkit/slicer/dataHolder.slicer";
 import Button from "../../../shared/components/Button";
@@ -30,7 +31,7 @@ const EditDealWarningModal = ({
               {language?.v3?.fundraiser?.warning}
             </label>
             <p className="pt-5">
-          {language?.v3?.fundraiser?.edit_approved_deal_confirmation}
+             {language?.v3?.fundraiser?.edit_approved_deal_confirmation}
             </p>
           </div>
         </section>
@@ -42,7 +43,7 @@ const EditDealWarningModal = ({
             divStyle="flex items-center justify-center w-6/12"
             onClick={handleWarningModal}
           >
-            {language?.v3?.button?.cancel}
+            {language?.v3?.investor?.cancel}
           </Button>
           <Button
             className="w-full !py-1"
@@ -60,7 +61,7 @@ const EditDealWarningModal = ({
               }
             }}
           >
-             {language?.v3?.syndicate?.continue}
+            {language?.v3?.syndicate?.continue}
           </Button>
         </footer>
       </aside>
