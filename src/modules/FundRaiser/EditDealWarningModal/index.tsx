@@ -1,8 +1,9 @@
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { saveDataHolder } from "../../../redux-toolkit/slicer/dataHolder.slicer";
 import Button from "../../../shared/components/Button";
 import { ApplicationStatus } from "../../../enums/types.enum";
 import { useNavigate } from "react-router-dom";
+import { RootState } from "../../../redux-toolkit/store/store";
 
 const EditDealWarningModal = ({
   handleWarningModal,
@@ -12,6 +13,8 @@ const EditDealWarningModal = ({
 }: any) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const language: any = useSelector((state: RootState) => state.language.value);
+
   return (
     <div
       className="rounded-md overflow-hidden inline-grid place-items-center absolute top-1/2 left-1/2 translate-x-[-50%] translate-y-[-50%]"
@@ -24,11 +27,10 @@ const EditDealWarningModal = ({
               htmlFor=""
               className="text-neutral-900 text-center font-bold text-xl"
             >
-              Warning!
+              {language?.v3?.fundraiser?.warning}
             </label>
             <p className="pt-5">
-              Editing an approved deal will impact its status and would require
-              re-approval. Are you sure you want to proceed with editing?
+             {language?.v3?.fundraiser?.edit_approved_deal_confirmation}
             </p>
           </div>
         </section>
@@ -40,7 +42,7 @@ const EditDealWarningModal = ({
             divStyle="flex items-center justify-center w-6/12"
             onClick={handleWarningModal}
           >
-            Cancel
+            {language?.v3?.investor?.cancel}
           </Button>
           <Button
             className="w-full !py-1"
@@ -58,7 +60,7 @@ const EditDealWarningModal = ({
               }
             }}
           >
-            Continue
+            {language?.v3?.syndicate?.continue}
           </Button>
         </footer>
       </aside>

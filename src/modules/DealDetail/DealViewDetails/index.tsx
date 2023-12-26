@@ -4,7 +4,6 @@ import { RootState } from "../../../redux-toolkit/store/store";
 import ApprovedSVG from "../../../assets/svg/approved.svg";
 import {
   comaFormattedNumber,
-  formatDate,
   numberFormatter,
 } from "../../../utils/object.utils";
 import { KanzRoles } from "../../../enums/roles.enum";
@@ -113,7 +112,7 @@ const DealViewDetails = ({ dealDetail, state }: any) => {
             </p>
           </div>
           {dealDetail?.equity_type && (
-            <React.Fragment>
+            <React.Fragment>    
               <div className="mt-10 mb-4">
                 <h2 className="text-black text-xl font-bold">{"Valuation"}</h2>
               </div>

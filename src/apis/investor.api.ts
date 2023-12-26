@@ -67,6 +67,22 @@ export const getCommitedDeals = ( token: string, filters :any, searchQuery:strin
       }
     );
   };
+  export const getPendingSyndicates = (token: string, searchQuery:string, currentPage:number) => {
+  const queryParameters = new URLSearchParams();
+  queryParameters.append("page", currentPage.toString())
+  queryParameters.append("pending", "true");
+  if (searchQuery.trim() !== "") {
+    queryParameters.append("search", searchQuery);
+  }
+    return axios.get(
+      `${ENV.API_URL}/${ENV.API_VERSION}/syndicates/all?${queryParameters.toString()}`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+  };
 
 
   export const postFollowSyndicate = (payload: any, syndicateID :any, token: string) => {

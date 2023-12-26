@@ -8,7 +8,6 @@ import Sidebar from "../../../shared/components/Sidebar";
 import Spinner from "../../../shared/components/Spinner";
 import AllSyndicates from ".././InvestorSyndicates/AllSyndicates";
 import FollowingSyndicates from ".././InvestorSyndicates/FollowingSyndicates";
-import { useDispatch } from "react-redux";
 import Applications from "./Applications";
 
 
@@ -28,8 +27,8 @@ const InvestorSyndicates = ({}: any) => {
   const authToken: any = useSelector((state: RootState) => state.auth.value);
   const tabs = [
     { id: 1, title: language?.v3?.investor?.all_syndicates },
-    { id: 2, title: language?.v3?.investor?.following_syndicates },
-    { id: 3, title: "Applications" },
+    { id: 2, title: language?.v3?.investor?.your_syndicates },
+    { id: 3, title: language?.v3?.investor?.application_pending },
   ];
 
 

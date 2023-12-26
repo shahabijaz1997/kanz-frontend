@@ -31,6 +31,7 @@ const FollowingSyndicates = (): any => {
   const authToken: any = useSelector((state: RootState) => state.auth.value);
   const user: any = useSelector((state: RootState) => state.user.value);
   const [paginationData, setpaginationData] = useState(null);
+  const [filter, setFilterCounts]: any = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const orientation: any = useSelector(
     (state: RootState) => state.orientation.value
@@ -50,10 +51,20 @@ const FollowingSyndicates = (): any => {
   const [isOpen, setOpen]: any = useState(false);
   const [searchQuery, setSearchQuery]: any = useState("");
   const [childData, setChildData]: any = useState(null);
+  const [selectedTab, setSelectedTab] = useState("all");
 
+  const getCountvalue = (value: string) => {
+    return filter[value] || 0
+  };
   const handleChildData = (data: any) => {
     setChildData(data);
   };
+  const [tabs] = useState<any>({
+    'all': language?.v3?.startup?.overview?.all,
+    'new': language?.v3?.investor?.new,
+    'has_active_deal': language?.v3?.investor?.has_active_deal,
+    'raising_fund': language?.v3?.investor?.raising_fund,
+  });
 
   useEffect(() => {
     syndicateInfo?.id && onGetSyndicateDetail(syndicateInfo?.id);
@@ -163,6 +174,24 @@ const FollowingSyndicates = (): any => {
               placeholder={language?.v3?.common?.search}
             />
           </div>
+          <ul className="inline-flex items-center">
+                  {React.Children.toArray(
+                    Object.keys(tabs).map((tab: any) => (
+                      <li
+                        onClick={() => {
+                          setSelectedTab(tab)}
+                        }
+                        className={`py-2 px-4 font-medium text-xs cursor-pointer rounded-md transition-all ${
+                          selectedTab === tab
+                            ? "text-neutral-900 bg-neutral-100"
+                            : "text-gray-500"
+                        } `}
+                      >
+                        {tabs[tab]} &nbsp;({getCountvalue(tab)})
+                      </li>
+                    ))
+                  )}
+                </ul>
         </span>
       </section>
       <section className="mt-5 relative">

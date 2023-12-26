@@ -13,7 +13,6 @@ import { getSyndicates } from "../../../../apis/syndicate.api";
 import { saveToken } from "../../../../redux-toolkit/slicer/auth.slicer";
 import SyndicateInfoDrawer from "../SyndicateInfoDrawer";
 import { getSyndicateInfo } from "../../../../apis/investor.api";
-import SyndicateMonthlyDealsGraph from "../SyndicateInfoDrawer/SyndicateMonthlyDealsGraph";
 
 const Applications = ({}: any): any => {
   const [childData, setChildData]: any = useState(null);
@@ -31,14 +30,16 @@ const Applications = ({}: any): any => {
 
   const columns = [
     language?.v3?.investor?.syndicate,
-    language?.v3?.investor?.total_deals,
-    language?.v3?.investor?.active_deals,
-    language?.v3?.investor?.raising_fund,
-    language?.v3?.investor?.formation_date,
+    language?.v3?.investor?.apply_date,
+    language?.v3?.investor?.status,
     "",
   ];
+  const getCountvalue = (value: string) => {
+    return filter[value] || 0
+  };
   const [loading, setLoading]: any = useState(false);
   const [invites, setInvites]: any = useState([]);
+  const [filter, setFilterCounts]: any = useState([]);
   const [syndicateInfo, setsyndicateInfo]: any = useState(null);
   const [paginationData, setpaginationData] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
@@ -47,7 +48,7 @@ const Applications = ({}: any): any => {
 
   useEffect(() => {
     dispatch(saveDataHolder(""));
-    getAllSyndicates();
+    getApplications();
   }, []);
   useEffect(() => {
     syndicateInfo?.id && onGetSyndicateDetail(syndicateInfo?.id);
@@ -64,7 +65,7 @@ const Applications = ({}: any): any => {
       setLoading(false);
     }
   };
-  const getAllSyndicates = async () => {
+  const getApplications = async () => {
     try {
       setLoading(true);
       let { status, data } = await getSyndicates(
@@ -80,23 +81,13 @@ const Applications = ({}: any): any => {
             [language?.v3?.investor?.syndicate]: (
               <span className=" capitalize">{syndicate?.name}</span>
             ),
-            [ language?.v3?.investor?.total_deals]: (
-              <span className=" capitalize">{syndicate?.total_deals}</span>
+            [ language?.v3?.investor?.apply_date]: (
+              <span className=" capitalize">{syndicate?.apply_date}</span>
             ),
-            [ language?.v3?.investor?.active_deals]: (
-              <span className=" capitalize">{syndicate?.active_deals}</span>
-            ),
-            [ language?.v3?.investor?.raising_fund]: (
+            [ language?.v3?.fundriaser?.status]: (
               <span className=" capitalize">
-                {syndicate?.raising_fund ? (
-                  <CustomStatus options={"Yes"} />
-                ) : (
-                  <CustomStatus options={"No"} />
-                )}
+                <CustomStatus options={syndicate?.status}/>
               </span>
-            ),
-            [ language?.v3?.investor?.formation_date]: (
-              <span className=" capitalize">{syndicate?.created_at}</span>
             ),
             [""]: (
               <div
@@ -129,12 +120,61 @@ const Applications = ({}: any): any => {
     }
   };
   return (
-    <div className="p-6">
-        <SyndicateMonthlyDealsGraph/>
-        </div>
-
-
-     
+    <>
+      <section className="inline-flex justify-between items-center w-full">
+        <span className="w-full flex items-center gap-5">
+          <div className="rounded-md shadow-cs-6 bg-white border-[1px] border-gray-200 h-9 overflow-hidden max-w-[310px] inline-flex items-center px-2">
+            <SearchIcon
+              onClick={() => {
+                getApplications();
+              }}
+            />
+            <input
+              onKeyDown={(e) => {
+                if (e.key === "Enter") {
+                  getApplications();
+                }
+              }}
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              type="search"
+              className="h-full w-full outline-none pl-2 text-sm font-normal "
+              placeholder={language?.v3?.common?.search}
+            />
+          </div>
+        </span>
+      </section>
+      <section className="mt-5 relative">
+        {loading ? (
+          <div
+            className="absolute left-0 top-0 w-full h-full grid place-items-center"
+            style={{ backgroundColor: "rgba(255, 255, 255, 1)", zIndex: 50 }}
+          >
+            <Spinner />
+          </div>
+        ) : (
+          <Table
+            columns={columns}
+            tableData={invites}
+            setCurrentPage={setCurrentPage}
+            paginationData={paginationData}
+            noDataNode={
+              <span className="absolute left-1/2 top-1/2 translate-x-[-50%] translate-y-[-50%]">
+                {language?.v3?.investor?.no_syndicates_followed}{" "}
+                <span className=" font-bold">{language?.v3?.investor?.follow_button_on_top_left}</span>{" "}
+                {language?.v3?.investor?.to_follow_a_syndicate}
+              </span>
+            }
+          />
+        )}
+      </section>
+      <SyndicateInfoDrawer
+        syndicateInfo={syndicateInfo}
+        openDrawer={isOpen}
+        isDrawerOpen={setOpen}
+        onData={handleChildData}
+      />
+    </>
   );
 };
 export default Applications;

@@ -24,12 +24,21 @@ const SyndicateInfoDrawer = ({
   const sendDataToParent = () => {
     onData(true);
   };
+  useEffect(()=>{
+  
+  },[])
   const user: any = useSelector((state: RootState) => state.user.value);
   const authToken: any = useSelector((state: RootState) => state.auth.value);
   const language: any = useSelector((state: RootState) => state.language.value);
+  console.log(toastUtil)
+
+
+
+
   const orientation: any = useSelector(
     (state: RootState) => state.orientation.value
   );
+
 
   const [loading, setLoading] = useState(false);
   const [buttonDisableTemp, setButtonDisableTemp] = useState(false);
@@ -101,7 +110,7 @@ const SyndicateInfoDrawer = ({
         authToken
       );
       if (status === 200) {
-        toast.success("Syndicate Unfollowed", toastUtil); //TODO
+        toast.success(language?.v3?.investor?.syndicate_unfollowed,  toastUtil); 
       }
       removeSpinning();
     } catch (error: any) {
@@ -217,12 +226,12 @@ const SyndicateInfoDrawer = ({
               </aside>
               <aside>
                 <div className="flex-col items-center justify-end mt-4">
-                  <span className="font-bold">{"Team"}</span>
+                  <span className="font-bold">{language?.v3?.fundraiser?.team}</span>
                   <div className="border-[1px] flex justify-center border-[#E4E7EC] w-1/2 rounded-lg shadow-md mt-3">
                     <div className="flex-col items-center p-4 justify-center">
                       <span className="flex items-center justify-center">
                         <img
-                          className=" h-[52px] w-[52px] mr-2.5 rounded-full"
+                          className=" h-[52px] w-[52px] rounded-full"
                           src={syndicateInfo?.profile?.logo}
                         ></img>
                       </span>
@@ -242,10 +251,10 @@ const SyndicateInfoDrawer = ({
                 <aside className="flex justify-between items-center text-sm px-6">
                   <div className=" w-full pl-3 pr-3 py-3">
                     <div className="font-medium text-base">
-                      {"34 deals in past 12 months"}
+                      {`${34} deals in past ${12} months`}
                     </div>
                     <div className=" mt-0.5 font-medium text-sm text-[#737373]">
-                      {"Syndicate Deals"}
+                      {language?.v3?.fundraiser?.syndicate_deals}
                     </div>
                   </div>
                   <div
@@ -259,7 +268,7 @@ const SyndicateInfoDrawer = ({
                       </span>
                     </div>
                     <div className="mt-0.5 font-medium text-sm text-[#737373]">
-                      {"Active deals"}
+                      {language?.v3?.fundraiser?.active_deals}
                     </div>
                   </div>
                 </aside>
@@ -272,7 +281,7 @@ const SyndicateInfoDrawer = ({
                   >
                     <div>
                       <span className="font-medium text-base">
-                        {"Total Raised Amount"}
+                        {language?.v3?.fundraiser?.total_raised_amount}
                       </span>
                     </div>
                     <div className="mt-2 font-bold text-xl">

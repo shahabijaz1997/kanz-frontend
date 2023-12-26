@@ -39,7 +39,7 @@ const FundRaiserHome = ({ loading, language }: any) => {
       return (
         <React.Fragment>
           <h2 className="text-2xl font-bold text-neutral-900 mb-4 screen500:text-[20px]">
-            {"Add Deals"}
+            {language?.v3?.fundraiser?.add_deals}
           </h2>
           <h3 className="text-base font-normal text-neutral-700 screen500:text-[12px]">
             {language?.v2?.startup?.home_sub}

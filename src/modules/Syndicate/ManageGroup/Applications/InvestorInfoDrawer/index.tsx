@@ -29,8 +29,6 @@ const InvestorInfoDrawer = ({
     (state: RootState) => state.orientation.value
   );
 
-  console.log("INVESTOR DATA RECIEVED", investorInfo?.Investor);
-
   const [loading, setLoading] = useState(false);
   const [buttonDisableTemp, setButtonDisableTemp] = useState(false);
 
@@ -84,13 +82,13 @@ const InvestorInfoDrawer = ({
     setButtonDisableTemp(true);
     try {
       setLoading(true);
-      const { status } = await postunFollowSyndicate(
+    const { status } = await postunFollowSyndicate(
         syndId,
         memberId,
         authToken
       );
       if (status === 200) {
-        toast.success("Syndicate Unfollowed", toastUtil);
+        toast.success(language?.v3?.investor?.syndicate_unfollowed, toastUtil);
       }
       removeSpinning();
     } catch (error: any) {

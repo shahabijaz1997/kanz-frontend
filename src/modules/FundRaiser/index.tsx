@@ -13,12 +13,15 @@ import { saveDataHolder } from "../../redux-toolkit/slicer/dataHolder.slicer";
 import { saveUserMetaData } from "../../redux-toolkit/slicer/metadata.slicer";
 import StartupDeals from "./StartupDeals";
 import PropertyDeals from "./PropertyDeals";
+import { toastUtil } from "../../utils/toast.utils";
 
 const FundRaiser = ({}: any) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
   const language: any = useSelector((state: RootState) => state.language.value);
+  const event: any = useSelector((state: RootState) => state.event.value);
+
 
   const sectionTabs = [
     { id: 1, title: language?.v3?.fundraiser?.startup },

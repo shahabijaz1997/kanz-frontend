@@ -27,11 +27,21 @@ const AllSyndicates = ({}: any): any => {
   const orientation: any = useSelector(
     (state: RootState) => state.orientation.value
   );
-
+  
+  const getCountvalue = (value: string) => {
+    return filter[value] || 0
+  };
+  const [tabs] = useState<any>({
+    'all': language?.v3?.startup?.overview?.all,
+    'new': language?.v3?.investor?.new,
+    'invited  ': language?.v3?.fundraiser?.invited,
+    'raising_fund': language?.v3?.investor?.raising_fund,
+  });
   const columns = [
     language?.v3?.investor?.syndicate,
     language?.v3?.investor?.total_deals,
     language?.v3?.investor?.active_deals,
+    language?.v3?.fundraiser?.invite_status,
     language?.v3?.investor?.raising_fund,
     language?.v3?.investor?.formation_date,
     "",
@@ -39,6 +49,8 @@ const AllSyndicates = ({}: any): any => {
   const [loading, setLoading]: any = useState(false);
   const [invites, setInvites]: any = useState([]);
   const [syndicateInfo, setsyndicateInfo]: any = useState(null);
+  const [selectedTab, setSelectedTab] = useState("all");
+  const [filter, setFilterCounts]: any = useState([]);
   const [paginationData, setpaginationData] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [isOpen, setOpen]: any = useState(false);
@@ -84,6 +96,11 @@ const AllSyndicates = ({}: any): any => {
             ),
             [ language?.v3?.investor?.active_deals]: (
               <span className=" capitalize">{syndicate?.active_deals}</span>
+            ),
+            [ language?.v3?.fundriaser?.invite_status]: (
+              <span className=" capitalize">
+                <CustomStatus options={""}/>
+              </span>
             ),
             [ language?.v3?.investor?.raising_fund]: (
               <span className=" capitalize">
@@ -150,6 +167,24 @@ const AllSyndicates = ({}: any): any => {
               placeholder={language?.v3?.common?.search}
             />
           </div>
+          <ul className="inline-flex items-center">
+                  {React.Children.toArray(
+                    Object.keys(tabs).map((tab: any) => (
+                      <li
+                        onClick={() => {
+                          setSelectedTab(tab)}
+                        }
+                        className={`py-2 px-4 font-medium text-xs cursor-pointer rounded-md transition-all ${
+                          selectedTab === tab
+                            ? "text-neutral-900 bg-neutral-100"
+                            : "text-gray-500"
+                        } `}
+                      >
+                        {tabs[tab]} &nbsp;({getCountvalue(tab)})
+                      </li>
+                    ))
+                  )}
+                </ul>
         </span>
       </section>
       <section className="mt-5 relative">

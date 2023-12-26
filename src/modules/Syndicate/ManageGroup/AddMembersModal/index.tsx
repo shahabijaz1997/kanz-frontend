@@ -64,7 +64,6 @@ const AddMembersModal = ({ reloadgetMembers, closeModal }: any) => {
         toast.warning(error?.response?.data?.status?.message, toastUtil);
         setButtonDisable(false)
     } finally {
-        console.log("IN FUNCTION")
       setButtonDisable(false)
       handleReload()
     }

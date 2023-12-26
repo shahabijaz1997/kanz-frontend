@@ -34,13 +34,14 @@ const SyndicateMonthlyDealsGraph = (monthsLabel :any, monthsData:any):any => {
             barThickness: 10,
             datalabels: {
               color: "#155E75",
-              offset:0,
+              offset:-1,
               anchor: "end",
               align: "top",
               font: {
                 size: 14,
                 weight:"normal",
               },
+              textAlign:"center",
               formatter: (value) => value !== 0 ? value  : ''
             },
           },
