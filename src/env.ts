@@ -19,7 +19,11 @@ export const getEnv = () => {
             };
         case "QA":
             return {
-
+                API_URL: process.env.REACT_API_URL,
+                GOOGLE_API_KEY: process.env.REACT_APP_GOOGLE_API_KEY,
+                LINKEDIN_API_KEY: process.env.REACT_APP_LINKEDIN_API_KEY,
+                API_VERSION: '1.0'
+                
             };
         default:
             return {
