@@ -2,7 +2,10 @@ export const APP_ENV = process.env.REACT_APP_ENV || "STAGING";
 
 export const getEnv = () => {
     const env = APP_ENV.trim().toUpperCase();
-    console.log(APP_ENV);
+    // console.log(APP_ENV);
+    console.log(process.env.REACT_APP_ENV);
+    console.log(process.env.REACT_API_URL);
+    console.log("hello");
     switch (env) {
         case "DEV":
             return {
