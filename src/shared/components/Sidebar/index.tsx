@@ -28,7 +28,7 @@ const Sidebar = ({ type }: any) => {
     },
     {
       id: 2,
-      title: "Investors",
+      title: language?.v3?.fundraiser.investors,
       route: RoutesEnums.INVESTOR_UPDATES,
     },
     {
@@ -110,13 +110,13 @@ const Sidebar = ({ type }: any) => {
             {
               id: 2,
               icon: <InvestorInvestmentIcon />,
-              title: "Investments",
+              title: language?.v3?.startup?.sidebar?.investments,
               route: RoutesEnums.SYNDICATE_INVESTMENTS,
             },
             {
               id: 3,
               icon: <SyndicateInvestorUpdates />,
-              title: "Investor Updates",
+              title: language?.v3?.startup?.sidebar?.investors,
             },
             {
               id: 4,
@@ -127,7 +127,7 @@ const Sidebar = ({ type }: any) => {
             {
               id: 5,
               icon: <InvestorSyndicateIcon />,
-              title: "Manage Group",
+              title: language?.v3?.startup?.sidebar?.manage_group,
               route: RoutesEnums.SYNDICATE_MANAGE_GROUP,
             },
           ],
@@ -148,24 +148,24 @@ const Sidebar = ({ type }: any) => {
             {
               id: 2,
               icon: <InvestorInvestmentIcon />,
-              title: "Investments",
+              title: language?.v3?.investor?.investments,
             },
             {
               id: 3,
               icon: <InvestorSyndicateIcon />,
-              title: "Syndicates",
+              title:  language?.v3?.investor?.syndicates,
               route: RoutesEnums.INVESTOR_SYNDICATES,
             },
             {
               id: 4,
               icon: <InvestorInvitesIcon />,
-              title: "Deals",
+              title:  language?.v3?.investor?.deals,
               route: RoutesEnums.INVESTOR_DEALS,
             },
             {
               id: 5,
               icon: <InvestorPortfolioIcon />,
-              title: "Portfolio",
+              title: language?.v3?.investor?.portfolio,
             },
           ],
         });

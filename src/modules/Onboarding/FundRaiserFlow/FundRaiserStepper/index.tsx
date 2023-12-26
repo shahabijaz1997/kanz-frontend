@@ -167,7 +167,7 @@ const FundRaiserStepper = ({ load, event, countries, orientation, language, file
               className="block text-neutral-700 text-sm font-medium mb-1"
               htmlFor="full-name"
             >
-              {"Residence"}
+              {language.common.residence2}
             </label>
 
             <CountrySelector
@@ -194,7 +194,7 @@ const FundRaiserStepper = ({ load, event, countries, orientation, language, file
               className="block text-neutral-700 text-sm font-medium mb-1"
               htmlFor="full-name"
             >
-              {"Nationality"}
+              {language.common.nationality}
             </label>
 
             <CountrySelector

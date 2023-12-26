@@ -15,64 +15,68 @@ const DealViewDetails = ({ dealDetail, state }: any) => {
   const dummy = [
     {
       id: 1,
-      title: "Customer Representative",
+      title: language?.v3?.fundraiser?.customer_rep,
       completed: true,
       ongoing: false,
     },
-    { id: 2, title: "Compliance Officer", completed: false, ongoing: true },
-    { id: 3, title: "Approved", completed: false, ongoing: false },
-    { id: 4, title: "Live", completed: false, ongoing: false },
+    { id: 2, title: language?.v3?.fundraiser?.compliance_officer, completed: false, ongoing: true },
+    { id: 3, title: language?.v3?.fundraiser?.approved, completed: false, ongoing: false },
+    { id: 4, title: language?.v3?.fundraiser?.live, completed: false, ongoing: false },
   ];
-
-
+  const orientation: any = useSelector(
+    (state: RootState) => state.orientation.value
+  );
   const getRoleBasedUI = () => {
     if (state === KanzRoles.STARTUP)
       return (
         <section className="flex items-start justify-center flex-col w-9/12 min-h-[250px]">
           <div className="mt-10 mb-4">
-            <h2 className="text-black text-xl font-bold">{"Instrument"}</h2>
+            <h2 className="text-black text-xl font-bold">{language?.v3?.fundraiser?.instrument}</h2>
           </div>
           <div className="py-4  border-b-neutral-200 w-full inline-flex items-center justify-between">
             <h3 className="text-neutral-900 font-medium text-sm">
               {language?.v3?.deal?.instrument_type}
             </h3>
-            <p className="text-neutral-900 font-normal text-sm capitalize">
+            <p className="text-neutral-900 font-normal text-sm capitalize px-4">
               {dealDetail?.instrument_type || language?.v3?.common?.not_added}
             </p>
           </div>
-          {dealDetail?.equity_type ? (  
-          <div className="py-4 border-b-[1px] border-b-neutral-200 w-full inline-flex items-center justify-between">
-            <h3 className="text-neutral-900 font-medium text-sm">
-              {language?.v3?.deal?.equity_type}
-            </h3>
-            <p className="text-neutral-900 font-normal text-sm capitalize">
-              {dealDetail?.equity_type || language?.v3?.common?.not_added}
-            </p>
-          </div>) :
-            (<div className="py-4 border-b-[1px] border-b-neutral-200 w-full inline-flex items-center justify-between">
-            <h3 className="text-neutral-900 font-medium text-sm">
-              {"Safe Type"}
-            </h3>
-            <p className="text-neutral-900 font-normal text-sm capitalize">
-              {dealDetail?.safe_type || language?.v3?.common?.not_added}
-            </p>
-          </div>)}
-        {dealDetail?.equity_type && 
-        (
-        <React.Fragment>  <div className="mt-10 mb-4">
-            <h2 className="text-black text-xl font-bold">{"Stage"}</h2>
-          </div>
-          <div className="py-4 border-b-[1px] border-b-neutral-200 w-full inline-flex items-center justify-between">
-            <h3 className="text-neutral-900 font-medium text-sm">
-              {"What round is this?"}
-            </h3>
-            <p className="text-neutral-900 font-normal text-sm capitalize">
-              {dealDetail?.stage || language?.v3?.common?.not_added}
-            </p>
-          </div>
-          </React.Fragment>
+          {dealDetail?.equity_type ? (
+            <div className="py-4 border-b-[1px] border-b-neutral-200 w-full inline-flex items-center justify-between">
+              <h3 className="text-neutral-900 font-medium text-sm">
+                {language?.v3?.deal?.equity_type}
+              </h3>
+              <p className="text-neutral-900 font-normal text-sm capitalize px-4">
+                {dealDetail?.equity_type || language?.v3?.common?.not_added}
+              </p>
+            </div>
+          ) : (
+            <div className="py-4 border-b-[1px] border-b-neutral-200 w-full inline-flex items-center justify-between">
+              <h3 className="text-neutral-900 font-medium text-sm">
+                {language?.v3?.fundraiser?.safe_type}
+              </h3>
+              <p className="text-neutral-900 font-normal text-sm capitalize px-4">
+                {dealDetail?.safe_type || language?.v3?.common?.not_added}
+              </p>
+            </div>
           )}
-        
+          {dealDetail?.equity_type && (
+            <React.Fragment>
+              {" "}
+              <div className="mt-10 mb-4">
+                <h2 className="text-black text-xl font-bold">{language?.v3?.table?.stage}</h2>
+              </div>
+              <div className="py-4 border-b-[1px] border-b-neutral-200 w-full inline-flex items-center justify-between">
+                <h3 className="text-neutral-900 font-medium text-sm">
+                  {language?.v3?.fundraiser?.what_round_is_this}
+                </h3>
+                <p className="text-neutral-900 font-normal text-sm capitalize px-4">
+                  {dealDetail?.stage || language?.v3?.common?.not_added}
+                </p>
+              </div>
+            </React.Fragment>
+          )}
+
           <div className="mt-10 mb-4">
             <h2 className="text-black text-xl font-bold">
               {language?.v3?.table?.title}
@@ -80,155 +84,197 @@ const DealViewDetails = ({ dealDetail, state }: any) => {
           </div>
           <div className="py-4  border-b-neutral-200 w-full inline-flex items-center justify-between">
             <h3 className="text-neutral-900 font-medium text-sm">
-              {"Startup Title"}
+              {language?.v3?.fundraiser?.startup_title}
             </h3>
-            <p className="text-neutral-900 font-normal text-sm capitalize">
+            <p className="text-neutral-900 font-normal text-sm capitalize px-4">
               {dealDetail?.title || language?.v3?.common?.not_added}
             </p>
           </div>
           <div className="py-4 border-b-[1px] border-b-neutral-200 w-full inline-flex items-center justify-between">
             <h3 className="text-neutral-900 font-medium text-sm w-full  whitespace-nowrap">
-              {"Startup Description"}
+              {language?.v3?.fundraiser?.startup_desc}
             </h3>
             <p className="text-neutral-900  text-xs capitalize text-right  flex-wrap pl-5">
               {dealDetail?.description || language?.v3?.common?.not_added}
             </p>
           </div>
           <div className="mt-10 mb-4">
-            <h2 className="text-black text-xl font-bold">{"Deal Target"}</h2>
+            <h2 className="text-black text-xl font-bold">{language?.v3?.fundraiser?.deal_target}</h2>
           </div>
           <div className="py-4 border-b-[1px] border-b-neutral-200 w-full inline-flex items-center justify-between">
             <h3 className="text-neutral-900 font-medium text-sm">
-              {"Deal target"}
+              {language?.v3?.fundraiser?.deal_target}
             </h3>
-            <p className="text-neutral-900 font-normal text-sm capitalize">
-              {comaFormattedNumber(dealDetail?.selling_price,DealCheckType.STARTUP)}
+            <p className="text-neutral-900 font-normal text-sm capitalize px-4">
+              {comaFormattedNumber(
+                dealDetail?.selling_price,
+                DealCheckType.STARTUP
+              )}
             </p>
           </div>
-       {dealDetail?.equity_type && (
-       <React.Fragment>
-           <div className="mt-10 mb-4">
-            <h2 className="text-black text-xl font-bold">{"Valuation"}</h2>
-          </div>
-          <div className="py-4  border-b-neutral-200 w-full inline-flex items-center justify-between">
-            <h3 className="text-neutral-900 font-medium text-sm">
-              {language?.v3?.table?.valuation}
-            </h3>
-            <p className="text-neutral-900 font-normal text-sm capitalize">
-              {comaFormattedNumber(dealDetail?.valuation, DealCheckType.STARTUP) || language?.v3?.common?.not_added}
-            </p>
-          </div>
-          <div className="py-4 border-b-[1px] border-b-neutral-200 w-full inline-flex items-center justify-between">
-            <h3 className="text-neutral-900 font-medium text-sm">{"Type"}</h3>
-            <p className="text-neutral-900 font-normal text-sm capitalize">
-              {dealDetail?.valuation_type || language?.v3?.common?.not_added}
-            </p>
-          </div>
-       </React.Fragment>)}
+          {dealDetail?.equity_type && (
+            <React.Fragment>
+              <div className="mt-10 mb-4">
+                <h2 className="text-black text-xl font-bold">{"Valuation"}</h2>
+              </div>
+              <div className="py-4  border-b-neutral-200 w-full inline-flex items-center justify-between">
+                <h3 className="text-neutral-900 font-medium text-sm">
+                  {language?.v3?.table?.valuation}
+                </h3>
+                <p className="text-neutral-900 font-normal text-sm capitalize px-4">
+                  {comaFormattedNumber(
+                    dealDetail?.valuation,
+                    DealCheckType.STARTUP
+                  ) || language?.v3?.common?.not_added}
+                </p>
+              </div>
+              <div className="py-4 border-b-[1px] border-b-neutral-200 w-full inline-flex items-center justify-between">
+                <h3 className="text-neutral-900 font-medium text-sm">
+                  {language?.v3?.fundraiser?.type}
+                </h3>
+                <p className="text-neutral-900 font-normal text-sm capitalize px-4">
+                  {dealDetail?.valuation_type ||
+                    language?.v3?.common?.not_added}
+                </p>
+              </div>
+            </React.Fragment>
+          )}
           <div className="mt-10 mb-4">
-            <h2 className="text-black text-xl font-bold">{"Deal Timeline"}</h2>
+            <h2 className="text-black text-xl font-bold">{language?.v3?.fundraiser?.deal_timeline}</h2>
           </div>
           <div className="py-4  border-b-neutral-200 w-full inline-flex items-center justify-between">
             <h3 className="text-neutral-900 font-medium text-sm">
-              {"Start Date"}
+              {language?.v3?.fundraiser?.start_date}
             </h3>
-            <p className="text-neutral-900 font-normal text-sm capitalize">
+            <p className="text-neutral-900 font-normal text-sm capitalize px-4">
               {dealDetail?.start_at || language?.v3?.common?.not_added}
             </p>
           </div>
           <div className="py-4 border-b-[1px] border-b-neutral-200 w-full inline-flex items-center justify-between">
             <h3 className="text-neutral-900 font-medium text-sm">
-              {"End Date"}
+              {language?.v3?.fundraiser?.end_date}
             </h3>
-            <p className="text-neutral-900 font-normal text-sm capitalize">
+            <p className="text-neutral-900 font-normal text-sm capitalize px-4">
               {dealDetail?.end_at || language?.v3?.common?.not_added}
             </p>
           </div>
           <div className="mt-10 mb-4">
-            <h2 className="text-black text-xl font-bold">{"Terms"}</h2>
+            <h2 className="text-black text-xl font-bold">{language?.v3?.fundraiser?.terms}</h2>
           </div>
-        {dealDetail?.safe_type && (
-          <React.Fragment>
+          {dealDetail?.safe_type && (
+            <React.Fragment>
+              <div className="py-4 border-b-neutral-200 w-full inline-flex items-center justify-between">
+                <h3 className="text-neutral-900 font-medium text-sm">
+                  {language?.v3?.fundraiser?.valuation_cap}
+                </h3>
+                <p className="text-neutral-900 font-normal text-sm capitalize px-4">
+                  {dealDetail.terms[0]?.value !== null
+                    ? comaFormattedNumber(
+                        dealDetail.terms[0]?.value,
+                        DealCheckType.STARTUP
+                      )
+                    : language?.v3?.fundraiser?.no}
+                </p>
+              </div>
+
+              <div className="py-4 border-b-neutral-200 w-full inline-flex items-center justify-between">
+                <h3 className="text-neutral-900 font-medium text-sm">
+                  {language?.v3?.fundraiser?.discount}
+                </h3>
+                <p className="text-neutral-900 font-normal text-sm capitalize px-4">
+                  {dealDetail.terms[1]?.value !== null
+                    ? `${dealDetail.terms[1]?.value}%`
+                    : language?.v3?.fundraiser?.no}
+                </p>
+              </div>
+
+              <div className="py-4 border-b-neutral-200 w-full inline-flex items-center justify-between">
+                <h3 className="text-neutral-900 font-medium text-sm">
+                  {language?.v3?.fundraiser?.mfn_only}
+                </h3>
+                <p className="text-neutral-900 font-normal text-sm capitalize px-4">
+                  {dealDetail.terms[2]?.value !== null &&
+                  typeof dealDetail.terms[2]?.value === "object"
+                    ? language?.v3?.fundraiser?.no
+                    : dealDetail.terms[2]?.value
+                    ? language?.v3?.fundraiser?.yes
+                    : language?.v3?.fundraiser?.no}
+                </p>
+              </div>
+
+              <div className="py-4 border-b-neutral-200 w-full inline-flex items-center justify-between">
+                <h3 className="text-neutral-900 font-medium text-sm">
+                  {language?.v3?.fundraiser?.min_check_size}
+                </h3>
+                <p className="text-neutral-900 font-normal text-sm capitalize px-4">
+                  {dealDetail.terms[3]?.value !== null
+                    ? comaFormattedNumber(
+                        dealDetail.terms[3]?.value,
+                        DealCheckType.STARTUP
+                      )
+                    : language?.v3?.fundraiser?.no}
+                </p>
+              </div>
+
+              <div className="py-4 border-b-neutral-200 w-full inline-flex items-center justify-between">
+                <h3 className="text-neutral-900 font-medium text-sm">
+                  {language?.v3?.fundraiser?.pro_rata}
+                </h3>
+                <p className="text-neutral-900 font-normal text-sm capitalize px-4">
+                  {dealDetail.terms[4]?.value !== null &&
+                  typeof dealDetail.terms[4]?.value === "object"
+                    ?language?.v3?.fundraiser?.no
+                    : dealDetail.terms[4]?.value
+                    ? language?.v3?.fundraiser?.yes
+                    : language?.v3?.fundraiser?.no}
+                </p>
+              </div>
+
+              <div className="py-4 border-b-neutral-200 w-full inline-flex items-center justify-between">
+                <h3 className="text-neutral-900 font-medium text-sm">
+                  {language?.v3?.fundraiser?.additional_terms}
+                </h3>
+                <p className="text-neutral-900 font-normal text-sm capitalize px-4">
+                  {dealDetail.terms[5]?.value !== null &&
+                  typeof dealDetail.terms[5]?.value === "object"
+                    ? language?.v3?.fundraiser?.no
+                    : dealDetail.terms[5]?.value ||language?.v3?.fundraiser?.no}
+                </p>
+              </div>
+            </React.Fragment>
+          )}
+
+          {dealDetail?.equity_type && (
+            <React.Fragment>
               <div className="py-4  border-b-neutral-200 w-full inline-flex items-center justify-between">
-            <h3 className="text-neutral-900 font-medium text-sm">
-              {"Valuation Cap"}
-            </h3>
-            <p className="text-neutral-900 font-normal text-sm capitalize">
-              {comaFormattedNumber(dealDetail?.terms[0]?.value, DealCheckType.STARTUP) || "No"}
-            </p>
-          </div>
-          <div className="py-4  border-b-neutral-200 w-full inline-flex items-center justify-between">
-            <h3 className="text-neutral-900 font-medium text-sm">
-              {"Discount"}
-            </h3>
-            <p className="text-neutral-900 font-normal text-sm capitalize">
-            {dealDetail?.terms[1]?.value !== null ? `${dealDetail?.terms[1]?.value}%` : "No"}
-
-            </p>
-          </div>
-          <div className="py-4  border-b-neutral-200 w-full inline-flex items-center justify-between">
-            <h3 className="text-neutral-900 font-medium text-sm">
-              {"MFN Only"}
-            </h3>
-            <p className="text-neutral-900 font-normal text-sm capitalize">
-              {dealDetail?.terms[2]?.is_enabled ? "Yes" : "No"}
-            </p>
-          </div>
-          <div className="py-4  border-b-neutral-200 w-full inline-flex items-center justify-between">
-            <h3 className="text-neutral-900 font-medium text-sm">
-              {"Minimum Check Size"}
-            </h3>
-            <p className="text-neutral-900 font-normal text-sm capitalize">
-              {comaFormattedNumber(dealDetail?.terms[3]?.value,DealCheckType.STARTUP) || "No"}
-            </p>
-          </div>
-          <div className="py-4  border-b-neutral-200 w-full inline-flex items-center justify-between">
-            <h3 className="text-neutral-900 font-medium text-sm">
-              {"Pro rata"}
-            </h3>
-            <p className="text-neutral-900 font-normal text-sm capitalize">
-            {dealDetail?.terms[4]?.is_enabled ? "Yes" : "No"}
-            </p>
-          </div>
-          <div className="py-4  border-b-neutral-200 w-full inline-flex items-center justify-between">
-            <h3 className="text-neutral-900 font-medium text-sm">
-              {"Additional Terms"}
-            </h3>
-            <p className="text-neutral-900 font-normal text-sm capitalize">
-            {dealDetail?.terms[5]?.value || "No"}
-            </p>
-          </div> 
-          </React.Fragment>
-        )}
-
-        {dealDetail?.equity_type && (
-          <React.Fragment>
-          <div className="py-4  border-b-neutral-200 w-full inline-flex items-center justify-between">
-            <h3 className="text-neutral-900 font-medium text-sm">
-              {"Minimum Check Size"}
-            </h3>
-            <p className="text-neutral-900 font-normal text-sm capitalize">
-              {comaFormattedNumber(dealDetail?.terms[0]?.value, DealCheckType.STARTUP) || "No"}
-            </p>
-          </div>
-          <div className="py-4  border-b-neutral-200 w-full inline-flex items-center justify-between">
-            <h3 className="text-neutral-900 font-medium text-sm">
-              {"Pro rata"}
-            </h3>
-            <p className="text-neutral-900 font-normal text-sm capitalize">
-            {dealDetail?.terms[1]?.is_enabled ? "Yes" : "No"}
-            </p>
-          </div>
-          <div className="py-4  border-b-neutral-200 w-full inline-flex items-center justify-between">
-            <h3 className="text-neutral-900 font-medium text-sm">
-              {"Additional Terms"}
-            </h3>
-            <p className="text-neutral-900 font-normal text-sm capitalize">
-            {dealDetail?.terms[2]?.value || "No"}
-            </p>
-          </div> 
-          </React.Fragment>
-        )}  
+                <h3 className="text-neutral-900 font-medium text-sm">
+                  {language?.v3?.fundraiser?.min_check_size}
+                </h3>
+                <p className="text-neutral-900 font-normal text-sm capitalize px-4">
+                  {comaFormattedNumber(
+                    dealDetail?.terms[0]?.value,
+                    DealCheckType.STARTUP
+                  ) || language?.v3?.fundraiser?.no}
+                </p>
+              </div>
+              <div className="py-4  border-b-neutral-200 w-full inline-flex items-center justify-between">
+                <h3 className="text-neutral-900 font-medium text-sm">
+                  {language?.v3?.fundraiser?.pro_rata}
+                </h3>
+                <p className="text-neutral-900 font-normal text-sm capitalize px-4">
+                  {dealDetail?.terms[1]?.is_enabled ? language?.v3?.fundraiser?.yes : language?.v3?.fundraiser?.no}
+                </p>
+              </div>
+              <div className="py-4  border-b-neutral-200 w-full inline-flex items-center justify-between">
+                <h3 className="text-neutral-900 font-medium text-sm">
+                  {language?.v3?.fundraiser?.additional_terms}
+                </h3>
+                <p className="text-neutral-900 font-normal text-sm capitalize px-4" >
+                  {dealDetail?.terms[2]?.value || language?.v3?.fundraiser?.no}
+                </p>
+              </div>
+            </React.Fragment>
+          )}
         </section>
       );
     else if (state === KanzRoles.PROPERTY_OWNER)
@@ -238,50 +284,50 @@ const DealViewDetails = ({ dealDetail, state }: any) => {
             <h3 className="text-neutral-900 font-medium text-sm">
               {language?.v3?.table?.title}
             </h3>
-            <p className="text-neutral-900 font-normal text-sm capitalize">
+            <p className="text-neutral-900 font-normal text-sm capitalize px-4">
               {dealDetail?.title || language?.v3?.common?.not_added}
             </p>
           </div>
           <div className="mt-10 mb-4">
-            <h2 className="text-black text-xl font-medium">Location</h2>
+            <h2 className="text-black text-xl font-medium">{language?.v3?.fundraiser?.location}</h2>
           </div>
           <div className="py-4  w-full inline-flex items-center justify-between">
-            <h3 className="text-neutral-900 font-medium text-sm">Country</h3>
-            <p className="text-neutral-900 font-normal text-sm capitalize">
+            <h3 className="text-neutral-900 font-medium text-sm">{language?.v3?.fundraiser?.country}</h3>
+            <p className="text-neutral-900 font-normal text-sm capitalize px-4">
               {dealDetail?.address?.country_name}
             </p>
           </div>
           <div className="py-4  w-full inline-flex items-center justify-between">
-            <h3 className="text-neutral-900 font-medium text-sm">State</h3>
-            <p className="text-neutral-900 font-normal text-sm capitalize">
+            <h3 className="text-neutral-900 font-medium text-sm">{language?.v3?.fundraiser?.state}</h3>
+            <p className="text-neutral-900 font-normal text-sm capitalize px-4">
               {dealDetail?.address?.state}
             </p>
           </div>
           <div className="py-4  w-full inline-flex items-center justify-between">
-            <h3 className="text-neutral-900 font-medium text-sm">City</h3>
-            <p className="text-neutral-900 font-normal text-sm capitalize">
+            <h3 className="text-neutral-900 font-medium text-sm">{language?.v3?.fundraiser?.city}</h3>
+            <p className="text-neutral-900 font-normal text-sm capitalize px-4">
               {dealDetail?.address?.city}
             </p>
           </div>
           <div className="py-4  w-full inline-flex items-center justify-between">
-            <h3 className="text-neutral-900 font-medium text-sm">Area </h3>
-            <p className="text-neutral-900 font-normal text-sm capitalize">
+            <h3 className="text-neutral-900 font-medium text-sm">{language?.v3?.fundraiser?.area}</h3>
+            <p className="text-neutral-900 font-normal text-sm capitalize px-4">
               {dealDetail?.address?.area}
             </p>
           </div>
           <div className="py-4 w-full inline-flex items-center justify-between">
             <h3 className="text-neutral-900 font-medium text-sm">
-              Building Name
+              {language?.v3?.fundraiser?.building_name}
             </h3>
-            <p className="text-neutral-900 font-normal text-sm capitalize">
+            <p className="text-neutral-900 font-normal text-sm capitalize px-4">
               {dealDetail?.address?.building_name}
             </p>
           </div>
           <div className="py-4  w-full inline-flex items-center justify-between">
             <h3 className="text-neutral-900 font-medium text-sm">
-              Street Address
+             {language?.v3?.fundraiser?.street_address}
             </h3>
-            <p className="text-neutral-900 font-normal text-sm capitalize">
+            <p className="text-neutral-900 font-normal text-sm capitalize px-4">
               {dealDetail?.address?.street_address}
             </p>
           </div>
@@ -289,7 +335,7 @@ const DealViewDetails = ({ dealDetail, state }: any) => {
             <h3 className="text-neutral-900 font-medium text-sm">
               {language?.v3?.table?.size}
             </h3>
-            <p className="text-neutral-900 font-normal text-sm capitalize">
+            <p className="text-neutral-900 font-normal text-sm capitalize px-4">
               {comaFormattedNumber(dealDetail?.size)} sqft
             </p>
           </div>
@@ -303,7 +349,7 @@ const DealViewDetails = ({ dealDetail, state }: any) => {
                   <h3 className="text-neutral-900 font-medium text-sm">
                     {language?.v3?.deal?.beds}
                   </h3>
-                  <p className="text-neutral-900 font-normal text-sm capitalize">
+                  <p className="text-neutral-900 font-normal text-sm capitalize px-4">
                     {dealDetail?.features?.bedrooms}
                   </p>
                 </div>
@@ -313,7 +359,7 @@ const DealViewDetails = ({ dealDetail, state }: any) => {
                   <h3 className="text-neutral-900 font-medium text-sm">
                     {language?.v3?.deal?.kitchen}
                   </h3>
-                  <p className="text-neutral-900 font-normal text-sm capitalize">
+                  <p className="text-neutral-900 font-normal text-sm capitalize px-4">
                     {dealDetail?.features?.kitchen}
                   </p>
                 </div>
@@ -323,7 +369,7 @@ const DealViewDetails = ({ dealDetail, state }: any) => {
                   <h3 className="text-neutral-900 font-medium text-sm">
                     {language?.v3?.deal?.washroom}
                   </h3>
-                  <p className="text-neutral-900 font-normal text-sm capitalize">
+                  <p className="text-neutral-900 font-normal text-sm capitalize px-4">
                     {dealDetail?.features?.washroom}
                   </p>
                 </div>
@@ -333,7 +379,7 @@ const DealViewDetails = ({ dealDetail, state }: any) => {
                   <h3 className="text-neutral-900 font-medium text-sm">
                     {language?.v3?.deal?.parking}
                   </h3>
-                  <p className="text-neutral-900 font-normal text-sm capitalize">
+                  <p className="text-neutral-900 font-normal text-sm capitalize px-4">
                     {dealDetail?.features?.parking}
                   </p>
                 </div>
@@ -343,7 +389,7 @@ const DealViewDetails = ({ dealDetail, state }: any) => {
                   <h3 className="text-neutral-900 font-medium text-sm">
                     {language?.v3?.deal?.swim}
                   </h3>
-                  <p className="text-neutral-900 font-normal text-sm capitalize">
+                  <p className="text-neutral-900 font-normal text-sm capitalize px-4">
                     {dealDetail?.features?.swimming_pool}
                   </p>
                 </div>
@@ -353,7 +399,7 @@ const DealViewDetails = ({ dealDetail, state }: any) => {
                   <h3 className="text-neutral-900 font-medium text-sm">
                     {language?.v3?.deal?.por_2}
                   </h3>
-                  <p className="text-neutral-900 font-normal text-sm capitalize">
+                  <p className="text-neutral-900 font-normal text-sm capitalize px-4">
                     ${numberFormatter(dealDetail?.features?.rental_amount)} (
                     {dealDetail?.features?.rental_period})
                   </p>
@@ -362,7 +408,7 @@ const DealViewDetails = ({ dealDetail, state }: any) => {
               {dealDetail?.description && (
                 <div className="py-6 border-b-[2px]  border-b-neutral-200 border-t-[2px]  border-t-neutral-200 w-full inline-flex items-center justify-between">
                   <h3 className="text-neutral-900 font-medium text-sm">
-                    Property Description
+                    {language?.v3?.fundraiser?.property_description}
                   </h3>
                   <p className="text-neutral-900 font-normal ml-3 text-sm capitalize text-justify ">
                     {dealDetail?.description}
@@ -370,55 +416,62 @@ const DealViewDetails = ({ dealDetail, state }: any) => {
                 </div>
               )}
               <div className="mt-10 mb-4">
-            <h2 className="text-black text-xl font-bold">{"Deal Timeline"}</h2>
-          </div>
-          <div className="py-4  border-b-neutral-200 w-full inline-flex items-center justify-between">
-            <h3 className="text-neutral-900 font-medium text-sm">
-              {"Start Date"}
-            </h3>
-            <p className="text-neutral-900 font-normal text-sm capitalize">
-              {dealDetail?.start_at || language?.v3?.common?.not_added}
-            </p>
-          </div>
-          <div className="py-4 border-b-[1px] border-b-neutral-200 w-full inline-flex items-center justify-between">
-            <h3 className="text-neutral-900 font-medium text-sm">
-              {"End Date"}
-            </h3>
-            <p className="text-neutral-900 font-normal text-sm capitalize">
-              {dealDetail?.end_at || language?.v3?.common?.not_added}
-            </p>
-          </div>
+                <h2 className="text-black text-xl font-bold">
+                  {language?.v3?.fundraiser?.deal_timeline}
+                </h2>
+              </div>
+              <div className="py-4  border-b-neutral-200 w-full inline-flex items-center justify-between">
+                <h3 className="text-neutral-900 font-medium text-sm">
+                  {language?.v3?.fundraiser?.start_date}
+                </h3>
+                <p className="text-neutral-900 font-normal text-sm capitalize px-4">
+                  {dealDetail?.start_at || language?.v3?.common?.not_added}
+                </p>
+              </div>
+              <div className="py-4 border-b-[1px] border-b-neutral-200 w-full inline-flex items-center justify-between">
+                <h3 className="text-neutral-900 font-medium text-sm">
+                  {language?.v3?.fundraiser?.end_date}
+                </h3>
+                <p className="text-neutral-900 font-normal text-sm capitalize px-4">
+                  {dealDetail?.end_at || language?.v3?.common?.not_added}
+                </p>
+              </div>
               {dealDetail?.selling_price && (
                 <div>
                   <div className="mt-10 mb-4">
                     <h2 className="text-black text-xl font-medium">
-                      Selling Price
+                     {language?.v3?.fundraiser?.selling_price}
                     </h2>
                   </div>
 
                   <div className="py-6 border-b-neutral-200 border-t-[2px]  border-t-neutral-200 w-full inline-flex items-center justify-between">
                     <h3 className="text-neutral-900 font-medium text-sm">
-                      Price
+                      {language?.v3?.fundraiser?.price}
                     </h3>
-                    <p className="text-neutral-900 font-normal text-sm capitalize">
-                      {comaFormattedNumber(dealDetail?.selling_price,DealCheckType.PROPERTY)}
+                    <p className="text-neutral-900 font-normal text-sm capitalize px-4">
+                      {comaFormattedNumber(
+                        dealDetail?.selling_price,
+                        DealCheckType.PROPERTY
+                      )}
                     </p>
                   </div>
                 </div>
               )}
-              {dealDetail?.expected_dividend_yield !== 0.0 && dealDetail?.expected_dividend_yield &&
-                dealDetail?.expected_annual_return !== 0.0 && dealDetail?.expected_annual_return && (
+              {dealDetail?.expected_dividend_yield !== 0.0 &&
+                dealDetail?.expected_dividend_yield &&
+                dealDetail?.expected_annual_return !== 0.0 &&
+                dealDetail?.expected_annual_return && (
                   <div className="border-t-[2px]  border-b-neutral-200">
                     <div className="mt-10 mb-4">
                       <h2 className="text-black text-xl font-medium">
-                        Expected Return
+                        {language?.v3?.fundraiser?.expected_return}
                       </h2>
                     </div>
                     <div className="py-4  w-full inline-flex items-center justify-between">
                       <h3 className="text-neutral-900 font-medium text-sm">
                         {language?.v3?.deal?.expected_dividend_yield}
                       </h3>
-                      <p className="text-neutral-900 font-normal text-sm capitalize">
+                      <p className="text-neutral-900 font-normal text-sm capitalize px-4">
                         {dealDetail?.expected_dividend_yield + "%" ||
                           language?.v3?.common?.not_added}
                       </p>
@@ -427,7 +480,7 @@ const DealViewDetails = ({ dealDetail, state }: any) => {
                       <h3 className="text-neutral-900 font-medium text-sm">
                         {language?.v3?.deal?.expected_annual_return}
                       </h3>
-                      <p className="text-neutral-900 font-normal text-sm capitalize">
+                      <p className="text-neutral-900 font-normal text-sm capitalize px-4">
                         {dealDetail?.expected_annual_return + "%" ||
                           language?.v3?.common?.not_added}
                       </p>
@@ -446,7 +499,7 @@ const DealViewDetails = ({ dealDetail, state }: any) => {
       {dealDetail && getRoleBasedUI()}
       <section className="bg-white rounded-md border-[1px] border-neutral-200 px-6 py-4 w-1/4 min-h-[250px]">
         <h3 className="font-medium text-xl text-neutral-900 mb-4">
-          {"Deal Status"}
+          {language?.v3?.deal.status}
         </h3>
         <div className="relative flex flex-col justify-center">
           {React.Children.toArray(
@@ -454,85 +507,69 @@ const DealViewDetails = ({ dealDetail, state }: any) => {
               return (
                 <div className="relative w-[30px] inline-flex items-center">
                   <span className="inline-flex items-center flex-col">
-                    {  dealDetail?.status === "live" && (
+                    {dealDetail?.status === "live" && (
                       <img
                         src={ApprovedSVG}
                         alt="Approved"
                         className="h-[20px] w-[20px]"
                       />
                     )}
-                 {
-                    dealDetail?.status === "submitted"   && (
-                      index === 0 ? (
+                    {dealDetail?.status === "submitted" &&
+                      (index === 0 ? (
                         <div className="h-[20px] w-[20px] bg-neutral-200 rounded-full inline-grid place-items-center">
                           <div className="h-[12px] w-[12px] bg-cyan-800 rounded-full"></div>
                         </div>
-                      ) : (
-                        index === 1 || index === 2 || index ===3 ? (
-                          <div className="h-[20px] w-[20px] bg-neutral-300 rounded-full inline-grid place-items-center"></div>
-                        ) :null
-                      )
-                    )
-                  }
-                 {
-                    dealDetail?.status === "draft" || dealDetail?.status === "reopened" && (
-                      <div className="h-[20px] w-[20px] bg-neutral-300 rounded-full inline-grid place-items-center"></div>
-                    )
-                  }
+                      ) : index === 1 || index === 2 || index === 3 ? (
+                        <div className="h-[20px] w-[20px] bg-neutral-300 rounded-full inline-grid place-items-center"></div>
+                      ) : null)}
+                    {dealDetail?.status === "draft" ||
+                      (dealDetail?.status === "reopened" && (
+                        <div className="h-[20px] w-[20px] bg-neutral-300 rounded-full inline-grid place-items-center"></div>
+                      ))}
 
-                 {
-                    dealDetail?.status === "verified"  && (
-                        index === 0 ? (
-                          <img
+                    {dealDetail?.status === "verified" &&
+                      (index === 0 ? (
+                        <img
                           src={ApprovedSVG}
                           alt="Approved"
                           className="h-[20px] w-[20px]"
                         />
-                        ) : (
-                          index === 1 ? (
-                            <div className="h-[20px] w-[20px] bg-neutral-200 rounded-full inline-grid place-items-center">
-                            <div className="h-[12px] w-[12px] bg-cyan-800 rounded-full"></div>
-                          </div>
-                          ) : index === 2 ? (
-                            <div className="h-[20px] w-[20px] bg-neutral-300 rounded-full inline-grid place-items-center"></div>
-                          ) : index === 3 ? (
-                            <div className="h-[20px] w-[20px] bg-neutral-300 rounded-full inline-grid place-items-center"></div>
-                          ): null
-                        )
-                      )
-                  }
-                 {
-                    dealDetail?.status === "approved"  && (
-                        index === 0 ? (
-                          <img
+                      ) : index === 1 ? (
+                        <div className="h-[20px] w-[20px] bg-neutral-200 rounded-full inline-grid place-items-center">
+                          <div className="h-[12px] w-[12px] bg-cyan-800 rounded-full"></div>
+                        </div>
+                      ) : index === 2 ? (
+                        <div className="h-[20px] w-[20px] bg-neutral-300 rounded-full inline-grid place-items-center"></div>
+                      ) : index === 3 ? (
+                        <div className="h-[20px] w-[20px] bg-neutral-300 rounded-full inline-grid place-items-center"></div>
+                      ) : null)}
+                    {dealDetail?.status === "approved" &&
+                      (index === 0 ? (
+                        <img
                           src={ApprovedSVG}
                           alt="Approved"
                           className="h-[20px] w-[20px]"
                         />
-                        ) : (
-                          index === 1 ? (
-                            <img
-                            src={ApprovedSVG}
-                            alt="Approved"
-                            className="h-[20px] w-[20px]"
-                          />
-                          ) : index === 2 ? (
-                            <img
-                            src={ApprovedSVG}
-                            alt="Approved"
-                            className="h-[20px] w-[20px]"
-                          />
-                          ) : index === 3 ? (
-                            <div className="h-[20px] w-[20px] bg-neutral-300 rounded-full inline-grid place-items-center"></div>
-                          ) : null
-                        )
-                      )
-                  }
+                      ) : index === 1 ? (
+                        <img
+                          src={ApprovedSVG}
+                          alt="Approved"
+                          className="h-[20px] w-[20px]"
+                        />
+                      ) : index === 2 ? (
+                        <img
+                          src={ApprovedSVG}
+                          alt="Approved"
+                          className="h-[20px] w-[20px]"
+                        />
+                      ) : index === 3 ? (
+                        <div className="h-[20px] w-[20px] bg-neutral-300 rounded-full inline-grid place-items-center"></div>
+                      ) : null)}
                     {index !== dummy.length - 1 && (
                       <div className="h-[55px] w-1 bg-neutral-300"></div>
                     )}
                   </span>
-                  <small className="absolute top-[2px] left-[80%] whitespace-nowrap text-xs font-medium text-neutral-500">
+                  <small className={`absolute top-[2px] ${orientation === "rtl" ? "right-[80%]" : "left-[80%]"} whitespace-nowrap text-xs font-medium text-neutral-500`}>
                     {item.title}
                   </small>
                 </div>

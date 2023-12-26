@@ -21,8 +21,8 @@ const FundRaiser = ({}: any) => {
   const language: any = useSelector((state: RootState) => state.language.value);
 
   const sectionTabs = [
-    { id: 1, title: "Startup" },
-    { id: 2, title: "Property" },
+    { id: 1, title: language?.v3?.fundraiser?.startup },
+    { id: 2, title: language?.v3?.fundraiser?.property },
   ];
   const metadata: any = useSelector((state: RootState) => state.metadata);
   const [startupRiskModal, setstartupRiskModal]: any = useState(null);
@@ -89,7 +89,7 @@ const FundRaiser = ({}: any) => {
                 }}
                 className="w-[170px]"
               >
-                {`Create ${selected.title} Deal`}
+                {`${language?.v3?.fundraiser?.create} ${selected.title} ${language?.v3?.fundraiser?.deal}`}
               </Button>
             </section>
             <section className="">

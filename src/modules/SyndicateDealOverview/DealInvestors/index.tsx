@@ -16,11 +16,12 @@ import { getDealInvestors } from "../../../apis/syndicate.api";
 const Investors = ({dealID, dealCreatorView} : any) => {
   const dispatch = useDispatch();
   const authToken: any = useSelector((state: RootState) => state.auth.value);
+  const language: any = useSelector((state: RootState) => state.language.value);
 
   const columns = [
-    "Name",
-    "Date",
-    "Amount Raised",
+    language?.v3?.fundraiser?.name,
+    language?.v3?.fundraiser?.date,
+    language?.v3?.fundraiser?.amount_raised,
     
   ];
   const [loading, setLoading] = useState(false);
@@ -72,7 +73,7 @@ const Investors = ({dealID, dealCreatorView} : any) => {
       <section className="inline-flex justify-between items-center w-full">
         <div className="w-full">
           {!dealCreatorView && ( <h1 className="text-black font-medium text-2xl mb-2">
-            {"Deal Activity"}
+          {language?.v3?.investor?.deal_activity}
           </h1>) }
         </div>
       </section>
@@ -91,7 +92,7 @@ const Investors = ({dealID, dealCreatorView} : any) => {
               removeHref={true}
               noDataNode={
                 <span className="absolute left-1/2 top-1/2 translate-x-[-50%] translate-y-[-50%]">
-                  No investors for now!
+                  {language?.v3?.fundraiser?.no_investors_for_now}
                 </span>
               }
             />

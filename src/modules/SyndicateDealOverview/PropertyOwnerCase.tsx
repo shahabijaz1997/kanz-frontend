@@ -76,11 +76,13 @@ const PropertyOwnerCase = ({
   const [modalOpen, setModalOpen]: any = useState(null);
   const [modalOpen2, setModalOpen2]: any = useState(null);
   const [modalOpen3, setModalOpen3]: any = useState(null);
-  const [currentDocumentDownload, setcurrentDocumentDownload]: any =
-    useState(null);
+  const orientation: any = useSelector(
+    (state: RootState) => state.orientation.value
+  );
   const [invited, setInvited]: any = useState();
   const [modalOpenComment, setmodalOpenComment]: any = useState(null);
   const [disableUpload, setdisableUpload]: any = useState(false);
+  const [InvestButtonDisable, setInvestButtonDisable]: any = useState(false);
   const [selectedCurrency, setSelectedCurrency] = useState("USD");
   const [investmentAmount, setAmount] = useState<number>();
 
@@ -201,7 +203,10 @@ const PropertyOwnerCase = ({
         authToken
       );
       if (status === 200) {
-        toast.success("Congratulations! Approved", toastUtil);
+        toast.success(
+          language?.v3?.syndicate?.congrats_deal_approval,
+          toastUtil
+        );
         setModalOpen3(false);
       }
     } catch (error) {
@@ -237,7 +242,10 @@ const PropertyOwnerCase = ({
         authToken
       );
       if (status === 200) {
-        toast.success("Congratulations! Approved", toastUtil);
+        toast.success(
+          language?.v3?.syndicate?.congrats_deal_approval,
+          toastUtil
+        );
         setModalOpen3(false);
       }
     } catch (error) {
@@ -331,13 +339,17 @@ const PropertyOwnerCase = ({
         authToken
       );
       if (status === 200) {
-        toast.success("Invested", toastUtil);
+        toast.success(language?.v3?.syndicate?.invested, toastUtil);
       }
     } catch (error: any) {
-      if (error?.response?.status === 400)
+      if (error?.response?.status === 400){
+        setInvestButtonDisable(false)
         toast.warning(error?.response?.data?.status?.message, toastUtil);
+      }
+        
     } finally {
       onGetdeal();
+      setInvestButtonDisable(false)
       setLoading(false);
     }
   };
@@ -352,7 +364,7 @@ const PropertyOwnerCase = ({
             </div>
             <div className="w-[80%] inline-block align-start">
               <h3 className="text-neutral-900 font-medium text-sm pb-1">
-                Selling Price
+                {language?.v3?.table?.sellingPrice}
               </h3>
               <p className="text-neutral-900 font-normal text-sm capitalize">
                 AED {comaFormattedNumber(deal?.selling_price)}
@@ -367,7 +379,7 @@ const PropertyOwnerCase = ({
             </div>
             <div className="w-[80%] inline-block align-start">
               <h3 className="text-neutral-900 font-medium text-sm pb-1">
-                Expected Dividend Yield
+                {language?.v3?.deal?.expected_dividend_yield}
               </h3>
               <p className="text-neutral-900 font-normal text-sm capitalize">
                 {comaFormattedNumber(deal?.expected_dividend_yield)}%
@@ -382,7 +394,7 @@ const PropertyOwnerCase = ({
             </div>
             <div className="w-[80%] inline-block align-start">
               <h3 className="text-neutral-900 font-medium text-sm pb-1">
-                Expected Annual Appreciation
+                {language?.v3?.deal?.expected_annual_return}
               </h3>
               <p className="text-neutral-900 font-normal text-sm capitalize">
                 {comaFormattedNumber(deal?.expected_annual_return)}%
@@ -397,7 +409,7 @@ const PropertyOwnerCase = ({
             </div>
             <div className="w-[80%] inline-block align-start">
               <h3 className="text-neutral-900 font-medium text-sm pb-1">
-                Property on a Rent
+                {language?.v3?.deal?.por_2}
               </h3>
               <p className="text-neutral-900 font-normal text-sm capitalize">
                 AED {comaFormattedNumber(deal?.features?.rental_amount)} (
@@ -421,15 +433,17 @@ const PropertyOwnerCase = ({
         />
       )}
       <section>
-        <Header onSuperLogout={(e:boolean) => {
-          setLoading(e)
-        }} />
+        <Header
+          onSuperLogout={(e: boolean) => {
+            setLoading(e);
+          }}
+        />
       </section>
       <aside
         className="w-full h-full flex items-start justify-start"
         style={{ height: "calc(100% - 70px)" }}
       >
-        {user.type?.toLowerCase() === "investor" ? (
+        {user?.type?.toLowerCase() === "investor" ? (
           <Sidebar type={KanzRoles.INVESTOR} />
         ) : (
           <Sidebar type={KanzRoles.SYNDICATE} />
@@ -456,7 +470,15 @@ const PropertyOwnerCase = ({
                     : navigate(returnPath)
                 }
               >
-                <Chevrond stroke="#000" className="rotate-90 w-4 h-4" />
+                 <Chevrond
+                    className={`${
+                      orientation === "rtl"
+                        ? "rotate-[-90deg]"
+                        : "rotate-[90deg]"
+                    } w-4 h-4`}
+                    strokeWidth={2}
+                    stroke={"#000"}
+                  />
                 <small className="text-neutral-500 text-sm font-medium">
                   {language?.v3?.common?.investments}
                 </small>
@@ -520,7 +542,7 @@ const PropertyOwnerCase = ({
                     prefix={<img src={ImgSVG} />}
                     className="absolute right-2 bottom-2 !py-1 bg-white border-[1px] border-gray-900 !text-gray-900 hover:!bg-white !font-normal"
                   >
-                    View all photos
+                    {language?.v3?.deal?.view_all_photos}
                   </Button>
                 </section>
               )}
@@ -528,7 +550,7 @@ const PropertyOwnerCase = ({
                 {deal?.features?.bedrooms && (
                   <section className="inline-flex flex-col items-start justify-start">
                     <small className="text-neutral-500 text-sm font-medium mb-2">
-                      Bedrooms
+                      {language?.v3?.deal?.beds}
                     </small>
                     <span className="inline-flex items-center gap-2">
                       <img src={BedSVG} alt="Kitchen" />
@@ -541,7 +563,7 @@ const PropertyOwnerCase = ({
                 {deal?.features?.kitchen && (
                   <section className="inline-flex flex-col items-start justify-start">
                     <small className="text-neutral-500 text-sm font-medium mb-2">
-                      Kitchen
+                      {language?.v3?.deal?.kitchen}
                     </small>
                     <span className="inline-flex items-center gap-2">
                       <img src={ChefSVG} alt="Kitchen" />
@@ -554,12 +576,12 @@ const PropertyOwnerCase = ({
                 {deal?.features?.washrooms && (
                   <section className="inline-flex flex-col items-start justify-start">
                     <small className="text-neutral-500 text-sm font-medium mb-2">
-                      Washrooms
+                      {language?.v3?.deal?.washroom}
                     </small>
                     <span className="inline-flex items-center gap-2">
                       <img src={TubSVG} alt="Kitchen" />
                       <small className="text-black font-semibold">
-                        {deal?.features?.washrooms}
+                        {deal?.features?.washroom}
                       </small>
                     </span>
                   </section>
@@ -567,7 +589,7 @@ const PropertyOwnerCase = ({
                 {deal?.features?.parking_space && (
                   <section className="inline-flex flex-col items-start justify-start">
                     <small className="text-neutral-500 text-sm font-medium mb-2">
-                      Parking
+                      {language?.v3?.deal?.parking}
                     </small>
                     <span className="inline-flex items-center gap-2">
                       <img src={CarSVG} alt="Kitchen" />
@@ -581,7 +603,7 @@ const PropertyOwnerCase = ({
                 {deal?.features?.swimming_pool && (
                   <section className="inline-flex flex-col items-start justify-start">
                     <small className="text-neutral-500 text-sm font-medium mb-2">
-                      Swimming Pool
+                      {language?.v3?.deal?.swim}
                     </small>
                     <span className="inline-flex items-center gap-2">
                       <img src={SwimSVG} alt="Kitchen" />
@@ -597,7 +619,7 @@ const PropertyOwnerCase = ({
                   deal?.unique_selling_points?.map((usp: any) => {
                     return (
                       <div className="mb-4">
-                        <div className="bg-cyan-800 rounded-full h-10 w-10 overflow-hidden inline-grid place-items-center inline-block align-top mr-4">
+                        <div className="bg-cyan-800 rounded-full h-10 w-10 overflow-hidden inline-grid place-items-center inline-block align-top ml-4 mr-4">
                           <img src={BagSVG} alt="Bag" />
                         </div>
                         <div className="inline-block w-[80%] align-top">
@@ -658,14 +680,15 @@ const PropertyOwnerCase = ({
                     <div className="mt-3">
                       <Button
                         disabled={
-                          investmentAmount === undefined || investmentAmount < 1
+                          investmentAmount === undefined || investmentAmount < 1 || InvestButtonDisable
                         }
                         onClick={() => {
                           syndicateInvestment();
+                          setInvestButtonDisable(true)
                         }}
                         className="w-full"
                       >
-                        Invest Now
+                        {language?.v3?.syndicate?.invest_now}
                       </Button>
                     </div>
                   </section>
@@ -674,7 +697,7 @@ const PropertyOwnerCase = ({
 
               <section className="mt-10 ">
                 <h1 className="text-black font-medium text-2xl mb-3">
-                  About the Property
+                  {language?.v3?.deal?.about_prop}
                 </h1>
                 <p className="text-sm text-neutral-500 font-medium">
                   {deal?.description}
@@ -720,19 +743,24 @@ const PropertyOwnerCase = ({
                   </ul>
                 </div>
               </section>
-              {user.type.toLowerCase() === "syndicate" &&
+              {user?.type?.toLowerCase() === "syndicate" &&
                 deal?.status !== DealStatus.LIVE && (
                   <div className="w-full inline-flex justify-end gap-4 mb-3">
                     {deal?.invite?.status !== DealStatus.ACCEPTED && (
                       <div className="w-full">
                         {deal?.invite ? (
-                            <Button className="w-full" onClick={() => setModalOpen2(true)}>
-                              {language?.v3?.button?.interested}
-                            </Button>
-                        
+                          <Button
+                            className="w-full"
+                            onClick={() => setModalOpen2(true)}
+                          >
+                            {language?.v3?.button?.interested}
+                          </Button>
                         ) : (
-                          <Button className="w-full" onClick={() => setModalOpenSyndication(true)}>
-                            {"Request Syndication"}
+                          <Button
+                            className="w-full"
+                            onClick={() => setModalOpenSyndication(true)}
+                          >
+                            {language?.v3?.syndicate?.req_syndication}
                           </Button>
                         )}
                       </div>
@@ -746,7 +774,7 @@ const PropertyOwnerCase = ({
             {/* Section Right */}
             <section className="w-[30%]">
               {/* Show/Hide based on some conditions */}
-              {user.type.toLowerCase() === "syndicate" &&
+              {user?.type?.toLowerCase() === "syndicate" &&
                 deal?.status === DealStatus.LIVE &&
                 deal?.current_deal_syndicate && (
                   <div className="w-full inline-flex justify-end gap-4">
@@ -761,7 +789,7 @@ const PropertyOwnerCase = ({
                     </div>
                   </div>
                 )}
-              {user.type.toLowerCase() === "syndicate" &&
+              {user?.type?.toLowerCase() === "syndicate" &&
                 deal?.status !== DealStatus.LIVE && (
                   <div className="w-full inline-flex justify-end gap-4">
                     {deal?.invite?.status !== DealStatus.ACCEPTED && (
@@ -780,7 +808,7 @@ const PropertyOwnerCase = ({
                           </>
                         ) : (
                           <Button onClick={() => setModalOpenSyndication(true)}>
-                            {"Request Syndication"}
+                            {language?.v3?.syndicate?.req_syndication}
                           </Button>
                         )}
                       </React.Fragment>
@@ -797,7 +825,7 @@ const PropertyOwnerCase = ({
 
                 {deal?.status === DealStatus.LIVE && !deal?.is_invested && (
                   <section className="mb-4 mt-1">
-                    <div className="border-neutral-500 border-[1px] rounded-md min-w-full px-2 pr-10 justify-between flex bg-white">
+                    <div  className={`${orientation === "rtl" ? "pl-7" : "pr-10"} "border-neutral-500 border-[1px] rounded-md min-w-full px-2 justify-between flex bg-white`}>
                       <label className="w-full">
                         <input
                           className="min-w-full h-9 no-spin-button"
@@ -833,14 +861,15 @@ const PropertyOwnerCase = ({
                     <div className="mt-4">
                       <Button
                         disabled={
-                          investmentAmount === undefined || investmentAmount < 1
+                          investmentAmount === undefined || investmentAmount < 1 || InvestButtonDisable
                         }
                         onClick={() => {
+                          setInvestButtonDisable(true)
                           syndicateInvestment();
                         }}
                         className="w-full"
                       >
-                        Invest Now
+                        {language?.v3?.syndicate?.invest_now}
                       </Button>
                     </div>
                   </section>
@@ -852,10 +881,10 @@ const PropertyOwnerCase = ({
                 <div className="">
                   <aside className="border-[1px] border-neutral-200 rounded-md w-full p-3 mt-5 bg-white items-center gap-3">
                     <div className="rounded-md text-md font-semibold inline-grid place-items-center">
-                      {"Your commitment"}
+                      {language?.v3?.syndicate?.your_commitment}
                     </div>
                     <div className="rounded-md text-xs inline-grid place-items-center">
-                      {"You’re not able to reverse the commitment after date"}
+                      {language?.v3?.syndicate?.not_able_to_rev}
                     </div>
                     <aside className="border-t-[2px] border-neutral-200  w-full p-3 mt-5 inline-flex items-center gap-3">
                       <div className="h-8 w-8 rounded-md bg-cbc-grey-sec inline-grid place-items-center">
@@ -864,7 +893,7 @@ const PropertyOwnerCase = ({
                       <div className="flex items-center justify-between w-full">
                         <div>
                           <h2 className="text-neutral-900 font-normal text-sm">
-                            {"Commitment"}
+                            {language?.v3?.syndicate?.commitment}
                           </h2>
                           <p className="text-black font-medium text-lg">
                             AED {comaFormattedNumber(deal?.my_invested_amount)}
@@ -876,7 +905,7 @@ const PropertyOwnerCase = ({
                             className="!py-1 !px-2 !font-medium !rounded-full border-[1px] border-black !text-xs"
                             type="outlined"
                           >
-                            Reverse
+                            {language?.v3?.syndicate?.reverse}
                           </Button>
                         </div>
                       </div>
@@ -948,7 +977,7 @@ const PropertyOwnerCase = ({
                 <aside className="mt-5">
                   {" "}
                   <h2 className="text-neutral-700 text-xl pb-2 font-medium">
-                    Property Links
+                    {language?.v3?.deal?.prop_links}
                   </h2>
                   <div className="inline-flex flex-col justify-between h-full w-full overflow-hidden">
                     {React.Children.toArray(
@@ -989,14 +1018,14 @@ const PropertyOwnerCase = ({
                   <div className="justify-between mb-4 w-full border-[1px]  rounded-md border-b-neutral-200 bg-white ">
                     <div className="inline-flex justify-between items-center w-full border-b-[1px] border-b-neutral-200">
                       <div className="pb-1 m-4  text-lg font-bold   ">
-                        Comments
+                        {language?.v3?.syndicate?.comments}
                       </div>
                       <Button
                         className="mr-4"
                         onClick={() => setmodalOpenComment(true)}
                         type="outlined"
                       >
-                        Add Reply
+                        {language?.v3?.syndicate?.add_reply}
                       </Button>
                     </div>
 
@@ -1015,7 +1044,7 @@ const PropertyOwnerCase = ({
                               <span className="ml-2 mr-4">
                                 <h1 className="font-medium capitalize text-lg">
                                   {comments?.author_id === user?.id
-                                    ? "You"
+                                    ? language?.v3?.syndicate?.you
                                     : comments?.author_name}
                                   <span className="text-xs font-neutral-700 ml-5 font-normal">
                                     {timeAgo(comments?.created_at)}
@@ -1046,7 +1075,7 @@ const PropertyOwnerCase = ({
           <aside className="bg-white w-[400px] rounded-md h-full">
             <header className="bg-cbc-grey-sec h-16 py-2 px-3 inline-flex w-full justify-between items-center">
               <h3 className="text-xl font-medium text-neutral-700">
-                Request Changes
+                {language?.v3?.syndicate?.req_changes}
               </h3>
               <div
                 className="bg-white h-8 w-8 border-[1px] border-black rounded-md shadow shadow-cs-6 p-1 cursor-pointer"
@@ -1066,7 +1095,7 @@ const PropertyOwnerCase = ({
                   htmlFor=""
                   className="text-neutral-900 font-medium text-sm"
                 >
-                  Add Comment
+                  {language?.v3?.syndicate?.add_comment}
                 </label>
                 <textarea
                   value={changes?.comment}
@@ -1075,7 +1104,7 @@ const PropertyOwnerCase = ({
                       return { ...prev, comment: e.target.value };
                     })
                   }
-                  placeholder="Add Comment"
+                  placeholder={language?.v3?.syndicate?.add_comment}
                   className=" h-[100px] mt-1 shadow-sm appearance-none border border-neutral-300 rounded-md w-full py-2 px-3 text-gray-500 leading-tight focus:outline-none focus:shadow-outline"
                 ></textarea>
               </div>
@@ -1125,7 +1154,7 @@ const PropertyOwnerCase = ({
                       return { ...prev, comment: e.target.value };
                     })
                   }
-                  placeholder="Add Reply"
+                  placeholder={language?.v3?.syndicate?.add_reply}
                   className=" h-[100px] mt-1 shadow-sm appearance-none border border-neutral-300 rounded-md w-full py-2 px-3 text-gray-500 leading-tight focus:outline-none focus:shadow-outline"
                 ></textarea>
               </div>
@@ -1141,7 +1170,7 @@ const PropertyOwnerCase = ({
                   setmodalOpenComment(false);
                 }}
               >
-                {"Reply"}
+                {language?.v3?.syndicate?.reply}
               </Button>
             </footer>
           </aside>
@@ -1171,11 +1200,10 @@ const PropertyOwnerCase = ({
                   htmlFor=""
                   className="text-neutral-900 text-center font-bold text-xl"
                 >
-                  Deal Approved by You!
+                  {language?.v3?.syndicate?.deal_approved_by_you}
                 </label>
                 <p className="pt-5">
-                  You've successfully approved the deal. Now you can upload the
-                  required document. Click “Continue” to upload the documents
+                  {language?.v3?.syndicate?.deal_approved_para}
                 </p>
               </div>
             </section>
@@ -1189,7 +1217,7 @@ const PropertyOwnerCase = ({
                   setModalOpen3(true);
                 }}
               >
-                Continue
+                {language?.v3?.syndicate?.continue}
               </Button>
             </footer>
           </aside>
@@ -1207,12 +1235,11 @@ const PropertyOwnerCase = ({
                   htmlFor=""
                   className="text-neutral-900 text-center font-bold text-xl"
                 >
-                  Request for syndication!
+                  {language?.v3?.syndicate?.req_for_syndication}
                 </label>
                 <p className="pt-5">
-                  You can request for syndication on this deal. You can upload
-                  the required document. Click “Continue” to upload the
-                  documents
+                {language?.v3?.syndicate?.req_changes_para}
+
                 </p>
               </div>
             </section>
@@ -1226,7 +1253,8 @@ const PropertyOwnerCase = ({
                   setModalOpen3(true);
                 }}
               >
-                Continue
+                                {language?.v3?.syndicate?.continue}
+
               </Button>
             </footer>
           </aside>
@@ -1240,7 +1268,8 @@ const PropertyOwnerCase = ({
           <aside className="bg-white w-[400px] rounded-md h-full">
             <header className="bg-cbc-grey-sec h-16 py-2 px-3 inline-flex w-full justify-between items-center">
               <h3 className="text-xl font-medium text-neutral-700">
-                Deal Approval
+              {language?.v3?.syndicate?.deal_approval}
+
               </h3>
               <div
                 className="bg-white h-8 w-8 border-[1px] border-black rounded-md shadow shadow-cs-6 p-1 cursor-pointer"
@@ -1267,7 +1296,8 @@ const PropertyOwnerCase = ({
                   >
                     <UploadIcon />
                     <small className="text-cyan-800 text-sm font-medium">
-                      Upload a Document
+                    {language?.v3?.syndicate?.upload_a_doc}
+
                     </small>
                   </button>
                   <input

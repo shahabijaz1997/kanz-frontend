@@ -19,21 +19,9 @@ export const investmentAccridiation = (investorID: any, payload: any, token: str
     });
 };
 
-export const getInvitees = (inviteeID:any ,token: string, filters :any) => {
-  const queryParameters = new URLSearchParams();
-  if (filters !== "All"){
-    queryParameters.append("status", filters.toLowerCase());
-  }
-  const apiUrl = `${ENV.API_URL}/${ENV.API_VERSION}/invitees/${inviteeID}/invites?${queryParameters.toString()}`;
-  return axios.get(apiUrl, {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  });
-};
 export const getAllDeals = ( token: string, filters :any, searchQuery:string, currentPage:number) => {
   const queryParameters = new URLSearchParams();
-  if (filters !== "All"){
+  if (filters !== "all"){
     queryParameters.append("deal_type", filters.toLowerCase());
   }
   queryParameters.append("page", currentPage.toString())
@@ -50,7 +38,7 @@ export const getAllDeals = ( token: string, filters :any, searchQuery:string, cu
 export const getCommitedDeals = ( token: string, filters :any, searchQuery:string, currentPage:number) => {
   const queryParameters = new URLSearchParams();
   queryParameters.append("page", currentPage.toString())
-  if (filters !== "All"){
+  if (filters !== "all"){
     queryParameters.append("deal_type", filters.toLowerCase());    
   }
   if (searchQuery.trim() !== "") {
@@ -63,33 +51,6 @@ export const getCommitedDeals = ( token: string, filters :any, searchQuery:strin
     },
   });
 };
-
-
-export const getInvites = (token: string, filters :any) => {
-    const queryParameters = new URLSearchParams();
-    if (filters !== "All"){
-      queryParameters.append("status", filters.toLowerCase());
-    }
-    const apiUrl = `${ENV.API_URL}/${ENV.API_VERSION}/invites?${queryParameters.toString()}`;
-    return axios.get(apiUrl, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
-  };
-  export const getCommittments = (token: string, filters :any) => {
-    const queryParameters = new URLSearchParams();
-    if (filters !== "All"){
-      queryParameters.append("status", filters.toLowerCase());
-    }
-    const apiUrl = `${ENV.API_URL}/${ENV.API_VERSION}/committed?${queryParameters.toString()}`;
-    return axios.get(apiUrl, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
-  };
-
   export const getFollowedSyndicates = (token: string, searchQuery:string, currentPage:number) => {
   const queryParameters = new URLSearchParams();
   queryParameters.append("page", currentPage.toString())

@@ -32,6 +32,9 @@ const DealDetail = ({}: any) => {
   const { id }: any = params;
   const language: any = useSelector((state: RootState) => state.language.value);
   const authToken: any = useSelector((state: RootState) => state.auth.value);
+  const orientation: any = useSelector(
+    (state: RootState) => state.orientation.value
+  );
 
   const [loading, setLoading]: any = useState(false);
   const [dealDetail, setDealDetail]: any = useState(null);
@@ -63,31 +66,30 @@ const DealDetail = ({}: any) => {
     dealDetail?.model !== "_"
       ? dealDetail?.model === DealPromotionType.SYNDICATE
         ? [
-            { id: 1, title: "Details" },
-            { id: 3, title: "Investors" },
-            { id: 4, title: "Documents" },
-            { id: 5, title: "Activity" },
-            { id: 6, title: "Invited Syndicates" },
-            { id: 7, title: "Interested Syndicates" },
+            { id: 1, title: language?.v3?.fundraiser?.details },
+            { id: 3, title: language?.v3?.fundraiser?.investors },
+            { id: 4, title: language?.v3?.fundraiser?.documents },
+            { id: 5, title: language?.v3?.fundraiser?.activity },
+            { id: 6, title: language?.v3?.fundraiser?.invited_syndicates },
+            { id: 7, title: language?.v3?.fundraiser?.interested_syndicates },
           ]
         : [
-            { id: 1, title: "Details" },
-            { id: 3, title: "Investors" },
-            { id: 4, title: "Documents" },
-            { id: 5, title: "Activity" },
-            { id: 6, title: "Invited Investors" },
+            { id: 1, title: language?.v3?.fundraiser?.details },
+            { id: 3, title: language?.v3?.fundraiser?.investors },
+            { id: 4, title: language?.v3?.fundraiser?.documents },
+            { id: 5, title: language?.v3?.fundraiser?.activity },
+            { id: 6, title:  language?.v3?.fundraiser?.invited_investors},
           ]
       : [
-          { id: 1, title: "Details" },
-          { id: 3, title: "Investors" },
-          { id: 4, title: "Documents" },
-          { id: 5, title: "Activity" },
+          { id: 1, title: language?.v3?.fundraiser?.details },
+          { id: 3, title: language?.v3?.fundraiser?.investors },
+          { id: 4, title: language?.v3?.fundraiser?.documents },
+          { id: 5, title: language?.v3?.fundraiser?.activity },
         ];
   if (state === KanzRoles.PROPERTY_OWNER) {
-    const newTab = { id: 2, title: "Unique Selling Points" };
+    const newTab = { id: 2, title: language?.v3?.fundraiser?.unique_selling_points };
     tabs.splice(1, 0, newTab);
   }
-
   const [selected, setSelected]: any = useState(tabs[0]);
   useLayoutEffect(() => {
     if (selected.id === 1) onGetDealDetail();
@@ -117,7 +119,15 @@ const DealDetail = ({}: any) => {
               className="inline-flex items-center gap-2 relative top-[-25px] cursor-pointer"
               onClick={() => navigate(-1)}
             >
-              <Chevrond stroke="#000" className="rotate-90 w-4 h-4" />
+              <Chevrond
+                    className={`${
+                      orientation === "rtl"
+                        ? "rotate-[-90deg]"
+                        : "rotate-[90deg]"
+                    } w-4 h-4`}
+                    strokeWidth={2}
+                    stroke={"#000"}
+                  />
               <small className="text-neutral-500 text-sm font-medium">
                 {language?.v3?.common?.deal}
               </small>

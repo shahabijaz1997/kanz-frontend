@@ -63,6 +63,7 @@ const CreateDeal = () => {
     (state: RootState) => state.questionnaire.value
   );
 
+
   const [step, setStep]: any = useState(Number(params?.id));
   const [multipleFieldsPayload, setMultipleFieldsPayload]: any = useState([]);
   const [restrictions, setRestrictions]: any = useState([]);
@@ -83,8 +84,8 @@ const CreateDeal = () => {
     setStep(Number(params?.id) || 1);
     getDealStepDetails();
   }, [params, step]);
- 
-/*   useEffect(()=>{
+
+  /*   useEffect(()=>{
   }) */
   /* UI Actions */
 
@@ -220,7 +221,6 @@ const CreateDeal = () => {
       }, 500);
     }
   };
-  console.log("METADATA DEAL TYPE", metadata.dealType)
 
   const onSetNext = async () => {
     try {
@@ -534,8 +534,7 @@ const CreateDeal = () => {
                   <span className="font-normal text-lg text-neutral-500">
                     {metadata.dealType === KanzRoles.PROPERTY_OWNER
                       ? CURRENCIES[1]
-                      : CURRENCIES[0]
-                      }
+                      : CURRENCIES[0]}
                   </span>
                 </span>
               )}
@@ -556,7 +555,7 @@ const CreateDeal = () => {
             </div>
             {showZeroWarning && (
               <span className="text-xs text-red-600">
-                Amount cannot be zero.
+                {language?.v3?.fundraiser?.amount_cannot_be_zero}
               </span>
             )}
             <ul className="inline-flex justify-between w-full items-center gap-6 mt-3">
@@ -842,7 +841,48 @@ const CreateDeal = () => {
     return (
       <section className="flex items-start justify-center flex-col mt-2 w-full">
         <section className="mb-5 w-full relative mt-1">
-          <div dangerouslySetInnerHTML={{ __html: ques?.description }}></div>
+          <div>
+            <span className="font-bold text-lg">
+              {language?.v3?.fundraiser?.terms_and_conditions}
+            </span>{" "}
+            <br />
+            <span className="font-bold">
+              {" "}
+              {language?.v3?.fundraiser?.acceptance_of_terms}
+            </span>{" "}
+            <br />
+            {language?.v3?.fundraiser?.welcome_message} <br />
+            {language?.v3?.fundraiser?.access_or_use_agreement} <br />
+            {language?.v3?.fundraiser?.disagreement_message} <br />
+            <span className="font-bold">
+              {" "}
+              {language?.v3?.fundraiser?.use_of_the_app}
+            </span>{" "}
+            <br />
+            {language?.v3?.fundraiser?.minimum_age_requirement} <br />
+            {language?.v3?.fundraiser?.account_confidentiality} <br />
+            {language?.v3?.fundraiser?.illegal_or_unauthorized_use} <br />
+            {language?.v3?.fundraiser?.no_harassment_abuse_harm} <br />
+            {language?.v3?.fundraiser?.no_transmission_of_worms_viruses} <br />
+            <span className="font-bold">
+              {" "}
+              {language?.v3?.fundraiser?.fundraising_guidelines}
+            </span>{" "}
+            <br />
+            {language?.v3?.fundraiser?.fundraising_app_platform} <br />
+            {language?.v3?.fundraiser?.user_responsibility} <br />
+            {language?.v3?.fundraiser?.no_fraudulent_or_misleading_use} <br />
+            {language?.v3?.fundraiser?.right_to_remove_or_suspend} <br />
+            <span className="font-bold">
+              {" "}
+              {language?.v3?.fundraiser?.financial_transactions}
+            </span>{" "}
+            <br />
+            {language?.v3?.fundraiser?.non_refundable_donations} <br />
+            {language?.v3?.fundraiser?.processing_fee} <br />
+            {language?.v3?.fundraiser?.no_credit_card_information_storage}{" "}
+            <br />
+          </div>
         </section>
 
         <section

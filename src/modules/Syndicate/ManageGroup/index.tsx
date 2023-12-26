@@ -11,7 +11,7 @@ import { KanzRoles } from "../../../enums/roles.enum";
 import { toastUtil } from "../../../utils/toast.utils";
 import { toast } from "react-toastify";
 import Spinner from "../../../shared/components/Spinner";
-import ActionButton from "./ActionButton"
+import ActionButton from "./ActionButton";
 
 import {
   comaFormattedNumber,
@@ -24,17 +24,12 @@ import Sidebar from "../../../shared/components/Sidebar";
 import CustomStatus from "../../../shared/components/CustomStatus";
 import CrossIcon from "../../../ts-icons/crossIcon.svg";
 import {
-  delRemoveInvestor,
   getGroupInvestors,
   getNonAddedInvestors,
   postAddInvestor,
 } from "../../../apis/syndicate.api";
-import { DealCheckType } from "../../../enums/types.enum";
 
-
-
-
-const ManageGroup = ({  }: any) => {
+const ManageGroup = ({}: any) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
@@ -51,32 +46,37 @@ const ManageGroup = ({  }: any) => {
   const [loading, setLoading] = useState(false);
   const [modalLoading, setmodalLoading] = useState(false);
   const [investors, setInvestors] = useState<any>([]);
-  const [filter, setFilterCounts]:any = useState([]);
+  const [filter, setFilterCounts]: any = useState([]);
   const [searchQuery, setSearchQuery]: any = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const [paginationData, setpaginationData] = useState(null);
   const [searchModalQuery, setModalSearchQuery]: any = useState("");
+  const [buttonDisable, setButtonDisable]: any = useState(false);
 
-  const setLoadingFalse = () =>{
-    setLoading(false)
-  }
-  const setLoadingTrue = () =>{
-    setLoading(true)
-  }
+  const setLoadingFalse = () => {
+    setLoading(false);
+  };
+  const setLoadingTrue = () => {
+    setLoading(true);
+  };
 
-  const [tabs] = useState(["All", "Added", "Follower"]);
+  const [tabs] = useState<any>({
+    'all': language?.v3?.startup?.overview?.all,
+    'added': language?.v3?.syndicate?.added,
+    'follower': language?.v3?.syndicate?.follower,
+  });
   const columns = [
-    "Investor",
-    "Invested",
-    "Investments",
-    "Join Status",
-    "Join Date",
-    "Action",
+    language?.v3?.syndicate?.investor,
+    language?.v3?.syndicate?.invested,
+    language?.v3?.syndicate?.investments,
+    language?.v3?.syndicate?.join_status,
+    language?.v3?.syndicate?.join_date,
+    language?.v3?.syndicate?.action,
   ];
 
   useEffect(() => {
     dispatch(saveDataHolder(""));
-    setCurrentPage(1)
+    setCurrentPage(1);
     getMembers();
   }, [selectedTab]);
   useEffect(() => {
@@ -85,26 +85,39 @@ const ManageGroup = ({  }: any) => {
   }, [currentPage]);
 
   const getMembers = async () => {
-    setLoading(true)
+    setLoading(true);
     try {
-      let { status, data } = await getGroupInvestors(authToken, selectedTab,searchQuery,currentPage);
+      let { status, data } = await getGroupInvestors(
+        authToken,
+        selectedTab,
+        searchQuery,
+        currentPage
+      );
 
       if (status === 200) {
-        setpaginationData(data?.status?.data?.pagy)
-        setFilterCounts(data?.status?.data?.stats)
-        let investors = data?.status?.data?.records?.map((investor: any) => {  
+        setpaginationData(data?.status?.data?.pagy);
+        setFilterCounts(data?.status?.data?.stats);
+        let investors = data?.status?.data?.records?.map((investor: any) => {
           return {
             id: investor?.id,
             filterStatus: investor?.status,
-            ["Investor"]: investor?.member_name || "N/A",
-            ["Invested"]: `$${comaFormattedNumber(investor?.invested_amount)}`,
-            ["Investments"]: investor?.no_investments,
-            ["Join Status"]:
+            [ language?.v3?.syndicate?.investor]: investor?.member_name || "N/A",
+            [ language?.v3?.syndicate?.invested]: `$${comaFormattedNumber(investor?.invested_amount)}`,
+            [ language?.v3?.syndicate?.investments]: investor?.no_investments,
+            [ language?.v3?.syndicate?.join_status]:
               <CustomStatus options={investor?.connection} /> || "N/A",
-            ["Join Date"]:
+            [ language?.v3?.syndicate?.join_date]:
               <span className="px-2">{investor?.joining_date}</span> || " N/A",
             Steps: investor?.current_state?.steps,
-            ["Action"]: <ActionButton investorID={Number(investor?.id)} setLoading={setLoading} setLoadingTrue={setLoadingTrue} setLoadingFalse={setLoadingFalse} getMembers={getMembers} />,
+            [ language?.v3?.syndicate?.action]: (
+              <ActionButton
+                investorID={Number(investor?.id)}
+                setLoading={setLoading}
+                setLoadingTrue={setLoadingTrue}
+                setLoadingFalse={setLoadingFalse}
+                getMembers={getMembers}
+              />
+            ),
           };
         });
         setGroupInvestors(investors);
@@ -120,33 +133,15 @@ const ManageGroup = ({  }: any) => {
       setLoading(false);
     }
   };
-  
-  const getCountvalue = ( value:string ) =>
-  { 
-    let count = 0 ;
-    switch (value) {
-      case  "All" : 
-      count = filter?.all
-      break
-      case  "Added" : 
-      count = filter?.added
-      break
-      case  "Follower" : 
-      count = filter?.follower
-      break
-    } 
-
-    return count
-    
-  }
-
+  const getCountvalue = (value: string) => {
+    return filter[value] || 0
+  };
 
   useEffect(() => {
     getAllUserListings();
   }, []);
 
-  const onAddInvestor = async (currSyndId: any, investorID: any ) => {
-
+  const onAddInvestor = async (currSyndId: any, investorID: any) => {
     try {
       setLoading(true);
       const { status } = await postAddInvestor(
@@ -160,16 +155,17 @@ const ManageGroup = ({  }: any) => {
       );
       if (status === 200) {
         toast.dismiss();
-        toast.success("Investor Added", toastUtil);
-        const dataCopy = [...investors]
-        const index = dataCopy.findIndex(item => item.id === investorID);
-        dataCopy[index].status = true
-        
+        toast.success(language?.v3?.syndicate?.investor_added, toastUtil);
+        const dataCopy = [...investors];
+        const index = dataCopy.findIndex((item) => item.id === investorID);
+        dataCopy[index].status = true;
       }
     } catch (error: any) {
       if (error?.response?.status === 400)
         toast.warning(error?.response?.data?.status?.message, toastUtil);
+        setButtonDisable(false)
     } finally {
+      setButtonDisable(false)
       getMembers();
     }
   };
@@ -177,7 +173,10 @@ const ManageGroup = ({  }: any) => {
   const getAllUserListings = async () => {
     try {
       setmodalLoading(true);
-      let { status, data } = await getNonAddedInvestors(authToken, searchModalQuery);
+      let { status, data } = await getNonAddedInvestors(
+        authToken,
+        searchModalQuery
+      );
       if (status === 200) {
         let investorData = data?.status?.data || [];
         let investors: any = investorData.map((investor: any) => ({
@@ -200,17 +199,18 @@ const ManageGroup = ({  }: any) => {
         error.response.data.status === 400
       ) {
         toast.dismiss();
-        toast.warn("Already Invited", toastUtil);
+        toast.warn(language?.v3?.syndicate?.already_invited, toastUtil);
       }
       if (error.response && error.response.status === 401) {
         dispatch(saveToken(""));
-        navigate(RoutesEnums.LOGIN, { state: RoutesEnums.FUNDRAISER_DASHBOARD });
+        navigate(RoutesEnums.LOGIN, {
+          state: RoutesEnums.FUNDRAISER_DASHBOARD,
+        });
       }
     } finally {
       setmodalLoading(false);
     }
   };
-
 
   return (
     <>
@@ -239,33 +239,33 @@ const ManageGroup = ({  }: any) => {
                 <section className="inline-flex justify-between items-center w-full">
                   <div className="w-full">
                     <h1 className="text-black font-medium text-2xl mb-2">
-                      {"Manage Group"}
+                      { language?.v3?.syndicate?.manage_group}
                     </h1>
 
                     <span className="w-full flex items-center gap-5">
-                    <div className="rounded-md shadow-cs-6 bg-white border-[1px] border-gray-200 h-9 overflow-hidden min-w-[300px] inline-flex items-center px-2">
-                      <SearchIcon
-                        onClick={() => {
-                          getMembers();
-                        }}
-                      />
-                      <input
-                       onKeyDown={(e) => {
-                        if (e.key === 'Enter') {
-                          getMembers();
-                        }
-                      }}
-                        value={searchQuery}
-                        onChange={(e) => setSearchQuery(e.target.value)}
-                        type="search"
-                        className="h-full w-full outline-none pl-2 text-sm font-normal "
-                        placeholder={"Search for investors"}
-                      />
-                    </div>
+                      <div className="rounded-md shadow-cs-6 bg-white border-[1px] border-gray-200 h-9 overflow-hidden min-w-[300px] inline-flex items-center px-2">
+                        <SearchIcon
+                          onClick={() => {
+                            getMembers();
+                          }}
+                        />
+                        <input
+                          onKeyDown={(e) => {
+                            if (e.key === "Enter") {
+                              getMembers();
+                            }
+                          }}
+                          value={searchQuery}
+                          onChange={(e) => setSearchQuery(e.target.value)}
+                          type="search"
+                          className="h-full w-full outline-none pl-2 text-sm font-normal "
+                          placeholder={ language?.v3?.syndicate?.search_for_investors}
+                        />
+                      </div>
 
                       <ul className="inline-flex items-center">
                         {React.Children.toArray(
-                          tabs.map((tab: any) => (
+                         Object.keys(tabs).map((tab: any) => (
                             <li
                               onClick={() => {
                                 setSelectedTab(tab);
@@ -276,7 +276,7 @@ const ManageGroup = ({  }: any) => {
                                   : "text-gray-500"
                               } `}
                             >
-                              {tab} &nbsp;({getCountvalue(tab)})
+                              {tabs[tab]} &nbsp;({getCountvalue(tab)})
                             </li>
                           ))
                         )}
@@ -290,7 +290,7 @@ const ManageGroup = ({  }: any) => {
                     }}
                     className="w-[170px]"
                   >
-                    {"+ Add New Member"}
+                    { language?.v3?.syndicate?.add_new_member}
                   </Button>
                 </section>
                 <section className="mt-10">
@@ -302,13 +302,13 @@ const ManageGroup = ({  }: any) => {
                     noDataNode={
                       <div className="absolute left-1/2 top-1/2 translate-x-[-50%] translate-y-[-50%]">
                         <div className="mb-4 font-medium  text-[#828282]">
-                          No Group Member yet
+                        {language?.v3?.syndicate?.no_group_member_yet}
                         </div>
                         <Button
                           onClick={() => setModalOpen(true)}
                           className=" font-extralight"
                         >
-                          {"+  Create Group"}
+                          {language?.v3?.syndicate?.create_group}
                         </Button>
                       </div>
                     }
@@ -322,7 +322,6 @@ const ManageGroup = ({  }: any) => {
 
       <Modal
         className={"w-[700px] screen1024:w-[300px]"}
-        
         show={modalOpen ? true : false}
       >
         <div
@@ -335,7 +334,7 @@ const ManageGroup = ({  }: any) => {
                 <div
                   className="bg-white h-8 w-8 border-[1px] border-black rounded-md  shadow-cs-6 p-1 cursor-pointer"
                   onClick={() => {
-                    setModalSearchQuery("")
+                    setModalSearchQuery("");
                     setModalOpen(false);
                   }}
                 >
@@ -345,25 +344,25 @@ const ManageGroup = ({  }: any) => {
             </section>
             <section className="inline-flex justify-between items-center mt-2 w-full">
               <span className="w-full flex items-center gap-5">
-              <div className="rounded-md shadow-cs-6 bg-white border-[1px] border-gray-200 h-9 overflow-hidden min-w-full inline-flex items-center px-2">
-                      <SearchIcon
-                        onClick={() => {
-                          getAllUserListings();
-                        }}
-                      />
-                      <input
-                       onKeyDown={(e) => {
-                        if (e.key === 'Enter') {
-                          getAllUserListings();
-                        }
-                      }}
-                        value={searchModalQuery}
-                        onChange={(e) => setModalSearchQuery(e.target.value)}
-                        type="search"
-                        className="h-full w-full outline-none pl-2 text-sm font-normal "
-                        placeholder={"Search for investors"}
-                      />
-                    </div>
+                <div className="rounded-md shadow-cs-6 bg-white border-[1px] border-gray-200 h-9 overflow-hidden min-w-full inline-flex items-center px-2">
+                  <SearchIcon
+                    onClick={() => {
+                      getAllUserListings();
+                    }}
+                  />
+                  <input
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter") {
+                        getAllUserListings();
+                      }
+                    }}
+                    value={searchModalQuery}
+                    onChange={(e) => setModalSearchQuery(e.target.value)}
+                    type="search"
+                    className="h-full w-full outline-none pl-2 text-sm font-normal "
+                    placeholder={language?.v3?.syndicate?.search_for_investors}
+                  />
+                </div>
               </span>
             </section>
             {modalLoading ? (
@@ -384,38 +383,49 @@ const ManageGroup = ({  }: any) => {
                       .toLowerCase()
                       .includes(searchText.toLowerCase())
                   )
-                  .map((investor: any , index : number) => (
+                  .map((investor: any, index: number) => (
                     <div className="py-3 border-b-[1px] border-b-neutral-200 w-full inline-flex items-center">
                       <div className=" justify-between items-center w-full">
                         <p>{investor.member_name}</p>
                         <div className="font-sm text-xs font-light">
-                          {numberFormatter(investor.invested_amount)} invested
-                          in {numberFormatter(investor.no_investments)}{" "}
-                          investments
+                          {numberFormatter(investor.invested_amount)} {language?.v3?.syndicate?.invested}
+                          {language?.v3?.syndicate?.in} {numberFormatter(investor.no_investments)}{" "}
+                          {language?.v3?.syndicate?.investments}
                         </div>
                       </div>
                       <div>
-                        {!investor?.status ?  <Button
-                divStyle="items-center justify-end max-w-fit"
-                type="outlined"
-                className="!p-2 !py-[1px] !border-[#D4D4D4] !shadow-none !border-[1px] !hover:shadow-lg !rounded-full"
-                onClick={() => onAddInvestor(user.id, investor?.id )}
-              >
-                Add
-              </Button> : <Button
-                divStyle="items-center justify-end max-w-fit"
-                type="outlined"
-                className="!p-2 !py-[1px] !border-[#D4D4D4] !border-[1px] !text-[#737373]  !shadow-none !rounded-full"
-              >
-                Added
-              </Button>  }
-                        </div>
+                        {!investor?.status ? (
+                          <Button
+                          disabled={buttonDisable}
+                            divStyle="items-center justify-end max-w-fit"
+                            type="outlined"
+                            className="!p-3 !py-1 !rounded-full"
+                            onClick={() =>{
+                              setButtonDisable(true)
+                              onAddInvestor(user.id, investor?.id)
+                            }}
+                          >
+                            {language?.v3?.syndicate?.add}
+                          </Button>
+                        ) : (
+                          <Button
+                            divStyle="items-center justify-end max-w-fit"
+                            onClick={()=>{
+
+                            }}
+                            type="outlined"
+                            className="!p-2 !py-[1px] !border-[#D4D4D4] !border-[1px] !text-[#737373]  !shadow-none !rounded-full"
+                          >
+                            {language?.v3?.syndicate?.added}
+                          </Button>
+                        )}
+                      </div>
                     </div>
                   ))
               )
             ) : (
               <div className="flex flex-col items-center justify-start mt-8 space-y-4 font-semibold pb-5">
-                All investors invited!
+                {language?.v3?.fundraiser?.all_investors_invited}
               </div>
             )}
           </aside>
