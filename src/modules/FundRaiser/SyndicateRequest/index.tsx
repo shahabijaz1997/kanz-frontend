@@ -382,7 +382,7 @@ const SyndicateRequest = ({}: any) => {
             <section className="border-b-[1px] border-b-neutral-200 pb-5 items-center">
               <aside>
                 <div className="justify-between pr-2 flex items-center">
-                  <span className="text-lg font-bold">Deal</span>
+                  <span className="text-lg font-bold">{language?.v3?.fundriaser?.deal}</span>
                   <span>
                     {" "}
                     <CustomStatus options={dealDetail?.deal?.status} />
