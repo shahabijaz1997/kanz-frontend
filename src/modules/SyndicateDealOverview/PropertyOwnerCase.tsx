@@ -581,7 +581,7 @@ const PropertyOwnerCase = ({
                     <span className="inline-flex items-center gap-2">
                       <img src={TubSVG} alt="Kitchen" />
                       <small className="text-black font-semibold">
-                        {deal?.features?.washroom}
+                        {deal?.features?.washrooms}
                       </small>
                     </span>
                   </section>

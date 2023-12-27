@@ -87,9 +87,9 @@ const FundRaiser = ({}: any) => {
                     setpropertyRiskModal("1");
                   }
                 }}
-                className="w-[170px]"
+                className="w-[190px]"
               >
-                {`${language?.v3?.fundraiser?.create} ${selected.title} ${language?.v3?.fundraiser?.deal}`}
+                {selected.title === language?.v3?.fundraiser?.startup ? language?.v3?.fundraiser?.create_startup_deal : language?.v3?.fundraiser?.create_property_deal}
               </Button>
             </section>
             <section className="">
@@ -141,7 +141,7 @@ const FundRaiser = ({}: any) => {
             </div>
             <aside>
               <h2 className="font-bold text-xl text-center text-neutral-900">
-                {"Startup Risks"}
+              {language?.v3?.startup?.disc_tit}
               </h2>
               <p className="text-sm font-normal text-center text-neutral-500 mt-8 mb-12">
                 {language?.v3?.startup?.disc_desc}
@@ -464,7 +464,7 @@ const FundRaiser = ({}: any) => {
             </div>
             <aside>
               <h2 className="font-bold text-xl text-center text-neutral-900">
-                {"Property Risks"}
+                {language?.v3?.property?.disc_tit}
               </h2>
               <p className="text-sm font-normal text-center text-neutral-500 mt-8 mb-12">
                 {language?.v3?.startup?.disc_desc}

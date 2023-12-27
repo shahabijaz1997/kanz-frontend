@@ -299,7 +299,7 @@ const StartupCase = ({
                   {language?.v3?.fundraiser?.additional_terms}
                 </h3>
                 <p className="text-neutral-900 font-normal text-sm capitalize">
-                  {deal.terms[2]?.is_enabled ? language?.v3?.fundraiser?.yes : language?.v3?.fundraiser?.no}
+                  {deal.terms[2]?.is_enabled ? deal.terms[2]?.value : language?.v3?.fundraiser?.no}
                 </p>
               </div>
             )}
