@@ -289,13 +289,13 @@ const DealViewDetails = ({ dealDetail, state }: any) => {
                   {language?.v3?.fundraiser?.min_check_size}
                 </h3>
                 <p className="text-neutral-900 font-normal text-sm capitalize px-4">
-                  {dealDetail.terms[0]?.value !== null &&
-                  typeof dealDetail.terms[0]?.value === "object" &&
-                  Object.keys(dealDetail.terms[0]?.value).length === 0
+                  {dealDetail.terms[2]?.value !== null &&
+                  typeof dealDetail.terms[2]?.value === "object" &&
+                  Object.keys(dealDetail.terms[2]?.value).length === 0
                     ? language?.v3?.fundraiser?.no
-                    : dealDetail.terms[0]?.value !== null
+                    : dealDetail.terms[2]?.value !== null
                     ? comaFormattedNumber(
-                        dealDetail.terms[0]?.value,
+                        dealDetail.terms[2]?.value,
                         DealCheckType.STARTUP
                       )
                     : language?.v3?.fundraiser?.no}
@@ -306,7 +306,7 @@ const DealViewDetails = ({ dealDetail, state }: any) => {
                   {language?.v3?.fundraiser?.pro_rata}
                 </h3>
                 <p className="text-neutral-900 font-normal text-sm capitalize px-4">
-                  {dealDetail?.terms[1]?.is_enabled
+                  {dealDetail?.terms[0]?.is_enabled
                     ? language?.v3?.fundraiser?.yes
                     : language?.v3?.fundraiser?.no}
                 </p>
@@ -316,13 +316,13 @@ const DealViewDetails = ({ dealDetail, state }: any) => {
                   {language?.v3?.fundraiser?.additional_terms}
                 </h3>
                 <p className="text-neutral-900 font-normal text-sm capitalize px-4">
-                  {dealDetail.terms[2]?.value !== null &&
-                  typeof dealDetail.terms[2]?.value === "object" &&
-                  Object.keys(dealDetail.terms[2]?.value).length === 0
+                  {dealDetail.terms[1]?.value !== null &&
+                  typeof dealDetail.terms[1]?.value === "object" &&
+                  Object.keys(dealDetail.terms[1]?.value).length === 0
                     ? language?.v3?.fundraiser?.no
-                    : dealDetail.terms[2]?.value !== null
+                    : dealDetail.terms[1]?.value !== null
                     ? 
-                        `${dealDetail.terms[2]?.value}`
+                        `${dealDetail.terms[1]?.value}`
                         
                     : language?.v3?.fundraiser?.no}
                 </p>
