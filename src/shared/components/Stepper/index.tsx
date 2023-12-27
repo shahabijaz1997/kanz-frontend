@@ -29,7 +29,7 @@ const Stepper = ({ currentStep = 1, totalSteps = [{ id: 1 }, { id: 2 }, { id: 3 
                     {renderCircle(step)}
                     {step?.id < totalSteps?.at(-1)?.id && (
                         direction === "row" ? (
-                            <div className={`h-0.5  ${currentStep >= step?.id ? "bg-cyan-800" : "bg-neutral-200"} w-20 absolute top-3.5 left-4.5 left-[100%] screen500:w-7`} />) : (
+                            <div className={`h-0.5  ${currentStep >= step?.id ? "bg-cyan-800" : "bg-neutral-200"} w-20 absolute top-3.5 ${orientation !== "rtl" ? `left-4.5 left-[100%]` : `right-4.5 right-[100%]`} screen500:w-7`} />) : (
                             <div className={`h-16 w-0.5 absolute left-3.5 ${currentStep >= step?.id ? "bg-cyan-800" : "bg-neutral-200"} top-[100%] screen500:w-7`} />
                         )
                     )}
