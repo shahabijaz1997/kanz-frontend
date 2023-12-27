@@ -87,9 +87,9 @@ const FundRaiser = ({}: any) => {
                     setpropertyRiskModal("1");
                   }
                 }}
-                className="w-[170px]"
+                className="w-[190px]"
               >
-                {`${language?.v3?.fundraiser?.create} ${selected.title} ${language?.v3?.fundraiser?.deal}`}
+                {selected.title === language?.v3?.fundraiser?.startup ? language?.v3?.fundraiser?.create_startup_deal : language?.v3?.fundraiser?.create_property_deal}
               </Button>
             </section>
             <section className="">
