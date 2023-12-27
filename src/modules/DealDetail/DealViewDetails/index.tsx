@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { useSelector } from "react-redux";
 import { RootState } from "../../../redux-toolkit/store/store";
 import ApprovedSVG from "../../../assets/svg/approved.svg";
@@ -12,6 +12,13 @@ import { DealCheckType } from "../../../enums/types.enum";
 
 const DealViewDetails = ({ dealDetail, state }: any) => {
   const language: any = useSelector((state: RootState) => state.language.value);
+  const [showFullText, setShowFullText] = useState(false);
+
+  const handleToggleText = () => {
+    setShowFullText(!showFullText);
+  };
+  const description =
+    dealDetail?.description || language?.v3?.common?.not_added;
   const dummy = [
     {
       id: 1,
@@ -113,8 +120,15 @@ const DealViewDetails = ({ dealDetail, state }: any) => {
             <h3 className="text-neutral-900 font-medium text-sm w-full  whitespace-nowrap">
               {language?.v3?.fundraiser?.startup_desc}
             </h3>
-            <p className="text-neutral-900  text-xs capitalize text-right  flex-wrap pl-5">
-              {dealDetail?.description || language?.v3?.common?.not_added}
+            <p
+              className={`text-neutral-900 text-xs capitalize ${
+                showFullText
+                  ? "whitespace-pre-line"
+                  : "text-ellipsis overflow-hidden max-w-[500px] whitespace-nowrap"
+              } flex-wrap cursor-pointer`}
+              onClick={handleToggleText}
+            >
+              {description}
             </p>
           </div>
           <div className="mt-10 mb-4">
@@ -216,9 +230,7 @@ const DealViewDetails = ({ dealDetail, state }: any) => {
                   Object.keys(dealDetail.terms[2]?.value).length === 0
                     ? language?.v3?.fundraiser?.no
                     : dealDetail.terms[2]?.value !== null
-                    ? 
-                        `${dealDetail.terms[2]?.value}%`
-                        
+                    ? `${dealDetail.terms[2]?.value}%`
                     : language?.v3?.fundraiser?.no}
                 </p>
               </div>
@@ -228,7 +240,7 @@ const DealViewDetails = ({ dealDetail, state }: any) => {
                   {language?.v3?.fundraiser?.mfn_only}
                 </h3>
                 <p className="text-neutral-900 font-normal text-sm capitalize px-4">
-                  { dealDetail.terms[0]?.is_enabled
+                  {dealDetail.terms[0]?.is_enabled
                     ? language?.v3?.fundraiser?.yes
                     : language?.v3?.fundraiser?.no}
                 </p>
@@ -257,7 +269,7 @@ const DealViewDetails = ({ dealDetail, state }: any) => {
                   {language?.v3?.fundraiser?.pro_rata}
                 </h3>
                 <p className="text-neutral-900 font-normal text-sm capitalize px-4">
-                  { dealDetail.terms[1]?.is_enabled
+                  {dealDetail.terms[1]?.is_enabled
                     ? language?.v3?.fundraiser?.yes
                     : language?.v3?.fundraiser?.no}
                 </p>
@@ -273,9 +285,7 @@ const DealViewDetails = ({ dealDetail, state }: any) => {
                   Object.keys(dealDetail.terms[4]?.value).length === 0
                     ? language?.v3?.fundraiser?.no
                     : dealDetail.terms[4]?.value !== null
-                    ? 
-                        `${dealDetail.terms[4]?.value}`
-                        
+                    ? `${dealDetail.terms[4]?.value}`
                     : language?.v3?.fundraiser?.no}
                 </p>
               </div>
@@ -321,9 +331,7 @@ const DealViewDetails = ({ dealDetail, state }: any) => {
                   Object.keys(dealDetail.terms[1]?.value).length === 0
                     ? language?.v3?.fundraiser?.no
                     : dealDetail.terms[1]?.value !== null
-                    ? 
-                        `${dealDetail.terms[1]?.value}`
-                        
+                    ? `${dealDetail.terms[1]?.value}`
                     : language?.v3?.fundraiser?.no}
                 </p>
               </div>
@@ -474,8 +482,15 @@ const DealViewDetails = ({ dealDetail, state }: any) => {
                   <h3 className="text-neutral-900 font-medium text-sm">
                     {language?.v3?.fundraiser?.property_description}
                   </h3>
-                  <p className="text-neutral-900 font-normal ml-3 text-sm capitalize text-justify ">
-                    {dealDetail?.description}
+                  <p
+                    className={`text-neutral-900 text-xs capitalize ${
+                      showFullText
+                        ? "whitespace-pre-line"
+                        : "text-ellipsis overflow-hidden max-w-[500px] whitespace-nowrap"
+                    } flex-wrap cursor-pointer`}
+                    onClick={handleToggleText}
+                  >
+                    {description}
                   </p>
                 </div>
               )}
