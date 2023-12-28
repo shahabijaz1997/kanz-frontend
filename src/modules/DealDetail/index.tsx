@@ -23,6 +23,7 @@ import Usp from "./Usp";
 import { DealPromotionType } from "../../enums/types.enum";
 import InvitesListing from "../SyndicateDealOverview/InvitesListing";
 import InvitedInvestors from "./InvitedInvestors";
+import { convertStatusLanguage } from "../../utils/string.utils";
 
 const DealDetail = ({}: any) => {
   const params = useParams();
@@ -138,10 +139,10 @@ const DealDetail = ({}: any) => {
                 {dealDetail?.title}
               </h1>
               <div className="inline-flex items-center gap-2">
-                {dealDetail?.model === DealPromotionType.SYNDICATE ? (
+                {convertStatusLanguage(dealDetail?.model) === DealPromotionType.SYNDICATE ? (
                   <div className="relative z-10">
                     <UserListingPopup
-                      approve={dealDetail?.status}
+                      approve={convertStatusLanguage(dealDetail?.status)}
                       dealId={id}
                       type={KanzRoles.SYNDICATE}
                       dealIdReal={dealDetail?.id}
@@ -151,7 +152,7 @@ const DealDetail = ({}: any) => {
                   <div className="relative z-10">
                     <InvitesListing
                       approve={dealDetail?.status}
-                      dealPromotionType={dealDetail?.model}
+                      dealPromotionType={convertStatusLanguage(dealDetail?.model)}
                       dealId={dealDetail?.token}
                       type={KanzRoles.SYNDICATE}
                       dealIdReal={dealDetail?.id}
@@ -170,7 +171,7 @@ const DealDetail = ({}: any) => {
 
             <section className="mt-1 mb-16">
               <DealTable
-                dealType={dealDetail?.category}
+                dealType={convertStatusLanguage(dealDetail?.category)}
                 targetSize={dealDetail?.selling_price}
                 committed={dealDetail?.committed}
                 investors={dealDetail?.investors}
@@ -217,11 +218,11 @@ const DealDetail = ({}: any) => {
             {selected?.id === 4 && <DocumentDetails dealDocs={dealDocs} />}
             {selected?.id === 5 && <ActivityDetails id={dealDetail?.id} />}
             {selected?.id === 6 &&
-              dealDetail?.model === DealPromotionType.SYNDICATE && (
+              convertStatusLanguage(dealDetail?.model) === DealPromotionType.SYNDICATE && (
                 <InvitedSyndicates id={dealDetail?.id} />
               )}
             {selected?.id === 6 &&
-              dealDetail?.model === DealPromotionType.CLASSIC && (
+              convertStatusLanguage(dealDetail?.model) === DealPromotionType.CLASSIC && (
                 <InvitedInvestors id={dealDetail?.id} />
               )}
             {selected?.id === 7 && <Requests id={dealDetail?.id} />}

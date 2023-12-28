@@ -9,9 +9,11 @@ import {
 } from "../../../utils/object.utils";
 import { KanzRoles } from "../../../enums/roles.enum";
 import { DealCheckType } from "../../../enums/types.enum";
+import { convertStatusLanguage } from "../../../utils/string.utils";
 
 const DealViewDetails = ({ dealDetail, state }: any) => {
   const language: any = useSelector((state: RootState) => state.language.value);
+  const event: any = useSelector((state: RootState) => state.event.value);
   const [showFullText, setShowFullText] = useState(false);
 
   const handleToggleText = () => {
@@ -141,9 +143,14 @@ const DealViewDetails = ({ dealDetail, state }: any) => {
               {language?.v3?.fundraiser?.deal_target}
             </h3>
             <p className="text-neutral-900 font-normal text-sm capitalize px-4">
-              {comaFormattedNumber(
+              {event === "ar" ? comaFormattedNumber(
                 dealDetail?.selling_price,
-                DealCheckType.STARTUP
+                DealCheckType.STARTUP,
+                true
+              ): comaFormattedNumber(
+                dealDetail?.selling_price,
+                DealCheckType.STARTUP,
+                false
               )}
             </p>
           </div>
@@ -157,10 +164,15 @@ const DealViewDetails = ({ dealDetail, state }: any) => {
                   {language?.v3?.table?.valuation}
                 </h3>
                 <p className="text-neutral-900 font-normal text-sm capitalize px-4">
-                  {comaFormattedNumber(
-                    dealDetail?.valuation,
-                    DealCheckType.STARTUP
-                  ) || language?.v3?.common?.not_added}
+                {event === "ar" ? comaFormattedNumber(
+                dealDetail?.valuation,
+                DealCheckType.STARTUP,
+                true
+              ): comaFormattedNumber(
+                dealDetail?.valuation,
+                DealCheckType.STARTUP,
+                false
+              ) || language?.v3?.common?.not_added}
                 </p>
               </div>
               <div className="py-4 border-b-[1px] border-b-neutral-200 w-full inline-flex items-center justify-between">
@@ -212,10 +224,15 @@ const DealViewDetails = ({ dealDetail, state }: any) => {
                   Object.keys(dealDetail.terms[5]?.value).length === 0
                     ? language?.v3?.fundraiser?.no
                     : dealDetail.terms[5]?.value !== null
-                    ? comaFormattedNumber(
-                        dealDetail.terms[5]?.value,
-                        DealCheckType.STARTUP
-                      )
+                    ? event === "ar" ? comaFormattedNumber(
+                      dealDetail.terms[5]?.value,
+                      DealCheckType.STARTUP,
+                      true
+                    ): comaFormattedNumber(
+                      dealDetail.terms[5]?.value,
+                      DealCheckType.STARTUP,
+                      false
+                    )
                     : language?.v3?.fundraiser?.no}
                 </p>
               </div>
@@ -256,10 +273,15 @@ const DealViewDetails = ({ dealDetail, state }: any) => {
                   Object.keys(dealDetail.terms[3]?.value).length === 0
                     ? language?.v3?.fundraiser?.no
                     : dealDetail.terms[3]?.value !== null
-                    ? comaFormattedNumber(
-                        dealDetail.terms[3]?.value,
-                        DealCheckType.STARTUP
-                      )
+                    ?  event === "ar" ? comaFormattedNumber(
+                      dealDetail.terms[3]?.value,
+                      DealCheckType.STARTUP,
+                      true
+                    ): comaFormattedNumber(
+                      dealDetail.terms[3]?.value,
+                      DealCheckType.STARTUP,
+                      false
+                    )
                     : language?.v3?.fundraiser?.no}
                 </p>
               </div>
@@ -274,7 +296,7 @@ const DealViewDetails = ({ dealDetail, state }: any) => {
                     : language?.v3?.fundraiser?.no}
                 </p>
               </div>
-
+                
               <div className="py-4 border-b-neutral-200 w-full inline-flex items-center justify-between">
                 <h3 className="text-neutral-900 font-medium text-sm">
                   {language?.v3?.fundraiser?.additional_terms}
@@ -304,10 +326,15 @@ const DealViewDetails = ({ dealDetail, state }: any) => {
                   Object.keys(dealDetail.terms[2]?.value).length === 0
                     ? language?.v3?.fundraiser?.no
                     : dealDetail.terms[2]?.value !== null
-                    ? comaFormattedNumber(
-                        dealDetail.terms[2]?.value,
-                        DealCheckType.STARTUP
-                      )
+                    ?  event === "ar" ? comaFormattedNumber(
+                      dealDetail.terms[2]?.value,
+                      DealCheckType.STARTUP,
+                      true
+                    ): comaFormattedNumber(
+                      dealDetail.terms[2]?.value,
+                      DealCheckType.STARTUP,
+                      false
+                    )
                     : language?.v3?.fundraiser?.no}
                 </p>
               </div>
@@ -408,7 +435,7 @@ const DealViewDetails = ({ dealDetail, state }: any) => {
               {language?.v3?.table?.size}
             </h3>
             <p className="text-neutral-900 font-normal text-sm capitalize px-4">
-              {comaFormattedNumber(dealDetail?.size)} sqft
+              {comaFormattedNumber(dealDetail?.size)} {language?.v3?.common?.sqft}
             </p>
           </div>
           <div className="pt-6 w-full inline-flex items-start justify-between flex-col">
@@ -472,7 +499,15 @@ const DealViewDetails = ({ dealDetail, state }: any) => {
                     {language?.v3?.deal?.por_2}
                   </h3>
                   <p className="text-neutral-900 font-normal text-sm capitalize px-4">
-                    ${numberFormatter(dealDetail?.features?.rental_amount)} (
+                    { event === "ar" ? comaFormattedNumber(
+                      dealDetail?.features?.rental_amount,
+                      DealCheckType.PROPERTY,
+                      true
+                    ): comaFormattedNumber(
+                      dealDetail?.features?.rental_amount,
+                      DealCheckType.PROPERTY,
+                      false
+                    )} (
                     {dealDetail?.features?.rental_period})
                   </p>
                 </div>
@@ -528,10 +563,15 @@ const DealViewDetails = ({ dealDetail, state }: any) => {
                       {language?.v3?.fundraiser?.price}
                     </h3>
                     <p className="text-neutral-900 font-normal text-sm capitalize px-4">
-                      {comaFormattedNumber(
-                        dealDetail?.selling_price,
-                        DealCheckType.PROPERTY
-                      )}
+                       { event === "ar" ? comaFormattedNumber(
+                      dealDetail?.selling_price,
+                      DealCheckType.PROPERTY,
+                      true
+                    ): comaFormattedNumber(
+                      dealDetail?.selling_price,  
+                      DealCheckType.PROPERTY,
+                      false
+                    )}
                     </p>
                   </div>
                 </div>
@@ -572,7 +612,6 @@ const DealViewDetails = ({ dealDetail, state }: any) => {
       );
     else return <div></div>;
   };
-
   return (
     <aside className="flex items-start justify-between mt-10 w-full gap-5">
       {dealDetail && getRoleBasedUI()}
@@ -586,14 +625,14 @@ const DealViewDetails = ({ dealDetail, state }: any) => {
               return (
                 <div className="relative w-[30px] inline-flex items-center">
                   <span className="inline-flex items-center flex-col">
-                    {dealDetail?.status === "live" && (
+                    {convertStatusLanguage(dealDetail?.status) === "live" && (
                       <img
                         src={ApprovedSVG}
                         alt="Approved"
                         className="h-[20px] w-[20px]"
                       />
                     )}
-                    {dealDetail?.status === "submitted" &&
+                    {convertStatusLanguage(dealDetail?.status) === "submitted" &&
                       (index === 0 ? (
                         <div className="h-[20px] w-[20px] bg-neutral-200 rounded-full inline-grid place-items-center">
                           <div className="h-[12px] w-[12px] bg-cyan-800 rounded-full"></div>
@@ -601,12 +640,12 @@ const DealViewDetails = ({ dealDetail, state }: any) => {
                       ) : index === 1 || index === 2 || index === 3 ? (
                         <div className="h-[20px] w-[20px] bg-neutral-300 rounded-full inline-grid place-items-center"></div>
                       ) : null)}
-                    {dealDetail?.status === "draft" ||
-                      (dealDetail?.status === "reopened" && (
+                    {convertStatusLanguage(dealDetail?.status) === "draft" ||
+                      (convertStatusLanguage(dealDetail?.status) === "reopened" && (
                         <div className="h-[20px] w-[20px] bg-neutral-300 rounded-full inline-grid place-items-center"></div>
                       ))}
 
-                    {dealDetail?.status === "verified" &&
+                    {convertStatusLanguage(dealDetail?.status) === "verified" &&
                       (index === 0 ? (
                         <img
                           src={ApprovedSVG}
@@ -622,7 +661,7 @@ const DealViewDetails = ({ dealDetail, state }: any) => {
                       ) : index === 3 ? (
                         <div className="h-[20px] w-[20px] bg-neutral-300 rounded-full inline-grid place-items-center"></div>
                       ) : null)}
-                    {dealDetail?.status === "approved" &&
+                    {convertStatusLanguage(dealDetail?.status) === "approved" &&
                       (index === 0 ? (
                         <img
                           src={ApprovedSVG}

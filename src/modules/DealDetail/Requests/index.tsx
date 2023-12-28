@@ -22,6 +22,7 @@ import Modal from "../../../shared/components/Modal";
 import { toast } from "react-toastify";
 import CrossIcon from "../../../ts-icons/crossIcon.svg";
 import { toastUtil } from "../../../utils/toast.utils";
+import { convertStatusLanguage } from "../../../utils/string.utils";
 
 const Requests = ({ id }: any) => {
   const navigate = useNavigate();
@@ -236,8 +237,8 @@ const Requests = ({ id }: any) => {
                 </div>
 
                 <span className="items-center">
-                  {dealDetail?.status === "accepted" &&
-                    dealDetail?.deal?.status === "approved" && (
+                  {convertStatusLanguage(dealDetail?.status) === "accepted" &&
+                   convertStatusLanguage(dealDetail?.deal?.status)  === "approved" && (
                       <Button
                         onClick={() =>
                           postSignOff(dealDetail?.deal?.id)
