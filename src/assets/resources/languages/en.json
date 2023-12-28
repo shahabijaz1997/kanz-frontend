@@ -791,6 +791,7 @@
       "disclaimer_desc": "Lorem ipsum dolor sit amet consectetur, adipisicing elit. Repudiandae quidem libero impedit voluptatum quasi delectus, fuga in aliquid deserunt exercitationem explicabo asperiores, dolorem veritatis maiores, illo vitae officiis sapiente? Est?",
       "percent": "Percent",
       "sqft": "Square Feet",
+      "sqftSymbol": "SQFT",
       "submitted_title": "Your Deal has been submitted",
       "submitted_message": "Please wait while our customer support officer review your submitted deal",
       "accept": "I agree",
@@ -800,7 +801,9 @@
       "invest_details": "Investment Details",
       "end_on": "Ends On",
       "am_raised": "Amount Raised",
-      "suces_msg": "Comment added successfully!"
+      "suces_msg": "Comment added successfully!",
+      "aedSymbol":"AED"
+
     },
     "button": {
       "new_deal": "Create New Deal",
@@ -1116,6 +1119,30 @@
       "h3bullet1": "Duis aute irure dolor in reprehenderit in voluptate velit esse cillum.",
       "h3bullet2": "eiusmod tempor incididunt ut labore et dolore magna aliqua.",
       "h3bullet3": "quis nostrud exercitation ullamco laboris nisi ut."
+    },
+    "status": {
+      "draft": "draft",
+      "submitted": "submitted",
+      "reopened": "reopened",
+      "verified": "verified",
+      "rejected": "rejected",
+      "live": "live",
+      "closed": "closed",
+      "startup": "startup",
+      "property": "property",
+      "_": "none",
+      "classic": "classic",
+      "syndicate": "syndicate",
+      "pending": "pending",
+      "interested": "interested",
+      "accepted": "accepted",
+      "approved": "approved",
+      "expired": "expired",
+      "invested": "invested",
+      "syndication": "syndication",
+      "investment": "investment",
+      "committed_amount": "committed",
+      "completed": "completed"
     }
   }
 }

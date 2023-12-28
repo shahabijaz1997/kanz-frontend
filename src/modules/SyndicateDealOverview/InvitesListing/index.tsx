@@ -18,6 +18,7 @@ import SharewithGroupIcon from "../../../ts-icons/SharewithGroupIcon.svg";
 import CopyInviteLinkIcon from "../../../ts-icons/CopyInviteLinkIcon.svg";
 import { numberFormatter } from "../../../utils/object.utils";
 import {  DealCheckType, DealPromotionType, DealStatus } from "../../../enums/types.enum";
+import { convertStatusLanguage } from "../../../utils/string.utils";
 
 const InvitesListing = ({
   approve,
@@ -153,7 +154,7 @@ const InvitesListing = ({
   return (
     <div ref={ref}>
       <Button
-      disabled={approve !== DealStatus.LIVE}
+      disabled={convertStatusLanguage(approve) !== DealStatus.LIVE}
         onClick={() => {
           getAllUserListings();
           setShowInvestors(true);

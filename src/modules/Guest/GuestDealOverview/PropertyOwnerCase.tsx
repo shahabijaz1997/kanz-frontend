@@ -48,7 +48,7 @@ const PropertyOwnerCase = ({  dealDetail }: any) => {
               {language?.v3?.fundraiser?.selling_price}
               </h3>
               <p className="text-neutral-900 font-normal text-sm capitalize">
-                {comaFormattedNumber(dealDetail?.selling_price, DealCheckType.PROPERTY)}
+              {language?.v3?.common?.aedSymbol}{comaFormattedNumber(dealDetail?.selling_price)}
               </p>
             </div>
           </div>
@@ -93,7 +93,7 @@ const PropertyOwnerCase = ({  dealDetail }: any) => {
               {language?.v3?.deal?.por}
               </h3>
               <p className="text-neutral-900 font-normal text-sm capitalize">
-                {comaFormattedNumber(dealDetail?.features?.rental_amoun, DealCheckType.PROPERTY)} (
+              {language?.v3?.common?.aedSymbol}{comaFormattedNumber(dealDetail?.features?.rental_amount)} (
                 {dealDetail?.features?.rental_period})
               </p>
             </div>
@@ -135,7 +135,7 @@ const PropertyOwnerCase = ({  dealDetail }: any) => {
                   type="outlined"
                   className="!cursor-default !hover:border-none"
                 >
-                  {comaFormattedNumber(dealDetail?.size)}&nbsp;SQFT
+                  {comaFormattedNumber(dealDetail?.size)}&nbsp;{language?.v3?.common?.sqftSymbol}
                 </Button>
               </div>
               <p className="text-black">{dealDetail?.description}</p>

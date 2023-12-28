@@ -19,6 +19,7 @@ import {
 import Spinner from "../../../shared/components/Spinner";
 import Chevrond from "../../../ts-icons/chevrond.svg";
 import CustomStatus from "../../../shared/components/CustomStatus";
+import { convertStatusLanguage } from "../../../utils/string.utils";
 
 const DealApproval = ({}: any) => {
   const navigate = useNavigate();
@@ -26,6 +27,7 @@ const DealApproval = ({}: any) => {
   const language: any = useSelector((state: RootState) => state.language.value);
   const authToken: any = useSelector((state: RootState) => state.auth.value);
   const user: any = useSelector((state: RootState) => state.user.value);
+  const event: any = useSelector((state: RootState) => state.event.value);
   const orientation: any = useSelector(
     (state: RootState) => state.orientation.value
   );
@@ -100,18 +102,19 @@ const DealApproval = ({}: any) => {
             id: deal?.id,
             filterStatus: deal?.status,
             [language?.v3?.syndicate?.deals?.table?.title]:
-              deal?.deal?.title || "N/A",
+              deal?.deal?.title || language?.v3?.common?.not_added,
             [language?.v3?.syndicate?.deals?.table?.category]: (
               <span className="capitalize">{deal?.deal?.type}</span>
             ),
             [language?.v3?.syndicate?.invite_status]:
-              <CustomStatus options={deal?.status} /> || "N/A",
+              <CustomStatus options={deal?.status} /> || language?.v3?.common?.not_added,
             [language?.v3?.syndicate?.deals?.table?.end_date]:
-              deal?.deal?.end_at || " N/A",
-            [language?.v3?.syndicate?.deals?.table?.target]: `${numberFormatter(
-              Number(deal?.deal?.target),
-              deal?.deal?.type
-            )}`,
+              deal?.deal?.end_at || language?.v3?.common?.not_added,
+            [language?.v3?.syndicate?.deals?.table?.target]: event === "ar" ?  `${numberFormatter(
+              deal?.deal?.target
+            , convertStatusLanguage(deal?.deal.type), true)}`:  `${numberFormatter(
+            deal?.deal?.target
+            , convertStatusLanguage(deal?.deal.type), false)}`,
 
             Steps: deal?.current_state?.steps,
             [language?.v3?.table?.action]: (

@@ -78,12 +78,12 @@ const Commitments = ({}: any): any => {
               <span className=" capitalize">{invitee?.syndicate?.name}</span>
             ),
             [language?.v3?.syndicate?.deals?.table?.title]:
-              invitee?.title || "N/A",
+              invitee?.title || language?.v3?.common?.not_added,
             [language?.v3?.syndicate?.deals?.table?.category]: (
               <span className="capitalize">{invitee?.deal_type}</span>
             ),
             [language?.v3?.syndicate?.deals?.table?.end_date]:
-              invitee?.end_at || " N/A",
+              invitee?.end_at || language?.v3?.common?.not_added,
             [    language?.v3?.investor?.committed
             ]: invitee?.invested_amount,
             [language?.v3?.syndicate?.deals?.table

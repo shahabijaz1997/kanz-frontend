@@ -50,9 +50,9 @@ const DealActivity = ({dealID, dealCreatorView}: any) => {
             [ language?.v3?.fundraiser?.name]:<span className="capitalize">{dealActivity?.investor?.name}</span> ,
             [language?.v3?.fundraiser?.user_type]:<span className="capitalize">{dealActivity?.type}</span> ,
             [language?.v3?.fundraiser?.date]:
-              dealActivity?.date|| "N/A",
+              dealActivity?.date|| language?.v3?.common?.not_added,
              [language?.v3?.fundraiser?.status]:
-              <CustomStatus options={dealActivity?.status === "committed_amount" ? "Committed" : dealActivity?.status} /> || "N/A", 
+              <CustomStatus options={dealActivity?.status === "committed_amount" ? "Committed" : dealActivity?.status} /> ||language?.v3?.common?.not_added, 
             [language?.v3?.fundraiser?.amount_raised]: (
               <span>{comaFormattedNumber(dealActivity?.amount)}</span>
             ),

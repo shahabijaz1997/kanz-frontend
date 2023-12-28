@@ -22,42 +22,74 @@ export const filterObjectsByTrueValue = (objectsArray: any, key: any) => {
 
 export const numberFormatter = (
   number: number,
-  dealType: string | null = null
+  dealType: string | null = null,
+  isArabic: boolean | null = null
 ) => {
   if (isNaN(number) || !number) return 0;
   let formattedNumber = "";
-  if (number >= 1000000000) {
-    formattedNumber = (number / 1000000000).toFixed(1) + "B";
-  } else if (number >= 1000000) {
-    formattedNumber = (number / 1000000).toFixed(1) + "M";
-  } else if (number >= 1000) {
-    formattedNumber = (number / 1000).toFixed(1) + "K";
+  console.log("FORAMTEED NUM",formattedNumber)
+  if (isArabic) {
+    if (number >= 1000000000) {
+      formattedNumber = ` ${(number / 1000000000).toFixed(1)} مليار`;
+    } else if (number >= 1000000) {
+      formattedNumber = `${(number / 1000000).toFixed(1)} مليون`;
+    } else if (number >= 1000) {
+      formattedNumber = `${(number / 1000).toFixed(1)} ألف`;
+    } else {
+      formattedNumber = number.toString();
+    }
   } else {
-    formattedNumber = number.toString();
+    if (number >= 1000000000) {
+      formattedNumber = (number / 1000000000).toFixed(1) + "B";
+    } else if (number >= 1000000) {
+      formattedNumber = (number / 1000000).toFixed(1) + "M";
+    } else if (number >= 1000) {
+      formattedNumber = (number / 1000).toFixed(1) + "K";
+    } else {
+      formattedNumber = number.toString();
+    }
   }
+  console.log("DEAL TYPE",dealType)
   if (dealType === null || dealType === undefined) {
     return formattedNumber;
   }
-  if (dealType !== null || dealType !== undefined) {
+  if ((dealType !== null || dealType !== undefined) && !isArabic) {
     if (dealType === DealCheckType.STARTUP) {
       formattedNumber = `$${formattedNumber}`;
     } else {
       formattedNumber = `AED ${formattedNumber}`;
     }
   }
+  if ((dealType !== null || dealType !== undefined) && isArabic) {
+    if (dealType === DealCheckType.PROPERTY) {
+      formattedNumber = `د.إ ${formattedNumber}`;
+    }
+    else{
+      formattedNumber = `$ ${formattedNumber}`
+    }
+  }
+  console.log("FORAMTEED NUM",formattedNumber)
   return formattedNumber;
 };
 export const comaFormattedNumber = (
   value: any,
-  dealType: string | null = null
+  dealType: string | null = null,
+  isArabic : boolean | null = null
 ) => {
   if (!value || isNaN(Number(value))) return value;
   const formattedValue = String(value).replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-  if (dealType !== null) {
+  if (dealType !== null && !isArabic) {
     if (dealType === DealCheckType.STARTUP) {
       return `$${formattedValue}`;
     } else {
       return `AED ${formattedValue}`;
+    }
+  }
+  if (dealType !== null && isArabic) {
+    if (dealType === DealCheckType.STARTUP) {
+      return `$${formattedValue}`;
+    } else {
+      return `د.إ ${formattedValue}`;
     }
   }
   return formattedValue;
@@ -89,8 +121,10 @@ export const uniqueArray = (arr: any[]) => {
   });
 };
 
-export const timeAgo = (created_at: string) => {
-  // Parse the input date using a custom date parser
+export const timeAgo = (
+  created_at: string,
+  isArabic: boolean | null = null
+) => {
   const parts = created_at.match(
     /(\d+)\/(\d+)\/(\d+) (\d+):(\d+):(\d+) (AM|PM)/
   );
@@ -122,16 +156,41 @@ export const timeAgo = (created_at: string) => {
   const hours = Math.floor(minutes / 60);
   const days = Math.floor(hours / 24);
   const months = Math.floor(days / 30);
+  const timeUnits = isArabic
+    ? {
+        month: "شهر",
+        day: "يوم",
+        hour: "ساعة",
+        minute: "دقيقة",
+        second: "ثانية",
+      }
+    : {
+        month: "month",
+        day: "day",
+        hour: "hour",
+        minute: "minute",
+        second: "second",
+      };
 
   if (months >= 1) {
-    return months + " month" + (months > 1 ? "s" : "") + " ago";
+    return `${months} ${timeUnits.month}${months > 1 ? "s" : ""} ${
+      isArabic ? "منذ" : "ago"
+    }`;
   } else if (days >= 1) {
-    return days + " day" + (days > 1 ? "s" : "") + " ago";
+    return `${days} ${timeUnits.day}${days > 1 ? "s" : ""} ${
+      isArabic ? "منذ" : "ago"
+    }`;
   } else if (hours >= 1) {
-    return hours + " hour" + (hours > 1 ? "s" : "") + " ago";
+    return `${hours} ${timeUnits.hour}${hours > 1 ? "s" : ""} ${
+      isArabic ? "منذ" : "ago"
+    }`;
   } else if (minutes >= 1) {
-    return minutes + " minute" + (minutes > 1 ? "s" : "") + " ago";
+    return `${minutes} ${timeUnits.minute}${minutes > 1 ? "s" : ""} ${
+      isArabic ? "منذ" : "ago"
+    }`;
   } else {
-    return seconds + " second" + (seconds > 1 ? "s" : "") + " ago";
+    return `${seconds} ${timeUnits.second}${seconds > 1 ? "s" : ""} ${
+      isArabic ? "منذ" : "ago"
+    }`;
   }
 };
