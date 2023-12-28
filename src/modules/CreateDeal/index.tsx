@@ -464,7 +464,7 @@ const CreateDeal = () => {
     let placeholder = "",
       symbol = "";
     if (ques?.input_type === InputType.CURRENCY)
-      placeholder = currency === 0 ? "$ 0.00" : "0.00 د.إ";
+      placeholder = metadata.dealType === KanzRoles.STARTUP ? "$ 0.00" : "0.00 د.إ" ;  
     else if (ques?.input_type === InputType.SQFT)
       placeholder = language?.v3?.common?.sqft;
     else if (ques?.input_type === InputType.PERCENT)
@@ -472,7 +472,7 @@ const CreateDeal = () => {
     else placeholder = ques?.placeholder || ques?.statement;
 
     if (ques?.input_type === InputType.CURRENCY)
-      symbol = currency === 0 ? "$" : "د.إ";
+      symbol = metadata.dealType === KanzRoles.STARTUP ? "$" : "د.إ";
     else if (ques?.input_type === InputType.SQFT) symbol = "SQFT";
     else if (ques?.input_type === InputType.PERCENT) symbol = "%";
 
@@ -529,15 +529,6 @@ const CreateDeal = () => {
                 type="text"
                 className="outline-none w-full h-full placeholder-neutral-500"
               />
-              {ques?.input_type === InputType.CURRENCY && (
-                <span className="inline-flex items-center">
-                  <span className="font-normal text-lg text-neutral-500">
-                    {metadata.dealType === KanzRoles.PROPERTY_OWNER
-                      ? CURRENCIES[1]
-                      : CURRENCIES[0]}
-                  </span>
-                </span>
-              )}
               {ques?.input_type === InputType.SQFT && (
                 <span className="cursor-pointer inline-flex items-center">
                   <button className="font-normal text-lg text-neutral-500">
