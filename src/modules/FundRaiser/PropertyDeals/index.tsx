@@ -21,6 +21,7 @@ import { saveToken } from "../../../redux-toolkit/slicer/auth.slicer";
 import SearchIcon from "../../../ts-icons/searchIcon.svg";
 import EditDealWarningModal from "../EditDealWarningModal";
 import { saveUserMetaData } from "../../../redux-toolkit/slicer/metadata.slicer";
+import { convertStatusLanguage } from "../../../utils/string.utils";
 
 const PropertyDeals = ({ openPropertyRiskModal }: any) => {
   const [loading, setLoading] = useState(false);
@@ -28,6 +29,7 @@ const PropertyDeals = ({ openPropertyRiskModal }: any) => {
   const authToken: any = useSelector((state: RootState) => state.auth.value);
   const [modalOpen, setModalOpen]: any = useState(null);
   const metadata: any = useSelector((state: RootState) => state.metadata);
+  const event: any = useSelector((state: RootState) => state.event.value);
   const orientation: any = useSelector(
     (state: RootState) => state.orientation.value
   );
@@ -68,6 +70,8 @@ const PropertyDeals = ({ openPropertyRiskModal }: any) => {
   const [searchQuery, setSearchQuery]: any = useState("");
   const [dealStatus, setDealStatus]: any = useState(null);
   const [selectTypeModal, setSelectTypeModal]: any = useState(null);
+  let sqftSymbol = event === "ar" ? "قدم مربع" : "SQFT"
+  let currencySymbol = event === "ar" ? "د.إ": "AED"
   useEffect(() => {
     dispatch(saveDataHolder(""));
     setCurrentPage(1)
@@ -106,15 +110,19 @@ const PropertyDeals = ({ openPropertyRiskModal }: any) => {
         let deals = data?.status?.data?.deals?.map((deal: any) => {
           return {
             id: deal?.id,
-            [language?.v3?.table?.title]: deal?.title || "N/A",
-            [language?.v3?.fundraiser?.selling_price]: `${numberFormatter(
+            [language?.v3?.table?.title]: deal?.title || language?.v3?.common?.not_added,
+            [language?.v3?.fundraiser?.selling_price]: event === "ar" ?  `د.إ ${numberFormatter(
+              deal.target,
+              null,
+              true
+            )}` : `${numberFormatter(
               deal.target,
               DealCheckType.PROPERTY
             )}`,
-            [language?.v3?.fundraiser?.size]: `${deal?.size ? `${deal.size} SQFT` : "N/A"}`,
-            [language?.v3?.fundraiser?.state]: deal?.state || "N/A",
-            [language?.v3?.fundraiser?.city]: deal?.city || "N/A",
-            [language.v3?.fundraiser.end_date]: deal?.end_at || "N/A",
+            [language?.v3?.fundraiser?.size]: `${deal?.size ? `${deal.size} ${sqftSymbol}` : language?.v3?.common?.not_added}`,
+            [language?.v3?.fundraiser?.state]: deal?.state || language?.v3?.common?.not_added,
+            [language?.v3?.fundraiser?.city]: deal?.city || language?.v3?.common?.not_added,
+            [language.v3?.fundraiser.end_date]: deal?.end_at || language?.v3?.common?.not_added,
             [language?.v3?.table?.status]: (
               <CustomStatus options={deal?.status} />
             ),
@@ -124,9 +132,9 @@ const PropertyDeals = ({ openPropertyRiskModal }: any) => {
             Steps: deal?.current_state?.steps,
             [language?.v3?.table?.action]: (
               <React.Fragment>
-                {(deal?.status === ApplicationStatus.DRAFT ||
-                  deal?.status === ApplicationStatus.REOPENED ||
-                  deal?.status === ApplicationStatus.APPROVED) && (
+                {(convertStatusLanguage(deal?.status) === ApplicationStatus.DRAFT ||
+                  convertStatusLanguage(deal?.status) === ApplicationStatus.REOPENED ||
+                  convertStatusLanguage(deal?.status) === ApplicationStatus.APPROVED) && (
                   <div
                     onClick={(e) => {
                       dispatch(
@@ -136,7 +144,7 @@ const PropertyDeals = ({ openPropertyRiskModal }: any) => {
                         })
                       );
 
-                      if (deal?.status === ApplicationStatus.APPROVED) {
+                      if (convertStatusLanguage(deal?.status) === ApplicationStatus.APPROVED) {
                         setDealId(deal?.id);
                         setDealStatus(deal?.status);
                         setDealStep(deal?.current_state?.current_step);
@@ -146,7 +154,7 @@ const PropertyDeals = ({ openPropertyRiskModal }: any) => {
                         e.stopPropagation();
 
                         dispatch(saveDataHolder(deal.id));
-                        if (deal?.status === ApplicationStatus.REOPENED) {
+                        if (convertStatusLanguage(deal?.status) === ApplicationStatus.REOPENED) {
                           navigate(
                             `/create-deal/${
                               deal?.current_state?.current_step + 1
@@ -172,9 +180,7 @@ const PropertyDeals = ({ openPropertyRiskModal }: any) => {
                     e.stopPropagation();
                     navigate(`${RoutesEnums.DEAL_DETAIL}/${deal?.token}`, {
                       state:
-                        deal?.deal_type === DealCheckType.PROPERTY
-                          ? KanzRoles.PROPERTY_OWNER
-                          : KanzRoles.STARTUP,
+                      KanzRoles.PROPERTY_OWNER
                     });
                   }}
                   className="bg-neutral-100 inline-flex items-center justify-center w-[26px] h-[26px] rounded-full transition-all hover:bg-cbc-transparent mx-2"

@@ -26,6 +26,7 @@ import { DealCheckType, FileType } from "../../../enums/types.enum";
 import { toast } from "react-toastify";
 import { toastUtil } from "../../../utils/toast.utils";
 import { numberFormatter } from "../../../utils/object.utils";
+import { convertStatusLanguage } from "../../../utils/string.utils";
 
 const InvestorUpdates = ({}: any) => {
   const navigate = useNavigate();
@@ -188,9 +189,9 @@ const InvestorUpdates = ({}: any) => {
           return {
             id: investor?.id,
             [language?.v3?.fundraiser?.name]: investor?.name,
-            [language?.v3?.fundraiser?.type]: investor?.type || "N/A",
+            [language?.v3?.fundraiser?.type]: investor?.type || language?.v3?.common?.not_added,
             [language?.v3?.fundraiser?.invested_amount]: investor?.deal,
-            [language?.v3?.fundraiser?.invested_amount]: numberFormatter(investor?.invested_amount,DealCheckType.STARTUP) || "N/A",
+            [language?.v3?.fundraiser?.invested_amount]: numberFormatter(investor?.invested_amount,DealCheckType.STARTUP) ||language?.v3?.common?.not_added,
             [language?.v3?.fundraiser?.invite_status]: <CustomStatus options={investor?.status} />,
             "": (
               <div
@@ -345,8 +346,8 @@ const InvestorUpdates = ({}: any) => {
                 </div>
 
                 <span className="items-center">
-                  {dealDetail?.status === "accepted" &&
-                    dealDetail?.deal?.status === "approved" && (
+                  {convertStatusLanguage(dealDetail?.status) === "accepted" &&
+                    convertStatusLanguage(dealDetail?.deal?.status) === "approved" && (
                       <Button onClick={() => postSignOff(dealDetail?.deal?.id)}>
                         {"Approve"}
                       </Button>

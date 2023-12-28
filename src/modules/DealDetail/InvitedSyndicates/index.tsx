@@ -59,7 +59,7 @@ const InvitedSyndicates = ({ id }: any) => {
                 </span>
               ),
               [language?.v3?.fundraiser?.invitation_sent_on]: deal?.sent_at,
-              [language?.v3?.fundraiser?.invite_expiration_date]: deal?.invite_expiry || "N/A",
+              [language?.v3?.fundraiser?.invite_expiration_date]: deal?.invite_expiry || language?.v3?.common?.not_added,
             };
           });
         setInvites(deals);

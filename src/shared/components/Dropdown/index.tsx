@@ -64,14 +64,14 @@ const Dropdown = (props: any) => {
                 >
                     <div className="py-1 inline-flex justify-start items-start w-full flex-col" role="none">
                         {React.Children.toArray(
-                            dropdownItems.map((item: any) => {
+                            dropdownItems.map((item: any , index: any) => {
                                 return (
                                     <button className={`text-gray-700 px-4 py-1.5 text-sm inline-flex items-center w-full cursor-pointer gap-2 hover:bg-cbc-transparent ${orientation === "rtl" && "justify-end"}`} role="menuitem" tabIndex={-1} id="menu-item-0" onClick={() => {
                                         setSelected(item)
                                         setIsOpen(false);
                                         onSetSelected(item);
                                     }}>
-                                        {item.icon && <img src={item.icon} alt={item.title} className="h-4 object-contain" />}
+                                        {item.icon && <img src={item.icon} alt={item.title} className={`h-4 object-contain ${selected.title === "العربية" && index === 1 ? "pl-[6px]": ""}`} />}
                                         <small className="text-[14px] font-medium">{item.title}</small>
                                     </button>
                                 )

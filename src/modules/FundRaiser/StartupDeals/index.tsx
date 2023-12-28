@@ -21,9 +21,11 @@ import { saveToken } from "../../../redux-toolkit/slicer/auth.slicer";
 import SearchIcon from "../../../ts-icons/searchIcon.svg";
 import EditDealWarningModal from "../EditDealWarningModal";
 import { saveUserMetaData } from "../../../redux-toolkit/slicer/metadata.slicer";
+import { convertStatusLanguage } from "../../../utils/string.utils";
 
 const StartupDeals = ({ openStartupRiskModal }: any) => {
   const [loading, setLoading] = useState(false);
+  const event: any = useSelector((state: RootState) => state.event.value);
   const language: any = useSelector((state: RootState) => state.language.value);
   const authToken: any = useSelector((state: RootState) => state.auth.value);
   const [modalOpen, setModalOpen]: any = useState(null);
@@ -109,19 +111,24 @@ const StartupDeals = ({ openStartupRiskModal }: any) => {
         let deals = data?.status?.data?.deals?.map((deal: any) => {
           return {
             id: deal?.id,
-            [language?.v3?.table?.title]: deal?.title || "N/A",
+            [language?.v3?.table?.title]: deal?.title || language?.v3?.common?.not_added,
             [language?.v3?.fundraiser?.model]:
-              <span className=" capitalize">{deal?.model}</span> || "N/A",
-            [language?.v3?.table?.target]: `${numberFormatter(
-              Number(deal?.target),
-              DealCheckType.STARTUP
+              <span className=" capitalize">{deal?.model}</span> || language?.v3?.common?.not_added,
+            [language?.v3?.table?.target]:  event === "ar" ?  `${numberFormatter(
+              deal.target,
+              DealCheckType.STARTUP,
+              true
+            )}` : `${numberFormatter(
+              deal.target,
+              DealCheckType.STARTUP,
+              false
             )}`,
-            [language?.v3?.table?.stage]: deal?.title || "N/A",
-            [language?.v3?.table?.round]: deal?.round || "N/A",
+            [language?.v3?.table?.stage]: deal?.title || language?.v3?.common?.not_added,
+            [language?.v3?.table?.round]: deal?.round || language?.v3?.common?.not_added,
             [language?.v3?.table?.status]: (
               <CustomStatus options={deal?.status} />
             ),
-            [language?.v3?.fundraiser?.end_date]: deal?.end_at || "N/A",
+            [language?.v3?.fundraiser?.end_date]: deal?.end_at || language?.v3?.common?.not_added,
             [language?.v3?.table?.type]: (
               <span className=" capitalize">{deal?.deal_type}</span>
             ),
@@ -130,9 +137,9 @@ const StartupDeals = ({ openStartupRiskModal }: any) => {
             Steps: deal?.current_state?.steps,
             [language?.v3?.table?.action]: (
               <React.Fragment>
-                {(deal?.status === ApplicationStatus.DRAFT ||
-                  deal?.status === ApplicationStatus.REOPENED ||
-                  deal?.status === ApplicationStatus.APPROVED) && (
+                {(convertStatusLanguage(deal?.status) === ApplicationStatus.DRAFT ||
+                  convertStatusLanguage(deal?.status) === ApplicationStatus.REOPENED ||
+                  convertStatusLanguage(deal?.status) === ApplicationStatus.APPROVED) && (
                   <div
                     onClick={(e) => {
                       dispatch(
@@ -141,7 +148,7 @@ const StartupDeals = ({ openStartupRiskModal }: any) => {
                           dealType: KanzRoles.STARTUP,
                         })
                       );
-                      if (deal?.status === ApplicationStatus.APPROVED) {
+                      if (convertStatusLanguage(deal?.status) === ApplicationStatus.APPROVED) {
                         setDealId(deal?.id);
                         setDealStatus(deal?.status);
                         setDealStep(deal?.current_state?.current_step);
@@ -150,7 +157,7 @@ const StartupDeals = ({ openStartupRiskModal }: any) => {
                         e.preventDefault();
                         e.stopPropagation();
                         dispatch(saveDataHolder(deal.id));
-                        if (deal?.status === ApplicationStatus.REOPENED) {
+                        if (convertStatusLanguage(deal?.status) === ApplicationStatus.REOPENED) {
                           navigate(
                             `/create-deal/${
                               deal?.current_state?.current_step + 1
@@ -176,9 +183,7 @@ const StartupDeals = ({ openStartupRiskModal }: any) => {
                     e.stopPropagation();
                     navigate(`${RoutesEnums.DEAL_DETAIL}/${deal?.token}`, {
                       state:
-                        deal?.deal_type === DealCheckType.PROPERTY
-                          ? KanzRoles.PROPERTY_OWNER
-                          : KanzRoles.STARTUP,
+                        KanzRoles.STARTUP
                     });
                   }}
                   className="bg-neutral-100 inline-flex items-center justify-center w-[26px] h-[26px] rounded-full transition-all hover:bg-cbc-transparent mx-2"

@@ -48,7 +48,7 @@ const Investors = ({dealID, dealCreatorView} : any) => {
             id: dealActivity?.id,
             [language?.v3?.fundraiser?.name]:<span className="capitalize">{dealActivity?.investor_name}</span> ,
             [language?.v3?.fundraiser?.date]:
-              dealActivity?.date|| "N/A",
+              dealActivity?.date||language?.v3?.common?.not_added,
             [language?.v3?.fundraiser?.amount_raised]: (
               <span>{comaFormattedNumber(dealActivity?.amount)}</span>
             ),

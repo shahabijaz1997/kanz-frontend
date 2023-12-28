@@ -31,7 +31,11 @@ export enum DealStatus {
   LIVE = "live",
   PENDING = "pending",
 }
-
+export enum DealStatusAR {
+  ACCEPTED = "قبلت",
+  LIVE = "مباشرة",
+  PENDING = "قيد الانتظار",
+}
 
 export enum DealType {
   STARTUP = "startup_deal",

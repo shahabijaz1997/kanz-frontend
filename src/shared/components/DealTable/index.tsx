@@ -8,6 +8,8 @@ import {
 
 const DealTable = ({ dealType, targetSize, committed, investors }: any) => {
   const language: any = useSelector((state: RootState) => state.language.value);
+  const event: any = useSelector((state: RootState) => state.event.value);
+
 
   return (
     <aside className="rounded-lg shadow-cs-5 border-[1px] border-neutral-200">
@@ -18,7 +20,7 @@ const DealTable = ({ dealType, targetSize, committed, investors }: any) => {
               {language?.v3?.fundraiser?.target_size}
             </small>
             <p className="uppercase text-neutral-900 font-semibold text-2xl">
-              {comaFormattedNumber(targetSize, dealType)}
+              {event === "ar" ? comaFormattedNumber(targetSize, dealType, true):comaFormattedNumber(targetSize, dealType, false)}
             </p>
           </span>
           {committed > 0 && investors > 0 && (
@@ -36,7 +38,7 @@ const DealTable = ({ dealType, targetSize, committed, investors }: any) => {
               {language?.v3?.startup?.overview?.committed}
             </small>
             <p className="uppercase text-neutral-900 font-semibold text-2xl">
-              {comaFormattedNumber(committed, dealType)}
+            {event === "ar" ? comaFormattedNumber(committed, dealType, true):comaFormattedNumber(committed, dealType, false)}
             </p>
           </span>
         </div>
