@@ -9,12 +9,12 @@ import { saveDataHolder } from "../../../../redux-toolkit/slicer/dataHolder.slic
 import Spinner from "../../../../shared/components/Spinner";
 import Chevrond from "../../../../ts-icons/chevrond.svg";
 import CustomStatus from "../../../../shared/components/CustomStatus";
-import { getSyndicates } from "../../../../apis/syndicate.api";
+import { getAppliedSyndicates, getSyndicates } from "../../../../apis/syndicate.api";
 import { saveToken } from "../../../../redux-toolkit/slicer/auth.slicer";
 import SyndicateInfoDrawer from "../SyndicateInfoDrawer";
 import { getSyndicateInfo } from "../../../../apis/investor.api";
 
-const AllSyndicates = ({}: any): any => {
+const Applications = ({}: any): any => {
   const [childData, setChildData]: any = useState(null);
 
   const handleChildData = (data: any) => {
@@ -24,34 +24,23 @@ const AllSyndicates = ({}: any): any => {
   const dispatch = useDispatch();
   const language: any = useSelector((state: RootState) => state.language.value);
   const authToken: any = useSelector((state: RootState) => state.auth.value);
-  const event: any = useSelector((state: RootState) => state.event.value);
   const orientation: any = useSelector(
     (state: RootState) => state.orientation.value
   );
-  
+
+  const columns = [
+    language?.v3?.investor?.syndicate,
+    language?.v3?.investor?.apply_date,
+    language?.v3?.investor?.status,
+    "",
+  ];
   const getCountvalue = (value: string) => {
     return filter[value] || 0
   };
-  const [tabs] = useState<any>({
-    'all': language?.v3?.startup?.overview?.all,
-    'new': language?.v3?.investor?.new,
-    'invited  ': language?.v3?.fundraiser?.invited,
-    'raising_fund': language?.v3?.investor?.raising_fund,
-  });
-  const columns = [
-    language?.v3?.investor?.syndicate,
-    language?.v3?.investor?.total_deals,
-    language?.v3?.investor?.active_deals,
-    language?.v3?.fundraiser?.invite_status,
-    language?.v3?.investor?.raising_fund,
-    language?.v3?.investor?.formation_date,
-    "",
-  ];
   const [loading, setLoading]: any = useState(false);
   const [invites, setInvites]: any = useState([]);
-  const [syndicateInfo, setsyndicateInfo]: any = useState(null);
-  const [selectedTab, setSelectedTab] = useState("all");
   const [filter, setFilterCounts]: any = useState([]);
+  const [syndicateInfo, setsyndicateInfo]: any = useState(null);
   const [paginationData, setpaginationData] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [isOpen, setOpen]: any = useState(false);
@@ -59,7 +48,7 @@ const AllSyndicates = ({}: any): any => {
 
   useEffect(() => {
     dispatch(saveDataHolder(""));
-    getAllSyndicates();
+    getApplications();
   }, []);
   useEffect(() => {
     syndicateInfo?.id && onGetSyndicateDetail(syndicateInfo?.id);
@@ -76,10 +65,10 @@ const AllSyndicates = ({}: any): any => {
       setLoading(false);
     }
   };
-  const getAllSyndicates = async () => {
+  const getApplications = async () => {
     try {
       setLoading(true);
-      let { status, data } = await getSyndicates(
+      let { status, data } = await getAppliedSyndicates(
         authToken,
         searchQuery,
         currentPage
@@ -92,28 +81,13 @@ const AllSyndicates = ({}: any): any => {
             [language?.v3?.investor?.syndicate]: (
               <span className=" capitalize">{syndicate?.name}</span>
             ),
-            [ language?.v3?.investor?.total_deals]: (
-              <span className=" capitalize">{syndicate?.total_deals}</span>
+            [ language?.v3?.investor?.apply_date]: (
+              <span className=" capitalize">{syndicate?.invite?.created_at}</span>
             ),
-            [ language?.v3?.investor?.active_deals]: (
-              <span className=" capitalize">{syndicate?.active_deals}</span>
-            ),
-            [ language?.v3?.fundraiser?.invite_status]: (
+            [ language?.v3?.investor?.status]: (
               <span className=" capitalize">
-                <CustomStatus options={syndicate?.membership_status}/>
+                <CustomStatus options={syndicate?.invite?.status}/>
               </span>
-            ),
-            [ language?.v3?.investor?.raising_fund]: (
-              <span className=" capitalize">
-                {syndicate?.raising_fund ? (
-                  <CustomStatus options={language?.v3?.fundraiser?.yes} />
-                ) : (
-                  <CustomStatus options={language?.v3?.fundraiser?.no} />
-                )}
-              </span>
-            ),
-            [ language?.v3?.investor?.formation_date]: (
-              <span className=" capitalize">{syndicate?.created_at}</span>
             ),
             [""]: (
               <div
@@ -152,13 +126,13 @@ const AllSyndicates = ({}: any): any => {
           <div className="rounded-md shadow-cs-6 bg-white border-[1px] border-gray-200 h-9 overflow-hidden max-w-[310px] inline-flex items-center px-2">
             <SearchIcon
               onClick={() => {
-                getAllSyndicates();
+                getApplications();
               }}
             />
             <input
               onKeyDown={(e) => {
                 if (e.key === "Enter") {
-                  getAllSyndicates();
+                  getApplications();
                 }
               }}
               value={searchQuery}
@@ -168,24 +142,6 @@ const AllSyndicates = ({}: any): any => {
               placeholder={language?.v3?.common?.search}
             />
           </div>
-          <ul className="inline-flex items-center">
-                  {React.Children.toArray(
-                    Object.keys(tabs).map((tab: any) => (
-                      <li
-                        onClick={() => {
-                          setSelectedTab(tab)}
-                        }
-                        className={`py-2 px-4 font-medium text-xs cursor-pointer rounded-md transition-all ${
-                          selectedTab === tab
-                            ? "text-neutral-900 bg-neutral-100"
-                            : "text-gray-500"
-                        } `}
-                      >
-                        {tabs[tab]} &nbsp;({getCountvalue(tab)})
-                      </li>
-                    ))
-                  )}
-                </ul>
         </span>
       </section>
       <section className="mt-5 relative">
@@ -221,4 +177,4 @@ const AllSyndicates = ({}: any): any => {
     </>
   );
 };
-export default AllSyndicates;
+export default Applications;

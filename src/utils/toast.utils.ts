@@ -1,10 +1,13 @@
-export const toastUtil:any = {
-    position: "top-center",
-    autoClose: 5000,
-    hideProgressBar: false,
-    closeOnClick: true,
-    pauseOnHover: true,
-    draggable: true,
-    progress: undefined,
-    theme: "light",
-}
+import store from "../redux-toolkit/store/store";
+
+export const toastUtil: any = {
+  position: "top-center",
+  autoClose: 5000,
+  hideProgressBar: false,
+  closeOnClick: true,
+  pauseOnHover: true,
+  draggable: true,
+  progress: undefined,
+  theme: "light",
+  className: store.getState().event.value === "ar" ? "toast-message-ar" : "",                                               
+};
