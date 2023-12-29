@@ -100,10 +100,10 @@ const FollowingSyndicates = (): any => {
             ),
             [ language?.v3?.investor?.raising_fund]: (
               <span className=" capitalize">
-                {syndicate?.raising_fund ? (
-                  <CustomStatus options={"Yes"} />
+                  {syndicate?.raising_fund ? (
+                  <CustomStatus options={language?.v3?.fundraiser?.yes} />
                 ) : (
-                  <CustomStatus options={"No"} />
+                  <CustomStatus options={language?.v3?.fundraiser?.no} />
                 )}
               </span>
             ),

@@ -861,10 +861,10 @@ const StartupCase = ({
                             onChange={handleCurrencyChange}
                           >
                             <option className="text-md font-light" value="USD">
-                              USD
+                            {language?.v3?.investor?.usdSymbol}
                             </option>
                             <option className="text-md font-light" value="AED">
-                              AED
+                            {language?.v3?.investor?.aedSymbol}
                             </option>
                           </select>
                         </label>
@@ -1051,13 +1051,13 @@ const StartupCase = ({
                                 className="text-md font-light"
                                 value="USD"
                               >
-                                USD
+                            {language?.v3?.investor?.usdSymbol}
                               </option>
                               <option
                                 className="text-md font-light"
                                 value="AED"
                               >
-                                AED
+                            {language?.v3?.investor?.aedSymbol}
                               </option>
                             </select>
                           </label>

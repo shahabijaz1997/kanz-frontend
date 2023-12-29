@@ -29,16 +29,16 @@ const DealViewDetails = ({ dealDetail, state }: any) => {
   }
 
   function getTermValue(term: any) {
-    if (term.is_enabled) {
-      if (term.term === language?.v3?.fundraiser?.discount) {
-        return `${term.value}%` || language?.v3?.fundraiser?.yes;
-      } else if (term.term === language?.v3?.fundraiser?.min_check_size || term.term === language?.v3?.fundraiser?.valuation_cap) {
-        return term.value && event === "ar"
-          ? comaFormattedNumber(term.value, DealCheckType.STARTUP, true)
-          : comaFormattedNumber(term.value, DealCheckType.STARTUP) ||
+    if (term?.is_enabled) {
+      if (term?.term === language?.v3?.fundraiser?.discount) {
+        return `${term?.value}%` || language?.v3?.fundraiser?.yes;
+      } else if (term?.term === language?.v3?.fundraiser?.min_check_size || term?.term === language?.v3?.fundraiser?.valuation_cap) {
+        return term?.value && event === "ar"
+          ? comaFormattedNumber(term?.value, DealCheckType.STARTUP, true)
+          : comaFormattedNumber(term?.value, DealCheckType.STARTUP) ||
               language?.v3?.fundraiser?.yes;
-      } else if (term.term === language?.v3?.fundraiser?.additional_terms) {
-        return term.value
+      } else if (term?.term === language?.v3?.fundraiser?.additional_terms) {
+        return term?.value
       }
        else {
         return language?.v3?.fundraiser?.yes;

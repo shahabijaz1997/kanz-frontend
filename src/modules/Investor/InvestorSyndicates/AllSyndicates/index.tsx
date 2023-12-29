@@ -24,6 +24,7 @@ const AllSyndicates = ({}: any): any => {
   const dispatch = useDispatch();
   const language: any = useSelector((state: RootState) => state.language.value);
   const authToken: any = useSelector((state: RootState) => state.auth.value);
+  const event: any = useSelector((state: RootState) => state.event.value);
   const orientation: any = useSelector(
     (state: RootState) => state.orientation.value
   );
@@ -88,9 +89,9 @@ const AllSyndicates = ({}: any): any => {
             [ language?.v3?.investor?.raising_fund]: (
               <span className=" capitalize">
                 {syndicate?.raising_fund ? (
-                  <CustomStatus options={"Yes"} />
+                  <CustomStatus options={language?.v3?.fundraiser?.yes} />
                 ) : (
-                  <CustomStatus options={"No"} />
+                  <CustomStatus options={language?.v3?.fundraiser?.no} />
                 )}
               </span>
             ),

@@ -36,7 +36,11 @@ const InvestorUpdates = ({}: any) => {
   const [files, setFiles]: any = useState([]);
   const language: any = useSelector((state: RootState) => state.language.value);
   const authToken: any = useSelector((state: RootState) => state.auth.value);
-  const user: any = useSelector((state: RootState) => state.user.value);
+  const event: any = useSelector((state: RootState) => state.event.value);
+  const user: any = useSelector((state: RootState) => state.user.value); 
+   const orientation: any = useSelector(
+    (state: RootState) => state.orientation.value
+  );
 
   const [changes, setChanges]: any = useState({
     comment: "",
@@ -191,7 +195,7 @@ const InvestorUpdates = ({}: any) => {
             [language?.v3?.fundraiser?.name]: investor?.name,
             [language?.v3?.fundraiser?.type]: investor?.type || language?.v3?.common?.not_added,
             [language?.v3?.fundraiser?.invested_amount]: investor?.deal,
-            [language?.v3?.fundraiser?.invested_amount]: numberFormatter(investor?.invested_amount,DealCheckType.STARTUP) ||language?.v3?.common?.not_added,
+            [language?.v3?.fundraiser?.invested_amount]: event === "ar" ?  numberFormatter(investor?.invested_amount,DealCheckType.STARTUP, true) :  numberFormatter(investor?.invested_amount,DealCheckType.STARTUP, false) ||  language?.v3?.common?.not_added,
             [language?.v3?.fundraiser?.invite_status]: <CustomStatus options={investor?.status} />,
             "": (
               <div
@@ -203,12 +207,12 @@ const InvestorUpdates = ({}: any) => {
                   );
                   setOpen(true);
                 }}
-                className="bg-neutral-100 inline-flex items-center justify-center w-[30px] h-[30px] rounded-full transition-all hover:bg-cbc-transparent"
-              >
-                <Chevrond
-                  className="rotate-[-90deg] w-6 h-6"
-                  stroke={"#737373"}
-                />
+                className="bg-neutral-100 inline-flex items-center justify-center w-[26px] h-[26px] rounded-full transition-all hover:bg-cbc-transparent mx-2"
+                > <Chevrond
+                className={`${orientation === "rtl" ? "rotate-[-270deg]" : "rotate-[-90deg]"} w-4 h-4`}
+                strokeWidth={2}
+                stroke={"#000"}
+              />
               </div>
             ),
             dealId: investor?.deal?.id,
@@ -358,7 +362,7 @@ const InvestorUpdates = ({}: any) => {
             <section className="border-b-[1px] border-b-neutral-200 pb-5 items-center">
               <aside>
                 <div className="justify-between pr-2 flex items-center">
-                  <span className="text-lg font-bold">Deal</span>
+                  <span className="text-lg font-bold">{language?.v3?.common?.deal}</span>
                   <span>
                     {" "}
                     <CustomStatus options={dealDetail?.deal?.status} />
@@ -383,14 +387,15 @@ const InvestorUpdates = ({}: any) => {
                                 onClick={() => setmodalAddComment(true)}
                                 className="text-md font-semibold"
                               >
-                                Add Comment
+                                {language?.v3?.fundraiser?.add_comment}
                               </span>
                             </Button>) : (<Button type="outlined">
                               <span
                                 onClick={() => setmodalReplyOpen(true)}
                                 className="text-md font-semibold"
                               >
-                                Add Reply
+                            {language?.v3?.fundraiser?.reply}
+
                               </span>
                             </Button>)}
                             
@@ -400,7 +405,7 @@ const InvestorUpdates = ({}: any) => {
                       <div className="w-full">
                         {dealDetail?.thread_id === null ? (
                           <section className="w-full  flex items-center justify-center h-56 text-[#828282] font-medium text-lg text-justify">
-                            No comments from investor yet
+                            {language?.v3?.fundraiser?.no_comments_from_syndicate_yet}
                           </section>
                         ) : (
                           <p className=" overflow-y-auto custom-scroll rounded-md  w-full opacity-80 max-h-56 text-neutral-700 font-normal text-sm text-justify">
@@ -420,7 +425,7 @@ const InvestorUpdates = ({}: any) => {
                                     <span className="ml-2 mr-4">
                                       <h1 className="font-medium capitalize text-xl">
                                         {comments?.author_id === user?.id
-                                          ? "You"
+                                          ? language?.v3?.fundraiser?.you
                                           : comments?.author_name}
                                       </h1>
                                       <p className="pt-1 overflow-auto custom-scroll">
@@ -442,7 +447,7 @@ const InvestorUpdates = ({}: any) => {
             {dealDetail?.attachments?.length > 0 && (
               <section className="pt-8">
                 <aside>
-                  <h1 className="text-lg font-bold">Documents</h1>
+                  <h1 className="text-lg font-bold">{language?.v3?.fundraiser?.documents}</h1>
                   <aside className="overflow-y-auto custom-scroll max-h-56 border-[1px] border-neutral-200 rounded-md w-full p-3 mt-5 bg-cbc-check">
                     {React.Children.toArray(
                       dealDetail?.attachments?.map((documents: any) => (
@@ -461,7 +466,7 @@ const InvestorUpdates = ({}: any) => {
                                   }}
                                   className="text-sm text-black font-medium "
                                 >
-                                  View Doc
+                                  {language?.v3?.fundraiser?.view_doc}
                                 </div>
                                 <ArrowIcon stroke="#000" />
                               </h4>
@@ -506,7 +511,7 @@ const InvestorUpdates = ({}: any) => {
             <aside className="bg-white w-[700px] rounded-md h-full">
               <header className="bg-cbc-grey-sec h-16 py-2 px-3 inline-flex w-full justify-between items-center">
                 <h3 className="text-xl font-medium text-neutral-700">
-                  Deal Approval
+                {language?.v3?.fundraiser?.deal_approval}
                 </h3>
                 <div
                   className="bg-white h-8 w-8 border-[1px] border-black rounded-md  shadow-cs-6 p-1 cursor-pointer"
@@ -520,7 +525,7 @@ const InvestorUpdates = ({}: any) => {
               </header>
               <section>
                 <div className="justify-between  px-4 pt-2 w-full">
-                  <div className="text-lg font-bold">Comment</div>
+                  <div className="text-lg font-bold">{language?.v3?.fundraiser?.comment}</div>
                   <p className="w-full pt-2 opacity-80 max-h-24 text-neutral-700  font-lg text-sm text-justify">
                     {dealDetail?.comments && dealDetail.comments.length > 0 && (
                       <p>
@@ -538,7 +543,7 @@ const InvestorUpdates = ({}: any) => {
                     htmlFor=""
                     className="text-neutral-900 font-medium text-sm"
                   >
-                    Add Comment
+                    {language?.v3?.fundraiser?.add_comment}
                   </label>
                   <textarea
                     value={changes?.comment}
@@ -547,7 +552,7 @@ const InvestorUpdates = ({}: any) => {
                         return { ...prev, comment: e.target.value };
                       })
                     }
-                    placeholder="Add Comment"
+                    placeholder={language?.v3?.fundraiser?.add_comment}
                     className=" h-[100px] mt-1 shadow-sm appearance-none border border-neutral-300 rounded-md w-full py-2 px-3 text-gray-500 leading-tight focus:outline-none focus:shadow-outline"
                   ></textarea>
                 </div>
@@ -563,7 +568,7 @@ const InvestorUpdates = ({}: any) => {
                     setCommentSubmitted(0);
                   }}
                 >
-                  Submit
+                 {language?.v3?.fundraiser?.submit}
                 </Button>
               </footer>
             </aside>
@@ -601,7 +606,7 @@ const InvestorUpdates = ({}: any) => {
             <aside className="bg-white w-[700px] rounded-md p-5 h-full">
               <section>
                 <div className="justify-between inline-flex pt-3 px-3 w-full">
-                  <div className="text-lg font-bold">Latest Comment</div>
+                  <div className="text-lg font-bold">{language?.v3?.fundraiser?.latest_comment}</div>
                   <div
                     className="bg-white h-8 w-8 border-[1px] border-black rounded-md  shadow-cs-6 p-1 cursor-pointer"
                     onClick={() => {
@@ -633,7 +638,7 @@ const InvestorUpdates = ({}: any) => {
                     htmlFor=""
                     className="text-neutral-900 font-medium text-sm"
                   >
-                    Reply:
+                    {language?.v3?.fundraiser?.reply}
                   </label>
                   <textarea
                     value={changes?.comment}
@@ -659,7 +664,7 @@ const InvestorUpdates = ({}: any) => {
                     setCommentSubmitted(0);
                   }}
                 >
-                  Submit
+                  {language?.v3?.fundraiser?.submit}
                 </Button>
               </footer>
             </aside>
@@ -701,7 +706,7 @@ const InvestorUpdates = ({}: any) => {
                     htmlFor=""
                     className="text-neutral-900 font-medium text-lg"
                   >
-                    Add Comment
+                    {language?.v3?.fundraiser?.add_comment}
                   </label>
                   <textarea
                     value={changes?.comment}
@@ -727,7 +732,7 @@ const InvestorUpdates = ({}: any) => {
                     setCommentSubmitted(0);
                   }}
                 >
-                  Submit
+                  {language?.v3?.fundraiser?.submit}
                 </Button>
               </footer>
             </aside>

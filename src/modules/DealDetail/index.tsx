@@ -65,7 +65,7 @@ const DealDetail = ({}: any) => {
   };
   const tabs =
     dealDetail?.model !== "_"
-      ? dealDetail?.model === DealPromotionType.SYNDICATE
+      ? convertStatusLanguage(dealDetail?.model) === DealPromotionType.SYNDICATE
         ? [
             { id: 1, title: language?.v3?.fundraiser?.details },
             { id: 3, title: language?.v3?.fundraiser?.investors },
