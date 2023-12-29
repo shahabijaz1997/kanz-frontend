@@ -12,11 +12,13 @@ import Spinner from "../../../../shared/components/Spinner";
 import Chevrond from "../../../../ts-icons/chevrond.svg";
 import CustomStatus from "../../../../shared/components/CustomStatus";
 import { getAllDeals } from "../../../../apis/investor.api";
+import { convertStatusLanguage } from "../../../../utils/string.utils";
 
 const Invites = ({}: any): any => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const language: any = useSelector((state: RootState) => state.language.value);
+  const event: any = useSelector((state: RootState) => state.event.value);
   const authToken: any = useSelector((state: RootState) => state.auth.value);
   const orientation: any = useSelector(
     (state: RootState) => state.orientation.value
@@ -35,6 +37,7 @@ const Invites = ({}: any): any => {
   const [invitees, setInvitees] = useState([]);
   const [filter, setFilterCounts]: any = useState([]);
   const [selectedTab, setSelectedTab] = useState("all");
+  
   const [searchQuery, setSearchQuery]: any = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const [paginationData, setpaginationData] = useState(null);
@@ -85,10 +88,13 @@ const Invites = ({}: any): any => {
             [language?.v3?.investor?.status]: <CustomStatus options={invitee?.status} /> || language?.v3?.common?.not_added,
             [language?.v3?.syndicate?.deals?.table?.end_date]:
               invitee?.end_at || language?.v3?.common?.not_added,
-            [language?.v3?.syndicate?.deals?.table?.target]: `${numberFormatter(
+            [language?.v3?.syndicate?.deals?.table?.target]:event === "ar" ?  `${numberFormatter(
               Number(invitee?.target),
-              invitee?.deal_type
-            )}`,
+              convertStatusLanguage(invitee?.deal_type)
+            , true)}`:`${numberFormatter(
+              Number(invitee?.target),
+              convertStatusLanguage(invitee?.deal_type)
+            ,false)}`,
 
             Steps: invitee?.current_state?.steps,
             [""]: (

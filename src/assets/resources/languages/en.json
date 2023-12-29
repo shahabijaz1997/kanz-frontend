@@ -1050,6 +1050,8 @@
       "no_credit_card_information_storage": "We do not store credit card information on our servers."
     },
     "investor": {
+      "usdSymbol":"USD",
+      "aedSymbol":"AED",
       "investments": "Investments",
       "deals": "Deals",
       "syndicates": "Syndicates",
