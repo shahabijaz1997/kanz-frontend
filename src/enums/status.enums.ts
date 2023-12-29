@@ -1,8 +1,6 @@
 import store from "../redux-toolkit/store/store";
 const event = store.getState().event.value;
-console.log('====================================');
-console.log("EVENT VALUE", event);
-console.log('====================================');
+
 /* export enum ApplicationStatus {
     IN_PROGRESS = "inprogress",
     APPROVED = "approved",

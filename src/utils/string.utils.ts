@@ -56,7 +56,5 @@ export const convertStatusLanguage = (status: any) => {
     'وأضاف': "added",
     'تابع': "follower"
   };
-  console.log("STATUS AS PARAM", status)
-  console.log("STATUS ACTUAL", statuses_array_en[status])
   return statuses_array_en[status];
 };
