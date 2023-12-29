@@ -153,6 +153,22 @@ export const getSyndicates = (token: string, searchQuery:string, currentPage:num
     }
   );
 };
+export const getAppliedSyndicates = (token: string, searchQuery:string, currentPage:number) => {
+  const queryParameters = new URLSearchParams();
+  queryParameters.append("page", currentPage.toString());
+  queryParameters.append("pending_invite", "true");
+  if (searchQuery.trim() !== "") {
+    queryParameters.append("search", searchQuery);
+  }
+  const apiUrl = `${ENV.API_URL}/${ENV.API_VERSION}/syndicates/all?${queryParameters.toString()}`;
+  return axios.get(
+      apiUrl,    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    }
+  );
+};
 
 export const getNonAddedInvestors = (token: string, searchQuery:any) => {
   const queryParameters = new URLSearchParams();
