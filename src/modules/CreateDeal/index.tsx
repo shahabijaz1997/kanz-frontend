@@ -456,7 +456,6 @@ const CreateDeal = () => {
       </section>
     );
   };
-console.log("EEVENT",event)
   const numberInputUI = (ques: any, secIndex: number, section: any) => {
     let dependantQuesion = section?.fields?.find(
       (field: any) => field.id === ques?.dependent_id
@@ -475,7 +474,6 @@ console.log("EEVENT",event)
       symbol = metadata.dealType === KanzRoles.STARTUP ? "$" : event === "ar" ?  "د.إ": "AED";
     else if (ques?.input_type === InputType.SQFT) symbol = event === "ar" ?  "قدم مربع": "SQFT";
     else if (ques?.input_type === InputType.PERCENT) symbol = "%";
-      console.log("DECIDED SYMBOL", symbol)
     if (!dependantQuesion || (dependantQuesion && dependantQuesion?.value))
       return (
         <section className="flex items-start justify-center flex-col mt-3 w-full">

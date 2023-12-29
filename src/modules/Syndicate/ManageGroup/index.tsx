@@ -214,14 +214,14 @@ const ManageGroup = ({}: any) => {
 
   return (
     <>
-      <main className="h-full max-h-full overflow-auto mb-6">
+      <main className="h-full max-h-full mb-6">
         <section>
           <Header />
         </section>
         <aside className="w-full h-full flex items-start justify-start">
           <Sidebar type={KanzRoles.SYNDICATE} />
           <section
-            className="bg-cbc-auth h-full p-[5rem] relative"
+            className="bg-cbc-auth h-full p-[2rem] relative"
             style={{ width: "calc(100% - 250px)" }}
           >
             {loading ? (

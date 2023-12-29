@@ -27,7 +27,6 @@ export const numberFormatter = (
 ) => {
   if (isNaN(number) || !number) return 0;
   let formattedNumber = "";
-  console.log("FORAMTEED NUM",formattedNumber)
   if (isArabic) {
     if (number >= 1000000000) {
       formattedNumber = ` ${(number / 1000000000).toFixed(1)} مليار`;
@@ -49,7 +48,6 @@ export const numberFormatter = (
       formattedNumber = number.toString();
     }
   }
-  console.log("DEAL TYPE",dealType)
   if (dealType === null || dealType === undefined) {
     return formattedNumber;
   }
@@ -68,7 +66,6 @@ export const numberFormatter = (
       formattedNumber = `$ ${formattedNumber}`
     }
   }
-  console.log("FORAMTEED NUM",formattedNumber)
   return formattedNumber;
 };
 export const comaFormattedNumber = (
