@@ -67,7 +67,7 @@ const SyndicateInfoDrawer = ({
         authToken
       );
       if (status === 200) {
-        toast.success("Syndicate Followed", toastUtil);                                //TODO
+        toast.success(language?.v3?.investor?.syndicate_followed, toastUtil);                                
       }
       removeSpinning()
     } catch (error: any) {
@@ -89,7 +89,7 @@ const SyndicateInfoDrawer = ({
         authToken
       );
       if (status === 200) {
-        toast.success("Syndicate Unfollowed", toastUtil);
+        toast.success(language?.v3?.investor?.syndicate_unfollowed, toastUtil);
   
       }
       removeSpinning()

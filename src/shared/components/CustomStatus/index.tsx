@@ -18,7 +18,7 @@ const CustomStatus = ({ options }: any) => {
     backgroundColor = "bg-indigo-100";
   } else if (options === language?.v3?.status?.closed) {
     backgroundColor = "bg-grey-100";
-  } else if (options === language?.v3?.status?.no) {
+  } else if (options === language?.v3?.fundraiser?.no) {
     backgroundColor = "bg-red-100";
   } else if (options === language?.v3?.status?.follower) {
     backgroundColor = "bg-blue-100";
