@@ -1546,7 +1546,6 @@ const CreateDeal = () => {
                                         <section className="flex items-start justify-center flex-col mb-1 mt-3 w-[415px]">
                                           <div className="relative inline-flex w-full mb-3">
                                             <p
-                                              placeholder="www.example.com"
                                               className={`h-[42px] rounded-md shadow-sm appearance-none border border-neutral-300 w-full py-2 px-3 bg-white text-blue-500 leading-tight focus:outline-none focus:shadow-outline inline-flex justify-between items-center`}
                                             >
                                               <small className="text-sm;">
