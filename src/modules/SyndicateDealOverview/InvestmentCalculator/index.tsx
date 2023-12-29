@@ -106,6 +106,7 @@ const InvestmentCalculator = ({}: any) => {
           <div className="min-w-full mb-4">
             <div className="relative w-full">
               <input
+                dir="ltr"
                 className="min-w-full "
                 type="range"
                 id="rangeSlider1"
@@ -120,7 +121,7 @@ const InvestmentCalculator = ({}: any) => {
               <span className="text-sm text-neutral-500 mr-2 ml-2">
                 {language?.v3?.syndicate?.inv_amount}
               </span>
-              <span className="text-lg font-semibold text-[#155E75]">{`(AED ${comaFormattedNumber(
+              <span className="text-lg font-semibold text-[#155E75]">{`(${language?.v3?.investor?.aedSymbol} ${comaFormattedNumber(
                 investmentAmount.toString()
               )})`}</span>
             </p>
@@ -128,6 +129,7 @@ const InvestmentCalculator = ({}: any) => {
 
           <div className="min-w-full mt-3 mb-8">
             <input
+              dir="ltr"
               className="min-w-full mb-2"
               type="range"
               id="rangeSlider2"
@@ -147,6 +149,7 @@ const InvestmentCalculator = ({}: any) => {
 
           <div className="min-w-full">
             <input
+              dir="ltr"
               className="min-w-full mb-2"
               type="range"
               id="rangeSlider3"
@@ -165,6 +168,7 @@ const InvestmentCalculator = ({}: any) => {
           </div>
           <div className="min-w-full mt-5">
             <input
+              dir="ltr"
               className="min-w-full mb-2"
               type="range"
               id="rangeSlider3"
@@ -192,7 +196,7 @@ const InvestmentCalculator = ({}: any) => {
                 <p className="px-5 pb-5 text-2xl  font-bold text-[#155E75] ">
                   {" "}
                   <span>
-                    AED{" "}
+                  {language?.v3?.investor?.aedSymbol}{" "}
                     {comaFormattedNumber(
                       parseFloat(
                         finalValue.finalTotalReturn.toString()

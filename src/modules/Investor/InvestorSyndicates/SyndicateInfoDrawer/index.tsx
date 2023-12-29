@@ -13,6 +13,8 @@ import { toastUtil } from "../../../../utils/toast.utils";
 import SyndicateMonthlyDealsGraph from "./SyndicateMonthlyDealsGraph";
 import { useNavigate } from "react-router-dom";
 import { RoutesEnums } from "../../../../enums/routes.enum";
+import Modal from "../../../../shared/components/Modal";
+import CrossIcon from "../../../../ts-icons/crossIcon.svg";
 
 const SyndicateInfoDrawer = ({
   syndicateInfo,
@@ -30,9 +32,12 @@ const SyndicateInfoDrawer = ({
   const user: any = useSelector((state: RootState) => state.user.value);
   const authToken: any = useSelector((state: RootState) => state.auth.value);
   const language: any = useSelector((state: RootState) => state.language.value);
-  console.log(toastUtil)
-
-
+  const [modalAddMessage, setmodalAddMessage]: any = useState(null);
+  const [changes, setChanges]: any = useState({
+    comment: "",
+    action: "",
+    document: null,
+  });
 
 
   const orientation: any = useSelector(
@@ -53,8 +58,7 @@ const SyndicateInfoDrawer = ({
     "Insurance",
   ];
 
-  let text =
-    "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.";
+  let text = "AlphaTech Solutions is a leading IT company specializing in innovative software solutions and cutting-edge technologies. Our team of experts is dedicated to providing high-quality services to clients worldwide, helping them achieve their business goals through advanced digital solutions."
   const [showFullText, setShowFullText] = useState(false);
 
   const toggleText = () => {
@@ -80,15 +84,14 @@ const SyndicateInfoDrawer = ({
     try {
       setLoading(true);
       const { status } = await postFollowSyndicate(
-        {
-          member_id: user.id,
-          connection: "follower",
-        },
+      { 
+          invite: { message: changes.comment, invitee_id: syndId }
+       },
         syndId,
         authToken
       );
       if (status === 200) {
-        toast.success(language?.v3?.investor?.syndicate_followed, toastUtil); 
+        toast.success(language?.v3?.investor?.applied, toastUtil); 
       }
       removeSpinning();
     } catch (error: any) {
@@ -100,7 +103,7 @@ const SyndicateInfoDrawer = ({
       sendDataToParent();
     }
   };
-  const onunFollow = async (syndId: any, memberId: any) => {
+ /*  const onunFollow = async (syndId: any, memberId: any) => {
     setButtonDisableTemp(true);
     try {
       setLoading(true);
@@ -122,13 +125,13 @@ const SyndicateInfoDrawer = ({
       sendDataToParent();
     }
   };
-
+ */
   const getButtonStatus = () => {
     if (buttonDisableTemp) return;
 
-    return syndicateInfo?.following
-      ? language?.v3?.investor?.following
-      : language?.v3?.investor?.follow;
+    return syndicateInfo?.is_invited
+      ? language?.v3?.investor?.applied
+      : language?.v3?.investor?.apply_to_syndicate;
   };
 
   const displayText = showFullText ? text : text.slice(0, 500);
@@ -163,26 +166,25 @@ const SyndicateInfoDrawer = ({
                       src={syndicateInfo?.profile?.logo}
                     ></img>
                   </span>
-                  <span className="items-center">{syndicateInfo?.name}</span>
+                  <span className="items-center justify-start flex-col flex"><span>
+                  {syndicateInfo?.name}
+                  </span>
+                  <span className="flex items-center justify-start w-full text-xs text-[#737373]">{syndicateInfo?.profile?.tagline}</span>
+                  </span>
+                  <></>
                 </div>
                 <span className="items-center">
                   <Button
                     type={
-                      syndicateInfo?.following && !buttonDisableTemp
+                      syndicateInfo?.is_invited && !buttonDisableTemp
                         ? "outlined"
                         : "primary"
                     }
                     centeredSpinner
                     className="!min-w-[90px]"
                     onClick={() => {
-                      if (syndicateInfo?.following) {
-                        onunFollow(
-                          syndicateInfo?.id,
-                          syndicateInfo?.membership_id
-                        );
-                      } else {
-                        onFollow(syndicateInfo?.id);
-                      }
+                     if (!syndicateInfo?.is_invited) setmodalAddMessage(true) 
+                     else return
                     }}
                     loading={buttonDisableTemp}
                   >
@@ -192,9 +194,9 @@ const SyndicateInfoDrawer = ({
               </section>
             </header>
             <section className="items-center w-full">
-              <aside className="flex items-center justify-center">
+              <aside className="flex items-center justify-start">
                 <div className="flex flex-wrap gap-2">
-                  {topics.map((topic, index) => (
+                  {syndicateInfo?.profile?.industries?.map((topic:any, index:any) => (
                     <div
                       key={index}
                       className=" bg-[#F2F2F2] p-2 text-xs text-[#202223] rounded-lg"
@@ -232,11 +234,11 @@ const SyndicateInfoDrawer = ({
                       <span className="flex items-center justify-center">
                         <img
                           className=" h-[52px] w-[52px] rounded-full"
-                          src={syndicateInfo?.profile?.logo}
+                          src={"https://images.unsplash.com/photo-1603415526960-f7e0328c63b1?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"}
                         ></img>
                       </span>
                       <span className="items-center font-medium">
-                        {syndicateInfo?.name}
+                        {"Leonard Krasner (Lead)"}
                       </span>
                     </div>
                   </div>
@@ -304,6 +306,61 @@ const SyndicateInfoDrawer = ({
           </div>
         )}
       </Drawer>
+      <Modal show={modalAddMessage ? true : false} className="w-full">
+          <div
+            className="rounded-md overflow-hidden inline-grid place-items-center absolute top-1/2 left-1/2 translate-x-[-50%] translate-y-[-50%]"
+            style={{ backgroundColor: "rgba(0, 0, 0, 0.078" }}
+          >
+            <aside className="bg-white w-[700px] rounded-md p-5 h-full">
+            <header className=" h-16 py-2 px-3 inline-flex w-full justify-between items-center">
+                <div
+                  className="bg-white h-8 w-8 border-[1px] border-black rounded-md  shadow-cs-6 p-1 cursor-pointer"
+                  onClick={() => {
+                    setmodalAddMessage(false);
+                    setChanges({ comment: "", action: "", document: null });
+                  }}
+                >
+                  <CrossIcon stroke="#000" />
+                </div>
+              </header>
+              <section className="py-3 px-3">
+                <div className="mb-6">
+                  <label
+                    htmlFor=""
+                    className="text-neutral-900 font-medium text-lg"
+                  >
+                    {language?.v3?.investor?.add_message}
+                  </label>
+                  <textarea
+                    value={changes?.comment}
+                    onChange={(e) =>
+                      setChanges((prev: any) => {
+                        return { ...prev, comment: e.target.value };
+                      })
+                    }
+                    placeholder= {language?.v3?.investor?.add_message}
+                    className=" h-[100px] mt-1 shadow-sm appearance-none border border-neutral-300 rounded-md w-full py-2 px-3 text-gray-500 leading-tight focus:outline-none focus:shadow-outline"
+                  ></textarea>
+                </div>
+              </section>
+
+              <footer className="w-full inline-flex justify-between gap-3 py-2 px-3">
+                <Button
+                  disabled={!changes.comment}
+                  className="w-full !py-1"
+                  divStyle="flex items-center justify-center w-full"
+                  onClick={() => {
+                    onFollow(syndicateInfo?.id);
+                    setmodalAddMessage(false)
+                    setChanges({ comment: "", action: "", document: null });
+                  }}
+                >
+                  {language?.v3?.fundraiser?.submit}
+                </Button>
+              </footer>
+            </aside>
+          </div>
+      </Modal>
     </main>
   );
 };

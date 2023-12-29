@@ -9,7 +9,7 @@ import { saveDataHolder } from "../../../../redux-toolkit/slicer/dataHolder.slic
 import Spinner from "../../../../shared/components/Spinner";
 import Chevrond from "../../../../ts-icons/chevrond.svg";
 import CustomStatus from "../../../../shared/components/CustomStatus";
-import { getSyndicates } from "../../../../apis/syndicate.api";
+import { getAppliedSyndicates, getSyndicates } from "../../../../apis/syndicate.api";
 import { saveToken } from "../../../../redux-toolkit/slicer/auth.slicer";
 import SyndicateInfoDrawer from "../SyndicateInfoDrawer";
 import { getSyndicateInfo } from "../../../../apis/investor.api";
@@ -68,7 +68,7 @@ const Applications = ({}: any): any => {
   const getApplications = async () => {
     try {
       setLoading(true);
-      let { status, data } = await getSyndicates(
+      let { status, data } = await getAppliedSyndicates(
         authToken,
         searchQuery,
         currentPage
@@ -82,11 +82,11 @@ const Applications = ({}: any): any => {
               <span className=" capitalize">{syndicate?.name}</span>
             ),
             [ language?.v3?.investor?.apply_date]: (
-              <span className=" capitalize">{syndicate?.apply_date}</span>
+              <span className=" capitalize">{syndicate?.invite?.created_at}</span>
             ),
-            [ language?.v3?.fundriaser?.status]: (
+            [ language?.v3?.investor?.status]: (
               <span className=" capitalize">
-                <CustomStatus options={syndicate?.status}/>
+                <CustomStatus options={syndicate?.invite?.status}/>
               </span>
             ),
             [""]: (

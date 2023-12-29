@@ -17,7 +17,7 @@ const Investor = ({}: any) => {
           className="bg-cbc-auth h-full p-[5rem] relative"
           style={{ width: "calc(100% - 250px)" }}
         >
-          .......Work in progress......
+          ///
         </section>
       </aside>
     </main>

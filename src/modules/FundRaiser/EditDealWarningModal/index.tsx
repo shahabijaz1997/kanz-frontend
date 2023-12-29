@@ -4,6 +4,7 @@ import Button from "../../../shared/components/Button";
 import { ApplicationStatus } from "../../../enums/types.enum";
 import { useNavigate } from "react-router-dom";
 import { RootState } from "../../../redux-toolkit/store/store";
+import { convertStatusLanguage } from "../../../utils/string.utils";
 
 const EditDealWarningModal = ({
   handleWarningModal,
@@ -51,9 +52,9 @@ const EditDealWarningModal = ({
               e.preventDefault();
               e.stopPropagation();
               dispatch(saveDataHolder(dealId));
-              if (dealStatus === ApplicationStatus.APPROVED) {
+              if (convertStatusLanguage(dealStatus) === ApplicationStatus.APPROVED) {
                 navigate(`/create-deal/1`);
-              } else if (dealStatus === ApplicationStatus.REOPENED) {
+              } else if (convertStatusLanguage(dealStatus) === ApplicationStatus.REOPENED) {
                 navigate(`/create-deal/${dealStep + 1}`);
               } else {
                 navigate(`/create-deal/${dealStep + 2}`);

@@ -19,12 +19,15 @@ import {
 import Spinner from "../../shared/components/Spinner";
 import CustomStatus from "../../shared/components/CustomStatus";
 import Chevrond from "../../ts-icons/chevrond.svg";
+import { convertStatusLanguage } from "../../utils/string.utils";
 
 const SyndicateDashboard = ({}: any) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const language: any = useSelector((state: RootState) => state.language.value);
   const authToken: any = useSelector((state: RootState) => state.auth.value);
+  const event: any = useSelector((state: RootState) => state.event.value);
+
   const [filter, setFilterCounts]:any = useState([]);
   const orientation: any = useSelector(
     (state: RootState) => state.orientation.value
@@ -98,11 +101,14 @@ const SyndicateDashboard = ({}: any) => {
             token: deal?.token,
             type: deal?.deal_type,
             id: deal?.id,
-            [language?.v3?.syndicate?.title]: deal?.title || "N/A",
+            [language?.v3?.syndicate?.title]: deal?.title || language?.v3?.common?.not_added,
             [language?.v3?.syndicate?.type]: <span className=" capitalize">{deal?.deal_type}</span>,
-            [language?.v3?.table?.sellingPrice]: `${numberFormatter(
-              Number(deal?.target)
-            , deal?.deal_type)}`,
+            [language?.v3?.table?.sellingPrice]: event === "ar" ?  `${numberFormatter(
+              deal?.deal?.target
+            , convertStatusLanguage(deal?.deal_type), true)}`:  `${numberFormatter(
+            deal?.target
+            , convertStatusLanguage(deal?.deal_type), false)}`,
+            
             [language?.v3?.table?.status]: (
               <CustomStatus options={deal?.status} />
             ),

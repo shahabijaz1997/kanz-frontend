@@ -19,12 +19,15 @@ import {
 import Spinner from "../../../shared/components/Spinner";
 import Chevrond from "../../../ts-icons/chevrond.svg";
 import CustomStatus from "../../../shared/components/CustomStatus";
+import { convertStatusLanguage } from "../../../utils/string.utils";
 
 const SyndicateInvestments = ({}: any) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const language: any = useSelector((state: RootState) => state.language.value);    
   const authToken: any = useSelector((state: RootState) => state.auth.value);
+  const event: any = useSelector((state: RootState) => state.event.value);
+
   const user: any = useSelector((state: RootState) => state.user.value);
   const orientation: any = useSelector(
     (state: RootState) => state.orientation.value
@@ -91,17 +94,25 @@ const SyndicateInvestments = ({}: any) => {
             id: deal?.id,
             filterStatus: deal?.status,
             [language?.v3?.syndicate?.deals?.table?.title]:
-              deal?.title || "N/A",
+              deal?.title || language?.v3?.common?.not_added,
             [language?.v3?.syndicate?.deals?.table?.category]: (
               <span className="capitalize">{deal?.deal_type}</span>
             ),
             [language?.v3?.syndicate?.status]:
-              <CustomStatus options={deal?.status} /> || "N/A",
+              <CustomStatus options={deal?.status} /> || language?.v3?.common?.not_added,
             [language?.v3?.syndicate?.deals?.table?.end_date]:
-              <span className="px-2">{(deal?.end_at)}</span>|| " N/A",
-            [language?.v3?.syndicate?.raised]:`$${numberFormatter(Number(deal?.raised))}`,  
+              <span className="px-2">{(deal?.end_at)}</span>|| language?.v3?.common?.not_added,
+            [language?.v3?.syndicate?.raised]: event === "ar" ?  `${numberFormatter(
+              deal?.raised
+            , convertStatusLanguage(deal?.deal_type), true)}`:  `${numberFormatter(
+              deal?.raised
+            , convertStatusLanguage(deal?.deal_type), false)}`,  
             [language?.v3?.syndicate?.deals?.table
-              ?.target]: `$${numberFormatter(Number(deal?.target))}`,
+              ?.target]:  event === "ar" ?  `${numberFormatter(
+              deal?.target
+            , convertStatusLanguage(deal?.deal_type), true)}`:  `${numberFormatter(
+              deal?.target
+            , convertStatusLanguage(deal?.deal_type), false)}`,
 
             Steps: deal?.current_state?.steps,
             [""]: (

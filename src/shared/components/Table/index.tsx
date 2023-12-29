@@ -97,7 +97,7 @@ const Table = ({
                       ) : (
                         <td
                           className={`px-3 h-10 text-sm font-medium text-gray-800 whitespace-nowrap max-w-[150px] truncate ${
-                            index === columns.length - 1 && `text-right`
+                             orientation !== "rtl" && index === columns.length - 1 ? `text-right` : orientation === "rtl" && index === columns.length-1 && `text-left`
                           } }`}
                         >
                           {row[column]}

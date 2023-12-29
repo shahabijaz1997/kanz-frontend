@@ -28,12 +28,9 @@ import ExternalSvg from "../../assets/svg/externl.svg";
 
 import {
   comaFormattedNumber,
-  formatDate,
-  numberFormatter,
   timeAgo,
 } from "../../utils/object.utils";
 import {
-  ApplicationStatus,
   DealStatus,
   FileType,
 } from "../../enums/types.enum";
@@ -52,10 +49,9 @@ import { fileSize } from "../../utils/files.utils";
 import InvitesListing from "./InvitesListing";
 import { RoutesEnums } from "../../enums/routes.enum";
 import InvestmentCalculator from "./InvestmentCalculator";
-import DealActivity from "./DealActivity";
 import { getDownloadDocument, investSyndicate } from "../../apis/syndicate.api";
-import Investors from "./DealInvestors";
-import { set } from "react-hook-form";
+import { convertStatusLanguage } from "../../utils/string.utils";
+
 
 const PropertyOwnerCase = ({
   dealToken,
@@ -66,6 +62,7 @@ const PropertyOwnerCase = ({
   const navigate = useNavigate();
   const language: any = useSelector((state: RootState) => state.language.value);
   const authToken: any = useSelector((state: RootState) => state.auth.value);
+  const event: any = useSelector((state: RootState) => state.event.value);
   const user: any = useSelector((state: RootState) => state.user.value);
   const [files, setFiles]: any = useState([]);
 
@@ -85,7 +82,6 @@ const PropertyOwnerCase = ({
   const [InvestButtonDisable, setInvestButtonDisable]: any = useState(false);
   const [selectedCurrency, setSelectedCurrency] = useState("USD");
   const [investmentAmount, setAmount] = useState<number>();
-
   const handleAmountChange = (event: any) => {
     setAmount(event.target.value);
   };
@@ -118,6 +114,7 @@ const PropertyOwnerCase = ({
     setFileInformation(file);
     e.target.value = "";
   };
+
 
   const setFileInformation = async (file: File) => {
     let size = fileSize(file.size, "mb");
@@ -367,7 +364,7 @@ const PropertyOwnerCase = ({
                 {language?.v3?.table?.sellingPrice}
               </h3>
               <p className="text-neutral-900 font-normal text-sm capitalize">
-                AED {comaFormattedNumber(deal?.selling_price)}
+                {language?.v3?.common?.aedSymbol} {comaFormattedNumber(deal?.selling_price)}
               </p>
             </div>
           </div>
@@ -412,7 +409,7 @@ const PropertyOwnerCase = ({
                 {language?.v3?.deal?.por_2}
               </h3>
               <p className="text-neutral-900 font-normal text-sm capitalize">
-                AED {comaFormattedNumber(deal?.features?.rental_amount)} (
+              {language?.v3?.common?.aedSymbol} {comaFormattedNumber(deal?.features?.rental_amount)} (
                 {deal?.features?.rental_period})
               </p>
             </div>
@@ -491,7 +488,7 @@ const PropertyOwnerCase = ({
                   type="outlined"
                   className="!cursor-default !hover:border-none"
                 >
-                  {comaFormattedNumber(deal?.size)}&nbsp;SQFT
+                  {comaFormattedNumber(deal?.size)}&nbsp;{language?.v3?.common?.sqftSymbol}
                 </Button>
               </div>
               {/* Images Section */}
@@ -635,7 +632,7 @@ const PropertyOwnerCase = ({
                   })
                 )}
               </section>
-              {deal?.status === DealStatus.LIVE && !deal?.is_invested && (
+              {convertStatusLanguage(deal?.status) === DealStatus.LIVE && !deal?.is_invested && (
                 <>
                   {(user.type === KanzRoles.INVESTOR ||
                     user.type === KanzRoles.SYNDICATE) && (
@@ -649,7 +646,7 @@ const PropertyOwnerCase = ({
                           className="min-w-full h-9 no-spin-button"
                           pattern="[0-9]*"
                           placeholder={
-                            selectedCurrency === "USD" ? "$ 0.00" : "AED 0.00"
+                            selectedCurrency === "USD" ? language?.v3?.investor?.placeholderUSD : language?.v3?.investor?.placeholderAED
                           }
                           onKeyDown={(evt) =>
                             ["e", "E", "+", "-"].includes(evt.key) &&
@@ -668,10 +665,10 @@ const PropertyOwnerCase = ({
                           onChange={handleCurrencyChange}
                         >
                           <option className="text-md font-light" value="USD">
-                            USD
+                          {language?.v3?.investor?.usdSymbol}
                           </option>
                           <option className="text-md font-light" value="AED">
-                            AED
+                          {language?.v3?.investor?.aedSymbol}
                           </option>
                         </select>
                       </label>
@@ -744,9 +741,9 @@ const PropertyOwnerCase = ({
                 </div>
               </section>
               {user?.type?.toLowerCase() === "syndicate" &&
-                deal?.status !== DealStatus.LIVE && (
+                convertStatusLanguage(deal?.status) !== DealStatus.LIVE && (
                   <div className="w-full inline-flex justify-end gap-4 mb-3">
-                    {deal?.invite?.status !== DealStatus.ACCEPTED && (
+                    {convertStatusLanguage(deal?.invite?.status) !== DealStatus.ACCEPTED && (
                       <div className="w-full">
                         {deal?.invite ? (
                           <Button
@@ -775,7 +772,7 @@ const PropertyOwnerCase = ({
             <section className="w-[30%]">
               {/* Show/Hide based on some conditions */}
               {user?.type?.toLowerCase() === "syndicate" &&
-                deal?.status === DealStatus.LIVE &&
+                convertStatusLanguage(deal?.status) == DealStatus.LIVE &&
                 deal?.current_deal_syndicate && (
                   <div className="w-full inline-flex justify-end gap-4">
                     <div className="relative z-10">
@@ -790,9 +787,9 @@ const PropertyOwnerCase = ({
                   </div>
                 )}
               {user?.type?.toLowerCase() === "syndicate" &&
-                deal?.status !== DealStatus.LIVE && (
+               convertStatusLanguage(deal?.status) !== DealStatus.LIVE && (
                   <div className="w-full inline-flex justify-end gap-4">
-                    {deal?.invite?.status !== DealStatus.ACCEPTED && (
+                    {convertStatusLanguage(deal?.invite?.status) !== DealStatus.ACCEPTED && (
                       <React.Fragment>
                         {deal?.invite ? (
                           <>
@@ -823,7 +820,7 @@ const PropertyOwnerCase = ({
                   {language?.v3?.common?.end_on} {deal?.end_at}
                 </small>
 
-                {deal?.status === DealStatus.LIVE && !deal?.is_invested && (
+                {convertStatusLanguage(deal?.status) === DealStatus.LIVE && !deal?.is_invested && (
                   <section className="mb-4 mt-1">
                     <div  className={`${orientation === "rtl" ? "pl-7" : "pr-10"} "border-neutral-500 border-[1px] rounded-md min-w-full px-2 justify-between flex bg-white`}>
                       <label className="w-full">
@@ -831,7 +828,7 @@ const PropertyOwnerCase = ({
                           className="min-w-full h-9 no-spin-button"
                           pattern="[0-9]*"
                           placeholder={
-                            selectedCurrency === "USD" ? "$ 0.00" : "AED 0.00"
+                            selectedCurrency === "USD" ? language?.v3?.investor?.placeholderUSD : language?.v3?.investor?.placeholderAED
                           }
                           onKeyDown={(evt) =>
                             ["e", "E", "+", "-"].includes(evt.key) &&
@@ -850,10 +847,10 @@ const PropertyOwnerCase = ({
                           onChange={handleCurrencyChange}
                         >
                           <option className="text-md font-light" value="USD">
-                            USD
+                            {language?.v3?.investor?.usdSymbol}
                           </option>
                           <option className="text-md font-light" value="AED">
-                            AED
+                          {language?.v3?.investor?.aedSymbol}
                           </option>
                         </select>
                       </label>
@@ -896,7 +893,7 @@ const PropertyOwnerCase = ({
                             {language?.v3?.syndicate?.commitment}
                           </h2>
                           <p className="text-black font-medium text-lg">
-                            AED {comaFormattedNumber(deal?.my_invested_amount)}
+                          {language?.v3?.common?.aedSymbol} {comaFormattedNumber(deal?.my_invested_amount)}
                           </p>
                         </div>
                         <div>
@@ -925,7 +922,7 @@ const PropertyOwnerCase = ({
                       {language?.v3?.common?.am_raised}
                     </h2>
                     <p className="text-black font-medium text-lg">
-                      AED {comaFormattedNumber(deal?.raised)}
+                    {language?.v3?.common?.aedSymbol} {comaFormattedNumber(deal?.raised)}
                     </p>
                   </div>
                 </aside>
@@ -1047,7 +1044,7 @@ const PropertyOwnerCase = ({
                                     ? language?.v3?.syndicate?.you
                                     : comments?.author_name}
                                   <span className="text-xs font-neutral-700 ml-5 font-normal">
-                                    {timeAgo(comments?.created_at)}
+                                  {event === "ar" ? timeAgo(comments?.created_at,true): timeAgo(comments?.created_at)}
                                   </span>
                                 </h1>
                                 <p className="pt-0 pb-1 overflow-y-auto custom-scroll font-nromal text-sm text-neutral-700">

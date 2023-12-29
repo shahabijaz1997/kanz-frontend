@@ -63,6 +63,7 @@ const CreateDeal = () => {
     (state: RootState) => state.questionnaire.value
   );
 
+
   const [step, setStep]: any = useState(Number(params?.id));
   const [multipleFieldsPayload, setMultipleFieldsPayload]: any = useState([]);
   const [restrictions, setRestrictions]: any = useState([]);
@@ -272,7 +273,7 @@ const CreateDeal = () => {
             field?.field_type === Constants.DATE
           )
             selected = field.value;
-          if (field.field_type === Constants.SWITCH) selected = field?.value;
+          if (field?.field_type === Constants?.SWITCH) selected = field?.value;
           if (field.field_type === Constants.FILE) selected = field?.value?.id;
           if (field.field_type === Constants.CHECK_BOX) selected = field?.value;
           return {
@@ -455,7 +456,6 @@ const CreateDeal = () => {
       </section>
     );
   };
-
   const numberInputUI = (ques: any, secIndex: number, section: any) => {
     let dependantQuesion = section?.fields?.find(
       (field: any) => field.id === ques?.dependent_id
@@ -463,7 +463,7 @@ const CreateDeal = () => {
     let placeholder = "",
       symbol = "";
     if (ques?.input_type === InputType.CURRENCY)
-      placeholder = currency === 0 ? "$ 0.00" : "0.00 د.إ";
+      placeholder = metadata.dealType === KanzRoles.STARTUP ? "$ 0.00" : event === "ar" ?  "د.إ00.0": "AED 0.00" ;  
     else if (ques?.input_type === InputType.SQFT)
       placeholder = language?.v3?.common?.sqft;
     else if (ques?.input_type === InputType.PERCENT)
@@ -471,10 +471,9 @@ const CreateDeal = () => {
     else placeholder = ques?.placeholder || ques?.statement;
 
     if (ques?.input_type === InputType.CURRENCY)
-      symbol = currency === 0 ? "$" : "د.إ";
-    else if (ques?.input_type === InputType.SQFT) symbol = "SQFT";
+      symbol = metadata.dealType === KanzRoles.STARTUP ? "$" : event === "ar" ?  "د.إ": "AED";
+    else if (ques?.input_type === InputType.SQFT) symbol = event === "ar" ?  "قدم مربع": "SQFT";
     else if (ques?.input_type === InputType.PERCENT) symbol = "%";
-
     if (!dependantQuesion || (dependantQuesion && dependantQuesion?.value))
       return (
         <section className="flex items-start justify-center flex-col mt-3 w-full">
@@ -528,29 +527,6 @@ const CreateDeal = () => {
                 type="text"
                 className="outline-none w-full h-full placeholder-neutral-500"
               />
-              {ques?.input_type === InputType.CURRENCY && (
-                <span className="inline-flex items-center">
-                  <span className="font-normal text-lg text-neutral-500">
-                    {metadata.dealType === KanzRoles.PROPERTY_OWNER
-                      ? CURRENCIES[1]
-                      : CURRENCIES[0]}
-                  </span>
-                </span>
-              )}
-              {ques?.input_type === InputType.SQFT && (
-                <span className="cursor-pointer inline-flex items-center">
-                  <button className="font-normal text-lg text-neutral-500">
-                    SQFT
-                  </button>
-                </span>
-              )}
-              {ques?.input_type === InputType.PERCENT && (
-                <span className="cursor-pointer inline-flex items-center">
-                  <button className="font-normal text-lg text-neutral-500">
-                    %
-                  </button>
-                </span>
-              )}
             </div>
             {showZeroWarning && (
               <span className="text-xs text-red-600">
@@ -565,18 +541,37 @@ const CreateDeal = () => {
                     ques.input_type === InputType.CURRENCY &&
                     metadata.dealType === KanzRoles.PROPERTY_OWNER
                   ) {
-                    formattedNumber = numberFormatter(
-                      suggestion,
-                      DealCheckType.PROPERTY
-                    );
+                    if(event === "ar") {
+                      formattedNumber =   "د.إ"  +
+                      numberFormatter(
+                        suggestion,
+                        null,
+                        true
+                      )}
+                    else {
+                      formattedNumber = numberFormatter(
+                        suggestion,
+                        DealCheckType.PROPERTY
+                      );
+                    }
+                  
                   } else if (
                     ques.input_type === InputType.CURRENCY &&
                     metadata.dealType === KanzRoles.STARTUP
                   ) {
-                    formattedNumber = numberFormatter(
-                      suggestion,
-                      DealCheckType.STARTUP
-                    );
+                    if(event === "ar") {
+                      formattedNumber =   "$" +
+                      numberFormatter(
+                        suggestion,
+                        null,
+                        true
+                      )}
+                    else {
+                      formattedNumber = numberFormatter(
+                        suggestion,
+                        DealCheckType.STARTUP
+                      );
+                    }
                   } else {
                     formattedNumber = suggestion + "%";
                   }
@@ -933,13 +928,13 @@ const CreateDeal = () => {
                 })
               );
               let dependantQuesions: any[] = section?.fields?.filter(
-                (field: any) => field.dependent_id === ques?.id
+                (field: any) => field?.dependent_id === ques?.id
               );
-              if (dependantQuesions.length && ques?.value) {
+              if (dependantQuesions?.length && ques?.value) {
                 dependantQuesions.forEach((dep) => {
                   dispatch(
                     saveDealSelection({
-                      option: null,
+                      option: "",
                       question: dep,
                       fields: dealData,
                       lang: event,
@@ -996,7 +991,7 @@ const CreateDeal = () => {
               onInput={(e: any) =>
                 dispatch(
                   saveDealSelection({
-                    option: e.target.value,
+                    option: e?.target?.value,
                     question: ques,
                     fields: dealData,
                     lang: event,
@@ -1214,7 +1209,7 @@ const CreateDeal = () => {
       flags.push({ section: sec.index, validations: [] });
       let fields = sec.fields;
       fields.forEach((ques: any) => {
-        if (ques?.field_type === Constants.SWITCH) {
+        if (ques?.field_type === Constants?.SWITCH) {
           let flag = false;
           if (ques?.is_required && ques?.value) flag = true;
           else if (!ques?.is_required) flag = true;
@@ -1224,18 +1219,18 @@ const CreateDeal = () => {
           ques?.field_type === Constants.DROPDOWN
         ) {
           let dependantQuesion = sec?.fields?.find(
-            (field: any) => field.id === ques?.dependent_id
+            (field: any) => field?.id === ques?.dependent_id
           );
           let flag = false;
-          let isSome = ques.options?.some((opt: any) => opt.selected);
+          let isSome = ques?.options?.some((opt: any) => opt?.selected);
           if (
             (!dependantQuesion && isSome) ||
             (dependantQuesion && dependantQuesion?.value && isSome) ||
-            (dependantQuesion && !dependantQuesion.value)
+            (dependantQuesion && !dependantQuesion?.value)
           )
             flag = true;
           else flag = false;
-          flags[index].validations.push(flag);
+          flags[index]?.validations?.push(flag);
         } else if (ques?.field_type === Constants.FILE) {
           let flag = ques.value?.id ? true : false;
           if (ques?.is_required && ques.value?.id) flag = true;
@@ -1254,9 +1249,9 @@ const CreateDeal = () => {
           );
           let flag = false;
           if (
-            (!dependantQuesion && ques.value) ||
-            (dependantQuesion && dependantQuesion?.value && ques.value) ||
-            (dependantQuesion && !dependantQuesion.value)
+            (!dependantQuesion && ques?.value) ||
+            (dependantQuesion && dependantQuesion?.value && ques?.value) ||
+            (dependantQuesion && !dependantQuesion?.value)
           ) {
             flag = true;
           } else flag = false;
@@ -1267,7 +1262,7 @@ const CreateDeal = () => {
             flag = false;
           flags[index].validations.push(flag);
         } else if (ques.field_type === Constants.SWITCH) {
-          flags[index].validations.push(ques.value);
+          flags[index]?.validations?.push(ques?.value);
         } else if (ques.field_type === Constants.CHECK_BOX) {
           flags[index].validations.push(ques.value);
         }

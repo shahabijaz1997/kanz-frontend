@@ -36,6 +36,7 @@ import InvitesListing from "./InvitesListing";
 import { RoutesEnums } from "../../enums/routes.enum";
 import { getDownloadDocument, investSyndicate } from "../../apis/syndicate.api";
 import Investors from "./DealInvestors";
+import { convertStatusLanguage } from "../../utils/string.utils";
 
 const CURRENCIES = ["USD", "AED"];
 
@@ -48,6 +49,7 @@ const StartupCase = ({
 }: any) => {
   const navigate = useNavigate();
   const language: any = useSelector((state: RootState) => state.language.value);
+  const event: any = useSelector((state: RootState) => state.event.value);
   const authToken: any = useSelector((state: RootState) => state.auth.value);
   const user: any = useSelector((state: RootState) => state.user.value);
   const orientation: any = useSelector(
@@ -66,7 +68,6 @@ const StartupCase = ({
   const [disableUpload, setdisableUpload]: any = useState(false);
   const [modalOpenComment, setmodalOpenComment]: any = useState(null);
   const [InvestButtonDisable, setInvestButtonDisable]: any = useState(false);
-
 
   const [investmentAmount, setAmount] = useState();
   const [selectedCurrency, setSelectedCurrency] = useState("USD");
@@ -214,7 +215,38 @@ const StartupCase = ({
       setChanges({ comment: "", action: "", document: null });
     }
   };
+  function getTermDisplayName(term: any) {
+    const termDisplayNames: any = {
+      "MFN Only": language?.v3?.fundraiser?.mfn_only,
+      "Pro Rata": language?.v3?.fundraiser?.pro_rata,
+      "Discount": language?.v3?.fundraiser?.discount,
+      "Minimum Check Size": language?.v3?.fundraiser?.min_check_size,
+      "Additional Terms": language?.v3?.fundraiser?.additional_terms,
+      "Valuation Cap": language?.v3?.fundraiser?.valuation_cap,
+    };
 
+    return termDisplayNames[term] || term;
+  }
+
+  function getTermValue(term: any) {
+    if (term.is_enabled) {
+      if (term.term === language?.v3?.fundraiser?.discount) {
+        return `${term.value}%` || language?.v3?.fundraiser?.yes;
+      } else if (term.term === language?.v3?.fundraiser?.min_check_size || term.term === language?.v3?.fundraiser?.valuation_cap) {
+        return term.value && event === "ar"
+          ? comaFormattedNumber(term.value, DealCheckType.STARTUP, true)
+          : comaFormattedNumber(term.value, DealCheckType.STARTUP) ||
+              language?.v3?.fundraiser?.yes;
+      } else if (term.term === language?.v3?.fundraiser?.additional_terms) {
+        return term.value
+      }
+       else {
+        return language?.v3?.fundraiser?.yes;
+      }
+    } else {
+      return language?.v3?.fundraiser?.no;
+    }
+  }
   const getRoleBasedUI = () => {
     return (
       <React.Fragment>
@@ -256,8 +288,16 @@ const StartupCase = ({
                   {language?.v3?.fundraiser?.deal_target}
                 </h3>
                 <p className="text-neutral-900 font-normal text-sm capitalize">
-                  {comaFormattedNumber(deal?.selling_price, DealCheckType.STARTUP) ||
-                    language?.v3?.common?.not_added}
+                  {event === "ar"
+                    ? comaFormattedNumber(
+                        deal?.selling_price,
+                        DealCheckType.STARTUP,
+                        true
+                      )
+                    : comaFormattedNumber(
+                        deal?.selling_price,
+                        DealCheckType.STARTUP
+                      ) || language?.v3?.common?.not_added}
                 </p>
               </div>
             )}
@@ -267,40 +307,35 @@ const StartupCase = ({
                   {language?.v3?.table?.valuation}
                 </h3>
                 <p className="text-neutral-900 font-normal text-sm capitalize">
-                  {comaFormattedNumber(deal?.valuation,DealCheckType.STARTUP)} ({deal?.valuation_type})
+                  {event === "ar"
+                    ? comaFormattedNumber(
+                        deal?.valuation,
+                        DealCheckType.STARTUP,
+                        true
+                      )
+                    : comaFormattedNumber(
+                        deal?.valuation,
+                        DealCheckType.STARTUP
+                      )}
                 </p>
               </div>
             )}
+
             {deal?.terms && (
-              <div className="w-full inline-flex justify-between items-center border-b-[1px] border-b-neutral-200 py-3">
-                <h3 className="text-neutral-900 font-medium text-sm">
-                  {language?.v3?.fundraiser?.min_check_size}
-                </h3>
-                <p className="text-neutral-900 font-normal text-sm capitalize">
-                  {deal.terms[0]?.is_enabled
-                    ? comaFormattedNumber(deal.terms[0]?.value, DealCheckType.STARTUP) || language?.v3?.fundraiser?.yes
-                    : language?.v3?.fundraiser?.no}
-                </p>
-              </div>
-            )}
-            {deal?.terms && (
-              <div className="w-full inline-flex justify-between items-center border-b-[1px] border-b-neutral-200 py-3">
-                <h3 className="text-neutral-900 font-medium text-sm">
-                  {language?.v3?.fundraiser?.pro_rata}
-                </h3>
-                <p className="text-neutral-900 font-normal text-sm capitalize">
-                  {deal.terms[1]?.is_enabled ? language?.v3?.fundraiser?.yes : language?.v3?.fundraiser?.no}
-                </p>
-              </div>
-            )}
-            {deal?.terms && (
-              <div className="w-full inline-flex justify-between items-center border-b-[1px] border-b-neutral-200 py-3">
-                <h3 className="text-neutral-900 font-medium text-sm">
-                  {language?.v3?.fundraiser?.additional_terms}
-                </h3>
-                <p className="text-neutral-900 font-normal text-sm capitalize">
-                  {deal.terms[2]?.is_enabled ? language?.v3?.fundraiser?.yes : language?.v3?.fundraiser?.no}
-                </p>
+              <div className="w-full">
+                {deal.terms.map((term: any, index: any) => (
+                  <div
+                    key={index}
+                    className="w-full inline-flex justify-between items-center border-b-[1px] border-b-neutral-200 py-3"
+                  >
+                    <h3 className="text-neutral-900 font-medium text-sm">
+                      {getTermDisplayName(term.term)}
+                    </h3>
+                    <p className="text-neutral-900 font-normal text-sm capitalize">
+                      {getTermValue(term)}
+                    </p>
+                  </div>
+                ))}
               </div>
             )}
           </>
@@ -336,93 +371,35 @@ const StartupCase = ({
                   {language?.v3?.table?.target}
                 </h3>
                 <p className="text-neutral-900 font-normal text-sm capitalize">
-                  
-                  {comaFormattedNumber(deal?.selling_price, DealCheckType.STARTUP) ||
-                    language?.v3?.common?.not_added}
+                  {event === "ar"
+                    ? comaFormattedNumber(
+                        deal?.selling_price,
+                        DealCheckType.STARTUP,
+                        true
+                      )
+                    : comaFormattedNumber(
+                        deal?.selling_price,
+                        DealCheckType.STARTUP
+                      ) || language?.v3?.common?.not_added}
                 </p>
               </div>
             )}
 
             {deal?.terms && (
-              <div className="w-full inline-flex justify-between items-center border-b-[1px] border-b-neutral-200 py-3">
-                <h3 className="text-neutral-900 font-medium text-sm">
-                  {language?.v3?.fundraiser?.valuation_cap}
-                </h3>
-                <p className="text-neutral-900 font-normal text-sm capitalize">
-                  {deal.terms[0]?.is_enabled
-                    ? `${comaFormattedNumber(deal.terms[0]?.value, DealCheckType.STARTUP)}` || language?.v3?.fundraiser?.yes
-                    : language?.v3?.fundraiser?.no}
-                </p>
-              </div>
-            )}
-
-            {deal?.terms && (
-              <div className="w-full inline-flex justify-between items-center border-b-[1px] border-b-neutral-200 py-3">
-                <h3 className="text-neutral-900 font-medium text-sm">
-                  {language?.v3?.fundraiser?.discount}
-                </h3>
-                <p className="text-neutral-900 font-normal text-sm capitalize">
-                  {deal.terms[1]?.is_enabled
-                    ? deal.terms[1]?.value+"%" || language?.v3?.fundraiser?.yes
-                    : language?.v3?.fundraiser?.no}
-                </p>
-              </div>
-            )}
-
-            {deal?.terms && (
-              <div className="w-full inline-flex justify-between items-center border-b-[1px] border-b-neutral-200 py-3">
-                <h3 className="text-neutral-900 font-medium text-sm">
-                  {language?.v3?.fundraiser?.mfn_only}
-                </h3>
-                <p className="text-neutral-900 font-normal text-sm capitalize">
-                  {deal.terms[2]?.is_enabled
-                    ? Object.keys(deal.terms[2]?.value).length > 0
-                      ? language?.v3?.fundraiser?.yes
-                      : language?.v3?.fundraiser?.no
-                    :language?.v3?.fundraiser?.no}
-                </p>
-              </div>
-            )}
-
-            {deal?.terms && (
-              <div className="w-full inline-flex justify-between items-center border-b-[1px] border-b-neutral-200 py-3">
-                <h3 className="text-neutral-900 font-medium text-sm">
-                  {language?.v3?.fundraiser?.min_check_size}
-                </h3>
-                <p className="text-neutral-900 font-normal text-sm capitalize">
-                  {deal.terms[3]?.is_enabled
-                    ? comaFormattedNumber(deal.terms[3]?.value, DealCheckType.STARTUP) || language?.v3?.fundraiser?.yes
-                    : language?.v3?.fundraiser?.no}
-                </p>
-              </div>
-            )}
-
-            {deal?.terms && (
-              <div className="w-full inline-flex justify-between items-center border-b-[1px] border-b-neutral-200 py-3">
-                <h3 className="text-neutral-900 font-medium text-sm">
-                  {language?.v3?.fundraiser?.pro_rata}
-                </h3>
-                <p className="text-neutral-900 font-normal text-sm capitalize">
-                  {deal.terms[4]?.is_enabled
-                    ? Object.keys(deal.terms[4]?.value).length > 0
-                      ?language?.v3?.fundraiser?.yes
-                      : language?.v3?.fundraiser?.no
-                    :language?.v3?.fundraiser?.no}
-                </p>
-              </div>
-            )}
-            {deal?.terms && (
-              <div className="w-full inline-flex justify-between items-center border-b-[1px] border-b-neutral-200 py-3">
-                <h3 className="text-neutral-900 font-medium text-sm">
-                  {language?.v3?.fundraiser?.additional_terms}
-                </h3>
-                <p className="text-neutral-900 font-normal text-sm capitalize">
-                  {deal.terms[5]?.is_enabled
-                    ? Object.keys(deal.terms[5]?.value).length > 0
-                      ? language?.v3?.fundraiser?.yes
-                      : language?.v3?.fundraiser?.no
-                    : language?.v3?.fundraiser?.no}
-                </p>
+              <div className="w-full">
+                {deal.terms.map((term: any, index: any) => (
+                  <div
+                    key={index}
+                    className="w-full inline-flex justify-between items-center border-b-[1px] border-b-neutral-200 py-3"
+                  >
+                    <h3 className="text-neutral-900 font-medium text-sm">
+                      {getTermDisplayName(term.term)}
+                    </h3>
+                    <p className="text-neutral-900 font-normal text-sm capitalize">
+                      {getTermValue(term)}
+                    </p>
+                  </div>
+                ))}
               </div>
             )}
           </>
@@ -434,9 +411,16 @@ const StartupCase = ({
               {language?.v3?.table?.sellingPrice}
             </h3>
             <p className="text-neutral-900 font-normal text-sm capitalize">
-              
-              {comaFormattedNumber(deal?.selling_price, DealCheckType.STARTUP) ||
-                language?.v3?.common?.not_added}
+              {event === "ar"
+                ? comaFormattedNumber(
+                    deal?.selling_price,
+                    DealCheckType.STARTUP,
+                    true
+                  )
+                : comaFormattedNumber(
+                    deal?.selling_price,
+                    DealCheckType.STARTUP
+                  ) || language?.v3?.common?.not_added}
             </p>
           </div>
         )}
@@ -476,7 +460,13 @@ const StartupCase = ({
               {language?.v3?.deal?.committed}
             </h3>
             <p className="text-neutral-900 font-normal text-sm capitalize">
-              {comaFormattedNumber(deal?.committed, DealCheckType.STARTUP)}
+              {event === "ar"
+                ? comaFormattedNumber(
+                    deal?.committed,
+                    DealCheckType.STARTUP,
+                    true
+                  )
+                : comaFormattedNumber(deal?.committed, DealCheckType.STARTUP)}
             </p>
           </div>
         )}
@@ -496,7 +486,13 @@ const StartupCase = ({
               {language?.v3?.deal?.raised}
             </h3>
             <p className="text-neutral-900 font-normal text-sm capitalize">
-              {comaFormattedNumber(deal?.raised,DealCheckType.STARTUP)}
+              {event === "ar"
+                ? comaFormattedNumber(
+                    deal?.raised,
+                    DealCheckType.PROPERTY,
+                    true
+                  )
+                : comaFormattedNumber(deal?.raised, DealCheckType.PROPERTY)}
             </p>
           </div>
         )}
@@ -506,7 +502,7 @@ const StartupCase = ({
               {language?.v3?.table?.size}
             </h3>
             <p className="text-neutral-900 font-normal text-sm capitalize">
-              {comaFormattedNumber(deal?.size)} sqft
+              {comaFormattedNumber(deal?.size)} {language?.v3?.common?.sqft}
             </p>
           </div>
         )}
@@ -588,8 +584,17 @@ const StartupCase = ({
               {language?.v3?.deal?.por_2}
             </h3>
             <p className="text-neutral-900 font-normal text-sm capitalize">
-              {comaFormattedNumber(deal?.features?.rental_amount)} (
-              {deal?.features?.rental_period})
+              {event === "ar"
+                ? comaFormattedNumber(
+                    deal?.rental_amount,
+                    DealCheckType.PROPERTY,
+                    true
+                  )
+                : comaFormattedNumber(
+                    deal?.rental_amount,
+                    DealCheckType.PROPERTY
+                  )}
+              ({deal?.features?.rental_period})
             </p>
           </div>
         )}
@@ -610,7 +615,7 @@ const StartupCase = ({
         authToken
       );
       if (status === 200) {
-        setInvestButtonDisable(false)
+        setInvestButtonDisable(false);
         toast.success(language?.v3?.syndicate?.invested, toastUtil);
       }
     } catch (error: any) {
@@ -618,7 +623,7 @@ const StartupCase = ({
         toast.warning(error?.response?.data?.status?.message, toastUtil);
     } finally {
       setLoading(false);
-      setInvestButtonDisable(false)
+      setInvestButtonDisable(false);
       onGetdeal();
     }
   };
@@ -648,7 +653,10 @@ const StartupCase = ({
         authToken
       );
       if (status === 200) {
-        toast.success(language?.v3?.syndicate?.congrats_deal_approval, toastUtil);
+        toast.success(
+          language?.v3?.syndicate?.congrats_deal_approval,
+          toastUtil
+        );
         setModalOpen3(false);
       }
     } catch (error) {
@@ -738,21 +746,21 @@ const StartupCase = ({
                 }
               >
                 <Chevrond
-                    className={`${
-                      orientation === "rtl"
-                        ? "rotate-[-90deg]"
-                        : "rotate-[90deg]"
-                    } w-4 h-4`}
-                    strokeWidth={2}
-                    stroke={"#000"}
-                  />
+                  className={`${
+                    orientation === "rtl" ? "rotate-[-90deg]" : "rotate-[90deg]"
+                  } w-4 h-4`}
+                  strokeWidth={2}
+                  stroke={"#000"}
+                />
                 <small className="text-neutral-500 text-sm font-medium">
-                  {returnPath === RoutesEnums.INVESTOR_DEALS && language?.v3?.syndicate?.dealsSidebar}
+                  {returnPath === RoutesEnums.INVESTOR_DEALS &&
+                    language?.v3?.syndicate?.dealsSidebar}
                   {returnPath === RoutesEnums.SYNDICATE_DASHBOARD &&
-                     language?.v3?.syndicate?.dashboard}
+                    language?.v3?.syndicate?.dashboard}
                   {returnPath === RoutesEnums.SYNDICATE_INVESTMENTS &&
-                     language?.v3?.syndicate?.investments}
-                  {returnPath === RoutesEnums.DEAL_APPROVAL &&  language?.v3?.syndicate?.deal_approval}
+                    language?.v3?.syndicate?.investments}
+                  {returnPath === RoutesEnums.DEAL_APPROVAL &&
+                    language?.v3?.syndicate?.deal_approval}
                 </small>
               </div>
               <div className="w-full inline-flex flex-col pb-8 items-start gap-2">
@@ -770,7 +778,7 @@ const StartupCase = ({
                 }}
               >
                 <h1 className="text-black font-medium text-2xl">
-                  { language?.v3?.syndicate?.investor_pitch}
+                  {language?.v3?.syndicate?.investor_pitch}
                 </h1>
                 <Button type="outlined">{language?.v3?.button?.new_tab}</Button>
               </div>
@@ -824,59 +832,62 @@ const StartupCase = ({
                 </section>
               )}
 
-              {deal?.status === DealStatus.LIVE && !deal?.is_invested && (
-                <>
-                  <section className="mb-4 mt-10">
-                    <div className="border-neutral-500 border-[1px] rounded-md min-w-full px-2 justify-between flex bg-white">
-                      <label className="w-full">
-                        <input
-                          className="min-w-full h-9 no-spin-button"
-                          pattern="[0-9]*"
-                          placeholder={
-                            selectedCurrency === "USD" ? "$ 0.00" : "AED 0.00"
+              {convertStatusLanguage(deal?.status) === DealStatus.LIVE &&
+                !deal?.is_invested && (
+                  <>
+                    <section className="mb-4 mt-10">
+                      <div className="border-neutral-500 border-[1px] rounded-md min-w-full px-2 justify-between flex bg-white">
+                        <label className="w-full">
+                          <input
+                            className="min-w-full h-9 no-spin-button"
+                            pattern="[0-9]*"
+                            placeholder={
+                              selectedCurrency === "USD" ? language?.v3?.investor?.placeholderUSD : language?.v3?.investor?.placeholderAED
+                            }
+                            onKeyDown={(evt) =>
+                              ["e", "E", "+", "-"].includes(evt.key) &&
+                              evt.preventDefault()
+                            }
+                            min="0"
+                            type="number"
+                            value={investmentAmount}
+                            onChange={handleAmountChange}
+                          />
+                        </label>
+                        <label className="w-[10%]">
+                          <select
+                            className="h-9"
+                            value={selectedCurrency}
+                            onChange={handleCurrencyChange}
+                          >
+                            <option className="text-md font-light" value="USD">
+                            {language?.v3?.investor?.usdSymbol}
+                            </option>
+                            <option className="text-md font-light" value="AED">
+                            {language?.v3?.investor?.aedSymbol}
+                            </option>
+                          </select>
+                        </label>
+                      </div>
+                      <div className="mt-3">
+                        <Button
+                          disabled={
+                            investmentAmount === undefined ||
+                            investmentAmount < 1 ||
+                            InvestButtonDisable
                           }
-                          onKeyDown={(evt) =>
-                            ["e", "E", "+", "-"].includes(evt.key) &&
-                            evt.preventDefault()
-                          }
-                          min="0"
-                          type="number"
-                          value={investmentAmount}
-                          onChange={handleAmountChange}
-                        />
-                      </label>
-                      <label className="w-[10%]">
-                        <select
-                          className="h-9"
-                          value={selectedCurrency}
-                          onChange={handleCurrencyChange}
+                          onClick={() => {
+                            setInvestButtonDisable(true);
+                            syndicateInvestment();
+                          }}
+                          className="w-full"
                         >
-                          <option className="text-md font-light" value="USD">
-                            USD
-                          </option>
-                          <option className="text-md font-light" value="AED">
-                            AED
-                          </option>
-                        </select>
-                      </label>
-                    </div>
-                    <div className="mt-3">
-                      <Button
-                        disabled={
-                          investmentAmount === undefined || investmentAmount < 1 || InvestButtonDisable
-                        }
-                        onClick={() => {
-                          setInvestButtonDisable(true)
-                          syndicateInvestment();
-                        }}
-                        className="w-full"
-                      >
-                        {language?.v3?.syndicate?.invest_now}
-                      </Button>
-                    </div>
-                  </section>
-                </>
-              )}
+                          {language?.v3?.syndicate?.invest_now}
+                        </Button>
+                      </div>
+                    </section>
+                  </>
+                )}
               <section>
                 <div className="inline-flex justify-between w-full flex-col my-10">
                   <h1 className="text-black font-medium text-2xl mb-3">
@@ -919,9 +930,10 @@ const StartupCase = ({
               </section>
               <div className="mb-4 mt-10">
                 {user.type.toLowerCase() === "syndicate" &&
-                  deal?.status !== DealStatus.LIVE && (
+                  convertStatusLanguage(deal?.status) !== DealStatus.LIVE && (
                     <div className="w-full inline-flex justify-end gap-4">
-                      {deal?.invite?.status !== DealStatus.ACCEPTED && (
+                      {convertStatusLanguage(deal?.invite?.status) !==
+                        DealStatus.ACCEPTED && (
                         <div className="w-full">
                           {deal?.invite ? (
                             <Button
@@ -958,7 +970,7 @@ const StartupCase = ({
             <section className="w-[30%]">
               {/* Show/Hide based on some conditions */}
               {user.type.toLowerCase() === "syndicate" &&
-                deal?.status === DealStatus.LIVE &&
+                convertStatusLanguage(deal?.status) === DealStatus.LIVE &&
                 deal?.current_deal_syndicate && (
                   <div className="w-full inline-flex justify-end gap-4">
                     <div className="relative z-10">
@@ -972,9 +984,10 @@ const StartupCase = ({
                   </div>
                 )}
               {user.type.toLowerCase() === "syndicate" &&
-                deal?.status !== DealStatus.LIVE && (
+                convertStatusLanguage(deal?.status) !== DealStatus.LIVE && (
                   <div className="w-full inline-flex justify-end gap-4">
-                    {deal?.invite?.status !== DealStatus.ACCEPTED && (
+                    {convertStatusLanguage(deal?.invite?.status) !==
+                      DealStatus.ACCEPTED && (
                       <React.Fragment>
                         {deal?.invite ? (
                           <>
@@ -1004,57 +1017,66 @@ const StartupCase = ({
                 <small className="text-neutral-500 text-sm font-normal">
                   {language?.v3?.common?.end_on} {deal?.end_at}
                 </small>
-                {deal?.status === DealStatus.LIVE && !deal?.is_invested && (
-                  <aside className="">
-                    <section className="mb-4 mt-1">
-                      <div className="border-neutral-500 border-[1px] rounded-md min-w-full bg-white px-2 justify-between flex">
-                        <label className="w-full">
-                          <input
-                            className="min-w-full h-9 no-spin-button"
-                            pattern="[0-9]*"
-                            placeholder={
-                              selectedCurrency === "USD" ? "$ 0.00" : "AED 0.00"
-                            }
-                            onKeyDown={(evt) =>
-                              ["e", "E", "+", "-"].includes(evt.key) &&
-                              evt.preventDefault()
-                            }
-                            min="0"
-                            type="number"
-                            value={investmentAmount}
-                            onChange={handleAmountChange}
-                          />
-                        </label>
-                        <label>
-                          <select
-                            className="h-9"
-                            value={selectedCurrency}
-                            onChange={handleCurrencyChange}
-                          >
-                            <option className="text-md font-light" value="USD">
-                              USD
-                            </option>
-                            <option className="text-md font-light" value="AED">
-                              AED
-                            </option>
-                          </select>
-                        </label>
-                      </div>
-                      <Button
-                        disabled={
-                          investmentAmount === undefined || investmentAmount < 1 || InvestButtonDisable
-                        }
-                        onClick={() => {
-                          setInvestButtonDisable(true)
-                          syndicateInvestment();
-                        }}
-                        className="w-full mt-4"
-                      >
-                        {language?.v3?.syndicate?.invest_now}
-                      </Button>
-                    </section>
-                  </aside>
-                )}
+                {convertStatusLanguage(deal?.status) === DealStatus.LIVE &&
+                  !deal?.is_invested && (
+                    <aside className="">
+                      <section className="mb-4 mt-1">
+                        <div className="border-neutral-500 border-[1px] rounded-md min-w-full bg-white px-2 justify-between flex">
+                          <label className="w-full">
+                            <input
+                              className="min-w-full h-9 no-spin-button"
+                              pattern="[0-9]*"
+                              placeholder={
+                                selectedCurrency === "USD" ? language?.v3?.investor?.placeholderUSD : language?.v3?.investor?.placeholderAED
+                              }
+                              onKeyDown={(evt) =>
+                                ["e", "E", "+", "-"].includes(evt.key) &&
+                                evt.preventDefault()
+                              }
+                              min="0"
+                              type="number"
+                              value={investmentAmount}
+                              onChange={handleAmountChange}
+                            />
+                          </label>
+                          <label>
+                            <select
+                              className="h-9"
+                              value={selectedCurrency}
+                              onChange={handleCurrencyChange}
+                            >
+                              <option
+                                className="text-md font-light"
+                                value="USD"
+                              >
+                            {language?.v3?.investor?.usdSymbol}
+                              </option>
+                              <option
+                                className="text-md font-light"
+                                value="AED"
+                              >
+                            {language?.v3?.investor?.aedSymbol}
+                              </option>
+                            </select>
+                          </label>
+                        </div>
+                        <Button
+                          disabled={
+                            investmentAmount === undefined ||
+                            investmentAmount < 1 ||
+                            InvestButtonDisable
+                          }
+                          onClick={() => {
+                            setInvestButtonDisable(true);
+                            syndicateInvestment();
+                          }}
+                          className="w-full mt-4"
+                        >
+                          {language?.v3?.syndicate?.invest_now}
+                        </Button>
+                      </section>
+                    </aside>
+                  )}
 
                 {getRoleBasedUI()}
               </aside>
@@ -1156,7 +1178,7 @@ const StartupCase = ({
                   <div className="justify-between mb-4 w-full border-[1px]  rounded-md border-b-neutral-200 bg-white ">
                     <div className="inline-flex justify-between items-center w-full  border-b-[1px] border-b-neutral-200 ">
                       <div className="pb-1 m-4  text-lg font-bold ">
-                       {language?.v3?.syndicate?.comments}
+                        {language?.v3?.syndicate?.comments}
                       </div>
                       <Button
                         className="mr-4 ml-4"
@@ -1184,7 +1206,9 @@ const StartupCase = ({
                                     ? language?.v3?.syndicate?.you
                                     : comments?.author_name}
                                   <span className="text-xs font-neutral-700 ml-5 font-normal">
-                                    {timeAgo(comments?.created_at)}
+                                    {event === "ar"
+                                      ? timeAgo(comments?.created_at, true)
+                                      : timeAgo(comments?.created_at)}
                                   </span>
                                 </h1>
                                 <p className="pt-0 pb-1 overflow-y-auto custom-scroll font-nromal text-sm text-neutral-700">
@@ -1212,7 +1236,9 @@ const StartupCase = ({
           <aside className="bg-white w-[400px] rounded-md h-full">
             <section className="py-3 px-4">
               <header className="h-16 py-2 px-3 inline-flex w-full justify-between items-center">
-                <h3 className="text-xl font-medium text-neutral-700">{language?.v3?.syndicate?.reply}</h3>
+                <h3 className="text-xl font-medium text-neutral-700">
+                  {language?.v3?.syndicate?.reply}
+                </h3>
                 <div
                   className="bg-white h-8 w-8 border-[1px] border-black rounded-md shadow shadow-cs-6 p-1 cursor-pointer"
                   onClick={() => {
@@ -1304,7 +1330,7 @@ const StartupCase = ({
                 className="w-full !py-1"
                 divStyle="flex items-center justify-center w-full"
                 onClick={() => {
-                  setModalOpen(false)
+                  setModalOpen(false);
                   onRequestChange();
                 }}
               >
@@ -1443,7 +1469,7 @@ const StartupCase = ({
                   />
                 </span>
                 <span className={`px-2 text-[0.55rem] font-light`}>
-                 {language?.v3?.syndicate?.upload_size}
+                  {language?.v3?.syndicate?.upload_size}
                 </span>
               </div>
               <div className="mb-3 w-full">

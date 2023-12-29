@@ -11,12 +11,14 @@ import { numberFormatter } from "../../../../utils/object.utils";
 import Spinner from "../../../../shared/components/Spinner";
 import Chevrond from "../../../../ts-icons/chevrond.svg";
 import { getCommitedDeals } from "../../../../apis/investor.api";
+import { convertStatusLanguage } from "../../../../utils/string.utils";
 
 const Commitments = ({}: any): any => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const language: any = useSelector((state: RootState) => state.language.value);
   const authToken: any = useSelector((state: RootState) => state.auth.value);
+  const event: any = useSelector((state: RootState) => state.event.value);
   const orientation: any = useSelector(
     (state: RootState) => state.orientation.value
   );
@@ -78,16 +80,22 @@ const Commitments = ({}: any): any => {
               <span className=" capitalize">{invitee?.syndicate?.name}</span>
             ),
             [language?.v3?.syndicate?.deals?.table?.title]:
-              invitee?.title || "N/A",
+              invitee?.title || language?.v3?.common?.not_added,
             [language?.v3?.syndicate?.deals?.table?.category]: (
               <span className="capitalize">{invitee?.deal_type}</span>
             ),
             [language?.v3?.syndicate?.deals?.table?.end_date]:
-              invitee?.end_at || " N/A",
+              invitee?.end_at || language?.v3?.common?.not_added,
             [    language?.v3?.investor?.committed
             ]: invitee?.invested_amount,
             [language?.v3?.syndicate?.deals?.table
-              ?.target]: `$${numberFormatter(Number(invitee?.target))}`,
+              ?.target]: event === "ar" ?  `${numberFormatter(
+                Number(invitee?.target),
+                convertStatusLanguage(invitee?.deal_type)
+              , true)}`:`${numberFormatter(
+                Number(invitee?.target),
+                convertStatusLanguage(invitee?.deal_type)
+              ,false)}`,
 
             Steps: invitee?.current_state?.steps,
             [""]: (

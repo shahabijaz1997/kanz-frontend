@@ -46,16 +46,15 @@ const Investors = ({dealID, dealCreatorView} : any) => {
         let activity = data?.status?.data?.records?.map((dealActivity: any) => {
           return {
             id: dealActivity?.id,
-            "Name":<span className="capitalize">{dealActivity?.investor_name}</span> ,
-            ["Date"]:
-              dealActivity?.date|| "N/A",
-            ["Amount Raised"]: (
+            [language?.v3?.fundraiser?.name]:<span className="capitalize">{dealActivity?.investor_name}</span> ,
+            [language?.v3?.fundraiser?.date]:
+              dealActivity?.date||language?.v3?.common?.not_added,
+            [language?.v3?.fundraiser?.amount_raised]: (
               <span>{comaFormattedNumber(dealActivity?.amount)}</span>
             ),
           };
         });
         setActivity(activity);
-        
       }
     } catch (error:any) {
       if (error.response && error.response.status === 302) {
