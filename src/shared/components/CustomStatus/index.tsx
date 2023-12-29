@@ -22,6 +22,8 @@ const CustomStatus = ({ options }: any) => {
     backgroundColor = "bg-red-100";
   } else if (options === language?.v3?.status?.follower) {
     backgroundColor = "bg-blue-100";
+   }  else if (options === language?.v3?.status?.not_invited) {
+    backgroundColor = "bg-[#F5F5F5]";
    } 
 
   let textColor = "text-green-800";
@@ -37,6 +39,8 @@ const CustomStatus = ({ options }: any) => {
     textColor = "text-red-800";
   } else if (options === language?.v3?.status?.follower) {
     textColor = "text-blue-800";
+  } else if (options === language?.v3?.status?.not_invited) {
+    textColor = "text-[#F5F5F5]-800";
   }
   return (
     <main>

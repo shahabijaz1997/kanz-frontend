@@ -839,6 +839,7 @@
           "target": "Target"
         }
       },
+      "name_paceholder":"Abdulrahman Mohammad",
       "title": "Title",
       "type": "Type",
       "start_at": "Syndicate",
@@ -1107,7 +1108,10 @@
       "team": "Team",
       "syndicate_deals": "Syndicate Deals",
       "total_raised_amount": "Total Raised Amount",
-      "syndicate_unfollowed": "Syndicate Unfollowed"
+      "syndicate_unfollowed": "Syndicate Unfollowed",
+      "applied":"Applied",
+      "apply_to_syndicate":"Apply to Syndicate",
+      "add_message":"Add Message"
     },
     "dealOverview": {
       "title": "Risk and Disclaimer",
@@ -1146,7 +1150,8 @@
       "syndication": "syndication",
       "investment": "investment",
       "committed_amount": "committed",
-      "completed": "completed"
+      "completed": "completed",
+      "not_invited":"Not Invited"
     }
   }
 }
