@@ -424,7 +424,7 @@ const FundRaiser = ({}: any) => {
                 </Button>
               </div>
             </aside>
-          </div>
+          </div>  
         ) : (
           <aside>
             <div className="relative p-12 rounded-md shadow-cs-1 flex flex-col items-center w-full bg-white outline-none focus:outline-none screen800:px-3">

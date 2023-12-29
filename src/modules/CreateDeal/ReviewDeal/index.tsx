@@ -131,14 +131,14 @@ const ReviewDeal = ({
               data?.map((step: any, index: number) => {
                 return (
                   <div
-                    className={`w-full cursor-pointer border-b-[1px] border-b-neutral-200 ${
+                    className={`w-full cursor-pointer hover:underline border-b-[1px] border-b-neutral-200 ${
                       index !== 0 ? "py-4" : "pb-4"
                     }`}
                     onClick={() =>
                       navigate(`${RoutesEnums.CREATE_DEAL}/${index + 1}`)
                     }
                   >
-                    <h2 className="text-cc-black font-semibold text-2xl capitalize mb-3">
+                    <h2 className="text-cc-black font-semibold text-2xl hover:text-[#155E75] capitalize mb-3">
                       {step?.title}
                     </h2>
                     {showLoopSelection(step)}

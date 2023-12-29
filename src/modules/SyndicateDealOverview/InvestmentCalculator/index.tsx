@@ -106,6 +106,7 @@ const InvestmentCalculator = ({}: any) => {
           <div className="min-w-full mb-4">
             <div className="relative w-full">
               <input
+                dir="ltr"
                 className="min-w-full "
                 type="range"
                 id="rangeSlider1"
@@ -128,6 +129,7 @@ const InvestmentCalculator = ({}: any) => {
 
           <div className="min-w-full mt-3 mb-8">
             <input
+              dir="ltr"
               className="min-w-full mb-2"
               type="range"
               id="rangeSlider2"
@@ -147,6 +149,7 @@ const InvestmentCalculator = ({}: any) => {
 
           <div className="min-w-full">
             <input
+              dir="ltr"
               className="min-w-full mb-2"
               type="range"
               id="rangeSlider3"
@@ -165,6 +168,7 @@ const InvestmentCalculator = ({}: any) => {
           </div>
           <div className="min-w-full mt-5">
             <input
+              dir="ltr"
               className="min-w-full mb-2"
               type="range"
               id="rangeSlider3"

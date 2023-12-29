@@ -195,7 +195,7 @@ const SyndicateInfoDrawer = ({
                 <div className="rounded-md border-[1.75px] border-[#404040] w-full pl-3 pr-3 py-3">
                   <div className=" text-[#737373]">{language?.v3?.investor?.total_deals_label}</div>
                   <div className="mt-2 font-bold text-xl">
-                    {syndicateInfo?.total_deals || "N/A"}
+                    {syndicateInfo?.total_deals || language?.v3?.common?.not_added}
                   </div>
                 </div>
                 <div className={`${
@@ -215,7 +215,7 @@ const SyndicateInfoDrawer = ({
                     </span>
                   </div>
                   <div className="mt-2 font-bold text-xl">
-                    {syndicateInfo?.active_deals || "N/A"}
+                    {syndicateInfo?.active_deals || language?.v3?.common?.not_added}
                   </div>
                 </div>
                 
@@ -224,7 +224,7 @@ const SyndicateInfoDrawer = ({
                 <div className="rounded-md border-[1.75px] border-[#404040] w-full pl-3 pr-3 py-3">
                   <div className=" text-[#737373]">{language?.v3?.investor?.total_deals_label}</div>
                   <div className="mt-2 font-bold text-xl">
-                    {comaFormattedNumber(syndicateInfo?.raised_amount, DealCheckType.STARTUP) || "N/A"}
+                    {comaFormattedNumber(syndicateInfo?.raised_amount, DealCheckType.STARTUP) || language?.v3?.common?.not_added}
                   </div>
                 </div>
                 <div  className={`${
@@ -236,7 +236,7 @@ const SyndicateInfoDrawer = ({
                     <span className="text-[#737373]">{language?.v3?.investor?.times_raised}</span>
                   </div>
                   <div className="mt-2 font-bold text-xl">
-                    {syndicateInfo?.no_times_raised || "N/A"}
+                    {syndicateInfo?.no_times_raised || language?.v3?.common?.not_added}
                   </div>
                 </div>
                 

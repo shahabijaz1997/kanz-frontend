@@ -27,6 +27,7 @@ import { FileType } from "../../../enums/types.enum";
 import { toast } from "react-toastify";
 import { toastUtil } from "../../../utils/toast.utils";
 import { numberFormatter } from "../../../utils/object.utils";
+import { convertStatusLanguage } from "../../../utils/string.utils";
 
 const SyndicateRequest = ({}: any) => {
   const navigate = useNavigate();
@@ -36,6 +37,7 @@ const SyndicateRequest = ({}: any) => {
   const [files, setFiles]: any = useState([]);
   const language: any = useSelector((state: RootState) => state.language.value);
   const authToken: any = useSelector((state: RootState) => state.auth.value);
+  const event: any = useSelector((state: RootState) => state.event.value);
   const user: any = useSelector((state: RootState) => state.user.value);
 
   const [changes, setChanges]: any = useState({
@@ -210,9 +212,13 @@ const SyndicateRequest = ({}: any) => {
           return {
             id: syndicate?.id,
             [language?.v3?.deal?.syndicate]: syndicate?.invitee?.name,
-            [language?.v3?.common?.deal]: syndicate?.deal?.title || "N/A",
-            [language?.v3?.fundraiser?.selling_price]: numberFormatter(syndicate?.deal?.target, syndicate?.deal?.type) || "N/A",
-            [language?.v3?.deal?.comments]: syndicate?.deal?.comment || "N/A",
+            [language?.v3?.common?.deal]: syndicate?.deal?.title || language?.v3?.common?.not_added,
+            [language?.v3?.fundraiser?.selling_price]: event === "ar" ?  `${numberFormatter(
+              syndicate?.deal?.target
+            , convertStatusLanguage(syndicate?.deal.type), true)}`:  `${numberFormatter(
+            syndicate?.deal?.target
+            , convertStatusLanguage(syndicate?.deal.type), false)}` || language?.v3?.common?.not_added,
+            [language?.v3?.deal?.comments]: syndicate?.deal?.comment || language?.v3?.common?.not_added,
             [language?.v3?.fundraiser?.invite_status]: <CustomStatus options={syndicate?.status} />,
             "": (
               <div
@@ -370,8 +376,8 @@ const SyndicateRequest = ({}: any) => {
                 </div>
 
                 <span className="items-center">
-                  {dealDetail?.status === "accepted" &&
-                    dealDetail?.deal?.status === "approved" && (
+                  {convertStatusLanguage(dealDetail?.status) === "accepted" &&
+                   convertStatusLanguage(dealDetail?.deal?.status) === "approved" && (
                       <Button onClick={() => postSignOff(dealDetail?.deal?.id)}>
                         {language?.v3?.fundraiser?.approve}
                       </Button>

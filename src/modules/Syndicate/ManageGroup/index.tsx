@@ -101,13 +101,13 @@ const ManageGroup = ({}: any) => {
           return {
             id: investor?.id,
             filterStatus: investor?.status,
-            [ language?.v3?.syndicate?.investor]: investor?.member_name || "N/A",
+            [ language?.v3?.syndicate?.investor]: investor?.member_name || language?.v3?.common?.not_added,
             [ language?.v3?.syndicate?.invested]: `$${comaFormattedNumber(investor?.invested_amount)}`,
             [ language?.v3?.syndicate?.investments]: investor?.no_investments,
             [ language?.v3?.syndicate?.join_status]:
-              <CustomStatus options={investor?.connection} /> || "N/A",
+              <CustomStatus options={investor?.connection} /> || language?.v3?.common?.not_added,
             [ language?.v3?.syndicate?.join_date]:
-              <span className="px-2">{investor?.joining_date}</span> || " N/A",
+              <span className="px-2">{investor?.joining_date}</span> || language?.v3?.common?.not_added,
             Steps: investor?.current_state?.steps,
             [ language?.v3?.syndicate?.action]: (
               <ActionButton
@@ -214,14 +214,14 @@ const ManageGroup = ({}: any) => {
 
   return (
     <>
-      <main className="h-full max-h-full">
+      <main className="h-full max-h-full mb-6">
         <section>
           <Header />
         </section>
         <aside className="w-full h-full flex items-start justify-start">
           <Sidebar type={KanzRoles.SYNDICATE} />
           <section
-            className="bg-cbc-auth h-full p-[5rem] relative"
+            className="bg-cbc-auth h-full p-[2rem] relative"
             style={{ width: "calc(100% - 250px)" }}
           >
             {loading ? (

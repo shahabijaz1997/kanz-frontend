@@ -102,7 +102,7 @@ const UserListingPopup = ({ approve, dealId, type, dealIdReal, setLoader }: any)
         let syndicates: Syndicate[] = syndicatesData.map((syndicate: any) => ({
           id: syndicate?.id,
           title: <span className=" capitalize">{syndicate?.name}</span>,
-          handle: syndicate?.handle || "N/A",
+          handle: syndicate?.handle || language?.v3?.common?.not_added,
           action: (
             <span id={`synd-${syndicate?.id}`}>
               <Button
