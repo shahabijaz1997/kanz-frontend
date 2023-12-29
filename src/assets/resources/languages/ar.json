@@ -1047,6 +1047,8 @@
     "investor": {
       "usdSymbol":"الدولار",
       "aedSymbol":"د.إ",
+      "placeholderUSD":"$ 0.00",
+      "placeholderAED":"د.إ0.00",
       "investments": "الاستثمارات",
       "deals": "الصفقات",
       "syndicates": "التكتلات",

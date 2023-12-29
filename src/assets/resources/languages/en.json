@@ -1052,6 +1052,8 @@
     "investor": {
       "usdSymbol":"USD",
       "aedSymbol":"AED",
+      "placeholderUSD":"$ 0.00",
+      "placeholderAED":"AED 0.00",
       "investments": "Investments",
       "deals": "Deals",
       "syndicates": "Syndicates",

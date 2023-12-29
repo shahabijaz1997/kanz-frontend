@@ -121,7 +121,7 @@ const InvestmentCalculator = ({}: any) => {
               <span className="text-sm text-neutral-500 mr-2 ml-2">
                 {language?.v3?.syndicate?.inv_amount}
               </span>
-              <span className="text-lg font-semibold text-[#155E75]">{`(AED ${comaFormattedNumber(
+              <span className="text-lg font-semibold text-[#155E75]">{`(${language?.v3?.investor?.aedSymbol} ${comaFormattedNumber(
                 investmentAmount.toString()
               )})`}</span>
             </p>
@@ -196,7 +196,7 @@ const InvestmentCalculator = ({}: any) => {
                 <p className="px-5 pb-5 text-2xl  font-bold text-[#155E75] ">
                   {" "}
                   <span>
-                    AED{" "}
+                  {language?.v3?.investor?.aedSymbol}{" "}
                     {comaFormattedNumber(
                       parseFloat(
                         finalValue.finalTotalReturn.toString()
