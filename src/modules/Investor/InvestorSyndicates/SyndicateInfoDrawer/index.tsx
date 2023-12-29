@@ -260,7 +260,3 @@ const SyndicateInfoDrawer = ({
   );
 };
 export default SyndicateInfoDrawer;
-
-{
-  /*  */
-}
