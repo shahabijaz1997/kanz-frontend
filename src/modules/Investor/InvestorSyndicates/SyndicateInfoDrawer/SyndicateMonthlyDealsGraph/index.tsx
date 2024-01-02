@@ -1,10 +1,10 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import Chart from "chart.js/auto";
 import "chartjs-plugin-datalabels";
 import "chartjs-plugin-annotation";
 import ChartDataLabels from "chartjs-plugin-datalabels";
 
-const SyndicateMonthlyDealsGraph = (monthsLabel :any, monthsData:any):any => {
+const SyndicateMonthlyDealsGraph = (props:any):any => {
   useEffect(() => {
     Chart.register(ChartDataLabels);
     const ctx = document.getElementById("myChart") as HTMLCanvasElement;
@@ -15,12 +15,12 @@ const SyndicateMonthlyDealsGraph = (monthsLabel :any, monthsData:any):any => {
     const myChart = new Chart(ctx, {
       type: "bar",
       data: {
-        labels: ["J", "F", "M", "A", "M", "J", "J", "A", "S", "O", "N", "D"],
+        labels: props.months,
         datasets: [
           {
-            minBarLength:7,
+            minBarLength: 5,
             label: "Monthly Values",
-            data: [4, 2, 3, 2, 1, 3, 3, 0, 7, 4, 2, 3],
+            data: props.values,
             backgroundColor: (context) => {
               const value = context.dataset.data[context.dataIndex];
               return value === 0 ? '#737373' : '#155E75';
@@ -30,8 +30,8 @@ const SyndicateMonthlyDealsGraph = (monthsLabel :any, monthsData:any):any => {
               return value === 0 ? '#737373' : '#155E75';
             },
             borderWidth: 3,
-            borderRadius: 100,
-            barThickness: 10,
+            borderRadius: props?.borderRadius || 100,
+            barThickness: props.barWidth || 10,
             datalabels: {
               color: "#155E75",
               offset:-1,
@@ -63,6 +63,7 @@ const SyndicateMonthlyDealsGraph = (monthsLabel :any, monthsData:any):any => {
           },
         scales: {
           y: {
+            min:0,
             display: false,
             beginAtZero:false,
           },
@@ -79,9 +80,9 @@ const SyndicateMonthlyDealsGraph = (monthsLabel :any, monthsData:any):any => {
     return () => {
       myChart.destroy();
     };
-  }, []);
-
-  return (
+  }, [props]);
+  
+  return props.months && props.values && (
       <canvas height={150} width={20} className="h-full" id="myChart"></canvas>
   );
 };

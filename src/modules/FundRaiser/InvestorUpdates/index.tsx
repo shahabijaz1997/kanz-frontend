@@ -708,7 +708,7 @@ const InvestorUpdates = ({}: any) => {
                         return { ...prev, comment: e.target.value };
                       })
                     }
-                    placeholder="Add new Comment"
+                    placeholder={language?.v3?.fundraiser?.add_comment}
                     className=" h-[100px] mt-1 shadow-sm appearance-none border border-neutral-300 rounded-md w-full py-2 px-3 text-gray-500 leading-tight focus:outline-none focus:shadow-outline"
                   ></textarea>
                 </div>

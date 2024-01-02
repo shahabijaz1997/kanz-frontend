@@ -35,7 +35,7 @@ const CustomStatus = ({ options }: any) => {
     textColor = "text-yellow-800";
   } else if (options === language?.v3?.status?.draft) {
     textColor = "text-indigo-800";
-  } else if (options === language?.v3?.status?.no) {
+  } else if (options === language?.v3?.fundraiser?.no) {
     textColor = "text-red-800";
   } else if (options === language?.v3?.status?.follower) {
     textColor = "text-blue-800";

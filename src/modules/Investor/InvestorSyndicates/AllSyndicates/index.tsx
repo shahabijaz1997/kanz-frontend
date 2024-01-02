@@ -62,6 +62,10 @@ const AllSyndicates = ({}: any): any => {
     getAllSyndicates();
   }, []);
   useEffect(() => {
+    dispatch(saveDataHolder(""));
+    getAllSyndicates();
+  }, [currentPage]);
+  useEffect(() => {
     syndicateInfo?.id && onGetSyndicateDetail(syndicateInfo?.id);
     setChildData(false);
   }, [childData]);
