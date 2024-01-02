@@ -572,11 +572,10 @@ const DealViewDetails = ({ dealDetail, state }: any) => {
                       ) : index === 1 || index === 2 || index === 3 ? (
                         <div className="h-[20px] w-[20px] bg-neutral-300 rounded-full inline-grid place-items-center"></div>
                       ) : null)}
-                    {convertStatusLanguage(dealDetail?.status) === "draft" ||
-                      (convertStatusLanguage(dealDetail?.status) ===
-                        "reopened" && (
+
+                    {(convertStatusLanguage(dealDetail?.status) === "draft" || convertStatusLanguage(dealDetail?.status === "reopened")) && (
                         <div className="h-[20px] w-[20px] bg-neutral-300 rounded-full inline-grid place-items-center"></div>
-                      ))}
+                      )}
 
                     {convertStatusLanguage(dealDetail?.status) === "verified" &&
                       (index === 0 ? (

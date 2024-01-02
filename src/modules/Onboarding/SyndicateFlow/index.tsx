@@ -39,6 +39,7 @@ const SyndicateFlow = ({ }: any) => {
     profileLink: "",
     dealflow: "",
     name: "",
+    about:"",
     tagline: "",
     logo: null,
     loading: true
@@ -73,6 +74,7 @@ const SyndicateFlow = ({ }: any) => {
       profileLink: meta?.profile?.profile_link,
       dealflow: meta?.profile?.dealflow,
       name: meta?.profile?.name,
+      about:meta?.profile?.about,
       tagline: meta?.profile?.tagline,
       logo: meta?.profile?.logo,
     });
@@ -172,6 +174,7 @@ const SyndicateFlow = ({ }: any) => {
         });
       } else {
         form.append("syndicate_profile[name]", payload.name);
+        form.append("syndicate_profile[about]", payload.about);
         form.append("syndicate_profile[tagline]", payload.tagline);
         typeof payload?.logo !== "string" && form.append("syndicate_profile[logo]", payload?.logo, payload?.logo?.name);
       }
