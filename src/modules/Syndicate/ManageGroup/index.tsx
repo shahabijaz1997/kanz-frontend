@@ -11,6 +11,7 @@ import Modal from "../../../shared/components/Modal";
 import AddMembersModal from "./AddMembersModal";
 import Applications from "./Applications";
 import Invites from "./Invites";
+import AllInvestors from "./AllInvestors";
 
 const ManageGroup = ({}: any) => {
   const language: any = useSelector((state: RootState) => state.language.value);
@@ -18,6 +19,7 @@ const ManageGroup = ({}: any) => {
     { id: 1, title: language?.v3?.investor?.group_members },
     { id: 2, title: language?.v3?.investor?.applications},
     { id: 3, title: language?.v3?.investor?.invites},
+    { id: 4, title: language?.v3?.investor?.investors},
   ];
   const openModal = () =>{
     setModalOpen(true)
@@ -62,14 +64,19 @@ const ManageGroup = ({}: any) => {
               <h1 className="text-black font-medium text-2xl">
                 {language?.v3?.syndicate?.manage_group}
               </h1>
-              <Button
-                    onClick={() => {
-                      setModalOpen(true)
-                    }}
-                    className="w-[170px]"
-                  >
-                    { language?.v3?.syndicate?.add_new_member}
-                  </Button>
+              {
+                selected?.id !== 4 &&(
+                  <Button
+                  onClick={() => {
+                    setSelected(tabs[3])
+                  }}
+                  className="w-[170px]"
+                >
+                  { language?.v3?.syndicate?.add_new_member}
+                </Button>
+                )
+              }
+   
           
             </section>
            
@@ -97,15 +104,16 @@ const ManageGroup = ({}: any) => {
               {selected.id===1 && <GroupMembers openModal={openModal} reloadMembers={reloadMembers}/>}
               {selected.id===2 && <Applications />}
               {selected.id===3 && <Invites />}
+              {selected.id===4 && <AllInvestors />}
           </section>
         )}
       </aside>
-      <Modal
+{/*       <Modal
         className={"w-[700px] screen1024:w-[300px]"}
         show={modalOpen ? true : false}
       >
         <AddMembersModal closeModal={closeModal} reloadgetMembers={reloadgetMembers}  openModal={openModal}  />
-      </Modal>
+      </Modal> */}
     </main>
   );
 };

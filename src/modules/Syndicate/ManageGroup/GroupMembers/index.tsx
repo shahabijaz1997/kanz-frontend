@@ -44,8 +44,6 @@ const GroupMembers = ({openModal,reloadMembers}: any) => {
   const [searchQuery, setSearchQuery]: any = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const [paginationData, setpaginationData] = useState(null);
-  const [searchModalQuery, setModalSearchQuery]: any = useState("");
-  const [buttonDisable, setButtonDisable]: any = useState(false);
 
   const setLoadingFalse = () => {
     setLoading(false);
@@ -123,6 +121,7 @@ const GroupMembers = ({openModal,reloadMembers}: any) => {
           };
         });
         setGroupInvestors(investors);
+        console.log(investors)
       }
     } catch (error: any) {
       if (error.response && error.response.status === 302) {
@@ -139,51 +138,7 @@ const GroupMembers = ({openModal,reloadMembers}: any) => {
     return filter[value] || 0
   };
 
-  useEffect(() => {
-    getAllUserListings();
-  }, []);
 
-  const getAllUserListings = async () => {
-    try {
-      setmodalLoading(true);
-      let { status, data } = await getNonAddedInvestors(
-        authToken,
-        searchModalQuery
-      );
-      if (status === 200) {
-        let investorData = data?.status?.data || [];
-        let investors: any = investorData.map((investor: any) => ({
-          id: investor?.id,
-          member_name: <span className="capitalize">{investor?.name}</span>,
-          profileImage: investor?.image,
-          invested_amount: investor?.invested_amount,
-          no_investments: investor?.no_investments,
-          status: false,
-        }));
-
-        setInvestors(investors);
-      }
-    } catch (error: any) {
-      console.log(error);
-
-      if (
-        error.response &&
-        error.response.status === 400 &&
-        error.response.data.status === 400
-      ) {
-        toast.dismiss();
-        toast.warn(language?.v3?.syndicate?.already_invited, toastUtil);
-      }
-      if (error.response && error.response.status === 401) {
-        dispatch(saveToken(""));
-        navigate(RoutesEnums.LOGIN, {
-          state: RoutesEnums.FUNDRAISER_DASHBOARD,
-        });
-      }
-    } finally {
-      setmodalLoading(false);
-    }
-  };
 
   return (
     <>
@@ -260,12 +215,6 @@ const GroupMembers = ({openModal,reloadMembers}: any) => {
                         <div className="mb-4 font-medium  text-[#828282]">
                         {language?.v3?.syndicate?.no_group_member_yet}
                         </div>
-                        <Button
-                          onClick={openModal}
-                          className=" font-extralight"
-                        >
-                          {language?.v3?.syndicate?.create_group}
-                        </Button>
                       </div>
                     }
                   />

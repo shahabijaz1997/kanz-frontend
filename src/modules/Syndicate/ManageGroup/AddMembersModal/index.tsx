@@ -74,7 +74,8 @@ const AddMembersModal = ({ reloadgetMembers, closeModal }: any) => {
       setmodalLoading(true);
       let { status, data } = await getNonAddedInvestors(
         authToken,
-        searchModalQuery
+        searchModalQuery,
+        1
       );
       if (status === 200) {
         let investorData = data?.status?.data || [];
@@ -117,7 +118,7 @@ const AddMembersModal = ({ reloadgetMembers, closeModal }: any) => {
 
   return(
   <div
-    className="rounded-md overflow-hidden inline-grid place-items-center absolute top-1/2 left-1/2 translate-x-[-50%] translate-y-[-50%]"
+    className="rounded-md custom-scroll max-h-[600px] overflow-y-auto inline-grid place-items-center absolute top-1/2 left-1/2 translate-x-[-50%] translate-y-[-50%]"
     style={{ backgroundColor: "rgba(0, 0, 0, 0.078" }}
   >
     <aside className="bg-white w-[500px] rounded-md p-5 h-full">

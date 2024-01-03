@@ -14,7 +14,7 @@ import Modal from "../../../../shared/components/Modal";
 import CrossIcon from "../../../../ts-icons/crossIcon.svg";
 import Selector from "../../../../shared/components/Selector";
 import { comaFormattedNumber } from "../../../../utils/object.utils";
-import { DealCheckType } from "../../../../enums/types.enum";
+import { DealCheckType, InviteStatus } from "../../../../enums/types.enum";
 
 const SyndicateInfoDrawer = ({
   syndicateInfo,
@@ -124,8 +124,10 @@ const SyndicateInfoDrawer = ({
   const displayText = showFullText
     ? syndicateInfo?.about
     : syndicateInfo?.about?.slice(0, 500);
-    const abbreviatedMonths = syndicateInfo?.portfolio_stats?.labels.map((month:string) => month.charAt(0));
-    console.log(abbreviatedMonths)
+  const abbreviatedMonths = syndicateInfo?.portfolio_stats?.labels.map(
+    (month: string) => month.charAt(0)
+  );
+  console.log(abbreviatedMonths);
   return (
     <main>
       <Drawer
@@ -156,8 +158,8 @@ const SyndicateInfoDrawer = ({
                 >
                   <span className="flex items-start justify-start">
                     <img
-                      className="h-9 w-11 rounded-full"
-                      src={syndicateInfo?.profile?.logo}
+                      className="h-[3.25rem] w-[7rem] rounded-full"
+                      src={syndicateInfo?.logo}
                     ></img>
                   </span>
                   <span className="w-full ml-4">
@@ -167,42 +169,56 @@ const SyndicateInfoDrawer = ({
                     </span>
                   </span>
                 </div>
-                <span className="items-center">
-                  <Button
-                    type={
-                      syndicateInfo?.is_invited && !buttonDisableTemp
-                        ? "outlined"
-                        : "primary"
-                    }
-                    centeredSpinner
-                    className="!min-w-[100px]"
-                    onClick={() => {
-                      if (syndicateInfo?.is_invited) {
-                        return;
-                      } else {
-                        handleToggle();
+                {syndicateInfo?.invite?.status === InviteStatus.INVITED && (
+                  <span className="items-center">
+                    <Button
+                      className={`!min-w-[100px]`}
+                      onClick={() => {}}
+                      loading={buttonDisableTemp}
+                    >
+                      {language?.v3?.investor?.accept}
+                    </Button>
+                  </span>
+                )}
+                {syndicateInfo?.invite?.status === InviteStatus.PENDING && (
+                  <span className="items-center">
+                    <Button
+                      type={
+                        syndicateInfo?.is_invited && !buttonDisableTemp
+                          ? "outlined"
+                          : "primary"
                       }
-                    }}
-                    loading={buttonDisableTemp}
-                  >
-                    {getButtonStatus()}
-                  </Button>
-                </span>
+                      centeredSpinner
+                      className={`!min-w-[100px] ${
+                        syndicateInfo?.is_invited &&
+                        `!cursor-not-allowed 'hover:border-none`
+                      }`}
+                      onClick={() => {
+                        if (syndicateInfo?.is_invited) {
+                          return;
+                        } else {
+                          handleToggle();
+                        }
+                      }}
+                      loading={buttonDisableTemp}
+                    >
+                      {getButtonStatus()}
+                    </Button>
+                  </span>
+                )}
               </section>
             </header>
             <section className="items-center w-full">
               <aside className="flex items-center justify-start">
                 <div className="flex flex-wrap gap-2">
-                  {syndicateInfo?.industries?.map(
-                    (topic: any, index: any) => (
-                      <div
-                        key={index}
-                        className=" bg-[#F2F2F2] p-2 text-xs text-[#202223] rounded-lg"
-                      >
-                        {topic}
-                      </div>
-                    )
-                  )}
+                  {syndicateInfo?.industries?.map((topic: any, index: any) => (
+                    <div
+                      key={index}
+                      className=" bg-[#F2F2F2] p-2 text-xs text-[#202223] rounded-lg"
+                    >
+                      {topic}
+                    </div>
+                  ))}
                 </div>
               </aside>
               <section
@@ -329,11 +345,9 @@ const SyndicateInfoDrawer = ({
                     <div className="flex-col items-center p-4 justify-center">
                       <span className="flex items-center justify-center">
                         <img
-                        alt="Lead Photo"
+                          alt="Lead Photo"
                           className=" h-[52px] w-[52px] rounded-full"
-                          src={
-                            syndicateInfo?.lead?.pic
-                          }
+                          src={syndicateInfo?.lead?.pic}
                         ></img>
                       </span>
                       <span className="items-center font-medium">
@@ -352,7 +366,10 @@ const SyndicateInfoDrawer = ({
                 <aside className="flex justify-between items-center text-sm px-6">
                   <div className=" w-full pl-3 pr-3 py-3">
                     <div className="font-medium text-base">
-                      {`${syndicateInfo?.portfolio_stats?.total_deals_closed_in_12_months} deals in past ${12} months`}
+                      {`${
+                        syndicateInfo?.portfolio_stats
+                          ?.total_deals_closed_in_12_months
+                      } deals in past ${12} months`}
                     </div>
                     <div className=" mt-0.5 font-medium text-sm text-[#737373]">
                       {language?.v3?.fundraiser?.syndicate_deals}
@@ -375,7 +392,10 @@ const SyndicateInfoDrawer = ({
                 </aside>
                 <aside className="flex justify-between items-center text-sm px-2 mt-4">
                   <div className="w-6/12 mt-1">
-                    <SyndicateMonthlyDealsGraph months= {abbreviatedMonths} values= {syndicateInfo?.portfolio_stats?.values}  />
+                    <SyndicateMonthlyDealsGraph
+                      months={abbreviatedMonths}
+                      values={syndicateInfo?.portfolio_stats?.values}
+                    />
                   </div>
                   <div
                     className={`w-5/12 border-[1px] border-[#E4E7EC] rounded-lg shadow-md  pl-3 pr-3 mb-4 py-6`}
@@ -386,7 +406,11 @@ const SyndicateInfoDrawer = ({
                       </span>
                     </div>
                     <div className="mt-2 font-bold text-xl">
-                      {`${comaFormattedNumber(syndicateInfo?.portfolio_stats?.total_raised, DealCheckType.STARTUP, false)}`}
+                      {`${comaFormattedNumber(
+                        syndicateInfo?.portfolio_stats?.total_raised,
+                        DealCheckType.STARTUP,
+                        false
+                      )}`}
                     </div>
                   </div>
                 </aside>
@@ -399,7 +423,9 @@ const SyndicateInfoDrawer = ({
                 </div>
                 <aside className="flex justify-between items-center text-sm  overflow-y-auto">
                   <p className="text-xs">
-                    {syndicateInfo?.about?.slice(0, 600)}
+                    {
+                      "Any financial information provided on this website is for general informational purposes and should not be considered as financial advice. Users are encouraged to seek advice from qualified financial professionals regarding their specific financial situation and goals."
+                    }
                   </p>
                 </aside>
               </aside>

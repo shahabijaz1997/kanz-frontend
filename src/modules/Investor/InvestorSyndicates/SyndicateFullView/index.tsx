@@ -180,14 +180,16 @@ const SyndicateFullView = ({}: any) => {
   const handleSelectChange = (selectedOption: any) => {
     setSelectedDiscovery(selectedOption?.value);
   };
-/*   const options = [
+  /*   const options = [
     { label: language?.v3?.investor?.news, value: "news" },
     { label: language?.v3?.investor?.profile, value: "profile" },
     { label: language?.v3?.investor?.website, value: "website" },
     { label: language?.v3?.investor?.other, value: "other" },
   ];
  */
-  const abbreviatedMonths = state?.portfolio_stats?.labels.map((month:string) => month.charAt(0));
+  const abbreviatedMonths = state?.portfolio_stats?.labels.map(
+    (month: string) => month.charAt(0)
+  );
 
   const options = [
     { label: "News", value: "news" },
@@ -195,9 +197,7 @@ const SyndicateFullView = ({}: any) => {
     { label: "Website", value: "website" },
     { label: "Other", value: "other" },
   ];
-  let text =
-    "AlphaTech Solutions is a leading IT company specializing in innovative software solutions and cutting-edge technologies. Our team of experts is dedicated to providing high-quality services to clients worldwide, helping them achieve their business goals through advanced digital solutions.AlphaTech Solutions is a leading IT company specializing in innovative software solutions and cutting-edge technologies. Our team of experts is dedicated to providing high-quality services to clients worldwide, helping them achieve their business goals through advanced digital solutions. AlphaTech Solutions is a leading IT company specializing in innovative software solutions and cutting-edge technologies. Our team of experts is dedicated to providing high-quality services to clients worldwide, helping them achieve their business goals through advanced digital solutions. AlphaTech Solutions is a leading IT company specializing in innovative software solutions and cutting-edge technologies. Our team of experts is dedicated to providing high-quality services to clients worldwide, helping them achieve their business goals through advanced digital solutions. AlphaTech Solutions is a leading IT company specializing in innovative software solutions and cutting-edge technologies. Our team of experts is dedicated to providing high-quality services to clients worldwide, helping them achieve their business goals through advanced digital solutions.";
-
+  
   const [loading, setLoading]: any = useState(false);
   return (
     <main className="h-full max-h-full overflow-y-hidden">
@@ -214,13 +214,13 @@ const SyndicateFullView = ({}: any) => {
           </div>
         ) : (
           <section className="bg-cbc-auth w-full h-full p-[5rem] flex items-start justify-center overflow-y-auto">
-            <aside>
+            <aside className="w-full">
               <div>
                 <div className="flex-col items-center p-4 justify-center">
                   <span className="flex items-center justify-center">
                     <img
                       className=" h-[88px] w-[88px] mr-2.5 shadow-md rounded-full"
-                      src={state?.profile?.logo}
+                      src={state?.logo}
                     ></img>
                   </span>
                   <span className="items-center justify-center flex mt-2 text-2xl font-medium">
@@ -276,96 +276,100 @@ const SyndicateFullView = ({}: any) => {
                 </span>
               </div>
               <section className="flex items-center justify-center mt-5">
-              <aside
-                className={`w-[50%] your-container overflow-hidden bg-[#F2F2F2] rounded-md mt-3 ${
-                  isExpanded ? "expanded" : ""
-                }`}
-              >
-                <div className="p-5">
-                  <div className=" pt-3 font-bold">{language?.v3?.investor?.apply_to_syndicate}</div>
-                  <div className="mt-5">
-                    <div className=" font-medium text-sm">
-                      {language?.v3?.investor?.how_did_you_discover_this_syndicate}
+                <aside
+                  className={`w-[50%] your-container overflow-hidden bg-[#F2F2F2] rounded-md mt-3 ${
+                    isExpanded ? "expanded" : ""
+                  }`}
+                >
+                  <div className="p-5">
+                    <div className=" pt-3 font-bold">
+                      {language?.v3?.investor?.apply_to_syndicate}
                     </div>
-                    <div className="mt-1">
-                      <Selector
-                        options={options}
-                        isSearchable={true}
-                        placeholder=""
-                        onChange={handleSelectChange}
-                      />
+                    <div className="mt-5">
+                      <div className=" font-medium text-sm">
+                        {
+                          language?.v3?.investor
+                            ?.how_did_you_discover_this_syndicate
+                        }
+                      </div>
+                      <div className="mt-1">
+                        <Selector
+                          options={options}
+                          isSearchable={true}
+                          placeholder=""
+                          onChange={handleSelectChange}
+                        />
+                      </div>
                     </div>
-                  </div>
-                  <div className="mt-5">
-                    <span className="mt-5 font-medium text-sm">
-                      {language?.v3?.investor?.personal_note_for}
-                    </span>
-                    <p className="text-sm text-[#737373]">
-                      {language?.v3?.investor?.briefly_introduce_yourself}
-                    </p>
-                    <textarea
-                      value={changes?.comment}
-                      onChange={(e) =>
-                        setChanges((prev: any) => {
-                          return { ...prev, comment: e.target.value };
-                        })
-                      }
-                      className="w-full mt-1 border-[1px] border-[#D4D4D4] min-h-[110px] max-h-[220px] p-1.5 text-sm"
-                    ></textarea>
-                  </div>
-                  <div className="mt-5 flex">
-                    <input
-                      type="checkbox"
-                      className="accent-cyan-800 h-3 w-3 mt-1.5 cursor-pointer"
-                      onChange={handleCheckboxChange}
-                    />
-                    <small className="ml-3">
-                      <span className="flex items-center font-medium mt-0.5">
-                        {language?.v3?.investor?.disclaimer_1}
+                    <div className="mt-5">
+                      <span className="mt-5 font-medium text-sm">
+                        {language?.v3?.investor?.personal_note_for}
                       </span>
                       <p className="text-sm text-[#737373]">
-                        {language?.v3?.investor?.description_about_disclaimer}
+                        {language?.v3?.investor?.briefly_introduce_yourself}
                       </p>
-                    </small>
+                      <textarea
+                        value={changes?.comment}
+                        onChange={(e) =>
+                          setChanges((prev: any) => {
+                            return { ...prev, comment: e.target.value };
+                          })
+                        }
+                        className="w-full mt-1 border-[1px] border-[#D4D4D4] min-h-[110px] max-h-[220px] p-1.5 text-sm"
+                      ></textarea>
+                    </div>
+                    <div className="mt-5 flex">
+                      <input
+                        type="checkbox"
+                        className="accent-cyan-800 h-3 w-3 mt-1.5 cursor-pointer"
+                        onChange={handleCheckboxChange}
+                      />
+                      <small className="ml-3">
+                        <span className="flex items-center font-medium mt-0.5">
+                          {language?.v3?.investor?.disclaimer_1}
+                        </span>
+                        <p className="text-sm text-[#737373]">
+                          {language?.v3?.investor?.description_about_disclaimer}
+                        </p>
+                      </small>
+                    </div>
+                    <aside className="flex items-center justify-end mt-5">
+                      <span className=" flex items-center justify-center gap-5">
+                        <Button
+                          onClick={() => {
+                            setChanges({
+                              comment: "",
+                              action: "",
+                              document: null,
+                            });
+                            handleToggle();
+                          }}
+                          className="!w-[140px] !text-black !border-[black]"
+                          type="outlined"
+                        >
+                          {language?.v3?.investor?.cancel}
+                        </Button>
+                        <Button
+                          centeredSpinner
+                          className=""
+                          onClick={() => {
+                            onFollow(state?.id);
+                            setChanges({
+                              comment: "",
+                              action: "",
+                              document: null,
+                            });
+                          }}
+                          loading={buttonDisableTemp}
+                          disabled={!enableButton}
+                        >
+                          {language?.v3?.investor?.submit_application}
+                        </Button>
+                      </span>
+                    </aside>
                   </div>
-                  <aside className="flex items-center justify-end mt-5">
-                    <span className=" flex items-center justify-center gap-5">
-                      <Button
-                        onClick={() => {
-                          setChanges({
-                            comment: "",
-                            action: "",
-                            document: null,
-                          });
-                          handleToggle();
-                        }}
-                        className="!w-[140px] !text-black !border-[black]"
-                        type="outlined"
-                      >
-                        {language?.v3?.investor?.cancel}
-                      </Button>
-                      <Button
-                        centeredSpinner
-                        className=""
-                        onClick={() => {
-                          onFollow(state?.id);
-                          setChanges({
-                            comment: "",
-                            action: "",
-                            document: null,
-                          });
-                        }}
-                        loading={buttonDisableTemp}
-                        disabled={!enableButton}
-                      >
-                        {language?.v3?.investor?.submit_application}
-                      </Button>
-                    </span>
-                  </aside>
-                </div>
-              </aside>
+                </aside>
               </section>
-
 
               <aside className="mt-8 justify-center flex">
                 <aside className="flex justify-center items-center text-sm w-[80%]">
@@ -378,7 +382,11 @@ const SyndicateFullView = ({}: any) => {
                       </span>
                     </div>
                     <div className="mt-2 font-semibold text-2xl">
-                      { comaFormattedNumber(state?.portfolio_stats?.total_raised, DealCheckType.STARTUP, false)}
+                      {comaFormattedNumber(
+                        state?.portfolio_stats?.total_raised,
+                        DealCheckType.STARTUP,
+                        false
+                      )}
                     </div>
                   </div>
                   <div
@@ -389,15 +397,19 @@ const SyndicateFullView = ({}: any) => {
                         {language?.v3?.fundraiser?.active_deals}
                       </span>
                     </div>
-                    <div className="mt-2 font-semibold text-2xl">{state?.portfolio_stats?.active_deals_count}</div>
+                    <div className="mt-2 font-semibold text-2xl">
+                      {state?.portfolio_stats?.active_deals_count}
+                    </div>
                   </div>
                 </aside>
               </aside>
               <aside className="mt-8 justify-center flex">
                 <div className="flex-col justify-center items-center w-[80%]">
-                  <div className=" mx-44">
+                  <div className=" mx-28">
                     <div className="font-medium text-2xl">
-                      {`${state?.portfolio_stats?.total_deals_closed_in_12_months} deals in past ${12} months`}
+                      {`${
+                        state?.portfolio_stats?.total_deals_closed_in_12_months
+                      } deals in past ${12} months`}
                     </div>
                     <div className=" mt-0.5 font-medium text-[#737373]">
                       {language?.v3?.fundraiser?.syndicate_deals}
@@ -406,24 +418,28 @@ const SyndicateFullView = ({}: any) => {
                   <aside className="flex justify-between items-center text-sm px-32 mt-4 w-full">
                     <div className="w-full">
                       <SyndicateMonthlyDealsGraph
-                        months= {state?.portfolio_stats?.labels} values= {state?.portfolio_stats?.values}
+                        months={state?.portfolio_stats?.labels}
+                        values={state?.portfolio_stats?.values}
                       />
                     </div>
                   </aside>
                 </div>
               </aside>
-              <section className="w-full flex items-center justify-center">
-                <aside className="mt-4 w-[63%] justify-center flex-col items-center">
-                  <div className=" pr-2 flex items-center">
-                    <span className="font-medium text-2xl mb-2">
-                      {language?.v3?.investor?.about}
-                    </span>
-                  </div>
-                  <div className=" text-start whitespace-pre-wrap text-sm">
-                    <p>{state?.about}</p>
-                  </div>
-                </aside>
-              </section>
+              {state?.about && (
+              <section className="w-full flex items-center justify-center mx-8">
+              <aside className="mt-4 w-[67%] justify-center flex-col items-center">
+                <div className=" pr-2 flex items-center">
+                  <span className="font-medium text-2xl mb-2">
+                    {language?.v3?.investor?.about}
+                  </span>
+                </div>
+                <div className=" text-start whitespace-pre-wrap text-sm">
+                  <p>{state?.about}</p>
+                </div>
+              </aside>
+            </section>
+              )}
+
 
               <div className="font-medium text-2xl mt-14 flex items-center justify-center">
                 Investments
@@ -433,23 +449,37 @@ const SyndicateFullView = ({}: any) => {
                   className="flex-wrap items-center justify-center max-w-[50%]"
                   style={{ display: "flex" }}
                 >
-                  {dataArrayCompany.map((item, index) => (
-                    <div
-                      key={index}
-                      className="flex-col items-center p-4 justify-center"
-                    >
-                      <span className="flex items-center justify-center shadow-md p-3 rouned-md border-[1px] border-[#E4E7EC]">
-                        <img
-                          className="h-[88px] w-[88px] shadow-md rounded-md flex items-center justify-center"
-                          src={item.profile.logo}
-                          alt={`Logo ${index}`}
-                        />
-                      </span>
-                      <span className="items-center justify-center flex mt-3 text-base font-medium">
-                        {item.name}
-                      </span>
-                    </div>
-                  ))}
+                  {state?.investments.map((item: any, index: any) => {
+                    const initials = item.name.slice(0, 2);
+                    return (
+                      <div
+                        key={index}
+                        className="flex-col items-center p-4 justify-center"
+                      >
+                        <span className="flex items-center justify-center shadow-md p-3 rounded-md border-[1px] border-[#E4E7EC]">
+                          {item?.profile_pic ? (
+                            <img
+                              className="h-[88px] w-[88px] shadow-md rounded-md flex items-center justify-center"
+                              src={item?.profile_pic}
+                              alt={`Logo ${index}`}
+                            />
+                          ) : (
+                            <div
+                              className="h-[88px] w-[88px] shadow-md rounded-md flex items-center justify-center"
+                              style={{ backgroundColor: "#155E75" }}
+                            >
+                              <span className="text-white font-bold text-2xl">
+                                {initials}
+                              </span>
+                            </div>
+                          )}
+                        </span>
+                        <span className="items-center justify-center flex mt-3 text-base font-medium">
+                          {item.name}
+                        </span>
+                      </div>
+                    );
+                  })}
                 </div>
               </div>
               <div>
@@ -475,7 +505,7 @@ const SyndicateFullView = ({}: any) => {
               </div>
               <div className="mt-4 flex items-center justify-center mb-10">
                 <div
-                  className="flex-wrap items-center justify-center max-w-[50%]"
+                  className="flex-wrap items-center justify-center max-w-[45%]"
                   style={{ display: "flex" }}
                 >
                   {dataArray.map((item, index) => (
@@ -483,7 +513,7 @@ const SyndicateFullView = ({}: any) => {
                       key={index}
                       className="flex-col items-center p-4 justify-center"
                     >
-                      <span className="h-[88px] w-[88px] shadow-sm rounded-full flex items-center justify-center">
+                      <span className="h-[100px] w-[100px] shadow-sm rounded-full flex items-center justify-center">
                         <img
                           className="w-full h-full shadow-md rounded-full flex items-center justify-center"
                           src={item.profile.logo}
