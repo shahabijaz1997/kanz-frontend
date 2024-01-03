@@ -16,19 +16,12 @@ import Applications from "./Applications";
 const InvestorSyndicates = ({}: any) => {
   const params = useParams();
 
-  interface Syndicate {
-    id: number;
-    title: React.ReactNode;
-    handle: string;
-    action: React.ReactNode;
-  }
-
   const language: any = useSelector((state: RootState) => state.language.value);
   const authToken: any = useSelector((state: RootState) => state.auth.value);
   const tabs = [
     { id: 1, title: language?.v3?.investor?.all_syndicates },
     { id: 2, title: language?.v3?.investor?.your_syndicates },
-    { id: 3, title: language?.v3?.investor?.application_pending },
+    { id: 3, title: language?.v3?.investor?.applications },
   ];
 
 

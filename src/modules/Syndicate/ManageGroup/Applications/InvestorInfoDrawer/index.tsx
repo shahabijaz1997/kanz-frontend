@@ -4,30 +4,30 @@ import Button from "../../../../../shared/components/Button";
 import Spinner from "../../../../../shared/components/Spinner";
 import {
   comaFormattedNumber,
-  numberFormatter,
 } from "../../../../../utils/object.utils";
-import RaiseIcon from "../../../../../ts-icons/raiseIcon.svg";
-import {
-  postFollowSyndicate,
-  postunFollowSyndicate,
-} from "../../../../../apis/investor.api";
+
 import { useSelector } from "react-redux";
 import { RootState } from "../../../../../redux-toolkit/store/store";
 import { toast } from "react-toastify";
 import { toastUtil } from "../../../../../utils/toast.utils";
-import { DealCheckType } from "../../../../../enums/types.enum";
+import { DealCheckType, InviteStatus, MemberType } from "../../../../../enums/types.enum";
+import { postApproveRequest, postInviteInvestor, putAcceptInvite } from "../../../../../apis/syndicate.api";
 
 const InvestorInfoDrawer = ({
   investorInfo,
   openDrawer,
   isDrawerOpen,
 }: any) => {
-  const user: any = useSelector((state: RootState) => state.user.value);
   const authToken: any = useSelector((state: RootState) => state.auth.value);
+  const user: any = useSelector((state: RootState) => state.user.value);
+
   const language: any = useSelector((state: RootState) => state.language.value);
   const orientation: any = useSelector(
     (state: RootState) => state.orientation.value
   );
+
+
+  console.log(investorInfo)
 
   const [loading, setLoading] = useState(false);
   const [buttonDisableTemp, setButtonDisableTemp] = useState(false);
@@ -53,21 +53,25 @@ const InvestorInfoDrawer = ({
       setButtonDisableTemp(false);
     }, 1000);
   };
+  console.log(investorInfo)
 
-  const onFollow = async (syndId: any) => {
+
+   const onInviteInvestor = async (investorID: any) => {
     setButtonDisableTemp(true);
     try {
-      setLoading(true);
-      const { status } = await postFollowSyndicate(
+      const { status } = await postInviteInvestor(
         {
-          member_id: user.id,
-          connection: "follower",
+          invite: {
+            discovery_method: null,
+            message: null,
+            invitee_id: investorID,
+          },
         },
-        syndId,
+        user.id,
         authToken
       );
       if (status === 200) {
-        toast.success(language?.v3?.investor?.syndicate_followed, toastUtil);
+        toast.success(language?.v3?.investor?.applied, toastUtil);
       }
       removeSpinning();
     } catch (error: any) {
@@ -75,20 +79,17 @@ const InvestorInfoDrawer = ({
       if (error?.response?.status === 400)
         toast.warning(error?.response?.data?.status?.message, toastUtil);
     } finally {
-      setLoading(false);
     }
   };
-  const onunFollow = async (syndId: any, memberId: any) => {
+   const acceptInvite = async (investorID: any) => {
     setButtonDisableTemp(true);
     try {
-      setLoading(true);
-    const { status } = await postunFollowSyndicate(
-        syndId,
-        memberId,
+      const { status } = await putAcceptInvite(
+        investorID,
         authToken
       );
       if (status === 200) {
-        toast.success(language?.v3?.investor?.syndicate_unfollowed, toastUtil);
+        toast.success(language?.v3?.investor?.applied, toastUtil);
       }
       removeSpinning();
     } catch (error: any) {
@@ -96,19 +97,27 @@ const InvestorInfoDrawer = ({
       if (error?.response?.status === 400)
         toast.warning(error?.response?.data?.status?.message, toastUtil);
     } finally {
-      setLoading(false);
+    }
+  };
+   const changeMemberRole = async (investorID: any, role:string) => {
+    try {
+      const { status } = await putAcceptInvite(
+        investorID,
+        authToken
+      );
+      if (status === 200) {
+        toast.success(language?.v3?.investor?.applied, toastUtil);
+      }
+      removeSpinning();
+    } catch (error: any) {
+      removeSpinning();
+      if (error?.response?.status === 400)
+        toast.warning(error?.response?.data?.status?.message, toastUtil);
+    } finally {
     }
   };
 
-  const getButtonStatus = () => {
-    if (buttonDisableTemp) return;
 
-    return investorInfo?.following
-      ? language?.v3?.investor?.following
-      : language?.v3?.investor?.follow;
-  };
-
-  const displayText = showFullText ? text : text.slice(0, 800);
   return (
     <main>
       <Drawer
@@ -151,30 +160,79 @@ const InvestorInfoDrawer = ({
                       {"Cancel"}
                     </Button>
                   </span>
-                  <span className="items-center">
-                    <Button
-                      type={
-                        investorInfo?.following && !buttonDisableTemp
-                          ? "outlined"
-                          : "primary"
-                      }
-                      centeredSpinner
-                      className="!min-w-[110px] !p-1.5 !border-[2px] !border-[#155E75]"
-                      onClick={() => {
-                        if (investorInfo?.following) {
-                          onunFollow(
-                            investorInfo?.id,
-                            investorInfo?.membership_id
-                          );
-                        } else {
-                          onFollow(investorInfo?.id);
+                  {
+                     (
+                      <span className="items-center">
+                      <Button
+                        type={
+                          investorInfo?.following && !buttonDisableTemp
+                            ? "outlined"
+                            : "primary"
                         }
-                      }}
-                      loading={buttonDisableTemp}
-                    >
-                      {"Approve"}
-                    </Button>
-                  </span>
+                        centeredSpinner
+                        className="!min-w-[110px] !p-1.5 !border-[2px] !border-[#155E75]"
+                        onClick={() => {
+                          onInviteInvestor(investorInfo?.id)
+                        }}
+                      >
+                        {"Invite"}
+                      </Button>
+                    </span>
+                    )
+                    
+                  }
+                  {
+                    investorInfo?.invite?.status === InviteStatus.AWAITING && (
+                      <span className="items-center">
+                      <Button
+                        centeredSpinner
+                        className="!min-w-[110px] !p-1.5 !border-[2px] !border-[#155E75]"
+                        onClick={() => {
+                          acceptInvite(investorInfo?.id)
+                        }}
+                        loading={buttonDisableTemp}
+                      >
+                        {"Approve"}
+                      </Button>
+                    </span>
+                    )
+                    
+                  }
+                  {
+                    investorInfo?.is_member && investorInfo?.role === MemberType.LP && (
+                      <span className="items-center">
+                      <Button
+                        centeredSpinner
+                        className="!min-w-[110px] !p-1.5 !border-[2px] !border-[#155E75]"
+                        onClick={() => {
+                          acceptInvite(investorInfo?.id)
+                        }}
+                        loading={buttonDisableTemp}
+                      >
+                        {"Change to GP"}
+                      </Button>
+                    </span>
+                    )
+                    
+                  }
+                  {
+                    investorInfo?.is_member && investorInfo?.role === MemberType.GP && (
+                      <span className="items-center">
+                      <Button
+                        centeredSpinner
+                        className="!min-w-[110px] !p-1.5 !border-[2px] !border-[#155E75]"
+                        onClick={() => {
+                          acceptInvite(investorInfo?.id)
+                        }}
+                        loading={buttonDisableTemp}
+                      >
+                        {"Change to LP"}
+                      </Button>
+                    </span>
+                    )
+                    
+                  }
+
                 </span>
               </section>
             </header>
@@ -193,7 +251,7 @@ const InvestorInfoDrawer = ({
                       {"Invested"}
                     </div>
                     <div className="mt-2 font-bold  text-2xl">
-                      {investorInfo?.total_deals || "$72000"}
+                      {comaFormattedNumber(investorInfo?.Invested, DealCheckType.STARTUP,false) || "$72000"}
                     </div>
                   </div>
                   <div
@@ -205,7 +263,7 @@ const InvestorInfoDrawer = ({
                       </span>
                     </div>
                     <div className="mt-2 font-bold text-2xl">
-                      {investorInfo?.active_deals || "02"}
+                      {investorInfo?.Investments || "02"}
                     </div>
                   </div>
                 </aside>
@@ -213,21 +271,11 @@ const InvestorInfoDrawer = ({
               <aside className="mt-6">
                 <div className=" pr-2 flex items-center">
                   <span className="font-bold mb-2">
-                    {language?.v3?.investor?.about}
+                    {`Personal note from ${investorInfo?.Investor}`}
                   </span>
                 </div>
-                <div className="fading-text-container text-sm">
-                  <p className={showFullText ? "" : "masked"}>{displayText}</p>
-                  {text.length > 800 && (
-                    <button
-                      className=" text-xs font-medium"
-                      onClick={toggleText}
-                    >
-                      {showFullText
-                        ? language?.v3?.investor?.see_less
-                        : language?.v3?.investor?.see_more}
-                    </button>
-                  )}
+                <div className="text-sm">
+                 <p>{`${investorInfo?.Notes?.props?.children}`}</p>
                 </div>
               </aside>
             </section>

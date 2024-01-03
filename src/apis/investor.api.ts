@@ -93,6 +93,7 @@ export const getCommitedDeals = ( token: string, filters :any, searchQuery:strin
     });
   };
 
+
   export const postunFollowSyndicate = ( syndicateID :any, memeberId:any , token: string) => {
     return axios.delete(`${ENV.API_URL}/${ENV.API_VERSION}/syndicates/${syndicateID}/syndicate_members/${memeberId}`, {
       headers: {

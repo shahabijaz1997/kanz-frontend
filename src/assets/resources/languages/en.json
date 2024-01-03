@@ -909,7 +909,9 @@
       "total_return_on_inv": "Total return on investment",
       "avg_annualised_return": "Average Annualised Return",
       "exp_cap_app": "Expected Capital Appreciation",
-      "net_div_inc": "Net Dividend Income"
+      "net_div_inc": "Net Dividend Income",
+      "notes":"Notes",
+      "sent_date":"Sent Date"
     },
     "fundraiser": {
       "startup": "Startup",
@@ -1124,7 +1126,10 @@
       "disclaimer_1": "Disclaimer 1",
       "description_about_disclaimer": "Description about disclaimer",
       "cancel": "Cancel",
-      "submit_application": "Submit Application"
+      "submit_application": "Submit Application",
+      "investors":"Investors",
+      "accept":"Accept",
+      "accepted":"Accepted"
     },
     "dealOverview": {
       "title": "Risk and Disclaimer",

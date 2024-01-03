@@ -17,77 +17,52 @@ import Table from "../../../../shared/components/Table";
 
 import CustomStatus from "../../../../shared/components/CustomStatus";
 import {
-  getGroupInvestors,
   getInvestorInfo,
-  getInvitesSent,
   getNonAddedInvestors,
   postAddInvestor,
 } from "../../../../apis/syndicate.api";
 import Chevrond from "../../../../ts-icons/chevrond.svg";
+import SyndicateInfoDrawer from "../../../Investor/InvestorSyndicates/SyndicateInfoDrawer";
 import InvestorInfoDrawer from "../Applications/InvestorInfoDrawer";
 
-const Invites = ({ openModal, reloadMembers }: any) => {
+const AllInvestors = ({ openModal, reloadMembers }: any) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-
-  const [groupInvestors, setGroupInvestors]: any = useState([]);
-
   const language: any = useSelector((state: RootState) => state.language.value);
+  const authToken: any = useSelector((state: RootState) => state.auth.value);
   const user: any = useSelector((state: RootState) => state.user.value);
   const orientation: any = useSelector(
     (state: RootState) => state.orientation.value
   );
 
-  const [selectedTab, setSelectedTab]: any = useState("all");
-  const [searchText, setSearchText] = useState("");
-
-  const authToken: any = useSelector((state: RootState) => state.auth.value);
-  const [loading, setLoading] = useState(false);
-  const [modalLoading, setmodalLoading] = useState(false);
-  const [investors, setInvestors] = useState<any>([]);
-  const [investorInfo, setInvestorInfo] = useState<any>([]);
-  const [filter, setFilterCounts]: any = useState([]);
-  const [searchQuery, setSearchQuery]: any = useState("");
+  const [loading, setLoading]: any = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
-  const [paginationData, setpaginationData] = useState(null);
+
+  const [modalLoading, setmodalLoading] = useState(false);
   const [searchModalQuery, setModalSearchQuery]: any = useState("");
-  const [buttonDisable, setButtonDisable]: any = useState(false);
+  const [searchText, setSearchText] = useState("");
   const [isOpen, setOpen]: any = useState(false);
 
-  const setLoadingFalse = () => {
-    setLoading(false);
-  };
-  const setLoadingTrue = () => {
-    setLoading(true);
-  };
+  const [investors, setInvestors] = useState<any>([]);
+  const [investorInfo, setInvestorInfo] = useState<any>(null);
+  const [buttonDisable, setButtonDisable]: any = useState(false);
+  const [paginationData, setpaginationData] = useState(null);
 
-  const [tabs] = useState<any>({
-    pending: language?.v3?.startup?.overview?.all,
-    approved: language?.v3?.syndicate?.added,
-  });
   const columns = [
     language?.v3?.syndicate?.investor,
-    language?.v3?.syndicate?.sent_date,
+    language?.v3?.syndicate?.invested,
+    language?.v3?.syndicate?.investments,
     "",
   ];
+  const [tabs] = useState<any>({
+    all: language?.v3?.startup?.overview?.all,
+    added: language?.v3?.syndicate?.added,
+    follower: language?.v3?.syndicate?.follower,
+  });
+  const [searchQuery, setSearchQuery]: any = useState("");
 
-  useEffect(() => {
-    const firstTabKey = Object.keys(tabs)[0];
-    setSelectedTab(firstTabKey);
-  }, [reloadMembers]);
-  useEffect(() => {
-    dispatch(saveDataHolder(""));
-    setCurrentPage(1);
-    getInvitesforGroup();
-  }, [selectedTab]);
-  useEffect(() => {
-    dispatch(saveDataHolder(""));
-    getInvitesforGroup();
-  }, [currentPage]);
-  useEffect(() => {
-    dispatch(saveDataHolder(""));
-    getInvitesforGroup();
-  }, [reloadMembers]);
+  const [selectedTab, setSelectedTab]: any = useState("all");
+  const [filter, setFilterCounts]: any = useState([]);
   const ongetInvestorInfo = async (id: any) => {
     try {
       setLoading(true);
@@ -99,12 +74,38 @@ const Invites = ({ openModal, reloadMembers }: any) => {
     }
   };
 
-  const getInvitesforGroup = async () => {
-    setLoading(true);
+  const onAddInvestor = async (currSyndId: any, investorID: any) => {
     try {
-      let { status, data } = await getInvitesSent(
+      const { status } = await postAddInvestor(
+        {
+          member_id: investorID,
+          member_type: "Investor",
+          connection: "added",
+        },
+        currSyndId,
+        authToken
+      );
+      if (status === 200) {
+        toast.dismiss();
+        toast.success(language?.v3?.syndicate?.investor_added, toastUtil);
+        const dataCopy = [...investors];
+        const index = dataCopy.findIndex((item) => item.id === investorID);
+        dataCopy[index].status = true;
+      }
+    } catch (error: any) {
+      if (error?.response?.status === 400)
+        toast.warning(error?.response?.data?.status?.message, toastUtil);
+      setButtonDisable(false);
+    } finally {
+      setButtonDisable(false);
+    }
+  };
+
+  const getAllUserListings = async () => {
+    try {
+      setLoading(true);
+      let { status, data } = await getNonAddedInvestors(
         authToken,
-        selectedTab,
         searchQuery,
         currentPage
       );
@@ -116,9 +117,15 @@ const Invites = ({ openModal, reloadMembers }: any) => {
           return {
             id: investor?.id,
             filterStatus: investor?.status,
-            [language?.v3?.syndicate?.investor]:
-              investor?.invitee_name || "N/A",
-            [language?.v3?.syndicate?.sent_date]: investor?.sent_at,
+            [language?.v3?.syndicate?.investor]: investor?.name || "N/A",
+            [language?.v3?.syndicate?.invested]: `$${comaFormattedNumber(
+              investor?.invested_amount
+            )}`,
+            [language?.v3?.syndicate?.investments]: investor?.no_investments,
+            [language?.v3?.syndicate?.join_status]:
+              <CustomStatus options={investor?.connection} /> || "N/A",
+            [language?.v3?.syndicate?.join_date]:
+              <span className="px-2">{investor?.joining_date}</span> || " N/A",
             [""]: (
               <div
                 onClick={() => {
@@ -141,24 +148,38 @@ const Invites = ({ openModal, reloadMembers }: any) => {
             ),
           };
         });
-        setGroupInvestors(investors);
+        setInvestors(investors);
+        console.log(investors);
       }
     } catch (error: any) {
-      if (error.response && error.response.status === 302) {
-        //   toast.dismiss();
-        //   toast.error("Session time out", toastUtil);
-        //  dispatch(saveToken(""));
-        // navigate(RoutesEnums.LOGIN);
+      console.log(error);
+
+      if (
+        error.response &&
+        error.response.status === 400 &&
+        error.response.data.status === 400
+      ) {
+        toast.dismiss();
+        toast.warn(language?.v3?.syndicate?.already_invited, toastUtil);
+      }
+      if (error.response && error.response.status === 401) {
+        dispatch(saveToken(""));
+        navigate(RoutesEnums.LOGIN, {
+          state: RoutesEnums.FUNDRAISER_DASHBOARD,
+        });
       }
     } finally {
       setLoading(false);
     }
   };
 
-  const handleRowClick = (row: any) => {
-    setInvestorInfo(row);
-    investorInfo && setOpen(true);
-  };
+  useEffect(() => {
+    getAllUserListings();
+  }, []);
+
+  useEffect(() => {
+    getAllUserListings();
+  }, [currentPage]);
 
   return (
     <>
@@ -183,13 +204,13 @@ const Invites = ({ openModal, reloadMembers }: any) => {
                       <div className="rounded-md shadow-cs-6 bg-white border-[1px] border-gray-200 h-9 overflow-hidden min-w-[300px] inline-flex items-center px-2">
                         <SearchIcon
                           onClick={() => {
-                            getInvitesforGroup();
+                            getAllUserListings();
                           }}
                         />
                         <input
                           onKeyDown={(e) => {
                             if (e.key === "Enter") {
-                              getInvitesforGroup();
+                              getAllUserListings();
                             }
                           }}
                           value={searchQuery}
@@ -201,33 +222,32 @@ const Invites = ({ openModal, reloadMembers }: any) => {
                           }
                         />
                       </div>
-
-                      {/* <ul className="inline-flex items-center">
-                        {React.Children.toArray(
-                         Object.keys(tabs).map((tab: any) => (
-                            <li
-                              onClick={() => {
-                                setSelectedTab(tab);
-                              }}
-                              className={`py-2 px-3 font-medium cursor-pointer rounded-md transition-all ${
-                                selectedTab === tab
-                                  ? "text-neutral-900 bg-neutral-100"
-                                  : "text-gray-500"
-                              } `}
-                            >
-                              {tabs[tab]} &nbsp;({getCountvalue(tab)})
-                            </li>
-                          ))
-                        )}
-                      </ul> */}
+                      {/* 
+                          <ul className="inline-flex items-center">
+                            {React.Children.toArray(
+                             Object.keys(tabs).map((tab: any) => (
+                                <li
+                                  onClick={() => {
+                                    setSelectedTab(tab);
+                                  }}
+                                  className={`py-2 px-3 font-medium cursor-pointer rounded-md transition-all ${
+                                    selectedTab === tab
+                                      ? "text-neutral-900 bg-neutral-100"
+                                      : "text-gray-500"
+                                  } `}
+                                >
+                                  {tabs[tab]} &nbsp;({getCountvalue(tab)})
+                                </li>
+                              ))
+                            )}
+                          </ul> */}
                     </span>
                   </div>
                 </section>
                 <section className="mt-10">
                   <Table
                     columns={columns}
-                    onclick={handleRowClick}
-                    tableData={groupInvestors}
+                    tableData={investors}
                     setCurrentPage={setCurrentPage}
                     paginationData={paginationData}
                     noDataNode={
@@ -235,6 +255,12 @@ const Invites = ({ openModal, reloadMembers }: any) => {
                         <div className="mb-4 font-medium  text-[#828282]">
                           {language?.v3?.syndicate?.no_group_member_yet}
                         </div>
+                        <Button
+                          onClick={openModal}
+                          className=" font-extralight"
+                        >
+                          {language?.v3?.syndicate?.create_group}
+                        </Button>
                       </div>
                     }
                   />
@@ -252,4 +278,4 @@ const Invites = ({ openModal, reloadMembers }: any) => {
     </>
   );
 };
-export default Invites;
+export default AllInvestors;
