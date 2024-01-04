@@ -1,22 +1,14 @@
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { KanzRoles } from "../../../../enums/roles.enum";
-import Header from "../../../../shared/components/Header";
-import Sidebar from "../../../../shared/components/Sidebar";
 import { RootState } from "../../../../redux-toolkit/store/store";
 import SearchIcon from "../../../../ts-icons/searchIcon.svg";
 import React, { useEffect, useState } from "react";
-import Button from "../../../../shared/components/Button";
 import Table from "../../../../shared/components/Table";
 import { RoutesEnums } from "../../../../enums/routes.enum";
 import { saveDataHolder } from "../../../../redux-toolkit/slicer/dataHolder.slicer";
-import { numberFormatter } from "../../../../utils/object.utils";
 import Spinner from "../../../../shared/components/Spinner";
-import { ApplicationStatus } from "../../../../enums/types.enum";
 import Chevrond from "../../../../ts-icons/chevrond.svg";
-import EditIcon from "../../../../ts-icons/editIcon.svg";
 import CustomStatus from "../../../../shared/components/CustomStatus";
-import { getSyndicates } from "../../../../apis/syndicate.api";
 import { saveToken } from "../../../../redux-toolkit/slicer/auth.slicer";
 import {
   getFollowedSyndicates,

@@ -177,7 +177,7 @@ const InvestorUpdates = ({}: any) => {
     language?.v3?.fundraiser?.type,
     language?.v3?.fundraiser?.invested_amount,
     language?.v3?.fundraiser?.invite_status,
-    language?.v3?.deal?.comments,
+    language?.v3?.fundraiser?.date,
 
   ];
   const getAllDeals = async () => {
@@ -196,7 +196,8 @@ const InvestorUpdates = ({}: any) => {
             [language?.v3?.fundraiser?.type]: investor?.type || language?.v3?.common?.not_added,
             [language?.v3?.fundraiser?.invested_amount]: investor?.deal,
             [language?.v3?.fundraiser?.invested_amount]: event === "ar" ?  numberFormatter(investor?.invested_amount,DealCheckType.STARTUP, true) :  numberFormatter(investor?.invested_amount,DealCheckType.STARTUP, false) ||  language?.v3?.common?.not_added,
-            [language?.v3?.fundraiser?.invite_status]: <CustomStatus options={investor?.status} />,
+            [language?.v3?.fundraiser?.invite_status]: <CustomStatus options={investor?.investment_status} />,
+            [language?.v3?.fundraiser?.date]: investor?.investment_date,
             dealId: investor?.deal?.id,
           };
         });

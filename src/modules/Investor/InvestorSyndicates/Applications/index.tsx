@@ -51,6 +51,10 @@ const Applications = ({}: any): any => {
     getApplications();
   }, []);
   useEffect(() => {
+    dispatch(saveDataHolder(""));
+    getApplications();
+  }, [currentPage]);
+  useEffect(() => {
     syndicateInfo?.id && onGetSyndicateDetail(syndicateInfo?.id);
     setChildData(false);
   }, [childData]);
@@ -86,7 +90,7 @@ const Applications = ({}: any): any => {
             ),
             [ language?.v3?.investor?.status]: (
               <span className=" capitalize">
-                <CustomStatus options={syndicate?.invite?.status}/>
+                <CustomStatus options={syndicate?.invite?.invite_type}/>
               </span>
             ),
             [""]: (

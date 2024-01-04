@@ -1,16 +1,9 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import Button from "../../../../shared/components/Button";
 import { RootState } from "../../../../redux-toolkit/store/store";
-import { saveDataHolder } from "../../../../redux-toolkit/slicer/dataHolder.slicer";
-import { saveToken } from "../../../../redux-toolkit/slicer/auth.slicer";
-import { RoutesEnums } from "../../../../enums/routes.enum";
 import SearchIcon from "../../../../ts-icons/searchIcon.svg";
-import { toastUtil } from "../../../../utils/toast.utils";
-import { toast } from "react-toastify";
 import Spinner from "../../../../shared/components/Spinner";
-import ActionButton from "./../ActionButton";
 
 import {
   comaFormattedNumber,
@@ -20,13 +13,13 @@ import Table from "../../../../shared/components/Table";
 import CustomStatus from "../../../../shared/components/CustomStatus";
 import {
   getGroupInvestors,
-  getNonAddedInvestors,
-  postAddInvestor,
+  getMemberInfo,
 } from "../../../../apis/syndicate.api";
+import Chevrond from "../../../../ts-icons/chevrond.svg";
+import InvestorInfoDrawer from "../Applications/InvestorInfoDrawer";
+import { MemberType } from "../../../../enums/types.enum";
 
-const GroupMembers = ({openModal,reloadMembers}: any) => {
-  const navigate = useNavigate();
-  const dispatch = useDispatch();
+const GroupMembers = ({}: any) => {
 
   const [groupInvestors, setGroupInvestors] = useState([]);
 
@@ -34,23 +27,27 @@ const GroupMembers = ({openModal,reloadMembers}: any) => {
   const user: any = useSelector((state: RootState) => state.user.value);
 
   const [selectedTab, setSelectedTab]: any = useState("all");
-  const [searchText, setSearchText] = useState("");
 
   const authToken: any = useSelector((state: RootState) => state.auth.value);
   const [loading, setLoading] = useState(false);
-  const [modalLoading, setmodalLoading] = useState(false);
-  const [investors, setInvestors] = useState<any>([]);
+  const [loaderParent, setloaderParent] = useState(false);
   const [filter, setFilterCounts]: any = useState([]);
   const [searchQuery, setSearchQuery]: any = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const [paginationData, setpaginationData] = useState(null);
+  const [investorInfo, setInvestorInfo] = useState<any>(null);
+  const [investorID, setInvestorID] = useState<any>(null);
 
-  const setLoadingFalse = () => {
-    setLoading(false);
+  const orientation: any = useSelector(
+    (state: RootState) => state.orientation.value
+  );
+
+
+  const loadingOn = () => {
+    setloaderParent(!loaderParent)
   };
-  const setLoadingTrue = () => {
-    setLoading(true);
-  };
+  const [isOpen, setOpen]: any = useState(false);
+
 
   const [tabs] = useState<any>({
     'all': language?.v3?.startup?.overview?.all,
@@ -59,31 +56,30 @@ const GroupMembers = ({openModal,reloadMembers}: any) => {
   });
   const columns = [
     language?.v3?.syndicate?.investor,
+    "Role",
     language?.v3?.syndicate?.invested,
     language?.v3?.syndicate?.investments,
-    language?.v3?.syndicate?.join_status,
     language?.v3?.syndicate?.join_date,
-    language?.v3?.syndicate?.action,
+    "",
   ];
 
-  useEffect(() => {
-    const firstTabKey = Object.keys(tabs)[0];
-    setSelectedTab(firstTabKey);
-  }, [reloadMembers]);
-  useEffect(() => {
-    dispatch(saveDataHolder(""));
-    setCurrentPage(1);
-    getMembers();
-  }, [selectedTab]);
-  useEffect(() => {
-    dispatch(saveDataHolder(""));
-    getMembers();
-  }, [currentPage]);
-  useEffect(() => {
-    dispatch(saveDataHolder(""));
-    getMembers();
-  }, [reloadMembers]);
 
+  useEffect(() => {
+    getMembers()
+  }, []);
+  useEffect(() => {
+    getMembers()
+  }, [loaderParent]);
+  const ongetInvestorInfo = async (id: any) => {
+    try {
+      setLoading(true);
+      let { status, data } = await getMemberInfo(authToken, id);
+      if (status === 200) setInvestorInfo(data?.status?.data);
+    } catch (error) {
+    } finally {
+      setLoading(false);
+    }
+  };
   const getMembers = async () => {
     setLoading(true);
     try {
@@ -104,24 +100,34 @@ const GroupMembers = ({openModal,reloadMembers}: any) => {
             [ language?.v3?.syndicate?.investor]: investor?.member_name || "N/A",
             [ language?.v3?.syndicate?.invested]: `$${comaFormattedNumber(investor?.invested_amount)}`,
             [ language?.v3?.syndicate?.investments]: investor?.no_investments,
-            [ language?.v3?.syndicate?.join_status]:
-              <CustomStatus options={investor?.connection} /> || "N/A",
+            ["Role"]:
+              investor?.role === MemberType.GP ? <CustomStatus options = {"GP"}/>: <CustomStatus options = {"LP"}/>,
             [ language?.v3?.syndicate?.join_date]:
               <span className="px-2">{investor?.joining_date}</span> || " N/A",
             Steps: investor?.current_state?.steps,
-            [ language?.v3?.syndicate?.action]: (
-              <ActionButton
-                investorID={Number(investor?.id)}
-                setLoading={setLoading}
-                setLoadingTrue={setLoadingTrue}
-                setLoadingFalse={setLoadingFalse}
-                getMembers={getMembers}
-              />
+            [""]: (
+              <div
+                onClick={() => {
+                  ongetInvestorInfo(investor?.id);
+                  setInvestorID(investor?.id)
+                  setOpen(true);
+                }}
+                className="bg-neutral-100 inline-flex items-center justify-center w-[26px] h-[26px] rounded-full transition-all hover:bg-cbc-transparent mx-2"
+              >
+                <Chevrond
+                  className={`${
+                    orientation === "rtl"
+                      ? "rotate-[-270deg]"
+                      : "rotate-[-90deg]"
+                  } w-4 h-4`}
+                  strokeWidth={2}
+                  stroke={"#000"}
+                />
+              </div>
             ),
           };
         });
         setGroupInvestors(investors);
-        console.log(investors)
       }
     } catch (error: any) {
       if (error.response && error.response.status === 302) {
@@ -223,6 +229,12 @@ const GroupMembers = ({openModal,reloadMembers}: any) => {
             )}
           </section>
         </aside>
+        <InvestorInfoDrawer
+          loadingOn={loadingOn}
+          investorInfo={investorInfo}
+          openDrawer={isOpen}
+          isDrawerOpen={setOpen}
+        />
       </main>
 
     </>

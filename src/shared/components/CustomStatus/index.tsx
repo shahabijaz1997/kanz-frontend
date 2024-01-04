@@ -4,7 +4,6 @@ import { RootState } from "../../../redux-toolkit/store/store";
 
 const CustomStatus = ({ options }: any) => {
   const language: any = useSelector((state: RootState) => state.language.value);
-
   let backgroundColor = "bg-green-100";
   if (options === language?.v3?.status?.approved || options === language?.v3?.status?.raising) {
     backgroundColor = "bg-green-100";
@@ -23,6 +22,9 @@ const CustomStatus = ({ options }: any) => {
   } else if (options === language?.v3?.status?.follower) {
     backgroundColor = "bg-blue-100";
    }  else if (options === language?.v3?.status?.not_invited) {
+    backgroundColor = "bg-[#F5F5F5]";
+   } 
+   else if (options === "LP") {
     backgroundColor = "bg-[#F5F5F5]";
    } 
 

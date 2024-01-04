@@ -1,13 +1,9 @@
 import React, { useEffect, useRef, useState } from "react";
-import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../../../redux-toolkit/store/store";
 import { saveDataHolder } from "../../../../redux-toolkit/slicer/dataHolder.slicer";
 import SearchIcon from "../../../../ts-icons/searchIcon.svg";
-import { toastUtil } from "../../../../utils/toast.utils";
-import { toast } from "react-toastify";
 import Spinner from "../../../../shared/components/Spinner";
-import ActionButton from "./../ActionButton";
 
 import {
   comaFormattedNumber,
@@ -15,6 +11,7 @@ import {
 import Table from "../../../../shared/components/Table";
 
 import {
+  getApplicationInvestorInfo,
   getApplications,
   getInvestorInfo,
 } from "../../../../apis/syndicate.api";
@@ -43,8 +40,11 @@ const Applications = ({reloadMembers}: any) => {
   const [paginationData, setpaginationData] = useState(null);
   const [isOpen, setOpen]: any = useState(false);
 
+  const [loaderParent, setloaderParent] = useState(false);
 
-
+  const loadingOn = () => {
+    setloaderParent(!loaderParent)
+  };
 
   const [tabs] = useState<any>({
     'pending': language?.v3?.startup?.overview?.all,
@@ -75,7 +75,7 @@ const Applications = ({reloadMembers}: any) => {
   const ongetInvestorInfo = async (id: any) => {
     try {
       setLoading(true);
-      let { status, data } = await getInvestorInfo(authToken, id);
+      let { status, data } = await getApplicationInvestorInfo(authToken, id);
       if (status === 200) setInvestorInfo(data?.status?.data);
     } catch (error) {
     } finally {
@@ -127,7 +127,10 @@ const Applications = ({reloadMembers}: any) => {
       setLoading(false);
     }
   };
-
+  useEffect(()=>{
+    dispatch(saveDataHolder(""));
+    getMembers()
+  }, [loaderParent])
 
 
   const handleRowClick = (row:any) => {
@@ -223,6 +226,7 @@ const Applications = ({reloadMembers}: any) => {
           </section>
         </aside>
         <InvestorInfoDrawer
+        loadingOn={loadingOn}
          investorInfo={investorInfo}
          openDrawer={isOpen}
          isDrawerOpen={setOpen}
