@@ -16,6 +16,7 @@ const Table = ({
   const orientation: any = useSelector(
     (state: RootState) => state.orientation.value
   );
+  console.log("NEW TABLE DTATA",tableData)
   const renderPaginationUI = () => {
     let pages: number[] = [];
     for (let i = 1; i <= paginationData?.pages; i++) pages.push(i);

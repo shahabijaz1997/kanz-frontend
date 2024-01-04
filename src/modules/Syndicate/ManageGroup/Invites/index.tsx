@@ -17,6 +17,7 @@ import Table from "../../../../shared/components/Table";
 
 import CustomStatus from "../../../../shared/components/CustomStatus";
 import {
+  getApplicationInvestorInfo,
   getGroupInvestors,
   getInvestorInfo,
   getInvitesSent,
@@ -91,7 +92,7 @@ const Invites = ({ openModal, reloadMembers }: any) => {
   const ongetInvestorInfo = async (id: any) => {
     try {
       setLoading(true);
-      let { status, data } = await getInvestorInfo(authToken, id);
+      let { status, data } = await getApplicationInvestorInfo(authToken, id);
       if (status === 200) setInvestorInfo(data?.status?.data);
     } catch (error) {
     } finally {
@@ -123,7 +124,6 @@ const Invites = ({ openModal, reloadMembers }: any) => {
               <div
                 onClick={() => {
                   ongetInvestorInfo(investor?.id);
-                  setInvestorInfo(investor);
                   setOpen(true);
                 }}
                 className="bg-neutral-100 inline-flex items-center justify-center w-[26px] h-[26px] rounded-full transition-all hover:bg-cbc-transparent mx-2"

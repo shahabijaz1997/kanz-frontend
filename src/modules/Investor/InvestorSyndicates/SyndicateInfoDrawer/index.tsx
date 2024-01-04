@@ -15,6 +15,7 @@ import CrossIcon from "../../../../ts-icons/crossIcon.svg";
 import Selector from "../../../../shared/components/Selector";
 import { comaFormattedNumber } from "../../../../utils/object.utils";
 import { DealCheckType, InviteStatus } from "../../../../enums/types.enum";
+import { putAcceptInvite } from "../../../../apis/syndicate.api";
 
 const SyndicateInfoDrawer = ({
   syndicateInfo,
@@ -83,6 +84,25 @@ const SyndicateInfoDrawer = ({
     }, 1000);
   };
 
+  
+  const acceptInvite = async (inviteID: any) => {
+    setButtonDisableTemp(true);
+    try {
+      const { status } = await putAcceptInvite(
+        inviteID,
+        authToken
+      );
+      if (status === 200) {
+        toast.success(language?.v3?.investor?.applied, toastUtil);
+      }
+      removeSpinning();
+    } catch (error: any) {
+      removeSpinning();
+      if (error?.response?.status === 400)
+        toast.warning(error?.response?.data?.status?.message, toastUtil);
+    } finally {
+    }
+  };
   const onFollow = async (syndId: any) => {
     setButtonDisableTemp(true);
     try {
@@ -127,7 +147,6 @@ const SyndicateInfoDrawer = ({
   const abbreviatedMonths = syndicateInfo?.portfolio_stats?.labels.map(
     (month: string) => month.charAt(0)
   );
-  console.log(abbreviatedMonths);
   return (
     <main>
       <Drawer
@@ -158,7 +177,7 @@ const SyndicateInfoDrawer = ({
                 >
                   <span className="flex items-start justify-start">
                     <img
-                      className="h-[3.25rem] w-[7rem] rounded-full"
+                      className="h-9 w-9 rounded-full"
                       src={syndicateInfo?.logo}
                     ></img>
                   </span>
@@ -180,7 +199,7 @@ const SyndicateInfoDrawer = ({
                     </Button>
                   </span>
                 )}
-                {syndicateInfo?.invite?.status === InviteStatus.PENDING && (
+                {syndicateInfo?.invite === null && (
                   <span className="items-center">
                     <Button
                       type={
@@ -200,9 +219,21 @@ const SyndicateInfoDrawer = ({
                           handleToggle();
                         }
                       }}
-                      loading={buttonDisableTemp}
                     >
                       {getButtonStatus()}
+                    </Button>
+                  </span>
+                )}
+                {syndicateInfo?.invite?.invite_type === "Invite" && (
+                  <span className="items-center">
+                    <Button
+                      centeredSpinner
+                      className={`!min-w-[100px]`}
+                      onClick={() => {
+                        acceptInvite(syndicateInfo?.invite?.id)
+                      }}
+                    >
+                      {"Accept"}
                     </Button>
                   </span>
                 )}

@@ -40,16 +40,19 @@ export const getGroupInvestors = ( token:any, filters:any, searchQuery:string, c
   });
 };
 export const putAcceptInvite = (inviteID:any ,token:any) => {
-  const apiUrl = `${ENV.API_URL}/${ENV.API_VERSION}/invites?${inviteID}/syndicate_members/accept_invite`;
-  return axios.put(apiUrl, {
+  const apiUrl = `${ENV.API_URL}/${ENV.API_VERSION}/invites/${inviteID}/syndicate_members/accept_invite`;
+  return axios.put(apiUrl, 
+    {
+      id:0
+    }, {
     headers: {
       Authorization: `Bearer ${token}`,
     },
   });
 };
-export const putChangeMemberRole = (inviteID:any , token :string) => {
-  const apiUrl = `${ENV.API_URL}/${ENV.API_VERSION}/invites?${inviteID}/syndicate_members/accept_invite`;
-  return axios.put(apiUrl, {
+export const putChangeMemberRole = (investorID:any , payload:any,  token :string) => {
+  const apiUrl = `${ENV.API_URL}/${ENV.API_VERSION}/syndicate_members/${investorID}`;
+  return axios.put(apiUrl, payload, {
     headers: {
       Authorization: `Bearer ${token}`,
     },
@@ -236,7 +239,28 @@ export const postInviteInvestor = (payload: any, investorID :any, token: string)
 
 
 export const getInvestorInfo = (token: string, investorID:any) => {
+  return axios.get(`${ENV.API_URL}/${ENV.API_VERSION}/syndicate_members/${investorID}`, {
+      headers: {
+          Authorization: `Bearer ${token}`
+      },
+  });
+};
+export const getInvestorAllInfo = (token: string, investorID:any) => {
   return axios.get(`${ENV.API_URL}/${ENV.API_VERSION}/investors/${investorID}`, {
+      headers: {
+          Authorization: `Bearer ${token}`
+      },
+  });
+};
+export const getMemberInfo = (token: string, investorID:any) => {
+  return axios.get(`${ENV.API_URL}/${ENV.API_VERSION}/syndicate_members/${investorID}`, {
+      headers: {
+          Authorization: `Bearer ${token}`
+      },
+  });
+};
+export const getApplicationInvestorInfo = (token: string, investorID:any) => {
+  return axios.get(`${ENV.API_URL}/${ENV.API_VERSION}/invites/${investorID}`, {
       headers: {
           Authorization: `Bearer ${token}`
       },

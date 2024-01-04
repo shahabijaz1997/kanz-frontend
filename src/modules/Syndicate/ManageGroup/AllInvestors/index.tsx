@@ -17,6 +17,7 @@ import Table from "../../../../shared/components/Table";
 
 import CustomStatus from "../../../../shared/components/CustomStatus";
 import {
+    getInvestorAllInfo,
   getInvestorInfo,
   getNonAddedInvestors,
   postAddInvestor,
@@ -36,18 +37,23 @@ const AllInvestors = ({ openModal, reloadMembers }: any) => {
   );
 
   const [loading, setLoading]: any = useState(false);
+  const [loadingChild, setLoadingChild]: any = useState(0);
   const [currentPage, setCurrentPage] = useState(1);
 
   const [modalLoading, setmodalLoading] = useState(false);
+  const [loaderParent, setloaderParent] = useState(false);
   const [searchModalQuery, setModalSearchQuery]: any = useState("");
   const [searchText, setSearchText] = useState("");
   const [isOpen, setOpen]: any = useState(false);
 
   const [investors, setInvestors] = useState<any>([]);
+  const [investorID, setinvestorID] = useState<any>(null);
   const [investorInfo, setInvestorInfo] = useState<any>(null);
   const [buttonDisable, setButtonDisable]: any = useState(false);
   const [paginationData, setpaginationData] = useState(null);
-
+  const loadingOn = () => {
+    setloaderParent(!loaderParent)
+  };
   const columns = [
     language?.v3?.syndicate?.investor,
     language?.v3?.syndicate?.invested,
@@ -65,45 +71,16 @@ const AllInvestors = ({ openModal, reloadMembers }: any) => {
   const [filter, setFilterCounts]: any = useState([]);
   const ongetInvestorInfo = async (id: any) => {
     try {
-      setLoading(true);
-      let { status, data } = await getInvestorInfo(authToken, id);
+      let { status, data } = await getInvestorAllInfo(authToken, id);
       if (status === 200) setInvestorInfo(data?.status?.data);
     } catch (error) {
     } finally {
-      setLoading(false);
+
     }
   };
-
-  const onAddInvestor = async (currSyndId: any, investorID: any) => {
-    try {
-      const { status } = await postAddInvestor(
-        {
-          member_id: investorID,
-          member_type: "Investor",
-          connection: "added",
-        },
-        currSyndId,
-        authToken
-      );
-      if (status === 200) {
-        toast.dismiss();
-        toast.success(language?.v3?.syndicate?.investor_added, toastUtil);
-        const dataCopy = [...investors];
-        const index = dataCopy.findIndex((item) => item.id === investorID);
-        dataCopy[index].status = true;
-      }
-    } catch (error: any) {
-      if (error?.response?.status === 400)
-        toast.warning(error?.response?.data?.status?.message, toastUtil);
-      setButtonDisable(false);
-    } finally {
-      setButtonDisable(false);
-    }
-  };
-
   const getAllUserListings = async () => {
+    setLoading(true);
     try {
-      setLoading(true);
       let { status, data } = await getNonAddedInvestors(
         authToken,
         searchQuery,
@@ -130,8 +107,8 @@ const AllInvestors = ({ openModal, reloadMembers }: any) => {
               <div
                 onClick={() => {
                   ongetInvestorInfo(investor?.id);
-                  setInvestorInfo(investor);
-                  setOpen(true);
+                  setinvestorID(investor?.id)
+                  setOpen(true)
                 }}
                 className="bg-neutral-100 inline-flex items-center justify-center w-[26px] h-[26px] rounded-full transition-all hover:bg-cbc-transparent mx-2"
               >
@@ -149,7 +126,6 @@ const AllInvestors = ({ openModal, reloadMembers }: any) => {
           };
         });
         setInvestors(investors);
-        console.log(investors);
       }
     } catch (error: any) {
       console.log(error);
@@ -173,13 +149,15 @@ const AllInvestors = ({ openModal, reloadMembers }: any) => {
     }
   };
 
-  useEffect(() => {
-    getAllUserListings();
-  }, []);
+  useEffect(()=>{
+    dispatch(saveDataHolder(""));
+    getAllUserListings()
+  }, [loaderParent])
+  useEffect(()=>{
+    dispatch(saveDataHolder(""));
+    getAllUserListings()
+  }, [currentPage])
 
-  useEffect(() => {
-    getAllUserListings();
-  }, [currentPage]);
 
   return (
     <>
@@ -270,6 +248,7 @@ const AllInvestors = ({ openModal, reloadMembers }: any) => {
           </section>
         </aside>
         <InvestorInfoDrawer
+        loadingOn= {loadingOn}
           investorInfo={investorInfo}
           openDrawer={isOpen}
           isDrawerOpen={setOpen}
