@@ -216,6 +216,8 @@ const SyndicateFullView = ({}: any) => {
     (month: string) => month.charAt(0)
   );
 
+
+
   const options = [
     { label: "News", value: "news" },
     { label: "Social Media", value: "social_media" },
@@ -280,7 +282,7 @@ const SyndicateFullView = ({}: any) => {
                   >
                     {language?.v3?.investor?.back_syndicate}
                   </Button>
-                  {state?.invite?.invite_type === "Invite" && (
+                  {state?.invite?.invite_type === "Invite" && state?.invite?.status === "pending" && (
                   <span className="items-center">
                     <Button
                           type={
