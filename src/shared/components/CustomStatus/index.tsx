@@ -5,7 +5,10 @@ import { RootState } from "../../../redux-toolkit/store/store";
 const CustomStatus = ({ options }: any) => {
   const language: any = useSelector((state: RootState) => state.language.value);
   let backgroundColor = "bg-green-100";
-  if (options === language?.v3?.status?.approved || options === language?.v3?.status?.raising) {
+  if (
+    options === language?.v3?.status?.approved ||
+    options === language?.v3?.status?.raising
+  ) {
     backgroundColor = "bg-green-100";
   } else if (options === language?.v3?.status?.pending) {
     backgroundColor = "bg-yellow-100";
@@ -21,12 +24,13 @@ const CustomStatus = ({ options }: any) => {
     backgroundColor = "bg-red-100";
   } else if (options === language?.v3?.status?.follower) {
     backgroundColor = "bg-blue-100";
-   }  else if (options === language?.v3?.status?.not_invited) {
+  } else if (options === language?.v3?.status?.not_invited) {
     backgroundColor = "bg-[#F5F5F5]";
-   } 
-   else if (options === "LP") {
+  } else if (options === "LP") {
     backgroundColor = "bg-[#F5F5F5]";
-   } 
+  } else if (options === "closed") {
+    backgroundColor = "bg-[#F5F5F5]";
+  }
 
   let textColor = "text-green-800";
   if (options === language?.v3?.status?.approved) {
@@ -43,12 +47,16 @@ const CustomStatus = ({ options }: any) => {
     textColor = "text-blue-800";
   } else if (options === language?.v3?.status?.not_invited) {
     textColor = "text-[#F5F5F5]-800";
+  } else if (options === "LP") {
+    textColor = "text-[#000]";
+  } else if (options === "closed") {
+    textColor = "text-[#000]";
   }
   return (
     <main>
       <section>
         <span
-          className={`font-semibold  px-4 w-fit capitalize ${backgroundColor} rounded-xl text-center py-1.5 w-[80px] ${textColor}`}
+          className={`  px-4 w-fit capitalize ${backgroundColor} rounded-xl text-center py-1.5 w-[80px] ${textColor}`}
         >
           {options}
         </span>
