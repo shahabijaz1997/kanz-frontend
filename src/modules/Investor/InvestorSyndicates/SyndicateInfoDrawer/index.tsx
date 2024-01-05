@@ -176,7 +176,7 @@ const SyndicateInfoDrawer = ({
             <header className="text-lg pr-3 pt-3 pb-2 items-center  w-full sticky">
               <section className="pb-10 w-full items-center capitalize justify-between flex">
                 <div
-                  className="inline-flex items-start gap-3 justify-between cursor-pointer max-w-[70%]"
+                  className="inline-flex items-start gap-3 justify-between cursor-pointer max-w-[70%] hover:text-blue-500 hover:underline"
                   onClick={() => {
                     navigate(RoutesEnums.SYNDICATE_DETAILED_VIEW, {
                       state: syndicateInfo,
