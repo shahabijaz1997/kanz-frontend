@@ -10,7 +10,6 @@ import SearchIcon from "../../../../ts-icons/searchIcon.svg";
 import { toastUtil } from "../../../../utils/toast.utils";
 import { toast } from "react-toastify";
 import Spinner from "../../../../shared/components/Spinner";
-import ActionButton from "./../ActionButton";
 
 import { comaFormattedNumber } from "../../../../utils/object.utils";
 import Table from "../../../../shared/components/Table";
@@ -18,12 +17,9 @@ import Table from "../../../../shared/components/Table";
 import CustomStatus from "../../../../shared/components/CustomStatus";
 import {
     getInvestorAllInfo,
-  getInvestorInfo,
   getNonAddedInvestors,
-  postAddInvestor,
 } from "../../../../apis/syndicate.api";
 import Chevrond from "../../../../ts-icons/chevrond.svg";
-import SyndicateInfoDrawer from "../../../Investor/InvestorSyndicates/SyndicateInfoDrawer";
 import InvestorInfoDrawer from "../Applications/InvestorInfoDrawer";
 
 const AllInvestors = ({ openModal, reloadMembers }: any) => {
@@ -31,25 +27,19 @@ const AllInvestors = ({ openModal, reloadMembers }: any) => {
   const dispatch = useDispatch();
   const language: any = useSelector((state: RootState) => state.language.value);
   const authToken: any = useSelector((state: RootState) => state.auth.value);
-  const user: any = useSelector((state: RootState) => state.user.value);
   const orientation: any = useSelector(
     (state: RootState) => state.orientation.value
   );
 
   const [loading, setLoading]: any = useState(false);
-  const [loadingChild, setLoadingChild]: any = useState(0);
   const [currentPage, setCurrentPage] = useState(1);
 
-  const [modalLoading, setmodalLoading] = useState(false);
   const [loaderParent, setloaderParent] = useState(false);
-  const [searchModalQuery, setModalSearchQuery]: any = useState("");
-  const [searchText, setSearchText] = useState("");
   const [isOpen, setOpen]: any = useState(false);
 
   const [investors, setInvestors] = useState<any>([]);
   const [investorID, setinvestorID] = useState<any>(null);
   const [investorInfo, setInvestorInfo] = useState<any>(null);
-  const [buttonDisable, setButtonDisable]: any = useState(false);
   const [paginationData, setpaginationData] = useState(null);
   const loadingOn = () => {
     setloaderParent(!loaderParent)
@@ -60,14 +50,9 @@ const AllInvestors = ({ openModal, reloadMembers }: any) => {
     language?.v3?.syndicate?.investments,
     "",
   ];
-  const [tabs] = useState<any>({
-    all: language?.v3?.startup?.overview?.all,
-    added: language?.v3?.syndicate?.added,
-    follower: language?.v3?.syndicate?.follower,
-  });
+
   const [searchQuery, setSearchQuery]: any = useState("");
 
-  const [selectedTab, setSelectedTab]: any = useState("all");
   const [filter, setFilterCounts]: any = useState([]);
   const ongetInvestorInfo = async (id: any) => {
     try {
@@ -230,15 +215,7 @@ const AllInvestors = ({ openModal, reloadMembers }: any) => {
                     paginationData={paginationData}
                     noDataNode={
                       <div className="absolute left-1/2 top-1/2 translate-x-[-50%] translate-y-[-50%]">
-                        <div className="mb-4 font-medium  text-[#828282]">
-                          {language?.v3?.syndicate?.no_group_member_yet}
-                        </div>
-                        <Button
-                          onClick={openModal}
-                          className=" font-extralight"
-                        >
-                          {language?.v3?.syndicate?.create_group}
-                        </Button>
+                       All Investors Invited
                       </div>
                     }
                   />

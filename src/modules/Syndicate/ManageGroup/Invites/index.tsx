@@ -226,7 +226,6 @@ const Invites = ({ openModal, reloadMembers }: any) => {
                 <section className="mt-10">
                   <Table
                     columns={columns}
-                    onclick={handleRowClick}
                     tableData={groupInvestors}
                     setCurrentPage={setCurrentPage}
                     paginationData={paginationData}

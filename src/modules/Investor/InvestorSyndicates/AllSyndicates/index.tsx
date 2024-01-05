@@ -16,10 +16,6 @@ import { getSyndicateInfo } from "../../../../apis/investor.api";
 
 const AllSyndicates = ({}: any): any => {
   const [childData, setChildData]: any = useState(null);
-
-  const handleChildData = (data: any) => {
-    setChildData(data);
-  };
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const language: any = useSelector((state: RootState) => state.language.value);
@@ -48,6 +44,7 @@ const AllSyndicates = ({}: any): any => {
     "",
   ];
   const [loading, setLoading]: any = useState(false);
+  const [loaderParent, setLoaderParent]: any = useState(false);
   const [invites, setInvites]: any = useState([]);
   const [syndicateInfo, setsyndicateInfo]: any = useState(null);
   const [selectedTab, setSelectedTab] = useState("all");
@@ -56,11 +53,17 @@ const AllSyndicates = ({}: any): any => {
   const [currentPage, setCurrentPage] = useState(1);
   const [isOpen, setOpen]: any = useState(false);
   const [searchQuery, setSearchQuery]: any = useState("");
-
+  const loadingOn = ()=>{
+    setLoaderParent(!loaderParent)
+  }
   useEffect(() => {
     dispatch(saveDataHolder(""));
     getAllSyndicates();
   }, []);
+  useEffect(() => {
+    dispatch(saveDataHolder(""));
+    getAllSyndicates();
+  }, [loaderParent]);
   useEffect(() => {
     dispatch(saveDataHolder(""));
     getAllSyndicates();
@@ -217,10 +220,10 @@ const AllSyndicates = ({}: any): any => {
         )}
       </section>
       <SyndicateInfoDrawer
+      loadingOn={loadingOn}
         syndicateInfo={syndicateInfo}
         openDrawer={isOpen}
         isDrawerOpen={setOpen}
-        onData={handleChildData}
       />
     </>
   );
