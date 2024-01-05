@@ -11,7 +11,8 @@ import { toast } from "react-toastify";
 import { postFollowSyndicate } from "../../../../apis/investor.api";
 import { toastUtil } from "../../../../utils/toast.utils";
 import { comaFormattedNumber } from "../../../../utils/object.utils";
-import { DealCheckType } from "../../../../enums/types.enum";
+import { DealCheckType, InviteStatus } from "../../../../enums/types.enum";
+import { putAcceptInvite } from "../../../../apis/syndicate.api";
 
 const SyndicateFullView = ({}: any) => {
   const params = useParams();
@@ -25,17 +26,19 @@ const SyndicateFullView = ({}: any) => {
   const [selectedDiscovery, setSelectedDiscovery]: any = useState(null);
   const [buttonDisableTemp, setButtonDisableTemp] = useState(false);
   const [isExpanded, setIsExpanded] = useState(false);
+  const [hideButton, setHideButton] = useState(false);
   const [changes, setChanges]: any = useState({
     comment: "",
     action: "",
     document: null,
   });
   const getButtonStatus = () => {
-    if (buttonDisableTemp) return;
-
-    return state?.is_invited
-      ? language?.v3?.investor?.applied
-      : language?.v3?.investor?.apply_to_syndicate;
+    if(hideButton || state?.invite) return "Applied"
+    else return "Apply to Syndicate"
+  };
+  const getAcceptButtonStatus = () => {
+    if(hideButton) return "Accepted"
+    else return "Accept"
   };
   const [enableButton, setEnableButton] = useState(false);
 
@@ -48,8 +51,11 @@ const SyndicateFullView = ({}: any) => {
     }, 1000);
   };
 
+
+
   const onFollow = async (syndId: any) => {
     setButtonDisableTemp(true);
+  setHideButton(true)
     try {
       const { status } = await postFollowSyndicate(
         {
@@ -72,6 +78,25 @@ const SyndicateFullView = ({}: any) => {
         toast.warning(error?.response?.data?.status?.message, toastUtil);
     } finally {
       handleToggle();
+    }
+  };
+  const acceptInvite = async (inviteID: any) => {
+    setButtonDisableTemp(true);
+    try {
+      const { status } = await putAcceptInvite(
+        inviteID,
+        authToken
+      );
+      if (status === 200) {
+        setHideButton(true)
+        toast.success(language?.v3?.investor?.applied, toastUtil);
+      }
+      removeSpinning();
+    } catch (error: any) {
+      removeSpinning();
+      if (error?.response?.status === 400)
+        toast.warning(error?.response?.data?.status?.message, toastUtil);
+    } finally {
     }
   };
   const handleToggle = () => {
@@ -197,6 +222,7 @@ const SyndicateFullView = ({}: any) => {
     { label: "Website", value: "website" },
     { label: "Other", value: "other" },
   ];
+
   
   const [loading, setLoading]: any = useState(false);
   return (
@@ -254,25 +280,52 @@ const SyndicateFullView = ({}: any) => {
                   >
                     {language?.v3?.investor?.back_syndicate}
                   </Button>
-                  <Button
-                    type={
-                      state?.is_invited && !buttonDisableTemp
-                        ? "outlined"
-                        : "primary"
-                    }
-                    centeredSpinner
-                    className="!min-w-[90px]"
-                    onClick={() => {
-                      if (state?.is_invited) {
-                        return;
-                      } else {
-                        handleToggle();
-                      }
-                    }}
-                    loading={buttonDisableTemp}
-                  >
-                    {getButtonStatus()}
-                  </Button>
+                  {state?.invite?.invite_type === "Invite" && (
+                  <span className="items-center">
+                    <Button
+                          type={
+                            hideButton
+                              ? "outlined"
+                              : "primary"
+                          }
+                    disabled={hideButton}
+                      centeredSpinner
+                      className={`!min-w-[100px]`}
+                      onClick={() => {
+                        acceptInvite(state?.invite?.id)
+                      }}
+                    >
+                      {getAcceptButtonStatus()}
+                    </Button>
+                  </span>
+                )}
+                {state?.invite === null && (
+                           <span className="items-center">
+                           <Button
+                           disabled={hideButton}
+                           type={
+                             hideButton || state?.invite
+                               ? "outlined"
+                               : "primary"
+                           }
+                             centeredSpinner
+                             className={`!min-w-[100px] ${
+                               state?.is_invited &&
+                               `!cursor-not-allowed 'hover:border-none`
+                             }`}
+                             onClick={() => {
+                               if (state?.is_invited) {
+                                 return;
+                               } else {
+                                 handleToggle();
+                               }
+                             }}
+                           >
+                             {getButtonStatus()}
+                           </Button>
+                         </span>
+                )}
+         
                 </span>
               </div>
               <section className="flex items-center justify-center mt-5">
@@ -336,6 +389,7 @@ const SyndicateFullView = ({}: any) => {
                     <aside className="flex items-center justify-end mt-5">
                       <span className=" flex items-center justify-center gap-5">
                         <Button
+                        disabled={hideButton}
                           onClick={() => {
                             setChanges({
                               comment: "",
@@ -352,6 +406,7 @@ const SyndicateFullView = ({}: any) => {
                         <Button
                           centeredSpinner
                           className=""
+                          
                           onClick={() => {
                             onFollow(state?.id);
                             setChanges({
@@ -361,7 +416,7 @@ const SyndicateFullView = ({}: any) => {
                             });
                           }}
                           loading={buttonDisableTemp}
-                          disabled={!enableButton}
+                          disabled={!enableButton || hideButton}
                         >
                           {language?.v3?.investor?.submit_application}
                         </Button>

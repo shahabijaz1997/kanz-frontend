@@ -214,7 +214,6 @@ const FollowingSyndicates = (): any => {
         syndicateInfo={syndicateInfo}
         openDrawer={isOpen}
         isDrawerOpen={setOpen}
-        onData={handleChildData}
       />
     </>
   );

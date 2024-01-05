@@ -21,12 +21,9 @@ const SyndicateInfoDrawer = ({
   syndicateInfo,
   openDrawer,
   isDrawerOpen,
-  onData,
+  loadingOn,
 }: any) => {
   const navigate = useNavigate();
-  const sendDataToParent = () => {
-    onData(true);
-  };
   useEffect(() => {}, []);
   const user: any = useSelector((state: RootState) => state.user.value);
   const authToken: any = useSelector((state: RootState) => state.auth.value);
@@ -38,12 +35,14 @@ const SyndicateInfoDrawer = ({
     action: "",
     document: null,
   });
-
+  useEffect(()=>{
+    setLoading(false)
+ }, [syndicateInfo])
   const orientation: any = useSelector(
     (state: RootState) => state.orientation.value
   );
 
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [buttonDisableTemp, setButtonDisableTemp] = useState(false);
 
   const [isExpanded, setIsExpanded] = useState(false);
@@ -58,7 +57,13 @@ const SyndicateInfoDrawer = ({
     { label: "Other", value: "other" },
   ];
 
+  
+  useEffect(()=>{
+    setLoading(false)
+ }, [syndicateInfo])
+
   const [showFullText, setShowFullText] = useState(false);
+  const [hideButton, setHideButton] = useState(false);
 
   const toggleText = () => {
     setShowFullText(!showFullText);
@@ -70,13 +75,8 @@ const SyndicateInfoDrawer = ({
     setEnableButton(event.target.checked);
   };
 
-  useEffect(() => {
-    if (syndicateInfo !== null) {
-      setButtonDisableTemp(false);
-    } else {
-      setButtonDisableTemp(true);
-    }
-  }, [syndicateInfo]);
+
+  useEffect(() => setLoading(openDrawer), [openDrawer])
 
   const removeSpinning = () => {
     setTimeout(() => {
@@ -84,8 +84,14 @@ const SyndicateInfoDrawer = ({
     }, 1000);
   };
 
+  const getAcceptButtonStatus = () => {
+    if(hideButton) return "Accepted"
+    else return "Accept"
+  };
+
   
   const acceptInvite = async (inviteID: any) => {
+    setHideButton(true)
     setButtonDisableTemp(true);
     try {
       const { status } = await putAcceptInvite(
@@ -94,6 +100,7 @@ const SyndicateInfoDrawer = ({
       );
       if (status === 200) {
         toast.success(language?.v3?.investor?.applied, toastUtil);
+      isDrawerOpen(false)
       }
       removeSpinning();
     } catch (error: any) {
@@ -101,9 +108,11 @@ const SyndicateInfoDrawer = ({
       if (error?.response?.status === 400)
         toast.warning(error?.response?.data?.status?.message, toastUtil);
     } finally {
+      loadingOn()
     }
   };
   const onFollow = async (syndId: any) => {
+    setHideButton(true)
     setButtonDisableTemp(true);
     try {
       const { status } = await postFollowSyndicate(
@@ -118,6 +127,7 @@ const SyndicateInfoDrawer = ({
         authToken
       );
       if (status === 200) {
+        isDrawerOpen(false)
         toast.success(language?.v3?.investor?.applied, toastUtil);
       }
       removeSpinning();
@@ -127,7 +137,7 @@ const SyndicateInfoDrawer = ({
         toast.warning(error?.response?.data?.status?.message, toastUtil);
     } finally {
       handleToggle();
-      sendDataToParent();
+      loadingOn()
     }
   };
   const handleSelectChange = (selectedOption: any) => {
@@ -135,11 +145,8 @@ const SyndicateInfoDrawer = ({
   };
 
   const getButtonStatus = () => {
-    if (buttonDisableTemp) return;
-
-    return syndicateInfo?.is_invited
-      ? language?.v3?.investor?.applied
-      : language?.v3?.investor?.apply_to_syndicate;
+    if(hideButton) return "Applied"
+    else return "Apply to Syndicate"
   };
   const displayText = showFullText
     ? syndicateInfo?.about
@@ -147,13 +154,14 @@ const SyndicateInfoDrawer = ({
   const abbreviatedMonths = syndicateInfo?.portfolio_stats?.labels.map(
     (month: string) => month.charAt(0)
   );
+
   return (
     <main>
       <Drawer
         drawerWidth="w-[600px]"
         isOpen={openDrawer}
         setIsOpen={(val: boolean) => {
-          setButtonDisableTemp(true);
+          setLoading(true)
           isDrawerOpen(val);
         }}
       >
@@ -175,12 +183,17 @@ const SyndicateInfoDrawer = ({
                     });
                   }}
                 >
-                  <span className="flex items-start justify-start">
-                    <img
-                      className="h-9 w-9 rounded-full"
-                      src={syndicateInfo?.logo}
-                    ></img>
-                  </span>
+                  {syndicateInfo?.logo ? (
+                      <img
+                        className="h-11 w-11 mr-2.5 rounded-full"
+                        src={syndicateInfo.logo}
+                        alt="Profile Pic"
+                      />
+                    ) : (
+                      <div className="h-9 w-9 mr-2.5 rounded-full bg-gray-300 flex items-center justify-center">
+                        {syndicateInfo?.name?.substring(0, 2)}
+                      </div>
+                    )}
                   <span className="w-full ml-4">
                     <span>{syndicateInfo?.name}</span>
                     <span className="flex justify-start w-full text-xs text-[#737373]">
@@ -188,22 +201,12 @@ const SyndicateInfoDrawer = ({
                     </span>
                   </span>
                 </div>
-                {syndicateInfo?.invite?.status === InviteStatus.INVITED && (
-                  <span className="items-center">
-                    <Button
-                      className={`!min-w-[100px]`}
-                      onClick={() => {}}
-                      loading={buttonDisableTemp}
-                    >
-                      {language?.v3?.investor?.accept}
-                    </Button>
-                  </span>
-                )}
                 {syndicateInfo?.invite === null && (
                   <span className="items-center">
                     <Button
+                    disabled={hideButton}
                       type={
-                        syndicateInfo?.is_invited && !buttonDisableTemp
+                        hideButton
                           ? "outlined"
                           : "primary"
                       }
@@ -224,16 +227,22 @@ const SyndicateInfoDrawer = ({
                     </Button>
                   </span>
                 )}
-                {syndicateInfo?.invite?.invite_type === "Invite" && (
+                {syndicateInfo?.invite?.invite_type === "Invite" && syndicateInfo?.invite?.status === "pending" && (
                   <span className="items-center">
                     <Button
+                       type={
+                        hideButton
+                          ? "outlined"
+                          : "primary"
+                      }
+                    disabled={hideButton}
                       centeredSpinner
                       className={`!min-w-[100px]`}
                       onClick={() => {
                         acceptInvite(syndicateInfo?.invite?.id)
                       }}
                     >
-                      {"Accept"}
+                      {getAcceptButtonStatus()}
                     </Button>
                   </span>
                 )}
@@ -309,6 +318,7 @@ const SyndicateInfoDrawer = ({
                   <aside className="flex items-center justify-end mt-5">
                     <span className=" flex items-center justify-center gap-5">
                       <Button
+                      disabled={hideButton}
                         onClick={() => {
                           setChanges({
                             comment: "",
@@ -334,7 +344,7 @@ const SyndicateInfoDrawer = ({
                           });
                         }}
                         loading={buttonDisableTemp}
-                        disabled={!enableButton}
+                        disabled={!enableButton || hideButton}
                       >
                         {"Submit Application"}
                       </Button>

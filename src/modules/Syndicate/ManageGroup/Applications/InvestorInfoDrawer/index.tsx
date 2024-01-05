@@ -2,16 +2,22 @@ import React, { useEffect, useState } from "react";
 import Drawer from "../../../../../shared/components/Drawer";
 import Button from "../../../../../shared/components/Button";
 import Spinner from "../../../../../shared/components/Spinner";
-import {
-  comaFormattedNumber,
-} from "../../../../../utils/object.utils";
+import { comaFormattedNumber } from "../../../../../utils/object.utils";
 
 import { useSelector } from "react-redux";
 import { RootState } from "../../../../../redux-toolkit/store/store";
 import { toast } from "react-toastify";
 import { toastUtil } from "../../../../../utils/toast.utils";
-import { DealCheckType, InviteStatus, MemberType } from "../../../../../enums/types.enum";
-import { postInviteInvestor, putAcceptInvite, putChangeMemberRole } from "../../../../../apis/syndicate.api";
+import {
+  DealCheckType,
+  InviteStatus,
+  MemberType,
+} from "../../../../../enums/types.enum";
+import {
+  postInviteInvestor,
+  putAcceptInvite,
+  putChangeMemberRole,
+} from "../../../../../apis/syndicate.api";
 
 const InvestorInfoDrawer = ({
   loadingOn,
@@ -27,26 +33,25 @@ const InvestorInfoDrawer = ({
     (state: RootState) => state.orientation.value
   );
 
-  
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [hideButton, setHideButton] = useState(true);
   const [buttonDisableTemp, setButtonDisableTemp] = useState(false);
 
-
-    useEffect(()=>{
-       setLoading(false)
-    }, [investorInfo])
+  useEffect(() => {
+    setLoading(false);
+    setHideButton(false)
+  }, [investorInfo]);
 
   const removeSpinning = () => {
     setTimeout(() => {
       setButtonDisableTemp(false);
-      setLoading(false)
+      setLoading(false);
     }, 1000);
-  }
+  };
 
-
-
-   const onInviteInvestor = async (investorID: any) => {
+  const onInviteInvestor = async (investorID: any) => {
     try {
+      setHideButton(true);
       const { status } = await postInviteInvestor(
         {
           invite: {
@@ -59,26 +64,24 @@ const InvestorInfoDrawer = ({
         authToken
       );
       if (status === 200) {
-        isDrawerOpen(false)
+        isDrawerOpen(false);
         toast.success(language?.v3?.investor?.applied, toastUtil);
       }
     } catch (error: any) {
       if (error?.response?.status === 400)
         toast.warning(error?.response?.data?.status?.message, toastUtil);
     } finally {
-      isDrawerOpen(false)
-    loadingOn()
+      isDrawerOpen(false);
+      loadingOn();
     }
   };
+  useEffect(() => setLoading(openDrawer), [openDrawer]);
 
-
-   const acceptInvite = async (inviteID: any) => {
+  const acceptInvite = async (inviteID: any) => {
+    setHideButton(true);
     setButtonDisableTemp(true);
     try {
-      const { status } = await putAcceptInvite(
-        inviteID,
-        authToken
-      );
+      const { status } = await putAcceptInvite(inviteID, authToken);
       if (status === 200) {
         toast.success(language?.v3?.investor?.applied, toastUtil);
       }
@@ -88,19 +91,20 @@ const InvestorInfoDrawer = ({
       if (error?.response?.status === 400)
         toast.warning(error?.response?.data?.status?.message, toastUtil);
     } finally {
-      isDrawerOpen(false)
-      loadingOn()
+      isDrawerOpen(false);
+      loadingOn();
     }
   };
-   const changeMemberRole = async (investorID: any, selectedRole:string) => {
+  const changeMemberRole = async (investorID: any, selectedRole: string) => {
     try {
-      setButtonDisableTemp(true)
+      setHideButton(true);
+      setButtonDisableTemp(true);
       const { status } = await putChangeMemberRole(
         investorID,
         {
           syndicate_member: {
-            role: selectedRole
-          }
+            role: selectedRole,
+          },
         },
         authToken
       );
@@ -113,12 +117,10 @@ const InvestorInfoDrawer = ({
       if (error?.response?.status === 400)
         toast.warning(error?.response?.data?.status?.message, toastUtil);
     } finally {
-      isDrawerOpen(false)
-      loadingOn()
-
+      isDrawerOpen(false);
+      loadingOn();
     }
   };
-
 
   return (
     <main>
@@ -126,7 +128,7 @@ const InvestorInfoDrawer = ({
         drawerWidth="w-[700px]"
         isOpen={openDrawer}
         setIsOpen={(val: boolean) => {
-          setLoading(true)
+          setLoading(true);
           isDrawerOpen(val);
         }}
       >
@@ -142,86 +144,87 @@ const InvestorInfoDrawer = ({
               <section className="border-b-[1px] border-b-neutral-200 pb-10 w-full items-center capitalize justify-between flex">
                 <div className="inline-flex items-center">
                   <span>
-                    <img
-                      className=" h-9 w-9 mr-2.5 rounded-full"
-                      src={investorInfo?.profile_pic}
-                    ></img>
+                    {investorInfo?.profile_pic ? (
+                      <img
+                        className="h-11 w-11 mr-2.5 rounded-full"
+                        src={investorInfo.profile_pic}
+                        alt="Profile Pic"
+                      />
+                    ) : (
+                      <div className="h-9 w-9 mr-2.5 rounded-full bg-gray-300 flex items-center justify-center">
+                        {investorInfo?.member_name?.substring(0, 2)}
+                      </div>
+                    )}
                   </span>
-                  <span className="items-center  font-medium">{investorInfo?.member_name}</span>
+                  <span className="items-center font-medium">
+                    {investorInfo?.member_name}
+                  </span>
                 </div>
                 <span className="flex gap-3 items-center">
-                  { !investorInfo?.invite_id && !investorInfo?.is_member &&
-                     (
-                      <span className="items-center">
+                  {!investorInfo?.invite_id && !investorInfo?.is_member && (
+                    <span className="items-center">
                       <Button
+                        disabled={hideButton}
                         centeredSpinner
                         className="!min-w-[110px] !p-1.5 !border-[2px] !border-[#155E75]"
                         onClick={() => {
-                          setButtonDisableTemp(true)
-                          onInviteInvestor(investorInfo?.member_id)
+                          onInviteInvestor(investorInfo?.member_id);
                         }}
                       >
                         {"Invite"}
                       </Button>
                     </span>
-                    )
-                    
-                  }
-                  {
-                    investorInfo?.invite_status === InviteStatus.PENDING && investorInfo?.invite_type === "Application" && !investorInfo?.is_member && (
+                  )}
+                  {investorInfo?.invite_status === InviteStatus.PENDING &&
+                    investorInfo?.invite_type === "Application" &&
+                    !investorInfo?.is_member && (
                       <span className="items-center">
-                      <Button
-                        centeredSpinner
-                        className="!min-w-[110px] !p-1.5 !border-[2px] !border-[#155E75]"
-                        onClick={() => {
-                          acceptInvite(investorInfo?.invite_id)
-                        }}
-                      >
-                        {"Approve"}
-                      </Button>
-                    </span>
-                    )
-                    
-                  }
-                  {
-                    investorInfo?.is_member && investorInfo?.role === MemberType.LP && (
+                        <Button
+                          disabled={hideButton}
+                          centeredSpinner
+                          className="!min-w-[110px] !p-1.5 !border-[2px] !border-[#155E75]"
+                          onClick={() => {
+                            acceptInvite(investorInfo?.invite_id);
+                          }}
+                        >
+                          {"Approve"}
+                        </Button>
+                      </span>
+                    )}
+                  {investorInfo?.is_member &&
+                    investorInfo?.role === MemberType.LP && (
                       <span className="items-center">
-                      <Button
-                        centeredSpinner
-                        className="!min-w-[110px] !p-1.5 !border-[2px] !border-[#155E75]"
-                        onClick={() => {
-                          changeMemberRole(investorInfo?.id, MemberType.GP)
-                          setButtonDisableTemp(true)
-                        }}
-                        loading={buttonDisableTemp}
-                      >
-                        {"Change to GP"}
-                      </Button>
-                    </span>
-                    )
-                    
-                  }
-                  {
-                    investorInfo?.is_member && investorInfo?.role === MemberType.GP && (
+                        <Button
+                          disabled={hideButton}
+                          centeredSpinner
+                          className="!min-w-[110px] !p-1.5 !border-[2px] !border-[#155E75]"
+                          onClick={() => {
+                            changeMemberRole(investorInfo?.id, MemberType.GP);
+                            setButtonDisableTemp(true);
+                          }}
+                          loading={buttonDisableTemp}
+                        >
+                          {"Change to GP"}
+                        </Button>
+                      </span>
+                    )}
+                  {investorInfo?.is_member &&
+                    investorInfo?.role === MemberType.GP && (
                       <span className="items-center">
-                      <Button
-                        centeredSpinner
-                        className="!min-w-[110px] !p-1.5 !border-[2px] !border-[#155E75]"
-                        onClick={() => {
-                          changeMemberRole(investorInfo?.id, MemberType.LP)
-                          setButtonDisableTemp(true)
-
-                        }}
-                        loading={buttonDisableTemp}
-                      >
-                        {"Change to LP"}
-                        
-                      </Button>
-                    </span>
-                    )
-                    
-                  }
-
+                        <Button
+                          disabled={hideButton}
+                          centeredSpinner
+                          className="!min-w-[110px] !p-1.5 !border-[2px] !border-[#155E75]"
+                          onClick={() => {
+                            changeMemberRole(investorInfo?.id, MemberType.LP);
+                            setButtonDisableTemp(true);
+                          }}
+                          loading={buttonDisableTemp}
+                        >
+                          {"Change to LP"}
+                        </Button>
+                      </span>
+                    )}
                 </span>
               </section>
             </header>
@@ -232,15 +235,23 @@ const InvestorInfoDrawer = ({
                     {language?.v3?.investor?.portfolio_stats}
                   </span>
                 </div>
-                <p className="text-[#404040] font-medium">{investorInfo?.investor_type}</p>
-                {<p className="text-[#737373] text-sm">I have at least AED 18.36 million in investments</p>}
+                <p className="text-[#404040] font-medium">
+                  {investorInfo?.investor_type}
+                </p>
+                {
+                  <p className="text-[#737373] text-sm">
+                    I have at least AED 18.36 million in investments
+                  </p>
+                }
                 <aside className="flex gap-24 justify-between items-center mt-5">
                   <div className=" rounded-xl border-[1.75px] border-[#E4E7EC] w-full pl-6 pr-6  py-7 shadow-md">
-                    <div className="text-lg font-medium">
-                      {"Invested"}
-                    </div>
+                    <div className="text-lg font-medium">{"Invested"}</div>
                     <div className="mt-2 font-bold  text-2xl">
-                      {comaFormattedNumber(investorInfo?.invested_amount, DealCheckType.STARTUP,false) || "$72000"}
+                      {comaFormattedNumber(
+                        investorInfo?.invested_amount,
+                        DealCheckType.STARTUP,
+                        false
+                      ) || "$72000"}
                     </div>
                   </div>
                   <div
@@ -258,19 +269,18 @@ const InvestorInfoDrawer = ({
                 </aside>
               </aside>
               {investorInfo?.personal_note && (
-                   <aside className="mt-6">
-                   <div className=" pr-2 flex items-center">
-                     <span className="font-bold mb-2">
-                       {`Personal note from ${investorInfo?.member_name}`}
-                     </span>
-                   </div>
-                 
-                   <div className="text-sm">
+                <aside className="mt-6">
+                  <div className=" pr-2 flex items-center">
+                    <span className="font-bold mb-2">
+                      {`Personal note from ${investorInfo?.member_name}`}
+                    </span>
+                  </div>
+
+                  <div className="text-sm">
                     <p>{`${investorInfo?.personal_note}`}</p>
-                   </div>
-                 </aside>
-                  )}
-             
+                  </div>
+                </aside>
+              )}
             </section>
           </div>
         )}

@@ -16,10 +16,8 @@ import { getSyndicateInfo } from "../../../../apis/investor.api";
 
 const Applications = ({}: any): any => {
   const [childData, setChildData]: any = useState(null);
+  const [loaderParent, setLoaderParent]: any = useState(false);
 
-  const handleChildData = (data: any) => {
-    setChildData(data);
-  };
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const language: any = useSelector((state: RootState) => state.language.value);
@@ -27,7 +25,9 @@ const Applications = ({}: any): any => {
   const orientation: any = useSelector(
     (state: RootState) => state.orientation.value
   );
-
+  const loadingOn = () =>{
+    setLoaderParent(!loaderParent)
+  }
   const columns = [
     language?.v3?.investor?.syndicate,
     language?.v3?.investor?.apply_date,
@@ -54,6 +54,10 @@ const Applications = ({}: any): any => {
     dispatch(saveDataHolder(""));
     getApplications();
   }, [currentPage]);
+  useEffect(() => {
+    dispatch(saveDataHolder(""));
+    getApplications();
+  }, [loaderParent]);
   useEffect(() => {
     syndicateInfo?.id && onGetSyndicateDetail(syndicateInfo?.id);
     setChildData(false);
@@ -176,7 +180,7 @@ const Applications = ({}: any): any => {
         syndicateInfo={syndicateInfo}
         openDrawer={isOpen}
         isDrawerOpen={setOpen}
-        onData={handleChildData}
+        loadingOn={loadingOn}
       />
     </>
   );
