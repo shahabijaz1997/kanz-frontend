@@ -85,8 +85,8 @@ const SyndicateInfoDrawer = ({
   };
 
   const getAcceptButtonStatus = () => {
-    if(hideButton) return "Accepted"
-    else return "Accept"
+    if(hideButton) return language?.v3?.investor?.accepted
+    else return language?.v3?.investor?.accept
   };
 
   
