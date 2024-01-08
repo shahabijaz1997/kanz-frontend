@@ -7,8 +7,6 @@ import { useSelector } from "react-redux";
 import { RootState } from "../../../redux-toolkit/store/store";
 import Button from "../../../shared/components/Button";
 import GroupMembers from "./GroupMembers";
-import Modal from "../../../shared/components/Modal";
-import AddMembersModal from "./AddMembersModal";
 import Applications from "./Applications";
 import Invites from "./Invites";
 import AllInvestors from "./AllInvestors";
@@ -24,12 +22,7 @@ const ManageGroup = ({}: any) => {
   const openModal = () =>{
     setModalOpen(true)
   }
-  const closeModal = () =>{
-    setModalOpen(false)
-  }
-  const reloadgetMembers = () =>{
-    setReloadMembers(current => !current)
-  }
+
 
   const [modalOpen, setModalOpen] = useState<boolean>(false);
   const [reloadMembers, setReloadMembers] = useState<boolean>(false);

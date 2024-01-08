@@ -48,13 +48,10 @@ const FollowingSyndicates = (): any => {
   const getCountvalue = (value: string) => {
     return filter[value] || 0
   };
-  const handleChildData = (data: any) => {
-    setChildData(data);
-  };
   const [tabs] = useState<any>({
     'all': language?.v3?.startup?.overview?.all,
     'has_active_deal': language?.v3?.investor?.has_active_deal,
-    'raising_fund': language?.v3?.investor?.raising_fund,
+    'no_active_deal': language?.v3?.investor?.no_active_deal,
   });
 
   useEffect(() => {
@@ -83,9 +80,8 @@ const FollowingSyndicates = (): any => {
   }, [currentPage]);
   useEffect(() => {
     dispatch(saveDataHolder(""));
-    setCurrentPage(1)
     getFollowingSynds();
-  }, [searchQuery]);
+  }, [selectedTab]);
 
   const getFollowingSynds = async () => {
     try {
@@ -93,10 +89,12 @@ const FollowingSyndicates = (): any => {
       let { status, data } = await getFollowedSyndicates(
         authToken,
         searchQuery,
-        currentPage
+        currentPage,
+        selectedTab
       );
       if (status === 200) {
         setpaginationData(data?.status?.data?.pagy);
+        setFilterCounts(data?.status?.data?.stats)
         let syndicates = data?.status?.data?.records?.map((syndicate: any) => {
           return {
             id: syndicate?.id,

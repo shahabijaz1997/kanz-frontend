@@ -189,8 +189,11 @@ export const getSyndicates = (token: string, searchQuery:string, currentPage:num
     }
   );
 };
-export const getAppliedSyndicates = (token: string, searchQuery:string, currentPage:number) => {
+export const getAppliedSyndicates = (token: string, searchQuery:string, currentPage:number, filters:any) => {
   const queryParameters = new URLSearchParams();
+  if (filters !== "all"){
+    queryParameters.append("status", filters.toLowerCase());
+  }
   queryParameters.append("page", currentPage.toString());
   queryParameters.append("pending_invite", "true");
   if (searchQuery.trim() !== "") {
@@ -206,8 +209,11 @@ export const getAppliedSyndicates = (token: string, searchQuery:string, currentP
   );
 };
 
-export const getNonAddedInvestors = (token: string, searchQuery:any, currentPage:number) => {
+export const getNonAddedInvestors = (token: string, searchQuery:any, currentPage:number, filters:any) => {
   const queryParameters = new URLSearchParams();
+  if (filters !== "all"){
+    queryParameters.append("role", filters.toLowerCase());
+  }
   queryParameters.append("page", currentPage.toString());
   if (searchQuery.trim() !== "") {
     queryParameters.append("search", searchQuery);

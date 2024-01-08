@@ -201,25 +201,6 @@ const Invites = ({ openModal, reloadMembers }: any) => {
                           }
                         />
                       </div>
-
-                      {/* <ul className="inline-flex items-center">
-                        {React.Children.toArray(
-                         Object.keys(tabs).map((tab: any) => (
-                            <li
-                              onClick={() => {
-                                setSelectedTab(tab);
-                              }}
-                              className={`py-2 px-3 font-medium cursor-pointer rounded-md transition-all ${
-                                selectedTab === tab
-                                  ? "text-neutral-900 bg-neutral-100"
-                                  : "text-gray-500"
-                              } `}
-                            >
-                              {tabs[tab]} &nbsp;({getCountvalue(tab)})
-                            </li>
-                          ))
-                        )}
-                      </ul> */}
                     </span>
                   </div>
                 </section>

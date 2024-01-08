@@ -51,10 +51,11 @@ export const getCommitedDeals = ( token: string, filters :any, searchQuery:strin
     },
   });
 };
-  export const getFollowedSyndicates = (token: string, searchQuery:string, currentPage:number) => {
+  export const getFollowedSyndicates = (token: string, searchQuery:string, currentPage:number, filters:any) => {
   const queryParameters = new URLSearchParams();
   queryParameters.append("page", currentPage.toString())
   queryParameters.append("mine", "true");
+  queryParameters.append("status",filters.toString())
   if (searchQuery.trim() !== "") {
     queryParameters.append("search", searchQuery);
   }

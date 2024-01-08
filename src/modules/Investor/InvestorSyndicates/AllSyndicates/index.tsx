@@ -70,10 +70,6 @@ const AllSyndicates = ({}: any): any => {
   }, [currentPage]);
   useEffect(() => {
     dispatch(saveDataHolder(""));
-    getAllSyndicates();
-  }, [searchQuery]);
-  useEffect(() => {
-    dispatch(saveDataHolder(""));
     setCurrentPage(1)
     getAllSyndicates();
   }, [selectedTab]);
@@ -103,6 +99,7 @@ const AllSyndicates = ({}: any): any => {
       );
       if (status === 200) {
         setpaginationData(data?.status?.data?.pagy);
+        setFilterCounts(data?.status?.data?.stats)
         let deals = data?.status?.data?.records.map((syndicate: any) => {
           return {
             id: syndicate?.id,
