@@ -1129,7 +1129,15 @@
       "submit_application": "Submit Application",
       "investors":"Investors",
       "accept":"Accept",
-      "accepted":"Accepted"
+      "accepted":"Accepted",
+      "lp":"LP",
+      "gp":"GP",
+      "role":"Role",
+      "no_invites_received":"No invites received",
+      "invite_sent":"Invite Sent",
+      "invite_accepted":"Invite Accepted",
+      "invite_received":"Invite Received",
+      "not_invited":"Not Invited"
     },
     "dealOverview": {
       "title": "Risk and Disclaimer",

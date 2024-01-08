@@ -24,15 +24,15 @@ const AllSyndicates = ({}: any): any => {
   const orientation: any = useSelector(
     (state: RootState) => state.orientation.value
   );
-  
+
   const getCountvalue = (value: string) => {
     return filter[value] || 0
   };
   const [tabs] = useState<any>({
     'all': language?.v3?.startup?.overview?.all,
-    'new': language?.v3?.investor?.new,
-    'invited  ': language?.v3?.fundraiser?.invited,
-    'raising_fund': language?.v3?.investor?.raising_fund,
+    'not_invited': language?.v3?.investor?.not_invited,
+    'applied': language?.v3?.investor?.applied,
+    'invite_received': language?.v3?.investor?.invite_received,
   });
   const columns = [
     language?.v3?.investor?.syndicate,
@@ -69,6 +69,15 @@ const AllSyndicates = ({}: any): any => {
     getAllSyndicates();
   }, [currentPage]);
   useEffect(() => {
+    dispatch(saveDataHolder(""));
+    getAllSyndicates();
+  }, [searchQuery]);
+  useEffect(() => {
+    dispatch(saveDataHolder(""));
+    setCurrentPage(1)
+    getAllSyndicates();
+  }, [selectedTab]);
+  useEffect(() => {
     syndicateInfo?.id && onGetSyndicateDetail(syndicateInfo?.id);
     setChildData(false);
   }, [childData]);
@@ -89,7 +98,8 @@ const AllSyndicates = ({}: any): any => {
       let { status, data } = await getSyndicates(
         authToken,
         searchQuery,
-        currentPage
+        currentPage,
+        selectedTab
       );
       if (status === 200) {
         setpaginationData(data?.status?.data?.pagy);
