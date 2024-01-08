@@ -109,7 +109,7 @@ const InvestorInfoDrawer = ({
         authToken
       );
       if (status === 200) {
-        toast.success("Changed", toastUtil);
+        toast.success(language?.v3?.investor?.changed, toastUtil);
       }
       removeSpinning();
     } catch (error: any) {
@@ -148,7 +148,7 @@ const InvestorInfoDrawer = ({
                       <img
                         className="h-11 w-11 mr-2.5 rounded-full"
                         src={investorInfo.profile_pic}
-                        alt="Profile Pic"
+                        alt={language?.v3?.investor?.profile_pic}
                       />
                     ) : (
                       <div className="h-9 w-9 mr-2.5 rounded-full bg-gray-300 flex items-center justify-center">
@@ -171,7 +171,7 @@ const InvestorInfoDrawer = ({
                           onInviteInvestor(investorInfo?.member_id);
                         }}
                       >
-                        {"Invite"}
+                        {language?.v3?.investor?.invite}
                       </Button>
                     </span>
                   )}
@@ -187,7 +187,7 @@ const InvestorInfoDrawer = ({
                             acceptInvite(investorInfo?.invite_id);
                           }}
                         >
-                          {"Approve"}
+                          {language?.v3?.investor?.approve}
                         </Button>
                       </span>
                     )}
@@ -204,7 +204,7 @@ const InvestorInfoDrawer = ({
                           }}
                           loading={buttonDisableTemp}
                         >
-                          {"Change to GP"}
+                          {language?.v3?.investor?.change_to_gp}
                         </Button>
                       </span>
                     )}
@@ -221,7 +221,7 @@ const InvestorInfoDrawer = ({
                           }}
                           loading={buttonDisableTemp}
                         >
-                          {"Change to LP"}
+                          {language?.v3?.investor?.change_to_lp}
                         </Button>
                       </span>
                     )}
@@ -259,7 +259,7 @@ const InvestorInfoDrawer = ({
                   >
                     <div>
                       <span className="text-lg font-medium">
-                        {"Investments"}
+                      {language?.v3?.investor?.investments}
                       </span>
                     </div>
                     <div className="mt-2 font-bold text-2xl">

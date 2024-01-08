@@ -33,8 +33,8 @@ const SyndicateFullView = ({}: any) => {
     document: null,
   });
   const getButtonStatus = () => {
-    if (hideButton || state?.invite) return "Applied";
-    else return "Apply to Syndicate";
+    if (hideButton || state?.invite) return language?.v3?.investor?.applied;
+    else return language?.v3?.investor?.apply_to_syndicate;
   };
   const getAcceptButtonStatus = () => {
     if (hideButton) return "Accepted";
@@ -451,7 +451,7 @@ const SyndicateFullView = ({}: any) => {
                     <div className="font-medium text-2xl">
                       {`${
                         state?.portfolio_stats?.total_deals_closed_in_12_months
-                      } deals in past ${12} months`}
+                      } ${language?.v3?.investor?.last_12_months}`}
                     </div>
                   </div>
                   <div className="flex items-center justify-center">
@@ -484,7 +484,7 @@ const SyndicateFullView = ({}: any) => {
                 </section>
               )}
               <div className="font-medium text-2xl mt-14 flex items-center justify-center">
-                Investments
+              {language?.v3?.investor?.investments}
               </div>
               <div className="mt-4 flex items-center justify-center">
                 <div
@@ -526,7 +526,7 @@ const SyndicateFullView = ({}: any) => {
               </div>
               <div>
                 <div className="font-medium text-2xl mt-5 flex items-center justify-center">
-                  Teams
+                  {language?.v3?.investor?.teams}
                 </div>
                 <div className="flex-col items-center p-4 justify-center">
                   <span className="flex items-center justify-center">
@@ -547,12 +547,12 @@ const SyndicateFullView = ({}: any) => {
                         )}
                   </span>
                   <span className="items-center justify-center flex mt-3 text-base font-medium">
-                    {`${state?.lead?.name}(Lead)` }
+                    {`${state?.lead?.name}(${language?.v3?.investor?.lead})` }
                   </span>
                 </div>
               </div>
               <div className="font-medium text-2xl mt-14 flex items-center justify-center">
-                LPs
+              {language?.v3?.investor?.lp}
               </div>
               <div className="mt-4 flex items-center justify-center mb-10">
                 <div
@@ -590,7 +590,7 @@ const SyndicateFullView = ({}: any) => {
                 </div>
               </div>
               <div className="font-medium text-2xl mt-14 flex items-center justify-center">
-                GPs
+              {language?.v3?.investor?.gp}
               </div>
               <div className="mt-4 flex items-center justify-center mb-10">
                 <div

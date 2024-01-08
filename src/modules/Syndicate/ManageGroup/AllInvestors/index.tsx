@@ -36,7 +36,8 @@ const AllInvestors = ({ openModal, reloadMembers }: any) => {
 
   const [loaderParent, setloaderParent] = useState(false);
   const [isOpen, setOpen]: any = useState(false);
-
+  const [selectedTab, setSelectedTab] = useState("all");
+  
   const [investors, setInvestors] = useState<any>([]);
   const [investorID, setinvestorID] = useState<any>(null);
   const [investorInfo, setInvestorInfo] = useState<any>(null);
@@ -44,6 +45,12 @@ const AllInvestors = ({ openModal, reloadMembers }: any) => {
   const loadingOn = () => {
     setloaderParent(!loaderParent)
   };
+
+  const [tabs] = useState<any>({
+    'all': language?.v3?.startup?.overview?.all,
+    "individual": language?.v3?.investor?.individual ,
+    "firm": language?.v3?.investor?.firm
+  });
   const columns = [
     language?.v3?.syndicate?.investor,
     language?.v3?.syndicate?.invested,
@@ -52,7 +59,9 @@ const AllInvestors = ({ openModal, reloadMembers }: any) => {
   ];
 
   const [searchQuery, setSearchQuery]: any = useState("");
-
+  const getCountvalue = (value: string) => {
+    return filter[value] || 0
+  };
   const [filter, setFilterCounts]: any = useState([]);
   const ongetInvestorInfo = async (id: any) => {
     try {
@@ -69,7 +78,8 @@ const AllInvestors = ({ openModal, reloadMembers }: any) => {
       let { status, data } = await getNonAddedInvestors(
         authToken,
         searchQuery,
-        currentPage
+        currentPage,
+        selectedTab
       );
 
       if (status === 200) {
@@ -185,7 +195,7 @@ const AllInvestors = ({ openModal, reloadMembers }: any) => {
                           }
                         />
                       </div>
-                      {/* 
+                      
                           <ul className="inline-flex items-center">
                             {React.Children.toArray(
                              Object.keys(tabs).map((tab: any) => (
@@ -203,7 +213,7 @@ const AllInvestors = ({ openModal, reloadMembers }: any) => {
                                 </li>
                               ))
                             )}
-                          </ul> */}
+                          </ul>
                     </span>
                   </div>
                 </section>

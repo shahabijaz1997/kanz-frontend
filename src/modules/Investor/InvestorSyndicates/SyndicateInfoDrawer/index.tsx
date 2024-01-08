@@ -145,8 +145,8 @@ const SyndicateInfoDrawer = ({
   };
 
   const getButtonStatus = () => {
-    if(hideButton) return "Applied"
-    else return "Apply to Syndicate"
+    if(hideButton) return language?.v3?.investor?.applied
+    else return language?.v3?.investor?.apply_to_syndicate
   };
   const displayText = showFullText
     ? syndicateInfo?.about
@@ -402,7 +402,7 @@ const SyndicateInfoDrawer = ({
                         )}
                       </span>
                       <span className="items-center font-medium">
-                        {`${syndicateInfo?.lead?.name} (Lead)`}
+                        {`${syndicateInfo?.lead?.name} (${language?.v3?.investor?.lead})`}
                       </span>
                     </div>
                   </div>
@@ -420,7 +420,7 @@ const SyndicateInfoDrawer = ({
                       {`${
                         syndicateInfo?.portfolio_stats
                           ?.total_deals_closed_in_12_months
-                      } deals in past ${12} months`}
+                      }${language?.v3?.investor?.last_12_months}`}
                     </div>
                     <div className=" mt-0.5 font-medium text-sm text-[#737373]">
                       {language?.v3?.fundraiser?.syndicate_deals}
@@ -433,7 +433,7 @@ const SyndicateInfoDrawer = ({
                   >
                     <div>
                       <span className="font-medium text-base">
-                        {`${syndicateInfo?.portfolio_stats?.active_deals_count} active deals`}
+                        {`${syndicateInfo?.portfolio_stats?.active_deals_count} ${language?.v3?.investor?.active_deals}`}
                       </span>
                     </div>
                     <div className="mt-0.5 font-medium text-sm text-[#737373]">
@@ -475,7 +475,7 @@ const SyndicateInfoDrawer = ({
                 <aside className="flex justify-between items-center text-sm  overflow-y-auto">
                   <p className="text-xs">
                     {
-                      "Any financial information provided on this website is for general informational purposes and should not be considered as financial advice. Users are encouraged to seek advice from qualified financial professionals regarding their specific financial situation and goals."
+                    language.v3?.investor?.disc_drawer
                     }
                   </p>
                 </aside>
