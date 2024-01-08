@@ -33,12 +33,12 @@ const SyndicateFullView = ({}: any) => {
     document: null,
   });
   const getButtonStatus = () => {
-    if(hideButton || state?.invite) return "Applied"
-    else return "Apply to Syndicate"
+    if (hideButton || state?.invite) return "Applied";
+    else return "Apply to Syndicate";
   };
   const getAcceptButtonStatus = () => {
-    if(hideButton) return "Accepted"
-    else return "Accept"
+    if (hideButton) return "Accepted";
+    else return "Accept";
   };
   const [enableButton, setEnableButton] = useState(false);
 
@@ -51,11 +51,9 @@ const SyndicateFullView = ({}: any) => {
     }, 1000);
   };
 
-
-
   const onFollow = async (syndId: any) => {
     setButtonDisableTemp(true);
-  setHideButton(true)
+    setHideButton(true);
     try {
       const { status } = await postFollowSyndicate(
         {
@@ -83,13 +81,10 @@ const SyndicateFullView = ({}: any) => {
   const acceptInvite = async (inviteID: any) => {
     setButtonDisableTemp(true);
     try {
-      const { status } = await putAcceptInvite(
-        inviteID,
-        authToken
-      );
+      const { status } = await putAcceptInvite(inviteID, authToken);
       if (status === 200) {
-        setHideButton(true)
-        toast.success(language?.v3?.investor?.applied, toastUtil);
+        setHideButton(true);
+        toast.success(language?.v3?.investor?.invite_accepted, toastUtil);
       }
       removeSpinning();
     } catch (error: any) {
@@ -216,8 +211,6 @@ const SyndicateFullView = ({}: any) => {
     (month: string) => month.charAt(0)
   );
 
-
-
   const options = [
     { label: "News", value: "news" },
     { label: "Social Media", value: "social_media" },
@@ -225,7 +218,6 @@ const SyndicateFullView = ({}: any) => {
     { label: "Other", value: "other" },
   ];
 
-  
   const [loading, setLoading]: any = useState(false);
   return (
     <main className="h-full max-h-full overflow-y-hidden">
@@ -282,52 +274,46 @@ const SyndicateFullView = ({}: any) => {
                   >
                     {language?.v3?.investor?.back_syndicate}
                   </Button>
-                  {state?.invite?.invite_type === "Invite" && state?.invite?.status === "pending" && (
-                  <span className="items-center">
-                    <Button
-                          type={
-                            hideButton
-                              ? "outlined"
-                              : "primary"
+                  {state?.invite?.invite_type === "Invite" &&
+                    state?.invite?.status === "pending" && (
+                      <span className="items-center">
+                        <Button
+                          type={hideButton ? "outlined" : "primary"}
+                          disabled={hideButton}
+                          centeredSpinner
+                          className={`!min-w-[100px]`}
+                          onClick={() => {
+                            acceptInvite(state?.invite?.id);
+                          }}
+                        >
+                          {getAcceptButtonStatus()}
+                        </Button>
+                      </span>
+                    )}
+                  {state?.invite === null && (
+                    <span className="items-center">
+                      <Button
+                        disabled={hideButton}
+                        type={
+                          hideButton || state?.invite ? "outlined" : "primary"
+                        }
+                        centeredSpinner
+                        className={`!min-w-[100px] ${
+                          state?.is_invited &&
+                          `!cursor-not-allowed 'hover:border-none`
+                        }`}
+                        onClick={() => {
+                          if (state?.is_invited) {
+                            return;
+                          } else {
+                            handleToggle();
                           }
-                    disabled={hideButton}
-                      centeredSpinner
-                      className={`!min-w-[100px]`}
-                      onClick={() => {
-                        acceptInvite(state?.invite?.id)
-                      }}
-                    >
-                      {getAcceptButtonStatus()}
-                    </Button>
-                  </span>
-                )}
-                {state?.invite === null && (
-                           <span className="items-center">
-                           <Button
-                           disabled={hideButton}
-                           type={
-                             hideButton || state?.invite
-                               ? "outlined"
-                               : "primary"
-                           }
-                             centeredSpinner
-                             className={`!min-w-[100px] ${
-                               state?.is_invited &&
-                               `!cursor-not-allowed 'hover:border-none`
-                             }`}
-                             onClick={() => {
-                               if (state?.is_invited) {
-                                 return;
-                               } else {
-                                 handleToggle();
-                               }
-                             }}
-                           >
-                             {getButtonStatus()}
-                           </Button>
-                         </span>
-                )}
-         
+                        }}
+                      >
+                        {getButtonStatus()}
+                      </Button>
+                    </span>
+                  )}
                 </span>
               </div>
               <section className="flex items-center justify-center mt-5">
@@ -391,7 +377,7 @@ const SyndicateFullView = ({}: any) => {
                     <aside className="flex items-center justify-end mt-5">
                       <span className=" flex items-center justify-center gap-5">
                         <Button
-                        disabled={hideButton}
+                          disabled={hideButton}
                           onClick={() => {
                             setChanges({
                               comment: "",
@@ -408,7 +394,6 @@ const SyndicateFullView = ({}: any) => {
                         <Button
                           centeredSpinner
                           className=""
-                          
                           onClick={() => {
                             onFollow(state?.id);
                             setChanges({
@@ -461,19 +446,21 @@ const SyndicateFullView = ({}: any) => {
                 </aside>
               </aside>
               <aside className="mt-8 justify-center flex">
-                <div className="flex-col justify-center items-center w-[80%]">
-                  <div className=" mx-28">
+                <div className="flex-col justify-center items-center w-[100%]">
+                  <div className="flex items-center justify-center">
                     <div className="font-medium text-2xl">
                       {`${
                         state?.portfolio_stats?.total_deals_closed_in_12_months
                       } deals in past ${12} months`}
                     </div>
+                  </div>
+                  <div className="flex items-center justify-center">
                     <div className=" mt-0.5 font-medium text-[#737373]">
                       {language?.v3?.fundraiser?.syndicate_deals}
                     </div>
                   </div>
-                  <aside className="flex justify-between items-center text-sm px-32 mt-4 w-full">
-                    <div className="w-full">
+                  <aside className="flex justify-center items-center text-sm w-full">
+                    <div className="items-center flex justify-center w-[60%]">
                       <SyndicateMonthlyDealsGraph
                         months={state?.portfolio_stats?.labels}
                         values={state?.portfolio_stats?.values}
@@ -483,21 +470,19 @@ const SyndicateFullView = ({}: any) => {
                 </div>
               </aside>
               {state?.about && (
-              <section className="w-full flex items-center justify-center mx-8">
-              <aside className="mt-4 w-[67%] justify-center flex-col items-center">
-                <div className=" pr-2 flex items-center">
-                  <span className="font-medium text-2xl mb-2">
-                    {language?.v3?.investor?.about}
-                  </span>
-                </div>
-                <div className=" text-start whitespace-pre-wrap text-sm">
-                  <p>{state?.about}</p>
-                </div>
-              </aside>
-            </section>
+                <section className="w-full flex items-center justify-center mx-8">
+                  <aside className="mt-4 w-[67%] justify-center flex-col items-center">
+                    <div className=" pr-2 flex items-center">
+                      <span className="font-medium text-2xl mb-2">
+                        {language?.v3?.investor?.about}
+                      </span>
+                    </div>
+                    <div className=" text-start whitespace-pre-wrap text-sm">
+                      <p>{state?.about}</p>
+                    </div>
+                  </aside>
+                </section>
               )}
-
-
               <div className="font-medium text-2xl mt-14 flex items-center justify-center">
                 Investments
               </div>
@@ -545,15 +530,24 @@ const SyndicateFullView = ({}: any) => {
                 </div>
                 <div className="flex-col items-center p-4 justify-center">
                   <span className="flex items-center justify-center">
-                    <img
-                      className=" h-[88px] w-[88px] mr-2.5 shadow-md rounded-full"
-                      src={
-                        "https://images.unsplash.com/photo-1603415526960-f7e0328c63b1?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-                      }
-                    ></img>
+                  {state.lead?.profile_pic ? (
+                          <img
+                            className="w-full h-full shadow-md rounded-full flex items-center justify-center"
+                            src={state?.lead.profile_pic}
+                          />
+                        ) : (
+                          <div
+                          className="h-[88px] w-[88px] shadow-md rounded-md flex items-center justify-center"
+                          style={{ backgroundColor: "#155E75" }}
+                        >
+                          <span className="text-white font-bold text-2xl">
+                          {state?.lead.name.substr(0, 2)}
+                          </span>
+                        </div>
+                        )}
                   </span>
                   <span className="items-center justify-center flex mt-3 text-base font-medium">
-                    {"Leonard Krasner (Lead)"}
+                    {`${state?.lead?.name}(Lead)` }
                   </span>
                 </div>
               </div>
@@ -565,17 +559,66 @@ const SyndicateFullView = ({}: any) => {
                   className="flex-wrap items-center justify-center max-w-[45%]"
                   style={{ display: "flex" }}
                 >
-                  {dataArray.map((item, index) => (
+                  {state?.limited_partners.map((item: any, index: any) => (
                     <div
                       key={index}
                       className="flex-col items-center p-4 justify-center"
                     >
                       <span className="h-[100px] w-[100px] shadow-sm rounded-full flex items-center justify-center">
-                        <img
-                          className="w-full h-full shadow-md rounded-full flex items-center justify-center"
-                          src={item.profile.logo}
-                          alt={`Logo ${index}`}
-                        />
+                        {item.profile_pic ? (
+                          <img
+                            className="w-full h-full shadow-md rounded-full flex items-center justify-center"
+                            src={item.profile_pic}
+                            alt={`Logo ${index}`}
+                          />
+                        ) : (
+                          <div
+                          className="h-[88px] w-[88px] shadow-md rounded-md flex items-center justify-center"
+                          style={{ backgroundColor: "#155E75" }}
+                        >
+                          <span className="text-white font-bold text-2xl">
+                          {item.name.substr(0, 2)}
+                          </span>
+                        </div>
+                        )}
+                      </span>
+                      <span className="items-center justify-center flex mt-3 text-base font-medium">
+                        {item.name}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+              <div className="font-medium text-2xl mt-14 flex items-center justify-center">
+                GPs
+              </div>
+              <div className="mt-4 flex items-center justify-center mb-10">
+                <div
+                  className="flex-wrap items-center justify-center max-w-[45%]"
+                  style={{ display: "flex" }}
+                >
+                  {state?.general_partners.map((item: any, index: any) => (
+                    <div
+                      key={index}
+                      className="flex-col items-center p-4 justify-center"
+                    >
+                      <span className="h-[100px] w-[100px] shadow-sm rounded-full flex items-center justify-center">
+                        {item.profile_pic ? (
+                          <img
+                            className="w-full h-full shadow-md rounded-full flex items-center justify-center"
+                            src={item.profile_pic}
+                            alt={`Logo ${index}`}
+                          />
+                        ) : (
+                          <div
+                          className="h-[88px] w-[88px] shadow-md rounded-md flex items-center justify-center"
+                          style={{ backgroundColor: "#155E75" }}
+                        >
+                          <span className="text-white font-bold text-2xl">
+                          {item.name.substr(0, 2)}
+                          </span>
+                        </div>
+                        )}
                       </span>
                       <span className="items-center justify-center flex mt-3 text-base font-medium">
                         {item.name}

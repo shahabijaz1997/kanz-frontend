@@ -66,7 +66,7 @@ const Applications = ({reloadMembers}: any) => {
     dispatch(saveDataHolder(""));
     setCurrentPage(1);
     getMembers();
-  }, [selectedTab, currentPage]);
+  }, [selectedTab]);
   useEffect(() => {
     dispatch(saveDataHolder(""));
     getMembers();
@@ -87,6 +87,8 @@ const Applications = ({reloadMembers}: any) => {
     try {
       let { status, data } = await getApplications(
         authToken,
+        currentPage, 
+        searchQuery
       );
 
       if (status === 200) {

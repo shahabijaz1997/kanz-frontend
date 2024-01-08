@@ -99,7 +99,7 @@ const SyndicateInfoDrawer = ({
         authToken
       );
       if (status === 200) {
-        toast.success(language?.v3?.investor?.applied, toastUtil);
+        toast.success(language?.v3?.investor?.invite_accepted, toastUtil);
       isDrawerOpen(false)
       }
       removeSpinning();
@@ -385,11 +385,21 @@ const SyndicateInfoDrawer = ({
                   <div className="border-[1px] flex justify-center border-[#E4E7EC] w-1/2 rounded-lg shadow-md mt-3">
                     <div className="flex-col items-center p-4 justify-center">
                       <span className="flex items-center justify-center">
-                        <img
-                          alt="Lead Photo"
-                          className=" h-[52px] w-[52px] rounded-full"
-                          src={syndicateInfo?.lead?.pic}
-                        ></img>
+                      {syndicateInfo?.lead?.profile_pic ? (
+                          <img
+                            className="w-full h-full shadow-md rounded-full flex items-center justify-center"
+                            src={syndicateInfo?.lead?.profile_pic}
+                          />
+                        ) : (
+                          <div
+                          className="h-[88px] w-[88px] shadow-md rounded-md flex items-center justify-center"
+                          style={{ backgroundColor: "#155E75" }}
+                        >
+                          <span className="text-white font-bold text-2xl ">
+                          {syndicateInfo?.lead?.name.substr(0, 2)}
+                          </span>
+                        </div>
+                        )}
                       </span>
                       <span className="items-center font-medium">
                         {`${syndicateInfo?.lead?.name} (Lead)`}

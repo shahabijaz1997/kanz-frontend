@@ -232,7 +232,7 @@ const Invites = ({ openModal, reloadMembers }: any) => {
                     noDataNode={
                       <div className="absolute left-1/2 top-1/2 translate-x-[-50%] translate-y-[-50%]">
                         <div className="mb-4 font-medium  text-[#828282]">
-                          {language?.v3?.syndicate?.no_group_member_yet}
+                          {language?.v3?.investor?.no_invites_received}
                         </div>
                       </div>
                     }

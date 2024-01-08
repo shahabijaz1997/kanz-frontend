@@ -53,7 +53,6 @@ const FollowingSyndicates = (): any => {
   };
   const [tabs] = useState<any>({
     'all': language?.v3?.startup?.overview?.all,
-    'new': language?.v3?.investor?.new,
     'has_active_deal': language?.v3?.investor?.has_active_deal,
     'raising_fund': language?.v3?.investor?.raising_fund,
   });
@@ -78,6 +77,15 @@ const FollowingSyndicates = (): any => {
     dispatch(saveDataHolder(""));
     getFollowingSynds();
   }, []);
+  useEffect(() => {
+    dispatch(saveDataHolder(""));
+    getFollowingSynds();
+  }, [currentPage]);
+  useEffect(() => {
+    dispatch(saveDataHolder(""));
+    setCurrentPage(1)
+    getFollowingSynds();
+  }, [searchQuery]);
 
   const getFollowingSynds = async () => {
     try {
