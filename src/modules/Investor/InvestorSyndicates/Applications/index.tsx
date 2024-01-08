@@ -28,6 +28,11 @@ const Applications = ({}: any): any => {
   const loadingOn = () =>{
     setLoaderParent(!loaderParent)
   }
+  const [tabs] = useState<any>({
+    "all": language?.v3?.startup?.overview?.all,
+    "applied": language?.v3?.investor?.applied,
+    "invite_received": language?.v3?.investor?.invite_received
+  });
   const columns = [
     language?.v3?.investor?.syndicate,
     language?.v3?.investor?.apply_date,
@@ -37,6 +42,7 @@ const Applications = ({}: any): any => {
   const getCountvalue = (value: string) => {
     return filter[value] || 0
   };
+  const [selectedTab, setSelectedTab] = useState("all");
   const [loading, setLoading]: any = useState(false);
   const [invites, setInvites]: any = useState([]);
   const [filter, setFilterCounts]: any = useState([]);
@@ -54,6 +60,11 @@ const Applications = ({}: any): any => {
     dispatch(saveDataHolder(""));
     getApplications();
   }, [currentPage]);
+  useEffect(() => {
+    dispatch(saveDataHolder(""));
+    setCurrentPage(1)
+    getApplications();
+  }, [selectedTab]);
   useEffect(() => {
     dispatch(saveDataHolder(""));
     getApplications();
@@ -79,9 +90,11 @@ const Applications = ({}: any): any => {
       let { status, data } = await getAppliedSyndicates(
         authToken,
         searchQuery,
-        currentPage
+        currentPage,
+        selectedTab
       );
       if (status === 200) {
+        setFilterCounts(data?.status?.data?.stats)
         setpaginationData(data?.status?.data?.pagy);
         let deals = data?.status?.data?.records.map((syndicate: any) => {
           return {
@@ -150,6 +163,24 @@ const Applications = ({}: any): any => {
               placeholder={language?.v3?.common?.search}
             />
           </div>
+          <ul className="inline-flex items-center">
+                  {React.Children.toArray(
+                    Object.keys(tabs).map((tab: any) => (
+                      <li
+                        onClick={() => {
+                          setSelectedTab(tab)}
+                        }
+                        className={`py-2 px-4 font-medium text-xs cursor-pointer rounded-md transition-all ${
+                          selectedTab === tab
+                            ? "text-neutral-900 bg-neutral-100"
+                            : "text-gray-500"
+                        } `}
+                      >
+                        {tabs[tab]} &nbsp;({getCountvalue(tab)})
+                      </li>
+                    ))
+                  )}
+                </ul>
         </span>
       </section>
       <section className="mt-5 relative">

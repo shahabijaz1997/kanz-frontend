@@ -802,8 +802,7 @@
       "end_on": "Ends On",
       "am_raised": "Amount Raised",
       "suces_msg": "Comment added successfully!",
-      "aedSymbol":"AED"
-
+      "aedSymbol": "AED"
     },
     "button": {
       "new_deal": "Create New Deal",
@@ -839,9 +838,9 @@
           "target": "Target"
         }
       },
-      "name_paceholder":"Abdulrahman Mohammad",
-      "about_paceholder":"Write about yourself",
-      "about":"About",
+      "name_paceholder": "Abdulrahman Mohammad",
+      "about_paceholder": "Write about yourself",
+      "about": "About",
       "title": "Title",
       "type": "Type",
       "start_at": "Syndicate",
@@ -910,8 +909,8 @@
       "avg_annualised_return": "Average Annualised Return",
       "exp_cap_app": "Expected Capital Appreciation",
       "net_div_inc": "Net Dividend Income",
-      "notes":"Notes",
-      "sent_date":"Sent Date"
+      "notes": "Notes",
+      "sent_date": "Sent Date"
     },
     "fundraiser": {
       "startup": "Startup",
@@ -1055,10 +1054,10 @@
       "no_credit_card_information_storage": "We do not store credit card information on our servers."
     },
     "investor": {
-      "usdSymbol":"USD",
-      "aedSymbol":"AED",
-      "placeholderUSD":"$ 0.00",
-      "placeholderAED":"AED 0.00",
+      "usdSymbol": "USD",
+      "aedSymbol": "AED",
+      "placeholderUSD": "$ 0.00",
+      "placeholderAED": "AED 0.00",
       "investments": "Investments",
       "deals": "Deals",
       "syndicates": "Syndicates",
@@ -1112,8 +1111,8 @@
       "syndicate_deals": "Syndicate Deals",
       "total_raised_amount": "Total Raised Amount",
       "syndicate_unfollowed": "Syndicate Unfollowed",
-      "applied":"Applied",
-      "add_message":"Add Message",
+      "applied": "Applied",
+      "add_message": "Add Message",
       "news": "News",
       "profile": "Profile",
       "website": "Website",
@@ -1127,17 +1126,30 @@
       "description_about_disclaimer": "Description about disclaimer",
       "cancel": "Cancel",
       "submit_application": "Submit Application",
-      "investors":"Investors",
-      "accept":"Accept",
-      "accepted":"Accepted",
-      "lp":"LP",
-      "gp":"GP",
-      "role":"Role",
-      "no_invites_received":"No invites received",
-      "invite_sent":"Invite Sent",
-      "invite_accepted":"Invite Accepted",
-      "invite_received":"Invite Received",
-      "not_invited":"Not Invited"
+      "investors": "Investors",
+      "accept": "Accept",
+      "accepted": "Accepted",
+      "lp": "LP",
+      "gp": "GP",
+      "role": "Role",
+      "no_invites_received": "No invites received",
+      "invite_sent": "Invite Sent",
+      "invite_accepted": "Invite Accepted",
+      "invite_received": "Invite Received",
+      "not_invited": "Not Invited",
+      "lead": "Lead",
+      "last_12_months": "deals in past 12 months",
+      "disc_drawer": "Any financial information provided on this website is for general informational purposes and should not be considered as financial advice. Users are encouraged to seek advice from qualified financial professionals regarding their specific financial situation and goals.",
+      "teams": "Teams",
+      "no_active_deal": "No active deal",
+      "changed": "Changed",
+      "profile_pic": "Profile Pic",
+      "invite": "Invite",
+      "change_to_gp": "Change to GP",
+      "change_to_lp": "Change to LP",
+      "personal_note_from": "Personal note from",
+      "individual": "Individual",
+      "firm": "Firm"
     },
     "dealOverview": {
       "title": "Risk and Disclaimer",
@@ -1177,7 +1189,7 @@
       "investment": "investment",
       "committed_amount": "committed",
       "completed": "completed",
-      "not_invited":"Not Invited"
+      "not_invited": "Not Invited"
     }
   }
 }
