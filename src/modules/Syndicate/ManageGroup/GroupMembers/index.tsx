@@ -51,12 +51,12 @@ const GroupMembers = ({}: any) => {
 
   const [tabs] = useState<any>({
     'all': language?.v3?.startup?.overview?.all,
-    'added': language?.v3?.syndicate?.added,
-    'follower': language?.v3?.syndicate?.follower,
+    'lp': language?.v3?.investor?.lp,
+    'gp': language?.v3?.investor?.gp,
   });
   const columns = [
     language?.v3?.syndicate?.investor,
-    "Role",
+    language?.v3?.investor?.role,
     language?.v3?.syndicate?.invested,
     language?.v3?.syndicate?.investments,
     language?.v3?.syndicate?.join_date,
@@ -67,6 +67,11 @@ const GroupMembers = ({}: any) => {
   useEffect(() => {
     getMembers()
   }, []);
+
+  useEffect(() => {
+    setCurrentPage(1)
+    getMembers()
+  }, [selectedTab]);
   useEffect(() => {
     getMembers()
   }, [loaderParent]);
@@ -100,8 +105,8 @@ const GroupMembers = ({}: any) => {
             [ language?.v3?.syndicate?.investor]: investor?.member_name || "N/A",
             [ language?.v3?.syndicate?.invested]: `$${comaFormattedNumber(investor?.invested_amount)}`,
             [ language?.v3?.syndicate?.investments]: investor?.no_investments,
-            ["Role"]:
-              investor?.role === MemberType.GP ? <CustomStatus options = {"GP"}/>: <CustomStatus options = {"LP"}/>,
+            [language?.v3?.investor?.role]:
+              investor?.role === MemberType.GP ? <CustomStatus options = {language?.v3?.investor?.gp}/>: <CustomStatus options = {language?.v3?.investor?.lp}/>,
             [ language?.v3?.syndicate?.join_date]:
               <span className="px-2">{investor?.joining_date}</span> || " N/A",
             Steps: investor?.current_state?.steps,

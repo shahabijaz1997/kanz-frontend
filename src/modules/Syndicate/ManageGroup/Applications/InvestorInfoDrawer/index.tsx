@@ -65,7 +65,7 @@ const InvestorInfoDrawer = ({
       );
       if (status === 200) {
         isDrawerOpen(false);
-        toast.success(language?.v3?.investor?.applied, toastUtil);
+        toast.success(language?.v3?.investor?.invite_sent, toastUtil);
       }
     } catch (error: any) {
       if (error?.response?.status === 400)
@@ -83,7 +83,7 @@ const InvestorInfoDrawer = ({
     try {
       const { status } = await putAcceptInvite(inviteID, authToken);
       if (status === 200) {
-        toast.success(language?.v3?.investor?.applied, toastUtil);
+        toast.success(language?.v3?.investor?.invite_accepted, toastUtil);
       }
       removeSpinning();
     } catch (error: any) {
@@ -238,10 +238,10 @@ const InvestorInfoDrawer = ({
                 <p className="text-[#404040] font-medium">
                   {investorInfo?.investor_type}
                 </p>
-                {
-                  <p className="text-[#737373] text-sm">
-                    I have at least AED 18.36 million in investments
-                  </p>
+                { investorInfo?.accreditation && (   <p className="text-[#737373] text-sm">
+                {investorInfo?.accreditation}
+                  </p>)
+               
                 }
                 <aside className="flex gap-24 justify-between items-center mt-5">
                   <div className=" rounded-xl border-[1.75px] border-[#E4E7EC] w-full pl-6 pr-6  py-7 shadow-md">

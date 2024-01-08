@@ -28,7 +28,7 @@ export const getGroupInvestors = ( token:any, filters:any, searchQuery:string, c
   const queryParameters = new URLSearchParams();
   queryParameters.append("page", currentPage.toString());
   if (filters !== "all")
-  queryParameters.append("connection", filters.toLowerCase());
+  queryParameters.append("role", filters.toLowerCase());
   if (searchQuery.trim() !== "") {
     queryParameters.append("search", searchQuery);
   }
@@ -171,9 +171,12 @@ export const postInviteSyn = ( dealId: any, token: string) => {
     }
   );
 };
-export const getSyndicates = (token: string, searchQuery:string, currentPage:number) => {
+export const getSyndicates = (token: string, searchQuery:string, currentPage:number, filters:any) => {
   const queryParameters = new URLSearchParams();
   queryParameters.append("page", currentPage.toString());
+  if (filters !== "all"){
+    queryParameters.append("status", filters.toLowerCase());
+  }
   if (searchQuery.trim() !== "") {
     queryParameters.append("search", searchQuery);
   }
@@ -246,7 +249,7 @@ export const getInvestorInfo = (token: string, investorID:any) => {
   });
 };
 export const getInvestorAllInfo = (token: string, investorID:any) => {
-  return axios.get(`${ENV.API_URL}/${ENV.API_VERSION}/investors/${investorID}`, {
+  return axios.get(`${ENV.API_URL}/${ENV.API_VERSION}/investors/${investorID}/details`, {
       headers: {
           Authorization: `Bearer ${token}`
       },
@@ -310,8 +313,14 @@ export const getSyndicateInformation = (stepId: number, token: string) => {
     },
   });
 };
-export const getApplications = (token: string) => {
-  return axios.get(`${ENV.API_URL}/${ENV.API_VERSION}/syndicate_members/applications`, {
+export const getApplications = (token: string, currentPage:number, searchQuery:string) => {
+  const queryParameters = new URLSearchParams();
+  queryParameters.append("page", currentPage.toString());
+  if (searchQuery.trim() !== "") {
+    queryParameters.append("search", searchQuery);
+  }
+  const apiUrl =`${ENV.API_URL}/${ENV.API_VERSION}/syndicate_members/applications?${queryParameters.toString()}`
+  return axios.get(apiUrl, {
     headers: {
       Authorization: `Bearer ${token}`,
     },
