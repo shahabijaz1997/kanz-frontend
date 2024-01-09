@@ -55,7 +55,8 @@ export const convertStatusLanguage = (status: any) => {
     'مكتمل': "completed",
     'يقرأ': "read",
     'وأضاف': "added",
-    'تابع': "follower"
+    'تابع': "follower",
+    "testing":"Testing"
   };
   return statuses_array_en[status];
 };
