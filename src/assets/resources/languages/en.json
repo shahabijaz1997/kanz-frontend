@@ -1149,7 +1149,8 @@
       "change_to_lp": "Change to LP",
       "personal_note_from": "Personal note from",
       "individual": "Individual",
-      "firm": "Firm"
+      "firm": "Firm",
+      "no_member_for_now":"No member for now"
     },
     "dealOverview": {
       "title": "Risk and Disclaimer",

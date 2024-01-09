@@ -227,7 +227,7 @@ const SyndicateInfoDrawer = ({
                     </Button>
                   </span>
                 )}
-                {syndicateInfo?.invite?.invite_type === "Invite" && syndicateInfo?.invite?.status === "pending" && (
+                {syndicateInfo?.invite?.invite_type === "Invite Received" && syndicateInfo?.invite?.status === "pending" && (
                   <span className="items-center">
                     <Button
                        type={

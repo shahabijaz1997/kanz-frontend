@@ -551,10 +551,11 @@ const SyndicateFullView = ({}: any) => {
                   </span>
                 </div>
               </div>
+              
               <div className="font-medium text-2xl mt-14 flex items-center justify-center">
               {language?.v3?.investor?.lp}
               </div>
-              <div className="mt-4 flex items-center justify-center mb-10">
+              {state?.limited_partners?.length > 0 ? ( <div className="mt-4 flex items-center justify-center mb-10">
                 <div
                   className="flex-wrap items-center justify-center max-w-[45%]"
                   style={{ display: "flex" }}
@@ -588,11 +589,14 @@ const SyndicateFullView = ({}: any) => {
                     </div>
                   ))}
                 </div>
-              </div>
+              </div>):(
+                <div className="mt-4 italic text-[#737380] text-center">{language?.v3?.investor?.no_member_for_now}</div>
+              )}
+             
               <div className="font-medium text-2xl mt-14 flex items-center justify-center">
               {language?.v3?.investor?.gp}
               </div>
-              <div className="mt-4 flex items-center justify-center mb-10">
+              {state?.general_partners?.length > 0 ? (  <div className="mt-4 flex items-center justify-center mb-10">
                 <div
                   className="flex-wrap items-center justify-center max-w-[45%]"
                   style={{ display: "flex" }}
@@ -626,7 +630,10 @@ const SyndicateFullView = ({}: any) => {
                     </div>
                   ))}
                 </div>
-              </div>
+              </div>): (
+                <div className="mt-4 italic text-[#737380] text-center">{language?.v3?.investor?.no_member_for_now}</div>
+              )}
+            
             </aside>
           </section>
         )}
