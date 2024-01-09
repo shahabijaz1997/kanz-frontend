@@ -720,6 +720,17 @@ const SyndicateRequest = ({}: any) => {
             style={{ backgroundColor: "rgba(0, 0, 0, 0.078" }}
           >
             <aside className="bg-white w-[700px] rounded-md p-5 h-full">
+            <header className="h-12 py-2 px-3 inline-flex w-full justify-between items-center">
+                <div
+                  className="bg-white h-8 w-8 border-[1px] border-black rounded-md  shadow-cs-6 p-1 cursor-pointer"
+                  onClick={() => {
+                    setmodalAddComment(false);
+                    setChanges({ comment: "", action: "", document: null });
+                  }}
+                >
+                  <CrossIcon stroke="#000" />
+                </div>
+              </header>
               <section className="py-3 px-3">
                 <div className="mb-6">
                   <label

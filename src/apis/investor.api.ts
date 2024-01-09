@@ -51,10 +51,27 @@ export const getCommitedDeals = ( token: string, filters :any, searchQuery:strin
     },
   });
 };
-  export const getFollowedSyndicates = (token: string, searchQuery:string, currentPage:number) => {
+  export const getFollowedSyndicates = (token: string, searchQuery:string, currentPage:number, filters:any) => {
   const queryParameters = new URLSearchParams();
   queryParameters.append("page", currentPage.toString())
-  queryParameters.append("followed", "true");
+  queryParameters.append("mine", "true");
+  queryParameters.append("status",filters.toString())
+  if (searchQuery.trim() !== "") {
+    queryParameters.append("search", searchQuery);
+  }
+    return axios.get(
+      `${ENV.API_URL}/${ENV.API_VERSION}/syndicates/all?${queryParameters.toString()}`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+  };
+  export const getPendingSyndicates = (token: string, searchQuery:string, currentPage:number) => {
+  const queryParameters = new URLSearchParams();
+  queryParameters.append("page", currentPage.toString())
+  queryParameters.append("pending", "true");
   if (searchQuery.trim() !== "") {
     queryParameters.append("search", searchQuery);
   }
@@ -70,12 +87,13 @@ export const getCommitedDeals = ( token: string, filters :any, searchQuery:strin
 
 
   export const postFollowSyndicate = (payload: any, syndicateID :any, token: string) => {
-    return axios.post(`${ENV.API_URL}/${ENV.API_VERSION}/syndicates/${syndicateID}/syndicate_members`, payload, {
+    return axios.post(`${ENV.API_URL}/${ENV.API_VERSION}/syndicates/${syndicateID}/invites`, payload, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
     });
   };
+
 
   export const postunFollowSyndicate = ( syndicateID :any, memeberId:any , token: string) => {
     return axios.delete(`${ENV.API_URL}/${ENV.API_VERSION}/syndicates/${syndicateID}/syndicate_members/${memeberId}`, {

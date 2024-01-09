@@ -16,10 +16,6 @@ import { getSyndicateInfo } from "../../../../apis/investor.api";
 
 const AllSyndicates = ({}: any): any => {
   const [childData, setChildData]: any = useState(null);
-
-  const handleChildData = (data: any) => {
-    setChildData(data);
-  };
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const language: any = useSelector((state: RootState) => state.language.value);
@@ -29,26 +25,54 @@ const AllSyndicates = ({}: any): any => {
     (state: RootState) => state.orientation.value
   );
 
+  const getCountvalue = (value: string) => {
+    return filter[value] || 0
+  };
+  const [tabs] = useState<any>({
+    'all': language?.v3?.startup?.overview?.all,
+    'not_invited': language?.v3?.investor?.not_invited,
+    'applied': language?.v3?.investor?.applied,
+    'invite_received': language?.v3?.investor?.invite_received,
+  });
   const columns = [
     language?.v3?.investor?.syndicate,
     language?.v3?.investor?.total_deals,
     language?.v3?.investor?.active_deals,
+    language?.v3?.fundraiser?.invite_status,
     language?.v3?.investor?.raising_fund,
     language?.v3?.investor?.formation_date,
     "",
   ];
   const [loading, setLoading]: any = useState(false);
+  const [loaderParent, setLoaderParent]: any = useState(false);
   const [invites, setInvites]: any = useState([]);
   const [syndicateInfo, setsyndicateInfo]: any = useState(null);
+  const [selectedTab, setSelectedTab] = useState("all");
+  const [filter, setFilterCounts]: any = useState([]);
   const [paginationData, setpaginationData] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [isOpen, setOpen]: any = useState(false);
   const [searchQuery, setSearchQuery]: any = useState("");
-
+  const loadingOn = ()=>{
+    setLoaderParent(!loaderParent)
+  }
   useEffect(() => {
     dispatch(saveDataHolder(""));
     getAllSyndicates();
   }, []);
+  useEffect(() => {
+    dispatch(saveDataHolder(""));
+    getAllSyndicates();
+  }, [loaderParent]);
+  useEffect(() => {
+    dispatch(saveDataHolder(""));
+    getAllSyndicates();
+  }, [currentPage]);
+  useEffect(() => {
+    dispatch(saveDataHolder(""));
+    setCurrentPage(1)
+    getAllSyndicates();
+  }, [selectedTab]);
   useEffect(() => {
     syndicateInfo?.id && onGetSyndicateDetail(syndicateInfo?.id);
     setChildData(false);
@@ -70,10 +94,12 @@ const AllSyndicates = ({}: any): any => {
       let { status, data } = await getSyndicates(
         authToken,
         searchQuery,
-        currentPage
+        currentPage,
+        selectedTab
       );
       if (status === 200) {
         setpaginationData(data?.status?.data?.pagy);
+        setFilterCounts(data?.status?.data?.stats)
         let deals = data?.status?.data?.records.map((syndicate: any) => {
           return {
             id: syndicate?.id,
@@ -85,6 +111,11 @@ const AllSyndicates = ({}: any): any => {
             ),
             [ language?.v3?.investor?.active_deals]: (
               <span className=" capitalize">{syndicate?.active_deals}</span>
+            ),
+            [ language?.v3?.fundraiser?.invite_status]: (
+              <span className=" capitalize">
+                <CustomStatus options={syndicate?.membership_status}/>
+              </span>
             ),
             [ language?.v3?.investor?.raising_fund]: (
               <span className=" capitalize">
@@ -151,6 +182,24 @@ const AllSyndicates = ({}: any): any => {
               placeholder={language?.v3?.common?.search}
             />
           </div>
+          <ul className="inline-flex items-center">
+                  {React.Children.toArray(
+                    Object.keys(tabs).map((tab: any) => (
+                      <li
+                        onClick={() => {
+                          setSelectedTab(tab)}
+                        }
+                        className={`py-2 px-4 font-medium text-xs cursor-pointer rounded-md transition-all ${
+                          selectedTab === tab
+                            ? "text-neutral-900 bg-neutral-100"
+                            : "text-gray-500"
+                        } `}
+                      >
+                        {tabs[tab]} &nbsp;({getCountvalue(tab)})
+                      </li>
+                    ))
+                  )}
+                </ul>
         </span>
       </section>
       <section className="mt-5 relative">
@@ -178,10 +227,10 @@ const AllSyndicates = ({}: any): any => {
         )}
       </section>
       <SyndicateInfoDrawer
+      loadingOn={loadingOn}
         syndicateInfo={syndicateInfo}
         openDrawer={isOpen}
         isDrawerOpen={setOpen}
-        onData={handleChildData}
       />
     </>
   );

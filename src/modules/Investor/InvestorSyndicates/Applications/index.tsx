@@ -9,51 +9,66 @@ import { saveDataHolder } from "../../../../redux-toolkit/slicer/dataHolder.slic
 import Spinner from "../../../../shared/components/Spinner";
 import Chevrond from "../../../../ts-icons/chevrond.svg";
 import CustomStatus from "../../../../shared/components/CustomStatus";
+import { getAppliedSyndicates, getSyndicates } from "../../../../apis/syndicate.api";
 import { saveToken } from "../../../../redux-toolkit/slicer/auth.slicer";
-import {
-  getFollowedSyndicates,
-  getSyndicateInfo,
-} from "../../../../apis/investor.api";
 import SyndicateInfoDrawer from "../SyndicateInfoDrawer";
+import { getSyndicateInfo } from "../../../../apis/investor.api";
 
-const FollowingSyndicates = (): any => {
+const Applications = ({}: any): any => {
+  const [childData, setChildData]: any = useState(null);
+  const [loaderParent, setLoaderParent]: any = useState(false);
+
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const language: any = useSelector((state: RootState) => state.language.value);
   const authToken: any = useSelector((state: RootState) => state.auth.value);
-  const user: any = useSelector((state: RootState) => state.user.value);
-  const [paginationData, setpaginationData] = useState(null);
-  const [filter, setFilterCounts]: any = useState([]);
-  const [currentPage, setCurrentPage] = useState(1);
   const orientation: any = useSelector(
     (state: RootState) => state.orientation.value
   );
-
+  const loadingOn = () =>{
+    setLoaderParent(!loaderParent)
+  }
+  const [tabs] = useState<any>({
+    "all": language?.v3?.startup?.overview?.all,
+    "applied": language?.v3?.investor?.applied,
+    "invite_received": language?.v3?.investor?.invite_received
+  });
   const columns = [
     language?.v3?.investor?.syndicate,
-    language?.v3?.investor?.total_deals,
-    language?.v3?.investor?.active_deals,
-    language?.v3?.investor?.raising_fund,
-    language?.v3?.investor?.formation_date,
+    language?.v3?.investor?.apply_date,
+    language?.v3?.investor?.status,
     "",
   ];
-  const [loading, setLoading]: any = useState(false);
-  const [invites, setInvites]: any = useState([]);
-  const [syndicateInfo, setsyndicateInfo]: any = useState(null);
-  const [isOpen, setOpen]: any = useState(false);
-  const [searchQuery, setSearchQuery]: any = useState("");
-  const [childData, setChildData]: any = useState(null);
-  const [selectedTab, setSelectedTab] = useState("all");
-
   const getCountvalue = (value: string) => {
     return filter[value] || 0
   };
-  const [tabs] = useState<any>({
-    'all': language?.v3?.startup?.overview?.all,
-    'has_active_deal': language?.v3?.investor?.has_active_deal,
-    'no_active_deal': language?.v3?.investor?.no_active_deal,
-  });
+  const [selectedTab, setSelectedTab] = useState("all");
+  const [loading, setLoading]: any = useState(false);
+  const [invites, setInvites]: any = useState([]);
+  const [filter, setFilterCounts]: any = useState([]);
+  const [syndicateInfo, setsyndicateInfo]: any = useState(null);
+  const [paginationData, setpaginationData] = useState(null);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [isOpen, setOpen]: any = useState(false);
+  const [searchQuery, setSearchQuery]: any = useState("");
 
+  useEffect(() => {
+    dispatch(saveDataHolder(""));
+    getApplications();
+  }, []);
+  useEffect(() => {
+    dispatch(saveDataHolder(""));
+    getApplications();
+  }, [currentPage]);
+  useEffect(() => {
+    dispatch(saveDataHolder(""));
+    setCurrentPage(1)
+    getApplications();
+  }, [selectedTab]);
+  useEffect(() => {
+    dispatch(saveDataHolder(""));
+    getApplications();
+  }, [loaderParent]);
   useEffect(() => {
     syndicateInfo?.id && onGetSyndicateDetail(syndicateInfo?.id);
     setChildData(false);
@@ -69,55 +84,31 @@ const FollowingSyndicates = (): any => {
       setLoading(false);
     }
   };
-
-  useEffect(() => {
-    dispatch(saveDataHolder(""));
-    getFollowingSynds();
-  }, []);
-  useEffect(() => {
-    dispatch(saveDataHolder(""));
-    getFollowingSynds();
-  }, [currentPage]);
-  useEffect(() => {
-    dispatch(saveDataHolder(""));
-    getFollowingSynds();
-  }, [selectedTab]);
-
-  const getFollowingSynds = async () => {
+  const getApplications = async () => {
     try {
       setLoading(true);
-      let { status, data } = await getFollowedSyndicates(
+      let { status, data } = await getAppliedSyndicates(
         authToken,
         searchQuery,
         currentPage,
         selectedTab
       );
       if (status === 200) {
-        setpaginationData(data?.status?.data?.pagy);
         setFilterCounts(data?.status?.data?.stats)
-        let syndicates = data?.status?.data?.records?.map((syndicate: any) => {
+        setpaginationData(data?.status?.data?.pagy);
+        let deals = data?.status?.data?.records.map((syndicate: any) => {
           return {
             id: syndicate?.id,
-            [ language?.v3?.investor?.syndicate]: (
+            [language?.v3?.investor?.syndicate]: (
               <span className=" capitalize">{syndicate?.name}</span>
             ),
-            [ language?.v3?.investor?.total_deals]: (
-              <span className=" capitalize">{syndicate?.total_deals}</span>
+            [ language?.v3?.investor?.apply_date]: (
+              <span className=" capitalize">{syndicate?.invite?.created_at}</span>
             ),
-            [ language?.v3?.investor?.active_deals]: (
-              <span className=" capitalize">{syndicate?.active_deals}</span>
-            ),
-            [ language?.v3?.investor?.raising_fund]: (
+            [ language?.v3?.investor?.status]: (
               <span className=" capitalize">
-                  {syndicate?.raising_fund ? (
-                  <CustomStatus options={language?.v3?.fundraiser?.yes} />
-                ) : (
-                  <CustomStatus options={language?.v3?.fundraiser?.no} />
-                )}
+                <CustomStatus options={syndicate?.invite?.invite_type}/>
               </span>
-            ),
-            [language?.v3?.investor?.formation_date]: (
-              <span className=" capitalize">{syndicate?.created_at}</span>
             ),
             [""]: (
               <div
@@ -126,16 +117,17 @@ const FollowingSyndicates = (): any => {
                   setOpen(true);
                 }}
                 className="bg-neutral-100 inline-flex items-center justify-center w-[26px] h-[26px] rounded-full transition-all hover:bg-cbc-transparent mx-2"
-                > <Chevrond
-                className={`${orientation === "rtl" ? "rotate-[-270deg]" : "rotate-[-90deg]"} w-4 h-4`}
-                strokeWidth={2}
-                stroke={"#000"}
-              />
+              >
+                 <Chevrond
+                    className={`${orientation === "rtl" ? "rotate-[-270deg]" : "rotate-[-90deg]"} w-4 h-4`}
+                    strokeWidth={2}
+                    stroke={"#000"}
+                  />
               </div>
             ),
           };
         });
-        setInvites(syndicates);
+        setInvites(deals);
       }
     } catch (error: any) {
       if (error.response && error.response.status === 401) {
@@ -148,7 +140,6 @@ const FollowingSyndicates = (): any => {
       setLoading(false);
     }
   };
-
   return (
     <>
       <section className="inline-flex justify-between items-center w-full">
@@ -156,13 +147,13 @@ const FollowingSyndicates = (): any => {
           <div className="rounded-md shadow-cs-6 bg-white border-[1px] border-gray-200 h-9 overflow-hidden max-w-[310px] inline-flex items-center px-2">
             <SearchIcon
               onClick={() => {
-                getFollowingSynds();
+                getApplications();
               }}
             />
             <input
               onKeyDown={(e) => {
                 if (e.key === "Enter") {
-                  getFollowingSynds();
+                  getApplications();
                 }
               }}
               value={searchQuery}
@@ -208,10 +199,10 @@ const FollowingSyndicates = (): any => {
             paginationData={paginationData}
             noDataNode={
               <span className="absolute left-1/2 top-1/2 translate-x-[-50%] translate-y-[-50%]">
-              {language?.v3?.investor?.no_syndicates_followed}{" "}
-              <span className=" font-bold">{language?.v3?.investor?.follow_button_on_top_left}</span>{" "}
-              {language?.v3?.investor?.to_follow_a_syndicate}
-            </span>
+                {language?.v3?.investor?.no_syndicates_followed}{" "}
+                <span className=" font-bold">{language?.v3?.investor?.follow_button_on_top_left}</span>{" "}
+                {language?.v3?.investor?.to_follow_a_syndicate}
+              </span>
             }
           />
         )}
@@ -220,8 +211,9 @@ const FollowingSyndicates = (): any => {
         syndicateInfo={syndicateInfo}
         openDrawer={isOpen}
         isDrawerOpen={setOpen}
+        loadingOn={loadingOn}
       />
     </>
   );
 };
-export default FollowingSyndicates;
+export default Applications;

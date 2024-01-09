@@ -50,9 +50,18 @@ export enum DealPromotionType {
   CLASSIC = "classic",
   SYNDICATE = "syndicate",
 }
+export enum InviteStatus {
+  PENDING = "pending",
+  INVITED = "invited",
+  AWAITING = "awaiting",
+}
 export enum InputType {
   CURRENCY = "currency",
   PERCENT = "percent",
   NUMERIC="numeric",
   SQFT="sqft"
+}
+export enum MemberType {
+  GP = "General Partner",
+  LP = "Limited Partner",
 }

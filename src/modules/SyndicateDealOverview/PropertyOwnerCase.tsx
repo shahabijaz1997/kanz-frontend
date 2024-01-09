@@ -646,7 +646,7 @@ const PropertyOwnerCase = ({
                           className="min-w-full h-9 no-spin-button"
                           pattern="[0-9]*"
                           placeholder={
-                            selectedCurrency === "USD" ? "$ 0.00" : "AED 0.00"
+                            selectedCurrency === "USD" ? language?.v3?.investor?.placeholderUSD : language?.v3?.investor?.placeholderAED
                           }
                           onKeyDown={(evt) =>
                             ["e", "E", "+", "-"].includes(evt.key) &&
@@ -828,7 +828,7 @@ const PropertyOwnerCase = ({
                           className="min-w-full h-9 no-spin-button"
                           pattern="[0-9]*"
                           placeholder={
-                            selectedCurrency === "USD" ? "$ 0.00" : "AED 0.00"
+                            selectedCurrency === "USD" ? language?.v3?.investor?.placeholderUSD : language?.v3?.investor?.placeholderAED
                           }
                           onKeyDown={(evt) =>
                             ["e", "E", "+", "-"].includes(evt.key) &&

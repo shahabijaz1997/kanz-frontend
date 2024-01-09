@@ -177,8 +177,8 @@ const InvestorUpdates = ({}: any) => {
     language?.v3?.fundraiser?.type,
     language?.v3?.fundraiser?.invested_amount,
     language?.v3?.fundraiser?.invite_status,
-    language?.v3?.deal?.comments,
-    "",
+    language?.v3?.fundraiser?.date,
+
   ];
   const getAllDeals = async () => {
     try {
@@ -196,25 +196,8 @@ const InvestorUpdates = ({}: any) => {
             [language?.v3?.fundraiser?.type]: investor?.type || language?.v3?.common?.not_added,
             [language?.v3?.fundraiser?.invested_amount]: investor?.deal,
             [language?.v3?.fundraiser?.invested_amount]: event === "ar" ?  numberFormatter(investor?.invested_amount,DealCheckType.STARTUP, true) :  numberFormatter(investor?.invested_amount,DealCheckType.STARTUP, false) ||  language?.v3?.common?.not_added,
-            [language?.v3?.fundraiser?.invite_status]: <CustomStatus options={investor?.status} />,
-            "": (
-              <div
-                onClick={() => {
-                  setsyndicateInfo(investor);
-                  viewDealSyndicate(
-                    investor?.deal?.id,
-                    investor?.invitee?.id
-                  );
-                  setOpen(true);
-                }}
-                className="bg-neutral-100 inline-flex items-center justify-center w-[26px] h-[26px] rounded-full transition-all hover:bg-cbc-transparent mx-2"
-                > <Chevrond
-                className={`${orientation === "rtl" ? "rotate-[-270deg]" : "rotate-[-90deg]"} w-4 h-4`}
-                strokeWidth={2}
-                stroke={"#000"}
-              />
-              </div>
-            ),
+            [language?.v3?.fundraiser?.invite_status]: <CustomStatus options={investor?.investment_status} />,
+            [language?.v3?.fundraiser?.date]: investor?.investment_date,
             dealId: investor?.deal?.id,
           };
         });
@@ -700,6 +683,17 @@ const InvestorUpdates = ({}: any) => {
             style={{ backgroundColor: "rgba(0, 0, 0, 0.078" }}
           >
             <aside className="bg-white w-[700px] rounded-md p-5 h-full">
+            <header className="h-16 py-2 px-3 inline-flex w-full justify-between items-center">
+                <div
+                  className="bg-white h-8 w-8 border-[1px] border-black rounded-md  shadow-cs-6 p-1 cursor-pointer"
+                  onClick={() => {
+                    setModalOpen(false);
+                    setChanges({ comment: "", action: "", document: null });
+                  }}
+                >
+                  <CrossIcon stroke="#000" />
+                </div>
+              </header>
               <section className="py-3 px-3">
                 <div className="mb-6">
                   <label
@@ -715,7 +709,7 @@ const InvestorUpdates = ({}: any) => {
                         return { ...prev, comment: e.target.value };
                       })
                     }
-                    placeholder="Add new Comment"
+                    placeholder={language?.v3?.fundraiser?.add_comment}
                     className=" h-[100px] mt-1 shadow-sm appearance-none border border-neutral-300 rounded-md w-full py-2 px-3 text-gray-500 leading-tight focus:outline-none focus:shadow-outline"
                   ></textarea>
                 </div>
