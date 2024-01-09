@@ -45,6 +45,7 @@ export const convertStatusLanguage = (status: any) => {
     "read": 'read',
     "added": 'added',
     "follower": 'follower',
+    "Invite Received":"Invite Received",
     'قيد الانتظار': "pending",
     'قبلت': "accepted",
     'منتهية الصلاحية': "expired",

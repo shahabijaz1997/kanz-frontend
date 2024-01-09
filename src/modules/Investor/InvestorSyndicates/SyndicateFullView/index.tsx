@@ -11,8 +11,9 @@ import { toast } from "react-toastify";
 import { postFollowSyndicate } from "../../../../apis/investor.api";
 import { toastUtil } from "../../../../utils/toast.utils";
 import { comaFormattedNumber } from "../../../../utils/object.utils";
-import { DealCheckType, InviteStatus } from "../../../../enums/types.enum";
+import { DealCheckType, InviteStatus, MemberInviteType } from "../../../../enums/types.enum";
 import { putAcceptInvite } from "../../../../apis/syndicate.api";
+import { convertStatusLanguage } from "../../../../utils/string.utils";
 
 const SyndicateFullView = ({}: any) => {
   const params = useParams();
@@ -37,9 +38,15 @@ const SyndicateFullView = ({}: any) => {
     else return language?.v3?.investor?.apply_to_syndicate;
   };
   const getAcceptButtonStatus = () => {
-    if (hideButton) return "Accepted";
-    else return "Accept";
+    if (hideButton) return language?.v3?.investor?.accepted;
+    else return language?.v3?.investor?.accept;
   };
+
+console.log('====================================');
+console.log("Yo");
+console.log('====================================');
+  console.log(convertStatusLanguage(state?.invite?.invite_type))
+  console.log(MemberInviteType.INVITE_RECEIVED)
   const [enableButton, setEnableButton] = useState(false);
 
   const handleCheckboxChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -97,116 +104,11 @@ const SyndicateFullView = ({}: any) => {
   const handleToggle = () => {
     setIsExpanded(!isExpanded);
   };
-  const dataArray = [
-    {
-      profile: {
-        logo: "https://images.unsplash.com/photo-1620000617482-821324eb9a14?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-      },
-      name: "John",
-    },
-    {
-      profile: {
-        logo: "https://images.unsplash.com/photo-1474176857210-7287d38d27c6?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-      },
-      name: "Doe",
-    },
-    {
-      profile: {
-        logo: "https://images.unsplash.com/photo-1445053023192-8d45cb66099d?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-      },
-      name: "Jane",
-    },
-    {
-      profile: {
-        logo: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-      },
-      name: "Alice",
-    },
-    {
-      profile: {
-        logo: "https://images.unsplash.com/photo-1534308143481-c55f00be8bd7?q=80&w=1930&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-      },
-      name: "Bob",
-    },
-    {
-      profile: {
-        logo: "https://images.unsplash.com/photo-1607746882042-944635dfe10e?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-      },
-      name: "Eve",
-    },
-    {
-      profile: {
-        logo: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-      },
-      name: "Charlie",
-    },
-    {
-      profile: {
-        logo: "https://images.unsplash.com/photo-1508214751196-bcfd4ca60f91?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-      },
-      name: "Sophie",
-    },
-  ];
-  const dataArrayCompany = [
-    {
-      profile: {
-        logo: "https://images.unsplash.com/photo-1635756837851-d3b6edbaa11c?q=80&w=1914&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-      },
-      name: "Tenosrr",
-    },
-    {
-      profile: {
-        logo: "https://images.unsplash.com/photo-1633409361618-c73427e4e206?q=80&w=1780&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-      },
-      name: "Venture",
-    },
-    {
-      profile: {
-        logo: "https://images.unsplash.com/photo-1602934445884-da0fa1c9d3b3?q=80&w=1916&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-      },
-      name: "Enigma",
-    },
-    {
-      profile: {
-        logo: "https://images.unsplash.com/photo-1541797873665-6d4cc148885f?q=80&w=2031&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-      },
-      name: "Funavry",
-    },
-    {
-      profile: {
-        logo: "https://images.unsplash.com/photo-1574630340198-0252cea163da?q=80&w=1887&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-      },
-      name: "GinTech",
-    },
-    {
-      profile: {
-        logo: "https://images.unsplash.com/photo-1602230167340-881f48d4bda7?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-      },
-      name: "Cative",
-    },
-    {
-      profile: {
-        logo: "https://images.unsplash.com/photo-1587987501183-33e43fdde781?q=80&w=1784&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-      },
-      name: "Capture",
-    },
-    {
-      profile: {
-        logo: "https://images.unsplash.com/photo-1567446537708-ac4aa75c9c28?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NjB8fGxvZ29zfGVufDB8fDB8fHww",
-      },
-      name: "VisionX",
-    },
-  ];
+
   const handleSelectChange = (selectedOption: any) => {
     setSelectedDiscovery(selectedOption?.value);
   };
-  /*   const options = [
-    { label: language?.v3?.investor?.news, value: "news" },
-    { label: language?.v3?.investor?.profile, value: "profile" },
-    { label: language?.v3?.investor?.website, value: "website" },
-    { label: language?.v3?.investor?.other, value: "other" },
-  ];
- */
+
   const abbreviatedMonths = state?.portfolio_stats?.labels.map(
     (month: string) => month.charAt(0)
   );
@@ -274,7 +176,7 @@ const SyndicateFullView = ({}: any) => {
                   >
                     {language?.v3?.investor?.back_syndicate}
                   </Button>
-                  {state?.invite?.invite_type === "Invite" &&
+                  {convertStatusLanguage(state?.invite?.invite_type) === MemberInviteType.INVITE_RECEIVED &&
                     state?.invite?.status === "pending" && (
                       <span className="items-center">
                         <Button
