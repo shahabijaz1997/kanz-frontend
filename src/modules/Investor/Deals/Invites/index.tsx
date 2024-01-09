@@ -148,7 +148,9 @@ const Invites = ({}: any): any => {
                 }
               }}
               value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
+              onChange={(e) => {
+              setSearchQuery(e.target.value)
+              setCurrentPage(1)}}
               type="search"
               className="h-full w-full outline-none pl-2 text-sm font-normal "
               placeholder={language?.v3?.common?.search}
