@@ -58,6 +58,15 @@ const AllInvestors = ({ openModal, reloadMembers }: any) => {
     "",
   ];
 
+  useEffect(()=>{
+    setCurrentPage(1)
+    getAllUserListings()
+    },[selectedTab])
+  useEffect(()=>{
+    getAllUserListings()
+    },[currentPage])
+  
+
   const [searchQuery, setSearchQuery]: any = useState("");
   const getCountvalue = (value: string) => {
     return filter[value] || 0

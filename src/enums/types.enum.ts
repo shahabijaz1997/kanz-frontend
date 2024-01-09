@@ -65,3 +65,9 @@ export enum MemberType {
   GP = "General Partner",
   LP = "Limited Partner",
 }
+
+export enum MemberInviteType {
+  INVITE_RECEIVED= "Invite Received",
+}
+
+
