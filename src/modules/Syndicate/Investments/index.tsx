@@ -185,7 +185,9 @@ const SyndicateInvestments = ({}: any) => {
                         }
                       }}
                         value={searchQuery}
-                        onChange={(e) => setSearchQuery(e.target.value)}
+                        onChange={(e) => {
+                          setCurrentPage(1)
+                          setSearchQuery(e.target.value)}}
                         type="search"
                         className="h-full w-full outline-none pl-2 text-sm font-normal "
                         placeholder={language?.v3?.common?.search}
