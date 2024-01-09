@@ -51,7 +51,7 @@ const GroupMembers = ({}: any) => {
 
   const [tabs] = useState<any>({
     'all': language?.v3?.startup?.overview?.all,
-    'Limited Partner': language?.v3?.investor?.lp,
+    'lp': language?.v3?.investor?.lp,
     'gp': language?.v3?.investor?.gp,
   });
   const columns = [
