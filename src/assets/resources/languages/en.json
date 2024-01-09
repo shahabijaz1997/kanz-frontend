@@ -1150,7 +1150,9 @@
       "personal_note_from": "Personal note from",
       "individual": "Individual",
       "firm": "Firm",
-      "no_member_for_now":"No member for now"
+      "no_member_for_now":"No member for now",
+      "social_media":"Social Media",
+      "webiste":"Website"
     },
     "dealOverview": {
       "title": "Risk and Disclaimer",
