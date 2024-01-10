@@ -15,6 +15,7 @@ import {
   getSyndicateInfo,
 } from "../../../../apis/investor.api";
 import SyndicateInfoDrawer from "../SyndicateInfoDrawer";
+import Search from "../../../../shared/components/Search";
 
 const FollowingSyndicates = (): any => {
   const navigate = useNavigate();
@@ -72,23 +73,19 @@ const FollowingSyndicates = (): any => {
 
   useEffect(() => {
     dispatch(saveDataHolder(""));
-    getFollowingSynds();
+    getFollowingSynds(searchQuery);
   }, []);
   useEffect(() => {
     dispatch(saveDataHolder(""));
-    getFollowingSynds();
+    getFollowingSynds(searchQuery);
   }, [currentPage]);
-  useEffect(() => {
-    dispatch(saveDataHolder(""));
-    getFollowingSynds();
-  }, [selectedTab]);
 
-  const getFollowingSynds = async () => {
+  const getFollowingSynds = async (queryString:string) => {
     try {
       setLoading(true);
       let { status, data } = await getFollowedSyndicates(
         authToken,
-        searchQuery,
+        queryString,
         currentPage,
         selectedTab
       );
@@ -153,27 +150,7 @@ const FollowingSyndicates = (): any => {
     <>
       <section className="inline-flex justify-between items-center w-full">
         <span className="w-full flex items-center gap-5">
-          <div className="rounded-md shadow-cs-6 bg-white border-[1px] border-gray-200 h-9 overflow-hidden max-w-[310px] inline-flex items-center px-2">
-            <SearchIcon
-              onClick={() => {
-                getFollowingSynds();
-              }}
-            />
-            <input
-              onKeyDown={(e) => {
-                if (e.key === "Enter") {
-                  getFollowingSynds();
-                }
-              }}
-              value={searchQuery}
-              onChange={(e) => {
-                setCurrentPage(1)
-                setSearchQuery(e.target.value)}}
-              type="search"
-              className="h-full w-full outline-none pl-2 text-sm font-normal "
-              placeholder={language?.v3?.common?.search}
-            />
-          </div>
+        <Search apiFunction={getFollowingSynds} searchQuery={searchQuery} setSearchQuery={setSearchQuery}/>
           <ul className="inline-flex items-center">
                   {React.Children.toArray(
                     Object.keys(tabs).map((tab: any) => (

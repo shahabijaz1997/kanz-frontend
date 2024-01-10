@@ -13,6 +13,8 @@ import { getSyndicates } from "../../../../apis/syndicate.api";
 import { saveToken } from "../../../../redux-toolkit/slicer/auth.slicer";
 import SyndicateInfoDrawer from "../SyndicateInfoDrawer";
 import { getSyndicateInfo } from "../../../../apis/investor.api";
+import CrossIcon from "../../../../ts-icons/crossIcon.svg";
+import Search from "../../../../shared/components/Search";
 
 const AllSyndicates = ({}: any): any => {
   const [childData, setChildData]: any = useState(null);
@@ -56,22 +58,25 @@ const AllSyndicates = ({}: any): any => {
   const loadingOn = ()=>{
     setLoaderParent(!loaderParent)
   }
+  const updateSearchString = (newString:string) => {
+    setSearchQuery(newString)
+  }
   useEffect(() => {
     dispatch(saveDataHolder(""));
-    getAllSyndicates();
+    getAllSyndicates("");
   }, []);
   useEffect(() => {
     dispatch(saveDataHolder(""));
-    getAllSyndicates();
+    getAllSyndicates(searchQuery);
   }, [loaderParent]);
   useEffect(() => {
     dispatch(saveDataHolder(""));
-    getAllSyndicates();
+    getAllSyndicates(searchQuery);
   }, [currentPage]);
   useEffect(() => {
     dispatch(saveDataHolder(""));
     setCurrentPage(1)
-    getAllSyndicates();
+    getAllSyndicates(searchQuery);
   }, [selectedTab]);
   useEffect(() => {
     syndicateInfo?.id && onGetSyndicateDetail(syndicateInfo?.id);
@@ -88,12 +93,12 @@ const AllSyndicates = ({}: any): any => {
       setLoading(false);
     }
   };
-  const getAllSyndicates = async () => {
+  const getAllSyndicates = async (queryString:string) => {
     try {
       setLoading(true);
       let { status, data } = await getSyndicates(
         authToken,
-        searchQuery,
+        queryString,
         currentPage,
         selectedTab
       );
@@ -163,28 +168,7 @@ const AllSyndicates = ({}: any): any => {
     <>
       <section className="inline-flex justify-between items-center w-full">
         <span className="w-full flex items-center gap-5">
-          <div className="rounded-md shadow-cs-6 bg-white border-[1px] border-gray-200 h-9 overflow-hidden max-w-[310px] inline-flex items-center px-2">
-            <SearchIcon
-              onClick={() => {
-                getAllSyndicates();
-              }}
-            />
-            <input
-              onKeyDown={(e) => {
-                if (e.key === "Enter") {
-                  getAllSyndicates();
-                }
-              }}
-              value={searchQuery}
-              onChange={(e) => {
-
-                setCurrentPage(1)
-                setSearchQuery(e.target.value)}}
-              type="search"
-              className="h-full w-full outline-none pl-2 text-sm font-normal "
-              placeholder={language?.v3?.common?.search}
-            />
-          </div>
+          <Search apiFunction={getAllSyndicates} searchQuery={searchQuery} setSearchQuery={setSearchQuery}/>
           <ul className="inline-flex items-center">
                   {React.Children.toArray(
                     Object.keys(tabs).map((tab: any) => (
