@@ -56,7 +56,7 @@ const Applications = ({}: any): any => {
   useEffect(() => {
     dispatch(saveDataHolder(""));
     getApplications(searchQuery);
-  }, []);
+  }, [selectedTab]);
   useEffect(() => {
     dispatch(saveDataHolder(""));
     getApplications(searchQuery);
@@ -141,6 +141,24 @@ const Applications = ({}: any): any => {
       <section className="inline-flex justify-between items-center w-full">
         <span className="w-full flex items-center gap-5">
         <Search apiFunction={getApplications} searchQuery={searchQuery} setSearchQuery={setSearchQuery}/>
+        <ul className="inline-flex items-center">
+                  {React.Children.toArray(
+                    Object.keys(tabs).map((tab: any) => (
+                      <li
+                        onClick={() => {
+                          setSelectedTab(tab)}
+                        }
+                        className={`py-2 px-4 font-medium text-xs cursor-pointer rounded-md transition-all ${
+                          selectedTab === tab
+                            ? "text-neutral-900 bg-neutral-100"
+                            : "text-gray-500"
+                        } `}
+                      >
+                        {tabs[tab]} &nbsp;({getCountvalue(tab)})
+                      </li>
+                    ))
+                  )}
+                </ul>
         </span>
       </section>
       <section className="mt-5 relative">

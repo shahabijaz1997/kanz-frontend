@@ -57,14 +57,22 @@ const SyndicateRequest = ({}: any) => {
   const [syndicates, setsyndicates]: any = useState([]);
   const [dealDetail, setDealDetail]: any = useState(null);
   const [searchQuery, setSearchQuery]: any = useState("");
+  const [filter, setFilterCounts]: any = useState([]);
+  const [selectedTab, setSelectedTab] = useState("all");
   const orientation: any = useSelector(
     (state: RootState) => state.orientation.value
   );
-
+  const [tabs] = useState<any>({
+    "all": language?.v3?.startup?.overview?.all,
+    "pending": language?.v3?.investor?.pending,
+    "interested": language?.v3?.investor?.interested,
+    "accepted": language?.v3?.investor?.accepted,
+    "approved": language?.v3?.investor?.approved,
+  });
   useEffect(() => {
     dispatch(saveDataHolder(""));
     getAllDeals(searchQuery);
-  }, []);
+  }, [selectedTab]);
   useEffect(() => {
     getAllDeals(searchQuery);
   }, [currentPage]);
@@ -92,6 +100,9 @@ const SyndicateRequest = ({}: any) => {
 
     doUploadUtil(fileData, size, type);
     setLoading(false);
+  };
+  const getCountvalue = (value: string) => {
+    return filter[value] || 0
   };
 
   const doUploadUtil = (file: any, size: any, type: string) => {
@@ -205,9 +216,11 @@ const SyndicateRequest = ({}: any) => {
         user.id,
         queryString,
         authToken,
-        currentPage
+        currentPage,
+        selectedTab
       );
       if (status === 200) {
+        setFilterCounts(data?.status?.data?.stats)
         setpaginationData(data?.status?.data?.pagy);
         let syndicates = data?.status?.data?.invites?.map((syndicate: any) => {
           return {
@@ -309,7 +322,24 @@ const SyndicateRequest = ({}: any) => {
                 <div className="w-full">
                   <span className="w-full flex items-center gap-5">
               <Search apiFunction={getAllDeals} searchQuery={searchQuery} setSearchQuery={setSearchQuery}/>
-
+              <ul className="inline-flex items-center">
+                  {React.Children.toArray(
+                    Object.keys(tabs).map((tab: any) => (
+                      <li
+                        onClick={() => {
+                          setSelectedTab(tab)}
+                        }
+                        className={`py-2 px-4 font-medium text-xs cursor-pointer rounded-md transition-all ${
+                          selectedTab === tab
+                            ? "text-neutral-900 bg-neutral-100"
+                            : "text-gray-500"
+                        } `}
+                      >
+                        {tabs[tab]} &nbsp;({getCountvalue(tab)})
+                      </li>
+                    ))
+                  )}
+                </ul>
                   </span>
                 </div>
               </section>

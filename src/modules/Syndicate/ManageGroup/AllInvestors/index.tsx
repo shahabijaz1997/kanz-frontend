@@ -61,10 +61,10 @@ const AllInvestors = ({ openModal, reloadMembers }: any) => {
 
   useEffect(()=>{
     setCurrentPage(1)
-    getAllUserListings()
+    getAllUserListings(searchQuery)
     },[selectedTab])
   useEffect(()=>{
-    getAllUserListings()
+    getAllUserListings(searchQuery)
     },[currentPage])
   
 
@@ -82,12 +82,12 @@ const AllInvestors = ({ openModal, reloadMembers }: any) => {
 
     }
   };
-  const getAllUserListings = async () => {
+  const getAllUserListings = async (queryString:string) => {
     setLoading(true);
     try {
       let { status, data } = await getNonAddedInvestors(
         authToken,
-        searchQuery,
+        queryString,
         currentPage,
         selectedTab
       );
@@ -156,11 +156,11 @@ const AllInvestors = ({ openModal, reloadMembers }: any) => {
 
   useEffect(()=>{
     dispatch(saveDataHolder(""));
-    getAllUserListings()
+    getAllUserListings(searchQuery)
   }, [loaderParent])
   useEffect(()=>{
     dispatch(saveDataHolder(""));
-    getAllUserListings()
+    getAllUserListings(searchQuery)
   }, [currentPage])
 
 
