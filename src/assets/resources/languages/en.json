@@ -922,6 +922,7 @@
       "approved": "Approved",
       "live": "Live",
       "verified": "Verified",
+      "file_type_err":"File type should be only image/jpeg/jpg/pdf",
       "rejected": "Rejected",
       "create_startup_deal": "Create Startup Deal",
       "create_property_deal": "Create Property Deal",
