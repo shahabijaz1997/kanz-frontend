@@ -1,28 +1,16 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import Button from "../../../../shared/components/Button";
 import { RootState } from "../../../../redux-toolkit/store/store";
 import { saveDataHolder } from "../../../../redux-toolkit/slicer/dataHolder.slicer";
-import { saveToken } from "../../../../redux-toolkit/slicer/auth.slicer";
-import { RoutesEnums } from "../../../../enums/routes.enum";
 import SearchIcon from "../../../../ts-icons/searchIcon.svg";
-import { toastUtil } from "../../../../utils/toast.utils";
-import { toast } from "react-toastify";
 import Spinner from "../../../../shared/components/Spinner";
-import ActionButton from "./../ActionButton";
 
-import { comaFormattedNumber } from "../../../../utils/object.utils";
 import Table from "../../../../shared/components/Table";
 
-import CustomStatus from "../../../../shared/components/CustomStatus";
 import {
   getApplicationInvestorInfo,
-  getGroupInvestors,
-  getInvestorInfo,
   getInvitesSent,
-  getNonAddedInvestors,
-  postAddInvestor,
 } from "../../../../apis/syndicate.api";
 import Chevrond from "../../../../ts-icons/chevrond.svg";
 import InvestorInfoDrawer from "../Applications/InvestorInfoDrawer";
@@ -46,22 +34,13 @@ const Invites = ({ openModal, reloadMembers }: any) => {
   const authToken: any = useSelector((state: RootState) => state.auth.value);
   const [loading, setLoading] = useState(false);
   const [modalLoading, setmodalLoading] = useState(false);
-  const [investors, setInvestors] = useState<any>([]);
   const [investorInfo, setInvestorInfo] = useState<any>([]);
   const [filter, setFilterCounts]: any = useState([]);
   const [searchQuery, setSearchQuery]: any = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const [paginationData, setpaginationData] = useState(null);
-  const [searchModalQuery, setModalSearchQuery]: any = useState("");
-  const [buttonDisable, setButtonDisable]: any = useState(false);
   const [isOpen, setOpen]: any = useState(false);
 
-  const setLoadingFalse = () => {
-    setLoading(false);
-  };
-  const setLoadingTrue = () => {
-    setLoading(true);
-  };
 
   const [tabs] = useState<any>({
     pending: language?.v3?.startup?.overview?.all,
