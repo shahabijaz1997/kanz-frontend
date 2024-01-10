@@ -116,9 +116,14 @@ export const getDealDetail = (dealToken: string, token: string) => {
     },
   });
 };
-export const getFundraiserInvestors = (token: string, currentPage:number) => {
+export const getFundraiserInvestors = (token: string, currentPage:number,searchQuery: string) => {
+  console.log(searchQuery)
   const queryParameters = new URLSearchParams();
   queryParameters.append("page", currentPage.toString());
+  if (searchQuery.trim() !== "") {
+    queryParameters.append("search", searchQuery);
+  }
+  console.log(queryParameters)
   const apiUrl = `${ENV.API_URL}/${ENV.API_VERSION}/fund_raisers/investors?${queryParameters.toString()}`;
   return axios.get(apiUrl, {
     headers: {

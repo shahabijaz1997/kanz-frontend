@@ -22,6 +22,7 @@ import SearchIcon from "../../../ts-icons/searchIcon.svg";
 import EditDealWarningModal from "../EditDealWarningModal";
 import { saveUserMetaData } from "../../../redux-toolkit/slicer/metadata.slicer";
 import { convertStatusLanguage } from "../../../utils/string.utils";
+import Search from "../../../shared/components/Search";
 
 const PropertyDeals = ({ openPropertyRiskModal }: any) => {
   const [loading, setLoading] = useState(false);
@@ -75,16 +76,16 @@ const PropertyDeals = ({ openPropertyRiskModal }: any) => {
   useEffect(() => {
     dispatch(saveDataHolder(""));
     setCurrentPage(1)
-    getAllDeals();
+    getAllDeals(searchQuery);
   }, [selectedTab]);
   useEffect(() => {
     dispatch(saveDataHolder(""));
-    getAllDeals();
+    getAllDeals(searchQuery);
   }, [currentPage]);
   useEffect(() => {
     dispatch(saveDataHolder(""));
     dispatch(saveUserMetaData(""));
-    getAllDeals();
+    getAllDeals(searchQuery);
   }, []);
   const handleCloseModal = () => {
     setSelectTypeModal(false);
@@ -95,13 +96,13 @@ const PropertyDeals = ({ openPropertyRiskModal }: any) => {
   const handleWarningModal = () => {
     setwarningModal(false);
   };
-  const getAllDeals = async () => {
+  const getAllDeals = async (queryString:string) => {
     try {
       setLoading(true);
       let { status, data } = await getPropertyDeals(
         authToken,
         selectedTab,
-        searchQuery,
+        queryString,
         currentPage
       );
       if (status === 200) {
@@ -220,26 +221,7 @@ const PropertyDeals = ({ openPropertyRiskModal }: any) => {
           <section className="inline-flex justify-between items-center w-full">
             <div className="w-full">
               <span className="w-full flex items-center gap-5">
-                <div className="rounded-md shadow-cs-6 bg-white border-[1px] border-gray-200 h-9 overflow-hidden max-w-[310px] inline-flex items-center px-2">
-                  <SearchIcon
-                    onClick={() => {
-                      getAllDeals();
-                    }}
-                  />
-                  <input
-                    onKeyDown={(e) => {
-                      if (e.key === "Enter") {
-                        getAllDeals();
-                      }
-                    }}
-                    value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
-                    type="search"
-                    className="h-full w-full outline-none pl-2 font-normal "
-                    placeholder={language?.v3?.common?.search}
-                  />
-                </div>
-
+              <Search apiFunction={getAllDeals} searchQuery={searchQuery} setSearchQuery={setSearchQuery}/>
                 <ul className="inline-flex items-center">
                   {React.Children.toArray(
                     Object.keys(tabs).map((tab: any) => (

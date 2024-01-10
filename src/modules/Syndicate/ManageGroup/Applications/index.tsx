@@ -17,6 +17,7 @@ import {
 } from "../../../../apis/syndicate.api";
 import InvestorInfoDrawer from "./InvestorInfoDrawer";
 import Chevrond from "../../../../ts-icons/chevrond.svg";
+import Search from "../../../../shared/components/Search";
 
 const Applications = ({reloadMembers}: any) => {
   const dispatch = useDispatch();
@@ -65,11 +66,11 @@ const Applications = ({reloadMembers}: any) => {
   useEffect(() => {
     dispatch(saveDataHolder(""));
     setCurrentPage(1);
-    getMembers();
-  }, [selectedTab]);
+    getMembers(searchQuery);
+  }, [selectedTab, currentPage]);
   useEffect(() => {
     dispatch(saveDataHolder(""));
-    getMembers();
+    getMembers(searchQuery);
   }, [currentPage]);
 
   const ongetInvestorInfo = async (id: any) => {
@@ -82,13 +83,12 @@ const Applications = ({reloadMembers}: any) => {
       setLoading(false);
     }
   };
-  const getMembers = async () => {
+  const getMembers = async (queryString:string) => {
     setLoading(true);
     try {
       let { status, data } = await getApplications(
         authToken,
-        currentPage, 
-        searchQuery
+        queryString
       );
 
       if (status === 200) {
@@ -131,7 +131,7 @@ const Applications = ({reloadMembers}: any) => {
   };
   useEffect(()=>{
     dispatch(saveDataHolder(""));
-    getMembers()
+    getMembers(searchQuery)
   }, [loaderParent])
 
 
@@ -166,44 +166,8 @@ const Applications = ({reloadMembers}: any) => {
                 <section className="inline-flex justify-between items-center w-full">
                   <div className="w-full">
                     <span className="w-full flex items-center gap-5">
-                      <div className="rounded-md shadow-cs-6 bg-white border-[1px] border-gray-200 h-9 overflow-hidden min-w-[300px] inline-flex items-center px-2">
-                        <SearchIcon
-                          onClick={() => {
-                            getMembers();
-                          }}
-                        />
-                        <input
-                          onKeyDown={(e) => {
-                            if (e.key === "Enter") {
-                              getMembers();
-                            }
-                          }}
-                          value={searchQuery}
-                          onChange={(e) => setSearchQuery(e.target.value)}
-                          type="search"
-                          className="h-full w-full outline-none pl-2 text-sm font-normal "
-                          placeholder={ language?.v3?.syndicate?.search_for_investors}
-                        />
-                      </div>
+                <Search apiFunction={getMembers} searchQuery={searchQuery} setSearchQuery={setSearchQuery}/>
 
-{/*                       <ul className="inline-flex items-center">
-                        {React.Children.toArray(
-                         Object.keys(tabs).map((tab: any) => (
-                            <li
-                              onClick={() => {
-                                setSelectedTab(tab);
-                              }}
-                              className={`py-2 px-3 font-medium cursor-pointer rounded-md transition-all ${
-                                selectedTab === tab
-                                  ? "text-neutral-900 bg-neutral-100"
-                                  : "text-gray-500"
-                              } `}
-                            >
-                              {tabs[tab]} &nbsp;({getCountvalue(tab)})
-                            </li>
-                          ))
-                        )}
-                      </ul> */}
                     </span>
                   </div>
                 </section>

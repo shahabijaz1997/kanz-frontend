@@ -13,6 +13,7 @@ import { getAppliedSyndicates, getSyndicates } from "../../../../apis/syndicate.
 import { saveToken } from "../../../../redux-toolkit/slicer/auth.slicer";
 import SyndicateInfoDrawer from "../SyndicateInfoDrawer";
 import { getSyndicateInfo } from "../../../../apis/investor.api";
+import Search from "../../../../shared/components/Search";
 
 const Applications = ({}: any): any => {
   const [childData, setChildData]: any = useState(null);
@@ -54,20 +55,15 @@ const Applications = ({}: any): any => {
 
   useEffect(() => {
     dispatch(saveDataHolder(""));
-    getApplications();
+    getApplications(searchQuery);
   }, []);
   useEffect(() => {
     dispatch(saveDataHolder(""));
-    getApplications();
+    getApplications(searchQuery);
   }, [currentPage]);
   useEffect(() => {
     dispatch(saveDataHolder(""));
-    setCurrentPage(1)
-    getApplications();
-  }, [selectedTab]);
-  useEffect(() => {
-    dispatch(saveDataHolder(""));
-    getApplications();
+    getApplications(searchQuery);
   }, [loaderParent]);
   useEffect(() => {
     syndicateInfo?.id && onGetSyndicateDetail(syndicateInfo?.id);
@@ -84,12 +80,12 @@ const Applications = ({}: any): any => {
       setLoading(false);
     }
   };
-  const getApplications = async () => {
+  const getApplications = async (queryString:string) => {
     try {
       setLoading(true);
       let { status, data } = await getAppliedSyndicates(
         authToken,
-        searchQuery,
+        queryString,
         currentPage,
         selectedTab
       );
@@ -144,43 +140,7 @@ const Applications = ({}: any): any => {
     <>
       <section className="inline-flex justify-between items-center w-full">
         <span className="w-full flex items-center gap-5">
-          <div className="rounded-md shadow-cs-6 bg-white border-[1px] border-gray-200 h-9 overflow-hidden max-w-[310px] inline-flex items-center px-2">
-            <SearchIcon
-              onClick={() => {
-                getApplications();
-              }}
-            />
-            <input
-              onKeyDown={(e) => {
-                if (e.key === "Enter") {
-                  getApplications();
-                }
-              }}
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              type="search"
-              className="h-full w-full outline-none pl-2 text-sm font-normal "
-              placeholder={language?.v3?.common?.search}
-            />
-          </div>
-          <ul className="inline-flex items-center">
-                  {React.Children.toArray(
-                    Object.keys(tabs).map((tab: any) => (
-                      <li
-                        onClick={() => {
-                          setSelectedTab(tab)}
-                        }
-                        className={`py-2 px-4 font-medium text-xs cursor-pointer rounded-md transition-all ${
-                          selectedTab === tab
-                            ? "text-neutral-900 bg-neutral-100"
-                            : "text-gray-500"
-                        } `}
-                      >
-                        {tabs[tab]} &nbsp;({getCountvalue(tab)})
-                      </li>
-                    ))
-                  )}
-                </ul>
+        <Search apiFunction={getApplications} searchQuery={searchQuery} setSearchQuery={setSearchQuery}/>
         </span>
       </section>
       <section className="mt-5 relative">

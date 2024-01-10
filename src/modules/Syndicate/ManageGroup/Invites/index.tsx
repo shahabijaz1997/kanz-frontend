@@ -26,6 +26,7 @@ import {
 } from "../../../../apis/syndicate.api";
 import Chevrond from "../../../../ts-icons/chevrond.svg";
 import InvestorInfoDrawer from "../Applications/InvestorInfoDrawer";
+import Search from "../../../../shared/components/Search";
 
 const Invites = ({ openModal, reloadMembers }: any) => {
   const navigate = useNavigate();
@@ -79,15 +80,15 @@ const Invites = ({ openModal, reloadMembers }: any) => {
   useEffect(() => {
     dispatch(saveDataHolder(""));
     setCurrentPage(1);
-    getInvitesforGroup();
+    getInvitesforGroup(searchQuery);
   }, [selectedTab]);
   useEffect(() => {
     dispatch(saveDataHolder(""));
-    getInvitesforGroup();
+    getInvitesforGroup(searchQuery);
   }, [currentPage]);
   useEffect(() => {
     dispatch(saveDataHolder(""));
-    getInvitesforGroup();
+    getInvitesforGroup(searchQuery);
   }, [reloadMembers]);
   const ongetInvestorInfo = async (id: any) => {
     try {
@@ -100,13 +101,13 @@ const Invites = ({ openModal, reloadMembers }: any) => {
     }
   };
 
-  const getInvitesforGroup = async () => {
+  const getInvitesforGroup = async (queryString:string) => {
     setLoading(true);
     try {
       let { status, data } = await getInvitesSent(
         authToken,
         selectedTab,
-        searchQuery,
+        queryString,
         currentPage
       );
 
@@ -180,27 +181,7 @@ const Invites = ({ openModal, reloadMembers }: any) => {
                 <section className="inline-flex justify-between items-center w-full">
                   <div className="w-full">
                     <span className="w-full flex items-center gap-5">
-                      <div className="rounded-md shadow-cs-6 bg-white border-[1px] border-gray-200 h-9 overflow-hidden min-w-[300px] inline-flex items-center px-2">
-                        <SearchIcon
-                          onClick={() => {
-                            getInvitesforGroup();
-                          }}
-                        />
-                        <input
-                          onKeyDown={(e) => {
-                            if (e.key === "Enter") {
-                              getInvitesforGroup();
-                            }
-                          }}
-                          value={searchQuery}
-                          onChange={(e) => setSearchQuery(e.target.value)}
-                          type="search"
-                          className="h-full w-full outline-none pl-2 text-sm font-normal "
-                          placeholder={
-                            language?.v3?.syndicate?.search_for_investors
-                          }
-                        />
-                      </div>
+                    <Search apiFunction={getInvitesforGroup} searchQuery={searchQuery} setSearchQuery={setSearchQuery}/>
                     </span>
                   </div>
                 </section>

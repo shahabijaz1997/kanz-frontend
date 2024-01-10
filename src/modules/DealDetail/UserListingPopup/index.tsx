@@ -14,6 +14,8 @@ import { toastUtil } from "../../../utils/toast.utils";
 import { toast } from "react-toastify";
 import { ApplicationStatus } from "../../../enums/types.enum";
 import Spinner from "../../../shared/components/Spinner";
+import Search from "../../../shared/components/Search";
+import CrossIcon from "../../../ts-icons/crossIcon.svg";
 
 interface Syndicate {
   id: number;
@@ -21,7 +23,13 @@ interface Syndicate {
   handle: string;
   action: React.ReactNode;
 }
-const UserListingPopup = ({ approve, dealId, type, dealIdReal, setLoader }: any) => {
+const UserListingPopup = ({
+  approve,
+  dealId,
+  type,
+  dealIdReal,
+  setLoader,
+}: any) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const ref: any = useRef();
@@ -36,7 +44,6 @@ const UserListingPopup = ({ approve, dealId, type, dealIdReal, setLoader }: any)
     (state: RootState) => state.orientation.value
   );
 
-
   useEffect(() => {
     const handleOutsideClick = (event: any) => {
       if (ref.current && !ref.current.contains(event.target)) {
@@ -48,8 +55,6 @@ const UserListingPopup = ({ approve, dealId, type, dealIdReal, setLoader }: any)
       window.removeEventListener("click", handleOutsideClick);
     };
   }, []);
-
-  
 
   const copyToClipboard = () => {
     let finalstring =
@@ -63,7 +68,7 @@ const UserListingPopup = ({ approve, dealId, type, dealIdReal, setLoader }: any)
 
   useEffect(() => {
     dispatch(saveDataHolder(""));
-    dealIdReal && getAllUserListings();
+    dealIdReal && getAllUserListings("");
   }, [type]);
 
   const onSendInvite = async (syndId: any) => {
@@ -87,15 +92,19 @@ const UserListingPopup = ({ approve, dealId, type, dealIdReal, setLoader }: any)
     } catch (error: any) {
       if (error?.response?.status === 400)
         toast.warning(error?.response?.data?.status?.message, toastUtil);
-    } 
+    }
   };
 
-  const getAllUserListings = async () => {
+  const getAllUserListings = async (queryString: string) => {
     try {
       setLoading(true);
       let results: any;
       if (type === KanzRoles.SYNDICATE)
-        results = await getSyndicatetoInvite(dealIdReal, searchQuery, authToken);
+        results = await getSyndicatetoInvite(
+          dealIdReal,
+          queryString,
+          authToken
+        );
       let { status, data } = results;
       if (status === 200) {
         let syndicatesData = data?.status?.data || [];
@@ -109,7 +118,9 @@ const UserListingPopup = ({ approve, dealId, type, dealIdReal, setLoader }: any)
                 divStyle="items-center justify-end max-w-fit"
                 type="outlined"
                 className="!p-3 !py-1 !rounded-full"
-                onClick={() => {onSendInvite(syndicate?.id)}}
+                onClick={() => {
+                  onSendInvite(syndicate?.id);
+                }}
               >
                 {language?.v3?.fundraiser?.invite}
               </Button>
@@ -132,7 +143,9 @@ const UserListingPopup = ({ approve, dealId, type, dealIdReal, setLoader }: any)
       }
       if (error.response && error.response.status === 401) {
         dispatch(saveToken(""));
-        navigate(RoutesEnums.LOGIN, { state: RoutesEnums.FUNDRAISER_DASHBOARD });
+        navigate(RoutesEnums.LOGIN, {
+          state: RoutesEnums.FUNDRAISER_DASHBOARD,
+        });
       }
     } finally {
       setLoading(false);
@@ -143,7 +156,7 @@ const UserListingPopup = ({ approve, dealId, type, dealIdReal, setLoader }: any)
     <div ref={ref}>
       <Button
         onClick={() => {
-          getAllUserListings();
+          getAllUserListings("");
           setShowInviteSyndicate(true);
         }}
         className="w-[80px]"
@@ -152,32 +165,40 @@ const UserListingPopup = ({ approve, dealId, type, dealIdReal, setLoader }: any)
         {language?.v3?.button?.invite}
       </Button>
       {showInviteSyndicate ? (
-        <section className={`${
-          orientation === "rtl"
-            ? "left-0"
-            : "right-0"
-        } absolute p-5 bg-white border-[1px] border-neutral-200 rounded-md w-[400px] top-[100%]`}>
-           
-                <div className="rounded-md shadow-cs-6 bg-white border-[1px] border-gray-200 h-9 overflow-hidden w-full inline-flex items-center px-2">
-                      <SearchIcon
-                        onClick={() => {
-                          getAllUserListings();
-                        }}
-                      />
-                      <input
-                        onKeyDown={(e) => {
-                          if (e.key === 'Enter') {
-                            getAllUserListings();
-                          }
-                        }}
-                        value={searchQuery}
-                        onChange={(e) => setSearchQuery(e.target.value)}
-                        type="search"
-                        className="h-full w-full outline-none pl-2 text-sm font-normal"
-                        placeholder={language?.v3?.fundraiser?.search_for_syndicates}
-                      />
-                    </div>
-
+        <section
+          className={`${
+            orientation === "rtl" ? "left-0" : "right-0"
+          } absolute p-5 bg-white border-[1px] border-neutral-200 rounded-md w-[400px] max-h-[400px] top-[100%]`}
+        >
+          <div className="rounded-md shadow-cs-6 bg-white border-[1px] border-gray-200 h-9 overflow-hidden w-full inline-flex items-center px-2">
+            <SearchIcon
+              onClick={() => {
+                getAllUserListings(searchQuery);
+              }}
+            />
+            <input
+              onKeyDown={(e) => {
+                if (e.key === "Enter") {
+                  getAllUserListings(searchQuery);
+                }
+              }}
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              type="text"
+              className="h-full w-full outline-none pl-2 text-sm font-normal"
+              placeholder={language?.v3?.fundraiser?.search_for_syndicates}
+            />
+            {searchQuery !== "" && (
+              <CrossIcon
+                onClick={() => {
+                  setSearchQuery("");
+                  getAllUserListings("");
+                }}
+                stroke="#171717"
+                className="w-5 h-5"
+              />
+            )}
+          </div>
           {loading ? (
             <div
               className="absolute left-0 top-0 w-full h-full grid place-items-center"
@@ -186,14 +207,17 @@ const UserListingPopup = ({ approve, dealId, type, dealIdReal, setLoader }: any)
               <Spinner />
             </div>
           ) : (
-            React.Children.toArray(
+            <div className="max-h-[270px] overflow-auto custom-scroll">
+                    {React.Children.toArray(
               syndicates.map((syndicate: Syndicate) => (
                 <div className="py-4 border-b-[1px] border-b-neutral-200 w-full inline-flex items-center justify-between">
                   <p>{syndicate.title}</p>
                   {syndicate.action}
                 </div>
               ))
-            )
+            )}
+            </div>
+      
           )}
           <span>
             <Button

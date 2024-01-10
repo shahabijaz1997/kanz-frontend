@@ -12,6 +12,7 @@ import Spinner from "../../../../shared/components/Spinner";
 import Chevrond from "../../../../ts-icons/chevrond.svg";
 import { getCommitedDeals } from "../../../../apis/investor.api";
 import { convertStatusLanguage } from "../../../../utils/string.utils";
+import Search from "../../../../shared/components/Search";
 
 const Commitments = ({}: any): any => {
   const navigate = useNavigate();
@@ -52,20 +53,20 @@ const Commitments = ({}: any): any => {
   useEffect(() => {
     dispatch(saveDataHolder(""));
     setCurrentPage(1);
-    getAllInvitees();
+    getAllInvitees(searchQuery);
   }, [selectedTab]);
   useEffect(() => {
     dispatch(saveDataHolder(""));
-    getAllInvitees();
+    getAllInvitees(searchQuery);
   }, [currentPage]);
 
-  const getAllInvitees = async () => {
+  const getAllInvitees = async (queryString:string) => {
     try {
       setLoading(true);
       let { status, data } = await getCommitedDeals(
         authToken,
         selectedTab,
-        searchQuery,
+        queryString,
         currentPage
       );
       if (status === 200) {
@@ -136,25 +137,7 @@ const Commitments = ({}: any): any => {
     <>
       <section className="inline-flex justify-between items-center w-full">
         <span className="w-full flex items-center gap-5">
-          <div className="rounded-md shadow-cs-6 bg-white border-[1px] border-gray-200 h-9 overflow-hidden max-w-[310px] inline-flex items-center px-2">
-            <SearchIcon
-              onClick={() => {
-                getAllInvitees();
-              }}
-            />
-            <input
-              onKeyDown={(e) => {
-                if (e.key === "Enter") {
-                  getAllInvitees();
-                }
-              }}
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              type="search"
-              className="h-full w-full outline-none pl-2 text-sm font-normal "
-              placeholder={language?.v3?.common?.search}
-            />
-          </div>
+        <Search apiFunction={getAllInvitees} searchQuery={searchQuery} setSearchQuery={setSearchQuery}/>
           <ul className="inline-flex items-center">
             {React.Children.toArray(
               Object.keys(tabs).map((tab: any) => (
