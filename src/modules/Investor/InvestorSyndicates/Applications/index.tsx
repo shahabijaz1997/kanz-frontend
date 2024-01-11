@@ -9,75 +9,62 @@ import { saveDataHolder } from "../../../../redux-toolkit/slicer/dataHolder.slic
 import Spinner from "../../../../shared/components/Spinner";
 import Chevrond from "../../../../ts-icons/chevrond.svg";
 import CustomStatus from "../../../../shared/components/CustomStatus";
-import { getSyndicates } from "../../../../apis/syndicate.api";
+import { getAppliedSyndicates, getSyndicates } from "../../../../apis/syndicate.api";
 import { saveToken } from "../../../../redux-toolkit/slicer/auth.slicer";
 import SyndicateInfoDrawer from "../SyndicateInfoDrawer";
 import { getSyndicateInfo } from "../../../../apis/investor.api";
-import CrossIcon from "../../../../ts-icons/crossIcon.svg";
 import Search from "../../../../shared/components/Search";
 
-const AllSyndicates = ({}: any): any => {
+const Applications = ({}: any): any => {
   const [childData, setChildData]: any = useState(null);
+  const [loaderParent, setLoaderParent]: any = useState(false);
+
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const language: any = useSelector((state: RootState) => state.language.value);
   const authToken: any = useSelector((state: RootState) => state.auth.value);
-  const event: any = useSelector((state: RootState) => state.event.value);
   const orientation: any = useSelector(
     (state: RootState) => state.orientation.value
   );
-
-  const getCountvalue = (value: string) => {
-    return filter[value] || 0
-  };
+  const loadingOn = () =>{
+    setLoaderParent(!loaderParent)
+  }
   const [tabs] = useState<any>({
-    'all': language?.v3?.startup?.overview?.all,
-    'not_invited': language?.v3?.investor?.not_invited,
-    'applied': language?.v3?.investor?.applied,
-    'invite_received': language?.v3?.investor?.invite_received,
+    "all": language?.v3?.startup?.overview?.all,
+    "applied": language?.v3?.investor?.applied,
+    "invite_received": language?.v3?.investor?.invite_received
   });
   const columns = [
     language?.v3?.investor?.syndicate,
-    language?.v3?.investor?.total_deals,
-    language?.v3?.investor?.active_deals,
-    language?.v3?.fundraiser?.invite_status,
-    language?.v3?.investor?.raising_fund,
-    language?.v3?.investor?.formation_date,
+    language?.v3?.investor?.apply_date,
+    language?.v3?.investor?.status,
     "",
   ];
-  const [loading, setLoading]: any = useState(false);
-  const [loaderParent, setLoaderParent]: any = useState(false);
-  const [invites, setInvites]: any = useState([]);
-  const [syndicateInfo, setsyndicateInfo]: any = useState(null);
+  const getCountvalue = (value: string) => {
+    return filter[value] || 0
+  };
   const [selectedTab, setSelectedTab] = useState("all");
+  const [loading, setLoading]: any = useState(false);
+  const [invites, setInvites]: any = useState([]);
   const [filter, setFilterCounts]: any = useState([]);
+  const [syndicateInfo, setsyndicateInfo]: any = useState(null);
   const [paginationData, setpaginationData] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [isOpen, setOpen]: any = useState(false);
   const [searchQuery, setSearchQuery]: any = useState("");
-  const loadingOn = ()=>{
-    setLoaderParent(!loaderParent)
-  }
-  const updateSearchString = (newString:string) => {
-    setSearchQuery(newString)
-  }
+
   useEffect(() => {
     dispatch(saveDataHolder(""));
-    getAllSyndicates("");
-  }, []);
+    getApplications(searchQuery);
+  }, [selectedTab]);
   useEffect(() => {
     dispatch(saveDataHolder(""));
-    getAllSyndicates(searchQuery);
-  }, [loaderParent]);
-  useEffect(() => {
-    dispatch(saveDataHolder(""));
-    getAllSyndicates(searchQuery);
+    getApplications(searchQuery);
   }, [currentPage]);
   useEffect(() => {
     dispatch(saveDataHolder(""));
-    setCurrentPage(1)
-    getAllSyndicates(searchQuery);
-  }, [selectedTab]);
+    getApplications(searchQuery);
+  }, [loaderParent]);
   useEffect(() => {
     syndicateInfo?.id && onGetSyndicateDetail(syndicateInfo?.id);
     setChildData(false);
@@ -93,46 +80,31 @@ const AllSyndicates = ({}: any): any => {
       setLoading(false);
     }
   };
-  const getAllSyndicates = async (queryString:string) => {
+  const getApplications = async (queryString:string) => {
     try {
       setLoading(true);
-      let { status, data } = await getSyndicates(
+      let { status, data } = await getAppliedSyndicates(
         authToken,
         queryString,
         currentPage,
         selectedTab
       );
       if (status === 200) {
-        setpaginationData(data?.status?.data?.pagy);
         setFilterCounts(data?.status?.data?.stats)
+        setpaginationData(data?.status?.data?.pagy);
         let deals = data?.status?.data?.records.map((syndicate: any) => {
           return {
             id: syndicate?.id,
             [language?.v3?.investor?.syndicate]: (
               <span className=" capitalize">{syndicate?.name}</span>
             ),
-            [ language?.v3?.investor?.total_deals]: (
-              <span className=" capitalize">{syndicate?.total_deals}</span>
+            [ language?.v3?.investor?.apply_date]: (
+              <span className=" capitalize">{syndicate?.invite?.created_at}</span>
             ),
-            [ language?.v3?.investor?.active_deals]: (
-              <span className=" capitalize">{syndicate?.active_deals}</span>
-            ),
-            [ language?.v3?.fundraiser?.invite_status]: (
+            [ language?.v3?.investor?.status]: (
               <span className=" capitalize">
-                <CustomStatus options={syndicate?.membership_status}/>
+                <CustomStatus options={syndicate?.invite?.invite_type}/>
               </span>
-            ),
-            [ language?.v3?.investor?.raising_fund]: (
-              <span className=" capitalize">
-                {syndicate?.raising_fund ? (
-                  <CustomStatus options={language?.v3?.fundraiser?.yes} />
-                ) : (
-                  <CustomStatus options={language?.v3?.fundraiser?.no} />
-                )}
-              </span>
-            ),
-            [ language?.v3?.investor?.formation_date]: (
-              <span className=" capitalize">{syndicate?.created_at}</span>
             ),
             [""]: (
               <div
@@ -168,8 +140,8 @@ const AllSyndicates = ({}: any): any => {
     <>
       <section className="inline-flex justify-between items-center w-full">
         <span className="w-full flex items-center gap-5">
-          <Search apiFunction={getAllSyndicates} searchQuery={searchQuery} setSearchQuery={setSearchQuery}/>
-          <ul className="inline-flex items-center">
+        <Search apiFunction={getApplications} searchQuery={searchQuery} setSearchQuery={setSearchQuery}/>
+        <ul className="inline-flex items-center">
                   {React.Children.toArray(
                     Object.keys(tabs).map((tab: any) => (
                       <li
@@ -214,12 +186,12 @@ const AllSyndicates = ({}: any): any => {
         )}
       </section>
       <SyndicateInfoDrawer
-      loadingOn={loadingOn}
         syndicateInfo={syndicateInfo}
         openDrawer={isOpen}
         isDrawerOpen={setOpen}
+        loadingOn={loadingOn}
       />
     </>
   );
 };
-export default AllSyndicates;
+export default Applications;

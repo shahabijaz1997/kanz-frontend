@@ -111,8 +111,22 @@ const PropertyOwnerCase = ({
 
   const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file: any = e.target.files?.[0];
-    setFileInformation(file);
-    e.target.value = "";
+    if (file) {
+      const fileSizeInMB = fileSize(file.size, "mb");
+  
+      if (fileSizeInMB > 10) {
+        toast.error(language?.v3?.fundraiser?.file_size_err, toastUtil);
+        navigator.vibrate(1000);
+        return;
+      }
+  
+      const allowedFileTypes = ["image/jpeg", "image/jpg", "image/png", "application/pdf"];
+      if (!allowedFileTypes.includes(file.type)) {
+        toast.error(language?.v3?.fundraiser?.file_type_err, toastUtil);
+        return;
+      }    setFileInformation(file);
+        e.target.value = "";
+    }
   };
 
 
@@ -646,7 +660,7 @@ const PropertyOwnerCase = ({
                           className="min-w-full h-9 no-spin-button"
                           pattern="[0-9]*"
                           placeholder={
-                            selectedCurrency === "USD" ? "$ 0.00" : "AED 0.00"
+                            selectedCurrency === "USD" ? language?.v3?.investor?.placeholderUSD : language?.v3?.investor?.placeholderAED
                           }
                           onKeyDown={(evt) =>
                             ["e", "E", "+", "-"].includes(evt.key) &&
@@ -828,7 +842,7 @@ const PropertyOwnerCase = ({
                           className="min-w-full h-9 no-spin-button"
                           pattern="[0-9]*"
                           placeholder={
-                            selectedCurrency === "USD" ? "$ 0.00" : "AED 0.00"
+                            selectedCurrency === "USD" ? language?.v3?.investor?.placeholderUSD : language?.v3?.investor?.placeholderAED
                           }
                           onKeyDown={(evt) =>
                             ["e", "E", "+", "-"].includes(evt.key) &&
@@ -1250,7 +1264,7 @@ const PropertyOwnerCase = ({
                   setModalOpen3(true);
                 }}
               >
-                                {language?.v3?.syndicate?.continue}
+                {language?.v3?.syndicate?.continue}
 
               </Button>
             </footer>
@@ -1304,6 +1318,9 @@ const PropertyOwnerCase = ({
                     multiple={true}
                     onChange={handleFileUpload}
                   />
+                </span>
+                <span className={`px-2 text-[0.55rem] font-light`}>
+                  {language?.v3?.syndicate?.upload_size}
                 </span>
               </div>
               <div className="mb-3 w-full">

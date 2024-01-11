@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
+import {  useNavigate } from "react-router-dom";
 import { KanzRoles } from "../../../enums/roles.enum";
 import Header from "../../../shared/components/Header";
 import Sidebar from "../../../shared/components/Sidebar";
@@ -27,6 +27,7 @@ import { toast } from "react-toastify";
 import { toastUtil } from "../../../utils/toast.utils";
 import { numberFormatter } from "../../../utils/object.utils";
 import { convertStatusLanguage } from "../../../utils/string.utils";
+import Search from "../../../shared/components/Search";
 
 const InvestorUpdates = ({}: any) => {
   const navigate = useNavigate();
@@ -63,7 +64,7 @@ const InvestorUpdates = ({}: any) => {
 
   useEffect(() => {
     dispatch(saveDataHolder(""));
-    getAllDeals();
+    getAllDeals("");
   }, []);
 
   const setFileInformation = async (file: File) => {
@@ -177,15 +178,16 @@ const InvestorUpdates = ({}: any) => {
     language?.v3?.fundraiser?.type,
     language?.v3?.fundraiser?.invested_amount,
     language?.v3?.fundraiser?.invite_status,
-    language?.v3?.deal?.comments,
-    "",
+    language?.v3?.fundraiser?.date,
+
   ];
-  const getAllDeals = async () => {
+  const getAllDeals = async (queryString:string) => {
     try {
       setLoading(true);
       let { status, data } = await getFundraiserInvestors(
         authToken,
         currentPage,
+        queryString
       );
       if (status === 200) {
         setpaginationData(data?.status?.data?.pagy)
@@ -196,25 +198,8 @@ const InvestorUpdates = ({}: any) => {
             [language?.v3?.fundraiser?.type]: investor?.type || language?.v3?.common?.not_added,
             [language?.v3?.fundraiser?.invested_amount]: investor?.deal,
             [language?.v3?.fundraiser?.invested_amount]: event === "ar" ?  numberFormatter(investor?.invested_amount,DealCheckType.STARTUP, true) :  numberFormatter(investor?.invested_amount,DealCheckType.STARTUP, false) ||  language?.v3?.common?.not_added,
-            [language?.v3?.fundraiser?.invite_status]: <CustomStatus options={investor?.status} />,
-            "": (
-              <div
-                onClick={() => {
-                  setsyndicateInfo(investor);
-                  viewDealSyndicate(
-                    investor?.deal?.id,
-                    investor?.invitee?.id
-                  );
-                  setOpen(true);
-                }}
-                className="bg-neutral-100 inline-flex items-center justify-center w-[26px] h-[26px] rounded-full transition-all hover:bg-cbc-transparent mx-2"
-                > <Chevrond
-                className={`${orientation === "rtl" ? "rotate-[-270deg]" : "rotate-[-90deg]"} w-4 h-4`}
-                strokeWidth={2}
-                stroke={"#000"}
-              />
-              </div>
-            ),
+            [language?.v3?.fundraiser?.invite_status]: <CustomStatus options={investor?.investment_status} />,
+            [language?.v3?.fundraiser?.date]: investor?.investment_date,
             dealId: investor?.deal?.id,
           };
         });
@@ -281,25 +266,7 @@ const InvestorUpdates = ({}: any) => {
               <section className="inline-flex justify-between items-center w-full">
                 <div className="w-full">
                   <span className="w-full flex items-center gap-5">
-                    <div className="rounded-md shadow-cs-6 bg-white border-[1px] border-gray-200 h-9 overflow-hidden max-w-[310px] inline-flex items-center px-2">
-                      <SearchIcon
-                        onClick={() => {
-                          getAllDeals();
-                        }}
-                      />
-                      <input
-                        onKeyDown={(e) => {
-                          if (e.key === "Enter") {
-                            getAllDeals();
-                          }
-                        }}
-                        value={searchQuery}
-                        onChange={(e) => setSearchQuery(e.target.value)}
-                        type="search"
-                        className="h-full w-full outline-none pl-2 text-sm font-normal "
-                        placeholder={language?.v3?.common?.search}
-                      />
-                    </div>
+                  <Search apiFunction={getAllDeals} searchQuery={searchQuery} setSearchQuery={setSearchQuery}/>
                   </span>
                 </div>
               </section>
@@ -700,6 +667,17 @@ const InvestorUpdates = ({}: any) => {
             style={{ backgroundColor: "rgba(0, 0, 0, 0.078" }}
           >
             <aside className="bg-white w-[700px] rounded-md p-5 h-full">
+            <header className="h-16 py-2 px-3 inline-flex w-full justify-between items-center">
+                <div
+                  className="bg-white h-8 w-8 border-[1px] border-black rounded-md  shadow-cs-6 p-1 cursor-pointer"
+                  onClick={() => {
+                    setModalOpen(false);
+                    setChanges({ comment: "", action: "", document: null });
+                  }}
+                >
+                  <CrossIcon stroke="#000" />
+                </div>
+              </header>
               <section className="py-3 px-3">
                 <div className="mb-6">
                   <label
@@ -715,7 +693,7 @@ const InvestorUpdates = ({}: any) => {
                         return { ...prev, comment: e.target.value };
                       })
                     }
-                    placeholder="Add new Comment"
+                    placeholder={language?.v3?.fundraiser?.add_comment}
                     className=" h-[100px] mt-1 shadow-sm appearance-none border border-neutral-300 rounded-md w-full py-2 px-3 text-gray-500 leading-tight focus:outline-none focus:shadow-outline"
                   ></textarea>
                 </div>

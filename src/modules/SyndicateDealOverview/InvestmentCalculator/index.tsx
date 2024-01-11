@@ -2,6 +2,8 @@ import { useEffect, useState } from "react";
 import { comaFormattedNumber } from "../../../utils/object.utils";
 import { useSelector } from "react-redux";
 import { RootState } from "../../../redux-toolkit/store/store";
+import { DealCheckType } from "../../../enums/types.enum";
+import { useLocation } from "react-router-dom";
 
 const InvestmentCalculator = ({}: any) => {
   const [investmentAmount, setinvestmentAmount] = useState(0);
@@ -16,7 +18,8 @@ const InvestmentCalculator = ({}: any) => {
     finalTotalReturn: 0,
     averageAnnualizedReturn: 0,
   });
-
+  const event: any = useSelector((state: RootState) => state.event.value);
+  const { state } = useLocation();
   const handleSlider1Change = (event: any) => {
     setinvestmentAmount(event.target.value);
   };
@@ -121,7 +124,7 @@ const InvestmentCalculator = ({}: any) => {
               <span className="text-sm text-neutral-500 mr-2 ml-2">
                 {language?.v3?.syndicate?.inv_amount}
               </span>
-              <span className="text-lg font-semibold text-[#155E75]">{`(AED ${comaFormattedNumber(
+              <span className="text-lg font-semibold text-[#155E75]">{`(${language?.v3?.investor?.aedSymbol} ${comaFormattedNumber(
                 investmentAmount.toString()
               )})`}</span>
             </p>
@@ -196,7 +199,7 @@ const InvestmentCalculator = ({}: any) => {
                 <p className="px-5 pb-5 text-2xl  font-bold text-[#155E75] ">
                   {" "}
                   <span>
-                    AED{" "}
+                  {language?.v3?.investor?.aedSymbol}{" "}
                     {comaFormattedNumber(
                       parseFloat(
                         finalValue.finalTotalReturn.toString()
@@ -212,7 +215,8 @@ const InvestmentCalculator = ({}: any) => {
                   {comaFormattedNumber(
                     parseFloat(finalValue.dividendComponent.toString()).toFixed(
                       2
-                    )
+                    ),
+                    DealCheckType.PROPERTY, event === "ar"
                   )}
                 </p>
               </div>
@@ -242,7 +246,7 @@ const InvestmentCalculator = ({}: any) => {
                   {comaFormattedNumber(
                     parseFloat(
                       finalValue.finalCapitalAppreciation.toString()
-                    ).toFixed(2)
+                    ).toFixed(2),DealCheckType.PROPERTY, event === "ar"
                   )}
                 </p>
               </div>

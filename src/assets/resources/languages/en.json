@@ -17,6 +17,7 @@
     "propertyOwner": "Propert Owners"
   },
   "onboarding": {
+    "session_timeOut":"Your session has timed out, please log in again...",
     "welcome": "Welcome to Kanz",
     "submitted": "Your application has been submitted!",
     "appStatus": "Application status",
@@ -707,7 +708,7 @@
         "startup_investment": "Startups Investment",
         "syndicate_requests": "Syndicate Requests",
         "dashboard": "Dashboard",
-        "manage_group": "Manage Group",
+        "manage_group": "Manage Syndicate",
         "investments": "Investments",
         "investors": "Investors"
       }
@@ -802,8 +803,7 @@
       "end_on": "Ends On",
       "am_raised": "Amount Raised",
       "suces_msg": "Comment added successfully!",
-      "aedSymbol":"AED"
-
+      "aedSymbol": "AED"
     },
     "button": {
       "new_deal": "Create New Deal",
@@ -839,6 +839,9 @@
           "target": "Target"
         }
       },
+      "name_paceholder": "Abdulrahman Mohammad",
+      "about_paceholder": "Write about yourself",
+      "about": "About",
       "title": "Title",
       "type": "Type",
       "start_at": "Syndicate",
@@ -853,7 +856,7 @@
       "accepted": "Accepted",
       "approved": "Approved",
       "invite_status": "Invite Status",
-      "manage_group": "Manage Group",
+      "manage_group": "Manage Syndicate",
       "search_for_investors": "Search for Investors",
       "investor": "Investor",
       "invested": "Invested",
@@ -863,8 +866,8 @@
       "action": "Action",
       "added": "Added",
       "follower": "Follower",
-      "create_group": "+ Create Group",
-      "no_group_member_yet": "No Group Member Yet",
+      "create_group": "+ Create Syndicate",
+      "no_group_member_yet": "No Syndicate Member Yet",
       "add_new_member": "+ Add New Member",
       "add": "Add",
       "view_details": "View Details",
@@ -906,7 +909,9 @@
       "total_return_on_inv": "Total return on investment",
       "avg_annualised_return": "Average Annualised Return",
       "exp_cap_app": "Expected Capital Appreciation",
-      "net_div_inc": "Net Dividend Income"
+      "net_div_inc": "Net Dividend Income",
+      "notes": "Notes",
+      "sent_date": "Sent Date"
     },
     "fundraiser": {
       "startup": "Startup",
@@ -918,6 +923,7 @@
       "approved": "Approved",
       "live": "Live",
       "verified": "Verified",
+      "file_type_err":"File type should be only image/jpeg/jpg/pdf",
       "rejected": "Rejected",
       "create_startup_deal": "Create Startup Deal",
       "create_property_deal": "Create Property Deal",
@@ -1004,7 +1010,7 @@
       "share": "Share",
       "all_investors_invited": "All investors invited",
       "share_deal": "Share Deal",
-      "share_with_group": "Share with group",
+      "share_with_group": "Share with syndicate",
       "copy_invite_link": "Copy Invite Link",
       "what_round_is_this": "What round is this?",
       "location": "Location",
@@ -1050,8 +1056,10 @@
       "no_credit_card_information_storage": "We do not store credit card information on our servers."
     },
     "investor": {
-      "usdSymbol":"USD",
-      "aedSymbol":"AED",
+      "usdSymbol": "USD",
+      "aedSymbol": "AED",
+      "placeholderUSD": "$ 0.00",
+      "placeholderAED": "AED 0.00",
       "investments": "Investments",
       "deals": "Deals",
       "syndicates": "Syndicates",
@@ -1093,19 +1101,61 @@
       "find_syndicates_to_follow": "Find Syndicates to Follow",
       "committed": "Committed",
       "deal_activity": "Deal Activity",
-      "group_members": "Group Members",
+      "group_members": "Syndicate Members",
       "applications": "Applications",
       "add_deals": "Add Deals",
       "pending": "Pending",
       "approved": "Approved",
       "syndicate_followed": "Syndicate Followed",
-      "cancel": "Cancel",
       "approve": "Approve",
       "invested": "Invested",
       "team": "Team",
       "syndicate_deals": "Syndicate Deals",
       "total_raised_amount": "Total Raised Amount",
-      "syndicate_unfollowed": "Syndicate Unfollowed"
+      "syndicate_unfollowed": "Syndicate Unfollowed",
+      "applied": "Applied",
+      "add_message": "Add Message",
+      "news": "News",
+      "profile": "Profile",
+      "website": "Website",
+      "other": "Other",
+      "back_syndicate": "Back Syndicate",
+      "apply_to_syndicate": "Apply to Syndicate",
+      "how_did_you_discover_this_syndicate": "How did you discover this syndicate?",
+      "personal_note_for": "Personal note for",
+      "briefly_introduce_yourself": "Briefly introduce yourself (consider adding your Linkedin URL) and share why you want to invest with their Syndicate.",
+      "disclaimer_1": "Disclaimer 1",
+      "description_about_disclaimer": "Description about disclaimer",
+      "cancel": "Cancel",
+      "submit_application": "Submit Application",
+      "investors": "Investors",
+      "accept": "Accept",
+      "accepted": "Accepted",
+      "lp": "LP",
+      "team_member": "Team Member",
+      "role": "Role",
+      "no_invites_received": "No invites received",
+      "invite_sent": "Invite Sent",
+      "invite_accepted": "Invite Accepted",
+      "invite_received": "Invite Received",
+      "not_invited": "Not Invited",
+      "lead": "Lead",
+      "last_12_months": "deals in past 12 months",
+      "disc_drawer": "Any financial information provided on this website is for general informational purposes and should not be considered as financial advice. Users are encouraged to seek advice from qualified financial professionals regarding their specific financial situation and goals.",
+      "teams": "Teams",
+      "no_active_deal": "No active deal",
+      "changed": "Changed to ",
+      "profile_pic": "Profile Pic",
+      "invite": "Invite",
+      "change_to_gp": "Change to Team Member",
+      "change_to_lp": "Change to LP",
+      "personal_note_from": "Personal note from",
+      "individual": "Individual",
+      "firm": "Firm",
+      "no_member_for_now":"No member for now",
+      "social_media":"Social Media",
+      "webiste":"Website",
+      "interested":"Interested"
     },
     "dealOverview": {
       "title": "Risk and Disclaimer",
@@ -1144,7 +1194,8 @@
       "syndication": "syndication",
       "investment": "investment",
       "committed_amount": "committed",
-      "completed": "completed"
+      "completed": "completed",
+      "not_invited": "Not Invited"
     }
   }
 }

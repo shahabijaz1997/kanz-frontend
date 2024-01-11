@@ -4,7 +4,6 @@ import { RootState } from "../../../redux-toolkit/store/store";
 import ApprovedSVG from "../../../assets/svg/approved.svg";
 import {
   comaFormattedNumber,
-  formatDate,
   numberFormatter,
 } from "../../../utils/object.utils";
 import { KanzRoles } from "../../../enums/roles.enum";
@@ -189,7 +188,7 @@ const DealViewDetails = ({ dealDetail, state }: any) => {
             </p>
           </div>
           {dealDetail?.equity_type && (
-            <React.Fragment>
+            <React.Fragment>    
               <div className="mt-10 mb-4">
                 <h2 className="text-black text-xl font-bold">{"Valuation"}</h2>
               </div>
@@ -573,11 +572,10 @@ const DealViewDetails = ({ dealDetail, state }: any) => {
                       ) : index === 1 || index === 2 || index === 3 ? (
                         <div className="h-[20px] w-[20px] bg-neutral-300 rounded-full inline-grid place-items-center"></div>
                       ) : null)}
-                    {convertStatusLanguage(dealDetail?.status) === "draft" ||
-                      (convertStatusLanguage(dealDetail?.status) ===
-                        "reopened" && (
+
+                    {(convertStatusLanguage(dealDetail?.status) === "draft" || convertStatusLanguage(dealDetail?.status === "reopened")) && (
                         <div className="h-[20px] w-[20px] bg-neutral-300 rounded-full inline-grid place-items-center"></div>
-                      ))}
+                      )}
 
                     {convertStatusLanguage(dealDetail?.status) === "verified" &&
                       (index === 0 ? (

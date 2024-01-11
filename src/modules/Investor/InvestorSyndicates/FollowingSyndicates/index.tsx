@@ -1,28 +1,21 @@
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { KanzRoles } from "../../../../enums/roles.enum";
-import Header from "../../../../shared/components/Header";
-import Sidebar from "../../../../shared/components/Sidebar";
 import { RootState } from "../../../../redux-toolkit/store/store";
 import SearchIcon from "../../../../ts-icons/searchIcon.svg";
 import React, { useEffect, useState } from "react";
-import Button from "../../../../shared/components/Button";
 import Table from "../../../../shared/components/Table";
 import { RoutesEnums } from "../../../../enums/routes.enum";
 import { saveDataHolder } from "../../../../redux-toolkit/slicer/dataHolder.slicer";
-import { numberFormatter } from "../../../../utils/object.utils";
 import Spinner from "../../../../shared/components/Spinner";
-import { ApplicationStatus } from "../../../../enums/types.enum";
 import Chevrond from "../../../../ts-icons/chevrond.svg";
-import EditIcon from "../../../../ts-icons/editIcon.svg";
 import CustomStatus from "../../../../shared/components/CustomStatus";
-import { getSyndicates } from "../../../../apis/syndicate.api";
 import { saveToken } from "../../../../redux-toolkit/slicer/auth.slicer";
 import {
   getFollowedSyndicates,
   getSyndicateInfo,
 } from "../../../../apis/investor.api";
 import SyndicateInfoDrawer from "../SyndicateInfoDrawer";
+import Search from "../../../../shared/components/Search";
 
 const FollowingSyndicates = (): any => {
   const navigate = useNavigate();
@@ -31,6 +24,7 @@ const FollowingSyndicates = (): any => {
   const authToken: any = useSelector((state: RootState) => state.auth.value);
   const user: any = useSelector((state: RootState) => state.user.value);
   const [paginationData, setpaginationData] = useState(null);
+  const [filter, setFilterCounts]: any = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const orientation: any = useSelector(
     (state: RootState) => state.orientation.value
@@ -50,10 +44,16 @@ const FollowingSyndicates = (): any => {
   const [isOpen, setOpen]: any = useState(false);
   const [searchQuery, setSearchQuery]: any = useState("");
   const [childData, setChildData]: any = useState(null);
+  const [selectedTab, setSelectedTab] = useState("all");
 
-  const handleChildData = (data: any) => {
-    setChildData(data);
+  const getCountvalue = (value: string) => {
+    return filter[value] || 0
   };
+  const [tabs] = useState<any>({
+    'all': language?.v3?.startup?.overview?.all,
+    'has_active_deal': language?.v3?.investor?.has_active_deal,
+    'no_active_deal': language?.v3?.investor?.no_active_deal,
+  });
 
   useEffect(() => {
     syndicateInfo?.id && onGetSyndicateDetail(syndicateInfo?.id);
@@ -73,19 +73,29 @@ const FollowingSyndicates = (): any => {
 
   useEffect(() => {
     dispatch(saveDataHolder(""));
-    getFollowingSynds();
+    getFollowingSynds(searchQuery);
   }, []);
+  useEffect(() => {
+    dispatch(saveDataHolder(""));
+    getFollowingSynds(searchQuery);
+  }, [currentPage]);
+  useEffect(() => {
+    dispatch(saveDataHolder(""));
+    getFollowingSynds(searchQuery);
+  }, [selectedTab]);
 
-  const getFollowingSynds = async () => {
+  const getFollowingSynds = async (queryString:string) => {
     try {
       setLoading(true);
       let { status, data } = await getFollowedSyndicates(
         authToken,
-        searchQuery,
-        currentPage
+        queryString,
+        currentPage,
+        selectedTab
       );
       if (status === 200) {
         setpaginationData(data?.status?.data?.pagy);
+        setFilterCounts(data?.status?.data?.stats)
         let syndicates = data?.status?.data?.records?.map((syndicate: any) => {
           return {
             id: syndicate?.id,
@@ -144,25 +154,25 @@ const FollowingSyndicates = (): any => {
     <>
       <section className="inline-flex justify-between items-center w-full">
         <span className="w-full flex items-center gap-5">
-          <div className="rounded-md shadow-cs-6 bg-white border-[1px] border-gray-200 h-9 overflow-hidden max-w-[310px] inline-flex items-center px-2">
-            <SearchIcon
-              onClick={() => {
-                getFollowingSynds();
-              }}
-            />
-            <input
-              onKeyDown={(e) => {
-                if (e.key === "Enter") {
-                  getFollowingSynds();
-                }
-              }}
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              type="search"
-              className="h-full w-full outline-none pl-2 text-sm font-normal "
-              placeholder={language?.v3?.common?.search}
-            />
-          </div>
+        <Search apiFunction={getFollowingSynds} searchQuery={searchQuery} setSearchQuery={setSearchQuery}/>
+          <ul className="inline-flex items-center">
+                  {React.Children.toArray(
+                    Object.keys(tabs).map((tab: any) => (
+                      <li
+                        onClick={() => {
+                          setSelectedTab(tab)}
+                        }
+                        className={`py-2 px-4 font-medium text-xs cursor-pointer rounded-md transition-all ${
+                          selectedTab === tab
+                            ? "text-neutral-900 bg-neutral-100"
+                            : "text-gray-500"
+                        } `}
+                      >
+                        {tabs[tab]} &nbsp;({getCountvalue(tab)})
+                      </li>
+                    ))
+                  )}
+                </ul>
         </span>
       </section>
       <section className="mt-5 relative">
@@ -193,7 +203,6 @@ const FollowingSyndicates = (): any => {
         syndicateInfo={syndicateInfo}
         openDrawer={isOpen}
         isDrawerOpen={setOpen}
-        onData={handleChildData}
       />
     </>
   );

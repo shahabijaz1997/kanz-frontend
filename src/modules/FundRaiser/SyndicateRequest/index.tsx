@@ -28,6 +28,7 @@ import { toast } from "react-toastify";
 import { toastUtil } from "../../../utils/toast.utils";
 import { numberFormatter } from "../../../utils/object.utils";
 import { convertStatusLanguage } from "../../../utils/string.utils";
+import Search from "../../../shared/components/Search";
 
 const SyndicateRequest = ({}: any) => {
   const navigate = useNavigate();
@@ -56,16 +57,24 @@ const SyndicateRequest = ({}: any) => {
   const [syndicates, setsyndicates]: any = useState([]);
   const [dealDetail, setDealDetail]: any = useState(null);
   const [searchQuery, setSearchQuery]: any = useState("");
+  const [filter, setFilterCounts]: any = useState([]);
+  const [selectedTab, setSelectedTab] = useState("all");
   const orientation: any = useSelector(
     (state: RootState) => state.orientation.value
   );
-
+  const [tabs] = useState<any>({
+    "all": language?.v3?.startup?.overview?.all,
+    "pending": language?.v3?.investor?.pending,
+    "interested": language?.v3?.investor?.interested,
+    "accepted": language?.v3?.investor?.accepted,
+    "approved": language?.v3?.investor?.approved,
+  });
   useEffect(() => {
     dispatch(saveDataHolder(""));
-    getAllDeals();
-  }, []);
+    getAllDeals(searchQuery);
+  }, [selectedTab]);
   useEffect(() => {
-    getAllDeals();
+    getAllDeals(searchQuery);
   }, [currentPage]);
 
   const setFileInformation = async (file: File) => {
@@ -91,6 +100,9 @@ const SyndicateRequest = ({}: any) => {
 
     doUploadUtil(fileData, size, type);
     setLoading(false);
+  };
+  const getCountvalue = (value: string) => {
+    return filter[value] || 0
   };
 
   const doUploadUtil = (file: any, size: any, type: string) => {
@@ -197,16 +209,18 @@ const SyndicateRequest = ({}: any) => {
     language?.v3?.table?.view,
     "",
   ];
-  const getAllDeals = async () => {
+  const getAllDeals = async (queryString:string) => {
     try {
       setLoading(true);
       let { status, data } = await getInvitedSyndicates(
         user.id,
-        searchQuery,
+        queryString,
         authToken,
-        currentPage
+        currentPage,
+        selectedTab
       );
       if (status === 200) {
+        setFilterCounts(data?.status?.data?.stats)
         setpaginationData(data?.status?.data?.pagy);
         let syndicates = data?.status?.data?.invites?.map((syndicate: any) => {
           return {
@@ -307,25 +321,25 @@ const SyndicateRequest = ({}: any) => {
               <section className="inline-flex justify-between items-center w-full">
                 <div className="w-full">
                   <span className="w-full flex items-center gap-5">
-                    <div className="rounded-md shadow-cs-6 bg-white border-[1px] border-gray-200 h-9 overflow-hidden max-w-[310px] inline-flex items-center px-2">
-                      <SearchIcon
+              <Search apiFunction={getAllDeals} searchQuery={searchQuery} setSearchQuery={setSearchQuery}/>
+              <ul className="inline-flex items-center">
+                  {React.Children.toArray(
+                    Object.keys(tabs).map((tab: any) => (
+                      <li
                         onClick={() => {
-                          getAllDeals();
-                        }}
-                      />
-                      <input
-                        onKeyDown={(e) => {
-                          if (e.key === "Enter") {
-                            getAllDeals();
-                          }
-                        }}
-                        value={searchQuery}
-                        onChange={(e) => setSearchQuery(e.target.value)}
-                        type="search"
-                        className="h-full w-full outline-none pl-2 text-sm font-normal "
-                        placeholder={language?.v3?.common?.search}
-                      />
-                    </div>
+                          setSelectedTab(tab)}
+                        }
+                        className={`py-2 px-4 font-medium text-xs cursor-pointer rounded-md transition-all ${
+                          selectedTab === tab
+                            ? "text-neutral-900 bg-neutral-100"
+                            : "text-gray-500"
+                        } `}
+                      >
+                        {tabs[tab]} &nbsp;({getCountvalue(tab)})
+                      </li>
+                    ))
+                  )}
+                </ul>
                   </span>
                 </div>
               </section>
@@ -720,6 +734,17 @@ const SyndicateRequest = ({}: any) => {
             style={{ backgroundColor: "rgba(0, 0, 0, 0.078" }}
           >
             <aside className="bg-white w-[700px] rounded-md p-5 h-full">
+            <header className="h-12 py-2 px-3 inline-flex w-full justify-between items-center">
+                <div
+                  className="bg-white h-8 w-8 border-[1px] border-black rounded-md  shadow-cs-6 p-1 cursor-pointer"
+                  onClick={() => {
+                    setmodalAddComment(false);
+                    setChanges({ comment: "", action: "", document: null });
+                  }}
+                >
+                  <CrossIcon stroke="#000" />
+                </div>
+              </header>
               <section className="py-3 px-3">
                 <div className="mb-6">
                   <label
