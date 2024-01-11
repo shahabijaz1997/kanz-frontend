@@ -46,14 +46,7 @@ export const getPropertyDeals = (token: string, filters : any, searchQuery:strin
     },
   });
 };
-export const getNoFilterDeals = (token: string) => {
-  const queryParameters = new URLSearchParams();
-  return axios.get(`${ENV.API_URL}/${ENV.API_VERSION}/deals`, {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  });
-};
+ 
 export const getDealsforsyndicate = (token: string, filters:any, searchQuery:any, currentPage:number ) => {
 
   const queryParameters = new URLSearchParams();
