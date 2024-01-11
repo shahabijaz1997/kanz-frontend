@@ -18,6 +18,7 @@ import {
 import Chevrond from "../../../../ts-icons/chevrond.svg";
 import InvestorInfoDrawer from "../Applications/InvestorInfoDrawer";
 import { MemberType } from "../../../../enums/types.enum";
+import Search from "../../../../shared/components/Search";
 
 const GroupMembers = ({}: any) => {
 
@@ -65,15 +66,15 @@ const GroupMembers = ({}: any) => {
 
 
   useEffect(() => {
-    getMembers()
+    getMembers(searchQuery)
   }, []);
 
   useEffect(() => {
     setCurrentPage(1)
-    getMembers()
+    getMembers(searchQuery)
   }, [selectedTab]);
   useEffect(() => {
-    getMembers()
+    getMembers(searchQuery)
   }, [loaderParent]);
   const ongetInvestorInfo = async (id: any) => {
     try {
@@ -85,13 +86,13 @@ const GroupMembers = ({}: any) => {
       setLoading(false);
     }
   };
-  const getMembers = async () => {
+  const getMembers = async (queryString:string) => {
     setLoading(true);
     try {
       let { status, data } = await getGroupInvestors(
         authToken,
         selectedTab,
-        searchQuery,
+        queryString,
         currentPage
       );
 
@@ -174,28 +175,7 @@ const GroupMembers = ({}: any) => {
                 <section className="inline-flex justify-between items-center w-full">
                   <div className="w-full">
                     <span className="w-full flex items-center gap-5">
-                      <div className="rounded-md shadow-cs-6 bg-white border-[1px] border-gray-200 h-9 overflow-hidden min-w-[300px] inline-flex items-center px-2">
-                        <SearchIcon
-                          onClick={() => {
-                            getMembers();
-                          }}
-                        />
-                        <input
-                          onKeyDown={(e) => {
-                            if (e.key === "Enter") {
-                              getMembers();
-                            }
-                          }}
-                          value={searchQuery}
-                          onChange={(e) => {
-                            setCurrentPage(1)
-                            setSearchQuery(e.target.value)}}
-                          type="search"
-                          className="h-full w-full outline-none pl-2 text-sm font-normal "
-                          placeholder={ language?.v3?.syndicate?.search_for_investors}
-                        />
-                      </div>
-
+                    <Search apiFunction={getMembers} searchQuery={searchQuery} setSearchQuery={setSearchQuery}/>
                       <ul className="inline-flex items-center">
                         {React.Children.toArray(
                          Object.keys(tabs).map((tab: any) => (

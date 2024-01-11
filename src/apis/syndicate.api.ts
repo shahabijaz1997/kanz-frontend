@@ -277,8 +277,11 @@ export const getApplicationInvestorInfo = (token: string, investorID:any) => {
 };
 
 
-export const getInvitedSyndicates = (userId: any, searchQuery:string, token: string, currentPage:number) => {
+export const getInvitedSyndicates = (userId: any, searchQuery:string, token: string, currentPage:number, filters:string) => {
   const queryParameters = new URLSearchParams();
+  if (filters !== "all"){
+    queryParameters.append("role", filters.toLowerCase());
+  }
   queryParameters.append("invite_type", "syndication");
   queryParameters.append("page", currentPage.toString());
   if (searchQuery.trim() !== "") {
@@ -319,13 +322,12 @@ export const getSyndicateInformation = (stepId: number, token: string) => {
     },
   });
 };
-export const getApplications = (token: string, currentPage:number, searchQuery:string) => {
+export const getApplications = (token: string, searchQuery:string) => {
   const queryParameters = new URLSearchParams();
-  queryParameters.append("page", currentPage.toString());
   if (searchQuery.trim() !== "") {
     queryParameters.append("search", searchQuery);
   }
-  const apiUrl =`${ENV.API_URL}/${ENV.API_VERSION}/syndicate_members/applications?${queryParameters.toString()}`
+  const apiUrl = `${ENV.API_URL}/${ENV.API_VERSION}/syndicate_members/applications?${queryParameters.toString()}`
   return axios.get(apiUrl, {
     headers: {
       Authorization: `Bearer ${token}`,

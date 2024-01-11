@@ -21,6 +21,7 @@ import {
 } from "../../../../apis/syndicate.api";
 import Chevrond from "../../../../ts-icons/chevrond.svg";
 import InvestorInfoDrawer from "../Applications/InvestorInfoDrawer";
+import Search from "../../../../shared/components/Search";
 
 const AllInvestors = ({ openModal, reloadMembers }: any) => {
   const navigate = useNavigate();
@@ -60,10 +61,10 @@ const AllInvestors = ({ openModal, reloadMembers }: any) => {
 
   useEffect(()=>{
     setCurrentPage(1)
-    getAllUserListings()
+    getAllUserListings(searchQuery)
     },[selectedTab])
   useEffect(()=>{
-    getAllUserListings()
+    getAllUserListings(searchQuery)
     },[currentPage])
   
 
@@ -81,12 +82,12 @@ const AllInvestors = ({ openModal, reloadMembers }: any) => {
 
     }
   };
-  const getAllUserListings = async () => {
+  const getAllUserListings = async (queryString:string) => {
     setLoading(true);
     try {
       let { status, data } = await getNonAddedInvestors(
         authToken,
-        searchQuery,
+        queryString,
         currentPage,
         selectedTab
       );
@@ -155,11 +156,11 @@ const AllInvestors = ({ openModal, reloadMembers }: any) => {
 
   useEffect(()=>{
     dispatch(saveDataHolder(""));
-    getAllUserListings()
+    getAllUserListings(searchQuery)
   }, [loaderParent])
   useEffect(()=>{
     dispatch(saveDataHolder(""));
-    getAllUserListings()
+    getAllUserListings(searchQuery)
   }, [currentPage])
 
 
@@ -183,48 +184,8 @@ const AllInvestors = ({ openModal, reloadMembers }: any) => {
                 <section className="inline-flex justify-between items-center w-full">
                   <div className="w-full">
                     <span className="w-full flex items-center gap-5">
-                      <div className="rounded-md shadow-cs-6 bg-white border-[1px] border-gray-200 h-9 overflow-hidden min-w-[300px] inline-flex items-center px-2">
-                        <SearchIcon
-                          onClick={() => {
-                            getAllUserListings();
-                          }}
-                        />
-                        <input
-                          onKeyDown={(e) => {
-                            if (e.key === "Enter") {
-                              getAllUserListings();
-                            }
-                          }}
-                          value={searchQuery}
-                          onChange={(e) => {
-                            setCurrentPage(1)
-                            setSearchQuery(e.target.value)}}
-                          type="search"
-                          className="h-full w-full outline-none pl-2 text-sm font-normal "
-                          placeholder={
-                            language?.v3?.syndicate?.search_for_investors
-                          }
-                        />
-                      </div>
-                      
-                          <ul className="inline-flex items-center">
-                            {React.Children.toArray(
-                             Object.keys(tabs).map((tab: any) => (
-                                <li
-                                  onClick={() => {
-                                    setSelectedTab(tab);
-                                  }}
-                                  className={`py-2 px-3 font-medium cursor-pointer rounded-md transition-all ${
-                                    selectedTab === tab
-                                      ? "text-neutral-900 bg-neutral-100"
-                                      : "text-gray-500"
-                                  } `}
-                                >
-                                  {tabs[tab]} &nbsp;({getCountvalue(tab)})
-                                </li>
-                              ))
-                            )}
-                          </ul>
+                <Search apiFunction={getAllUserListings} searchQuery={searchQuery} setSearchQuery={setSearchQuery}/>
+
                     </span>
                   </div>
                 </section>

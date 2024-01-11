@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
+import {  useNavigate } from "react-router-dom";
 import { KanzRoles } from "../../../enums/roles.enum";
 import Header from "../../../shared/components/Header";
 import Sidebar from "../../../shared/components/Sidebar";
@@ -27,6 +27,7 @@ import { toast } from "react-toastify";
 import { toastUtil } from "../../../utils/toast.utils";
 import { numberFormatter } from "../../../utils/object.utils";
 import { convertStatusLanguage } from "../../../utils/string.utils";
+import Search from "../../../shared/components/Search";
 
 const InvestorUpdates = ({}: any) => {
   const navigate = useNavigate();
@@ -63,7 +64,7 @@ const InvestorUpdates = ({}: any) => {
 
   useEffect(() => {
     dispatch(saveDataHolder(""));
-    getAllDeals();
+    getAllDeals("");
   }, []);
 
   const setFileInformation = async (file: File) => {
@@ -180,13 +181,13 @@ const InvestorUpdates = ({}: any) => {
     language?.v3?.fundraiser?.date,
 
   ];
-  const getAllDeals = async () => {
+  const getAllDeals = async (queryString:string) => {
     try {
       setLoading(true);
       let { status, data } = await getFundraiserInvestors(
         authToken,
         currentPage,
-        searchQuery,
+        queryString
       );
       if (status === 200) {
         setpaginationData(data?.status?.data?.pagy)
@@ -265,27 +266,7 @@ const InvestorUpdates = ({}: any) => {
               <section className="inline-flex justify-between items-center w-full">
                 <div className="w-full">
                   <span className="w-full flex items-center gap-5">
-                    <div className="rounded-md shadow-cs-6 bg-white border-[1px] border-gray-200 h-9 overflow-hidden max-w-[310px] inline-flex items-center px-2">
-                      <SearchIcon
-                        onClick={() => {
-                          getAllDeals();
-                        }}
-                      />
-                      <input
-                        onKeyDown={(e) => {
-                          if (e.key === "Enter") {
-                            getAllDeals();
-                          }
-                        }}
-                        value={searchQuery}
-                        onChange={(e) => {
-                        setSearchQuery(e.target.value)
-                        setCurrentPage(1)}}
-                        type="search"
-                        className="h-full w-full outline-none pl-2 text-sm font-normal "
-                        placeholder={language?.v3?.common?.search}
-                      />
-                    </div>
+                  <Search apiFunction={getAllDeals} searchQuery={searchQuery} setSearchQuery={setSearchQuery}/>
                   </span>
                 </div>
               </section>

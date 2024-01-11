@@ -60,6 +60,7 @@ const SyndicateInfoDrawer = ({
   
   useEffect(()=>{
     setLoading(false)
+    setHideButton(false)
  }, [syndicateInfo])
 
   const [showFullText, setShowFullText] = useState(false);
@@ -162,6 +163,7 @@ const SyndicateInfoDrawer = ({
         isOpen={openDrawer}
         setIsOpen={(val: boolean) => {
           setLoading(true)
+          setHideButton(false)
           isDrawerOpen(val);
         }}
       >

@@ -20,6 +20,7 @@ import Spinner from "../../shared/components/Spinner";
 import CustomStatus from "../../shared/components/CustomStatus";
 import Chevrond from "../../ts-icons/chevrond.svg";
 import { convertStatusLanguage } from "../../utils/string.utils";
+import Search from "../../shared/components/Search";
 
 const SyndicateDashboard = ({}: any) => {
   const navigate = useNavigate();
@@ -77,22 +78,22 @@ const SyndicateDashboard = ({}: any) => {
 
   useEffect(() => {
     dispatch(saveDataHolder(""));
-    getAllDeals();
+    getAllDeals(searchQuery);
   }, []);
 
   useEffect(() => {
-    getAllDeals();
+    getAllDeals(searchQuery);
   }, [currentPage]);
 
   useEffect(() => {
     setCurrentPage(1)
-    getAllDeals();
+    getAllDeals(searchQuery);
   }, [selectedTab]);
 
-  const getAllDeals = async () => {
+  const getAllDeals = async (queryString:string) => {
     try {
       setLoading(true);
-      let { status, data } = await getDealsforsyndicate(authToken, selectedTab,searchQuery, currentPage);
+      let { status, data } = await getDealsforsyndicate(authToken, selectedTab,queryString, currentPage);
       if (status === 200) {
         setFilterCounts(data?.status?.data?.stats)
         setpaginationData(data?.status?.data?.pagy)
@@ -164,27 +165,7 @@ const SyndicateDashboard = ({}: any) => {
                   </h1>
 
                   <span className="w-full flex items-center gap-5">
-                  <div className="rounded-md shadow-cs-6 bg-white border-[1px] border-gray-200 h-9 overflow-hidden max-w-[310px] inline-flex items-center px-2">
-                      <SearchIcon
-                        onClick={() => {
-                          getAllDeals();
-                        }}
-                      />
-                      <input
-                       onKeyDown={(e) => {
-                        if (e.key === 'Enter') {
-                          getAllDeals();
-                        }
-                      }}
-                        value={searchQuery}
-                        onChange={(e) => {
-                          setCurrentPage(1)
-                          setSearchQuery(e.target.value)}}
-                        type="search"
-                        className="h-full w-full outline-none pl-2 text-sm font-normal "
-                        placeholder={language?.v3?.common?.search}
-                      />
-                    </div>
+                <Search apiFunction={getAllDeals} searchQuery={searchQuery} setSearchQuery={setSearchQuery}/>
                     <ul className="inline-flex items-center">
                         {React.Children.toArray(
                           Object.keys(tabs).map((tab: any) => (
