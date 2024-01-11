@@ -164,6 +164,8 @@ const SyndicateInfoDrawer = ({
         setIsOpen={(val: boolean) => {
           setLoading(true)
           setHideButton(false)
+          setIsExpanded(false)
+          setEnableButton(false)
           isDrawerOpen(val);
         }}
       >

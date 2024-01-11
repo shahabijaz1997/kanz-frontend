@@ -280,7 +280,7 @@ export const getApplicationInvestorInfo = (token: string, investorID:any) => {
 export const getInvitedSyndicates = (userId: any, searchQuery:string, token: string, currentPage:number, filters:string) => {
   const queryParameters = new URLSearchParams();
   if (filters !== "all"){
-    queryParameters.append("role", filters.toLowerCase());
+    queryParameters.append("status", filters.toLowerCase());
   }
   queryParameters.append("invite_type", "syndication");
   queryParameters.append("page", currentPage.toString());
