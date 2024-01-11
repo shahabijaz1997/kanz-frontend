@@ -17,6 +17,7 @@
     "propertyOwner": "Propert Owners"
   },
   "onboarding": {
+    "session_timeOut":"Your session has timed out, please log in again...",
     "welcome": "Welcome to Kanz",
     "submitted": "Your application has been submitted!",
     "appStatus": "Application status",
@@ -922,6 +923,7 @@
       "approved": "Approved",
       "live": "Live",
       "verified": "Verified",
+      "file_type_err":"File type should be only image/jpeg/jpg/pdf",
       "rejected": "Rejected",
       "create_startup_deal": "Create Startup Deal",
       "create_property_deal": "Create Property Deal",
