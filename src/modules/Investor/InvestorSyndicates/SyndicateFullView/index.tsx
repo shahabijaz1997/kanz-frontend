@@ -42,11 +42,7 @@ const SyndicateFullView = ({}: any) => {
     else return language?.v3?.investor?.accept;
   };
 
-console.log('====================================');
-console.log("Yo");
-console.log('====================================');
-  console.log(convertStatusLanguage(state?.invite?.invite_type))
-  console.log(MemberInviteType.INVITE_RECEIVED)
+
   const [enableButton, setEnableButton] = useState(false);
 
   const handleCheckboxChange = (event: React.ChangeEvent<HTMLInputElement>) => {
