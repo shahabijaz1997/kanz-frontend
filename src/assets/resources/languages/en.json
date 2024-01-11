@@ -17,6 +17,7 @@
     "propertyOwner": "Propert Owners"
   },
   "onboarding": {
+    "session_timeOut":"Your session has timed out, please log in again...",
     "welcome": "Welcome to Kanz",
     "submitted": "Your application has been submitted!",
     "appStatus": "Application status",
