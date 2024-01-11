@@ -129,6 +129,7 @@ const InvestorInfoDrawer = ({
         isOpen={openDrawer}
         setIsOpen={(val: boolean) => {
           setLoading(true);
+          setHideButton(false)
           isDrawerOpen(val);
         }}
       >
