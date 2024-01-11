@@ -101,7 +101,7 @@ const InvitesListing = ({
         toast.success("Invitation sent", toastUtil);
         let elem: any = document.getElementById(`group`);
         let button = document.createElement("button");
-        button.innerText = "Group Invited";
+        button.innerText = "Syndicate Invited";
         elem.innerHTML = "";
         elem.appendChild(button);
       }
