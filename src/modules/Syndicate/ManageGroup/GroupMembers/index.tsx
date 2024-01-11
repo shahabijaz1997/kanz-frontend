@@ -53,7 +53,7 @@ const GroupMembers = ({}: any) => {
   const [tabs] = useState<any>({
     'all': language?.v3?.startup?.overview?.all,
     'lp': language?.v3?.investor?.lp,
-    'gp': language?.v3?.investor?.gp,
+    'gp': language?.v3?.investor?.team_member,
   });
   const columns = [
     language?.v3?.syndicate?.investor,
@@ -107,7 +107,7 @@ const GroupMembers = ({}: any) => {
             [ language?.v3?.syndicate?.invested]: `$${comaFormattedNumber(investor?.invested_amount)}`,
             [ language?.v3?.syndicate?.investments]: investor?.no_investments,
             [language?.v3?.investor?.role]:
-              investor?.role === MemberType.GP ? <CustomStatus options = {language?.v3?.investor?.gp}/>: <CustomStatus options = {language?.v3?.investor?.lp}/>,
+              investor?.role === MemberType.GP ? <CustomStatus options = {language?.v3?.investor?.team_member}/>: <CustomStatus options = {language?.v3?.investor?.lp}/>,
             [ language?.v3?.syndicate?.join_date]:
               <span className="px-2">{investor?.joining_date}</span> || " N/A",
             Steps: investor?.current_state?.steps,

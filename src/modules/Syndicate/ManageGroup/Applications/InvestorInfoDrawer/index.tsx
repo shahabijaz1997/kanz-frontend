@@ -109,7 +109,8 @@ const InvestorInfoDrawer = ({
         authToken
       );
       if (status === 200) {
-        toast.success(language?.v3?.investor?.changed, toastUtil);
+        let toastText = selectedRole === MemberType.GP ? "Team Member" : "LP"
+        toast.success(language?.v3?.investor?.changed + " " + toastText , toastUtil);
       }
       removeSpinning();
     } catch (error: any) {

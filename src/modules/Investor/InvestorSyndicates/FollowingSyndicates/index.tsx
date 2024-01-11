@@ -79,6 +79,10 @@ const FollowingSyndicates = (): any => {
     dispatch(saveDataHolder(""));
     getFollowingSynds(searchQuery);
   }, [currentPage]);
+  useEffect(() => {
+    dispatch(saveDataHolder(""));
+    getFollowingSynds(searchQuery);
+  }, [selectedTab]);
 
   const getFollowingSynds = async (queryString:string) => {
     try {

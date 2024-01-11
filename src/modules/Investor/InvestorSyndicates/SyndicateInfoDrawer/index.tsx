@@ -164,6 +164,8 @@ const SyndicateInfoDrawer = ({
         setIsOpen={(val: boolean) => {
           setLoading(true)
           setHideButton(false)
+          setIsExpanded(false)
+          setEnableButton(false)
           isDrawerOpen(val);
         }}
       >
@@ -178,7 +180,7 @@ const SyndicateInfoDrawer = ({
             <header className="text-lg pr-3 pt-3 pb-2 items-center  w-full sticky">
               <section className="pb-10 w-full items-center capitalize justify-between flex">
                 <div
-                  className="inline-flex items-start gap-3 justify-between cursor-pointer max-w-[70%] hover:text-blue-500 hover:underline"
+                  className="inline-flex items-center gap-3 justify-between cursor-pointer max-w-[70%] hover:text-blue-500 hover:underline"
                   onClick={() => {
                     navigate(RoutesEnums.SYNDICATE_DETAILED_VIEW, {
                       state: syndicateInfo,
@@ -187,7 +189,7 @@ const SyndicateInfoDrawer = ({
                 >
                   {syndicateInfo?.logo ? (
                       <img
-                        className="h-11 w-11 mr-2.5 rounded-full"
+                        className="h-9 w-9 mx-2.5 rounded-full"
                         src={syndicateInfo.logo}
                         alt="Profile Pic"
                       />
@@ -196,7 +198,7 @@ const SyndicateInfoDrawer = ({
                         {syndicateInfo?.name?.substring(0, 2)}
                       </div>
                     )}
-                  <span className="w-full ml-4">
+                  <span className="w-full flex-col items-center justify-center flex h-full">
                     <span>{syndicateInfo?.name}</span>
                     <span className="flex justify-start w-full text-xs text-[#737373]">
                       {syndicateInfo?.tagline}

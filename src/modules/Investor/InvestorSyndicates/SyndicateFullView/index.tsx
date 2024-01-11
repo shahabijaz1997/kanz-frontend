@@ -42,11 +42,7 @@ const SyndicateFullView = ({}: any) => {
     else return language?.v3?.investor?.accept;
   };
 
-console.log('====================================');
-console.log("Yo");
-console.log('====================================');
-  console.log(convertStatusLanguage(state?.invite?.invite_type))
-  console.log(MemberInviteType.INVITE_RECEIVED)
+
   const [enableButton, setEnableButton] = useState(false);
 
   const handleCheckboxChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -496,7 +492,7 @@ console.log('====================================');
               )}
              
               <div className="font-medium text-2xl mt-14 flex items-center justify-center">
-              {language?.v3?.investor?.gp}
+              {language?.v3?.investor?.team_member}
               </div>
               {state?.general_partners?.length > 0 ? (  <div className="mt-4 flex items-center justify-center mb-10">
                 <div

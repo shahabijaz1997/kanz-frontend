@@ -704,7 +704,7 @@
         "contacts": "جهات الاتصال",
         "investments": "الاستثمارات",
         "deal_approval": "الموافقة على الصفقة",
-        "manage_group": "إدارة المجموعة",
+        "manage_syndicate": "إدارة الفريق",
         "investors": "المستثمرين"
       }
     },
@@ -1120,7 +1120,7 @@
       "accept": "قبول",
       "accepted": "تم قبوله",
       "lp": "ل ص",
-      "gp": "ز ص",
+      "team_member": "عضو في الفريق",
       "role": "الدور",
       "no_invites_received": "لم يتم استلام دعوات",
       "invite_sent": "تم إرسال الدعوة",
