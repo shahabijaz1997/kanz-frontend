@@ -1,24 +1,17 @@
 
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { KanzRoles } from "../../../../../enums/roles.enum";
-import Header from "../../../../../shared/components/Header";
-import Sidebar from "../../../../../shared/components/Sidebar";
 import { RootState } from "../../../../../redux-toolkit/store/store";
 import SearchIcon from "../../../../../ts-icons/searchIcon.svg";
 import React, { useEffect, useState } from "react";
-import Button from "../../../../../shared/components/Button";
 import Table from "../../../../../shared/components/Table";
 import { RoutesEnums, StartupRoutes } from "../../../../../enums/routes.enum";
-import Modal from "../../../../../shared/components/Modal";
-import CrossIcon from "../../../../../ts-icons/crossIcon.svg";
 import { saveDataHolder } from "../../../../../redux-toolkit/slicer/dataHolder.slicer";
 import {  getLiveDeals } from "../../../../../apis/deal.api";
 import {
   numberFormatter,
 } from "../../../../../utils/object.utils";
 import Spinner from "../../../../../shared/components/Spinner";
-import Chevrond from "../../../ts-icons/chevrond.svg";
 import CustomStatus from "../../../../../shared/components/CustomStatus";
 
 const Investments = ({}: any) => {
@@ -37,18 +30,14 @@ const Investments = ({}: any) => {
     language?.v3?.syndicate?.deals?.table?.target,
     "",
   ];
-  const [pagination, setPagination] = useState({
-    items_per_page: 10,
-    total_items: [],
-    current_page: 1,
-    total_pages: 0,
-  });
+
   const [selectedTab, setSelectedTab]: any = useState("All");
-  const [modalOpen, setModalOpen]: any = useState(null);
+  const [paginationData, setPaginationData]: any = useState(null);
   const [loading, setLoading] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
   const [filter, setFilterCounts]:any = useState([]);
   const [tabs] = useState([
-    "All",
+    "all",
     "Startup",
     "Property",
   ]);
@@ -71,19 +60,7 @@ const Investments = ({}: any) => {
     
   }
   const [deals, setDeals] = useState([]);
-  const [dummyDisclaimers, setDummyDisclaimers] = useState({
-    d1: false,
-    d2: false,
-    d3: false,
-  });
-  const [disclaimersToggler, setDisclaimersToggler] = useState({
-    d1: false,
-    d2: false,
-    d3: false,
-  });
 
-
-  
   useEffect(() => {
     dispatch(saveDataHolder(""));
     getAllDeals();
@@ -92,8 +69,9 @@ const Investments = ({}: any) => {
   const getAllDeals = async () => {
     try {
       setLoading(true);
-      let { status, data } = await getLiveDeals(user.id, authToken, selectedTab);
+      let { status, data } = await getLiveDeals(authToken, selectedTab," ", currentPage);
       if (status === 200) {
+        setPaginationData(data?.status?.data?.pagy)
         setFilterCounts(data?.status?.data?.stats)
         let deals = data?.status?.data?.deals?.map((deal: any) => {
           return {
@@ -131,15 +109,6 @@ const Investments = ({}: any) => {
           };
         });
 
-        setPagination((prev) => {
-          return {
-            ...prev,
-            total_items: deals.length,
-            current_page: 1,
-            total_pages: Math.ceil(deals.length / prev.items_per_page),
-            data: deals?.slice(0, prev.items_per_page),
-          };
-        });
         setDeals(deals);
       }
     } catch (error:any) {
@@ -151,34 +120,7 @@ const Investments = ({}: any) => {
     }
   };
 
-  const paginate = (type: string) => {
-    if (type === "next" && pagination.current_page < pagination.total_pages) {
-      setPagination((prev: any) => {
-        const nextPage = prev.current_page + 1;
-        const startIndex = (nextPage - 1) * prev.items_per_page;
-        const endIndex = startIndex + prev.items_per_page;
-        const data = deals.slice(startIndex, endIndex);
-        return { ...prev, current_page: nextPage, data };
-      });
-    } else if (type === "previous" && pagination.current_page > 1) {
-      setPagination((prev: any) => {
-        const prevPage = prev.current_page - 1;
-        const startIndex = (prevPage - 1) * prev.items_per_page;
-        const endIndex = startIndex + prev.items_per_page;
-        const data = deals.slice(startIndex, endIndex);
-        return { ...prev, current_page: prevPage, data };
-      });
-    } else {
-      setPagination((prev: any) => {
-        const prevPage = Number(type) + 1 - 1;
-        const startIndex = (prevPage - 1) * prev.items_per_page;
-        const endIndex = startIndex + prev.items_per_page;
-        const data = deals.slice(startIndex, endIndex);
 
-        return { ...prev, current_page: type, data };
-      });
-    }
-  };
 
   return (
     <main className=" relative h-full w-full max-h-full mt-4">
@@ -229,10 +171,10 @@ const Investments = ({}: any) => {
 
               <section className="mt-5">
                 <Table
+                  tableData={deals}
+                  paginationData={paginationData}
+                  setCurrentPage={setCurrentPage}
                   columns={columns}
-                  pagination={pagination}
-                  paginate={paginate}
-                  goToPage={paginate}
                 />
               </section>
             </React.Fragment>
