@@ -1,8 +1,8 @@
-import React, { useState, useLayoutEffect, useEffect } from "react";
+import React, { useState, useLayoutEffect } from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../redux-toolkit/store/store";
-import { useLocation, useNavigate, useParams } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { toastUtil } from "../../utils/toast.utils";
 import ClippedBanner from "../Onboarding/components/ClippedBanner";
@@ -16,7 +16,6 @@ import Button from "../../shared/components/Button";
 import { AntdInput } from "../../shared/components/Input";
 import LanguageDrodownWrapper from "../../shared/views/LanguageDrodownWrapper";
 import { saveEvent } from "../../redux-toolkit/slicer/event.slicer";
-import { isEmpty } from "../../utils/object.utils";
 import { RoutesEnums } from "../../enums/routes.enum";
 
 type FormValues = {
@@ -25,10 +24,7 @@ type FormValues = {
 };
 
 const Login = ({ }: any) => {
-  const { state } = useLocation();
-
-  const searchParams = new URLSearchParams(window.location.search)
-  const sessionTimeoutLabel = searchParams.get('sessionTimeout')  
+  const { state } = useLocation();  
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const authToken: any = useSelector((state: RootState) => state.auth.value);
@@ -143,7 +139,6 @@ const Login = ({ }: any) => {
             <h2 className={`text-[24px] font-bold text-neutral-900 screen500:text-[20px] ${orientation === "rtl" ? "text-right" : "text-left"}`}>
               {language?.onboarding?.loginKanz}
             </h2>
-            {sessionTimeoutLabel && <p className="text-red-500">{language?.onboarding?.session_timeOut}</p>}
             <Form />
           </section>
         </aside>
