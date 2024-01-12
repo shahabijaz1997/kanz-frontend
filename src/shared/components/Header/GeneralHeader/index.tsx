@@ -16,14 +16,14 @@ import { languageDropdownItems } from "../../../../utils/dropdown-items.utils";
 import { RoutesEnums } from "../../../../enums/routes.enum";
 import { saveDataHolder } from "../../../../redux-toolkit/slicer/dataHolder.slicer";
 
-const GeneralHeader = ({ responsive = false, showMenu = false, showLanguageDropdown = false }: any) => {
+const GeneralHeader = ({ responsive = false, showMenu = false, showLanguageDropdown = false, onSuperLogout = ()=>{} }: any) => {
     const navigate = useNavigate();
     const dispatch = useDispatch();
     const language: any = useSelector((state: RootState) => state.language.value);
     const orientation: any = useSelector((state: RootState) => state.orientation.value);
     const authToken: any = useSelector((state: RootState) => state.auth.value);
     const event: any = useSelector((state: RootState) => state.event.value);
-    const navigationMenu = [{id: 1, title:"Investor" }, { id: 2, title: language.header?.startup }, { id: 3, title: language.header?.syndicate }, { id: 4, title: language.header?.propertyOwner }]
+    const navigationMenu = [{id: 1, title:language.landing?.invest }, { id: 2, title: language.landing?.raise }, { id: 3, title: language.header?.syndicate }]
     const [isMenuOpen, setIsMenuOpen] = useState(false);
    
     const toggleMenu = () => {
@@ -32,16 +32,21 @@ const GeneralHeader = ({ responsive = false, showMenu = false, showLanguageDropd
 
     const onLogout = async () => {
         try {
-            await logout(authToken);
-        } catch (error: any) {
-        } finally {
+            onSuperLogout(true);
             dispatch(saveToken(""));
-            navigate(RoutesEnums.LOGIN);
             localStorage.clear();
             dispatch(saveUserData(""));
             dispatch(saveUserMetaData(""));
             dispatch(saveLogo(""));
             dispatch(saveDataHolder(""));
+            navigate(RoutesEnums.LOGIN);
+            await logout(authToken);
+        } catch (error: any) {
+        } finally {
+            let timer = setTimeout(() => {
+                clearTimeout(timer);
+                onSuperLogout(false);
+            }, 500)
         }
     };
 

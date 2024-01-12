@@ -14,6 +14,7 @@ type ButtonProps = {
   style?: React.CSSProperties; // button style
   divStyle?: string; //
   title?: string ;
+  centeredSpinner?: boolean
 };
 
 const Button: React.FC<ButtonProps> = ({
@@ -30,6 +31,7 @@ const Button: React.FC<ButtonProps> = ({
   style,
   divStyle = "flex items-center justify-center",
   title="",
+  centeredSpinner=false,
   ...props
 }) => {
   // Map button type to Tailwind CSS className
@@ -76,7 +78,7 @@ const Button: React.FC<ButtonProps> = ({
       >
         {loading ? (
           <svg
-            className="w-5 h-5 mx-3 -ml-1 text-white animate-spin"
+            className={`w-5 h-5 text-white animate-spin ${!centeredSpinner && 'mx-3 -ml-1' }`}
             xmlns="http://www.w3.org/2000/svg"
             fill="none"
             viewBox="0 0 24 24"

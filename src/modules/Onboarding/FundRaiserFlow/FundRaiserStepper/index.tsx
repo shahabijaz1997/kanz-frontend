@@ -14,7 +14,7 @@ import Loader from "../../../../shared/views/Loader";
 
 const currencies = [{ label: "AED", value: "AED" }, { label: "USD", value: "USD" }];
 
-const StartupStepper = ({ load, event, countries, orientation, language, file, payload, onSetPayload, step, removeFile, setFile, setModalOpen, setFileType, authToken }: any) => {
+const FundRaiserStepper = ({ load, event, countries, orientation, language, file, payload, onSetPayload, step, removeFile, setFile, setModalOpen, setFileType, authToken }: any) => {
   const refInd: any = useRef(null);
   const [showHoverModal, setShowHoverModal] = useState(false);
   const [search, setSearch] = useState("");
@@ -62,7 +62,7 @@ const StartupStepper = ({ load, event, countries, orientation, language, file, p
     });
   }
 
-  const startupUI = () => {
+  const fundraiserUI = () => {
     return step === 1 ? (
       <section className="flex items-start justify-center flex-col">
         <form className="pt-8 mb-4 w-full">
@@ -162,12 +162,12 @@ const StartupStepper = ({ load, event, countries, orientation, language, file, p
             )}
           </div>
 
-          <div className="mb-8 w-full relative" style={{ zIndex: 90 }}>
+          <div className="mb-8 w-full relative" style={{ zIndex: 2 }}>
             <label
               className="block text-neutral-700 text-sm font-medium mb-1"
               htmlFor="full-name"
             >
-              {language?.company?.country}
+              {language.common.residence2}
             </label>
 
             <CountrySelector
@@ -175,17 +175,44 @@ const StartupStepper = ({ load, event, countries, orientation, language, file, p
                 let c = countries.all.find(
                   (c: any) => c[event].name === v.value
                 );
-                onSetPayload(c, "country");
+                onSetPayload(c, "residence");
               }}
               selectedValue={{
-                label: payload?.country?.name,
-                value: payload?.country?.name,
+                label: payload?.residence?.name,
+                value: payload?.residence?.name,
               }}
               allCountries={countries.names}
-              value={payload?.country?.name}
+              value={payload?.residence?.name}
               defaultValue={{
-                label: payload?.country?.name,
-                value: payload?.country?.name,
+                label: payload?.residence?.name,
+                value: payload?.residence?.name,
+              }}
+            />
+          </div>
+          <div className="mb-8 w-full relative" style={{ zIndex: 1 }}>
+            <label
+              className="block text-neutral-700 text-sm font-medium mb-1"
+              htmlFor="full-name"
+            >
+              {language.common.nationality}
+            </label>
+
+            <CountrySelector
+              onChange={(v: any) => {
+                let c = countries.all.find(
+                  (c: any) => c[event].name === v.value
+                );
+                onSetPayload(c, "nationality");
+              }}
+              selectedValue={{
+                label: payload?.nationality?.name,
+                value: payload?.nationality?.name,
+              }}
+              allCountries={countries.names}
+              value={payload?.nationality?.name}
+              defaultValue={{
+                label: payload?.nationality?.name,
+                value: payload?.nationality?.name,
               }}
             />
           </div>
@@ -431,8 +458,8 @@ const StartupStepper = ({ load, event, countries, orientation, language, file, p
     );
   };
   return (
-    load ? <Loader /> : startupUI()
+    load ? <Loader /> : fundraiserUI()
   )
 }
 
-export default StartupStepper;
+export default FundRaiserStepper;

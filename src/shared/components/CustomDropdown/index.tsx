@@ -20,7 +20,7 @@ const CustomDropdown = ({ mainNode, options = ["Item","Test1","Test2","Test3"], 
 
 
     return (
-        <div ref={ref} className={`relative w-full cursor-pointer ${className}`} onClick={() => setOpen(!isOpen)}>
+        <div ref={ref} className={`relative w-full cursor-not-allowed ${className}`} onClick={() => {}}>
             {mainNode}
 
             {isOpen && (

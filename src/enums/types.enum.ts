@@ -31,8 +31,43 @@ export enum DealStatus {
   LIVE = "live",
   PENDING = "pending",
 }
+export enum DealStatusAR {
+  ACCEPTED = "قبلت",
+  LIVE = "مباشرة",
+  PENDING = "قيد الانتظار",
+}
 
 export enum DealType {
   STARTUP = "startup_deal",
   PROPERTY_OWNER = "property_deal",
 }
+export enum DealCheckType {
+  STARTUP = "startup",
+  PROPERTY = "property",
+}
+
+export enum DealPromotionType {
+  CLASSIC = "classic",
+  SYNDICATE = "syndicate",
+}
+export enum InviteStatus {
+  PENDING = "pending",
+  INVITED = "invited",
+  AWAITING = "awaiting",
+}
+export enum InputType {
+  CURRENCY = "currency",
+  PERCENT = "percent",
+  NUMERIC="numeric",
+  SQFT="sqft"
+}
+export enum MemberType {
+  GP = "General Partner",
+  LP = "Limited Partner",
+}
+
+export enum MemberInviteType {
+  INVITE_RECEIVED= "Invite Received",
+}
+
+

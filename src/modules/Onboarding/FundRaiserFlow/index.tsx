@@ -11,7 +11,7 @@ import { toastUtil } from "../../../utils/toast.utils";
 import CrossIcon from "../../../ts-icons/crossIcon.svg";
 import Button from "../../../shared/components/Button";
 import { isValidEmail, isValidUrl } from "../../../utils/regex.utils";
-import StartupStepper from "./StartupStepper";
+import FundRaiserStepper from "./FundRaiserStepper";
 import { getCompanyInformation, postCompanyInformation } from "../../../apis/company.api";
 import { saveLogo } from "../../../redux-toolkit/slicer/attachments.slicer";
 import { getCountries } from "../../../apis/bootstrap.api";
@@ -19,7 +19,7 @@ import { KanzRoles } from "../../../enums/roles.enum";
 import { RoutesEnums } from "../../../enums/routes.enum";
 import { saveUserMetaData } from "../../../redux-toolkit/slicer/metadata.slicer";
 
-const StartupFlow = ({ }: any) => {
+const FundRaiserFlow = ({ }: any) => {
   const params = useParams();
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -34,7 +34,8 @@ const StartupFlow = ({ }: any) => {
   const [payload, setPayload]: any = useState({
     company: "",
     legal: "",
-    country: "",
+    residence: "",
+    nationality:"",
     market: [],
     web: "",
     address: "",
@@ -58,11 +59,11 @@ const StartupFlow = ({ }: any) => {
   const [load, setLoad] = useState(false);
 
   useLayoutEffect(() => {
-    if (user.type !== KanzRoles.STARTUP) navigate(RoutesEnums.WELCOME);
+    if (user.type !== KanzRoles.FUNDRAISER) navigate(RoutesEnums.WELCOME);
   }, []);
 
   useEffect(() => {
-    getStartupDetails();
+    getFundRaiserDetails();
   }, [])
 
   useEffect(() => {
@@ -71,7 +72,7 @@ const StartupFlow = ({ }: any) => {
     }
   }, [metadata])
 
-  const getStartupDetails = async () => {
+  const getFundRaiserDetails = async () => {
     try {
       setLoad(true);
       let { status, data } = await getCompanyInformation(user.id, authToken);
@@ -94,7 +95,6 @@ const StartupFlow = ({ }: any) => {
       setLoad(false);
     }
   };
-
   useLayoutEffect(() => {
     setStep(Number(params?.id) || 1);
   }, [params]);
@@ -104,8 +104,11 @@ const StartupFlow = ({ }: any) => {
       ...payload,
       company: metadata?.profile?.company_name,
       legal: metadata?.profile?.legal_name,
-      country: {
-        name: metadata?.profile ? metadata?.profile[event]?.country : null,
+      residence: {
+        name: metadata?.profile ? metadata?.profile[event]?.residence : null,
+      },
+      nationality: {
+        name: metadata?.profile ? metadata?.profile[event]?.nationality : null,
       },
       market: metadata?.profile?.industry_ids || [],
       web: metadata?.profile?.website,
@@ -151,14 +154,14 @@ const StartupFlow = ({ }: any) => {
   const ontoNextStep = () => {
     if (step === 1) {
       let errors = [];
-      if (!payload.company || !payload.legal || !payload.market.length || !payload.web || !payload.address || !payload.country)
+      if (!payload.company || !payload.legal || !payload.market.length || !payload.web || !payload.address || !payload.residence || !payload.nationality)
         errors.push(language.promptMessages.pleaseSelectAllData)
       if (!isValidUrl(payload.web)) errors.push(language.promptMessages.validComp);
       toast.dismiss();
       if (errors.length) return errors?.forEach(e => toast.warning(e, toastUtil));
     } else {
       let errors = [];
-      if (!payload.company || !payload.legal || !payload.country || !payload.market.length || !payload.address || !payload.web || !payload.name || !payload.email || !payload.logo || !payload.business || !payload.raised || !payload.target) {
+      if (!payload.company || !payload.legal || !payload.residence || !payload.nationality || !payload.market.length || !payload.address || !payload.web || !payload.name || !payload.email || !payload.logo || !payload.business || !payload.raised || !payload.target) {
         errors.push(language.promptMessages.pleaseSelectAllData);
       }
       if (!isValidEmail(payload.email)) errors.push(language.promptMessages.invalidEmailCeo)
@@ -177,36 +180,38 @@ const StartupFlow = ({ }: any) => {
   const onPostCompanyData = async () => {
     try {
       setLoading(true);
-      let _country: any = countries.all.find((x: any) => x[event].name === payload.country.name);
-
+      let _residence: any = countries.all.find((x: any) => x[event].name === payload.residence.name);
+      let _nationality: any = countries.all.find((x: any) => x[event].name === payload.nationality.name);
       const form: any = new FormData();
       if (Number(step) === 1) {
-        form.append("startup_profile[step]", step);
-        form.append("startup_profile[company_name]", payload.company);
-        form.append("startup_profile[legal_name]", payload.legal);
-        form.append("startup_profile[country_id]", payload.country?.id || _country?.id);
+        form.append("fund_raiser_profile[step]", step);
+        form.append("fund_raiser_profile[company_name]", payload.company);
+        form.append("fund_raiser_profile[legal_name]", payload.legal);
+        form.append("fund_raiser_profile[residence_id]", payload.residence?.id || _residence?.id);
+        form.append("fund_raiser_profile[nationality_id]", payload.nationality?.id || _nationality?.id);
         payload.market?.forEach((val: any) => {
-          form.append("startup_profile[industry_ids][]", val);
+          form.append("fund_raiser_profile[industry_ids][]", val);
         });
-        form.append("startup_profile[website]", payload.web);
-        form.append("startup_profile[address]", payload.address);
+        form.append("fund_raiser_profile[website]", payload.web);
+        form.append("fund_raiser_profile[address]", payload.address);
       } else {
-        form.append("startup_profile[step]", step);
-        form.append("startup_profile[company_name]", payload.company);
-        form.append("startup_profile[legal_name]", payload.legal);
-        form.append("startup_profile[country_id]", payload.country?.id || _country?.id);
+        form.append("fund_raiser_profile[step]", step);
+        form.append("fund_raiser_profile[company_name]", payload.company);
+        form.append("fund_raiser_profile[legal_name]", payload.legal);
+        form.append("fund_raiser_profile[residence_id]", payload.residence?.id || _residence?.id);
+        form.append("fund_raiser_profile[nationality_id]", payload.nationality?.id || _nationality?.id);
         payload.market?.forEach((val: any) => {
-          form.append("startup_profile[industry_ids][]", val);
+          form.append("fund_raiser[industry_ids][]", val);
         });
-        form.append("startup_profile[website]", payload.web);
-        form.append("startup_profile[address]", payload.address);
-        typeof payload?.logo !== "string" && form.append("startup_profile[logo]", payload?.logo, payload?.logo?.name);
-        form.append("startup_profile[description]", payload.business);
-        form.append("startup_profile[ceo_name]", payload.name);
-        form.append("startup_profile[ceo_email]", payload.email);
-        form.append("startup_profile[total_capital_raised]", payload.raised);
-        form.append("startup_profile[current_round_capital_target]", payload.target);
-        form.append("startup_profile[currency]", payload?.currency?.value);
+        form.append("fund_raiser_profile[website]", payload.web);
+        form.append("fund_raiser_profile[address]", payload.address);
+        typeof payload?.logo !== "string" && form.append("fund_raiser_profile[logo]", payload?.logo, payload?.logo?.name);
+        form.append("fund_raiser_profile[description]", payload.business);
+        form.append("fund_raiser_profile[ceo_name]", payload.name);
+        form.append("fund_raiser_profile[ceo_email]", payload.email);
+        form.append("fund_raiser_profile[total_capital_raised]", payload.raised);
+        form.append("fund_raiser_profile[current_round_capital_target]", payload.target);
+        form.append("fund_raiser_profile[currency]", payload?.currency?.value);
       }
 
       let { status } = await postCompanyInformation(form, authToken);
@@ -215,7 +220,7 @@ const StartupFlow = ({ }: any) => {
         navigate(RoutesEnums.ADD_ATTACHMENTS);
       else if (Number(step) === 1) {
         setStep(2);
-        navigate(`${RoutesEnums.STARTUP_DETAILS}/${step + 1}`);
+        navigate(`${RoutesEnums.FUNDRAISER_DETAILS}/${step + 1}`);
       }
       let { status: _status, data } = await getCompanyInformation(1, authToken);
       if (_status === 200) {
@@ -252,7 +257,7 @@ const StartupFlow = ({ }: any) => {
           <hr className="h-px w-full mt-4 bg-gray-200 border-0 bg-cbc-grey" />
         </section>
 
-        <StartupStepper
+        <FundRaiserStepper
           countries={countries}
           language={language}
           payload={payload}
@@ -273,7 +278,7 @@ const StartupFlow = ({ }: any) => {
         <section className="w-full inline-flex items-center justify-between py-10">
           <Button className="h-[38px] w-[140px]" htmlType="button" type="outlined" onClick={() => {
             if (step === 1) navigate(RoutesEnums.WELCOME);
-            else navigate(`${RoutesEnums.STARTUP_DETAILS}/1`);
+            else navigate(`${RoutesEnums.FUNDRAISER_DETAILS}/1`);
           }}>
             {language?.buttons?.back}
           </Button>
@@ -294,4 +299,4 @@ const StartupFlow = ({ }: any) => {
     </main>
   );
 };
-export default StartupFlow;
+export default FundRaiserFlow;

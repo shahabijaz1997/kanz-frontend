@@ -13,62 +13,51 @@ import Modal from "../../../shared/components/Modal";
 import CrossIcon from "../../../ts-icons/crossIcon.svg";
 import { saveDataHolder } from "../../../redux-toolkit/slicer/dataHolder.slicer";
 import {  getLiveDeals } from "../../../apis/deal.api";
-import { formatDate } from "../../../utils/object.utils";
 import {
   numberFormatter,
 } from "../../../utils/object.utils";
 import Spinner from "../../../shared/components/Spinner";
 import Chevrond from "../../../ts-icons/chevrond.svg";
 import CustomStatus from "../../../shared/components/CustomStatus";
+import { convertStatusLanguage } from "../../../utils/string.utils";
+import Search from "../../../shared/components/Search";
 
 const SyndicateInvestments = ({}: any) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const language: any = useSelector((state: RootState) => state.language.value);    
   const authToken: any = useSelector((state: RootState) => state.auth.value);
-  const user: any = useSelector((state: RootState) => state.user.value);
+  const event: any = useSelector((state: RootState) => state.event.value);
 
+  const user: any = useSelector((state: RootState) => state.user.value);
+  const orientation: any = useSelector(
+    (state: RootState) => state.orientation.value
+  );
   const columns = [
     language?.v3?.syndicate?.deals?.table?.title,
     language?.v3?.syndicate?.deals?.table?.category,
-    "Status",
+    language?.v3?.syndicate?.status,
     language?.v3?.syndicate?.deals?.table?.end_date,
-    "Raised",
+    language?.v3?.syndicate?.raised,
     language?.v3?.syndicate?.deals?.table?.target,
     "",
   ];
-  const [pagination, setPagination] = useState({
-    items_per_page: 10,
-    total_items: [],
-    current_page: 1,
-    total_pages: 0,
-  });
-  const [selectedTab, setSelectedTab]: any = useState("All");
+
+  const [selectedTab, setSelectedTab]: any = useState("all");
+  const [searchQuery, setSearchQuery]: any = useState("");
   const [modalOpen, setModalOpen]: any = useState(null);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [paginationData, setpaginationData] = useState(null);
   const [loading, setLoading] = useState(false);
   const [filter, setFilterCounts]:any = useState([]);
-  const [tabs] = useState([
-    "All",
-    "Startup",
-    "Property",
-  ]);
+  const [tabs] = useState<any>({
+    'all': language?.v3?.startup?.overview?.all,
+    'startup': language?.v3?.fundraiser?.startup,
+    'property': language?.v3?.fundraiser?.property,
+  });
   const getCountvalue = ( value:string ) =>
   { 
-    let count = 0 ;
-    switch (value) {
-      case  "All" : 
-      count = filter?.all
-      break
-      case  "Property" : 
-      count = filter?.property
-      break
-      case  "Startup" : 
-      count = filter?.startup
-      break
-    } 
-
-    return count
-    
+    return filter[value] || 0
   }
   const [deals, setDeals] = useState([]);
   const [dummyDisclaimers, setDummyDisclaimers] = useState({
@@ -86,31 +75,45 @@ const SyndicateInvestments = ({}: any) => {
   
   useEffect(() => {
     dispatch(saveDataHolder(""));
-    getAllDeals();
+    getAllDeals(searchQuery);
+  }, [currentPage]);
+  useEffect(() => {
+    dispatch(saveDataHolder(""));
+    setCurrentPage(1)
+    getAllDeals(searchQuery);
   }, [selectedTab]);
 
-  const getAllDeals = async () => {
+  const getAllDeals = async (queryString:string) => {
     try {
       setLoading(true);
-      let { status, data } = await getLiveDeals(user.id, authToken, selectedTab);
+      let { status, data } = await getLiveDeals(authToken, selectedTab, queryString, currentPage);
       if (status === 200) {
         setFilterCounts(data?.status?.data?.stats)
+        setpaginationData(data?.status?.data?.pagy)
         let deals = data?.status?.data?.deals?.map((deal: any) => {
           return {
             id: deal?.id,
             filterStatus: deal?.status,
             [language?.v3?.syndicate?.deals?.table?.title]:
-              deal?.title || "N/A",
+              deal?.title || language?.v3?.common?.not_added,
             [language?.v3?.syndicate?.deals?.table?.category]: (
               <span className="capitalize">{deal?.deal_type}</span>
             ),
-            ["Status"]:
-              <CustomStatus options={deal?.status} /> || "N/A",
+            [language?.v3?.syndicate?.status]:
+              <CustomStatus options={deal?.status} /> || language?.v3?.common?.not_added,
             [language?.v3?.syndicate?.deals?.table?.end_date]:
-              <span className="px-2">{(deal?.end_at)}</span>|| " N/A",
-            ["Raised"]:`$${numberFormatter(Number(deal?.raised))}`,  
+              <span className="px-2">{(deal?.end_at)}</span>|| language?.v3?.common?.not_added,
+            [language?.v3?.syndicate?.raised]: event === "ar" ?  `${numberFormatter(
+              deal?.raised
+            , convertStatusLanguage(deal?.deal_type), true)}`:  `${numberFormatter(
+              deal?.raised
+            , convertStatusLanguage(deal?.deal_type), false)}`,  
             [language?.v3?.syndicate?.deals?.table
-              ?.target]: `$${numberFormatter(Number(deal?.target))}`,
+              ?.target]:  event === "ar" ?  `${numberFormatter(
+              deal?.target
+            , convertStatusLanguage(deal?.deal_type), true)}`:  `${numberFormatter(
+              deal?.target
+            , convertStatusLanguage(deal?.deal_type), false)}`,
 
             Steps: deal?.current_state?.steps,
             [""]: (
@@ -123,24 +126,15 @@ const SyndicateInvestments = ({}: any) => {
                     { state: window.location.pathname }
                   );
                 }}
-                className="bg-neutral-100 inline-flex items-center justify-center w-[30px] h-[30px] rounded-full transition-all hover:bg-cbc-transparent"
+                className="bg-neutral-100 inline-flex items-center justify-center w-[24px] h-[24px] rounded-full transition-all hover:bg-cbc-transparent mx-5"
               >
-                <Chevrond
-                  className="rotate-[-90deg] w-6 h-6"
-                  stroke={"#737373"}
-                />
+                 <Chevrond
+                    className={`${orientation === "rtl" ? "rotate-[-270deg]" : "rotate-[-90deg]"} w-4 h-4`}
+                    strokeWidth={2}
+                    stroke={"#000"}
+                  />
               </div>
             ),
-          };
-        });
-
-        setPagination((prev) => {
-          return {
-            ...prev,
-            total_items: deals.length,
-            current_page: 1,
-            total_pages: Math.ceil(deals.length / prev.items_per_page),
-            data: deals?.slice(0, prev.items_per_page),
           };
         });
         setDeals(deals);
@@ -154,34 +148,6 @@ const SyndicateInvestments = ({}: any) => {
     }
   };
 
-  const paginate = (type: string) => {
-    if (type === "next" && pagination.current_page < pagination.total_pages) {
-      setPagination((prev: any) => {
-        const nextPage = prev.current_page + 1;
-        const startIndex = (nextPage - 1) * prev.items_per_page;
-        const endIndex = startIndex + prev.items_per_page;
-        const data = deals.slice(startIndex, endIndex);
-        return { ...prev, current_page: nextPage, data };
-      });
-    } else if (type === "previous" && pagination.current_page > 1) {
-      setPagination((prev: any) => {
-        const prevPage = prev.current_page - 1;
-        const startIndex = (prevPage - 1) * prev.items_per_page;
-        const endIndex = startIndex + prev.items_per_page;
-        const data = deals.slice(startIndex, endIndex);
-        return { ...prev, current_page: prevPage, data };
-      });
-    } else {
-      setPagination((prev: any) => {
-        const prevPage = Number(type) + 1 - 1;
-        const startIndex = (prevPage - 1) * prev.items_per_page;
-        const endIndex = startIndex + prev.items_per_page;
-        const data = deals.slice(startIndex, endIndex);
-
-        return { ...prev, current_page: type, data };
-      });
-    }
-  };
 
   return (
     <main className="h-full max-h-full overflow-y-auto">
@@ -203,22 +169,14 @@ const SyndicateInvestments = ({}: any) => {
               <section className="inline-flex justify-between items-center w-full">
                 <div className="w-full">
                   <h1 className="text-black font-medium text-2xl mb-2">
-                    {"Investments"}
+                    {language?.v3?.syndicate?.investments}
                   </h1>
 
                   <span className="w-full flex items-center gap-5">
-                    <div className="rounded-md shadow-cs-6 bg-white border-[1px] border-gray-200 h-9 overflow-hidden max-w-[310px] inline-flex items-center px-2">
-                      <SearchIcon />
-                      <input
-                        type="search"
-                        className="h-full w-full outline-none pl-2 pr-[6.5rem] text-sm font-normal text-gray-400"
-                        placeholder={language?.v3?.common?.search}
-                      />
-                    </div>
-
+                  <Search apiFunction={getAllDeals} searchQuery={searchQuery} setSearchQuery={setSearchQuery}/>
                     <ul className="inline-flex items-center">
                       {React.Children.toArray(
-                        tabs.map((tab:any) => (
+                         Object.keys(tabs).map((tab: any) => (
                           <li
                             onClick={() => {
                               
@@ -229,7 +187,7 @@ const SyndicateInvestments = ({}: any) => {
                                 : "text-gray-500"
                             } `}
                           >
-                            {tab} &nbsp;({getCountvalue(tab)})
+                             {tabs[tab]} &nbsp;({getCountvalue(tab)})
                           </li>
                         ))
                       )}
@@ -241,9 +199,9 @@ const SyndicateInvestments = ({}: any) => {
               <section className="mt-10">
                 <Table
                   columns={columns}
-                  pagination={pagination}
-                  paginate={paginate}
-                  goToPage={paginate}
+                  tableData={deals}
+                  setCurrentPage={setCurrentPage}
+                  paginationData={paginationData}
                 />
               </section>
             </React.Fragment>

@@ -5,7 +5,7 @@ import Table from "../../../shared/components/Table";
 import { RootState } from "../../../redux-toolkit/store/store";
 import { ApplicationStatus } from "../../../enums/types.enum";
 import { saveDataHolder } from "../../../redux-toolkit/slicer/dataHolder.slicer";
-import { getDealSyndicates } from "../../../apis/deal.api";
+import { getInvitedDealSyndicates } from "../../../apis/deal.api";
 import Button from "../../../shared/components/Button";
 import { saveToken } from "../../../redux-toolkit/slicer/auth.slicer";
 import { RoutesEnums } from "../../../enums/routes.enum";
@@ -13,105 +13,67 @@ import CustomStatus from "../../../shared/components/CustomStatus";
 import { numberFormatter } from "../../../utils/object.utils";
 import Spinner from "../../../shared/components/Spinner";
 
-const InvitedSyndicates = ({ id, setInnerLoader }: any) => {
+const InvitedSyndicates = ({ id }: any) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const language: any = useSelector((state: RootState) => state.language.value);
   const authToken: any = useSelector((state: RootState) => state.auth.value);
   const columns = [
-    "Syndicate",
-    "Status",
-    "Invitation Sent On",
-    "Invite Expiration Date",
+    language?.v3?.fundraiser?.syndicate,
+    language?.v3?.fundraiser?.status,
+    language?.v3?.fundraiser?.invitation_sent_on,
+    language?.v3?.fundraiser?.invite_expiration_date,
   ];
   const [loading, setLoading]: any = useState(false);
   const [invites, setInvites]: any = useState([]);
-  const [pagination, setPagination] = useState({
-    items_per_page: 5,
-    total_items: [],
-    current_page: 1,
-    total_pages: 0,
-  });
+  const [currentPage, setCurrentPage] = useState(1);
+  const [paginationData, setpaginationData] = useState(null);
 
   useEffect(() => {
     dispatch(saveDataHolder(""));
     getAllDeals();
   }, []);
+  useEffect(() => {
+    dispatch(saveDataHolder(""));
+    getAllDeals();
+  }, [currentPage]);
  
 
   const getAllDeals = async () => {
     try {
       setLoading(true);
-      let { status, data } = await getDealSyndicates(id, authToken);
+      let { status, data } = await getInvitedDealSyndicates(id, authToken, currentPage);
       if (status === 200) {
-        let deals = data?.status?.data
-          ?.filter((deal: any) => deal?.status === "pending")
+        setpaginationData(data?.status?.data?.pagy)
+        let deals = data?.status?.data?.invites
           ?.map((deal: any) => {
             return {
               id: deal?.id,
-              ["Syndicate"]: (
+              [ language?.v3?.fundraiser?.syndicate]: (
                 <span className=" capitalize">{deal?.invitee?.name}</span>
               ),
-              ["Status"]: (
+              [language?.v3?.fundraiser?.status]: (
                 <span className="capitalize">
                   {" "}
                   <CustomStatus options={deal?.status} />
                 </span>
               ),
-              ["Invitation Sent On"]: deal?.sent_at,
-              ["Invite Expiration Date"]: deal?.invite_expiry || "N/A",
+              [language?.v3?.fundraiser?.invitation_sent_on]: deal?.sent_at,
+              [language?.v3?.fundraiser?.invite_expiration_date]: deal?.invite_expiry || language?.v3?.common?.not_added,
             };
           });
-
-        setPagination((prev) => {
-          return {
-            ...prev,
-            total_items: deals.length,
-            current_page: 1,
-            total_pages: Math.ceil(deals.length / prev.items_per_page),
-            data: deals?.slice(0, prev.items_per_page),
-          };
-        });
         setInvites(deals);
       }
     } catch (error: any) {
       if (error.response && error.response.status === 401) {
         dispatch(saveToken(""));
-        navigate(RoutesEnums.LOGIN, { state: RoutesEnums.STARTUP_DASHBOARD });
+        navigate(RoutesEnums.LOGIN, { state: RoutesEnums.FUNDRAISER_DASHBOARD });
       }
     } finally {
       setLoading(false);
     }
   };
-  const paginate = (type: string) => {
-    if (type === "next" && pagination.current_page < pagination.total_pages) {
-      setPagination((prev: any) => {
-        const nextPage = prev.current_page + 1;
-        const startIndex = (nextPage - 1) * prev.items_per_page;
-        const endIndex = startIndex + prev.items_per_page;
-        const data = invites.slice(startIndex, endIndex);
-        return { ...prev, current_page: nextPage, data };
-      });
-    } else if (type === "previous" && pagination.current_page > 1) {
-      setPagination((prev: any) => {
-        const prevPage = prev.current_page - 1;
-        const startIndex = (prevPage - 1) * prev.items_per_page;
-        const endIndex = startIndex + prev.items_per_page;
-        const data = invites.slice(startIndex, endIndex);
-
-        return { ...prev, current_page: prevPage, data };
-      });
-    } else {
-      setPagination((prev: any) => {
-        const prevPage = Number(type) + 1 - 1;
-        const startIndex = (prevPage - 1) * prev.items_per_page;
-        const endIndex = startIndex + prev.items_per_page;
-        const data = invites.slice(startIndex, endIndex);
-
-        return { ...prev, current_page: type, data };
-      });
-    }
-  };
+ 
 
   return (
     <section className="mt-10 relative">
@@ -125,14 +87,14 @@ const InvitedSyndicates = ({ id, setInnerLoader }: any) => {
       ) : (
         <Table
           columns={columns}
-          pagination={pagination}
-          paginate={paginate}
-          goToPage={paginate}
+          tableData={invites}
+          setCurrentPage={setCurrentPage}
+          paginationData={paginationData}
           noDataNode={
             <span className="absolute left-1/2 top-1/2 translate-x-[-50%] translate-y-[-50%]">
-              No invites sent! Click on the{" "}
-              <span className=" font-bold">invite button on top right</span> to
-              invite a syndicate
+              {language?.v3?.fundraiser?.no_invites_sent}{" "}
+              <span className=" font-bold">{language?.v3?.fundraiser?.invite_button_on_top_right}</span> to
+              {language?.v3?.fundraiser?.to_invite_a_syndicate}
             </span>
           }
         />

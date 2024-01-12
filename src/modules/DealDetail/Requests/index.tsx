@@ -5,7 +5,7 @@ import Table from "../../../shared/components/Table";
 import { RootState } from "../../../redux-toolkit/store/store";
 import { ApplicationStatus } from "../../../enums/types.enum";
 import { saveDataHolder } from "../../../redux-toolkit/slicer/dataHolder.slicer";
-import { addCommentOnDeal, getDealSyndicates, getViewDealSyndicates, signOff } from "../../../apis/deal.api";
+import { addCommentOnDeal, getInterestedDealSyndicates, getViewDealSyndicates, signOff } from "../../../apis/deal.api";
 import { numberFormatter } from "../../../utils/object.utils";
 import Button from "../../../shared/components/Button";
 import { saveToken } from "../../../redux-toolkit/slicer/auth.slicer";
@@ -22,6 +22,7 @@ import Modal from "../../../shared/components/Modal";
 import { toast } from "react-toastify";
 import CrossIcon from "../../../ts-icons/crossIcon.svg";
 import { toastUtil } from "../../../utils/toast.utils";
+import { convertStatusLanguage } from "../../../utils/string.utils";
 
 const Requests = ({ id }: any) => {
   const navigate = useNavigate();
@@ -30,7 +31,7 @@ const Requests = ({ id }: any) => {
   const authToken: any = useSelector((state: RootState) => state.auth.value);
   const user: any = useSelector((state: RootState) => state.user.value);
 
-  const columns = ["Syndicate", "Status", "Comments", ""];
+  const columns = [language?.v3?.fundraiser?.syndicate, language?.v3?.fundraiser?.status, language?.v3?.syndicate?.comments, ""];
   const [loading, setLoading]: any = useState(false);
   const [invites, setInvites]: any = useState([]);
   const [dealDetail, setDealDetail]: any = useState(null);
@@ -41,6 +42,8 @@ const Requests = ({ id }: any) => {
   const [modalOpen, setModalOpen]: any = useState(null);
   const [CommentSubmitted, setCommentSubmitted]: any = useState(false);
   const [currentDealId,setCurrentDealId]:any = useState (null)
+  const [currentPage, setCurrentPage] = useState(1)
+  const [paginationData, setpaginationData] = useState(null)
 
 
   const [changes, setChanges]: any = useState({
@@ -49,15 +52,6 @@ const Requests = ({ id }: any) => {
     document: null,
   });
 
-
-
-
-  const [pagination, setPagination] = useState({
-    items_per_page: 5,
-    total_items: [],
-    current_page: 1,
-    total_pages: 0,
-  });
 
 
   const onAddCommentOnDeal = async (id: any) => {
@@ -110,7 +104,7 @@ const Requests = ({ id }: any) => {
       let { status, data } = await getViewDealSyndicates(
         dealId,
         syndicateId,
-        authToken
+        authToken,
       );
       if (status === 200) {
         setDealDetail(data?.status?.data);
@@ -118,7 +112,7 @@ const Requests = ({ id }: any) => {
     } catch (error: any) {
       if (error.response && error.response.status === 401) {
         dispatch(saveToken(""));
-        navigate(RoutesEnums.LOGIN, { state: RoutesEnums.STARTUP_DASHBOARD });
+        navigate(RoutesEnums.LOGIN, { state: RoutesEnums.FUNDRAISER_DASHBOARD });
       }
     } finally {
       setLoadingDrawer(false);
@@ -134,20 +128,20 @@ const Requests = ({ id }: any) => {
   const getAllDeals = async () => {
     try {
       setLoading(true);
-      let { status, data } = await getDealSyndicates(id, authToken);
+      let { status, data } = await getInterestedDealSyndicates(id, authToken, currentPage);
       if (status === 200) {
-        let deals = data?.status?.data
-          ?.filter((deal: any) => deal?.status !== "pending")
+        setpaginationData(data?.status?.data?.pagy)
+        let deals = data?.status?.data?.invites
           .map((deal: any) => {
             return {
               id: deal?.id,
-              ["Syndicate"]: (
+              [language?.v3?.fundraiser?.syndicate]: (
                 <span className=" capitalize">{deal?.invitee?.name}</span>
               ),
-              ["Status"]: (
+              [language?.v3?.fundraiser?.status]: (
                 <span className=" capitalize">{<CustomStatus options={deal?.status} />}</span>
               ),
-              ["Comments"]: deal?.deal?.comment || " ",
+              [language?.v3?.syndicate?.comments]: deal?.deal?.comment || " ",
               "":
               (
                 <div
@@ -173,53 +167,16 @@ const Requests = ({ id }: any) => {
             };
           });
 
-        setPagination((prev) => {
-          return {
-            ...prev,
-            total_items: deals.length,
-            current_page: 1,
-            total_pages: Math.ceil(deals.length / prev.items_per_page),
-            data: deals?.slice(0, prev.items_per_page),
-          };
-        });
+     
         setInvites(deals);
       }
     } catch (error: any) {
       if (error.response && error.response.status === 401) {
         dispatch(saveToken(""));
-        navigate(RoutesEnums.LOGIN, { state: RoutesEnums.STARTUP_DASHBOARD });
+        navigate(RoutesEnums.LOGIN, { state: RoutesEnums.FUNDRAISER_DASHBOARD });
       }
     } finally {
       setLoading(false);
-    }
-  };
-  const paginate = (type: string) => {
-    if (type === "next" && pagination.current_page < pagination.total_pages) {
-      setPagination((prev: any) => {
-        const nextPage = prev.current_page + 1;
-        const startIndex = (nextPage - 1) * prev.items_per_page;
-        const endIndex = startIndex + prev.items_per_page;
-        const data = invites.slice(startIndex, endIndex);
-        return { ...prev, current_page: nextPage, data };
-      });
-    } else if (type === "previous" && pagination.current_page > 1) {
-      setPagination((prev: any) => {
-        const prevPage = prev.current_page - 1;
-        const startIndex = (prevPage - 1) * prev.items_per_page;
-        const endIndex = startIndex + prev.items_per_page;
-        const data = invites.slice(startIndex, endIndex);
-
-        return { ...prev, current_page: prevPage, data };
-      });
-    } else {
-      setPagination((prev: any) => {
-        const prevPage = Number(type) + 1 - 1;
-        const startIndex = (prevPage - 1) * prev.items_per_page;
-        const endIndex = startIndex + prev.items_per_page;
-        const data = invites.slice(startIndex, endIndex);
-
-        return { ...prev, current_page: type, data };
-      });
     }
   };
 
@@ -236,30 +193,20 @@ const Requests = ({ id }: any) => {
     ) : (
       <Table
         columns={columns}
-        pagination={pagination}
-        goToPage={paginate}
-        paginate={paginate}
+        tableData={invites}
+        setCurrentPage={setCurrentPage}
+        paginationData={paginationData}
         noDataNode={
           <span className="absolute left-1/2 top-1/2 translate-x-[-50%] translate-y-[-50%]">
-            No invites sent! Click on the{" "}
-            <span className=" font-bold">invite button on top right</span> to
-            invite a syndicate
-          </span>
+              {language?.v3?.fundraiser?.no_invites_sent}{" "}
+              <span className=" font-bold">{language?.v3?.fundraiser?.invite_button_on_top_right}</span> to
+              {language?.v3?.fundraiser?.to_invite_a_syndicate}
+            </span>
         }
       />
     )}
   </section>
-  
 
-  {/*
-  {.......##..............########..########.....###....##......##.########.########.....................##
-  {......##...##...##.....##.....##.##.....##...##.##...##..##..##.##.......##.....##.....##...##.......##.
-  {.....##.....##.##......##.....##.##.....##..##...##..##..##..##.##.......##.....##......##.##.......##..
-  {....##....#########....##.....##.########..##.....##.##..##..##.######...########.....#########....##...
-  {...##.......##.##......##.....##.##...##...#########.##..##..##.##.......##...##........##.##.....##....
-  {..##.......##...##.....##.....##.##....##..##.....##.##..##..##.##.......##....##......##...##...##.....
-  {.##....................########..##.....##.##.....##..###..###..########.##.....##..............##......
-  {*/}
   
   <Drawer
         drawerWidth="w-[700px]"
@@ -290,8 +237,8 @@ const Requests = ({ id }: any) => {
                 </div>
 
                 <span className="items-center">
-                  {dealDetail?.status === "accepted" &&
-                    dealDetail?.deal?.status === "approved" && (
+                  {convertStatusLanguage(dealDetail?.status) === "accepted" &&
+                   convertStatusLanguage(dealDetail?.deal?.status)  === "approved" && (
                       <Button
                         onClick={() =>
                           postSignOff(dealDetail?.deal?.id)

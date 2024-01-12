@@ -19,7 +19,7 @@ const DataRooms = () => {
                 <Header />
             </section>
             <aside className="w-full h-full flex items-start justify-start">
-                <Sidebar type={KanzRoles.STARTUP} />
+                <Sidebar type={KanzRoles.FUNDRAISER} />
                 <section className="bg-cbc-auth h-full p-[5rem]" style={{ width: "calc(100% - 250px)" }}>
                     <section className="inline-flex justify-between items-center w-full">
                         <div className="w-full">

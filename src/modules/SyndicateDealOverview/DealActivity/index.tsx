@@ -1,71 +1,61 @@
 import { useDispatch, useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
 import { RootState } from "../../../redux-toolkit/store/store";
 import React, { useEffect, useState } from "react";
 import Table from "../../../shared/components/Table";
-import { RoutesEnums } from "../../../enums/routes.enum";
-import { saveToken } from "../../../redux-toolkit/slicer/auth.slicer";
 import { saveDataHolder } from "../../../redux-toolkit/slicer/dataHolder.slicer";
 import {
   comaFormattedNumber,
 } from "../../../utils/object.utils";
 import Spinner from "../../../shared/components/Spinner";
-import { toast } from "react-toastify";
-import { toastUtil } from "../../../utils/toast.utils";
 import { getDealActivity } from "../../../apis/syndicate.api";
 import CustomStatus from "../../../shared/components/CustomStatus";
 
 const DealActivity = ({dealID, dealCreatorView}: any) => {
   const dispatch = useDispatch();
   const authToken: any = useSelector((state: RootState) => state.auth.value);
+  const language: any = useSelector((state: RootState) => state.language.value);
+
 
   const columns = [
-    "Name",
-    "Date",
-    "Status",
-    "Amount Raised",
+    language?.v3?.fundraiser?.name,
+    language?.v3?.fundraiser?.user_type,
+    language?.v3?.fundraiser?.date,
+    language?.v3?.fundraiser?.status,
+    language?.v3?.fundraiser?.amount_raised,
     
   ];
-  const [pagination, setPagination] = useState({
-    items_per_page: 10,
-    total_items: [],
-    current_page: 1,
-    total_pages: 0,
-  });
   const [loading, setLoading] = useState(false);
   const [activity, setDeals] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [paginationData, setpaginationData] = useState(null);
  
   useEffect(() => {
     dispatch(saveDataHolder(""));
     dealID && getAllDeals();
   }, []);
+  useEffect(() => {
+    dispatch(saveDataHolder(""));
+     getAllDeals();
+  }, [currentPage]);
 
   const getAllDeals = async () => {
     try {
       setLoading(true);
-      let { status, data } = await getDealActivity(dealID, authToken);
+      let { status, data } = await getDealActivity(dealID, authToken, currentPage);
       if (status === 200) {
-        let activity = data?.status?.data?.map((dealActivity: any) => {
+        setpaginationData(data?.status?.data?.pagy)
+        let activity = data?.status?.data?.records?.map((dealActivity: any) => {
           return {
             id: dealActivity?.investor?.id,
-            "Name":<span className="capitalize">{dealActivity?.investor?.name}</span> ,
-            ["Date"]:
-              dealActivity?.date|| "N/A",
-             ["Status"]:
-              <CustomStatus options={dealActivity?.status === "committed_amount" ? "Committed" : dealActivity?.status} /> || "N/A", 
-            ["Amount Raised"]: (
+            [ language?.v3?.fundraiser?.name]:<span className="capitalize">{dealActivity?.investor?.name}</span> ,
+            [language?.v3?.fundraiser?.user_type]:<span className="capitalize">{dealActivity?.type}</span> ,
+            [language?.v3?.fundraiser?.date]:
+              dealActivity?.date|| language?.v3?.common?.not_added,
+             [language?.v3?.fundraiser?.status]:
+              <CustomStatus options={dealActivity?.status === "committed_amount" ? "Committed" : dealActivity?.status} /> ||language?.v3?.common?.not_added, 
+            [language?.v3?.fundraiser?.amount_raised]: (
               <span>{comaFormattedNumber(dealActivity?.amount)}</span>
             ),
-          };
-        });
-
-        setPagination((prev) => {
-          return {
-            ...prev,
-            total_items: activity.length,
-            current_page: 1,
-            total_pages: Math.ceil(activity.length / prev.items_per_page),
-            data: activity?.slice(0, prev.items_per_page),
           };
         });
         setDeals(activity);
@@ -82,41 +72,12 @@ const DealActivity = ({dealID, dealCreatorView}: any) => {
     }
   };
 
-  const paginate = (type: string) => {
-    if (type === "next" && pagination.current_page < pagination.total_pages) {
-      setPagination((prev: any) => {
-        const nextPage = prev.current_page + 1;
-        const startIndex = (nextPage - 1) * prev.items_per_page;
-        const endIndex = startIndex + prev.items_per_page;
-        const data = activity.slice(startIndex, endIndex);
-        return { ...prev, current_page: nextPage, data };
-      });
-    } else if (type === "previous" && pagination.current_page > 1) {
-      setPagination((prev: any) => {
-        const prevPage = prev.current_page - 1;
-        const startIndex = (prevPage - 1) * prev.items_per_page;
-        const endIndex = startIndex + prev.items_per_page;
-        const data = activity.slice(startIndex, endIndex);
-        return { ...prev, current_page: prevPage, data };
-      });
-    } else {
-      setPagination((prev: any) => {
-        const prevPage = Number(type) + 1 - 1;
-        const startIndex = (prevPage - 1) * prev.items_per_page;
-        const endIndex = startIndex + prev.items_per_page;
-        const data = activity.slice(startIndex, endIndex);
-
-        return { ...prev, current_page: type, data };
-      });
-    }
-  };
-
   return (
     <main className="h-full relative max-h-full">
       <section className="inline-flex justify-between items-center w-full">
         <div className="w-full"> 
         {!dealCreatorView && (  <h1 className="text-black font-medium text-2xl mb-2">
-            {"Deal Activity"}
+            {language?.v3?.investor?.deal_activity}
           </h1>) }
         </div>
       </section>
@@ -129,13 +90,13 @@ const DealActivity = ({dealID, dealCreatorView}: any) => {
           <section className="mt-5 shadow-lg">
             <Table
               columns={columns}
-              pagination={pagination}
-              paginate={paginate}
-              goToPage={paginate}
+              tableData={activity}
+              setCurrentPage={setCurrentPage}
+              paginationData={paginationData}
               removeHref={true}
               noDataNode={
                 <span className="absolute left-1/2 top-1/2 translate-x-[-50%] translate-y-[-50%]">
-                  No activity for now!
+                  {language?.v3?.fundraiser?.no_activity_for_now}
                 </span>
               }
             />

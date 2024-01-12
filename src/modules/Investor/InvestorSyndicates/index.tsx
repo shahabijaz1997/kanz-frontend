@@ -8,34 +8,21 @@ import Sidebar from "../../../shared/components/Sidebar";
 import Spinner from "../../../shared/components/Spinner";
 import AllSyndicates from ".././InvestorSyndicates/AllSyndicates";
 import FollowingSyndicates from ".././InvestorSyndicates/FollowingSyndicates";
-import { useDispatch } from "react-redux";
+import Applications from "./Applications";
 
 
 
 
 const InvestorSyndicates = ({}: any) => {
   const params = useParams();
-  const navigate = useNavigate();
-  const dispatch = useDispatch();
 
-
-  const { state } = useLocation();
-
-  interface Syndicate {
-    id: number;
-    title: React.ReactNode;
-    handle: string;
-    action: React.ReactNode;
-  }
-
-  const { id }: any = params;
   const language: any = useSelector((state: RootState) => state.language.value);
   const authToken: any = useSelector((state: RootState) => state.auth.value);
   const tabs = [
-    { id: 1, title: "All Syndicates" },
-    { id: 2, title: "Following Syndicates" },
+    { id: 1, title: language?.v3?.investor?.all_syndicates },
+    { id: 2, title: language?.v3?.investor?.your_syndicates },
+    { id: 3, title: language?.v3?.investor?.applications },
   ];
-  const [syndicates, setSyndicates] = useState<Syndicate[]>([]);
 
 
   const [selected, setSelected]: any = useState(tabs[0]);
@@ -66,7 +53,7 @@ const InvestorSyndicates = ({}: any) => {
           >
             <section className="inline-flex justify-between items-center w-full mb-4">
               <h1 className="text-black font-medium text-2xl">
-                {"Syndicates"}
+                {language?.v3?.investor?.syndicates}
               </h1>
           
             </section>
@@ -93,6 +80,7 @@ const InvestorSyndicates = ({}: any) => {
             </section>
             {selected?.id === 1 && <AllSyndicates />}
             {selected?.id === 2 && <FollowingSyndicates />}
+            {selected?.id === 3 && <Applications />}
           </section>
         )}
       </aside>

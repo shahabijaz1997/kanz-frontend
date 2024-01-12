@@ -23,7 +23,7 @@ const Home = ({ }: any) => {
   const longSecContent = () => {
     return (
       <React.Fragment>
-        <aside id={language.header.startup}>
+        <aside id={language.landing.raise}>
           <h3 className="text-cyan-800 text-xl tracking-[0.03em] font-bold">
             {language.landing.startup}
           </h3>
@@ -41,40 +41,7 @@ const Home = ({ }: any) => {
               style={{ fontSize: "1.125rem", fontWeight: 500 }}
               className="bg-cyan-800 h-[56px] w-[173px] font-medium text-lg mt-6"
               htmlType="submit"
-              onClick={() => navigate(RoutesEnums.SIGNUP, { state: KanzRoles.STARTUP })}
-            >
-              {language.buttons.getStart}
-            </Button>
-          </div>
-          <div className="mt-[5rem]">
-            <img src={LeftQuote} alt="Kanz" className="mb-2" />
-            <div className="rounded-md bg-cyan-800 p-8 text-white font-semibold text-base tracking-[0.03em] max-w-[70%] screen991:max-w-full">
-              {language.landing.kanzNetworkBank}
-            </div>
-          </div>
-        </aside>
-
-        <aside className="mt-[10rem] screen500:mt-[5rem]" id={language.header.syndicate}>
-          <h3 className="text-cyan-800 text-xl tracking-[0.03em] font-bold">
-            {language.landing.syndicate}
-          </h3>
-          <h1 className="text-neutral-900 text-2xl tracking-[0.03em] font-bold my-2">
-            3017 {language.landing.switchedToKanz}
-          </h1>
-          <p className="text-neutral-500 tracking-[0.03em] text-base font-normal pt-1 max-w-[70%] screen991:max-w-full">
-            {language.landing.investPara1}
-          </p>
-          <p className="text-neutral-500 tracking-[0.03em] text-base font-normal pt-6 max-w-[70%] screen991:max-w-full">
-            {language.landing.investPara2}
-          </p>
-          <div className={`${orientation === "rtl" ? "float-right" : "float-left"}`}>
-            <Button
-              style={{ fontSize: "1.125rem", fontWeight: 500 }}
-              className="bg-cyan-800 h-[56px] w-[173px] font-medium text-lg mt-6"
-              htmlType="submit"
-              onClick={() =>
-                navigate(RoutesEnums.SIGNUP, { state: KanzRoles.SYNDICATE })
-              }
+              onClick={() => navigate(RoutesEnums.SIGNUP, { state: KanzRoles.FUNDRAISER })}
             >
               {language.buttons.getStart}
             </Button>
@@ -105,12 +72,47 @@ const Home = ({ }: any) => {
               style={{ fontSize: "1.125rem", fontWeight: 500 }}
               className="bg-cyan-800 h-[56px] w-[173px] font-medium text-lg mt-6"
               htmlType="submit"
-              onClick={() => navigate(RoutesEnums.SIGNUP, { state: KanzRoles.PROPERTY_OWNER })}
+              onClick={() => navigate(RoutesEnums.SIGNUP, { state: KanzRoles.FUNDRAISER })}
             >
               {language.buttons.getStart}
             </Button>
           </div>
 
+          <div className="mt-[5rem]">
+            <img src={LeftQuote} alt="Kanz" className="mb-2" />
+            <div className="rounded-md bg-cyan-800 p-8 text-white font-semibold text-base tracking-[0.03em] max-w-[70%] screen991:max-w-full">
+              {language.landing.kanzNetworkBank}
+            </div>
+          </div>
+        </aside>
+
+
+
+        <aside className="mt-[10rem] screen500:mt-[5rem]" id={language.header.syndicate}>
+          <h3 className="text-cyan-800 text-xl tracking-[0.03em] font-bold">
+            {language.landing.syndicate}
+          </h3>
+          <h1 className="text-neutral-900 text-2xl tracking-[0.03em] font-bold my-2">
+            3017 {language.landing.switchedToKanz}
+          </h1>
+          <p className="text-neutral-500 tracking-[0.03em] text-base font-normal pt-1 max-w-[70%] screen991:max-w-full">
+            {language.landing.investPara1}
+          </p>
+          <p className="text-neutral-500 tracking-[0.03em] text-base font-normal pt-6 max-w-[70%] screen991:max-w-full">
+            {language.landing.investPara2}
+          </p>
+          <div className={`${orientation === "rtl" ? "float-right" : "float-left"}`}>
+            <Button
+              style={{ fontSize: "1.125rem", fontWeight: 500 }}
+              className="bg-cyan-800 h-[56px] w-[173px] font-medium text-lg mt-6"
+              htmlType="submit"
+              onClick={() =>
+                navigate(RoutesEnums.SIGNUP, { state: KanzRoles.SYNDICATE })
+              }
+            >
+              {language.buttons.getStart}
+            </Button>
+          </div>
           <div className="mt-[5rem]">
             <img src={LeftQuote} alt="Kanz" className="mb-2" />
             <div className="rounded-md bg-cyan-800 p-8 text-white font-semibold text-base tracking-[0.03em] max-w-[70%] screen991:max-w-full">

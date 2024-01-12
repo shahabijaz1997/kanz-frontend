@@ -3,7 +3,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
 import { RootState } from "../../redux-toolkit/store/store";
 import { getDealQuestion, postDealStep, submitDeal } from "../../apis/deal.api";
-import { DealType, FileType } from "../../enums/types.enum";
+import { DealCheckType, DealType, FileType } from "../../enums/types.enum";
 import {
   onResetFields,
   onResetOptions,
@@ -41,7 +41,6 @@ import CalendarIcon from "../../ts-icons/calendarIcon.svg";
 import { isValidUrl } from "../../utils/regex.utils";
 import { kebabCase } from "../../utils/string.utils";
 
-
 const CURRENCIES = ["USD", "AED"];
 
 const CreateDeal = () => {
@@ -52,15 +51,18 @@ const CreateDeal = () => {
   const event: any = useSelector((state: RootState) => state.event.value);
   const authToken: any = useSelector((state: RootState) => state.auth.value);
   const metadata: any = useSelector((state: RootState) => state.metadata.value);
+
   const orientation: any = useSelector(
     (state: RootState) => state.orientation.value
   );
   const dataHolder: any = useSelector(
     (state: RootState) => state.dataHolder.value
   );
+
   const dealData: any = useSelector(
     (state: RootState) => state.questionnaire.value
   );
+
 
   const [step, setStep]: any = useState(Number(params?.id));
   const [multipleFieldsPayload, setMultipleFieldsPayload]: any = useState([]);
@@ -72,22 +74,27 @@ const CreateDeal = () => {
   const [dependencies, setDependencies]: any = useState(null);
   const [totalSteps, setTotalSteps]: any = useState(null);
   const [showCustomBox, setShowCustomBox]: any = useState(true);
+  const [showZeroWarning, setShowZeroWarning]: any = useState(false);
   const [open, setOpen]: any = useState(false);
   const [loading, setLoading] = useState(false);
   const [modalOpen, setModalOpen]: any = useState(null);
+  const [uspAdded, setUspAdded]: any = useState(false);
 
   useEffect(() => {
     setStep(Number(params?.id) || 1);
     getDealStepDetails();
   }, [params, step]);
 
+  /*   useEffect(()=>{
+  }) */
   /* UI Actions */
+
   const getDealStepDetails = async () => {
     try {
       setLoading(true);
       const queryParams: any = {
         type:
-          metadata.role === KanzRoles.STARTUP
+          metadata.dealType === KanzRoles.STARTUP
             ? DealType.STARTUP
             : DealType.PROPERTY_OWNER,
       };
@@ -266,7 +273,7 @@ const CreateDeal = () => {
             field?.field_type === Constants.DATE
           )
             selected = field.value;
-          if (field.field_type === Constants.SWITCH) selected = field?.value;
+          if (field?.field_type === Constants?.SWITCH) selected = field?.value;
           if (field.field_type === Constants.FILE) selected = field?.value?.id;
           if (field.field_type === Constants.CHECK_BOX) selected = field?.value;
           return {
@@ -278,7 +285,7 @@ const CreateDeal = () => {
       let payload: any = {
         deal: {
           deal_type:
-            metadata.role === KanzRoles.STARTUP ? "startup" : "property",
+            metadata.dealType === KanzRoles.STARTUP ? "startup" : "property",
           step: questions[step - 1]?.id,
           fields,
         },
@@ -312,7 +319,7 @@ const CreateDeal = () => {
 
   const onSetPrev = () => {
     if (step > 1) navigate(`/create-deal/${step - 1}`);
-    else navigate(`/${kebabCase(metadata?.role)}`);
+    else navigate(`${RoutesEnums.FUNDRAISER_DASHBOARD}`);
   };
 
   const tieUpRestrictions = (as: any) => {
@@ -344,7 +351,6 @@ const CreateDeal = () => {
       setLoading(false);
     }
   };
-
   /* UI Components */
   const multipleChoice = (ques: any, secIndex: number, section: any) => {
     let flag = false;
@@ -450,7 +456,6 @@ const CreateDeal = () => {
       </section>
     );
   };
-
   const numberInputUI = (ques: any, secIndex: number, section: any) => {
     let dependantQuesion = section?.fields?.find(
       (field: any) => field.id === ques?.dependent_id
@@ -458,7 +463,7 @@ const CreateDeal = () => {
     let placeholder = "",
       symbol = "";
     if (ques?.input_type === InputType.CURRENCY)
-      placeholder = currency === 0 ? "$ 0.00" : "0.00 د.إ";
+      placeholder = metadata.dealType === KanzRoles.STARTUP ? "$ 0.00" : event === "ar" ?  "د.إ00.0": "AED 0.00" ;  
     else if (ques?.input_type === InputType.SQFT)
       placeholder = language?.v3?.common?.sqft;
     else if (ques?.input_type === InputType.PERCENT)
@@ -466,10 +471,9 @@ const CreateDeal = () => {
     else placeholder = ques?.placeholder || ques?.statement;
 
     if (ques?.input_type === InputType.CURRENCY)
-      symbol = currency === 0 ? "$" : "د.إ";
-    else if (ques?.input_type === InputType.SQFT) symbol = "SQFT";
+      symbol = metadata.dealType === KanzRoles.STARTUP ? "$" : event === "ar" ?  "د.إ": "AED";
+    else if (ques?.input_type === InputType.SQFT) symbol = event === "ar" ?  "قدم مربع": "SQFT";
     else if (ques?.input_type === InputType.PERCENT) symbol = "%";
-
     if (!dependantQuesion || (dependantQuesion && dependantQuesion?.value))
       return (
         <section className="flex items-start justify-center flex-col mt-3 w-full">
@@ -485,10 +489,22 @@ const CreateDeal = () => {
                 value={comaFormattedNumber(ques?.value)}
                 onInput={(e: any) => {
                   const enteredValue = e.target.value;
-                  const numericValue = enteredValue.replace(
-                    /[^0-9.]|(\.(?=.*\.))/g,
-                    ""
-                  );
+                  let numericValue =
+                    ques?.id == 49 || ques?.id == 5
+                      ? enteredValue.replace(/[^0-9]|(\.(?=.*\.))/g, "")
+                      : enteredValue.replace(/[^0-9.]|(\.(?=.*\.))/g, "");
+
+                  if (
+                    (ques?.id == 49 || ques?.id == 5) &&
+                    (numericValue == undefined ||
+                      numericValue == 0.0 ||
+                      numericValue == 0)
+                  ) {
+                    setShowZeroWarning(true);
+                  } else {
+                    setShowZeroWarning(false);
+                  }
+
                   if (
                     ques?.input_type === InputType.PERCENT &&
                     Number(e.target.value) > 100
@@ -511,59 +527,78 @@ const CreateDeal = () => {
                 type="text"
                 className="outline-none w-full h-full placeholder-neutral-500"
               />
-              {ques?.input_type === InputType.CURRENCY && (
-                <span
-                  className="cursor-pointer inline-flex items-center"
-                  onClick={() =>
-                    setCurrency((prev) => {
-                      return prev === 0 ? 1 : 0;
-                    })
-                  }
-                >
-                  <button className="font-normal text-lg text-neutral-500">
-                    {CURRENCIES[currency]}
-                  </button>
-                </span>
-              )}
-              {ques?.input_type === InputType.SQFT && (
-                <span className="cursor-pointer inline-flex items-center">
-                  <button className="font-normal text-lg text-neutral-500">
-                    SQFT
-                  </button>
-                </span>
-              )}
-              {ques?.input_type === InputType.PERCENT && (
-                <span className="cursor-pointer inline-flex items-center">
-                  <button className="font-normal text-lg text-neutral-500">
-                    %
-                  </button>
-                </span>
-              )}
             </div>
-            <ul className="inline-flex items-center gap-6 mt-3">
+            {showZeroWarning && (
+              <span className="text-xs text-red-600">
+                {language?.v3?.fundraiser?.amount_cannot_be_zero}
+              </span>
+            )}
+            <ul className="inline-flex justify-between w-full items-center gap-6 mt-3">
               {React.Children.toArray(
-                ques?.suggestions.map((suggestion: any) => (
-                  <li
-                    onClick={() => {
-                      let elem: HTMLInputElement | any =
-                        document.getElementById(`num-${ques.id}`);
-                      elem.value = String(suggestion);
-                      dispatch(
-                        saveDealSelection({
-                          option: String(suggestion),
-                          question: ques,
-                          fields: dealData,
-                          lang: event,
-                          secIndex,
-                          step: dealData[step - 1],
-                        })
+                ques?.suggestions.map((suggestion: any) => {
+                  let formattedNumber;
+                  if (
+                    ques.input_type === InputType.CURRENCY &&
+                    metadata.dealType === KanzRoles.PROPERTY_OWNER
+                  ) {
+                    if(event === "ar") {
+                      formattedNumber =   "د.إ"  +
+                      numberFormatter(
+                        suggestion,
+                        null,
+                        true
+                      )}
+                    else {
+                      formattedNumber = numberFormatter(
+                        suggestion,
+                        DealCheckType.PROPERTY
                       );
-                    }}
-                    className="cursor-pointer py-2 px-3 h-9 w-24 bg-cbc-grey-sec rounded-md text-center text-sm font-normal text-neutral-900"
-                  >
-                    {numberFormatter(Number(suggestion))}&nbsp;{symbol}
-                  </li>
-                ))
+                    }
+                  
+                  } else if (
+                    ques.input_type === InputType.CURRENCY &&
+                    metadata.dealType === KanzRoles.STARTUP
+                  ) {
+                    if(event === "ar") {
+                      formattedNumber =   "$" +
+                      numberFormatter(
+                        suggestion,
+                        null,
+                        true
+                      )}
+                    else {
+                      formattedNumber = numberFormatter(
+                        suggestion,
+                        DealCheckType.STARTUP
+                      );
+                    }
+                  } else {
+                    formattedNumber = suggestion + "%";
+                  }
+
+                  return (
+                    <li
+                      onClick={() => {
+                        let elem: HTMLInputElement | any =
+                          document.getElementById(`num-${ques.id}`);
+                        elem.value = String(suggestion);
+                        dispatch(
+                          saveDealSelection({
+                            option: String(suggestion),
+                            question: ques,
+                            fields: dealData,
+                            lang: event,
+                            secIndex,
+                            step: dealData[step - 1],
+                          })
+                        );
+                      }}
+                      className="cursor-pointer py-2 px-3 h-9 w-30 bg-cbc-grey-sec rounded-md text-center text-sm font-normal text-neutral-900"
+                    >
+                      {formattedNumber}
+                    </li>
+                  );
+                })
               )}
             </ul>
           </section>
@@ -800,7 +835,48 @@ const CreateDeal = () => {
     return (
       <section className="flex items-start justify-center flex-col mt-2 w-full">
         <section className="mb-5 w-full relative mt-1">
-          <div dangerouslySetInnerHTML={{ __html: ques?.description }}></div>
+          <div>
+            <span className="font-bold text-lg">
+              {language?.v3?.fundraiser?.terms_and_conditions}
+            </span>{" "}
+            <br />
+            <span className="font-bold">
+              {" "}
+              {language?.v3?.fundraiser?.acceptance_of_terms}
+            </span>{" "}
+            <br />
+            {language?.v3?.fundraiser?.welcome_message} <br />
+            {language?.v3?.fundraiser?.access_or_use_agreement} <br />
+            {language?.v3?.fundraiser?.disagreement_message} <br />
+            <span className="font-bold">
+              {" "}
+              {language?.v3?.fundraiser?.use_of_the_app}
+            </span>{" "}
+            <br />
+            {language?.v3?.fundraiser?.minimum_age_requirement} <br />
+            {language?.v3?.fundraiser?.account_confidentiality} <br />
+            {language?.v3?.fundraiser?.illegal_or_unauthorized_use} <br />
+            {language?.v3?.fundraiser?.no_harassment_abuse_harm} <br />
+            {language?.v3?.fundraiser?.no_transmission_of_worms_viruses} <br />
+            <span className="font-bold">
+              {" "}
+              {language?.v3?.fundraiser?.fundraising_guidelines}
+            </span>{" "}
+            <br />
+            {language?.v3?.fundraiser?.fundraising_app_platform} <br />
+            {language?.v3?.fundraiser?.user_responsibility} <br />
+            {language?.v3?.fundraiser?.no_fraudulent_or_misleading_use} <br />
+            {language?.v3?.fundraiser?.right_to_remove_or_suspend} <br />
+            <span className="font-bold">
+              {" "}
+              {language?.v3?.fundraiser?.financial_transactions}
+            </span>{" "}
+            <br />
+            {language?.v3?.fundraiser?.non_refundable_donations} <br />
+            {language?.v3?.fundraiser?.processing_fee} <br />
+            {language?.v3?.fundraiser?.no_credit_card_information_storage}{" "}
+            <br />
+          </div>
         </section>
 
         <section
@@ -852,13 +928,13 @@ const CreateDeal = () => {
                 })
               );
               let dependantQuesions: any[] = section?.fields?.filter(
-                (field: any) => field.dependent_id === ques?.id
+                (field: any) => field?.dependent_id === ques?.id
               );
-              if (dependantQuesions.length && ques?.value) {
+              if (dependantQuesions?.length && ques?.value) {
                 dependantQuesions.forEach((dep) => {
                   dispatch(
                     saveDealSelection({
-                      option: null,
+                      option: "",
                       question: dep,
                       fields: dealData,
                       lang: event,
@@ -915,7 +991,7 @@ const CreateDeal = () => {
               onInput={(e: any) =>
                 dispatch(
                   saveDealSelection({
-                    option: e.target.value,
+                    option: e?.target?.value,
                     question: ques,
                     fields: dealData,
                     lang: event,
@@ -1133,7 +1209,7 @@ const CreateDeal = () => {
       flags.push({ section: sec.index, validations: [] });
       let fields = sec.fields;
       fields.forEach((ques: any) => {
-        if (ques?.field_type === Constants.SWITCH) {
+        if (ques?.field_type === Constants?.SWITCH) {
           let flag = false;
           if (ques?.is_required && ques?.value) flag = true;
           else if (!ques?.is_required) flag = true;
@@ -1143,18 +1219,18 @@ const CreateDeal = () => {
           ques?.field_type === Constants.DROPDOWN
         ) {
           let dependantQuesion = sec?.fields?.find(
-            (field: any) => field.id === ques?.dependent_id
+            (field: any) => field?.id === ques?.dependent_id
           );
           let flag = false;
-          let isSome = ques.options?.some((opt: any) => opt.selected);
+          let isSome = ques?.options?.some((opt: any) => opt?.selected);
           if (
             (!dependantQuesion && isSome) ||
             (dependantQuesion && dependantQuesion?.value && isSome) ||
-            (dependantQuesion && !dependantQuesion.value)
+            (dependantQuesion && !dependantQuesion?.value)
           )
             flag = true;
           else flag = false;
-          flags[index].validations.push(flag);
+          flags[index]?.validations?.push(flag);
         } else if (ques?.field_type === Constants.FILE) {
           let flag = ques.value?.id ? true : false;
           if (ques?.is_required && ques.value?.id) flag = true;
@@ -1173,9 +1249,9 @@ const CreateDeal = () => {
           );
           let flag = false;
           if (
-            (!dependantQuesion && ques.value) ||
-            (dependantQuesion && dependantQuesion?.value && ques.value) ||
-            (dependantQuesion && !dependantQuesion.value)
+            (!dependantQuesion && ques?.value) ||
+            (dependantQuesion && dependantQuesion?.value && ques?.value) ||
+            (dependantQuesion && !dependantQuesion?.value)
           ) {
             flag = true;
           } else flag = false;
@@ -1186,7 +1262,7 @@ const CreateDeal = () => {
             flag = false;
           flags[index].validations.push(flag);
         } else if (ques.field_type === Constants.SWITCH) {
-          flags[index].validations.push(ques.value);
+          flags[index]?.validations?.push(ques?.value);
         } else if (ques.field_type === Constants.CHECK_BOX) {
           flags[index].validations.push(ques.value);
         }
@@ -1248,7 +1324,9 @@ const CreateDeal = () => {
           data={{
             leftMenu: language?.v3?.deal?.create_deal,
             button: (
-              <button onClick={() => navigate(`/${kebabCase(metadata.role)}`)}>
+              <button
+                onClick={() => navigate(RoutesEnums.FUNDRAISER_DASHBOARD)}
+              >
                 {" "}
                 <CrossIcon stroke="#171717" className="w-6 h-6" />
               </button>
@@ -1310,6 +1388,14 @@ const CreateDeal = () => {
                                       <div
                                         className="w-full inline-flex justify-end cursor-pointer"
                                         onClick={() => {
+                                          /* setUspAdded(false)
+                                           */ dispatch(
+                                            onResetFields({
+                                              secIndex: section?.index,
+                                              lang: event,
+                                              step: dealData[step - 1],
+                                            })
+                                          );
                                           setMultipleFieldsPayload(
                                             (prev: any) => {
                                               const secs = prev.filter(
@@ -1362,7 +1448,16 @@ const CreateDeal = () => {
                                   <div className="w-full inline-flex justify-center items-center gap-2">
                                     <Button
                                       className="w-[100px] border-2 border-cyan-800"
-                                      onClick={() => setShowCustomBox(false)}
+                                      onClick={() => {
+                                        dispatch(
+                                          onResetFields({
+                                            secIndex: section?.index,
+                                            lang: event,
+                                            step: dealData[step - 1],
+                                          })
+                                        );
+                                        setShowCustomBox(false);
+                                      }}
                                     >
                                       {language?.v3?.button?.cancel}
                                     </Button>
@@ -1372,6 +1467,7 @@ const CreateDeal = () => {
                                       )}
                                       className="w-[100px] bg-transparent border-2 border-cyan-800 !text-cyan-800 hover:!text-white"
                                       onClick={() => {
+                                        /* setUspAdded(true) */
                                         setShowCustomBox(false);
                                         setMultipleFieldsPayload(
                                           (prev: any) => {
@@ -1450,7 +1546,6 @@ const CreateDeal = () => {
                                         <section className="flex items-start justify-center flex-col mb-1 mt-3 w-[415px]">
                                           <div className="relative inline-flex w-full mb-3">
                                             <p
-                                              placeholder="www.example.com"
                                               className={`h-[42px] rounded-md shadow-sm appearance-none border border-neutral-300 w-full py-2 px-3 bg-white text-blue-500 leading-tight focus:outline-none focus:shadow-outline inline-flex justify-between items-center`}
                                             >
                                               <small className="text-sm;">
@@ -1586,7 +1681,10 @@ const CreateDeal = () => {
                     </Button>
                     <Button
                       className="h-[38px] w-[140px]"
-                      disabled={!checkValidation()}
+                      disabled={
+                        !checkValidation() ||
+                        showZeroWarning /*  || !uspAdded */
+                      }
                       htmlType="submit"
                       loading={loading}
                       onClick={onSetNext}
@@ -1633,7 +1731,7 @@ const CreateDeal = () => {
                   className="w-6 h-6"
                   onClick={() => {
                     setModalOpen(false);
-                    navigate(`/${kebabCase(metadata?.role)}`);
+                    navigate(`${RoutesEnums.FUNDRAISER_DASHBOARD}`);
                   }}
                 />
               </div>

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { KanzRoles } from "../../enums/roles.enum";
 import { RootState } from "../../redux-toolkit/store/store";
 import Header from "../../shared/components/Header";
@@ -13,8 +13,6 @@ import DownloadIcon from "../../ts-icons/downloadIcon.svg";
 import Modal from "../../shared/components/Modal";
 import CrossIcon from "../../ts-icons/crossIcon.svg";
 import FileSVG from "../../assets/svg/file.svg";
-import Zoomin from "../../ts-icons/zoominIcon.svg";
-import Zoomout from "../../ts-icons/ZoomoutIcon.svg";
 import CurrencySVG from "../../assets/svg/currency.svg";
 
 import {
@@ -22,16 +20,11 @@ import {
   numberFormatter,
   timeAgo,
 } from "../../utils/object.utils";
-import {
-  ApplicationStatus,
-  DealStatus,
-  FileType,
-} from "../../enums/types.enum";
+import { DealCheckType, DealStatus, FileType } from "../../enums/types.enum";
 import {
   addCommentOnDeal,
   getDealDetail,
   requestSyndication,
-  signOff,
   syndicateApprove,
 } from "../../apis/deal.api";
 import { toast } from "react-toastify";
@@ -40,21 +33,29 @@ import UploadIcon from "../../ts-icons/uploadIcon.svg";
 import BinIcon from "../../ts-icons/binIcon.svg";
 import { fileSize, handleFileRead } from "../../utils/files.utils";
 import InvitesListing from "./InvitesListing";
-import DealActivity from "./DealActivity";
 import { RoutesEnums } from "../../enums/routes.enum";
-import { investSyndicate } from "../../apis/syndicate.api";
-import path from "path";
+import { getDownloadDocument, investSyndicate } from "../../apis/syndicate.api";
 import Investors from "./DealInvestors";
+import { convertStatusLanguage } from "../../utils/string.utils";
 
 const CURRENCIES = ["USD", "AED"];
 
-const StartupCase = ({ dealToken, dealDetail, docs, returnPath }: any) => {
+const StartupCase = ({
+  dealToken,
+  dealDetail,
+  docs,
+  returnPath,
+  pitchDeck,
+}: any) => {
   const navigate = useNavigate();
   const language: any = useSelector((state: RootState) => state.language.value);
+  const event: any = useSelector((state: RootState) => state.event.value);
   const authToken: any = useSelector((state: RootState) => state.auth.value);
   const user: any = useSelector((state: RootState) => state.user.value);
+  const orientation: any = useSelector(
+    (state: RootState) => state.orientation.value
+  );
   const [files, setFiles]: any = useState([]);
-  const [currency, setCurrency] = useState(0);
   const [deal, setDeal]: any = useState(dealDetail);
   const [selectedDocs, setSelectedDocs]: any = useState(docs);
   const [invited, setInvited]: any = useState();
@@ -66,6 +67,7 @@ const StartupCase = ({ dealToken, dealDetail, docs, returnPath }: any) => {
   const [modalOpenSyndication, setModalOpenSyndication]: any = useState(null);
   const [disableUpload, setdisableUpload]: any = useState(false);
   const [modalOpenComment, setmodalOpenComment]: any = useState(null);
+  const [InvestButtonDisable, setInvestButtonDisable]: any = useState(false);
 
   const [investmentAmount, setAmount] = useState();
   const [selectedCurrency, setSelectedCurrency] = useState("USD");
@@ -85,8 +87,22 @@ const StartupCase = ({ dealToken, dealDetail, docs, returnPath }: any) => {
 
   const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file: any = e.target.files?.[0];
-    setFileInformation(file);
-    e.target.value = "";
+    if (file) {
+      const fileSizeInMB = fileSize(file.size, "mb");
+  
+      if (fileSizeInMB > 10) {
+        toast.error(language?.v3?.fundraiser?.file_size_err, toastUtil);
+        navigator.vibrate(1000);
+        return;
+      }
+  
+      const allowedFileTypes = ["image/jpeg", "image/jpg", "image/png", "application/pdf"];
+      if (!allowedFileTypes.includes(file.type)) {
+        toast.error(language?.v3?.fundraiser?.file_type_err, toastUtil);
+        return;
+      }    setFileInformation(file);
+        e.target.value = "";
+    }
   };
 
   const setFileInformation = async (file: File) => {
@@ -123,60 +139,9 @@ const StartupCase = ({ dealToken, dealDetail, docs, returnPath }: any) => {
     }, 1000);
   };
 
-useEffect (()=>
-{
-  deal && (deal?.invite ? setInvited(true) : setInvited(false)) 
-})
-
-  const numberInputUI = () => {
-    let placeholder = currency === 0 ? "$ 0.00" : "0.00 د.إ";
-
-    return (
-      <section className="flex items-start justify-center flex-col mt-3 w-full">
-        <section className="mb-2 w-full relative">
-          <div className="relative rounded-md w-full h-10 border-[1px] border-neutral-300 bg-white overflow-hidden inline-flex items-center px-3">
-            <input
-              value={comaFormattedNumber("")}
-              onInput={(e: any) => {
-                const enteredValue = e.target.value;
-                const numericValue = enteredValue.replace(
-                  /[^0-9.]|(\.(?=.*\.))/g,
-                  ""
-                );
-              }}
-              placeholder={placeholder}
-              type="text"
-              className="outline-none w-full h-full placeholder-neutral-500"
-            />
-            <span
-              className="cursor-pointer inline-flex items-center"
-              onClick={() =>
-                setCurrency((prev) => {
-                  return prev === 0 ? 1 : 0;
-                })
-              }
-            >
-              <button className="font-normal text-lg text-neutral-500">
-                {CURRENCIES[currency]}
-              </button>
-            </span>
-          </div>
-        </section>
-      </section>
-    );
-  };
-
-  const zoomin = () => {
-    let imgElem: any = document.getElementById("deal-file");
-    let currWidth = imgElem.clientWidth;
-    imgElem.style.width = currWidth + 50 + "px";
-  };
-
-  const zoomout = () => {
-    let imgElem: any = document.getElementById("deal-file");
-    let currWidth = imgElem.clientWidth;
-    if (currWidth > 150) imgElem.style.width = currWidth - 50 + "px";
-  };
+  useEffect(() => {
+    deal && (deal?.invite ? setInvited(true) : setInvited(false));
+  });
 
   const onGetdeal = async () => {
     try {
@@ -185,6 +150,18 @@ useEffect (()=>
       if (status === 200) {
         setDeal(data?.status?.data);
         setSelectedDocs(data?.status?.data?.docs[0]);
+      }
+    } catch (error) {
+    } finally {
+      setLoading(false);
+    }
+  };
+  const onDownloadDocument = async (documentID: any, authToken: any) => {
+    try {
+      setLoading(true);
+      let { status, data } = await getDownloadDocument(documentID, authToken);
+      if (status === 200) {
+        window.open(data?.status?.data);
       }
     } catch (error) {
     } finally {
@@ -243,7 +220,38 @@ useEffect (()=>
       setChanges({ comment: "", action: "", document: null });
     }
   };
+  function getTermDisplayName(term: any) {
+    const termDisplayNames: any = {
+      "MFN Only": language?.v3?.fundraiser?.mfn_only,
+      "Pro Rata": language?.v3?.fundraiser?.pro_rata,
+      "Discount": language?.v3?.fundraiser?.discount,
+      "Minimum Check Size": language?.v3?.fundraiser?.min_check_size,
+      "Additional Terms": language?.v3?.fundraiser?.additional_terms,
+      "Valuation Cap": language?.v3?.fundraiser?.valuation_cap,
+    };
 
+    return termDisplayNames[term] || term;
+  }
+
+  function getTermValue(term: any) {
+    if (term.is_enabled) {
+      if (term.term === language?.v3?.fundraiser?.discount) {
+        return `${term.value}%` || language?.v3?.fundraiser?.yes;
+      } else if (term.term === language?.v3?.fundraiser?.min_check_size || term.term === language?.v3?.fundraiser?.valuation_cap) {
+        return term.value && event === "ar"
+          ? comaFormattedNumber(term.value, DealCheckType.STARTUP, true)
+          : comaFormattedNumber(term.value, DealCheckType.STARTUP) ||
+              language?.v3?.fundraiser?.yes;
+      } else if (term.term === language?.v3?.fundraiser?.additional_terms) {
+        return term.value
+      }
+       else {
+        return language?.v3?.fundraiser?.yes;
+      }
+    } else {
+      return language?.v3?.fundraiser?.no;
+    }
+  }
   const getRoleBasedUI = () => {
     return (
       <React.Fragment>
@@ -262,7 +270,7 @@ useEffect (()=>
             {deal?.instrument_type && (
               <div className="w-full inline-flex justify-between items-center border-b-[1px] border-b-neutral-200 py-3">
                 <h3 className="text-neutral-900 font-medium text-sm">
-                  {"Equity Type"}
+                  {language?.v3?.deal?.equity_type}
                 </h3>
                 <p className="text-neutral-900 font-normal text-sm capitalize">
                   {deal?.equity_type || language?.v3?.common?.not_added}
@@ -282,11 +290,19 @@ useEffect (()=>
             {deal?.selling_price && (
               <div className="w-full inline-flex justify-between items-center border-b-[1px] border-b-neutral-200 py-3">
                 <h3 className="text-neutral-900 font-medium text-sm">
-                  {"Deal Target"}
+                  {language?.v3?.fundraiser?.deal_target}
                 </h3>
                 <p className="text-neutral-900 font-normal text-sm capitalize">
-                  {comaFormattedNumber(parseFloat(deal?.selling_price).toFixed(0)) ||
-                    language?.v3?.common?.not_added}
+                  {event === "ar"
+                    ? comaFormattedNumber(
+                        deal?.selling_price,
+                        DealCheckType.STARTUP,
+                        true
+                      )
+                    : comaFormattedNumber(
+                        deal?.selling_price,
+                        DealCheckType.STARTUP
+                      ) || language?.v3?.common?.not_added}
                 </p>
               </div>
             )}
@@ -296,30 +312,35 @@ useEffect (()=>
                   {language?.v3?.table?.valuation}
                 </h3>
                 <p className="text-neutral-900 font-normal text-sm capitalize">
-                  ${comaFormattedNumber(parseFloat(deal?.valuation).toFixed(0))} ({deal?.valuation_type})
+                  {event === "ar"
+                    ? comaFormattedNumber(
+                        deal?.valuation,
+                        DealCheckType.STARTUP,
+                        true
+                      )
+                    : comaFormattedNumber(
+                        deal?.valuation,
+                        DealCheckType.STARTUP
+                      )}
                 </p>
               </div>
             )}
+
             {deal?.terms && (
-              <div className="w-full inline-flex justify-between items-center border-b-[1px] border-b-neutral-200 py-3">
-                <h3 className="text-neutral-900 font-medium text-sm">
-                  {"Minimum Check Size"}
-                </h3>
-                <p className="text-neutral-900 font-normal text-sm capitalize">
-                  {deal.terms[0]?.is_enabled
-                    ? numberFormatter(deal.terms[0]?.value) || "Yes"
-                    : "No"}
-                </p>
-              </div>
-            )}
-            {deal?.terms && (
-              <div className="w-full inline-flex justify-between items-center border-b-[1px] border-b-neutral-200 py-3">
-                <h3 className="text-neutral-900 font-medium text-sm">
-                  {"Pro Rata"}
-                </h3>
-                <p className="text-neutral-900 font-normal text-sm capitalize">
-                  {deal.terms[1]?.is_enabled ? "Yes" : "No"}
-                </p>
+              <div className="w-full">
+                {deal.terms.map((term: any, index: any) => (
+                  <div
+                    key={index}
+                    className="w-full inline-flex justify-between items-center border-b-[1px] border-b-neutral-200 py-3"
+                  >
+                    <h3 className="text-neutral-900 font-medium text-sm">
+                      {getTermDisplayName(term.term)}
+                    </h3>
+                    <p className="text-neutral-900 font-normal text-sm capitalize">
+                      {getTermValue(term)}
+                    </p>
+                  </div>
+                ))}
               </div>
             )}
           </>
@@ -341,7 +362,7 @@ useEffect (()=>
             {deal?.safe_type && (
               <div className="w-full inline-flex justify-between items-center border-b-[1px] border-b-neutral-200 py-3">
                 <h3 className="text-neutral-900 font-medium text-sm">
-                  {"Safe type"}
+                  {language?.v3?.fundraiser?.safe_type}
                 </h3>
                 <p className="text-neutral-900 font-normal text-sm capitalize">
                   {deal?.safe_type || language?.v3?.common?.not_added}
@@ -355,92 +376,35 @@ useEffect (()=>
                   {language?.v3?.table?.target}
                 </h3>
                 <p className="text-neutral-900 font-normal text-sm capitalize">
-                  {numberFormatter(deal?.selling_price) ||
-                    language?.v3?.common?.not_added}
+                  {event === "ar"
+                    ? comaFormattedNumber(
+                        deal?.selling_price,
+                        DealCheckType.STARTUP,
+                        true
+                      )
+                    : comaFormattedNumber(
+                        deal?.selling_price,
+                        DealCheckType.STARTUP
+                      ) || language?.v3?.common?.not_added}
                 </p>
               </div>
             )}
 
             {deal?.terms && (
-              <div className="w-full inline-flex justify-between items-center border-b-[1px] border-b-neutral-200 py-3">
-                <h3 className="text-neutral-900 font-medium text-sm">
-                  {"Valuation Cap"}
-                </h3>
-                <p className="text-neutral-900 font-normal text-sm capitalize">
-                  {deal.terms[0]?.is_enabled
-                    ? deal.terms[0]?.value || "Yes"
-                    : "No"}
-                </p>
-              </div>
-            )}
-
-            {deal?.terms && (
-              <div className="w-full inline-flex justify-between items-center border-b-[1px] border-b-neutral-200 py-3">
-                <h3 className="text-neutral-900 font-medium text-sm">
-                  {"Discount"}
-                </h3>
-                <p className="text-neutral-900 font-normal text-sm capitalize">
-                  {deal.terms[1]?.is_enabled
-                    ? deal.terms[1]?.value || "Yes"
-                    : "No"}
-                </p>
-              </div>
-            )}
-
-            {deal?.terms && (
-              <div className="w-full inline-flex justify-between items-center border-b-[1px] border-b-neutral-200 py-3">
-                <h3 className="text-neutral-900 font-medium text-sm">
-                  {"MFN Only"}
-                </h3>
-                <p className="text-neutral-900 font-normal text-sm capitalize">
-                  {deal.terms[2]?.is_enabled
-                    ? Object.keys(deal.terms[2]?.value).length > 0
-                      ? "Yes"
-                      : "No"
-                    : "No"}
-                </p>
-              </div>
-            )}
-
-            {deal?.terms && (
-              <div className="w-full inline-flex justify-between items-center border-b-[1px] border-b-neutral-200 py-3">
-                <h3 className="text-neutral-900 font-medium text-sm">
-                  {"Minimum Check Size"}
-                </h3>
-                <p className="text-neutral-900 font-normal text-sm capitalize">
-                  {deal.terms[3]?.is_enabled
-                    ? deal.terms[3]?.value || "Yes"
-                    : "No"}
-                </p>
-              </div>
-            )}
-
-            {deal?.terms && (
-              <div className="w-full inline-flex justify-between items-center border-b-[1px] border-b-neutral-200 py-3">
-                <h3 className="text-neutral-900 font-medium text-sm">
-                  {"Pro Rata"}
-                </h3>
-                <p className="text-neutral-900 font-normal text-sm capitalize">
-                  {deal.terms[4]?.is_enabled
-                    ? Object.keys(deal.terms[4]?.value).length > 0
-                      ? "Yes"
-                      : "No"
-                    : "No"}
-                </p>
-              </div>
-            )}
-            {deal?.terms && (
-              <div className="w-full inline-flex justify-between items-center border-b-[1px] border-b-neutral-200 py-3">
-                <h3 className="text-neutral-900 font-medium text-sm">
-                  {"Additional Terms"}
-                </h3>
-                <p className="text-neutral-900 font-normal text-sm capitalize">
-                  {deal.terms[5]?.is_enabled
-                    ? Object.keys(deal.terms[5]?.value).length > 0
-                      ? "Yes"
-                      : "No"
-                    : "No"}
-                </p>
+              <div className="w-full">
+                {deal.terms.map((term: any, index: any) => (
+                  <div
+                    key={index}
+                    className="w-full inline-flex justify-between items-center border-b-[1px] border-b-neutral-200 py-3"
+                  >
+                    <h3 className="text-neutral-900 font-medium text-sm">
+                      {getTermDisplayName(term.term)}
+                    </h3>
+                    <p className="text-neutral-900 font-normal text-sm capitalize">
+                      {getTermValue(term)}
+                    </p>
+                  </div>
+                ))}
               </div>
             )}
           </>
@@ -452,8 +416,16 @@ useEffect (()=>
               {language?.v3?.table?.sellingPrice}
             </h3>
             <p className="text-neutral-900 font-normal text-sm capitalize">
-              {numberFormatter(deal?.selling_price) ||
-                language?.v3?.common?.not_added}
+              {event === "ar"
+                ? comaFormattedNumber(
+                    deal?.selling_price,
+                    DealCheckType.STARTUP,
+                    true
+                  )
+                : comaFormattedNumber(
+                    deal?.selling_price,
+                    DealCheckType.STARTUP
+                  ) || language?.v3?.common?.not_added}
             </p>
           </div>
         )}
@@ -493,7 +465,13 @@ useEffect (()=>
               {language?.v3?.deal?.committed}
             </h3>
             <p className="text-neutral-900 font-normal text-sm capitalize">
-              {numberFormatter(deal?.committed)}
+              {event === "ar"
+                ? comaFormattedNumber(
+                    deal?.committed,
+                    DealCheckType.STARTUP,
+                    true
+                  )
+                : comaFormattedNumber(deal?.committed, DealCheckType.STARTUP)}
             </p>
           </div>
         )}
@@ -513,7 +491,13 @@ useEffect (()=>
               {language?.v3?.deal?.raised}
             </h3>
             <p className="text-neutral-900 font-normal text-sm capitalize">
-              ${numberFormatter(deal?.raised)}
+              {event === "ar"
+                ? comaFormattedNumber(
+                    deal?.raised,
+                    DealCheckType.PROPERTY,
+                    true
+                  )
+                : comaFormattedNumber(deal?.raised, DealCheckType.PROPERTY)}
             </p>
           </div>
         )}
@@ -523,7 +507,7 @@ useEffect (()=>
               {language?.v3?.table?.size}
             </h3>
             <p className="text-neutral-900 font-normal text-sm capitalize">
-              {comaFormattedNumber(deal?.size)} sqft
+              {comaFormattedNumber(deal?.size)} {language?.v3?.common?.sqft}
             </p>
           </div>
         )}
@@ -605,8 +589,17 @@ useEffect (()=>
               {language?.v3?.deal?.por_2}
             </h3>
             <p className="text-neutral-900 font-normal text-sm capitalize">
-              ${numberFormatter(deal?.features?.rental_amount)} (
-              {deal?.features?.rental_period})
+              {event === "ar"
+                ? comaFormattedNumber(
+                    deal?.rental_amount,
+                    DealCheckType.PROPERTY,
+                    true
+                  )
+                : comaFormattedNumber(
+                    deal?.rental_amount,
+                    DealCheckType.PROPERTY
+                  )}
+              ({deal?.features?.rental_period})
             </p>
           </div>
         )}
@@ -627,14 +620,16 @@ useEffect (()=>
         authToken
       );
       if (status === 200) {
-        toast.success("Invested", toastUtil);
+        setInvestButtonDisable(false);
+        toast.success(language?.v3?.syndicate?.invested, toastUtil);
       }
     } catch (error: any) {
       if (error?.response?.status === 400)
         toast.warning(error?.response?.data?.status?.message, toastUtil);
     } finally {
       setLoading(false);
-      onGetdeal()
+      setInvestButtonDisable(false);
+      onGetdeal();
     }
   };
 
@@ -656,14 +651,17 @@ useEffect (()=>
         );
         formData.append(`invite[deal_attachments][${i}]name`, element?.name);
       }
-      let { status, data } = await syndicateApprove(
+      let { status } = await syndicateApprove(
         formData,
         deal?.id,
         deal?.invite?.id,
         authToken
       );
       if (status === 200) {
-        toast.success("Congratulations! Deal Approved", toastUtil);
+        toast.success(
+          language?.v3?.syndicate?.congrats_deal_approval,
+          toastUtil
+        );
         setModalOpen3(false);
       }
     } catch (error) {
@@ -699,41 +697,26 @@ useEffect (()=>
         authToken
       );
       if (status === 200) {
-        toast.success("Congratulations! requested", toastUtil);
+        toast.success(language?.v3?.syndicate?.congrats_requested, toastUtil);
       }
     } catch (error) {
       console.log(error);
     } finally {
       onGetdeal();
       setLoading(false);
-      setModalOpen3(false)
+      setModalOpen3(false);
       setChanges({ comment: "", action: "", document: null });
     }
   };
 
-  const onTo = (type: string) => {
-    setFileLoading(true);
-    let idx: number = deal?.docs?.findIndex(
-      (f: any) => f.id === selectedDocs?.id
-    );
-    if (type === "++" && idx < deal?.docs?.length - 1)
-      setSelectedDocs(deal?.docs[idx + 1]);
-    else if (type === "--" && idx > 0) setSelectedDocs(deal?.docs[idx - 1]);
-
-    let timer = setTimeout(() => {
-      clearTimeout(timer);
-      setFileLoading(false);
-    }, 500);
-  };
-
-  useEffect(()=>{
-    console.log(returnPath)
-  })
-
   return (
     <main className="h-full relative max-h-full overflow-y-hidden">
       <section>
-        <Header />
+        <Header
+          onSuperLogout={(e: boolean) => {
+            setLoading(e);
+          }}
+        />
       </section>
       <aside
         className="w-full flex items-start justify-start"
@@ -767,15 +750,22 @@ useEffect (()=>
                     : navigate(returnPath)
                 }
               >
-                <Chevrond stroke="#000" className="rotate-90 w-4 h-4" />
+                <Chevrond
+                  className={`${
+                    orientation === "rtl" ? "rotate-[-90deg]" : "rotate-[90deg]"
+                  } w-4 h-4`}
+                  strokeWidth={2}
+                  stroke={"#000"}
+                />
                 <small className="text-neutral-500 text-sm font-medium">
-                  
-                  { returnPath === RoutesEnums.INVESTOR_DEALS && ("Deals")}
-                  { returnPath === RoutesEnums.SYNDICATE_DASHBOARD && ("Dashboard")}
-                  { returnPath === RoutesEnums.SYNDICATE_INVESTMENTS && ("Investments")}
-                  { returnPath === RoutesEnums.DEAL_APPROVAL && ("Deal Approval")}
-                  
-                  
+                  {returnPath === RoutesEnums.INVESTOR_DEALS &&
+                    language?.v3?.syndicate?.dealsSidebar}
+                  {returnPath === RoutesEnums.SYNDICATE_DASHBOARD &&
+                    language?.v3?.syndicate?.dashboard}
+                  {returnPath === RoutesEnums.SYNDICATE_INVESTMENTS &&
+                    language?.v3?.syndicate?.investments}
+                  {returnPath === RoutesEnums.DEAL_APPROVAL &&
+                    language?.v3?.syndicate?.deal_approval}
                 </small>
               </div>
               <div className="w-full inline-flex flex-col pb-8 items-start gap-2">
@@ -789,50 +779,17 @@ useEffect (()=>
               <div
                 className="inline-flex justify-between w-full mb-4"
                 onClick={() => {
-                  window.open(selectedDocs?.url, "_blank");
+                  window.open(pitchDeck?.attributes?.url, "_blank");
                 }}
               >
                 <h1 className="text-black font-medium text-2xl">
-                  {selectedDocs?.name}
+                  {language?.v3?.syndicate?.investor_pitch}
                 </h1>
                 <Button type="outlined">{language?.v3?.button?.new_tab}</Button>
               </div>
               {/* If Image or PDF */}
-              {selectedDocs?.attachment_kind === FileType.IMAGE ? (
-                <section className="h-[500px] rounded-[8px] overflow-hidden border-[1px] border-neutral-200 relative">
-                  <div className="bg-white w-full h-16 inline-flex items-center px-4 border-b-[1px] border-b-neutral-200">
-                    <Zoomin onClick={zoomin} className="cursor-pointer mr-3" />
-
-                    <hr className="w-[1px] h-full bg-neutral-200" />
-                    <Zoomout
-                      onClick={zoomout}
-                      className="cursor-pointer mx-3"
-                    />
-
-                    <hr className="w-[1px] h-full bg-neutral-200" />
-                    <Chevrond
-                      onClick={() => onTo("--")}
-                      className={`mx-3 h-8 w-8 rotate-90 ${
-                        deal?.docs?.length > 1
-                          ? "cursor-pointer"
-                          : "cursor-not-allowed"
-                      }`}
-                      stroke="#404040"
-                    />
-
-                    <hr className="w-[1px] h-full bg-neutral-200" />
-                    <Chevrond
-                      onClick={() => onTo("++")}
-                      className={`mx-3 h-8 w-8 rotate-[-90deg] ${
-                        deal?.docs?.length > 1
-                          ? "cursor-pointer"
-                          : "cursor-not-allowed"
-                      }`}
-                      stroke="#404040"
-                    />
-
-                    <hr className="w-[1px] h-full bg-neutral-200" />
-                  </div>
+              {pitchDeck?.attributes?.attachment_kind === FileType.IMAGE ? (
+                <section className="h-[700px] rounded-[8px] overflow-hidden border-[1px] border-neutral-200 relative">
                   <aside
                     className="w-full overflow-y-auto bg-cbc-grey-sec p-4"
                     style={{ height: "calc(100% - 60px)" }}
@@ -849,8 +806,8 @@ useEffect (()=>
                       </div>
                     ) : (
                       <img
-                        src={selectedDocs?.url}
-                        alt={selectedDocs?.name}
+                        src={pitchDeck?.attributes?.url}
+                        alt={pitchDeck?.attributes?.name}
                         id="deal-file"
                         className="bg-white mx-auto"
                         style={{ maxWidth: "unset", objectFit: "contain" }}
@@ -859,31 +816,7 @@ useEffect (()=>
                   </aside>
                 </section>
               ) : (
-                <section className="w-full h-[500px] rounded-[8px] overflow-hidden border-[1px] border-neutral-200 bg-cbc-grey-sec p-4 relative">
-                  <div className="bg-white w-full h-16 inline-flex items-center px-4 border-b-[1px] border-b-neutral-200">
-                    <Chevrond
-                      onClick={() => onTo("--")}
-                      className={`mr-3 h-8 w-8 rotate-90 ${
-                        deal?.docs?.length > 1
-                          ? "cursor-pointer"
-                          : "cursor-not-allowed"
-                      }`}
-                      stroke="#404040"
-                    />
-
-                    <hr className="w-[1px] h-full bg-neutral-200" />
-                    <Chevrond
-                      onClick={() => onTo("++")}
-                      className={`mx-3 h-8 w-8 rotate-[-90deg] ${
-                        deal?.docs?.length > 1
-                          ? "cursor-pointer"
-                          : "cursor-not-allowed"
-                      }`}
-                      stroke="#404040"
-                    />
-
-                    <hr className="w-[1px] h-full bg-neutral-200" />
-                  </div>
+                <section className="w-full h-[700px] rounded-[8px] overflow-hidden border-[1px] border-neutral-200 bg-cbc-grey-sec p-4 relative">
                   {fileLoading ? (
                     <div
                       className="absolute left-0 top-0 w-full h-full grid place-items-center"
@@ -896,7 +829,7 @@ useEffect (()=>
                     </div>
                   ) : (
                     <embed
-                      src={selectedDocs?.url}
+                      src={pitchDeck?.attributes?.url}
                       className="w-full h-full"
                       id="deal-file"
                     />
@@ -904,58 +837,62 @@ useEffect (()=>
                 </section>
               )}
 
-              {deal?.status === DealStatus.LIVE && !deal?.is_invested && (
-                <>
-                  <section className="mb-4 mt-10">
-                    <div className="border-neutral-500 border-[1px] rounded-md min-w-full px-2 justify-between flex bg-white">
-                      <label className="w-full">
-                        <input
-                          className="min-w-full h-9 no-spin-button"
-                          pattern="[0-9]*"
-                          placeholder={
-                            selectedCurrency === "USD" ? "$ 0.00" : "AED 0.00"
+              {convertStatusLanguage(deal?.status) === DealStatus.LIVE &&
+                !deal?.is_invested && (
+                  <>
+                    <section className="mb-4 mt-10">
+                      <div className="border-neutral-500 border-[1px] rounded-md min-w-full px-2 justify-between flex bg-white">
+                        <label className="w-full">
+                          <input
+                            className="min-w-full h-9 no-spin-button"
+                            pattern="[0-9]*"
+                            placeholder={
+                              selectedCurrency === "USD" ? language?.v3?.investor?.placeholderUSD : language?.v3?.investor?.placeholderAED
+                            }
+                            onKeyDown={(evt) =>
+                              ["e", "E", "+", "-"].includes(evt.key) &&
+                              evt.preventDefault()
+                            }
+                            min="0"
+                            type="number"
+                            value={investmentAmount}
+                            onChange={handleAmountChange}
+                          />
+                        </label>
+                        <label className="w-[10%]">
+                          <select
+                            className="h-9"
+                            value={selectedCurrency}
+                            onChange={handleCurrencyChange}
+                          >
+                            <option className="text-md font-light" value="USD">
+                            {language?.v3?.investor?.usdSymbol}
+                            </option>
+                            <option className="text-md font-light" value="AED">
+                            {language?.v3?.investor?.aedSymbol}
+                            </option>
+                          </select>
+                        </label>
+                      </div>
+                      <div className="mt-3">
+                        <Button
+                          disabled={
+                            investmentAmount === undefined ||
+                            investmentAmount < 1 ||
+                            InvestButtonDisable
                           }
-                          onKeyDown={(evt) =>
-                            ["e", "E", "+", "-"].includes(evt.key) &&
-                            evt.preventDefault()
-                          }
-                          min="0"
-                          type="number"
-                          value={investmentAmount}
-                          onChange={handleAmountChange}
-                        />
-                      </label>
-                      <label className="w-[10%]">
-                        <select
-                          className="h-9"
-                          value={selectedCurrency}
-                          onChange={handleCurrencyChange}
+                          onClick={() => {
+                            setInvestButtonDisable(true);
+                            syndicateInvestment();
+                          }}
+                          className="w-full"
                         >
-                          <option className="text-md font-light" value="USD">
-                            USD
-                          </option>
-                          <option className="text-md font-light" value="AED">
-                            AED
-                          </option>
-                        </select>
-                      </label>
-                    </div>
-                    <div className="mt-3">
-                      <Button
-                        disabled={
-                          investmentAmount === undefined || investmentAmount < 1
-                        }
-                        onClick={() => {
-                          syndicateInvestment();
-                        }}
-                        className="w-full"
-                      >
-                        Invest Now
-                      </Button>
-                    </div>
-                  </section>
-                </>
-              )}
+                          {language?.v3?.syndicate?.invest_now}
+                        </Button>
+                      </div>
+                    </section>
+                  </>
+                )}
               <section>
                 <div className="inline-flex justify-between w-full flex-col my-10">
                   <h1 className="text-black font-medium text-2xl mb-3">
@@ -997,46 +934,53 @@ useEffect (()=>
                 </div>
               </section>
               <div className="mb-4 mt-10">
-              {deal?.invite?.status !== DealStatus.ACCEPTED && (
-                          <React.Fragment>  
+                {user.type.toLowerCase() === "syndicate" &&
+                  convertStatusLanguage(deal?.status) !== DealStatus.LIVE && (
+                    <div className="w-full inline-flex justify-end gap-4">
+                      {convertStatusLanguage(deal?.invite?.status) !==
+                        DealStatus.ACCEPTED && (
+                        <div className="w-full">
                           {deal?.invite ? (
-                            <Button  className="w-full" onClick={() => setModalOpen2(true)}>
+                            <Button
+                              className="w-full"
+                              onClick={() => setModalOpen2(true)}
+                            >
                               {language?.v3?.button?.interested}
                             </Button>
-                          ) :  <Button className="w-full" onClick={() => setModalOpenSyndication(true)}>
-                          {"Request Syndication"}
-                        </Button> }
-                        </React.Fragment>
-                    )}
+                          ) : (
+                            <Button
+                              className="w-full"
+                              onClick={() => setModalOpenSyndication(true)}
+                            >
+                              {language?.v3?.syndicate?.req_syndication}
+                            </Button>
+                          )}
+                        </div>
+                      )}
+                    </div>
+                  )}
               </div>
 
-              {deal && user.type.toLowerCase() === "syndicate" && deal?.current_deal_syndicate && (
-                <div className="w-full mt-8 mb-4">
-                <Investors dealID={deal?.id} dealCreatorView={false}/>
-                </div>
-              )}
+              {deal &&
+                user.type.toLowerCase() === "syndicate" &&
+                deal?.current_deal_syndicate && (
+                  <div className="w-full mt-8 mb-4">
+                    <Investors dealID={deal?.id} dealCreatorView={false} />
+                  </div>
+                )}
             </section>
 
             {/* Invisible Section */}
             <section className="w-[10%]"></section>
-
-            {/*
-            {.......##...............######..########..######..########.####..#######..##....##....########..####..######...##.....##.########....................##
-            {......##...##...##.....##....##.##.......##....##....##.....##..##.....##.###...##....##.....##..##..##....##..##.....##....##........##...##.......##.
-            {.....##.....##.##......##.......##.......##..........##.....##..##.....##.####..##....##.....##..##..##........##.....##....##.........##.##.......##..
-            {....##....#########.....######..######...##..........##.....##..##.....##.##.##.##....########...##..##...####.#########....##.......#########....##...
-            {...##.......##.##............##.##.......##..........##.....##..##.....##.##..####....##...##....##..##....##..##.....##....##.........##.##.....##....
-            {..##.......##...##.....##....##.##.......##....##....##.....##..##.....##.##...###....##....##...##..##....##..##.....##....##........##...##...##.....
-            {.##.....................######..########..######.....##....####..#######..##....##....##.....##.####..######...##.....##....##.................##......
-            {*/}
             <section className="w-[30%]">
               {/* Show/Hide based on some conditions */}
               {user.type.toLowerCase() === "syndicate" &&
-                deal?.status === DealStatus.LIVE && deal?.current_deal_syndicate && (
+                convertStatusLanguage(deal?.status) === DealStatus.LIVE &&
+                deal?.current_deal_syndicate && (
                   <div className="w-full inline-flex justify-end gap-4">
                     <div className="relative z-10">
                       <InvitesListing
-                        approve={true}
+                        approve={deal?.status}
                         dealId={dealToken}
                         type={KanzRoles.SYNDICATE}
                         dealIdReal={deal?.id}
@@ -1045,118 +989,138 @@ useEffect (()=>
                   </div>
                 )}
               {user.type.toLowerCase() === "syndicate" &&
-                deal?.status !== DealStatus.LIVE && (
+                convertStatusLanguage(deal?.status) !== DealStatus.LIVE && (
                   <div className="w-full inline-flex justify-end gap-4">
-                    {deal?.invite?.status !== DealStatus.ACCEPTED && (
+                    {convertStatusLanguage(deal?.invite?.status) !==
+                      DealStatus.ACCEPTED && (
                       <React.Fragment>
-                        <Button
-                          type="outlined"
-                          onClick={() => setModalOpen(true)}
-                        >
-                          {language?.v3?.button?.req_change}
-                        </Button>
                         {deal?.invite ? (
-                          <Button onClick={() => setModalOpen2(true)}>
-                            {language?.v3?.button?.interested}
+                          <>
+                            <Button
+                              type="outlined"
+                              onClick={() => setModalOpen(true)}
+                            >
+                              {language?.v3?.button?.req_change}
+                            </Button>
+                            <Button onClick={() => setModalOpen2(true)}>
+                              {language?.v3?.button?.interested}
+                            </Button>
+                          </>
+                        ) : (
+                          <Button onClick={() => setModalOpenSyndication(true)}>
+                            {language?.v3?.syndicate?.req_syndication}
                           </Button>
-                        ) :  <Button onClick={() => setModalOpenSyndication(true)}>
-                        {"Request Syndication"}
-                      </Button> }
+                        )}
                       </React.Fragment>
                     )}
                   </div>
                 )}
               <aside className="border-[1px] border-neutral-200 rounded-md w-full px-3 pt-3 mt-5 bg-white">
-              <h2 className="text-neutral-700 text-xl font-medium">
+                <h2 className="text-neutral-700 text-xl font-medium">
                   {language?.v3?.common?.invest_details}
                 </h2>
                 <small className="text-neutral-500 text-sm font-normal">
                   {language?.v3?.common?.end_on} {deal?.end_at}
                 </small>
-                {deal?.status === DealStatus.LIVE && !deal?.is_invested &&(
-                  <aside className="">
-                    <section className="mb-4 mt-1">
-                      <div className="border-neutral-500 border-[1px] rounded-md min-w-full bg-white px-2 justify-between flex">
-                        <label className="w-full">
-                          <input
-                            className="min-w-full h-9 no-spin-button"
-                            pattern="[0-9]*"
-                            placeholder={
-                              selectedCurrency === "USD" ? "$ 0.00" : "AED 0.00"
-                            }
-                            onKeyDown={(evt) =>
-                              ["e", "E", "+", "-"].includes(evt.key) &&
-                              evt.preventDefault()
-                            }
-                            min="0"
-                            type="number"
-                            value={investmentAmount}
-                            onChange={handleAmountChange}
-                          />
-                        </label>
-                        <label>
-                          <select
-                            className="h-9"
-                            value={selectedCurrency}
-                            onChange={handleCurrencyChange}
-                          >
-                            <option className="text-md font-light" value="USD">
-                              USD
-                            </option>
-                            <option className="text-md font-light" value="AED">
-                              AED
-                            </option>
-                          </select>
-                        </label>
-                      </div>
-                      <Button
-                        disabled={
-                          investmentAmount === undefined || investmentAmount < 1
-                        }
-                        onClick={() => {
-                          syndicateInvestment();
-                        }}
-                        className="w-full mt-4"
-                      >
-                        Invest Now
-                      </Button>
-                    </section>
-                  </aside>
-                )}
-             
+                {convertStatusLanguage(deal?.status) === DealStatus.LIVE &&
+                  !deal?.is_invested && (
+                    <aside className="">
+                      <section className="mb-4 mt-1">
+                        <div className="border-neutral-500 border-[1px] rounded-md min-w-full bg-white px-2 justify-between flex">
+                          <label className="w-full">
+                            <input
+                              className="min-w-full h-9 no-spin-button"
+                              pattern="[0-9]*"
+                              placeholder={
+                                selectedCurrency === "USD" ? language?.v3?.investor?.placeholderUSD : language?.v3?.investor?.placeholderAED
+                              }
+                              onKeyDown={(evt) =>
+                                ["e", "E", "+", "-"].includes(evt.key) &&
+                                evt.preventDefault()
+                              }
+                              min="0"
+                              type="number"
+                              value={investmentAmount}
+                              onChange={handleAmountChange}
+                            />
+                          </label>
+                          <label>
+                            <select
+                              className="h-9"
+                              value={selectedCurrency}
+                              onChange={handleCurrencyChange}
+                            >
+                              <option
+                                className="text-md font-light"
+                                value="USD"
+                              >
+                            {language?.v3?.investor?.usdSymbol}
+                              </option>
+                              <option
+                                className="text-md font-light"
+                                value="AED"
+                              >
+                            {language?.v3?.investor?.aedSymbol}
+                              </option>
+                            </select>
+                          </label>
+                        </div>
+                        <Button
+                          disabled={
+                            investmentAmount === undefined ||
+                            investmentAmount < 1 ||
+                            InvestButtonDisable
+                          }
+                          onClick={() => {
+                            setInvestButtonDisable(true);
+                            syndicateInvestment();
+                          }}
+                          className="w-full mt-4"
+                        >
+                          {language?.v3?.syndicate?.invest_now}
+                        </Button>
+                      </section>
+                    </aside>
+                  )}
+
                 {getRoleBasedUI()}
               </aside>
-              {deal?.is_invested && (   
+              {deal?.is_invested && (
                 <div className="">
-                <aside className="border-[1px] bg-white border-neutral-200 rounded-md  w-full p-3 mt-5 items-center gap-3">
-                <div className="rounded-md text-md font-semibold inline-grid place-items-center">
-                  {"Your commitment"}
+                  <aside className="border-[1px] bg-white border-neutral-200 rounded-md  w-full p-3 mt-5 items-center gap-3">
+                    <div className="rounded-md text-md font-semibold inline-grid place-items-center">
+                      {language?.v3?.syndicate?.your_commitment}
+                    </div>
+                    <div className="rounded-md text-xs inline-grid place-items-center">
+                      {language?.v3?.syndicate?.not_able_to_rev}
+                    </div>
+                    <aside className="border-t-[2px] border-neutral-200 w-full p-3 mt-5 inline-flex items-center gap-3">
+                      <div className="h-8 w-8 rounded-md bg-cbc-grey-sec inline-grid place-items-center">
+                        <img src={CurrencySVG} alt="Currency" />
+                      </div>
+                      <div className="flex items-center justify-between w-full">
+                        <div>
+                          <h2 className="text-neutral-900 font-normal text-sm">
+                            {language?.v3?.syndicate?.commitment}
+                          </h2>
+                          <p className="text-black font-medium text-lg">
+                            ${comaFormattedNumber(deal?.my_invested_amount)}
+                          </p>
+                        </div>
+                        <div>
+                          <Button
+                            onClick={() => {}}
+                            className="!py-1 !px-2 !font-medium !rounded-full border-[1px] border-black !text-xs"
+                            type="outlined"
+                          >
+                            {language?.v3?.syndicate.reverse}
+                          </Button>
+                        </div>
+                      </div>
+                    </aside>
+                  </aside>
                 </div>
-                <div className="rounded-md text-xs inline-grid place-items-center">
-                  {"You’re not able to reverse the commitment after date"}
-                </div>
-                  <aside className="border-t-[2px] border-neutral-200 w-full p-3 mt-5 inline-flex items-center gap-3">
-                <div className="h-8 w-8 rounded-md bg-cbc-grey-sec inline-grid place-items-center">
-                  <img src={CurrencySVG} alt="Currency" />
-                </div>
-                  <div className="flex items-center justify-between w-full">    
-                <div>
-                  <h2 className="text-neutral-900 font-normal text-sm">
-                    {"Commitment"}
-                  </h2>
-                  <p className="text-black font-medium text-lg">
-                    ${numberFormatter(deal?.my_invested_amount)}
-                  </p>
-                </div>
-                <div>
-                  <Button onClick={()=>{
-
-                  }} className="!py-1 !px-2 !font-medium !rounded-full border-[1px] border-black !text-xs" type="outlined">Reverse</Button>
-                </div>
-                </div>
-              </aside>
-              </aside>
-                </div>)}
+              )}
               <aside className="border-[1px] border-neutral-200 rounded-md w-full p-3 mt-5 inline-flex bg-white items-center gap-3 bg-white">
                 <div className="h-8 w-8 rounded-md bg-cbc-grey-sec inline-grid place-items-center">
                   <img src={CurrencySVG} alt="Currency" />
@@ -1167,7 +1131,7 @@ useEffect (()=>
                     {language?.v3?.common?.am_raised}
                   </h2>
                   <p className="text-black font-medium text-lg">
-                    ${numberFormatter(deal?.raised)}
+                    ${comaFormattedNumber(deal?.raised)}
                   </p>
                 </div>
               </aside>
@@ -1178,26 +1142,23 @@ useEffect (()=>
                       return (
                         <section className="rounded-md bg-white px-3 py-1 inline-flex items-center justify-between w-full border-[1px] border-neutral-200 mb-2">
                           <span className="inline-flex items-center w-[80%]">
-                            <div 
-                             onClick={() => {
-                              window.open(doc?.url, "_blank");
-                            }}
-                             className="bg-white  h-14 inline-flex justify-center flex-col  cursor-pointer w-full">
-                              <h4
-                           className="text-md font-medium  max-w-full truncate"
-                           title={doc?.name}
-                         >
-                           {doc?.name}
-                              </h4>
-                              <h2
-                              className="inline-flex items-center text-sm  gap-1 max-w-[200px] "
-                             
+                            <div
+                              onClick={() => {
+                                window.open(doc?.url, "_blank");
+                              }}
+                              className="bg-white  h-14 inline-flex justify-center flex-col  cursor-pointer w-full"
                             >
-                              <div className="text-xs text-black text-neutral-500 font-medium ">
-                                {language?.v3?.button?.view}
-                              </div>
-                              <ArrowIcon stroke="#000" />
-                               
+                              <h4
+                                className="text-md font-medium  max-w-full truncate"
+                                title={doc?.name}
+                              >
+                                {doc?.name}
+                              </h4>
+                              <h2 className="inline-flex items-center text-sm  gap-1 max-w-[200px] ">
+                                <div className="text-xs text-black text-neutral-500 font-medium ">
+                                  {language?.v3?.button?.view}
+                                </div>
+                                <ArrowIcon stroke="#000" />
                               </h2>
                             </div>
                           </span>
@@ -1205,12 +1166,7 @@ useEffect (()=>
                           <div
                             className="h-10 w-10 rounded-lg inline-flex items-center flex-row justify-center gap-2 bg-white cursor-pointer border-[1px] border-neutral-200"
                             onClick={() => {
-                              const downloadLink = document.createElement("a");
-                              downloadLink.href = doc?.url;
-                              downloadLink.target = "_blank";
-                              downloadLink.download = doc?.name;
-                              downloadLink.click();
-                              downloadLink.remove();
+                              onDownloadDocument(doc?.id, authToken);
                             }}
                           >
                             <DownloadIcon />
@@ -1227,14 +1183,14 @@ useEffect (()=>
                   <div className="justify-between mb-4 w-full border-[1px]  rounded-md border-b-neutral-200 bg-white ">
                     <div className="inline-flex justify-between items-center w-full  border-b-[1px] border-b-neutral-200 ">
                       <div className="pb-1 m-4  text-lg font-bold ">
-                        Comments
+                        {language?.v3?.syndicate?.comments}
                       </div>
                       <Button
-                        className="mr-4"
+                        className="mr-4 ml-4"
                         onClick={() => setmodalOpenComment(true)}
                         type="outlined"
                       >
-                        Add Reply
+                        {language?.v3?.syndicate?.add_reply}
                       </Button>
                     </div>
                     <p className=" overflow-auto custom-scroll rounded-md  w-full opacity-80 max-h-56 text-neutral-700 font-normal text-sm text-justify">
@@ -1252,10 +1208,12 @@ useEffect (()=>
                               <span className="ml-2 mr-4">
                                 <h1 className="font-medium capitalize text-lg">
                                   {comments?.author_id === user?.id
-                                    ? "You"
+                                    ? language?.v3?.syndicate?.you
                                     : comments?.author_name}
                                   <span className="text-xs font-neutral-700 ml-5 font-normal">
-                                    {timeAgo(comments?.created_at)}
+                                    {event === "ar"
+                                      ? timeAgo(comments?.created_at, true)
+                                      : timeAgo(comments?.created_at)}
                                   </span>
                                 </h1>
                                 <p className="pt-0 pb-1 overflow-y-auto custom-scroll font-nromal text-sm text-neutral-700">
@@ -1283,7 +1241,9 @@ useEffect (()=>
           <aside className="bg-white w-[400px] rounded-md h-full">
             <section className="py-3 px-4">
               <header className="h-16 py-2 px-3 inline-flex w-full justify-between items-center">
-                <h3 className="text-xl font-medium text-neutral-700">Reply</h3>
+                <h3 className="text-xl font-medium text-neutral-700">
+                  {language?.v3?.syndicate?.reply}
+                </h3>
                 <div
                   className="bg-white h-8 w-8 border-[1px] border-black rounded-md shadow shadow-cs-6 p-1 cursor-pointer"
                   onClick={() => {
@@ -1303,7 +1263,7 @@ useEffect (()=>
                       return { ...prev, comment: e.target.value };
                     })
                   }
-                  placeholder="Add Reply"
+                  placeholder={language?.v3?.syndicate?.add_reply}
                   className=" h-[100px] mt-1 shadow-sm appearance-none border border-neutral-300 rounded-md w-full py-2 px-3 text-gray-500 leading-tight focus:outline-none focus:shadow-outline"
                 ></textarea>
               </div>
@@ -1319,7 +1279,7 @@ useEffect (()=>
                   setmodalOpenComment(false);
                 }}
               >
-                {"Reply"}
+                {language?.v3?.syndicate?.reply}
               </Button>
             </footer>
           </aside>
@@ -1334,7 +1294,7 @@ useEffect (()=>
           <aside className="bg-white w-[400px] rounded-md h-full">
             <header className="bg-cbc-grey-sec h-16 py-2 px-3 inline-flex w-full justify-between items-center">
               <h3 className="text-xl font-medium text-neutral-700">
-                Request Changes
+                {language?.v3?.syndicate?.req_changes}
               </h3>
               <div
                 className="bg-white h-8 w-8 border-[1px] border-black rounded-md shadow shadow-cs-6 p-1 cursor-pointer"
@@ -1354,7 +1314,7 @@ useEffect (()=>
                   htmlFor=""
                   className="text-neutral-900 font-medium text-sm"
                 >
-                  Add Comment
+                  {language?.v3?.syndicate?.add_comment}
                 </label>
                 <textarea
                   value={changes?.comment}
@@ -1363,7 +1323,7 @@ useEffect (()=>
                       return { ...prev, comment: e.target.value };
                     })
                   }
-                  placeholder="Add Comment"
+                  placeholder={language?.v3?.syndicate?.add_comment}
                   className=" h-[100px] mt-1 shadow-sm appearance-none border border-neutral-300 rounded-md w-full py-2 px-3 text-gray-500 leading-tight focus:outline-none focus:shadow-outline"
                 ></textarea>
               </div>
@@ -1375,6 +1335,7 @@ useEffect (()=>
                 className="w-full !py-1"
                 divStyle="flex items-center justify-center w-full"
                 onClick={() => {
+                  setModalOpen(false);
                   onRequestChange();
                 }}
               >
@@ -1390,17 +1351,28 @@ useEffect (()=>
           style={{ backgroundColor: "rgba(0, 0, 0, 0.078" }}
         >
           <aside className="bg-white w-[400px] rounded-md h-full">
-            <section className="py-3 px-10">
-              <div className="mb-6 pt-5 text-center">
+            <header className=" inline-flex w-full justify-end items-center py-1 px-2">
+              <div
+                className="bg-white h-8 w-8 border-[1px] border-black rounded-md shadow  cursor-pointer"
+                onClick={() => {
+                  setModalOpen2(false);
+                  setChanges({ comment: "", action: "", document: null });
+                  // setFiles([]);
+                }}
+              >
+                <CrossIcon stroke="#000" />
+              </div>
+            </header>
+            <section className="py-2 px-10">
+              <div className="mb-6  text-center">
                 <label
                   htmlFor=""
                   className="text-neutral-900 text-center font-bold text-xl"
                 >
-                  Deal Approved by You!
+                  {language?.v3?.syndicate?.deal_approved_by_you}
                 </label>
                 <p className="pt-5">
-                  You've successfully approved the deal. Now you can upload the
-                  required document. Click “Continue” to upload the documents
+                  {language?.v3?.syndicate?.deal_approved_para}
                 </p>
               </div>
             </section>
@@ -1414,7 +1386,7 @@ useEffect (()=>
                   setModalOpen3(true);
                 }}
               >
-                Continue
+                {language?.v3?.syndicate?.continue}
               </Button>
             </footer>
           </aside>
@@ -1432,11 +1404,10 @@ useEffect (()=>
                   htmlFor=""
                   className="text-neutral-900 text-center font-bold text-xl"
                 >
-                  Request for syndication!
+                  {language?.v3?.syndicate?.req_for_syndication}
                 </label>
                 <p className="pt-5">
-                  You can request for syndication on this deal. You can upload the
-                  required document. Click “Continue” to upload the documents
+                  {language?.v3?.syndicate?.req_changes_para}
                 </p>
               </div>
             </section>
@@ -1450,7 +1421,7 @@ useEffect (()=>
                   setModalOpen3(true);
                 }}
               >
-                Continue
+                {language?.v3?.syndicate?.continue}
               </Button>
             </footer>
           </aside>
@@ -1464,8 +1435,18 @@ useEffect (()=>
           <aside className="bg-white w-[400px] rounded-md h-full">
             <header className="bg-cbc-grey-sec h-16 py-2 px-3 inline-flex w-full justify-between items-center">
               <h3 className="text-xl font-medium text-neutral-700">
-                Deal Approval
+                {language?.v3?.syndicate?.deal_approval}
               </h3>
+              <div
+                className="bg-white h-8 w-8 border-[1px] border-black rounded-md shadow shadow-cs-6 p-1 cursor-pointer"
+                onClick={() => {
+                  setModalOpen3(false);
+                  setChanges({ comment: "", action: "", document: null });
+                  // setFiles([]);
+                }}
+              >
+                <CrossIcon stroke="#000" />
+              </div>
             </header>
 
             <section className="py-3 px-4">
@@ -1481,7 +1462,7 @@ useEffect (()=>
                   >
                     <UploadIcon />
                     <small className="text-cyan-800 text-sm font-medium">
-                      Upload a Document
+                      {language?.v3?.syndicate?.upload_a_doc}
                     </small>
                   </button>
                   <input
@@ -1491,6 +1472,9 @@ useEffect (()=>
                     multiple={true}
                     onChange={handleFileUpload}
                   />
+                </span>
+                <span className={`px-2 text-[0.55rem] font-light`}>
+                  {language?.v3?.syndicate?.upload_size}
                 </span>
               </div>
               <div className="mb-3 w-full">
@@ -1540,7 +1524,7 @@ useEffect (()=>
                 divStyle="flex items-center justify-center w-full"
                 onClick={() => {
                   setdisableUpload(true);
-                  invited ? postSignOff() : syndicationRequest()
+                  invited ? postSignOff() : syndicationRequest();
                 }}
               >
                 {language.buttons.submit}
@@ -1549,7 +1533,6 @@ useEffect (()=>
           </aside>
         </div>
       </Modal>
- 
     </main>
   );
 };

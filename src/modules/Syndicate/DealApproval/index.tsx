@@ -12,14 +12,15 @@ import { RoutesEnums, StartupRoutes } from "../../../enums/routes.enum";
 import Modal from "../../../shared/components/Modal";
 import CrossIcon from "../../../ts-icons/crossIcon.svg";
 import { saveDataHolder } from "../../../redux-toolkit/slicer/dataHolder.slicer";
-import { getDeals, getInvitedDeals } from "../../../apis/deal.api";
+import {  getInvitedDeals } from "../../../apis/deal.api";
 import {
-  comaFormattedNumber,
   numberFormatter,
 } from "../../../utils/object.utils";
 import Spinner from "../../../shared/components/Spinner";
 import Chevrond from "../../../ts-icons/chevrond.svg";
 import CustomStatus from "../../../shared/components/CustomStatus";
+import { convertStatusLanguage } from "../../../utils/string.utils";
+import Search from "../../../shared/components/Search";
 
 const DealApproval = ({}: any) => {
   const navigate = useNavigate();
@@ -27,27 +28,29 @@ const DealApproval = ({}: any) => {
   const language: any = useSelector((state: RootState) => state.language.value);
   const authToken: any = useSelector((state: RootState) => state.auth.value);
   const user: any = useSelector((state: RootState) => state.user.value);
+  const event: any = useSelector((state: RootState) => state.event.value);
+  const orientation: any = useSelector(
+    (state: RootState) => state.orientation.value
+  );
 
   const columns = [
     language?.v3?.syndicate?.deals?.table?.title,
     language?.v3?.syndicate?.deals?.table?.category,
-    "Invite Status",
+    language?.v3?.syndicate?.invite_status,
     language?.v3?.syndicate?.deals?.table?.end_date,
     language?.v3?.syndicate?.deals?.table?.target,
     language?.v3?.table?.action,
   ];
-  const [pagination, setPagination] = useState({
-    items_per_page: 10,
-    total_items: [],
-    current_page: 1,
-    total_pages: 0,
-  });
+
   const [selectedTab, setSelectedTab]: any = useState("all");
+  const [searchQuery, setSearchQuery]: any = useState("");
   const [modalOpen, setModalOpen]: any = useState(null);
   const [loading, setLoading] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [paginationData, setpaginationData] = useState(null);
 
   const [deals, setDeals] = useState([]);
-  const [filter, setFilterCounts]:any = useState([]);
+  const [filter, setFilterCounts]: any = useState([]);
   const [dummyDisclaimers, setDummyDisclaimers] = useState({
     d1: false,
     d2: false,
@@ -58,61 +61,65 @@ const DealApproval = ({}: any) => {
     d2: false,
     d3: false,
   });
+  const [tabs] = useState<any>({
+    'all': language?.v3?.startup?.overview?.all,
+    'pending': language?.v3?.syndicate?.pending,
+    'interested': language?.v3?.syndicate?.interested,
+    'accepted': language?.v3?.syndicate?.accepted,
+    'approved': language?.v3?.syndicate?.approved,
+  });
 
 
   const getCountvalue = ( value:string ) =>
   { 
-    let count = 0 ;
-    switch (value) {
-      case  "All" : 
-      count = filter?.all
-      break
-      case  "Pending" : 
-      count = filter?.pending
-      break
-      case  "Interested" : 
-      count = filter?.interested
-      break
-      case  "Accepted" : 
-      count = filter?.accepted
-      break
-      case  "Approved" : 
-      count = filter?.approved
-      break
-      
-    } 
-
-    return count
-    
+    return filter[value] || 0
   }
 
   useEffect(() => {
     dispatch(saveDataHolder(""));
-    getAllDeals();
+    getAllDeals(searchQuery);
+  }, [currentPage]);
+  useEffect(() => {
+    dispatch(saveDataHolder(""));
+    getAllDeals(searchQuery);
+  }, []);
+  useEffect(() => {
+    dispatch(saveDataHolder(""));
+    setCurrentPage(1);
+    getAllDeals(searchQuery);
   }, [selectedTab]);
 
-  const getAllDeals = async () => {
+  const getAllDeals = async (queryString:string) => {
     try {
       setLoading(true);
-      let { status, data } = await getInvitedDeals(user.id, authToken, selectedTab);
+      let { status, data } = await getInvitedDeals(
+        user.id,
+        authToken,
+        selectedTab,
+        queryString,
+        currentPage
+      );
       if (status === 200) {
-        
-        setFilterCounts(data?.status?.data?.stats)
+        setFilterCounts(data?.status?.data?.stats);
+        setpaginationData(data?.status?.data?.pagy);
         let deals = data?.status?.data?.invites?.map((deal: any) => {
           return {
             id: deal?.id,
             filterStatus: deal?.status,
             [language?.v3?.syndicate?.deals?.table?.title]:
-              deal?.deal?.title || "N/A",
+              deal?.deal?.title || language?.v3?.common?.not_added,
             [language?.v3?.syndicate?.deals?.table?.category]: (
               <span className="capitalize">{deal?.deal?.type}</span>
             ),
-            ["Invite Status"]:
-              <CustomStatus options={deal?.status} /> || "N/A",
+            [language?.v3?.syndicate?.invite_status]:
+              <CustomStatus options={deal?.status} /> || language?.v3?.common?.not_added,
             [language?.v3?.syndicate?.deals?.table?.end_date]:
-              deal?.deal?.end_at || " N/A",
-            [language?.v3?.syndicate?.deals?.table
-              ?.target]: `$${numberFormatter(Number(deal?.deal?.target))}`,
+              deal?.deal?.end_at || language?.v3?.common?.not_added,
+            [language?.v3?.syndicate?.deals?.table?.target]: event === "ar" ?  `${numberFormatter(
+              deal?.deal?.target
+            , convertStatusLanguage(deal?.deal.type), true)}`:  `${numberFormatter(
+            deal?.deal?.target
+            , convertStatusLanguage(deal?.deal.type), false)}`,
 
             Steps: deal?.current_state?.steps,
             [language?.v3?.table?.action]: (
@@ -125,31 +132,23 @@ const DealApproval = ({}: any) => {
                     { state: window.location.pathname }
                   );
                 }}
-                className="bg-neutral-100 inline-flex items-center justify-center w-[30px] h-[30px] rounded-full transition-all hover:bg-cbc-transparent"
+                className="bg-neutral-100 inline-flex items-center justify-center w-[24px] h-[24px] rounded-full transition-all hover:bg-cbc-transparent mx-5"
               >
-                <Chevrond
-                  className="rotate-[-90deg] w-6 h-6"
-                  stroke={"#737373"}
-                />
+               <Chevrond
+                    className={`${orientation === "rtl" ? "rotate-[-270deg]" : "rotate-[-90deg]"} w-4 h-4`}
+                    strokeWidth={2}
+                    stroke={"#000"}
+                  />
               </div>
             ),
           };
         });
 
-        setPagination((prev) => {
-          return {
-            ...prev,
-            total_items: deals.length,
-            current_page: 1,
-            total_pages: Math.ceil(deals.length / prev.items_per_page),
-            data: deals?.slice(0, prev.items_per_page),
-          };
-        });
         setDeals(deals);
       }
-    } catch (error:any) {
+    } catch (error: any) {
       if (error.response && error.response.status === 302) {
-    /*     toast.dismiss()
+        /*     toast.dismiss()
         toast.error("Session time out",toastUtil)
         dispatch(saveToken(""));
         navigate(RoutesEnums.LOGIN); */
@@ -159,45 +158,6 @@ const DealApproval = ({}: any) => {
     }
   };
 
-  const [tabs] = useState([
-    "All",
-    "Pending",
-    "Interested",
-    "Accepted",
-    "Approved",
-  ]);
-
-
-
-
-  const paginate = (type: string) => {
-    if (type === "next" && pagination.current_page < pagination.total_pages) {
-      setPagination((prev: any) => {
-        const nextPage = prev.current_page + 1;
-        const startIndex = (nextPage - 1) * prev.items_per_page;
-        const endIndex = startIndex + prev.items_per_page;
-        const data = deals.slice(startIndex, endIndex);
-        return { ...prev, current_page: nextPage, data };
-      });
-    } else if (type === "previous" && pagination.current_page > 1) {
-      setPagination((prev: any) => {
-        const prevPage = prev.current_page - 1;
-        const startIndex = (prevPage - 1) * prev.items_per_page;
-        const endIndex = startIndex + prev.items_per_page;
-        const data = deals.slice(startIndex, endIndex);
-        return { ...prev, current_page: prevPage, data };
-      });
-    } else {
-      setPagination((prev: any) => {
-        const prevPage = Number(type) + 1 - 1;
-        const startIndex = (prevPage - 1) * prev.items_per_page;
-        const endIndex = startIndex + prev.items_per_page;
-        const data = deals.slice(startIndex, endIndex);
-
-        return { ...prev, current_page: type, data };
-      });
-    }
-  };
 
   return (
     <main className="h-full max-h-full overflow-y-auto">
@@ -223,28 +183,21 @@ const DealApproval = ({}: any) => {
                   </h1>
 
                   <span className="w-full flex items-center gap-5">
-                    <div className="rounded-md shadow-cs-6 bg-white border-[1px] border-gray-200 h-9 overflow-hidden max-w-[310px] inline-flex items-center px-2">
-                      <SearchIcon />
-                      <input
-                        type="search"
-                        className="h-full w-full outline-none pl-2 pr-[6.5rem] text-sm font-normal text-gray-400"
-                        placeholder={language?.v3?.common?.search}
-                      />
-                    </div>
-
+                <Search apiFunction={getAllDeals} searchQuery={searchQuery} setSearchQuery={setSearchQuery}/>
                     <ul className="inline-flex items-center">
                       {React.Children.toArray(
-                        tabs.map((tab:any, index : number) => (
+                       Object.keys(tabs).map((tab: any) => (
                           <li
                             onClick={() => {
-                              setSelectedTab(tab)}}
+                              setSelectedTab(tab);
+                            }}
                             className={`py-2 px-3 font-medium cursor-pointer rounded-md transition-all ${
                               selectedTab === tab
                                 ? "text-neutral-900 bg-neutral-100"
                                 : "text-gray-500"
                             } `}
                           >
-                            {tab} &nbsp;({getCountvalue(tab)})
+                            {tabs[tab]} &nbsp;({getCountvalue(tab)})
                           </li>
                         ))
                       )}
@@ -256,9 +209,9 @@ const DealApproval = ({}: any) => {
               <section className="mt-10">
                 <Table
                   columns={columns}
-                  pagination={pagination}
-                  paginate={paginate}
-                  goToPage={paginate}
+                  tableData={deals}
+                  setCurrentPage={setCurrentPage}
+                  paginationData={paginationData}
                 />
               </section>
             </React.Fragment>

@@ -6,8 +6,8 @@ import { getDealDetail } from "../../../apis/deal.api";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { RootState } from "../../../redux-toolkit/store/store";
+import { convertStatusLanguage } from "../../../utils/string.utils";
 
-const CURRENCIES = ["USD", "AED"];
 
 const GuestInvestorOverview = ({}: any) => {
  
@@ -32,9 +32,8 @@ const GuestInvestorOverview = ({}: any) => {
       console.log(error)
     }
   }
-  
   return deal && (
-    deal.category === KanzRoles.STARTUP.toLocaleLowerCase() ?
+   convertStatusLanguage(deal?.category) === KanzRoles?.STARTUP?.toLocaleLowerCase() ?
     <StartupCase dealToken={dealToken} dealDetail={deal} docs= {selectedDocs} />
     :
     <PropertyOwnerCase dealToken={dealToken} dealDetail={deal} dealDocs= {selectedDocs}  />
