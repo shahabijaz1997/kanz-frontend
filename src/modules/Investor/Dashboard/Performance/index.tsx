@@ -23,7 +23,9 @@ const Performance = ({changeTabtoInsights, changeTabtoActivity}: any) :any => {
         <main>
         <aside className=" border-[1px] bg-white border-neutral-200 rounded-md  w-full p-3">
         <InvestmentCards/>
+        <section className="mt-10">
         <Graph/>
+        </section>
         </aside>
         <aside className="mt-5">
             <div className="flex gap-5">

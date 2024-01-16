@@ -25,10 +25,11 @@ const Investments = ({}: any) => {
     language?.v3?.syndicate?.deals?.table?.title,
     language?.v3?.syndicate?.deals?.table?.category,
     "Status",
-    language?.v3?.syndicate?.deals?.table?.end_date,
-    "Raised",
-    language?.v3?.syndicate?.deals?.table?.target,
-    "",
+    "Invest Date",
+    "Invested",
+    "Net Value",
+    "Multiple",
+    ""
   ];
 
   const [selectedTab, setSelectedTab]: any = useState("All");
@@ -37,7 +38,7 @@ const Investments = ({}: any) => {
   const [currentPage, setCurrentPage] = useState(1);
   const [filter, setFilterCounts]:any = useState([]);
   const [tabs] = useState([
-    "all",
+    "All",
     "Startup",
     "Property",
   ]);
@@ -84,11 +85,13 @@ const Investments = ({}: any) => {
             ),
             ["Status"]:
               <CustomStatus options={deal?.status} /> || "N/A",
-            [language?.v3?.syndicate?.deals?.table?.end_date]:
+            ["Invest Date"]:
               <span className="px-2">{(deal?.end_at)}</span>|| " N/A",
-            ["Raised"]:`$${numberFormatter(Number(deal?.raised))}`,  
+            ["Invested"]:`$${numberFormatter(Number(deal?.raised))}`,  
             [language?.v3?.syndicate?.deals?.table
               ?.target]: `$${numberFormatter(Number(deal?.target))}`,
+            ["Net Value"]: `$${numberFormatter(Number(deal?.target))}`,
+            ["Multiple"]: `$${numberFormatter(Number(deal?.target))}`,
 
             Steps: deal?.current_state?.steps,
             [""]: (

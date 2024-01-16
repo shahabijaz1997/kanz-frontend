@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import  { useEffect } from "react";
 import Chart from "chart.js/auto";
 import "chartjs-plugin-datalabels";
 import "chartjs-plugin-annotation";

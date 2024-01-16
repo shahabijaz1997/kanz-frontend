@@ -2,7 +2,7 @@ import LinearProgressBar from ".././LinearProgressBar";
 
 const YourTopMarkets = ({}: any): any => {
   return (
-    <main className="">
+    <main className="w-[50%]">
       <aside className="border-[1px] bg-white w-full border-neutral-200 rounded-md  p-3">
         <div>
           <h1 className="font-bold text-sm"> Your Top Markets</h1>

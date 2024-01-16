@@ -4,7 +4,7 @@ import WidthLinearProgressBar from "./WidthLinearProgressBar";
 
 const ComparedToOther = ({}: any): any => {
   return (
-    <main className="min-h-full w-1/2">
+    <main className="min-h-full w-[47%]">
       <aside className="border-[1px] bg-white w-full border-neutral-200 min-h-full rounded-md  p-3">
         <div>
           <h1 className="font-bold text-sm"> Compared to Other Investors</h1>
