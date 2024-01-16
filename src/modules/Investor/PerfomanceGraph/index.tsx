@@ -53,6 +53,9 @@ const data = {
 
 const options: any = {
   plugins: {
+      tooltip: {
+        enabled: false,
+      },
     legend: {
       align: "end", 
       labels: {
@@ -68,7 +71,6 @@ const options: any = {
   },
   scales: {
     x: {
-    categoryPercentage: 1,
       stacked: true,
       grid: {
         drawOnChartArea: false,
@@ -82,7 +84,7 @@ const options: any = {
 };
 
 const PerfomanceGraph  = () => {
-  return <div className="h-[100vh] w-full"><Bar data={data} options={options} /></div> ;
+  return <div className="h-[75vh] w-full"><Bar data={data} options={options} /></div> ;
 };
 
 export default PerfomanceGraph;

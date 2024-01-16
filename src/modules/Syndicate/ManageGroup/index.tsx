@@ -19,7 +19,7 @@ const ManageGroup = ({}: any) => {
     { id: 2, title: language?.v3?.investor?.applications},
     { id: 3, title: language?.v3?.investor?.invites},
     { id: 4, title: language?.v3?.investor?.investors},
-    { id: 5, title: "Post"},
+/*     { id: 5, title: "Post"}, */
   ];
   const openModal = () =>{
     setModalOpen(true)
@@ -60,7 +60,7 @@ const ManageGroup = ({}: any) => {
                 {language?.v3?.syndicate?.manage_group}
               </h1>
               {
-                selected?.id !== 4 && selected?.id !==5 &&(
+                selected?.id !== 4  && (
                   <Button
                   onClick={() => {
                     setSelected(tabs[3])
@@ -100,7 +100,7 @@ const ManageGroup = ({}: any) => {
               {selected.id===2 && <Applications />}
               {selected.id===3 && <Invites />}
               {selected.id===4 && <AllInvestors />}
-              {selected.id===5 && <Post/>}
+              {/* {selected.id===5 && <Post/>} */}
           </section>
         )}
       </aside>

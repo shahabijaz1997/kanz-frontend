@@ -271,10 +271,10 @@ const SyndicateInfoDrawer = ({
                 }`}
               >
                 <aside className="p-5">
-                  <div className=" pt-3 font-bold">Apply to Syndicate</div>
+                  <div className=" pt-3 font-bold">{language?.v3?.investor?.apply_to_syndicate}</div>
                   <div className="mt-5">
                     <div className=" font-medium text-sm">
-                      How did you discover this syndicate?
+                    {language?.v3?.investor?.how_did_you_discover_this_syndicate}
                     </div>
                     <div className="mt-1">
                       <Selector
@@ -287,12 +287,11 @@ const SyndicateInfoDrawer = ({
                   </div>
                   <div className="mt-5">
                     <span className="mt-5 font-medium text-sm">
-                      Personal note for
+                    {language?.v3?.investor?.personal_note_for}
+
                     </span>
                     <p className="text-sm text-[#737373]">
-                      Briefly introduce yourself (consider adding your Linkedin
-                      URL) and share why you want to invest with their
-                      Syndicate.
+                    {language?.v3?.investor?.briefly_introduce_yourself}
                     </p>
                     <textarea
                       value={changes?.comment}
@@ -310,12 +309,12 @@ const SyndicateInfoDrawer = ({
                       className="accent-cyan-800 h-3 w-3 mt-1.5 cursor-pointer"
                       onChange={handleCheckboxChange}
                     />
-                    <small className="ml-3">
+                    <small className="mx-3">
                       <span className="flex items-center font-medium mt-0.5">
-                        Disclaimer 1
+                        {language?.v3?.investor?.disclaimer_1}
                       </span>
                       <p className="text-sm text-[#737373]">
-                        Description about desclaimer
+                      {language?.v3?.investor?.description_about_disclaimer}
                       </p>
                     </small>
                   </div>
@@ -334,7 +333,7 @@ const SyndicateInfoDrawer = ({
                         className="!w-[140px] !text-black !border-[black]"
                         type="outlined"
                       >
-                        Cancel
+                        {language?.v3?.investor?.cancel}
                       </Button>
                       <Button
                         centeredSpinner
@@ -350,7 +349,7 @@ const SyndicateInfoDrawer = ({
                         loading={buttonDisableTemp}
                         disabled={!enableButton || hideButton}
                       >
-                        {"Submit Application"}
+                       {language?.v3?.investor?.submit_application}
                       </Button>
                     </span>
                   </aside>

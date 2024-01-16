@@ -32,9 +32,14 @@ const DoghnutGraph = ({}: any) :any => {
                 borderWidth: 0,
               }],
             },
-            options: {
+            options: {              
               responsive: true,
               maintainAspectRatio: true, 
+              plugins: {
+                tooltip: {
+                  enabled: false,
+                },
+              },
             },
           });
         }

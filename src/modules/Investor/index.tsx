@@ -5,10 +5,11 @@ import { KanzRoles } from "../../enums/roles.enum";
 import Header from "../../shared/components/Header";
 import Sidebar from "../../shared/components/Sidebar";
 import Spinner from "../../shared/components/Spinner";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import Insights from "./Dashboard/Insights";
 import Activity from "./Dashboard/Acitivity";
 import Performance from "./Dashboard/Performance";
+import { RootState } from "../../redux-toolkit/store/store";
 
 
 
@@ -19,14 +20,15 @@ const Investor = ({}: any) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
+  const language: any = useSelector((state: RootState) => state.language.value);
 
 
 
 
   const tabs = [
-    { id: 1, title: "Performance" },
-    { id: 2, title: "Activity" },
-    { id: 3, title: "Insights" },
+    { id: 1, title: language?.v3?.investor?.performance },
+    { id: 2, title: language?.v3?.investor?.activity },
+    { id: 3, title: language?.v3?.investor?.insights },
     
   ];
   const [tabSelector, settabSelector]: any = useState(0);
@@ -67,7 +69,7 @@ const Investor = ({}: any) => {
           >
             <section className="inline-flex justify-between items-center w-full mb-4">
               <h1 className="text-black font-medium text-2xl">
-                {"Deals"}
+                {language?.v3?.investor?.dashboard}
               </h1>
           
             </section>
