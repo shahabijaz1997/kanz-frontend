@@ -68,14 +68,12 @@ const SyndicateRequest = ({}: any) => {
     "interested": language?.v3?.investor?.interested,
     "accepted": language?.v3?.investor?.accepted,
     "approved": language?.v3?.investor?.approved,
-  });
-  useEffect(() => {
+  }); 
+   useEffect(() => {
     dispatch(saveDataHolder(""));
     getAllDeals(searchQuery);
-  }, [selectedTab]);
-  useEffect(() => {
-    getAllDeals(searchQuery);
-  }, [currentPage]);
+  }, [currentPage, selectedTab]);
+
 
   const setFileInformation = async (file: File) => {
     let size = fileSize(file.size, "mb");
@@ -327,6 +325,7 @@ const SyndicateRequest = ({}: any) => {
                     Object.keys(tabs).map((tab: any) => (
                       <li
                         onClick={() => {
+                          setCurrentPage(1)
                           setSelectedTab(tab)}
                         }
                         className={`py-2 px-4 font-medium text-xs cursor-pointer rounded-md transition-all ${

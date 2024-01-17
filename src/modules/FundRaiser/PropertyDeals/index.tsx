@@ -75,18 +75,8 @@ const PropertyDeals = ({ openPropertyRiskModal }: any) => {
   let currencySymbol = event === "ar" ? "د.إ": "AED"
   useEffect(() => {
     dispatch(saveDataHolder(""));
-    setCurrentPage(1)
     getAllDeals(searchQuery);
-  }, [selectedTab]);
-  useEffect(() => {
-    dispatch(saveDataHolder(""));
-    getAllDeals(searchQuery);
-  }, [currentPage]);
-  useEffect(() => {
-    dispatch(saveDataHolder(""));
-    dispatch(saveUserMetaData(""));
-    getAllDeals(searchQuery);
-  }, []);
+  }, [currentPage, selectedTab]);
   const handleCloseModal = () => {
     setSelectTypeModal(false);
   };
@@ -156,17 +146,23 @@ const PropertyDeals = ({ openPropertyRiskModal }: any) => {
 
                         dispatch(saveDataHolder(deal.id));
                         if (convertStatusLanguage(deal?.status) === ApplicationStatus.REOPENED) {
-                          navigate(
+                      /*     navigate(
+                            `/create-deal/${
+                              deal?.current_state?.current_step
+                            }`
+                          ); */
+                          navigate(RoutesEnums.CREATE_DEAL, {
+                            state : deal?.current_state?.current_step
+                          })
+                        } else {
+                          navigate(RoutesEnums.CREATE_DEAL, {
+                            state : deal?.current_state?.current_step 
+                          })
+                     /*      navigate(
                             `/create-deal/${
                               deal?.current_state?.current_step + 1
                             }`
-                          );
-                        } else {
-                          navigate(
-                            `/create-deal/${
-                              deal?.current_state?.current_step + 2
-                            }`
-                          );
+                          ); */
                         }
                       }
                     }}
@@ -227,6 +223,7 @@ const PropertyDeals = ({ openPropertyRiskModal }: any) => {
                     Object.keys(tabs).map((tab: any) => (
                       <li
                         onClick={() => {
+                          setCurrentPage(1)
                           setSelectedTab(tab)}
                         }
                         className={`py-2 px-4 font-medium text-xs cursor-pointer rounded-md transition-all ${

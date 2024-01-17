@@ -75,17 +75,8 @@ const StartupDeals = ({ openStartupRiskModal }: any) => {
 
   useEffect(() => {
     dispatch(saveDataHolder(""));
-    setCurrentPage(1);
     getAllDeals(searchQuery);
-  }, [selectedTab]);
-  useEffect(() => {
-    dispatch(saveDataHolder(""));
-    getAllDeals(searchQuery);
-  }, [currentPage]);
-  useEffect(() => {
-    dispatch(saveDataHolder(""));
-    getAllDeals(searchQuery);
-  }, []);
+  }, [currentPage, selectedTab]);
 
   const handleCloseModal = () => {
     setSelectTypeModal(false);
@@ -159,17 +150,19 @@ const StartupDeals = ({ openStartupRiskModal }: any) => {
                         e.stopPropagation();
                         dispatch(saveDataHolder(deal.id));
                         if (convertStatusLanguage(deal?.status) === ApplicationStatus.REOPENED) {
-                          navigate(
+                          navigate(RoutesEnums.CREATE_DEAL , {state: deal?.current_state?.current_step});
+                       /*    navigate(
                             `/create-deal/${
                               deal?.current_state?.current_step + 1
                             }`
-                          );
+                          ); */
                         } else {
-                          navigate(
+                          navigate(RoutesEnums.CREATE_DEAL , {state: deal?.current_state?.current_step + 1});
+                         /*  navigate(
                             `/create-deal/${
                               deal?.current_state?.current_step + 2
                             }`
-                          );
+                          ); */
                         }
                       }
                     }}
@@ -234,8 +227,9 @@ const StartupDeals = ({ openStartupRiskModal }: any) => {
                     Object.keys(tabs).map((tab: any) => (
                       <li
                         onClick={() => {
-                          setSelectedTab(tab)}
-                        }
+                          setCurrentPage(1)
+                          setSelectedTab(tab)
+                        }}
                         className={`py-2 px-4 font-medium text-xs cursor-pointer rounded-md transition-all ${
                           selectedTab === tab
                             ? "text-neutral-900 bg-neutral-100"

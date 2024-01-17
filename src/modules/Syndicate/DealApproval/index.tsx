@@ -78,16 +78,7 @@ const DealApproval = ({}: any) => {
   useEffect(() => {
     dispatch(saveDataHolder(""));
     getAllDeals(searchQuery);
-  }, [currentPage]);
-  useEffect(() => {
-    dispatch(saveDataHolder(""));
-    getAllDeals(searchQuery);
-  }, []);
-  useEffect(() => {
-    dispatch(saveDataHolder(""));
-    setCurrentPage(1);
-    getAllDeals(searchQuery);
-  }, [selectedTab]);
+  }, [currentPage, selectedTab]);
 
   const getAllDeals = async (queryString:string) => {
     try {
@@ -189,6 +180,7 @@ const DealApproval = ({}: any) => {
                        Object.keys(tabs).map((tab: any) => (
                           <li
                             onClick={() => {
+                              setCurrentPage(1)
                               setSelectedTab(tab);
                             }}
                             className={`py-2 px-3 font-medium cursor-pointer rounded-md transition-all ${
