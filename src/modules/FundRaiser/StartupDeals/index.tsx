@@ -157,7 +157,7 @@ const StartupDeals = ({ openStartupRiskModal }: any) => {
                             }`
                           ); */
                         } else {
-                          navigate(RoutesEnums.CREATE_DEAL , {state: deal?.current_state?.current_step + 1});
+                          navigate(RoutesEnums.CREATE_DEAL , {state: deal?.current_state?.current_step });
                          /*  navigate(
                             `/create-deal/${
                               deal?.current_state?.current_step + 2
