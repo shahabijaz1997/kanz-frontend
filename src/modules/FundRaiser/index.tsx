@@ -42,10 +42,6 @@ const FundRaiser = ({}: any) => {
     d2: false,
     d3: false,
   });
-  useEffect(() => {
-    dispatch(saveDataHolder(""));
-    dispatch(saveUserMetaData(""));
-  }, []);
   const openStartupRiskModal = () => {
     setstartupRiskModal("1");
   };
@@ -137,7 +133,6 @@ const FundRaiser = ({}: any) => {
                 onClick={() => {
                   setDummyDisclaimers({ d1: false, d2: false, d3: false });
                   dispatch(saveDataHolder(""));
-                  dispatch(saveUserMetaData(""));
                   setstartupRiskModal(null);
                 }}
               />
@@ -408,7 +403,6 @@ const FundRaiser = ({}: any) => {
                   onClick={() => {
                     setDummyDisclaimers({ d1: false, d2: false, d3: false });
                     dispatch(saveDataHolder(""));
-                    dispatch(saveUserMetaData(""));
                     setstartupRiskModal(null);
                   }}
                 >
@@ -460,7 +454,6 @@ const FundRaiser = ({}: any) => {
                 onClick={() => {
                   setDummyDisclaimers({ d1: false, d2: false, d3: false });
                   dispatch(saveDataHolder(""));
-                  dispatch(saveUserMetaData(""));
                   setpropertyRiskModal(null);
                 }}
               />
@@ -731,7 +724,6 @@ const FundRaiser = ({}: any) => {
                   onClick={() => {
                     setDummyDisclaimers({ d1: false, d2: false, d3: false });
                     dispatch(saveDataHolder(""));
-                    dispatch(saveUserMetaData(""));
                     setpropertyRiskModal(null);
                   }}
                 >

@@ -87,12 +87,12 @@ const GeneralHeader = ({ responsive = false, showMenu = false, showLanguageDropd
                 <button className="text-neutral-500 font-medium cursor-pointer text-sm tracking-[0.03em] flex items-center">
                   {metadata?.profile?.logo ? (
                     <img
-                      className="w-10 h-10 rounded-full shadow-lg"
+                      className="w-8 h-8 rounded-full shadow-lg"
                       src={metadata?.profile?.logo}
                     />
                   ) : (
-                    <div className="text-white justify-center items-center flex w-10 h-10 rounded-full shadow-lg bg-[#155E75]">
-                      {metadata?.name?.slice(0, 2)}
+                    <div className="text-white justify-center items-center flex w-8 h-8 rounded-full shadow-lg bg-[#155E75]">
+                      {metadata?.name?.slice(0, 2).toUpperCase()}
                     </div>
                   )}{" "}
                 </button>
