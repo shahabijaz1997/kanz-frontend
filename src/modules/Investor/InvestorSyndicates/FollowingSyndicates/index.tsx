@@ -74,15 +74,7 @@ const FollowingSyndicates = (): any => {
   useEffect(() => {
     dispatch(saveDataHolder(""));
     getFollowingSynds(searchQuery);
-  }, []);
-  useEffect(() => {
-    dispatch(saveDataHolder(""));
-    getFollowingSynds(searchQuery);
-  }, [currentPage]);
-  useEffect(() => {
-    dispatch(saveDataHolder(""));
-    getFollowingSynds(searchQuery);
-  }, [selectedTab]);
+  }, [currentPage, selectedTab]);
 
   const getFollowingSynds = async (queryString:string) => {
     try {
@@ -160,6 +152,7 @@ const FollowingSyndicates = (): any => {
                     Object.keys(tabs).map((tab: any) => (
                       <li
                         onClick={() => {
+                          setCurrentPage(1)
                           setSelectedTab(tab)}
                         }
                         className={`py-2 px-4 font-medium text-xs cursor-pointer rounded-md transition-all ${

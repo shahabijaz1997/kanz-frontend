@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { useNavigate, useParams } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { RootState } from "../../redux-toolkit/store/store";
 import { getDealQuestion, postDealStep, submitDeal } from "../../apis/deal.api";
 import { DealCheckType, DealType, FileType } from "../../enums/types.enum";
@@ -39,13 +39,10 @@ import ReviewDeal from "./ReviewDeal";
 import Drawer from "../../shared/components/Drawer";
 import CalendarIcon from "../../ts-icons/calendarIcon.svg";
 import { isValidUrl } from "../../utils/regex.utils";
-import { kebabCase } from "../../utils/string.utils";
-
-const CURRENCIES = ["USD", "AED"];
 
 const CreateDeal = () => {
   const navigate = useNavigate();
-  const params = useParams();
+  const { state } = useLocation();
   const dispatch = useDispatch();
   const language: any = useSelector((state: RootState) => state.language.value);
   const event: any = useSelector((state: RootState) => state.event.value);
@@ -63,12 +60,10 @@ const CreateDeal = () => {
     (state: RootState) => state.questionnaire.value
   );
 
-
-  const [step, setStep]: any = useState(Number(params?.id));
+  const [step, setStep]: any = useState(state || 1);
   const [multipleFieldsPayload, setMultipleFieldsPayload]: any = useState([]);
   const [restrictions, setRestrictions]: any = useState([]);
   const [deleted, setDeleted]: any = useState([]);
-  const [currency, setCurrency] = useState(0);
   const [showHoverModal, setShowHoverModal] = useState(null);
   const [questions, setQuestions]: any = useState(null);
   const [dependencies, setDependencies]: any = useState(null);
@@ -78,16 +73,10 @@ const CreateDeal = () => {
   const [open, setOpen]: any = useState(false);
   const [loading, setLoading] = useState(false);
   const [modalOpen, setModalOpen]: any = useState(null);
-  const [uspAdded, setUspAdded]: any = useState(false);
 
   useEffect(() => {
-    setStep(Number(params?.id) || 1);
-    getDealStepDetails();
-  }, [params, step]);
-
-  /*   useEffect(()=>{
-  }) */
-  /* UI Actions */
+    getDealStepDetails()
+  }, [step]);
 
   const getDealStepDetails = async () => {
     try {
@@ -212,7 +201,7 @@ const CreateDeal = () => {
     } catch (error: any) {
       if (error.response && error.response.status === 401) {
         dispatch(saveToken(""));
-        navigate(RoutesEnums.LOGIN, { state: `create-deal/${step}` });
+        navigate(RoutesEnums.LOGIN);
       }
     } finally {
       let timer = setTimeout(() => {
@@ -300,7 +289,7 @@ const CreateDeal = () => {
 
       if (status === 200) {
         dispatch(saveDataHolder(data?.status?.data?.id));
-        if (step < totalSteps?.all.length) navigate(`/create-deal/${step + 1}`);
+        if (step < totalSteps?.all.length) setStep(step + 1);
         else {
           dispatch(saveDataHolder(""));
           setModalOpen(true);
@@ -318,8 +307,8 @@ const CreateDeal = () => {
   };
 
   const onSetPrev = () => {
-    if (step > 1) navigate(`/create-deal/${step - 1}`);
-    else navigate(`${RoutesEnums.FUNDRAISER_DASHBOARD}`);
+    if (step > 1) setStep(step - 1)
+    else navigate(`${RoutesEnums.FUNDRAISER_DASHBOARD}`)
   };
 
   const tieUpRestrictions = (as: any) => {

@@ -5,6 +5,7 @@ import { ApplicationStatus } from "../../../enums/types.enum";
 import { useNavigate } from "react-router-dom";
 import { RootState } from "../../../redux-toolkit/store/store";
 import { convertStatusLanguage } from "../../../utils/string.utils";
+import { RoutesEnums } from "../../../enums/routes.enum";
 
 const EditDealWarningModal = ({
   handleWarningModal,
@@ -53,11 +54,13 @@ const EditDealWarningModal = ({
               e.stopPropagation();
               dispatch(saveDataHolder(dealId));
               if (convertStatusLanguage(dealStatus) === ApplicationStatus.APPROVED) {
-                navigate(`/create-deal/1`);
+                navigate(RoutesEnums.CREATE_DEAL);
               } else if (convertStatusLanguage(dealStatus) === ApplicationStatus.REOPENED) {
-                navigate(`/create-deal/${dealStep + 1}`);
+               /*  navigate(`/create-deal/${dealStep + 1}`); */
+               navigate (RoutesEnums.CREATE_DEAL, {state: dealStep + 1})
               } else {
-                navigate(`/create-deal/${dealStep + 2}`);
+                navigate(RoutesEnums.CREATE_DEAL, {state: dealStep + 2});
+                /* navigate(`/create-deal/${dealStep + 2}`); */
               }
             }}
           >

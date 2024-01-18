@@ -53,18 +53,9 @@ const Invites = ({ openModal, reloadMembers }: any) => {
   ];
 
   useEffect(() => {
-    const firstTabKey = Object.keys(tabs)[0];
-    setSelectedTab(firstTabKey);
-  }, [reloadMembers]);
-  useEffect(() => {
-    dispatch(saveDataHolder(""));
-    setCurrentPage(1);
-    getInvitesforGroup(searchQuery);
-  }, [selectedTab]);
-  useEffect(() => {
     dispatch(saveDataHolder(""));
     getInvitesforGroup(searchQuery);
-  }, [currentPage]);
+  }, [currentPage, selectedTab]);
   useEffect(() => {
     dispatch(saveDataHolder(""));
     getInvitesforGroup(searchQuery);

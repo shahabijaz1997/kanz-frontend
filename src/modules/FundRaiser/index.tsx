@@ -421,7 +421,7 @@ const FundRaiser = ({}: any) => {
                     !dummyDisclaimers.d2 ||
                     !dummyDisclaimers.d3
                   }
-                  onClick={() => navigate(`${RoutesEnums.CREATE_DEAL}/1`)}
+                  onClick={() => navigate(`${RoutesEnums.CREATE_DEAL}`)}
                 >
                   {language?.buttons?.continue}
                 </Button>
@@ -744,7 +744,7 @@ const FundRaiser = ({}: any) => {
                     !dummyDisclaimers.d2 ||
                     !dummyDisclaimers.d3
                   }
-                  onClick={() => navigate(`${RoutesEnums.CREATE_DEAL}/1`)}
+                  onClick={() => navigate(`${RoutesEnums.CREATE_DEAL}`)}
                 >
                   {language?.buttons?.continue}
                 </Button>
