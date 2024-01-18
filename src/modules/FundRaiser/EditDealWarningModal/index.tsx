@@ -53,15 +53,7 @@ const EditDealWarningModal = ({
               e.preventDefault();
               e.stopPropagation();
               dispatch(saveDataHolder(dealId));
-              if (convertStatusLanguage(dealStatus) === ApplicationStatus.APPROVED) {
-                navigate(RoutesEnums.CREATE_DEAL);
-              } else if (convertStatusLanguage(dealStatus) === ApplicationStatus.REOPENED) {
-               /*  navigate(`/create-deal/${dealStep + 1}`); */
-               navigate (RoutesEnums.CREATE_DEAL, {state: dealStep + 1})
-              } else {
-                navigate(RoutesEnums.CREATE_DEAL, {state: dealStep + 2});
-                /* navigate(`/create-deal/${dealStep + 2}`); */
-              }
+              navigate (RoutesEnums.CREATE_DEAL)
             }}
           >
             {language?.v3?.syndicate?.continue}
