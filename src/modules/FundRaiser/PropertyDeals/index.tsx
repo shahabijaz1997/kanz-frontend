@@ -18,7 +18,6 @@ import { KanzRoles } from "../../../enums/roles.enum";
 import Chevrond from "../../../ts-icons/chevrond.svg";
 import { useNavigate } from "react-router-dom";
 import { saveToken } from "../../../redux-toolkit/slicer/auth.slicer";
-import SearchIcon from "../../../ts-icons/searchIcon.svg";
 import EditDealWarningModal from "../EditDealWarningModal";
 import { saveUserMetaData } from "../../../redux-toolkit/slicer/metadata.slicer";
 import { convertStatusLanguage } from "../../../utils/string.utils";
