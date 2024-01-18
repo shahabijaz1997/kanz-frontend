@@ -32,10 +32,7 @@ const GeneralHeader = ({ responsive = false, showMenu = false, showLanguageDropd
     const toggleMenu = () => {
         setIsMenuOpen(!isMenuOpen);
     };
-
     
-    console.log("USer Value", metadata?.name)
-
     const onLogout = async () => {
         try {
             onSuperLogout(true);

@@ -12,13 +12,6 @@ const Profile = () => {
   const handleFocus = (inputName: any) => {
     setFocusedInput(inputName);
   };
-
-  
-
-  useEffect(() => {
-    console.log(focusedInput);
-  }, [focusedInput]);
-
 const profileInfo = {
     "name": "John Doe",
     "email": "john.doe@example.com",
