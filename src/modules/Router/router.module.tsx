@@ -23,6 +23,7 @@ import ManageGroup from "../Syndicate/ManageGroup";
 import GuestInvestorOverview from "../Guest/GuestDealOverview";
 import SyndicateFullView from "../Investor/InvestorSyndicates/SyndicateFullView";
 import InvestmentDealDetail from "../Investor/Dashboard/InvestmentDealDetail";
+import PageNotFound from "../PageNotFound";
 
 /* --- Modules --- */
 
@@ -439,7 +440,7 @@ const RouterModule = () => {
         }
       />
       <Route
-        path={`${RoutesEnums.CREATE_DEAL}/:id`}
+        path={`${RoutesEnums.CREATE_DEAL}`}
         element={
           <Suspense fallback={<Loader />}>
             <CHECK_LOGGED_IN>
@@ -614,6 +615,14 @@ const RouterModule = () => {
           </Suspense>
         }
       />
+      <Route
+      path="*"
+      element={
+        <Suspense fallback={<Loader />}>
+          <PageNotFound/>
+    </Suspense>
+  }
+/>
     </Routes>
   );
 };

@@ -58,26 +58,10 @@ const AllSyndicates = ({}: any): any => {
   const loadingOn = ()=>{
     setLoaderParent(!loaderParent)
   }
-  const updateSearchString = (newString:string) => {
-    setSearchQuery(newString)
-  }
-  useEffect(() => {
-    dispatch(saveDataHolder(""));
-    getAllSyndicates("");
-  }, []);
   useEffect(() => {
     dispatch(saveDataHolder(""));
     getAllSyndicates(searchQuery);
-  }, [loaderParent]);
-  useEffect(() => {
-    dispatch(saveDataHolder(""));
-    getAllSyndicates(searchQuery);
-  }, [currentPage]);
-  useEffect(() => {
-    dispatch(saveDataHolder(""));
-    setCurrentPage(1)
-    getAllSyndicates(searchQuery);
-  }, [selectedTab]);
+  }, [currentPage, selectedTab]);
   useEffect(() => {
     syndicateInfo?.id && onGetSyndicateDetail(syndicateInfo?.id);
     setChildData(false);
@@ -174,6 +158,7 @@ const AllSyndicates = ({}: any): any => {
                     Object.keys(tabs).map((tab: any) => (
                       <li
                         onClick={() => {
+                          setCurrentPage(1)
                           setSelectedTab(tab)}
                         }
                         className={`py-2 px-4 font-medium text-xs cursor-pointer rounded-md transition-all ${

@@ -58,15 +58,10 @@ const AllInvestors = ({ openModal, reloadMembers }: any) => {
     language?.v3?.syndicate?.investments,
     "",
   ];
-
-  useEffect(()=>{
-    setCurrentPage(1)
-    getAllUserListings(searchQuery)
-    },[selectedTab])
-  useEffect(()=>{
-    getAllUserListings(searchQuery)
-    },[currentPage])
-  
+  useEffect(() => {
+    dispatch(saveDataHolder(""));
+    getAllUserListings(searchQuery);
+  }, [currentPage, selectedTab]);
 
   const [searchQuery, setSearchQuery]: any = useState("");
   const getCountvalue = (value: string) => {
@@ -158,10 +153,7 @@ const AllInvestors = ({ openModal, reloadMembers }: any) => {
     dispatch(saveDataHolder(""));
     getAllUserListings(searchQuery)
   }, [loaderParent])
-  useEffect(()=>{
-    dispatch(saveDataHolder(""));
-    getAllUserListings(searchQuery)
-  }, [currentPage])
+
 
 
   return (

@@ -49,7 +49,10 @@ const Commitments = ({}: any): any => {
   { 
     return filter[value] || 0
   }
-
+  useEffect(() => {
+    dispatch(saveDataHolder(""));
+    getAllInvitees(searchQuery);
+  }, [currentPage, selectedTab]);
   useEffect(() => {
     dispatch(saveDataHolder(""));
     setCurrentPage(1);

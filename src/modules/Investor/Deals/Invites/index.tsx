@@ -54,6 +54,10 @@ const Invites = ({}: any): any => {
   }
   useEffect(() => {
     dispatch(saveDataHolder(""));
+    getAllInvitees(searchQuery);
+  }, [currentPage, selectedTab]);
+  useEffect(() => {
+    dispatch(saveDataHolder(""));
     setCurrentPage(1)
     getAllInvitees(searchQuery);
   }, [selectedTab]);
