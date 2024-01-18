@@ -15,20 +15,26 @@ import { saveLogo } from "../../../../redux-toolkit/slicer/attachments.slicer";
 import { languageDropdownItems } from "../../../../utils/dropdown-items.utils";
 import { RoutesEnums } from "../../../../enums/routes.enum";
 import { saveDataHolder } from "../../../../redux-toolkit/slicer/dataHolder.slicer";
+import ProfileDropDown from "../ProfileDropDown";
 
 const GeneralHeader = ({ responsive = false, showMenu = false, showLanguageDropdown = false, onSuperLogout = ()=>{} }: any) => {
     const navigate = useNavigate();
     const dispatch = useDispatch();
+    const user : any = useSelector((state: RootState) => state.user.value);
     const language: any = useSelector((state: RootState) => state.language.value);
     const orientation: any = useSelector((state: RootState) => state.orientation.value);
     const authToken: any = useSelector((state: RootState) => state.auth.value);
+    const metadata: any = useSelector((state: RootState) => state.metadata.value);
     const event: any = useSelector((state: RootState) => state.event.value);
     const navigationMenu = [{id: 1, title:language.landing?.invest }, { id: 2, title: language.landing?.raise }, { id: 3, title: language.header?.syndicate }]
     const [isMenuOpen, setIsMenuOpen] = useState(false);
-   
+   const [isProfileOpen, setIsProfileOpen]= useState(false)
     const toggleMenu = () => {
         setIsMenuOpen(!isMenuOpen);
     };
+
+    
+    console.log("USer Value", metadata?.name)
 
     const onLogout = async () => {
         try {
@@ -66,38 +72,81 @@ const GeneralHeader = ({ responsive = false, showMenu = false, showLanguageDropd
 
     const authenticatedHeaderNav = () => {
         if (authToken) {
-            return (
-                <React.Fragment>
-                    <li className="">
-                        <div className="rounded-full w-8 h-8 inline-grid place-items-center bell-background cursor-not-allowed">
-                            <BellIcon stroke={"#4F4F4F"} />
-                        </div>
-                    </li>
-                    <li onClick={onLogout}>
-                        <button className="text-neutral-500 font-medium cursor-pointer text-sm tracking-[0.03em]">{language.buttons?.logout}</button>
-                    </li>
-                </React.Fragment>
-            )
+          return (
+            <React.Fragment>
+              <li className="">
+                <div className="rounded-full w-8 h-8 inline-grid place-items-center bell-background cursor-not-allowed">
+                  <BellIcon stroke={"#4F4F4F"} />
+                </div>
+              </li>
+              <li
+                onClick={() => {
+                  setIsProfileOpen(!isProfileOpen);
+                }}
+              >
+                <button className="text-neutral-500 font-medium cursor-pointer text-sm tracking-[0.03em] flex items-center">
+                  {metadata?.profile?.logo ? (
+                    <img
+                      className="w-10 h-10 rounded-full shadow-lg"
+                      src={metadata?.profile?.logo}
+                    />
+                  ) : (
+                    <div className="text-white justify-center items-center flex w-10 h-10 rounded-full shadow-lg bg-[#155E75]">
+                      {metadata?.name?.slice(0, 2)}
+                    </div>
+                  )}{" "}
+                </button>
+                <ProfileDropDown
+                  isProfileOpen={isProfileOpen}
+                  setIsProfileOpen={setIsProfileOpen}
+                  onLogout={onLogout}
+                />
+              </li>
+            </React.Fragment>
+          );
         } else {
-            return (
+          return (
+            <React.Fragment>
+              {authToken ? (
+                <li
+                  onClick={() => {
+                    setIsProfileOpen(!isProfileOpen);
+                  }}
+                >
+                  <button className="text-neutral-500 font-medium cursor-pointer text-sm tracking-[0.03em] flex items-center">
+                    <img
+                      className="w-10 h-10 rounded-full shadow-lg"
+                      src={metadata?.profile?.logo}
+                    />
+                  </button>
+                  <ProfileDropDown
+                    isProfileOpen={isProfileOpen}
+                    setIsProfileOpen={setIsProfileOpen}
+                    onLogout={onLogout}
+                  />
+                </li>
+              ) : (
                 <React.Fragment>
-                    {authToken ? (
-                        <li onClick={onLogout}>
-                            <button className="text-neutral-500 font-medium cursor-pointer text-sm tracking-[0.03em]">{language?.buttons?.logout}</button>
-                        </li>
-                    ) : (
-                        <React.Fragment>
-                            <li onClick={() => navigate(RoutesEnums.LOGIN)}>
-                                <button className="text-neutral-500 cursor-pointer text-sm tracking-[0.03em]">{language?.buttons?.signin}</button>
-                            </li>
-                            <li onClick={() => navigate(RoutesEnums.SIGNUP, { state: KanzRoles.INVESTOR })}>
-                                <button className="text-white text-sm tracking-[0.03em] bg-cyan-800 rounded-md focus:outline-none focus:shadow-outline w-full h-[38px] px-3">{language?.buttons?.getStart}</button>
-                            </li>
-                        </React.Fragment>
-                    )}
-
+                  <li onClick={() => navigate(RoutesEnums.LOGIN)}>
+                    <button className="text-neutral-500 cursor-pointer text-sm tracking-[0.03em]">
+                      {language?.buttons?.signin}
+                    </button>
+                  </li>
+                  <li
+                    onClick={() =>
+                      navigate(RoutesEnums.SIGNUP, {
+                        state: KanzRoles.INVESTOR,
+                      })
+                    }
+                  >
+                    <button className="text-white text-sm tracking-[0.03em] bg-cyan-800 rounded-md focus:outline-none focus:shadow-outline w-full h-[38px] px-3">
+                      {language?.buttons?.getStart}
+                    </button>
+                  </li>
                 </React.Fragment>
-            )
+              )}
+            </React.Fragment>
+          );
         }
     };
 
@@ -158,9 +207,10 @@ const GeneralHeader = ({ responsive = false, showMenu = false, showLanguageDropd
                                 </div>
                             </li>
                             {authToken ? (
-                                <li onClick={onLogout} className="mr-3">
-                                    <button className="text-neutral-500 font-medium cursor-pointer text-sm tracking-[0.03em]">{language.buttons?.logout}</button>
-                                </li>
+                                          <li onClick={()=>{setIsProfileOpen(!isProfileOpen)}}>
+                                          <button className="text-neutral-500 font-medium cursor-pointer text-sm tracking-[0.03em] flex items-center"><img className="w-10 h-10 rounded-full shadow-lg" src={metadata?.profile?.logo} /></button>
+                                          <ProfileDropDown isProfileOpen={isProfileOpen} setIsProfileOpen={setIsProfileOpen} onLogout={onLogout}/>
+                                      </li>
                             ) : (
                                 <li onClick={() => navigate(RoutesEnums.SIGNUP, { state: KanzRoles.INVESTOR })}>
                                     <button className="text-white text-sm tracking-[0.03em] bg-cyan-800 rounded-md focus:outline-none focus:shadow-outline w-full h-[38px] px-3">{language?.buttons?.getStart}</button>
