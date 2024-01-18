@@ -13,6 +13,7 @@ const ReviewDeal = ({
   metadata,
   language,
   showDeal,
+  setStep
 }: any) => {
   const [loading, setLoading] = useState(false);
   const [data, setData]: any = useState();
@@ -46,8 +47,8 @@ const ReviewDeal = ({
   const showUI = (field: any) => {
     return (
       <div
-        className="pb-3 w-full cursor-pointer inline-flex w-full justify-between"
-        onClick={() => navigate(`${RoutesEnums.CREATE_DEAL}/1`)}
+        className="pb-3 w-full cursor-pointer inline-flex justify-between"
+        onClick={() => setStep(1)}
       >
         <h3 className="capitalize text-neutral-900 font-medium text-sm">
           {field?.statement}
@@ -95,7 +96,7 @@ const ReviewDeal = ({
           return (
             <div
               className="pb-3 w-full cursor-pointer inline-flex flex-col"
-              onClick={() => navigate(`${RoutesEnums.CREATE_DEAL}/1`)}
+              onClick={() => setStep(1)}
             >
               <h3 className="capitalize text-neutral-900 font-medium text-sm">
                 {nz?.fields[1]?.value}
@@ -134,10 +135,7 @@ const ReviewDeal = ({
                     className={`w-full cursor-pointer hover:underline border-b-[1px] border-b-neutral-200 ${
                       index !== 0 ? "py-4" : "pb-4"
                     }`}
-                    onClick={() =>
-                      navigate(`${RoutesEnums.CREATE_DEAL}/${index + 1}`)
-                    }
-                  >
+                    onClick={() =>setStep(index + 1)}>
                     <h2 className="text-cc-black font-semibold text-2xl hover:text-[#155E75] capitalize mb-3">
                       {step?.title}
                     </h2>

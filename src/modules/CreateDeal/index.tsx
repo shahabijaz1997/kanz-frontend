@@ -1173,6 +1173,7 @@ const CreateDeal = () => {
       else
         return (
           <ReviewDeal
+            setStep= {setStep}
             language={language}
             dealId={dataHolder}
             metadata={metadata}
@@ -1350,6 +1351,7 @@ const CreateDeal = () => {
                 !dealData[step - 1] ||
                 !dealData[step - 1][event]?.sections.length ? (
                   <ReviewDeal
+                    setStep= {setStep}
                     language={language}
                     navigate={navigate}
                     dealId={dataHolder}
@@ -1644,6 +1646,7 @@ const CreateDeal = () => {
                               )
                             ) : (
                               <ReviewDeal
+                                setStep= {setStep}
                                 language={language}
                                 dealId={dataHolder}
                                 metadata={metadata}
