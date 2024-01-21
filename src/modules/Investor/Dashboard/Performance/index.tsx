@@ -11,7 +11,7 @@ import Investments from "./Investments";
 
 const Performance = ({changeTabtoInsights, changeTabtoActivity}: any) :any => {
 
-
+    
     const routeInsights = () => {
       changeTabtoInsights(); 
     };

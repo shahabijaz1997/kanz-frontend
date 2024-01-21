@@ -16,22 +16,13 @@ import { RootState } from "../../redux-toolkit/store/store";
 
 
 const Investor = ({}: any) => {
-  const params = useParams();
-  const navigate = useNavigate();
-  const dispatch = useDispatch();
-
   const language: any = useSelector((state: RootState) => state.language.value);
-
-
-
-
   const tabs = [
     { id: 1, title: language?.v3?.investor?.performance },
     { id: 2, title: language?.v3?.investor?.activity },
     { id: 3, title: language?.v3?.investor?.insights },
     
   ];
-  const [tabSelector, settabSelector]: any = useState(0);
 
   const changeTabtoInsights = () => {
     setSelected(tabs[2])
@@ -39,8 +30,6 @@ const Investor = ({}: any) => {
   const changeTabtoActivity = () => {
     setSelected(tabs[1])
   };
-
-
 
   const [selected, setSelected]: any = useState(tabs[0]);
   const [loading, setLoading]: any = useState(false);

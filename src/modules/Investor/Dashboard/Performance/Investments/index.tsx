@@ -13,6 +13,8 @@ import {
 } from "../../../../../utils/object.utils";
 import Spinner from "../../../../../shared/components/Spinner";
 import CustomStatus from "../../../../../shared/components/CustomStatus";
+import { getInvestorAnalyticsInvestments } from "../../../../../apis/investor.api";
+import MultipleDecider from "./MultipleDecider";
 
 const Investments = ({}: any) => {
   const navigate = useNavigate();
@@ -70,45 +72,28 @@ const Investments = ({}: any) => {
   const getAllDeals = async () => {
     try {
       setLoading(true);
-      let { status, data } = await getLiveDeals(authToken, selectedTab," ", currentPage);
+      let { status, data } = await getInvestorAnalyticsInvestments(authToken, "" , 1 , "");
       if (status === 200) {
         setPaginationData(data?.status?.data?.pagy)
         setFilterCounts(data?.status?.data?.stats)
-        let deals = data?.status?.data?.deals?.map((deal: any) => {
+        let deals = data?.status?.data?.records?.map((deal: any) => {
           return {
             id: deal?.id,
             filterStatus: deal?.status,
             [language?.v3?.syndicate?.deals?.table?.title]:
-              deal?.title || "N/A",
+              deal?.deal_title || "N/A",
             [language?.v3?.syndicate?.deals?.table?.category]: (
-              <span className="capitalize">{deal?.deal_type}</span>
+              <span className="capitalize">{deal?.deal_category}</span>
             ),
             ["Status"]:
-              <CustomStatus options={deal?.status} /> || "N/A",
+              <CustomStatus options={deal?.deal_status} /> || "N/A",
             ["Invest Date"]:
-              <span className="px-2">{(deal?.end_at)}</span>|| " N/A",
-            ["Invested"]:`$${numberFormatter(Number(deal?.raised))}`,  
+              <span className="px-2">{(deal?.investment_date)}</span>|| " N/A",
+            ["Invested"]:`$${numberFormatter(Number(deal?.invested_amount))}`,  
             [language?.v3?.syndicate?.deals?.table
               ?.target]: `$${numberFormatter(Number(deal?.target))}`,
-            ["Net Value"]: `$${numberFormatter(Number(deal?.target))}`,
-            ["Multiple"]: `$${numberFormatter(Number(deal?.target))}`,
-
-            Steps: deal?.current_state?.steps,
-            [""]: (
-              <div
-                onClick={(e) => {
-                  e.preventDefault();
-                  e.stopPropagation();
-                  navigate(
-                    `${RoutesEnums.SYNDICATE_DEAL_DETAIL}/${deal?.token}`,
-                    { state: window.location.pathname }
-                  );
-                }}
-                className="bg-neutral-100 inline-flex items-center justify-center w-[30px] h-[30px] rounded-full transition-all hover:bg-cbc-transparent"
-              >
-             
-              </div>
-            ),
+            ["Net Value"]: `$${numberFormatter(Number(deal?.net_value))}`,
+            ["Multiple"]: <MultipleDecider multiple={deal?.multiple} />,
           };
         });
 
