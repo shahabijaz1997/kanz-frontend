@@ -15,13 +15,12 @@ import Spinner from "../../../../../shared/components/Spinner";
 import CustomStatus from "../../../../../shared/components/CustomStatus";
 import { getInvestorAnalyticsInvestments } from "../../../../../apis/investor.api";
 import MultipleDecider from "./MultipleDecider";
+import Search from "../../../../../shared/components/Search";
 
 const Investments = ({}: any) => {
-  const navigate = useNavigate();
   const dispatch = useDispatch();
   const language: any = useSelector((state: RootState) => state.language.value);    
   const authToken: any = useSelector((state: RootState) => state.auth.value);
-  const user: any = useSelector((state: RootState) => state.user.value);
 
   const columns = [
     language?.v3?.syndicate?.deals?.table?.title,
@@ -39,40 +38,27 @@ const Investments = ({}: any) => {
   const [loading, setLoading] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [filter, setFilterCounts]:any = useState([]);
-  const [tabs] = useState([
-    "All",
-    "Startup",
-    "Property",
-  ]);
+  const [tabs] = useState<any>({
+    'all': language?.v3?.startup?.overview?.all,
+    'startup': language?.v3?.fundraiser?.startup,
+    'property': language?.v3?.fundraiser?.property,
+  });
+  const [searchQuery, setSearchQuery]: any = useState("");
   const getCountvalue = ( value:string ) =>
   { 
-    let count = 0 ;
-    switch (value) {
-      case  "All" : 
-      count = filter?.all
-      break
-      case  "Property" : 
-      count = filter?.property
-      break
-      case  "Startup" : 
-      count = filter?.startup
-      break
-    } 
-
-    return count
-    
+    return filter[value] || 0
   }
   const [deals, setDeals] = useState([]);
 
   useEffect(() => {
     dispatch(saveDataHolder(""));
-    getAllDeals();
+    getAllDeals(searchQuery);
   }, [selectedTab]);
 
-  const getAllDeals = async () => {
+  const getAllDeals = async (queryString:string) => {
     try {
       setLoading(true);
-      let { status, data } = await getInvestorAnalyticsInvestments(authToken, "" , 1 , "");
+      let { status, data } = await getInvestorAnalyticsInvestments(authToken, queryString , currentPage , selectedTab);
       if (status === 200) {
         setPaginationData(data?.status?.data?.pagy)
         setFilterCounts(data?.status?.data?.stats)
@@ -125,35 +111,25 @@ const Investments = ({}: any) => {
                     {"Investments"}
                   </h1>
 
-                  <span className="w-full flex items-center gap-5 mt-2">
-                    <div className="rounded-md shadow-cs-6 bg-white border-[1px] border-gray-200 h-9 overflow-hidden max-w-[310px] inline-flex items-center px-2">
-                      <SearchIcon />
-                      <input
-                        type="search"
-                        className="h-full w-full outline-none pl-2 pr-[6.5rem] text-sm font-normal text-gray-400"
-                        placeholder={language?.v3?.common?.search}
-                      />
-                    </div>
-
-                    <ul className="inline-flex items-center">
-                      {React.Children.toArray(
-                        tabs.map((tab:any) => (
-                          <li
-                            onClick={() => {
-                              
-                              setSelectedTab(tab)}}
-                            className={`py-2 px-3 font-medium cursor-pointer rounded-md transition-all ${
-                              selectedTab === tab
-                                ? "text-neutral-900 bg-neutral-100"
-                                : "text-gray-500"
-                            } `}
-                          >
-                            {tab} &nbsp;({getCountvalue(tab)})
-                          </li>
-                        ))
-                      )}
-                    </ul>
-                  </span>
+                 <span className="w-full flex items-center gap-5">
+        <Search apiFunction={getAllDeals} searchQuery={searchQuery} setSearchQuery={setSearchQuery}/>
+          <ul className="inline-flex items-center">
+            {React.Children.toArray(
+               Object.keys(tabs).map((tab: any) => (
+                <li
+                  onClick={() => setSelectedTab(tab)}
+                  className={`py-2 px-3 font-medium cursor-pointer rounded-md transition-all ${
+                    selectedTab === tab
+                      ? "text-neutral-900 bg-neutral-100"
+                      : "text-gray-500"
+                  } `}
+                >
+                 {tabs[tab]} &nbsp;({getCountvalue(tab)})
+                </li>
+              ))
+            )}
+          </ul>
+        </span>
                 </div>
               </section>
 

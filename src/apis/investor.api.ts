@@ -112,6 +112,10 @@ export const getInvestor = (investorID:any, token: string) => {
 };
 export const getInvestorAnalyticsInvestments = (token: string, searchQuery:string, currentPage:number, filters:any) => {
   const queryParameters = new URLSearchParams();
+  queryParameters.append("page", currentPage.toString())
+  if (filters !== "all"){
+    queryParameters.append("deal_type", filters.toLowerCase());    
+  }
   if (searchQuery.trim() !== "") {
     queryParameters.append("search", searchQuery);
   }

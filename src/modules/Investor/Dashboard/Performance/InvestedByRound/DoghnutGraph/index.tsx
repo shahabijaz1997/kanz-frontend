@@ -7,8 +7,6 @@ import { Chart } from 'chart.js/auto';
 
 const DoghnutGraph = (props: any) :any => {
     const chartRef = useRef<HTMLCanvasElement>(null);
-    console.log("Props data", props.data)
-
     useEffect(() => {
       if (chartRef.current) {
         const ctx = chartRef.current.getContext('2d');
@@ -21,11 +19,8 @@ const DoghnutGraph = (props: any) :any => {
             type: 'doughnut',
             data: {
               datasets: [{
-                data: [props?.data],
-                backgroundColor: [
-                  '#0D485B',
-                  '#9FC6D2',
-                ],
+                data: props?.data,
+                backgroundColor: props?.backgroundColor,
                 borderWidth: 0,
               }],
             },
