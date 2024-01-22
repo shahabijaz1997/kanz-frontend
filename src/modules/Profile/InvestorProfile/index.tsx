@@ -100,12 +100,8 @@ const InvestorProfile = ({setPhotoUploadModal}:any) => {
             />
           </span>
         </div>
-        <span className="rounded-lg border-[1px] h-[80%] overflow-hidden border-neutral-200 w-[30%] flex flex-col">
-          <p className="bg-white p-[0.5rem] text-lg inline-flex items-center justify-start">
-            {" "}
-            <span className="text-xs font-medium">Profile Image</span>
-          </p>
-          <div className="w-full flex bg-white items-center justify-center p-3">
+        <span>
+          <div>
             <div className="relative ">
               <img
                 className="w-48 h-48 rounded-full bg-slate-100 border-[1px] shadow-lg"
@@ -116,8 +112,8 @@ const InvestorProfile = ({setPhotoUploadModal}:any) => {
                 src="https://images.unsplash.com/photo-1556157382-97eda2d62296?q=80&w=3870&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
                 alt=""
               />
-              <span onClick={() => {setPhotoUploadModal(true)}} className="bottom-0 left-7 absolute cursor-pointer w-9 h-9 border-2 hover:bg-slate-100 border-white bg-white dark:border-gray-800 rounded-full flex items-center justify-center">
-                <EditIcon className="w-6 h-6" stroke={"#000"} />
+              <span onClick={() => {setPhotoUploadModal(true)}} className="bottom-0 left-9 absolute cursor-pointer w-6 h-6 hover:bg-slate-100 bg-white rounded-full flex items-center justify-center">
+                <EditIcon className="w-4 h-4" stroke="#000" />
               </span>
             </div>
           </div>
