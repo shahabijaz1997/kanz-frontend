@@ -105,7 +105,7 @@ const InvestedByRound = ({ routeInsights }: any): any => {
           </div>
 
           <aside className="p-2 w-48 ">
-            <DoghnutGraph seedAngel={seedAngel} preSeed={preSeed} mezzanineBridge={mezzanineBridge} seriesA={seriesA} seriesB={seriesB}  />
+            <DoghnutGraph data={[mezzanineBridge,preSeed,seedAngel,seriesA,seriesB, seriesC, seriesD ]} backgroundColor={[ '#204646','#0D485B', '#155E75', '#4D8697', '#9FC6D2', , '#E1EFF3']} />
           </aside>
         </aside>
       )}
