@@ -46,6 +46,9 @@ const Profile = () => {
       />
     ) : metadata?.type === KanzRoles.SYNDICATE ? (
       <SyndicateProfile
+        getDetail={getDetail}
+        setLoading={setLoading}
+        data={profile}
         setPhotoUploadModal={setPhotoUploadModal}
       />
     ) : metadata?.type === KanzRoles.FUNDRAISER ? (

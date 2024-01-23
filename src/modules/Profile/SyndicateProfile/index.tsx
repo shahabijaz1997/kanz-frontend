@@ -1,125 +1,253 @@
-import { useState } from "react";
-import EditIcon from "../../../ts-icons/editIcon.svg"
+import { useEffect, useRef, useState } from "react";
+import EditIcon from "../../../ts-icons/editIcon.svg";
+import InputProfile from "../InputProfile";
+import Button from "../../../shared/components/Button";
+import { toast } from "react-toastify";
+import { toastUtil } from "../../../utils/toast.utils";
+import { updateProfile } from "../../../apis/investor.api";
+import { RootState } from "../../../redux-toolkit/store/store";
+import { useSelector } from "react-redux";
+import { getAllIndustries } from "../../../apis/bootstrap.api";
+import SearchedItems from "../../../shared/components/SearchedItems";
+import Chevrond from "../../../ts-icons/chevrond.svg";
+import React from "react";
+import CrossIcon from "../../../ts-icons/crossIcon.svg";
 
-const SyndicateProfile = ({setPhotoUploadModal}:any) => {
-    const profileInfo = {
-        "name": "John Doe",
-        "email": "john.doe@example.com",
-        "investorType": "Individual",
-        "nationality": "US",
-        "residence": "US",
-        "address": "123 Main Street, Anytown, CA 12345"
-      }
-      const [focusedInput, setFocusedInput] = useState(null);
-      const handleFocus = (inputName: any) => {
-        setFocusedInput(inputName);
+const SyndciateProfile = ({
+  setLoading,
+  getDetail,
+  file,
+  data,
+  setPhotoUploadModal,
+}: any) => {
+  const authToken: any = useSelector((state: RootState) => state.auth.value);
+  const [searchResults, setSearchResults]: any = useState([]);
+  const [name, setName] = useState(data?.name);
+  const [website, setWebsite] = useState(data?.profile?.profile_link);
+  const [address, setAddress] = useState(data?.profile?.address);
+  const [tagline, setTagline] = useState(data?.profile?.tagline);
+  const [search, setSearch] = useState(data?.profile?.industries?.join(", "));
+  const event: any = useSelector((state: RootState) => state.event.value);
+  const orientation: any = useSelector(
+    (state: RootState) => state.orientation.value
+  );
+  const [payload, setPayload]: any = useState({
+    market: [],
+  });
+  const onSetPayload = (data: any, type: string) => {
+    setPayload((prev: any) => {
+      return { ...prev, [type]: data };
+    });
+  };
+  const refInd: any = useRef(null);
+
+  const updateInfo = async (payload: any) => {
+    try {
+      let sentPayload = {
+        profile: {
+          website: website,
+          address: address,
+          industry_ids: payload?.market,
+          fund_raiser_attributes: {
+            name: name,
+          },
+        },
       };
-    return (
-        <section className="inline-flex justify-center w-full">
-        <div className="flex flex-col gap-8 w-[50%]">
-          <span
-            className={`rounded-lg border-[1px] overflow-hidden w-[60%]  ${focusedInput === "input1"
-            ? "border-[1px] border-[#155E75]" 
-            :"border-[1px] border-#E0E0E0"} inline-flex`}
-          >
-            <p className="bg-white p-[0.5rem] text-xs font-medium ">Name</p>
-            <input
-              onFocus={() => handleFocus("input1")}
-              className="px-2 w-full text-[10px]"
-              type="text"
-            />
-          </span>
-          <span className={`rounded-lg border-[1px] overflow-hidden w-[60%]  ${focusedInput === "input2"
-            ? "border-[1px] border-[#155E75]" 
-            :"border-[1px] border-#E0E0E0"} inline-flex`}>
-            <p className="bg-white p-[0.5rem] text-xs font-medium ">
-              Email
+      let { status, data } = await updateProfile(authToken, sentPayload);
+      if (status === 200) {
+        toast.success("Profile Updated", toastUtil);
+      }
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setLoading(false);
+      getDetail();
+    }
+  };
+  const [showData, setShowData] = useState(false);
+
+  useEffect(() => {
+    bootstrapData();
+  }, []);
+
+  const bootstrapData = async () => {
+    try {
+      let { status, data } = await getAllIndustries(authToken);
+      if (status === 200) {
+        setSearchResults(data.status.data);
+      }
+    } catch (error) {
+      console.error("Error in industries: ", error);
+    }
+  };
+  const filteredData: any = [];
+  if (searchResults.length > 0 && payload?.market) {
+    searchResults?.filter((item: any) => {
+      payload?.market?.map((market: any) => {
+        if (market === item.id) {
+          filteredData.push(item);
+        }
+      });
+    });
+  }
+
+  return (
+    <section className="inline-flex justify-start gap-36 w-full max-h-full">
+      <div className="flex flex-col gap-6 w-[40%]">
+        <span className="inline-flex justify-center gap-12 items-center">
+          <InputProfile
+            disabled={false}
+            label={"Name"}
+            value={name}
+            onChange={setName}
+          />
+          {<InputProfile disabled={true} label={"Email"} value={data?.email} />}
+        </span>
+        <span className="inline-flex justify-center gap-12 items-center">
+          <InputProfile
+            disabled={true}
+            label={"Reigon"}
+            value={data?.profile?.regions?.join(", ")}
+          />
+                   <div className="w-[60%] relative" ref={refInd}>
+            <p className="text-xs mb-1 font-medium whitespace-nowrap">
+              {"Markets"}
             </p>
-            <input
-            value={profileInfo?.email}
-              onFocus={() => handleFocus("input2")}
-              disabled
-              className="px-2 text-[10px] w-full cursor-not-allowed"
-              type="text"
-            />
-          </span>
-          <span  className={`rounded-lg border-[1px] overflow-hidden w-[60%]  ${focusedInput === "input3"
-            ? "border-[1px] border-[#155E75]" 
-            :"border-[1px] border-#E0E0E0"} inline-flex`}>
-            <p className="bg-white p-[0.5rem] text-xs font-medium whitespace-nowrap">
-              Investor Type
-            </p>
-            <input
-            value={profileInfo?.investorType}
-            disabled
-              onFocus={() => handleFocus("input3")}
-              className="px-2 text-[10px] w-full  cursor-not-allowed"
-              type="text"
-            />
-          </span>
-          <span className={`rounded-lg border-[1px] overflow-hidden w-[60%]  ${focusedInput === "input4"
-            ? "border-[1px] border-[#155E75]" 
-            :"border-[1px] border-#E0E0E0"} inline-flex`}>
-            <p className="bg-white p-[0.5rem] text-xs font-medium ">
-              Nationality
-            </p>
-            <input
-            disabled
-            value={profileInfo?.nationality}
-              onFocus={() => handleFocus("input4")}
-              className="px-2 text-[10px] w-full"
-              type="text"
-            />
-          </span>
-          <span className={`rounded-lg border-[1px] overflow-hidden w-[60%]  ${focusedInput === "input5"
-            ? "border-[1px] border-[#155E75]" 
-            :"border-[1px] border-#E0E0E0"} inline-flex`}>
-            <p className="bg-white p-[0.5rem] text-xs font-medium ">
-              Residence
-            </p>
-            <input
-            disabled
-            value={profileInfo?.residence}
-              onFocus={() => handleFocus("input5")}
-              className="px-2 w-full text-[10px]"
-              type="text"
-            />
-          </span>
-          <span className={`rounded-lg border-[1px] overflow-hidden w-[60%]  ${focusedInput === "input6"
-            ? "border-[1px] border-[#155E75]" 
-            :"border-[1px] border-#E0E0E0"} inline-flex`}>
-            <p className="bg-white p-[0.5rem] text-xs font-medium ">
-              Address
-            </p>
-            <input
-            disabled
-            value={profileInfo?.address}
-              onFocus={() => handleFocus("input6")}
-              className="px-2 w-full text-[10px]"
-              type="text"
-            />
-          </span>
-        </div>
-        <span>
-          <div>
-            <div className="relative ">
-              <img
-                className="w-48 h-48 rounded-full bg-slate-100 border-[1px] shadow-lg"
-                style={{
-                  objectFit: "cover",
-                  aspectRatio: "1",
+            <span className="relative">
+              <input
+                id="market"
+                autoComplete="off"
+                value={search}
+                onChange={(e) => {
+                  setSearch(e.target.value);
                 }}
-                src="https://images.unsplash.com/photo-1556157382-97eda2d62296?q=80&w=3870&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-                alt=""
+                onClick={() => setShowData(!showData)}
+                className=" text-[10px] px-2 py-1.5 w-full border-[1px] focus:border-[#155E75] rounded-md bg-white"
+                type="text"
               />
-              <span onClick={() => {setPhotoUploadModal(true)}} className="bottom-0 left-9 absolute cursor-pointer w-6 h-6 hover:bg-slate-100 bg-white rounded-full flex items-center justify-center">
-                <EditIcon className="w-4 h-4" stroke="#000" />
+              <span
+                className={`absolute top-[6px] flex items-center pr-2 pointer-events-none ${
+                  orientation === "rtl" ? "left-1" : "right-0"
+                }`}
+                style={{ zIndex: 99 }}
+              >
+                <Chevrond className="w-3 h-3" stroke="#737373" />
               </span>
+            </span>
+            <div className="absolute top-[53px] left-0 ">
+              {payload?.market && payload?.market?.length > 0 && (
+                <aside className="inline-flex gap-2 flex-wrap  shadow-sm appearance-none border bg-white border-neutral-300 rounded-md w-full py-1 px-2 text-gray-500 leading-tight focus:outline-none focus:shadow-outline">
+                  {React.Children.toArray(
+                    filteredData.map((ind: any) => (
+                      <div className="check-background rounded-[4px] p-1 text-[7px] inline-flex items-center">
+                        <span>{ind[event]?.name}</span>
+                        <CrossIcon
+                          onClick={() => {
+                            let payloadItems = filteredData.filter(
+                              (x: any) => x.id !== ind.id
+                            );
+                            onSetPayload(
+                              payloadItems.map((item: any) => item.id),
+                              "market"
+                            );
+                          }}
+                          className="cursor-pointer h-2 w-2 ml-1"
+                          stroke={"#828282"}
+                        />
+                      </div>
+                    ))
+                  )}
+                </aside>
+              )}
+              {showData && (
+                <SearchedItems
+                  items={searchResults}
+                  searchString={search}
+                  passItemSelected={(it: any) => {
+                    let payloadItems = [...payload.market];
+                    payloadItems.push(it.id);
+                    onSetPayload(Array.from(new Set(payloadItems)), "market");
+                  }}
+                  className={
+                    "cursor-pointer rounded-md py-1 px-1 bg-cbc-check text-neutral-700 font-normal text-[7px] hover:bg-cbc-check-hover transition-all"
+                  }
+                  parentClass={
+                    "flex rounded-md border-[1px] flex-wrap gap-2 bg-white p-2 max-h-[200px] overflow-y-auto"
+                  }
+                />
+              )}
             </div>
           </div>
         </span>
-      </section>
-    )
-}
+        <span className="inline-flex justify-start  font-medium items-center">
+          Syndicate Details
+        </span>
+        <span className="flex-col flex">
+          <img
+            className="h-36 w-28"
+            style={{
+              objectFit: "cover",
+              aspectRatio: "1",
+            }}
+            src={data?.profile?.logo}
+            alt=""
+          />
+        </span>
+        <span className="inline-flex justify-center gap-12 items-center">
+          <InputProfile
+            disabled={false}
+            label={"Profile Link"}
+            value={website}
+            onChange={setWebsite}
+          />
+          <InputProfile
+            disabled={false}
+            label={"Tagline"}
+            value={tagline}
+            onChange={setTagline}
+          />
+        </span>
+        <span className="flex mt-1 items-center justify-start">
+          <Button
+            onClick={() => {
+              setLoading(true);
+              updateInfo(payload);
+            }}
+            className="!p-2 !text-xs !font-medium"
+            type="primary"
+          >
+            Update
+          </Button>
+        </span>
+      </div>
+      <span>
+        <div>
+          <div className="relative ">
+            <img
+              className="w-48 h-48 rounded-full bg-slate-100 border-[1px] shadow-lg"
+              style={{
+                objectFit: "cover",
+                aspectRatio: "1",
+              }}
+              src={
+                data?.profile_picture_url ||
+                "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"
+              }
+              alt=""
+            />
+            <span
+              onClick={() => {
+                setPhotoUploadModal(true);
+              }}
+              className="bottom-0 left-9 absolute cursor-pointer w-6 h-6 hover:bg-slate-100 bg-white rounded-full flex items-center justify-center"
+            >
+              <EditIcon className="w-5 h-5" stroke="#000" />
+            </span>
+          </div>
+        </div>
+      </span>
+    </section>
+  );
+};
 
-export default SyndicateProfile
+export default SyndciateProfile;

@@ -16,9 +16,8 @@ const InvestorProfile = ({ getDetail, setLoading, data, setPhotoUploadModal }: a
     try {
       setLoading(true);
       let payload: any = {
-      user:{
+      investor_attributes:{
         "name": name, 
-        profile_pic:"https://images.unsplash.com/photo-1556157382-97eda2d62296?q=80&w=3870&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
       }
       };
       let { status, data } = await updateProfile(authToken, payload);
@@ -98,7 +97,10 @@ const InvestorProfile = ({ getDetail, setLoading, data, setPhotoUploadModal }: a
                 objectFit: "cover",
                 aspectRatio: "1",
               }}
-              src="https://images.unsplash.com/photo-1556157382-97eda2d62296?q=80&w=3870&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+              src={
+                data?.profile_picture_url ||
+                "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"
+              }
               alt=""
             />
             <span
