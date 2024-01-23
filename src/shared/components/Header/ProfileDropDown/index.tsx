@@ -12,23 +12,19 @@ const ProfileDropDown = ({
   return (
     isProfileOpen && (
       <section
-        className={`absolute z-[1] top-[3.75rem] right-8 bg-white border-[1px] border-neutral-200 rounded-md w-[120px]`}
+        className={`absolute z-[1] top-[3.25rem] right-8 bg-white border-[1px] border-neutral-200 rounded-md w-[100px]`}
       >
         <div className="items-center justify-center flex flex-col py-1 cursor-pointer">
-          <span onClick={()=> navigate(RoutesEnums.PROFILE)} className=" w-full flex items-center justify-center gap-3 p-1 hover:bg-slate-100">
-            <span className="flex items-center justify-center">
-              <ProfileDropDownIcon />
-            </span>
-            <span className="flex items-center justify-center ">Profile</span>
+          <span onClick={()=> navigate(RoutesEnums.PROFILE)} className="w-full flex items-center gap-2 px-3 py-1 hover:bg-slate-100">
+            <ProfileDropDownIcon />
+            <span className="text-xs">Profile</span>
           </span>
           <span
             onClick={onLogout}
-            className=" w-full flex items-center justify-center p-1 gap-3 cursor-pointer  hover:bg-slate-100"
+            className="w-full flex items-center px-3 py-1 gap-2 cursor-pointer hover:bg-slate-100"
           >
-            <span className="flex items-center justify-center">
-           <LogoutDropDownIcon />
-            </span>
-            <span className="flex items-center justify-center ">Logout</span>
+            <LogoutDropDownIcon />
+            <span className="text-xs">Logout</span>
           </span>
         </div>
       </section>
