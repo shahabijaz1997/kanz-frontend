@@ -12,17 +12,19 @@ import SearchedItems from "../../../shared/components/SearchedItems";
 import Chevrond from "../../../ts-icons/chevrond.svg";
 import React from "react";
 import CrossIcon from "../../../ts-icons/crossIcon.svg";
+import { jsonToFormData } from "../../../utils/files.utils";
 
 const FundRaiserProfile = ({
   setLoading,
   getDetail,
+  file,
   data,
   setPhotoUploadModal,
 }: any) => {
   const authToken: any = useSelector((state: RootState) => state.auth.value);
   const [searchResults, setSearchResults]: any = useState([]);
   const [name, setName] = useState(data?.name);
-  const [comapnyName, setCompanyName] = useState(data?.profile?.company_name);
+  const [companyName, setCompanyName] = useState(data?.profile?.company_name);
   const [legalName, setLegalname] = useState(data?.profile?.legal_name);
   const [website, setWebsite] = useState(data?.profile?.website);
   const [description, setDescription] = useState(data?.profile?.description);
@@ -47,15 +49,20 @@ const FundRaiserProfile = ({
   const updateInfo = async (payload: any) => {
     try {
       let sentPayload = {
-        user: {
-          name: name,
-          profile_picture: null,
-          profile_attributes: {
+          profile:{
+            company_name: companyName,
+            legal_name: legalName,
+            website: website,
+            address: address,
+            description: description,
+            ceo_name: ceoName,
+            ceo_email: ceoEmail,
             industry_ids: payload?.market,
-          },
-        },
+            fund_raiser_attributes:{
+              name: name
+            }
+          }
       };
-
       let { status, data } = await updateProfile(authToken, sentPayload);
       if (status === 200) {
         toast.success("Profile Updated", toastUtil);
@@ -137,7 +144,7 @@ const FundRaiserProfile = ({
             <InputProfile
               disabled={false}
               label={"Company Name"}
-              value={comapnyName}
+              value={companyName}
               onChange={setCompanyName}
             />
           }
@@ -224,7 +231,7 @@ const FundRaiserProfile = ({
                     className={
                       "cursor-pointer rounded-md py-1 px-1 bg-cbc-check text-neutral-700 font-normal text-[7px] hover:bg-cbc-check-hover transition-all"
                     }
-                    parentClass={"flex rounded-md border-[1px] flex-wrap gap-2 bg-white p-2 max-h-[350px] overflow-y-auto"}
+                    parentClass={"flex rounded-md border-[1px] flex-wrap gap-2 bg-white p-2 max-h-[200px] overflow-y-auto"}
                   />
                 )}
               </div>
@@ -277,6 +284,7 @@ const FundRaiserProfile = ({
         <span className="flex mt-1 items-center justify-start">
           <Button
             onClick={() => {
+              setLoading(true)
               updateInfo(payload);
             }}
             className="!p-2 !text-xs !font-medium"
@@ -295,7 +303,7 @@ const FundRaiserProfile = ({
                 objectFit: "cover",
                 aspectRatio: "1",
               }}
-              src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=3276&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+              src={data?.profile_picture_url || "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"}
               alt=""
             />
             <span

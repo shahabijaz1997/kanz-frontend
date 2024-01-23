@@ -53,3 +53,28 @@ export const formatFileSize = (size: number): string => {
 export const validTypes = ['image/jpeg', 'image/png', 'application/pdf'];
 export const validImages = ['image/jpeg', 'image/png'];
 export const validVideos = ['video/webm', 'video/mp4'];
+
+export function jsonToFormData(json:any) {
+    const formData = new FormData();
+  
+    const flattenObject = (obj:any, parentKey = '') => {
+      for (let key in obj) {
+        if (obj.hasOwnProperty(key)) {
+          const newKey = parentKey ? `${parentKey}[${key}]` : key;
+          if (typeof obj[key] === 'object' && obj[key] !== null) {
+            if (obj[key] instanceof File) {
+              formData.append(newKey, obj[key], obj[key].name);
+            } else {
+              flattenObject(obj[key], newKey);
+            }
+          } else {
+            formData.append(newKey, obj[key]);
+          }
+        }
+      }
+    };
+  
+    flattenObject(json);
+  
+    return formData;
+  }

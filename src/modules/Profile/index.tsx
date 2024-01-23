@@ -9,11 +9,6 @@ import SyndicateProfile from "./SyndicateProfile";
 import FundraiserProfile from "./FundraiserProfile";
 import Modal from "../../shared/components/Modal";
 import EditPhotoModal from "./EditPhotoModal";
-import { fileSize } from "../../utils/files.utils";
-import { toast } from "react-toastify";
-import { toastUtil } from "../../utils/toast.utils";
-import { FileType } from "../../enums/types.enum";
-import Button from "../../shared/components/Button";
 import { getProfile } from "../../apis/investor.api";
 import Spinner from "../../shared/components/Spinner";
 
@@ -22,10 +17,8 @@ const Profile = () => {
   const language: any = useSelector((state: RootState) => state.language.value);
   const metadata: any = useSelector((state: RootState) => state.metadata.value);
   const authToken: any = useSelector((state: RootState) => state.auth.value);
-  const [profile, setProfile] = useState();
+  const [profile, setProfile]: any = useState();
   const [photoUploadModal, setPhotoUploadModal] = useState(false);
-  const [files, setFiles]: any = useState();
-
   useEffect(() => {
     getDetail();
   }, []);
@@ -34,79 +27,25 @@ const Profile = () => {
     try {
       setLoading(true);
       let { status, data } = await getProfile(authToken);
-      if (status === 200) setProfile(data?.status?.data);
+      if (status === 200) {
+        setProfile(data?.status?.data);
+      }
     } catch (error) {
     } finally {
       setLoading(false);
     }
   };
-  const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file: any = e.target.files?.[0];
-    if (file) {
-      const fileSizeInMB = fileSize(file.size, "mb");
 
-      if (fileSizeInMB > 10) {
-        toast.error(language?.v3?.fundraiser?.file_size_err, toastUtil);
-        navigator.vibrate(1000);
-        return;
-      }
-
-      const allowedFileTypes = [
-        "image/jpeg",
-        "image/jpg",
-        "image/png",
-        "application/pdf",
-      ];
-      if (!allowedFileTypes.includes(file.type)) {
-        toast.error(language?.v3?.fundraiser?.file_type_err, toastUtil);
-        return;
-      }
-      setFileInformation(file);
-      e.target.value = "";
-    }
-  };
-  const setFileInformation = async (file: File) => {
-    let size = fileSize(file.size, "mb");
-    let type;
-    if (file.type.includes("video")) type = FileType.VIDEO;
-    else if (file.type.includes("image")) {
-      type = FileType.IMAGE;
-      const reader = new FileReader();
-      reader.readAsDataURL(file);
-      reader.onload = () => {
-        const img: any = new Image();
-        img.src = reader.result;
-      };
-    } else {
-      type = FileType.PDF;
-      const reader = new FileReader();
-      reader.readAsDataURL(file);
-    }
-    /* const fileData: any = await handleFileRead(file); */
-    doUploadUtil(file, size, type);
-  };
-
-  const doUploadUtil = (file: any, size: any, type: string) => {
-    setFiles((prev: any) => {
-      return [...prev, { file, size, type, id: prev.length + 1 }];
-    });
-
-    let timer = setTimeout(() => {
-      clearTimeout(timer);
-    }, 1000);
-  };
   const showProfileDetails = () => {
     return metadata?.type === KanzRoles.INVESTOR ? (
       <InvestorProfile
         getDetail={getDetail}
         setLoading={setLoading}
         data={profile}
-        file={files}
         setPhotoUploadModal={setPhotoUploadModal}
       />
     ) : metadata?.type === KanzRoles.SYNDICATE ? (
       <SyndicateProfile
-        file={files}
         setPhotoUploadModal={setPhotoUploadModal}
       />
     ) : metadata?.type === KanzRoles.FUNDRAISER ? (
@@ -114,7 +53,6 @@ const Profile = () => {
         getDetail={getDetail}
         setLoading={setLoading}
         data={profile}
-        file={files}
         setPhotoUploadModal={setPhotoUploadModal}
       />
     ) : (
@@ -122,15 +60,15 @@ const Profile = () => {
     );
   };
 
-
   return (
     <main className="max-h-full">
       <Header />
       <aside className="w-full h-full flex items-start justify-start ">
         <Sidebar type={metadata?.type} />
         <section
-          style={{ 
-            width: "calc(100% - 250px)" }}
+          style={{
+            width: "calc(100% - 250px)",
+          }}
           className="bg-cbc-auth p-[4rem] h-[100vh] relative overflow-y-scroll w-full"
         >
           {loading ? (
@@ -158,10 +96,11 @@ const Profile = () => {
       </aside>
       <Modal show={photoUploadModal ? true : false} className="w-full">
         <EditPhotoModal
+          authToken={authToken}
+          getDetail={getDetail}
+          imageUrl={profile?.profile_picture_url}
           setPhotoUploadModal={setPhotoUploadModal}
-          handleFileUpload={handleFileUpload}
-          files={files}
-          setFiles={setFiles}
+          setLoading={setLoading}
         />
       </Modal>
     </main>

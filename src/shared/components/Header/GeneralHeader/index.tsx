@@ -32,6 +32,8 @@ const GeneralHeader = ({ responsive = false, showMenu = false, showLanguageDropd
     const toggleMenu = () => {
         setIsMenuOpen(!isMenuOpen);
     };
+
+    console.log(metadata?.profile_picture_url)
     
     const onLogout = async () => {
         try {
@@ -82,10 +84,10 @@ const GeneralHeader = ({ responsive = false, showMenu = false, showLanguageDropd
                 }}
               >
                 <button className="text-neutral-500 font-medium cursor-pointer text-sm tracking-[0.03em] flex items-center">
-                  {metadata?.profile?.logo ? (
+                  {metadata?.profile_picture_url ? (
                     <img
                       className="w-8 h-8 rounded-full shadow-lg"
-                      src={metadata?.profile?.logo}
+                      src={metadata?.profile_picture_url}
                     />
                   ) : (
                     <div className="text-white justify-center items-center flex w-8 h-8 rounded-full shadow-lg bg-[#155E75]">
@@ -113,7 +115,7 @@ const GeneralHeader = ({ responsive = false, showMenu = false, showLanguageDropd
                   <button className="text-neutral-500 font-medium cursor-pointer text-sm tracking-[0.03em] flex items-center">
                     <img
                       className="w-10 h-10 rounded-full shadow-lg"
-                      src={metadata?.profile?.logo}
+                      src={metadata?.profile_picture_url}
                     />
                   </button>
                   <ProfileDropDown
