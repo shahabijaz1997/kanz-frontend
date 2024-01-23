@@ -8,7 +8,6 @@ import React, { useState } from "react";
 const EditPhotoModal = ({setPhotoUploadModal, handleFileUpload, files, setFiles}:any) => {
 
     function handleChange(e:any) {
-        console.log(e.target.files);
         setFiles(URL.createObjectURL(e.target.files[0]));
     }
  

@@ -126,7 +126,6 @@ export const getProfile = (token: string) => {
     });
 };
 export const updateProfile = (token: string, payload:any) => {
-  debugger
     return axios.put(`${ENV.API_URL}/${ENV.API_VERSION}/profile`, payload,{
         headers: {
             Authorization: `Bearer ${token}`

@@ -122,9 +122,6 @@ const Profile = () => {
     );
   };
 
-  useEffect(() => {
-    console.log("MODAL VALUE", photoUploadModal);
-  }, [photoUploadModal]);
 
   return (
     <main className="max-h-full">
