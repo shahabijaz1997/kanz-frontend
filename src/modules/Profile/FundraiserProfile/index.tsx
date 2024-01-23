@@ -160,13 +160,12 @@ const FundRaiserProfile = ({
             />
           }
           {
-            <div className="w-[60%]" ref={refInd}>
-              <label
+            <div className="w-[60%] relative" ref={refInd}>
+              <p
                 className="text-xs mb-1 font-medium whitespace-nowrap"
-                htmlFor="market"
               >
                 {"Markets"}
-              </label>
+              </p>
               <span className="relative">
                 <input
                   id="market"
@@ -190,11 +189,11 @@ const FundRaiserProfile = ({
               </span>
               <div className="absolute top-[53px] left-0 ">
                 {payload?.market && payload?.market?.length > 0 && (
-                  <aside className="inline-flex gap-2 flex-wrap  shadow-sm appearance-none border bg-white border-neutral-300 rounded-md w-full py-2 px-3 text-gray-500 leading-tight focus:outline-none focus:shadow-outline">
+                  <aside className="inline-flex gap-2 flex-wrap  shadow-sm appearance-none border bg-white border-neutral-300 rounded-md w-full py-1 px-2 text-gray-500 leading-tight focus:outline-none focus:shadow-outline">
                     {React.Children.toArray(
                       filteredData.map((ind: any) => (
-                        <div className="check-background rounded-[4px] px-0.5 py-0.5 text-[7px] inline-flex items-center">
-                          <small>{ind[event]?.name}</small>
+                        <div className="check-background rounded-[4px] p-1 text-[7px] inline-flex items-center">
+                          <span>{ind[event]?.name}</span>
                           <CrossIcon
                             onClick={() => {
                               let payloadItems = filteredData.filter(
@@ -225,7 +224,7 @@ const FundRaiserProfile = ({
                     className={
                       "cursor-pointer rounded-md py-1 px-1 bg-cbc-check text-neutral-700 font-normal text-[7px] hover:bg-cbc-check-hover transition-all"
                     }
-                    parentClass={"flex rounded-md border-[1px] mt-1 max-h-[200px] custom-scroll flex-wrap gap-4 bg-white p-4 max-h-[350px] overflow-y-auto"}
+                    parentClass={"flex rounded-md border-[1px] flex-wrap gap-2 bg-white p-2 max-h-[350px] overflow-y-auto"}
                   />
                 )}
               </div>
