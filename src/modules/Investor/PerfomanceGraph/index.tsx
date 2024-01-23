@@ -1,24 +1,13 @@
 import { Bar } from "react-chartjs-2";
 
-const data = {
-    labels: [
-      "January",
-      "February",
-      "March",
-      "April",
-      "May",
-      "June",
-      "July",
-      "August",
-      "September",
-      "October",
-      "November",
-      "December",
-    ],
+
+const getFormattedData = (data: any) => {
+  return {
+    labels:data?.labels,
     datasets: [
       {
         label: "Property Investment",
-        data: [65, 59, 80, 81, 56, 70, 68, 75, 82, 73, 64, 85], 
+        data: data?.property_investment, 
         backgroundColor: "#0E2E35",
         borderColor: "#0E2E35",
         borderWidth: 1,
@@ -26,7 +15,7 @@ const data = {
       },
       {
         label: "Property Value",
-        data: [28, 48, 40, 19, 86, 35, 42, 51, 38, 49, 31, 62], 
+        data: data?.property_net_value, 
         backgroundColor: "#327286",
         borderColor: "#327286",
         borderWidth: 1,
@@ -34,7 +23,7 @@ const data = {
       },
       {
         label: "Startup Investment",
-        data: [20, 45, 55, 75, 81, 60, 50, 63, 70, 65, 58, 78], 
+        data: data?.startup_investment, 
         backgroundColor: "#768A2A",
         borderColor: "#768A2A",
         borderWidth: 1,
@@ -42,7 +31,7 @@ const data = {
       },
       {
         label: "Startup Value",
-        data: [10, 25, 35, 65, 51, 40, 30, 45, 55, 42, 38, 58], // Dummy data added
+        data: data?.startup_net_value,
         backgroundColor: "#BED36F",
         borderColor: "#BED36F",
         borderWidth: 1,
@@ -50,6 +39,8 @@ const data = {
       },
     ],
   };
+
+}
 
 const options: any = {
   plugins: {
@@ -75,16 +66,17 @@ const options: any = {
       grid: {
         drawOnChartArea: false,
       },
+      barThickness: 10,
     },
     y: {
       stacked: true,
     },
   },
-  barPercentage: 0.5,
+  barPercentage: 0.1,
 };
 
-const PerfomanceGraph  = () => {
-  return <div className="h-[75vh] w-full"><Bar data={data} options={options} /></div> ;
+const PerfomanceGraph  = ({data}:any) => {
+  return <div className="h-[75vh] w-full"><Bar data={getFormattedData(data)} options={options} /></div> ;
 };
 
 export default PerfomanceGraph;

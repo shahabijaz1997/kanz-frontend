@@ -16,7 +16,7 @@ const Graph = ({}: any) :any => {
       setLoading(true);
       let { status, data } = await getInvestorAnalyticsInvestmentsChart(authToken);
       if (status === 200) {
-        setGraphData(data?.status?.data);
+        setGraphData(data?.status?.data?.records);
       }
     } catch (error: any) {
       if (error.response && error.response.status === 401) {
@@ -29,6 +29,6 @@ const Graph = ({}: any) :any => {
    
   console.log(graphData)
 
-    return <PerfomanceGraph/>
+    return <PerfomanceGraph data={graphData} />
 };
 export default Graph;
