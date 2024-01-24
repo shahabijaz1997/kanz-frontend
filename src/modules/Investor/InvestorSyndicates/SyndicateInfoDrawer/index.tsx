@@ -189,12 +189,12 @@ const SyndicateInfoDrawer = ({
                 >
                   {syndicateInfo?.logo ? (
                       <img
-                        className="h-9 w-9 mx-2.5 rounded-full"
+                        className="h-12 w-12 rounded-full"
                         src={syndicateInfo.logo}
                         alt="Profile Pic"
                       />
                     ) : (
-                      <div className="h-9 w-9 mr-2.5 rounded-full bg-gray-300 flex items-center justify-center">
+                      <div className="h-12 w-14 rounded-full bg-gray-300 flex items-center justify-center">
                         {syndicateInfo?.name?.substring(0, 2)}
                       </div>
                     )}
