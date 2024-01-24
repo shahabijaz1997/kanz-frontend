@@ -150,12 +150,10 @@ const PropertyDeals = ({ openPropertyRiskModal }: any) => {
                               deal?.current_state?.current_step
                             }`
                           ); */
-                          navigate(RoutesEnums.CREATE_DEAL, {
-                            state : deal?.current_state?.current_step
-                          })
+                          navigate(RoutesEnums.CREATE_DEAL)
                         } else {
                           navigate(RoutesEnums.CREATE_DEAL, {
-                            state : deal?.current_state?.current_step 
+                            state : deal?.current_state?.current_step + 1
                           })
                      /*      navigate(
                             `/create-deal/${
