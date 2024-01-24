@@ -7,6 +7,8 @@ import {
 import { useSelector } from "react-redux";
 import { RootState } from "../../../../../redux-toolkit/store/store";
 import Spinner from "../../../../../shared/components/Spinner";
+import { comaFormattedNumber } from "../../../../../utils/object.utils";
+import { DealCheckType } from "../../../../../enums/types.enum";
 
 const InvestedByRound = ({ routeInsights }: any): any => {
   const [investmentsByRound, setInvestmentsByRound]: any = useState({
@@ -55,12 +57,6 @@ const InvestedByRound = ({ routeInsights }: any): any => {
     <main className="w-1/2 border-[1.5px] bg-white border-neutral-200 rounded-md flex-col p-4">
       <div className="flex justify-between items-center">
         <span className="font-medium">$ Invested by Round</span>
-        <span
-          onClick={goToInshights}
-          className="font-bold  text-[#155E75] text-xs flex justify-end cursor-pointer"
-        >
-          See more Insights
-        </span>
       </div>
       {loading ? (
         <aside className="relative h-full">
@@ -76,7 +72,9 @@ const InvestedByRound = ({ routeInsights }: any): any => {
                 <span className="w-1 bg-[#294c57] px-1.5 h-3 rounded-sm"></span>
                 <span>Mezzanine & bridge</span>
               </span>
-              <span className="font-medium text-[#667085]">{mezzanineBridge}</span>
+              <span className="font-medium text-[#667085]">
+                {comaFormattedNumber(mezzanineBridge, DealCheckType.STARTUP)}
+              </span>
             </div>
             <div className="flex justify-between py-2">
               <span className="font-light flex items-center text-sm gap-3 text-[#667085]">
@@ -84,7 +82,9 @@ const InvestedByRound = ({ routeInsights }: any): any => {
                 <span className="w-1 bg-[#315b68] px-1.5 h-3 rounded-sm"></span>
                 <span>Pre Seed </span>
               </span>
-              <span className="font-medium text-[#667085]">{preSeed}</span>
+              <span className="font-medium text-[#667085]">
+                {comaFormattedNumber(preSeed, DealCheckType.STARTUP)}
+              </span>
             </div>
             <div className="flex justify-between py-2">
               <span className="font-light flex items-center text-sm gap-3 text-[#667085]">
@@ -92,7 +92,7 @@ const InvestedByRound = ({ routeInsights }: any): any => {
                 <span>Seed / Angel</span>
               </span>
               <span className="font-medium text-[#667085]">
-                {seedAngel}
+                {comaFormattedNumber(seedAngel, DealCheckType.STARTUP)}
               </span>
             </div>
             <div className="flex justify-between py-2">
@@ -100,33 +100,43 @@ const InvestedByRound = ({ routeInsights }: any): any => {
                 <span className="w-1 bg-[#417a8b] px-1.5 h-3 rounded-sm"></span>
                 <span>Series A</span>
               </span>
-              <span className="font-medium text-[#667085]">{seriesA}</span>
+              <span className="font-medium text-[#667085]">
+                {comaFormattedNumber(seriesA, DealCheckType.STARTUP)}
+              </span>
             </div>
             <div className="flex justify-between py-2">
               <span className="font-light flex items-center text-sm gap-3 text-[#667085]">
                 <span className="w-1 bg-[#49899c] px-1.5 h-3 rounded-sm"></span>
                 <span>Series B</span>
               </span>
-              <span className="font-medium text-[#667085]">{seriesB}</span>
+              <span className="font-medium text-[#667085]">
+                {comaFormattedNumber(seriesB, DealCheckType.STARTUP)}
+              </span>
             </div>
             <div className="flex justify-between py-2">
               <span className="font-light flex items-center text-sm gap-3 text-[#667085]">
                 <span className="w-1 bg-[#5298ad] px-1.5 h-3 rounded-sm"></span>
                 <span>Series C</span>
               </span>
-              <span className="font-medium text-[#667085]">{seriesC}</span>
+              <span className="font-medium text-[#667085]">
+                {comaFormattedNumber(seriesC, DealCheckType.STARTUP)}
+              </span>
             </div>
             <div className="flex justify-between py-2">
               <span className="font-light flex items-center text-sm gap-3 text-[#667085]">
                 <span className="w-1 bg-[#63a2b6] px-1.5 h-3 rounded-sm"></span>
                 <span>Series D</span>
               </span>
-              <span className="font-medium text-[#667085]">{seriesD}</span>
+              <span className="font-medium text-[#667085]">
+                {comaFormattedNumber(seriesD, DealCheckType.STARTUP)}
+              </span>
             </div>
           </div>
 
           <aside className="p-2 w-48 ">
-            <DoghnutGraph
+          {investmentsByRound && (
+            (
+              <DoghnutGraph
               data={[
                 mezzanineBridge,
                 preSeed,
@@ -146,6 +156,8 @@ const InvestedByRound = ({ routeInsights }: any): any => {
                 "#63a2b6",
               ]}
             />
+            )
+          )}
           </aside>
         </aside>
       )}

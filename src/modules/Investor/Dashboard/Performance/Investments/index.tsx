@@ -33,7 +33,7 @@ const Investments = ({}: any) => {
     ""
   ];
 
-  const [selectedTab, setSelectedTab]: any = useState("All");
+  const [selectedTab, setSelectedTab]: any = useState("all");
   const [paginationData, setPaginationData]: any = useState(null);
   const [loading, setLoading] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
