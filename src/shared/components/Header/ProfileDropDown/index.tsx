@@ -2,6 +2,7 @@ import { useNavigate } from "react-router-dom";
 import LogoutDropDownIcon from "../../../../ts-icons/LogoutDropDownIcon.svg";
 import ProfileDropDownIcon from "../../../../ts-icons/ProfileDropDownIcon.svg";
 import { RoutesEnums } from "../../../../enums/routes.enum";
+import WalletDropDownIcon from "../../../../ts-icons/WalletDropDownIcon.scg";
 
 const ProfileDropDown = ({
   isProfileOpen,
@@ -18,6 +19,13 @@ const ProfileDropDown = ({
           <span onClick={()=> navigate(RoutesEnums.PROFILE)} className="w-full flex items-center gap-2 px-3 py-1 hover:bg-slate-100">
             <ProfileDropDownIcon />
             <span className="text-xs">Profile</span>
+          </span>
+          <span
+            onClick={()=>{navigate(RoutesEnums.WALLET)}}
+            className="w-full flex items-center px-3 py-1 gap-2 cursor-pointer hover:bg-slate-100"
+          >
+            <WalletDropDownIcon />
+            <span className="text-xs">Wallet</span>
           </span>
           <span
             onClick={onLogout}
