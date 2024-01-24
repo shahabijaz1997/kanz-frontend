@@ -110,6 +110,42 @@ export const getInvestor = (investorID:any, token: string) => {
         },
     });
 };
+export const getInvestorAnalyticsInvestments = (token: string, searchQuery:string, currentPage:number, filters:any) => {
+  const queryParameters = new URLSearchParams();
+  queryParameters.append("page", currentPage.toString())
+  if (filters !== "all"){
+    queryParameters.append("deal_type", filters.toLowerCase());    
+  }
+  if (searchQuery.trim() !== "") {
+    queryParameters.append("search", searchQuery);
+  }
+    return axios.get(`${ENV.API_URL}/${ENV.API_VERSION}/analytics/investors/investments?${queryParameters.toString()}`, {
+        headers: {
+            Authorization: `Bearer ${token}`
+        },
+    });
+};
+export const getInvestorAnalyticsFundingRoundInvestments = (token: string) => {
+    return axios.get(`${ENV.API_URL}/${ENV.API_VERSION}/analytics/investors/funding_round_investments`, {
+        headers: {
+            Authorization: `Bearer ${token}`
+        },
+    });
+};
+export const getInvestorAnalyticsPropertyInvestments = (token: string) => {
+    return axios.get(`${ENV.API_URL}/${ENV.API_VERSION}/analytics/investors/property_investments`, {
+        headers: {
+            Authorization: `Bearer ${token}`
+        },
+    });
+};
+export const getInvestorAnalyticsInvestmentsChart = (token: string) => {
+    return axios.get(`${ENV.API_URL}/${ENV.API_VERSION}/analytics/investors/investments_chart`, {
+        headers: {
+            Authorization: `Bearer ${token}`
+        },
+    });
+};
 
 export const getSyndicateInfo = (token: string, syndID:any) => {
     return axios.get(`${ENV.API_URL}/${ENV.API_VERSION}/syndicates/${syndID}`, {

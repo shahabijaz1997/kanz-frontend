@@ -37,8 +37,9 @@ export enum RoutesEnums {
   SYNDICATE_INVESTMENTS = "/syndicate-investments",
   SYNDICATE_MANAGE_GROUP="/manage-group",
   GUEST_DEAL_VIEW="/deal-guest-view",
-  LOADING_LOGOUT= "/logging-out",
-  PROFILE="/profile"
+  PROFILE="/profile",
+  INVESTOR_DEAL_DETAILS="/investor-deal-details",
+  LOADING_LOGOUT= "/logging-out"
 }
 
 export enum StartupRoutes {}
