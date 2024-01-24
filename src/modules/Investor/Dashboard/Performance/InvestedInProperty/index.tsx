@@ -4,6 +4,8 @@ import DoghnutGraph from "../InvestedByRound/DoghnutGraph";
 import { RootState } from "../../../../../redux-toolkit/store/store";
 import { getInvestorAnalyticsPropertyInvestments } from "../../../../../apis/investor.api";
 import Spinner from "../../../../../shared/components/Spinner";
+import { comaFormattedNumber } from "../../../../../utils/object.utils";
+import { DealCheckType } from "../../../../../enums/types.enum";
 
 const InvestedInProperty = ({routeInsights}: any): any => {
   const [loading, setLoading] = useState(false);
@@ -48,7 +50,7 @@ const InvestedInProperty = ({routeInsights}: any): any => {
               <span className="w-1 bg-[#0D485B] px-1.5 h-3 rounded-sm"></span>
               <span>Rented Property</span>
             </span>
-            <span className="font-medium text-[#667085]">${investedInProperty?.rental_property}</span>
+            <span className="font-medium text-[#667085]">{comaFormattedNumber(investedInProperty?.rental_property, DealCheckType.STARTUP)}</span>
           </div>
           <div className="flex justify-between py-2">
             <span className="font-light flex items-center text-sm gap-3 text-[#667085]">
@@ -56,7 +58,7 @@ const InvestedInProperty = ({routeInsights}: any): any => {
               <span className="w-1 bg-[#9FC6D2] px-1.5 h-3 rounded-sm"></span>
               <span>Non rented Property </span>
             </span>
-            <span className="font-medium text-[#667085]">${investedInProperty?.non_rental_property}</span>
+            <span className="font-medium text-[#667085]">{comaFormattedNumber(investedInProperty?.non_rental_property,DealCheckType.STARTUP)}</span>
           </div>
         </div>
 

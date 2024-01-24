@@ -33,8 +33,8 @@ const Performance = ({
       </aside>
       <aside className="mt-5">
         <div className="flex gap-5">
-          <InvestedByRound routeInsights={routeInsights} />
-          <InvestedInProperty routeInsights={routeInsights} />
+          <InvestedByRound />
+          <InvestedInProperty  />
         </div>
       </aside>
       <aside className="flex justify-between mt-5 gap-5 w-full">
