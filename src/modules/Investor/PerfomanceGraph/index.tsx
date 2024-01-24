@@ -19,7 +19,7 @@ const getFormattedData = (data: any) => {
         backgroundColor: "#327286",
         borderColor: "#327286",
         borderWidth: 1,
-        stack: "Stack 1",
+        stack: "Stack 2",
       },
       {
         label: "Startup Investment",
@@ -27,7 +27,7 @@ const getFormattedData = (data: any) => {
         backgroundColor: "#768A2A",
         borderColor: "#768A2A",
         borderWidth: 1,
-        stack: "Stack 2",
+        stack: "Stack 1",
       },
       {
         label: "Startup Value",

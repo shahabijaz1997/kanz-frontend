@@ -1161,8 +1161,10 @@
       "insights": "Insights",
       "dashboard": "Dashboard",
       "investment_value": "Investment Value",
+      "investment_startup": "Invested in Startup",
+      "investment_property": "Invested in Property",
       "investment_amount": "$73.1K",
-      "total_investments": "42 investments - total investment $59.2K",
+      "total_investments": " investments - total investment",
       "investment_multiple": "1.09x",
       "irr_percentage": "4.1% IRR"
     },
