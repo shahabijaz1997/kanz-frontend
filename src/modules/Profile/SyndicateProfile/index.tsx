@@ -45,10 +45,10 @@ const SyndciateProfile = ({
     try {
       let sentPayload = {
         profile: {
-          website: website,
+          profile_link: website,
           address: address,
           industry_ids: payload?.market,
-          fund_raiser_attributes: {
+          syndicate_attributes: {
             name: name,
           },
         },

@@ -8,6 +8,7 @@ import { fileSize, jsonToFormData } from "../../../utils/files.utils";
 import { updateProfile } from "../../../apis/investor.api";
 import { toastUtil } from "../../../utils/toast.utils";
 import { toast } from "react-toastify";
+import { KanzRoles } from "../../../enums/roles.enum";
 
 const EditPhotoModal = ({
   setPhotoUploadModal,
@@ -18,16 +19,13 @@ const EditPhotoModal = ({
 }: any) => {
   const [files, setFiles] = useState<any>(null);
   const [imagePreview, setImagePreview] = useState<any>(null);
+  const metadata: any = useSelector((state: RootState) => state.metadata.value);
   function handleChange(e: any) {}
   const handleFileUpload = (e: any) => {
     const file: any = e.target.files?.[0];
     if (file) {
       const fileSizeInMB = fileSize(file.size, "mb");
-      const allowedFileTypes = [
-        "image/jpeg",
-        "image/jpg",
-        "image/png",
-      ];
+      const allowedFileTypes = ["image/jpeg", "image/jpg", "image/png"];
       if (!allowedFileTypes.includes(file.type)) {
         toast.error(language?.v3?.fundraiser?.typeError, toastUtil);
         return;
@@ -42,17 +40,34 @@ const EditPhotoModal = ({
       e.target.value = "";
     }
   };
+  let sentPayload: any =
+    metadata?.type === KanzRoles.INVESTOR
+      ? {
+          profile: {
+            investor_attributes: {
+              profile_picture: files,
+            },
+          },
+        }
+      : metadata?.type === KanzRoles.SYNDICATE
+      ? {
+          profile: {
+            syndicate_attributes: {
+              profile_picture: files,
+            },
+          },
+        }
+      : {
+          profile: {
+            fund_raiser_attributes: {
+              profile_picture: files,
+            },
+          },
+        };
 
   const updateInfo = async () => {
     try {
-      let sentPayload = {
-        profile: {
-          fund_raiser_attributes: {
-            profile_picture: files,
-          },
-        },
-      };
-      let { status, data } = await updateProfile(
+      let { status } = await updateProfile(
         authToken,
         jsonToFormData(sentPayload)
       );

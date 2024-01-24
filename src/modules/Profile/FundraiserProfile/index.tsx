@@ -12,7 +12,6 @@ import SearchedItems from "../../../shared/components/SearchedItems";
 import Chevrond from "../../../ts-icons/chevrond.svg";
 import React from "react";
 import CrossIcon from "../../../ts-icons/crossIcon.svg";
-import { jsonToFormData } from "../../../utils/files.utils";
 
 const FundRaiserProfile = ({
   setLoading,
@@ -31,7 +30,7 @@ const FundRaiserProfile = ({
   const [address, setAddress] = useState(data?.profile?.address);
   const [ceoName, setCeoName] = useState(data?.profile?.ceo_name);
   const [ceoEmail, setCeoEmail] = useState(data?.profile?.ceo_email);
-  const [search, setSearch] = useState("");
+  const [search, setSearch] = useState(data?.profile?.industries?.join(", "));
   const event: any = useSelector((state: RootState) => state.event.value);
   const orientation: any = useSelector(
     (state: RootState) => state.orientation.value
@@ -129,15 +128,14 @@ const FundRaiserProfile = ({
         </span>
         <span className="flex-col flex items-center justify-center">
           <img
-            className="h-36 w-28"
+            className="h-36 w-28 border-[0.5px] rounded-md"
             style={{
-              objectFit: "cover",
+              objectFit: "contain",
               aspectRatio: "1",
             }}
-            src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=3276&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+            src={data?.profile?.logo}
             alt=""
           />
-          <span className="text-[10px] font-medium mt-2">Logo</span>
         </span>
         <span className="inline-flex justify-center gap-12 items-center">
           {
@@ -257,7 +255,7 @@ const FundRaiserProfile = ({
               <textarea
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
-                className={`text-[10px] px-2 py-1.5 w-full border-[1px] rounded-md focus:border-none min-h-20 `}
+                className={`text-[10px] px-2 py-1.5 w-full border-[1px] rounded-md focus:border-none min-h-40 custom-scroll `}
               />
             </span>
           }
