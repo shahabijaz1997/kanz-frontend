@@ -24,7 +24,7 @@ type FormValues = {
 };
 
 const Login = ({ }: any) => {
-  const { state } = useLocation();  
+  const { state } = useLocation();
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const authToken: any = useSelector((state: RootState) => state.auth.value);

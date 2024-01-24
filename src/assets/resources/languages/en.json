@@ -1155,7 +1155,16 @@
       "no_member_for_now":"No member for now",
       "social_media":"Social Media",
       "webiste":"Website",
-      "interested":"Interested"
+      "interested":"Interested",
+      "performance": "Performance",
+      "activity": "Activity",
+      "insights": "Insights",
+      "dashboard": "Dashboard",
+      "investment_value": "Investment Value",
+      "investment_amount": "$73.1K",
+      "total_investments": "42 investments - total investment $59.2K",
+      "investment_multiple": "1.09x",
+      "irr_percentage": "4.1% IRR"
     },
     "dealOverview": {
       "title": "Risk and Disclaimer",

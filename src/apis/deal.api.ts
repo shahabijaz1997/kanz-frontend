@@ -89,8 +89,9 @@ export const getInvitedDeals = (inviteeId: any, token: any, filters: any, search
 export const getLiveDeals = ( token:any, filters:any, searchQuery:string, currentPage:number) => {
   const queryParameters = new URLSearchParams();
   queryParameters.append("page", currentPage.toString());
-  if (filters !== "all")
+  if (filters !== "all"){
   queryParameters.append("deal_type", filters.toLowerCase());
+  }
   if (searchQuery.trim() !== "") {
     queryParameters.append("search", searchQuery);
   }

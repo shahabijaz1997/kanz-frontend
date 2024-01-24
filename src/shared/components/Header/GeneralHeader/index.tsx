@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../../../redux-toolkit/store/store";
 import Logo from "../../../../assets/logo.png";
@@ -15,16 +15,19 @@ import { saveLogo } from "../../../../redux-toolkit/slicer/attachments.slicer";
 import { languageDropdownItems } from "../../../../utils/dropdown-items.utils";
 import { RoutesEnums } from "../../../../enums/routes.enum";
 import { saveDataHolder } from "../../../../redux-toolkit/slicer/dataHolder.slicer";
+import Notifcations from "../Notifications";
 
 const GeneralHeader = ({ responsive = false, showMenu = false, showLanguageDropdown = false, onSuperLogout = ()=>{} }: any) => {
     const navigate = useNavigate();
     const dispatch = useDispatch();
+    const ref: any = useRef();
     const language: any = useSelector((state: RootState) => state.language.value);
     const orientation: any = useSelector((state: RootState) => state.orientation.value);
     const authToken: any = useSelector((state: RootState) => state.auth.value);
     const event: any = useSelector((state: RootState) => state.event.value);
     const navigationMenu = [{id: 1, title:language.landing?.invest }, { id: 2, title: language.landing?.raise }, { id: 3, title: language.header?.syndicate }]
     const [isMenuOpen, setIsMenuOpen] = useState(false);
+    const [notifcationsOpen, setNotificationsOpen] = useState(false);
    
     const toggleMenu = () => {
         setIsMenuOpen(!isMenuOpen);
@@ -67,10 +70,11 @@ const GeneralHeader = ({ responsive = false, showMenu = false, showLanguageDropd
     const authenticatedHeaderNav = () => {
         if (authToken) {
             return (
-                <React.Fragment>
-                    <li className="">
-                        <div className="rounded-full w-8 h-8 inline-grid place-items-center bell-background cursor-not-allowed">
+                <React.Fragment >
+                    <li ref={ref} className="">
+                        <div onClick={()=>{setNotificationsOpen(!notifcationsOpen)}} className={`rounded-full w-8 h-8 inline-grid place-items-center ${notifcationsOpen ? `bell-background`: ``}`}>
                             <BellIcon stroke={"#4F4F4F"} />
+                            <Notifcations ref = {ref} open={notifcationsOpen} setOpen={setNotificationsOpen} />
                         </div>
                     </li>
                     <li onClick={onLogout}>

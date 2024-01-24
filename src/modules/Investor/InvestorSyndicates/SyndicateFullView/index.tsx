@@ -110,10 +110,10 @@ const SyndicateFullView = ({}: any) => {
   );
 
   const options = [
-    { label: "News", value: "news" },
-    { label: "Social Media", value: "social_media" },
-    { label: "Website", value: "website" },
-    { label: "Other", value: "other" },
+    { label: language?.v3?.investor?.news, value: "news" },
+    { label: language?.v3?.investor?.social_media, value: "social_media" },
+    { label: language?.v3?.investor?.website, value: "website" },
+    { label: language?.v3?.investor?.other, value: "other" },
   ];
 
   const [loading, setLoading]: any = useState(false);
@@ -226,10 +226,7 @@ const SyndicateFullView = ({}: any) => {
                     </div>
                     <div className="mt-5">
                       <div className=" font-medium text-sm">
-                        {
-                          language?.v3?.investor
-                            ?.how_did_you_discover_this_syndicate
-                        }
+                        {language?.v3?.investor?.how_did_you_discover_this_syndicate}
                       </div>
                       <div className="mt-1">
                         <Selector
@@ -263,7 +260,7 @@ const SyndicateFullView = ({}: any) => {
                         className="accent-cyan-800 h-3 w-3 mt-1.5 cursor-pointer"
                         onChange={handleCheckboxChange}
                       />
-                      <small className="ml-3">
+                      <small className="mx-3">
                         <span className="flex items-center font-medium mt-0.5">
                           {language?.v3?.investor?.disclaimer_1}
                         </span>
