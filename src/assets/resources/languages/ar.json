@@ -907,6 +907,8 @@
       "net_div_inc": "صافي دخل التوزيع"
     },
     "fundraiser": {
+      "typeError":"الملف يجب أن يكون PNG، JPG، JPEG",
+      "upload_photo": "تحميل الصورة",
       "startup": "بدء",
       "property": "ملكية",
       "investors": "المستثمرين",

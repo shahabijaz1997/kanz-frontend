@@ -154,4 +154,17 @@ export const getSyndicateInfo = (token: string, syndID:any) => {
         },
     });
 };
-
+export const getProfile = (token: string) => {
+    return axios.get(`${ENV.API_URL}/${ENV.API_VERSION}/profile`, {
+        headers: {
+            Authorization: `Bearer ${token}`
+        },
+    });
+};
+export const updateProfile = (token: string, payload:any) => {
+    return axios.put(`${ENV.API_URL}/${ENV.API_VERSION}/profile`, payload,{
+        headers: {
+            Authorization: `Bearer ${token}`
+        },
+    });
+};

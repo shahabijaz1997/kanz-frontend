@@ -914,6 +914,7 @@
       "sent_date": "Sent Date"
     },
     "fundraiser": {
+      "typeError":"File should be of type JPG/PNG/JPEG",
       "startup": "Startup",
       "property": "Property",
       "investors": "Investors",
