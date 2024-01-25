@@ -16,7 +16,6 @@ import CrossIcon from "../../../ts-icons/crossIcon.svg";
 const SyndciateProfile = ({
   setLoading,
   getDetail,
-  file,
   data,
   setPhotoUploadModal,
 }: any) => {
