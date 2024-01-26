@@ -20,7 +20,7 @@ const CustomStatus = ({ options }: any) => {
     backgroundColor = "bg-indigo-100";
   } else if (options === language?.v3?.status?.closed) {
     backgroundColor = "bg-grey-100";
-  } else if (options === language?.v3?.fundraiser?.no) {
+  } else if (options === language?.v3?.fundraiser?.no || options === "rejected") {
     backgroundColor = "bg-red-100";
   } else if (options === language?.v3?.status?.follower) {
     backgroundColor = "bg-blue-100";
@@ -41,7 +41,7 @@ const CustomStatus = ({ options }: any) => {
     textColor = "text-yellow-800";
   } else if (options === language?.v3?.status?.draft) {
     textColor = "text-indigo-800";
-  } else if (options === language?.v3?.fundraiser?.no) {
+  } else if (options === language?.v3?.fundraiser?.no || options === "rejected") {
     textColor = "text-red-800";
   } else if (options === language?.v3?.status?.follower) {
     textColor = "text-blue-800";

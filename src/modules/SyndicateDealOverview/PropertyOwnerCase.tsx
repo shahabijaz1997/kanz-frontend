@@ -80,7 +80,7 @@ const PropertyOwnerCase = ({
   const [modalOpenComment, setmodalOpenComment]: any = useState(null);
   const [disableUpload, setdisableUpload]: any = useState(false);
   const [InvestButtonDisable, setInvestButtonDisable]: any = useState(false);
-  const [selectedCurrency, setSelectedCurrency] = useState("USD");
+  const [selectedCurrency, setSelectedCurrency] = useState("AED");
   const [investmentAmount, setAmount] = useState<number>();
   const handleAmountChange = (event: any) => {
     setAmount(event.target.value);
@@ -672,7 +672,7 @@ const PropertyOwnerCase = ({
                           onChange={handleAmountChange}
                         />
                       </label>
-                      <label className="w-[10%]">
+            {/*           <label className="w-[10%]">
                         <select
                           className="h-9"
                           value={selectedCurrency}
@@ -685,7 +685,7 @@ const PropertyOwnerCase = ({
                           {language?.v3?.investor?.aedSymbol}
                           </option>
                         </select>
-                      </label>
+                      </label> */}
                     </div>
 
                     <div className="mt-3">
@@ -854,7 +854,7 @@ const PropertyOwnerCase = ({
                           onChange={handleAmountChange}
                         />
                       </label>
-                      <label className="w-[10%]">
+   {/*                    <label className="w-[10%]">
                         <select
                           className="h-9"
                           value={selectedCurrency}
@@ -867,7 +867,7 @@ const PropertyOwnerCase = ({
                           {language?.v3?.investor?.aedSymbol}
                           </option>
                         </select>
-                      </label>
+                      </label> */}
                     </div>
                     <div className="mt-4">
                       <Button

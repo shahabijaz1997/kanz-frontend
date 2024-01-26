@@ -3,10 +3,12 @@ import AddImage from "../../../ts-icons/addImageIcon.svg";
 import { useSelector } from "react-redux";
 import { RootState } from "../../../redux-toolkit/store/store";
 import Button from "../../../shared/components/Button";
+import CrossIcon from "../../../ts-icons/crossIcon.svg";
+import Modal from "../../../shared/components/Modal";
 
 const UploadReceipt = ({ setStep , setImage, submitForm }: any) => {
   const language: any = useSelector((state: RootState) => state.language.value);
-
+  const [open, setOpen] = useState(false);
   const [imagePreview, setImagePreview]: any = useState();
   const handleFileUpload = (event: any) => {
     const file = event.target.files[0];
@@ -52,7 +54,9 @@ const UploadReceipt = ({ setStep , setImage, submitForm }: any) => {
                     setStep(2)}} className="w-full" type="outlined">Back</Button>
             </span>
             <span className="w-full">
-                <Button onClick={()=>submitForm()} className="w-full">Continue</Button>
+                <Button disabled={!imagePreview} onClick={()=>{
+                  submitForm()
+                  }} className="w-full">Continue</Button>
             </span>
         </span>
       </section>

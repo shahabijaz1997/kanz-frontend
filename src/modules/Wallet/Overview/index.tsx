@@ -5,9 +5,11 @@ import Modal from "../../../shared/components/Modal";
 import CrossIcon from "../../../ts-icons/crossIcon.svg";
 import { useSelector } from "react-redux";
 import { RootState } from "../../../redux-toolkit/store/store";
-import { numberFormatter } from "../../../utils/object.utils";
+import { comaFormattedNumber, numberFormatter } from "../../../utils/object.utils";
 import { DealCheckType } from "../../../enums/types.enum";
 import Transactions from "./Transactions";
+import { useNavigate } from "react-router-dom";
+import { RoutesEnums } from "../../../enums/routes.enum";
 
 const Overview = ({
   setStep,
@@ -16,7 +18,10 @@ const Overview = ({
   amount,
   method,
   setMethod,
+  getCurrentBalance
 }: any): any => {
+
+  const navigate = useNavigate()
   const handleKeyDown = (e: any) => {
     if (e.keyCode === 8) return;
     if (['-', 'e', '+'].includes(e.key)) {
@@ -40,9 +45,16 @@ const Overview = ({
   return (
     <section className="flex justify-between items-start gap-56">
       <section className="flex flex-col items-start justify-start w-1/2">
-        <div className="flex flex-col items-start justify-center w-full border-[1px] border-[#E5E5E5] rounded-lg shadow-md p-6 mt-5">
-          <h1 className="text-[#667085] font-medium">Current Balance</h1>
-          <p className="text-black font-semibold text-4xl mt-3">{numberFormatter(currentBalance, DealCheckType.PROPERTY)}</p>
+        <div className="flex items-center justify-center w-full border-[1px] border-[#E5E5E5] rounded-lg shadow-md p-6 mt-5">
+       <span className="w-full">
+       <h1 className="text-[#667085] text-base">Current Balance</h1>
+          <p className="text-black font-semibold text-2xl mt-3">{comaFormattedNumber(currentBalance, DealCheckType.PROPERTY)}</p>
+       </span>
+       <span className="w-full flex items-center justify-center">
+          <Button className="!text-xs" onClick={()=>{
+            navigate(RoutesEnums.TRANSACTIONS)
+          }}>View All Transactions</Button>
+       </span>
         </div>
         <span className="flex flex-col items-start justify-start w-full mt-10">
           <label className="text-xs font-medium" htmlFor="amount">
@@ -143,19 +155,16 @@ const Overview = ({
         <div className="p-2 gap-10 justify-start flex flex-col ">
           <h1 className="text-black font-medium">Transaction Details</h1>
           <span className="border-b-[1px] border-[#E5E5E5] w-full flex font-medium text-sm justify-between">
-            Current Balance <span className="font-normal">{numberFormatter(currentBalance, DealCheckType.PROPERTY)}</span>
+            Current Balance <span className="font-normal">{comaFormattedNumber(currentBalance, DealCheckType.PROPERTY)}</span>
           </span>
           <span className="border-b-[1px] border-[#E5E5E5] w-full flex font-medium text-sm justify-between">
-            Deposit Amount <span className="font-normal">{numberFormatter(amount, DealCheckType.PROPERTY)}</span>
+            Deposit Amount <span className="font-normal">{comaFormattedNumber(amount, DealCheckType.PROPERTY)}</span>
           </span>
           <span className=" w-full flex font-medium text-sm  justify-between">
-            New Balance <span className="font-normal">{numberFormatter(newValue, DealCheckType.PROPERTY)}</span>
+            New Balance <span className="font-normal">{comaFormattedNumber(newValue, DealCheckType.PROPERTY)}</span>
           </span>
         </div>
         </section>
-        <div className="mt-5">
-          <Transactions />
-        </div>
       </section>
       <Modal show={open ? true : false} className="w-full">
         <div

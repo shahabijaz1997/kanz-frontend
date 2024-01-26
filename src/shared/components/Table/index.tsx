@@ -4,6 +4,7 @@ import { RootState } from "../../../redux-toolkit/store/store";
 import Chevrond from "../../../ts-icons/chevrond.svg";
 
 const Table = ({
+  fullWidthData = false,
   tableData,
   paginationData,
   setCurrentPage,
@@ -31,8 +32,8 @@ const Table = ({
             <a
               className={`${
                 page === paginationData?.page
-                  ? "border-[1px] border-l-[1px]  border-r-[1px] border-[#155E75] bg-[#F5F5F5] text-[#155E75]"
-                  : "bg-transparent text-[#737373] border-[1px] border-l-[#D4D4D4]border-r-[#D4D4D4]"
+                  ? "border-[1px] border-l-[1px] cursor-pointer  border-r-[1px] border-[#155E75] bg-[#F5F5F5] text-[#155E75]"
+                  : "bg-transparent text-[#737373] cursor-pointer border-[1px] border-l-[#D4D4D4]border-r-[#D4D4D4]"
               } transition-all block   px-3 py-1.5 text-sm font-medium`}
               href={removeHref ? undefined : "#!"}
             >
@@ -81,7 +82,7 @@ const Table = ({
                     columns.map((column: any, index: number) =>
                       index === 0 ? (
                         <td
-                          className={`px-3 h-12 text-sm font-medium text-gray-800 whitespace-nowrap max-w-[150px] truncate inline-flex items-center ${
+                          className={`px-3 h-12 text-sm font-medium text-gray-800 whitespace-nowrap ${fullWidthData ? "max-w-[180px]" : " max-w-[150px]"} truncate inline-flex items-center ${
                             index === columns.length - 1 && `text-right`
                           } }`}
                         >
@@ -96,7 +97,7 @@ const Table = ({
                         </td>
                       ) : (
                         <td
-                          className={`px-3 h-10 text-sm font-medium text-gray-800 whitespace-nowrap max-w-[150px] truncate ${
+                          className={`px-3 h-10 text-sm font-medium text-gray-800 whitespace-nowrap ${fullWidthData ? "max-w-[170px]" : " max-w-[150px]"} truncate ${
                              orientation !== "rtl" && index === columns.length - 1 ? `text-right` : orientation === "rtl" && index === columns.length-1 && `text-left`
                           } }`}
                         >

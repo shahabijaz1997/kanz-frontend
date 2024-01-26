@@ -9,6 +9,9 @@ import AccountDetails from "./AccountDetails";
 import UploadReceipt from "./UploadReceipt";
 import { createTransaction, getBalance } from "../../apis/wallet.api";
 import { jsonToFormData } from "../../utils/files.utils";
+import Modal from "../../shared/components/Modal";
+import CrossIcon from "../../ts-icons/crossIcon.svg";
+import Button from "../../shared/components/Button";
 
 const Wallet = () => {
   const authToken: any = useSelector((state: RootState) => state.auth.value);
@@ -19,10 +22,7 @@ const Wallet = () => {
   const [currentBalance, setCurrentBalance] = useState<string>();
   const [method, setMethod] = useState("");
   const [image, setImage]: any = useState();
-
-  useEffect(() => {
-    console.log(image)
-  },[image])
+  const [verificationModal, setVerificationModal] = useState(false);
 
   useEffect(() => {
     getCurrentBalance()
@@ -62,6 +62,7 @@ const Wallet = () => {
     } finally {
       setLoading(false);
       setCurrentStep(1)
+      setVerificationModal(true)
     }
   };
 
@@ -88,6 +89,7 @@ const Wallet = () => {
 
               {step === 1 && (
                 <Overview
+                  getCurrentBalance={getCurrentBalance}
                   currentBalance={currentBalance}
                   method={method}
                   setStep={setCurrentStep}
@@ -96,11 +98,57 @@ const Wallet = () => {
                   setMethod={setMethod}
                 />
               )}
-              {step === 2 && <AccountDetails setStep={setCurrentStep} />}
-              {step === 3 && <UploadReceipt  setImage={setImage} setStep={setCurrentStep} submitForm={postTransaction} />}
+              {step === 2 && <AccountDetails amount={amount} setStep={setCurrentStep} />}
+              {step === 3 && <UploadReceipt setImage={setImage} setStep={setCurrentStep} submitForm={postTransaction} />}
             </aside>
           )}
         </section>
+        <Modal show={verificationModal ? true : false} className="w-full">
+        <div
+          className="rounded-md overflow-hidden inline-grid place-items-center absolute top-1/2 left-1/2 translate-x-[-50%] translate-y-[-50%]"
+          style={{ backgroundColor: "rgba(0, 0, 0, 0.078" }}
+        >
+          <aside className="bg-white w-[500px] rounded-md h-full">
+            <header className=" h-16 py-2 px-3 inline-flex w-full justify-end items-center">
+              <div
+                onClick={() => setVerificationModal(false)}
+                className="bg-white h-8 w-8 p-1 cursor-pointer"
+              >
+                <CrossIcon stroke="#000" />
+              </div>
+            </header>
+            <section className="flex flex-col items-center justify-center">
+              <h3 className="flex items-center w-full justify-center font-bold text-lg">
+                Verficiation Notice
+              </h3>
+              <p className="text-[#737373] text-sm mt-3 w-full text-center px-10">
+              Your receipt has been uploaded and is pending for verification from the back office. Once verified, the amount will be credited into your wallet.
+              </p>
+              <footer className="w-[80%] inline-flex justify-center gap-10 py-6 px-3">
+                <Button
+                onClick={()=>{
+                  setVerificationModal(false)
+                }}
+                  type="outlined"
+                  className="w-full !py-1"
+                  divStyle="flex items-center justify-center w-full"
+                >
+                  {"Cancel"}
+                </Button>
+                <Button
+                  onClick={() => {
+                    setVerificationModal(false)
+                  }}
+                  className="w-full !py-1"
+                  divStyle="flex items-center justify-center w-full"
+                >
+                  {"Continue"}
+                </Button>
+              </footer>
+            </section>
+          </aside>
+        </div>
+      </Modal>
       </aside>
     </main>
   );

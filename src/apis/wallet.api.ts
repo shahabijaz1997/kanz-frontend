@@ -14,9 +14,11 @@ export const getBalance = (token: string) => {
       }
     );
   };
-export const getTransactions = (token: string ,query : string, currentPage:number) => {
+export const getTransactions = (token: string , currentPage:number) => {
+  let queryParameters = new URLSearchParams();
+  queryParameters.append("page", currentPage.toString());
     return axios.get(
-      `${ENV.API_URL}/${ENV.API_VERSION}/transactions`,
+      `${ENV.API_URL}/${ENV.API_VERSION}/transactions?${queryParameters.toString()}`,
       {
         headers: {
           Authorization: `Bearer ${token}`,

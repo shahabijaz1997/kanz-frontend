@@ -26,6 +26,7 @@ import InvestmentDealDetail from "../Investor/Dashboard/InvestmentDealDetail";
 import PageNotFound from "../PageNotFound";
 import Profile from "../Profile";
 import Wallet from "../Wallet";
+import Transactions from "../Wallet/Overview/Transactions";
 
 /* --- Modules --- */
 
@@ -511,6 +512,21 @@ const RouterModule = () => {
                 status={ApplicationStatus.APPROVED}
               >
                 <Wallet />
+              </GUARD_SUBMITTED_ROUTE>
+            </CHECK_LOGGED_IN>
+          </Suspense>
+        }
+      />
+      <Route
+        path={`${RoutesEnums.TRANSACTIONS}`}
+        element={
+          <Suspense fallback={<Loader />}>
+            <CHECK_LOGGED_IN>
+              <GUARD_SUBMITTED_ROUTE
+                role={[KanzRoles.SYNDICATE, KanzRoles.FUNDRAISER, KanzRoles.PROPERTY_OWNER, KanzRoles.INVESTOR]}
+                status={ApplicationStatus.APPROVED}
+              >
+                <Transactions />
               </GUARD_SUBMITTED_ROUTE>
             </CHECK_LOGGED_IN>
           </Suspense>

@@ -40,7 +40,8 @@ export enum RoutesEnums {
   PROFILE = "/profile",
   INVESTOR_DEAL_DETAILS = "/investor-deal-details",
   LOADING_LOGOUT = "/logging-out",
-  WALLET = "/wallet"
+  WALLET = "/wallet",
+  TRANSACTIONS="/transactions"
 }
 
 export enum StartupRoutes {}

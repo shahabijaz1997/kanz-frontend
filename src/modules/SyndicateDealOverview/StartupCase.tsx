@@ -859,7 +859,7 @@ const StartupCase = ({
                             onChange={handleAmountChange}
                           />
                         </label>
-                        <label className="w-[10%]">
+             {/*            <label className="w-[10%]">
                           <select
                             className="h-9"
                             value={selectedCurrency}
@@ -872,7 +872,7 @@ const StartupCase = ({
                             {language?.v3?.investor?.aedSymbol}
                             </option>
                           </select>
-                        </label>
+                        </label> */}
                       </div>
                       <div className="mt-3">
                         <Button
@@ -1016,12 +1016,18 @@ const StartupCase = ({
                   </div>
                 )}
               <aside className="border-[1px] border-neutral-200 rounded-md w-full px-3 pt-3 mt-5 bg-white">
-                <h2 className="text-neutral-700 text-xl font-medium">
+                <span className="w-full flex flex-col">
+                <span className="w-full flex">
+                <h2 className="text-neutral-700 text-xl font-medium flex-nowrap w-full">
                   {language?.v3?.common?.invest_details}
                 </h2>
+                <span className="w-[60%] text-blue-500 text-xs flex items-center hover:underline cursor-pointer">View conversion rate</span>
+                </span>
                 <small className="text-neutral-500 text-sm font-normal">
                   {language?.v3?.common?.end_on} {deal?.end_at}
                 </small>
+                </span>
+                
                 {convertStatusLanguage(deal?.status) === DealStatus.LIVE &&
                   !deal?.is_invested && (
                     <aside className="">
@@ -1044,7 +1050,7 @@ const StartupCase = ({
                               onChange={handleAmountChange}
                             />
                           </label>
-                          <label>
+  {/*                         <label>
                             <select
                               className="h-9"
                               value={selectedCurrency}
@@ -1063,7 +1069,7 @@ const StartupCase = ({
                             {language?.v3?.investor?.aedSymbol}
                               </option>
                             </select>
-                          </label>
+                          </label> */}
                         </div>
                         <Button
                           disabled={
