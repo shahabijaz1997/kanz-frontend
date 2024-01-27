@@ -39,6 +39,10 @@ const SyndciateProfile = ({
     });
   };
   const refInd: any = useRef(null);
+  const urlRegex = /^(https:\/\/|www\.)[a-zA-Z0-9-]+\.[a-zA-Z]{2,}(\.[a-zA-Z]{2,})?$/;
+  const updateButtonDisable = () => {
+    return !name || !website  || !tagline || !urlRegex.test(website) ? true : false;
+  }
 
   const updateInfo = async (payload: any) => {
     try {
@@ -208,6 +212,7 @@ const SyndciateProfile = ({
         </span>
         <span className="flex mt-1 items-center justify-start">
           <Button
+          disabled={updateButtonDisable()}
             onClick={() => {
               setLoading(true);
               updateInfo(payload);

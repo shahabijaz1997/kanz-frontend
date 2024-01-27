@@ -45,22 +45,35 @@ const FundRaiserProfile = ({
   };
   const refInd: any = useRef(null);
 
+  const updateButtonDisable = () => {
+    return !name ||
+      !companyName ||
+      !legalName ||
+      !website ||
+      !description ||
+      !address ||
+      !ceoName ||
+      !ceoEmail
+      ? true
+      : false;
+  };
+
   const updateInfo = async (payload: any) => {
     try {
       let sentPayload = {
-          profile:{
-            company_name: companyName,
-            legal_name: legalName,
-            website: website,
-            address: address,
-            description: description,
-            ceo_name: ceoName,
-            ceo_email: ceoEmail,
-            industry_ids: payload?.market,
-            fund_raiser_attributes:{
-              name: name
-            }
-          }
+        profile: {
+          company_name: companyName,
+          legal_name: legalName,
+          website: website,
+          address: address,
+          description: description,
+          ceo_name: ceoName,
+          ceo_email: ceoEmail,
+          industry_ids: payload?.market,
+          fund_raiser_attributes: {
+            name: name,
+          },
+        },
       };
       let { status, data } = await updateProfile(authToken, sentPayload);
       if (status === 200) {
@@ -166,9 +179,7 @@ const FundRaiserProfile = ({
           }
           {
             <div className="w-[60%] relative" ref={refInd}>
-              <p
-                className="text-xs mb-1 font-medium whitespace-nowrap"
-              >
+              <p className="text-xs mb-1 font-medium whitespace-nowrap">
                 {"Markets"}
               </p>
               <span className="relative">
@@ -225,11 +236,13 @@ const FundRaiserProfile = ({
                       let payloadItems = [...payload.market];
                       payloadItems.push(it.id);
                       onSetPayload(Array.from(new Set(payloadItems)), "market");
-                    }} 
+                    }}
                     className={
                       "cursor-pointer rounded-md py-1 px-1 bg-cbc-check text-neutral-700 font-normal text-[7px] hover:bg-cbc-check-hover transition-all"
                     }
-                    parentClass={"flex rounded-md border-[1px] flex-wrap gap-2 bg-white p-2 max-h-[200px] overflow-y-auto"}
+                    parentClass={
+                      "flex rounded-md border-[1px] flex-wrap gap-2 bg-white p-2 max-h-[200px] overflow-y-auto"
+                    }
                   />
                 )}
               </div>
@@ -281,8 +294,9 @@ const FundRaiserProfile = ({
 
         <span className="flex mt-1 items-center justify-start">
           <Button
+            disabled={updateButtonDisable()}
             onClick={() => {
-              setLoading(true)
+              setLoading(true);
               updateInfo(payload);
             }}
             className="!p-2 !text-xs !font-medium"
@@ -301,7 +315,10 @@ const FundRaiserProfile = ({
                 objectFit: "cover",
                 aspectRatio: "1",
               }}
-              src={data?.profile_picture_url || "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"}
+              src={
+                data?.profile_picture_url ||
+                "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"
+              }
               alt=""
             />
             <span
