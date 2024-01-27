@@ -33,3 +33,10 @@ export const getTransactions = (token: string , currentPage:number) => {
       },
     });
   };
+  export const getCurrentConversionRate = ( token: string) => {
+    return axios.get(`${ENV.API_URL}/${ENV.API_VERSION}/exchange_rate`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+  };

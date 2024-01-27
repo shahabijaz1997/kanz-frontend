@@ -1,12 +1,11 @@
 import { DealCheckType } from "../../../../../enums/types.enum";
 import {
   comaFormattedNumber,
-  numberFormatter,
 } from "../../../../../utils/object.utils";
 
 const DepositWithdrawalColor: any = ({ amount, type, status }: any) => {
   const spanColor = () => {
-    if (status === "invested" && type === "debit") {
+    if (status === "invested") {
       return (
         <span className="text-red-700">
           - {comaFormattedNumber(amount, DealCheckType.PROPERTY)}
@@ -20,14 +19,14 @@ const DepositWithdrawalColor: any = ({ amount, type, status }: any) => {
       );
     } else if (status === "pending" && type === "credit") {
       return (
-        <span className="text-blue-500">
+        <span className="text-[#155E75]">
           {" "}
           {comaFormattedNumber(amount, DealCheckType.PROPERTY)}
         </span>
       );
     } else if (status === "rejected" && type === "credit") {
       return (
-        <span className="text-gray-700">
+        <span className="text-neutral-400">
           {" "}
           {comaFormattedNumber(amount, DealCheckType.PROPERTY)}
         </span>
@@ -42,6 +41,13 @@ const DepositWithdrawalColor: any = ({ amount, type, status }: any) => {
       return (
         <span className="text-red-700">
           - {comaFormattedNumber(amount, DealCheckType.PROPERTY)}
+        </span>
+      );
+    } else {
+      return (
+        <span className="text-black">
+          {" "}
+          {comaFormattedNumber(amount, DealCheckType.PROPERTY)}
         </span>
       );
     }

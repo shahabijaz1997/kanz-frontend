@@ -17,7 +17,6 @@ import CurrencySVG from "../../assets/svg/currency.svg";
 
 import {
   comaFormattedNumber,
-  numberFormatter,
   timeAgo,
 } from "../../utils/object.utils";
 import { DealCheckType, DealStatus, FileType } from "../../enums/types.enum";
@@ -31,14 +30,14 @@ import { toast } from "react-toastify";
 import { toastUtil } from "../../utils/toast.utils";
 import UploadIcon from "../../ts-icons/uploadIcon.svg";
 import BinIcon from "../../ts-icons/binIcon.svg";
-import { fileSize, handleFileRead } from "../../utils/files.utils";
+import { fileSize } from "../../utils/files.utils";
 import InvitesListing from "./InvitesListing";
 import { RoutesEnums } from "../../enums/routes.enum";
 import { getDownloadDocument, investSyndicate } from "../../apis/syndicate.api";
 import Investors from "./DealInvestors";
 import { convertStatusLanguage } from "../../utils/string.utils";
+import CurrencyConversionModal from "./CurrencyConversionModal";
 
-const CURRENCIES = ["USD", "AED"];
 
 const StartupCase = ({
   dealToken,
@@ -72,13 +71,12 @@ const StartupCase = ({
   const [investmentAmount, setAmount] = useState();
   const [selectedCurrency, setSelectedCurrency] = useState("USD");
 
+  const [modalOpenConversion, setModalOpenConversion]: any = useState(false);
+
   const handleAmountChange = (event: any) => {
     if (event.target.value !== 0) setAmount(event.target.value);
   };
 
-  const handleCurrencyChange = (event: any) => {
-    setSelectedCurrency(event.target.value);
-  };
   const [changes, setChanges]: any = useState({
     comment: "",
     action: "",
@@ -141,7 +139,7 @@ const StartupCase = ({
 
   useEffect(() => {
     deal && (deal?.invite ? setInvited(true) : setInvited(false));
-  });
+  },[deal]);
 
   const onGetdeal = async () => {
     try {
@@ -847,7 +845,9 @@ const StartupCase = ({
                             className="min-w-full h-9 no-spin-button"
                             pattern="[0-9]*"
                             placeholder={
-                              selectedCurrency === "USD" ? language?.v3?.investor?.placeholderUSD : language?.v3?.investor?.placeholderAED
+                              selectedCurrency === "USD"
+                                ? language?.v3?.investor?.placeholderUSD
+                                : language?.v3?.investor?.placeholderAED
                             }
                             onKeyDown={(evt) =>
                               ["e", "E", "+", "-"].includes(evt.key) &&
@@ -859,7 +859,7 @@ const StartupCase = ({
                             onChange={handleAmountChange}
                           />
                         </label>
-             {/*            <label className="w-[10%]">
+                        {/*            <label className="w-[10%]">
                           <select
                             className="h-9"
                             value={selectedCurrency}
@@ -1017,17 +1017,28 @@ const StartupCase = ({
                 )}
               <aside className="border-[1px] border-neutral-200 rounded-md w-full px-3 pt-3 mt-5 bg-white">
                 <span className="w-full flex flex-col">
-                <span className="w-full flex">
-                <h2 className="text-neutral-700 text-xl font-medium flex-nowrap w-full">
-                  {language?.v3?.common?.invest_details}
-                </h2>
-                <span className="w-[60%] text-blue-500 text-xs flex items-center hover:underline cursor-pointer">View conversion rate</span>
+                  <span className="w-full flex">
+                    <h2 className="text-neutral-700 text-xl font-medium flex-nowrap w-full">
+                      {language?.v3?.common?.invest_details}
+                    </h2>
+                    {!(investmentAmount === undefined ||
+                      investmentAmount < 1 ||
+                      InvestButtonDisable) && (
+                      <span
+                        onClick={() => {
+                          setModalOpenConversion(true);
+                        }}
+                        className="w-[60%] text-[#155E75] text-xs flex items-center justify-end hover:underline cursor-pointer"
+                      >
+                        View conversion rate
+                      </span>
+                    )}
+                  </span>
+                  <small className="text-neutral-500 text-sm font-normal">
+                    {language?.v3?.common?.end_on} {deal?.end_at}
+                  </small>
                 </span>
-                <small className="text-neutral-500 text-sm font-normal">
-                  {language?.v3?.common?.end_on} {deal?.end_at}
-                </small>
-                </span>
-                
+
                 {convertStatusLanguage(deal?.status) === DealStatus.LIVE &&
                   !deal?.is_invested && (
                     <aside className="">
@@ -1038,7 +1049,9 @@ const StartupCase = ({
                               className="min-w-full h-9 no-spin-button"
                               pattern="[0-9]*"
                               placeholder={
-                                selectedCurrency === "USD" ? language?.v3?.investor?.placeholderUSD : language?.v3?.investor?.placeholderAED
+                                selectedCurrency === "USD"
+                                  ? language?.v3?.investor?.placeholderUSD
+                                  : language?.v3?.investor?.placeholderAED
                               }
                               onKeyDown={(evt) =>
                                 ["e", "E", "+", "-"].includes(evt.key) &&
@@ -1050,7 +1063,7 @@ const StartupCase = ({
                               onChange={handleAmountChange}
                             />
                           </label>
-  {/*                         <label>
+                          {/*                         <label>
                             <select
                               className="h-9"
                               value={selectedCurrency}
@@ -1427,7 +1440,7 @@ const StartupCase = ({
                   setModalOpen3(true);
                 }}
               >
-                {language?.v3?.syndicate?.continue}
+                {language?.v3?.scyndicate?.continue}
               </Button>
             </footer>
           </aside>
@@ -1538,6 +1551,13 @@ const StartupCase = ({
             </footer>
           </aside>
         </div>
+      </Modal>
+
+      <Modal show={modalOpenConversion} className="w-full">
+        <CurrencyConversionModal
+          setOpen={setModalOpenConversion}
+          amount={investmentAmount}
+        />
       </Modal>
     </main>
   );
