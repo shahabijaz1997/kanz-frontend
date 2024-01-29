@@ -80,7 +80,7 @@ const PropertyOwnerCase = ({
   const [modalOpenComment, setmodalOpenComment]: any = useState(null);
   const [disableUpload, setdisableUpload]: any = useState(false);
   const [InvestButtonDisable, setInvestButtonDisable]: any = useState(false);
-  const [selectedCurrency, setSelectedCurrency] = useState("USD");
+  const [selectedCurrency, setSelectedCurrency] = useState("AED");
   const [investmentAmount, setAmount] = useState<number>();
   const handleAmountChange = (event: any) => {
     setAmount(event.target.value);
@@ -113,19 +113,24 @@ const PropertyOwnerCase = ({
     const file: any = e.target.files?.[0];
     if (file) {
       const fileSizeInMB = fileSize(file.size, "mb");
-  
+      const allowedFileTypes = [
+        "image/jpeg",
+        "image/jpg",
+        "image/png",
+        "application/pdf",
+      ];
+      if (!allowedFileTypes.includes(file.type)) {
+        toast.error(language?.v3?.fundraiser?.file_type_err, toastUtil);
+        return;
+      }
+
       if (fileSizeInMB > 10) {
         toast.error(language?.v3?.fundraiser?.file_size_err, toastUtil);
         navigator.vibrate(1000);
         return;
       }
-  
-      const allowedFileTypes = ["image/jpeg", "image/jpg", "image/png", "application/pdf"];
-      if (!allowedFileTypes.includes(file.type)) {
-        toast.error(language?.v3?.fundraiser?.file_type_err, toastUtil);
-        return;
-      }    setFileInformation(file);
-        e.target.value = "";
+      setFileInformation(file);
+      e.target.value = "";
     }
   };
 
@@ -672,7 +677,7 @@ const PropertyOwnerCase = ({
                           onChange={handleAmountChange}
                         />
                       </label>
-                      <label className="w-[10%]">
+            {/*           <label className="w-[10%]">
                         <select
                           className="h-9"
                           value={selectedCurrency}
@@ -685,7 +690,7 @@ const PropertyOwnerCase = ({
                           {language?.v3?.investor?.aedSymbol}
                           </option>
                         </select>
-                      </label>
+                      </label> */}
                     </div>
 
                     <div className="mt-3">
@@ -854,7 +859,7 @@ const PropertyOwnerCase = ({
                           onChange={handleAmountChange}
                         />
                       </label>
-                      <label className="w-[10%]">
+   {/*                    <label className="w-[10%]">
                         <select
                           className="h-9"
                           value={selectedCurrency}
@@ -867,7 +872,7 @@ const PropertyOwnerCase = ({
                           {language?.v3?.investor?.aedSymbol}
                           </option>
                         </select>
-                      </label>
+                      </label> */}
                     </div>
                     <div className="mt-4">
                       <Button
@@ -1239,8 +1244,20 @@ const PropertyOwnerCase = ({
           className="rounded-md overflow-hidden inline-grid place-items-center absolute top-1/2 left-1/2 translate-x-[-50%] translate-y-[-50%]"
           style={{ backgroundColor: "rgba(0, 0, 0, 0.078" }}
         >
-          <aside className="bg-white w-[400px] rounded-md h-full">
+          <aside className="bg-white w-[400px] rounded-md h-full pb-5">
             <section className="py-3 px-10">
+            <header className="h-16 inline-flex w-full justify-between items-center">
+                <div
+                  className="bg-white h-8 w-8  p-1 cursor-pointer"
+                  onClick={() => {
+                    setModalOpenSyndication(false);
+                    setChanges({ comment: "", action: "", document: null });
+                    // setFiles([]);
+                  }}
+                >
+                  <CrossIcon stroke="#000" />
+                </div>
+              </header>
               <div className="mb-6 pt-5 text-center">
                 <label
                   htmlFor=""
@@ -1379,11 +1396,7 @@ const PropertyOwnerCase = ({
           </aside>
         </div>
       </Modal>
-      <svg id="svg-filter">
-        <filter id="svg-blur">
-          <feGaussianBlur in="SourceGraphic" stdDeviation="4"></feGaussianBlur>
-        </filter>
-      </svg>
+
     </main>
   );
 };

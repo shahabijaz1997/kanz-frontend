@@ -299,3 +299,19 @@ export const requestSyndication = (
     }
   );
 };
+
+export const getInvestorDealDetail = (dealId: any, token: string) => {
+  return axios.get(`${ENV.API_URL}/${ENV.API_VERSION}/analytics/deals/${dealId}`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+};
+
+export const getDealChartStats = (dealId: any, token: string) => {
+  return axios.get(`${ENV.API_URL}/${ENV.API_VERSION}/analytics/deals/${dealId}/stats`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+};

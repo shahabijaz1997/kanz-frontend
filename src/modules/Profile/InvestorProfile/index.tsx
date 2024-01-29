@@ -85,7 +85,7 @@ const InvestorProfile = ({ getDetail, setLoading, data, setPhotoUploadModal }: a
         </span>
 
         <span className="flex mt-1 items-center justify-start"> 
-            <Button onClick={()=>{updateInfo()}} className="!p-2 !text-xs !font-medium" type="primary">Update</Button>
+            <Button disabled={!name} onClick={()=>{updateInfo()}} className="!p-2 !text-xs !font-medium" type="primary">Update</Button>
             </span>
       </div>
       <span>

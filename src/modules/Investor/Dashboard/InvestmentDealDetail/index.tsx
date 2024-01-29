@@ -1,22 +1,57 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { KanzRoles } from "../../../../enums/roles.enum";
 import Header from "../../../../shared/components/Header";
 import Sidebar from "../../../../shared/components/Sidebar";
 import Spinner from "../../../../shared/components/Spinner"
 import Chevrond from "../../../../ts-icons/chevrond.svg";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { RootState } from "../../../../redux-toolkit/store/store";
 import DealDescription from "./DealDescription";
 import InvestmentDescription from "./InvestmentDescription";
+import { getDealChartStats, getInvestorDealDetail } from "../../../../apis/deal.api";
 
 const InvestmentDealDetail = () =>{
     const orientation: any = useSelector(
         (state: RootState) => state.orientation.value
       );
   const language: any = useSelector((state: RootState) => state.language.value);
-  const [loading, setLoading]: any = useState(false);
   const navigate = useNavigate();
+
+  const authToken: any = useSelector((state: RootState) => state.auth.value);
+  const [loading, setLoading] = useState(false);
+   const [deal, setDeal]: any = useState();
+   const [dealStats, setDealStats]: any = useState();
+    const params = useParams()
+    useEffect(() => {
+      getDealDetail()
+      getChartStats()
+    },[params])
+    const getDealDetail : any = async () => {    
+      try {
+        setLoading(true);
+        let { status, data } = await getInvestorDealDetail(params?.token, authToken);
+        if (status === 200) {
+          setDeal(data?.status?.data);
+        }
+      } catch (error) {
+      } finally {
+        setLoading(false);
+      }
+    }
+    const getChartStats : any = async () => {    
+      try {
+        setLoading(true);
+        let { status, data } = await getDealChartStats(params?.token, authToken);
+        if (status === 200) {
+          setDealStats(data?.status?.data);
+        }
+      } catch (error) {
+      } finally {
+        setLoading(false);
+      }
+    }
+  
     return (
         <main className="h-full max-h-full overflow-y-hidden pb-5">
         <section>
@@ -54,20 +89,20 @@ const InvestmentDealDetail = () =>{
                     stroke={"#000"}
                   />
               <small className="text-neutral-500 text-sm font-medium">
-                {language?.v3?.common?.deal}
+                {"Dashboard"}
               </small>
             </span>
               <section className="flex-col flex justify-start items-start w-full mb-6">
                 <h1 className="text-black font-medium text-2xl w-full">
-                  Startup Title
+                  {deal?.title}
                 </h1>
-                <p className=" mt-2 text-[#737373]">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+                <p className=" mt-2 text-[#737373]">{deal?.description}</p>
               </section>
               <aside>
-                <DealDescription/>
+                <DealDescription data={deal}/>
               </aside>
               <aside className="mt-5">
-                <InvestmentDescription/>
+                <InvestmentDescription data={dealStats}/>
               </aside>
             </section>
           )}

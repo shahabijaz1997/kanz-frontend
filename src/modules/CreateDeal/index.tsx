@@ -275,10 +275,11 @@ const CreateDeal = () => {
         deal: {
           deal_type:
             metadata.dealType === KanzRoles.STARTUP ? "startup" : "property",
+          
           step: questions[step - 1]?.id,
           fields,
         },
-      };
+      };  
       if (dataHolder) payload.deal.id = dataHolder;
       let submission;
       if (step >= totalSteps?.all.length)

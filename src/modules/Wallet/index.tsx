@@ -1,0 +1,157 @@
+import { useSelector } from "react-redux";
+import Header from "../../shared/components/Header";
+import Sidebar from "../../shared/components/Sidebar";
+import Spinner from "../../shared/components/Spinner";
+import { RootState } from "../../redux-toolkit/store/store";
+import { useEffect, useState } from "react";
+import Overview from "./Overview";
+import AccountDetails from "./AccountDetails";
+import UploadReceipt from "./UploadReceipt";
+import { createTransaction, getBalance } from "../../apis/wallet.api";
+import { jsonToFormData } from "../../utils/files.utils";
+import Modal from "../../shared/components/Modal";
+import CrossIcon from "../../ts-icons/crossIcon.svg";
+import Button from "../../shared/components/Button";
+
+const Wallet = () => {
+  const authToken: any = useSelector((state: RootState) => state.auth.value);
+  const metadata: any = useSelector((state: RootState) => state.metadata.value);
+  const [loading, setLoading] = useState(false);
+  const [step, setCurrentStep] = useState(1);
+  const [amount, setAmount] = useState<number>(0);
+  const [currentBalance, setCurrentBalance] = useState<string>();
+  const [method, setMethod] = useState("");
+  const [image, setImage]: any = useState();
+  const [verificationModal, setVerificationModal] = useState(false);
+
+  useEffect(() => {
+    getCurrentBalance()
+  }, []);
+
+  const getCurrentBalance = async () => {
+    try {
+      setLoading(true);
+      let { status, data } = await getBalance(authToken);
+      if (status === 200) {
+        setCurrentBalance(data?.wallet?.balance)
+      }
+    } catch (error: any) {
+      console.log(error);
+    } finally {
+      setLoading(false);
+    }
+  };
+  const postTransaction = async () => {
+    try {
+      setLoading(true);
+      let payload : any = {
+        transaction : {
+          amount: amount,
+          transaction_type:"deposit",
+          method: method,
+          receipt: image,
+          timestamp: String(new Date())
+        }
+      }
+      let { status, data } = await createTransaction(jsonToFormData(payload),authToken);
+      if (status === 200) {
+        setCurrentBalance(data?.wallet?.balance)
+      }
+    } catch (error: any) {
+      console.log(error);
+    } finally {
+      setLoading(false);
+      setCurrentStep(1)
+      setVerificationModal(true)
+    }
+  };
+
+  return (
+    <main className="max-h-full">
+      <Header />
+      <aside className="w-full h-full flex items-start justify-start ">
+        <Sidebar type={metadata?.type} />
+        <section
+          style={{
+            width: "calc(100% - 250px)",
+          }}
+          className="bg-cbc-auth p-[4rem] h-[100vh] relative overflow-y-scroll w-full"
+        >
+          {loading ? (
+            <div className="mt-48 w-full h-full grid place-items-center">
+              <Spinner />
+            </div>
+          ) : (
+            <aside>
+              <h1 className="text-black font-medium text-xl mb-2">
+                {"Wallet"}
+              </h1>
+
+              {step === 1 && (
+                <Overview
+                  getCurrentBalance={getCurrentBalance}
+                  currentBalance={currentBalance}
+                  method={method}
+                  setStep={setCurrentStep}
+                  amount={amount}
+                  setAmount={setAmount}
+                  setMethod={setMethod}
+                />
+              )}
+              {step === 2 && <AccountDetails amount={amount} setStep={setCurrentStep} />}
+              {step === 3 && <UploadReceipt setImage={setImage} setStep={setCurrentStep} submitForm={postTransaction} />}
+            </aside>
+          )}
+        </section>
+        <Modal show={verificationModal ? true : false} className="w-full">
+        <div
+          className="rounded-md overflow-hidden inline-grid place-items-center absolute top-1/2 left-1/2 translate-x-[-50%] translate-y-[-50%]"
+          style={{ backgroundColor: "rgba(0, 0, 0, 0.078" }}
+        >
+          <aside className="bg-white w-[500px] rounded-md h-full">
+            <header className=" h-16 py-2 px-3 inline-flex w-full justify-end items-center">
+              <div
+                onClick={() => setVerificationModal(false)}
+                className="bg-white h-8 w-8 p-1 cursor-pointer"
+              >
+                <CrossIcon stroke="#000" />
+              </div>
+            </header>
+            <section className="flex flex-col items-center justify-center">
+              <h3 className="flex items-center w-full justify-center font-bold text-lg">
+                Verficiation Notice
+              </h3>
+              <p className="text-[#737373] text-sm mt-3 w-full text-center px-10">
+              Your receipt has been uploaded and is pending for verification from the back office. Once verified, the amount will be credited into your wallet.
+              </p>
+              <footer className="w-[80%] inline-flex justify-center gap-10 py-6 px-3">
+                <Button
+                onClick={()=>{
+                  setVerificationModal(false)
+                }}
+                  type="outlined"
+                  className="w-full !py-1"
+                  divStyle="flex items-center justify-center w-full"
+                >
+                  {"Cancel"}
+                </Button>
+                <Button
+                  onClick={() => {
+                    setVerificationModal(false)
+                  }}
+                  className="w-full !py-1"
+                  divStyle="flex items-center justify-center w-full"
+                >
+                  {"Continue"}
+                </Button>
+              </footer>
+            </section>
+          </aside>
+        </div>
+      </Modal>
+      </aside>
+    </main>
+  );
+};
+
+export default Wallet;

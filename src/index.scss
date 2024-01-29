@@ -109,6 +109,11 @@
    transition: max-height 0.5s ease-in-out;
 }
 
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+}
+
 .masked:after {
   content: "";
   position: absolute;

@@ -17,7 +17,6 @@ import CurrencySVG from "../../assets/svg/currency.svg";
 
 import {
   comaFormattedNumber,
-  numberFormatter,
   timeAgo,
 } from "../../utils/object.utils";
 import { DealCheckType, DealStatus, FileType } from "../../enums/types.enum";
@@ -31,14 +30,14 @@ import { toast } from "react-toastify";
 import { toastUtil } from "../../utils/toast.utils";
 import UploadIcon from "../../ts-icons/uploadIcon.svg";
 import BinIcon from "../../ts-icons/binIcon.svg";
-import { fileSize, handleFileRead } from "../../utils/files.utils";
+import { fileSize } from "../../utils/files.utils";
 import InvitesListing from "./InvitesListing";
 import { RoutesEnums } from "../../enums/routes.enum";
 import { getDownloadDocument, investSyndicate } from "../../apis/syndicate.api";
 import Investors from "./DealInvestors";
 import { convertStatusLanguage } from "../../utils/string.utils";
+import CurrencyConversionModal from "./CurrencyConversionModal";
 
-const CURRENCIES = ["USD", "AED"];
 
 const StartupCase = ({
   dealToken,
@@ -72,13 +71,12 @@ const StartupCase = ({
   const [investmentAmount, setAmount] = useState();
   const [selectedCurrency, setSelectedCurrency] = useState("USD");
 
+  const [modalOpenConversion, setModalOpenConversion]: any = useState(false);
+
   const handleAmountChange = (event: any) => {
     if (event.target.value !== 0) setAmount(event.target.value);
   };
 
-  const handleCurrencyChange = (event: any) => {
-    setSelectedCurrency(event.target.value);
-  };
   const [changes, setChanges]: any = useState({
     comment: "",
     action: "",
@@ -89,19 +87,23 @@ const StartupCase = ({
     const file: any = e.target.files?.[0];
     if (file) {
       const fileSizeInMB = fileSize(file.size, "mb");
-  
+      const allowedFileTypes = [
+        "image/jpeg",
+        "image/jpg",
+        "image/png",
+        "application/pdf",
+      ];
+      if (!allowedFileTypes.includes(file.type)) {
+        toast.error(language?.v3?.fundraiser?.file_type_err, toastUtil);
+        return;
+      }
       if (fileSizeInMB > 10) {
         toast.error(language?.v3?.fundraiser?.file_size_err, toastUtil);
         navigator.vibrate(1000);
         return;
       }
-  
-      const allowedFileTypes = ["image/jpeg", "image/jpg", "image/png", "application/pdf"];
-      if (!allowedFileTypes.includes(file.type)) {
-        toast.error(language?.v3?.fundraiser?.file_type_err, toastUtil);
-        return;
-      }    setFileInformation(file);
-        e.target.value = "";
+      setFileInformation(file);
+      e.target.value = "";
     }
   };
 
@@ -141,7 +143,7 @@ const StartupCase = ({
 
   useEffect(() => {
     deal && (deal?.invite ? setInvited(true) : setInvited(false));
-  });
+  },[deal]);
 
   const onGetdeal = async () => {
     try {
@@ -624,7 +626,6 @@ const StartupCase = ({
         toast.success(language?.v3?.syndicate?.invested, toastUtil);
       }
     } catch (error: any) {
-      if (error?.response?.status === 400)
         toast.warning(error?.response?.data?.status?.message, toastUtil);
     } finally {
       setLoading(false);
@@ -792,7 +793,7 @@ const StartupCase = ({
                 <section className="h-[700px] rounded-[8px] overflow-hidden border-[1px] border-neutral-200 relative">
                   <aside
                     className="w-full overflow-y-auto bg-cbc-grey-sec p-4"
-                    style={{ height: "calc(100% - 60px)" }}
+                    style={{ height: "100%" }}
                   >
                     {fileLoading ? (
                       <div
@@ -837,7 +838,7 @@ const StartupCase = ({
                 </section>
               )}
 
-              {convertStatusLanguage(deal?.status) === DealStatus.LIVE &&
+{/*               {convertStatusLanguage(deal?.status) === DealStatus.LIVE &&
                 !deal?.is_invested && (
                   <>
                     <section className="mb-4 mt-10">
@@ -847,7 +848,9 @@ const StartupCase = ({
                             className="min-w-full h-9 no-spin-button"
                             pattern="[0-9]*"
                             placeholder={
-                              selectedCurrency === "USD" ? language?.v3?.investor?.placeholderUSD : language?.v3?.investor?.placeholderAED
+                              selectedCurrency === "USD"
+                                ? language?.v3?.investor?.placeholderUSD
+                                : language?.v3?.investor?.placeholderAED
                             }
                             onKeyDown={(evt) =>
                               ["e", "E", "+", "-"].includes(evt.key) &&
@@ -859,20 +862,7 @@ const StartupCase = ({
                             onChange={handleAmountChange}
                           />
                         </label>
-                        <label className="w-[10%]">
-                          <select
-                            className="h-9"
-                            value={selectedCurrency}
-                            onChange={handleCurrencyChange}
-                          >
-                            <option className="text-md font-light" value="USD">
-                            {language?.v3?.investor?.usdSymbol}
-                            </option>
-                            <option className="text-md font-light" value="AED">
-                            {language?.v3?.investor?.aedSymbol}
-                            </option>
-                          </select>
-                        </label>
+
                       </div>
                       <div className="mt-3">
                         <Button
@@ -892,7 +882,7 @@ const StartupCase = ({
                       </div>
                     </section>
                   </>
-                )}
+                )} */}
               <section>
                 <div className="inline-flex justify-between w-full flex-col my-10">
                   <h1 className="text-black font-medium text-2xl mb-3">
@@ -1016,12 +1006,29 @@ const StartupCase = ({
                   </div>
                 )}
               <aside className="border-[1px] border-neutral-200 rounded-md w-full px-3 pt-3 mt-5 bg-white">
-                <h2 className="text-neutral-700 text-xl font-medium">
-                  {language?.v3?.common?.invest_details}
-                </h2>
-                <small className="text-neutral-500 text-sm font-normal">
-                  {language?.v3?.common?.end_on} {deal?.end_at}
-                </small>
+                <span className="w-full flex flex-col">
+                  <span className="w-full flex">
+                    <h2 className="text-neutral-700 text-xl font-medium flex-nowrap w-full">
+                      {language?.v3?.common?.invest_details}
+                    </h2>
+                    {!(investmentAmount === undefined ||
+                      investmentAmount < 1 ||
+                      InvestButtonDisable) && (
+                      <span
+                        onClick={() => {
+                          setModalOpenConversion(true);
+                        }}
+                        className="w-[60%] text-[#155E75] text-xs flex items-center justify-end hover:underline cursor-pointer"
+                      >
+                        View conversion rate
+                      </span>
+                    )}
+                  </span>
+                  <small className="text-neutral-500 text-sm font-normal">
+                    {language?.v3?.common?.end_on} {deal?.end_at}
+                  </small>
+                </span>
+
                 {convertStatusLanguage(deal?.status) === DealStatus.LIVE &&
                   !deal?.is_invested && (
                     <aside className="">
@@ -1032,7 +1039,9 @@ const StartupCase = ({
                               className="min-w-full h-9 no-spin-button"
                               pattern="[0-9]*"
                               placeholder={
-                                selectedCurrency === "USD" ? language?.v3?.investor?.placeholderUSD : language?.v3?.investor?.placeholderAED
+                                selectedCurrency === "USD"
+                                  ? language?.v3?.investor?.placeholderUSD
+                                  : language?.v3?.investor?.placeholderAED
                               }
                               onKeyDown={(evt) =>
                                 ["e", "E", "+", "-"].includes(evt.key) &&
@@ -1043,26 +1052,6 @@ const StartupCase = ({
                               value={investmentAmount}
                               onChange={handleAmountChange}
                             />
-                          </label>
-                          <label>
-                            <select
-                              className="h-9"
-                              value={selectedCurrency}
-                              onChange={handleCurrencyChange}
-                            >
-                              <option
-                                className="text-md font-light"
-                                value="USD"
-                              >
-                            {language?.v3?.investor?.usdSymbol}
-                              </option>
-                              <option
-                                className="text-md font-light"
-                                value="AED"
-                              >
-                            {language?.v3?.investor?.aedSymbol}
-                              </option>
-                            </select>
                           </label>
                         </div>
                         <Button
@@ -1397,8 +1386,18 @@ const StartupCase = ({
           className="rounded-md overflow-hidden inline-grid place-items-center absolute top-1/2 left-1/2 translate-x-[-50%] translate-y-[-50%]"
           style={{ backgroundColor: "rgba(0, 0, 0, 0.078" }}
         >
-          <aside className="bg-white w-[400px] rounded-md h-full">
+          <aside className="bg-white w-[400px] rounded-md h-full pb-5">
             <section className="py-3 px-10">
+            <header className="h-16 inline-flex w-full justify-between items-center">
+                <div
+                  className="bg-white h-8 w-8 p-1 cursor-pointer"
+                  onClick={() => {
+                    setModalOpenSyndication(false);
+                  }}
+                >
+                  <CrossIcon stroke="#000" />
+                </div>
+              </header>
               <div className="mb-6 pt-5 text-center">
                 <label
                   htmlFor=""
@@ -1532,6 +1531,13 @@ const StartupCase = ({
             </footer>
           </aside>
         </div>
+      </Modal>
+
+      <Modal show={modalOpenConversion} className="w-full">
+        <CurrencyConversionModal
+          setOpen={setModalOpenConversion}
+          amount={investmentAmount}
+        />
       </Modal>
     </main>
   );

@@ -45,7 +45,7 @@ const getFormattedData = (data: any) => {
 const options: any = {
   plugins: {
       tooltip: {
-        enabled: false,
+        enabled: true,
       },
     legend: {
       align: "end", 
@@ -62,17 +62,21 @@ const options: any = {
   },
   scales: {
     x: {
-      stacked: true,
+      stacked: "bar",
       grid: {
         drawOnChartArea: false,
       },
       barThickness: 10,
     },
     y: {
-      stacked: true,
+      ticks: {
+        beginAtZero : true
+      },
+      stacked: "bar",
     },
   },
   barPercentage: 0.1,
+  minBarLength: 10,
 };
 
 const PerfomanceGraph  = ({data}:any) => {

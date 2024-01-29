@@ -73,15 +73,7 @@ const InvestmentCalculator = ({}: any) => {
   }
 
   const [amount, setAmount] = useState(0);
-  const [selectedCurrency, setSelectedCurrency] = useState("USD");
 
-  const handleAmountChange = (event: any) => {
-    setAmount(event.target.value);
-  };
-
-  const handleCurrencyChange = (event: any) => {
-    setSelectedCurrency(event.target.value);
-  };
 
   useEffect(() => {
     setFinalValue(
