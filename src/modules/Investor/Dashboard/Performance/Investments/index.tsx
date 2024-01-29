@@ -16,11 +16,16 @@ import CustomStatus from "../../../../../shared/components/CustomStatus";
 import { getInvestorAnalyticsInvestments } from "../../../../../apis/investor.api";
 import MultipleDecider from "./MultipleDecider";
 import Search from "../../../../../shared/components/Search";
+import Chevrond from "../../../../../ts-icons/chevrond.svg";
 
 const Investments = ({}: any) => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const language: any = useSelector((state: RootState) => state.language.value);    
   const authToken: any = useSelector((state: RootState) => state.auth.value);
+  const orientation: any = useSelector(
+    (state: RootState) => state.orientation.value
+  )
 
   const columns = [
     language?.v3?.syndicate?.deals?.table?.title,
@@ -80,6 +85,25 @@ const Investments = ({}: any) => {
               ?.target]: `$${numberFormatter(Number(deal?.target))}`,
             ["Net Value"]: `$${numberFormatter(Number(deal?.net_value))}`,
             ["Multiple"]: <MultipleDecider multiple={deal?.multiple} />,
+            [""]: (
+              <div
+                onClick={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  navigate(
+                    `${RoutesEnums.INVESTOR_DEAL_DETAILS}/${deal?.deal_token}`,
+                    { state: window.location.pathname }
+                  );
+                }}
+                className="bg-neutral-100 inline-flex items-center justify-center w-[24px] h-[24px] rounded-full transition-all hover:bg-cbc-transparent mx-5"
+              >
+                <Chevrond
+                    className={`${orientation === "rtl" ? "rotate-[-270deg]" : "rotate-[-90deg]"} w-4 h-4`}
+                    strokeWidth={2}
+                    stroke={"#000"}
+                  />
+              </div>
+            ),
           };
         });
 

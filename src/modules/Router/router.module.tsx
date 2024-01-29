@@ -383,7 +383,7 @@ const RouterModule = () => {
         }
       />
             <Route
-        path={`${RoutesEnums.INVESTOR_DEAL_DETAILS}`}
+        path={`${RoutesEnums.INVESTOR_DEAL_DETAILS}/:token`}
         element={
           <Suspense fallback={<Loader />}>
             <CHECK_LOGGED_IN>

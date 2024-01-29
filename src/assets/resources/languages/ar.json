@@ -918,6 +918,8 @@
       "approved": "موافقة",
       "live": "يعيش",
       "verified": "تم التحقق",
+      "file_type_err":"يجب أن يكون الملف PNG، JPG، JPEG",
+      "file_size_err":"يجب أن يكون حجم الملف اقل من 10MB",
       "rejected": "مرفوض",
       "create_startup_deal": "إنشاء صفقة بدء التشغيل",
       "create_property_deal": "إنشاء صفقة عقارية",
