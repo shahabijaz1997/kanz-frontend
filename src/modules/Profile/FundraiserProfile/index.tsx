@@ -44,16 +44,16 @@ const FundRaiserProfile = ({
     });
   };
   const refInd: any = useRef(null);
-
+  const urlRegex = /^(https?:\/\/)?(www\.)?(?:[a-zA-Z0-9-]+\.)+[a-zA-Z]{2,}(\.[a-zA-Z]{2,})?$/;
   const updateButtonDisable = () => {
     return !name ||
       !companyName ||
       !legalName ||
-      !website ||
       !description ||
       !address ||
       !ceoName ||
       !ceoEmail
+      || !urlRegex.test(website)
       ? true
       : false;
   };
@@ -91,6 +91,20 @@ const FundRaiserProfile = ({
   useEffect(() => {
     bootstrapData();
   }, []);
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (refInd.current && !refInd.current.contains(event.target as Node)) {
+        setShowData(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [refInd, showData]);
 
   const bootstrapData = async () => {
     try {
@@ -136,12 +150,13 @@ const FundRaiserProfile = ({
             />
           }
         </span>
-        <span className="inline-flex justify-start  font-medium items-center">
+        <span className="inline-flex justify-start text-xl mt-5 font-medium items-center">
           Company Details
         </span>
-        <span className="flex-col flex items-center justify-center">
+        <label className="font-medium">Logo</label>
+        <span className="flex-col flex items-start justify-center">
           <img
-            className="h-36 w-28 border-[0.5px] rounded-md"
+            className="h-56 w-48 border-[0.5px] rounded-md"
             style={{
               objectFit: "contain",
               aspectRatio: "1",
@@ -171,6 +186,7 @@ const FundRaiserProfile = ({
         <span className="inline-flex justify-center gap-12 items-center">
           {
             <InputProfile
+              placeholder="example.com"
               disabled={false}
               label={"Website"}
               value={website}
@@ -179,7 +195,7 @@ const FundRaiserProfile = ({
           }
           {
             <div className="w-[60%] relative" ref={refInd}>
-              <p className="text-xs mb-1 font-medium whitespace-nowrap">
+              <p className="mb-1 font-medium whitespace-nowrap">
                 {"Markets"}
               </p>
               <span className="relative">
@@ -203,12 +219,12 @@ const FundRaiserProfile = ({
                   <Chevrond className="w-3 h-3" stroke="#737373" />
                 </span>
               </span>
-              <div className="absolute top-[53px] left-0 ">
+              <div className="absolute top-[60px] left-0 ">
                 {payload?.market && payload?.market?.length > 0 && (
                   <aside className="inline-flex gap-2 flex-wrap  shadow-sm appearance-none border bg-white border-neutral-300 rounded-md w-full py-1 px-2 text-gray-500 leading-tight focus:outline-none focus:shadow-outline">
                     {React.Children.toArray(
                       filteredData.map((ind: any) => (
-                        <div className="check-background rounded-[4px] p-1 text-[7px] inline-flex items-center">
+                        <div className="check-background rounded-[4px] p-1 text-[11px] inline-flex items-center">
                           <span>{ind[event]?.name}</span>
                           <CrossIcon
                             onClick={() => {
@@ -238,7 +254,7 @@ const FundRaiserProfile = ({
                       onSetPayload(Array.from(new Set(payloadItems)), "market");
                     }}
                     className={
-                      "cursor-pointer rounded-md py-1 px-1 bg-cbc-check text-neutral-700 font-normal text-[7px] hover:bg-cbc-check-hover transition-all"
+                      "cursor-pointer rounded-md py-1 px-1 bg-cbc-check text-neutral-700 font-normal text-[11px] hover:bg-cbc-check-hover transition-all"
                     }
                     parentClass={
                       "flex rounded-md border-[1px] flex-wrap gap-2 bg-white p-2 max-h-[200px] overflow-y-auto"
@@ -262,13 +278,13 @@ const FundRaiserProfile = ({
         <span className="inline-flex justify-start gap-12 items-center">
           {
             <span className={` w-[60%] flex-col flex`}>
-              <p className="text-xs mb-1 font-medium whitespace-nowrap">
+              <p className="mb-1 font-medium whitespace-nowrap">
                 {"Description"}
               </p>
               <textarea
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
-                className={`text-[10px] px-2 py-1.5 w-full border-[1px] rounded-md focus:border-none min-h-40 custom-scroll `}
+                className={` px-2 py-1.5 w-full border-[1px] rounded-md focus:border-none min-h-40 custom-scroll `}
               />
             </span>
           }
@@ -299,7 +315,7 @@ const FundRaiserProfile = ({
               setLoading(true);
               updateInfo(payload);
             }}
-            className="!p-2 !text-xs !font-medium"
+            className="!py-2"
             type="primary"
           >
             Update

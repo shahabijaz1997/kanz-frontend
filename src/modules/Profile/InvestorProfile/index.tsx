@@ -8,7 +8,12 @@ import { RootState } from "../../../redux-toolkit/store/store";
 import { toast } from "react-toastify";
 import { toastUtil } from "../../../utils/toast.utils";
 
-const InvestorProfile = ({ getDetail, setLoading, data, setPhotoUploadModal }: any) => {
+const InvestorProfile = ({
+  getDetail,
+  setLoading,
+  data,
+  setPhotoUploadModal,
+}: any) => {
   const [name, setName] = useState(data?.name);
   const authToken: any = useSelector((state: RootState) => state.auth.value);
 
@@ -16,9 +21,9 @@ const InvestorProfile = ({ getDetail, setLoading, data, setPhotoUploadModal }: a
     try {
       setLoading(true);
       let payload: any = {
-      investor_attributes:{
-        "name": name, 
-      }
+        investor_attributes: {
+          name: name,
+        },
       };
       let { status, data } = await updateProfile(authToken, payload);
       if (status === 200) {
@@ -28,14 +33,13 @@ const InvestorProfile = ({ getDetail, setLoading, data, setPhotoUploadModal }: a
       console.log(error);
     } finally {
       setLoading(false);
-      getDetail()
-
+      getDetail();
     }
   };
 
   return (
     <section className="inline-flex justify-start gap-36 w-full">
-      <div className="flex flex-col gap-8 w-[40%]">
+      <div className="flex flex-col gap-8 w-[50%]">
         <span className="inline-flex justify-center gap-16 items-center">
           {
             <InputProfile
@@ -56,14 +60,25 @@ const InvestorProfile = ({ getDetail, setLoading, data, setPhotoUploadModal }: a
           }
         </span>
         <span className="inline-flex justify-center gap-16 items-center">
-          {
+          {data?.profile_states?.investor_type === "Individual Investor" ? (
             <InputProfile
               disabled={true}
               label={"Nationality"}
               value={data?.profile?.en?.nationality}
-              inputClass={"p-2 w-full border-[1px] text-gray-400 cursor-not-allowed text-[10px]"}
+              inputClass={
+                "p-2 w-full border-[1px] text-gray-400 cursor-not-allowed text-[10px]"
+              }
             />
-          }
+          ) : (
+            <InputProfile
+              disabled={true}
+              label={"Loaction"}
+              value={data?.profile?.en?.location}
+              inputClass={
+                "p-2 w-full border-[1px] text-gray-400 cursor-not-allowed text-[10px]"
+              }
+            />
+          )}
           {
             <InputProfile
               disabled={true}
@@ -73,20 +88,31 @@ const InvestorProfile = ({ getDetail, setLoading, data, setPhotoUploadModal }: a
             />
           }
         </span>
-        <span className="inline-flex justify-start w-[73%] items-center">
-          {
+        {data?.profile_states?.investor_type === "Individual Investor" && (
+          <span className="inline-flex justify-start w-[73%] items-center">
             <InputProfile
               disabled={true}
               label={"Residence"}
               value={data?.profile?.en?.residence}
-              inputClass={"p-2 w-full border-[1px] text-gray-400 cursor-not-allowed text-[10px]"}
+              inputClass={
+                "p-2 w-full border-[1px] text-gray-400 cursor-not-allowed text-[10px]"
+              }
             />
-          }
-        </span>
+          </span>
+        )}
 
-        <span className="flex mt-1 items-center justify-start"> 
-            <Button disabled={!name} onClick={()=>{updateInfo()}} className="!p-2 !text-xs !font-medium" type="primary">Update</Button>
-            </span>
+        <span className="flex mt-1 items-center justify-start">
+          <Button
+            disabled={!name}
+            onClick={() => {
+              updateInfo();
+            }}
+            className="!py-2"
+            type="primary"
+          >
+            Update
+          </Button>
+        </span>
       </div>
       <span>
         <div>
