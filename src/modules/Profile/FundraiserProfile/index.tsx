@@ -38,13 +38,21 @@ const FundRaiserProfile = ({
   const [payload, setPayload]: any = useState({
     market: [],
   });
+  const validateEmail = (email: any) => {
+    return emailRegex.test(email) ? true : false;
+  };
+  const validateProfileLink = (link: any) => {
+    return urlRegex.test(link) ? true : false;
+  };
   const onSetPayload = (data: any, type: string) => {
     setPayload((prev: any) => {
       return { ...prev, [type]: data };
     });
   };
   const refInd: any = useRef(null);
-  const urlRegex = /^(https?:\/\/)?(www\.)?(?:[a-zA-Z0-9-]+\.)+[a-zA-Z]{2,}(\.[a-zA-Z]{2,})?$/;
+  const emailRegex = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i;
+  const urlRegex =
+    /^(https?:\/\/)?(www\.)?(?:[a-zA-Z0-9-]+\.)+[a-zA-Z]{2,}(\.[a-zA-Z]{2,})?$/;
   const updateButtonDisable = () => {
     return !name ||
       !companyName ||
@@ -52,8 +60,8 @@ const FundRaiserProfile = ({
       !description ||
       !address ||
       !ceoName ||
-      !ceoEmail
-      || !urlRegex.test(website)
+      !validateEmail(ceoEmail) ||
+      !validateProfileLink(website)
       ? true
       : false;
   };
@@ -99,10 +107,10 @@ const FundRaiserProfile = ({
       }
     };
 
-    document.addEventListener('mousedown', handleClickOutside);
+    document.addEventListener("mousedown", handleClickOutside);
 
     return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
+      document.removeEventListener("mousedown", handleClickOutside);
     };
   }, [refInd, showData]);
 
@@ -191,13 +199,14 @@ const FundRaiserProfile = ({
               label={"Website"}
               value={website}
               onChange={setWebsite}
+              validationName={"Website"}
+              valid={!validateProfileLink(website)}
             />
+            
           }
           {
             <div className="w-[60%] relative" ref={refInd}>
-              <p className="mb-1 font-medium whitespace-nowrap">
-                {"Markets"}
-              </p>
+              <p className="mb-1 font-medium whitespace-nowrap">{"Markets"}</p>
               <span className="relative">
                 <input
                   id="market"
@@ -304,6 +313,8 @@ const FundRaiserProfile = ({
               label={"CEO email"}
               value={ceoEmail}
               onChange={setCeoEmail}
+              validationName={"Email"}
+              valid={!validateEmail(ceoEmail)}
             />
           }
         </span>

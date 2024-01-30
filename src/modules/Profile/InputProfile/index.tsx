@@ -12,6 +12,9 @@ const InputProfile = (props: any) => {
         type="text"
         onChange={(e) => props?.onChange(e.target.value)}
       />
+      {props?.valid && (
+      <span className="text-xs mt-2 px-1 text-red-500 font-medium">{props?.validationName + " is not valid"}</span>
+      )}
     </span>
   );
 };

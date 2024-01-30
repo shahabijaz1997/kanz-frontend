@@ -38,10 +38,13 @@ const SyndciateProfile = ({
       return { ...prev, [type]: data };
     });
   };
+  const validateProfileLink = (link: any) => {
+    return urlRegex.test(link) ? true : false;
+  };
   const refInd: any = useRef(null);
   const urlRegex = /^(https?:\/\/)?(www\.)?(?:[a-zA-Z0-9-]+\.)+[a-zA-Z]{2,}(\.[a-zA-Z]{2,})?$/;
   const updateButtonDisable = () => {
-    return !name || !website || !tagline || !urlRegex.test(website)
+    return !name || !website || !tagline || !validateProfileLink(website)
       ? true
       : false;
   };
@@ -220,6 +223,8 @@ const SyndciateProfile = ({
             label={"Profile Link"}
             value={website}
             onChange={setWebsite}
+            validationName={"Website"}
+            valid={!validateProfileLink(website)}
           />
           <InputProfile
             disabled={false}
