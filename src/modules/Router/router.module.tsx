@@ -28,6 +28,7 @@ import Profile from "../Profile";
 import Wallet from "../Wallet";
 import Transactions from "../Wallet/Overview/Transactions";
 import Blogs from "../Blogs";
+import BlogView from "../Blogs/BlogView";
 
 /* --- Modules --- */
 
@@ -180,7 +181,7 @@ const RouterModule = () => {
 
       <Route
         path={`${RoutesEnums.BLOG}/:id`}
-        element={<Suspense fallback={<Loader />}>{}</Suspense>}
+        element={<Suspense fallback={<Loader />}>{<BlogView/>}</Suspense>}
       />
 
       {/*

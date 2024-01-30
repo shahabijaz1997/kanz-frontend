@@ -1,3 +1,6 @@
+import { useNavigate } from "react-router-dom";
+import { RoutesEnums } from "../../enums/routes.enum";
+
 const posts = [
     {
       id: 1,
@@ -105,6 +108,8 @@ const posts = [
   ]
   
   export default function Blogs() {
+
+    const navigate = useNavigate();
     return (
       <div className="bg-white py-24 sm:py-32 overflow-scroll max-h-screen">
         <div className="mx-auto  px-6">
@@ -137,7 +142,9 @@ const posts = [
                   </a> */}
                 </div>
                 <div className="group relative">
-                  <h3 className="mt-3 text-lg font-semibold leading-6 text-gray-900 group-hover:text-gray-600">
+                  <h3 onClick={()=>{
+                    navigate(`${RoutesEnums.BLOG}/${post.id}`)
+                  }} className="mt-3 text-lg font-semibold leading-6 text-gray-900 group-hover:text-gray-600">
                     <a href={post.href}>
                       <span className="absolute inset-0" />
                       {post.title}
