@@ -48,6 +48,11 @@ const SyndciateProfile = ({
       ? true
       : false;
   };
+  const emptyFieldsMessage = () => {
+    return !name || !website || !tagline || !website
+      ? true
+      : false;
+  };
 
   const updateInfo = async (payload: any) => {
     try {
@@ -223,7 +228,7 @@ const SyndciateProfile = ({
             label={"Profile Link"}
             value={website}
             onChange={setWebsite}
-            validationName={"Website"}
+            validationName={"URL"}
             valid={!validateProfileLink(website)}
           />
           <InputProfile
@@ -233,6 +238,7 @@ const SyndciateProfile = ({
             onChange={setTagline}
           />
         </span>
+        {emptyFieldsMessage() && (<span className="text-red-500 font-medium text-xs px-1">Please fill all fields to update....</span>)}
         <span className="flex mt-1 items-center justify-start">
           <Button
             disabled={updateButtonDisable()}

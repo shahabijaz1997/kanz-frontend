@@ -66,6 +66,19 @@ const FundRaiserProfile = ({
       : false;
   };
 
+  const emptyFieldsMessage = () => {
+    return !name ||
+      !companyName ||
+      !legalName ||
+      !description ||
+      !address ||
+      !ceoName ||
+      !ceoEmail ||
+      !website
+      ? true
+      : false;
+  };
+
   const updateInfo = async (payload: any) => {
     try {
       let sentPayload = {
@@ -199,7 +212,7 @@ const FundRaiserProfile = ({
               label={"Website"}
               value={website}
               onChange={setWebsite}
-              validationName={"Website"}
+              validationName={"website"}
               valid={!validateProfileLink(website)}
             />
             
@@ -313,12 +326,12 @@ const FundRaiserProfile = ({
               label={"CEO email"}
               value={ceoEmail}
               onChange={setCeoEmail}
-              validationName={"Email"}
+              validationName={"email"}
               valid={!validateEmail(ceoEmail)}
             />
           }
         </span>
-
+        {emptyFieldsMessage() && (<span className="text-red-500 font-medium text-xs px-1">Please fill all fields to update....</span>)}
         <span className="flex mt-1 items-center justify-start">
           <Button
             disabled={updateButtonDisable()}
