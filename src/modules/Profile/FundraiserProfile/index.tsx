@@ -306,7 +306,7 @@ const FundRaiserProfile = ({
               <textarea
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
-                className={` px-2 py-1.5 w-full border-[1px] rounded-md focus:border-none min-h-40 custom-scroll `}
+                className={`${description ? "border-gray-400" : "border-red-500"} px-2 py-1.5 w-full border-[1px] rounded-md  min-h-40 custom-scroll `}
               />
             </span>
           }
