@@ -51,6 +51,7 @@ import { RoutesEnums } from "../../enums/routes.enum";
 import InvestmentCalculator from "./InvestmentCalculator";
 import { getDownloadDocument, investSyndicate } from "../../apis/syndicate.api";
 import { convertStatusLanguage } from "../../utils/string.utils";
+import { revertInvestment } from "./CommonFunctions";
 
 
 const PropertyOwnerCase = ({
@@ -915,15 +916,19 @@ const PropertyOwnerCase = ({
                           {language?.v3?.common?.aedSymbol} {comaFormattedNumber(deal?.my_invested_amount)}
                           </p>
                         </div>
-                        <div>
-                          <Button
-                            onClick={() => {}}
-                            className="!py-1 !px-2 !font-medium !rounded-full border-[1px] border-black !text-xs"
-                            type="outlined"
-                          >
-                            {language?.v3?.syndicate?.reverse}
-                          </Button>
-                        </div>
+                        {deal?.is_refundable && (
+                                <div>
+                                <Button
+                                  onClick={() => {
+                                    revertInvestment({dealId: deal?.id , authToken: authToken , getDealDetail: onGetdeal , setLoading: setLoading})
+                                  }}
+                                  className="!py-1 !px-2 !font-medium !rounded-full border-[1px] border-black !text-xs"
+                                  type="outlined"
+                                >
+                                  {language?.v3?.syndicate?.reverse}
+                                </Button>
+                              </div>
+                        )}
                       </div>
                     </aside>
                   </aside>
