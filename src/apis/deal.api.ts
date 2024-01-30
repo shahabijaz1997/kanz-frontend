@@ -315,3 +315,10 @@ export const getDealChartStats = (dealId: any, token: string) => {
     },
   });
 };
+export const getRevertTransaction = (dealId: any, token: string) => {
+  return axios.get(`${ENV.API_URL}/${ENV.API_VERSION}/deals/${dealId}/investments/revert`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+};
