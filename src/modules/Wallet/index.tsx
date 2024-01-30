@@ -25,8 +25,8 @@ const Wallet = () => {
   const [verificationModal, setVerificationModal] = useState(false);
 
   useEffect(() => {
-    getCurrentBalance()
-  }, []);
+   step === 1 && getCurrentBalance()
+  }, [step]);
 
   const getCurrentBalance = async () => {
     try {
@@ -47,7 +47,6 @@ const Wallet = () => {
       let payload : any = {
         transaction : {
           amount: amount,
-          transaction_type:"deposit",
           method: method,
           receipt: image,
           timestamp: String(new Date())
@@ -56,13 +55,13 @@ const Wallet = () => {
       let { status, data } = await createTransaction(jsonToFormData(payload),authToken);
       if (status === 200) {
         setCurrentBalance(data?.wallet?.balance)
+        setCurrentStep(1)
+        setVerificationModal(true)
       }
     } catch (error: any) {
       console.log(error);
     } finally {
       setLoading(false);
-      setCurrentStep(1)
-      setVerificationModal(true)
     }
   };
 
