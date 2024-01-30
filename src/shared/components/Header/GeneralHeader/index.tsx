@@ -101,7 +101,7 @@ const GeneralHeader = ({
             <button
               className="text-neutral-500 font-medium cursor-pointer text-sm tracking-[0.03em]"
               onClick={() => {
-                
+                navigate(RoutesEnums.BLOGS)
               }}
             >
              Blogs

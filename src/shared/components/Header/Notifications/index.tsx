@@ -2,9 +2,6 @@ import React, { useEffect, useRef } from "react";
 
 const Notifcations = ({ open, setOpen  }: any) => {
   const refInd: any = useRef();
-
-  console.log(refInd)
-
   const notificationMockData = [
     {
       name: "Alice",

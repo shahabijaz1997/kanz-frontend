@@ -41,7 +41,9 @@ export enum RoutesEnums {
   INVESTOR_DEAL_DETAILS = "/investor-deal-details",
   LOADING_LOGOUT = "/logging-out",
   WALLET = "/wallet",
-  TRANSACTIONS="/transactions"
+  TRANSACTIONS="/transactions",
+  BLOGS="/blogs",
+  BLOG="/blog"
 }
 
 export enum StartupRoutes {}
