@@ -1,10 +1,10 @@
 const BlogView = () => {
   return (
     <div className=" mx-auto overflow-y-scroll max-h-screen">
-      <main className=" w-[100wv]  items-center justify-center">
+      <main className=" w-[100wv]  items-center justify-center pb-20">
         <div
           className="mb-4 md:mb-0 w-full max-w-screen-md mx-auto relative"
-          style={{ height: "24em" }}
+          style={{ height: "35em" }}
         >
           <div
             className="absolute left-0 bottom-0 w-full h-full z-10"
