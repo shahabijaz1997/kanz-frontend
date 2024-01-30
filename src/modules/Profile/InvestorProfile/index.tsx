@@ -100,7 +100,7 @@ const InvestorProfile = ({
             />
           </span>
         )}
-
+        { !name && (<span className="text-red-500 text-xs px-1">Please fill all fields to update....</span>)}
         <span className="flex mt-1 items-center justify-start">
           <Button
             disabled={!name}
