@@ -189,7 +189,11 @@ const SyndicateInfoDrawer = ({
                 >
                   {syndicateInfo?.profile_picture_url ? (
                       <img
-                        className="h-12 w-12 rounded-full"
+                      style={{
+                        objectFit: "cover",
+                        aspectRatio: "1 / 1",
+                      }}
+                        className="h-12 w-16 rounded-full"
                         src={syndicateInfo?.profile_picture_url}
                         alt="Profile Pic"
                       />
