@@ -187,10 +187,10 @@ const SyndicateInfoDrawer = ({
                     });
                   }}
                 >
-                  {syndicateInfo?.logo ? (
+                  {syndicateInfo.profile_picture_url ? (
                       <img
                         className="h-12 w-12 rounded-full"
-                        src={syndicateInfo.logo}
+                        src={syndicateInfo.profile_picture_url}
                         alt="Profile Pic"
                       />
                     ) : (
@@ -390,6 +390,12 @@ const SyndicateInfoDrawer = ({
                       <span className="flex items-center justify-center">
                       {syndicateInfo?.lead?.profile_pic ? (
                           <img
+                          style={{
+                            objectFit: "cover",
+                            borderRadius: "50%",
+                            height: "88px",
+                            width: "88px",
+                          }}
                             className="w-full h-full shadow-md rounded-full flex items-center justify-center"
                             src={syndicateInfo?.lead?.profile_pic}
                           />
