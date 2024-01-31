@@ -429,7 +429,7 @@ const SyndicateInfoDrawer = ({
                       {`${
                         syndicateInfo?.portfolio_stats
                           ?.total_deals_closed_in_12_months
-                      }${language?.v3?.investor?.last_12_months}`}
+                      }${" " +language?.v3?.investor?.last_12_months}`}
                     </div>
                     <div className=" mt-0.5 font-medium text-sm text-[#737373]">
                       {language?.v3?.fundraiser?.syndicate_deals}
