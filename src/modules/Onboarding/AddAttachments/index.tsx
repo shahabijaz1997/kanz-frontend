@@ -305,7 +305,7 @@ const AddAttachments = (props: any) => {
 
             <div className="w-[80%] screen800:w-full">
               <p className="mt-4 text-sm font-normal text-neutral-500 text-center leading-relaxed">
-                {language.modal.sub_2} <button className="text-blue-700" onClick={() => navigate(RoutesEnums.WELCOME)}>{language.modal.sub_3}</button> {language.modal.sub_4}
+               {language.modal.sub_4}
               </p>
             </div>
             <Button className="mt-8 w-[120px] h-9" htmlType="button"
