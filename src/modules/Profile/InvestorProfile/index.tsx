@@ -91,6 +91,7 @@ const InvestorProfile = ({
         {data?.profile_states?.investor_type === "Individual Investor" && (
           <span className="inline-flex justify-start w-[73%] items-center">
             <InputProfile
+            width={true}
               disabled={true}
               label={"Residence"}
               value={data?.profile?.en?.residence}
