@@ -97,16 +97,7 @@ const GeneralHeader = ({
     if (authToken) {
       return (
         <React.Fragment>
-          <li>
-            <button
-              className="text-neutral-500 font-medium cursor-pointer text-sm tracking-[0.03em]"
-              onClick={() => {
-                navigate(RoutesEnums.BLOGS)
-              }}
-            >
-             Blogs
-            </button> 
-            </li>  
+ 
           <li className="">
             <div
               onClick={(e:any) => {
@@ -171,7 +162,7 @@ const GeneralHeader = ({
               />
             </li>
           ) : (
-            <React.Fragment>
+            <React.Fragment> 
               <li onClick={() => navigate(RoutesEnums.LOGIN)}>
                 <button className="text-neutral-500 cursor-pointer text-sm tracking-[0.03em]">
                   {language?.buttons?.signin}
@@ -222,6 +213,18 @@ const GeneralHeader = ({
 
           <nav className="">
             <ul className="inline-flex items-center gap-6">
+              {!authToken && (
+                <li>
+                  <button
+                    className="text-neutral-500 font-medium cursor-pointer text-sm tracking-[0.03em]"
+                    onClick={() => {
+                      navigate(RoutesEnums.BLOGS);
+                    }}
+                  >
+                    Blogs
+                  </button>
+                </li>
+              )}
               <li className="relative">
                 {showLanguageDropdown ? (
                   <LanguageDrodownWrapper />
