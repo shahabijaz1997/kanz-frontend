@@ -180,7 +180,7 @@ const RouterModule = () => {
       />
 
       <Route
-        path={`${RoutesEnums.BLOG}/:id`}
+        path={`${RoutesEnums.BLOG}/:slug`}
         element={<Suspense fallback={<Loader />}>{<BlogView/>}</Suspense>}
       />
 
