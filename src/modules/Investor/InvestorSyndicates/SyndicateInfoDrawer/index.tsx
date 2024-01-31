@@ -194,11 +194,11 @@ const SyndicateInfoDrawer = ({
                         alt="Profile Pic"
                       />
                     ) : (
-                      <div className="h-12 w-14 rounded-full bg-gray-300 flex items-center justify-center">
+                      <div className="h-12 w-16 rounded-full bg-gray-300 flex items-center justify-center">
                         {syndicateInfo?.name?.substring(0, 2)}
                       </div>
                     )}
-                  <span className="w-full flex-col items-center justify-center flex h-full">
+                  <span className="w-full flex-col items-start justify-center flex h-full">
                     <span>{syndicateInfo?.name}</span>
                     <span className="flex justify-start w-full text-xs text-[#737373]">
                       {syndicateInfo?.tagline}
