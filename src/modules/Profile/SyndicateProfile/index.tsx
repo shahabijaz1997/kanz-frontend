@@ -145,6 +145,7 @@ const SyndciateProfile = ({
             <p className=" mb-1 font-medium whitespace-nowrap">{"Markets"}</p>
             <span className="relative">
               <input
+              readOnly
                 id="market"
                 autoComplete="off"
                 value={search}
