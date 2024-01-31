@@ -187,10 +187,10 @@ const SyndicateInfoDrawer = ({
                     });
                   }}
                 >
-                  {syndicateInfo.profile_picture_url ? (
+                  {syndicateInfo?.profile_picture_url ? (
                       <img
                         className="h-12 w-12 rounded-full"
-                        src={syndicateInfo.profile_picture_url}
+                        src={syndicateInfo?.profile_picture_url}
                         alt="Profile Pic"
                       />
                     ) : (
