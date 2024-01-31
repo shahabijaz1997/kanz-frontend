@@ -62,11 +62,12 @@ const FundRaiserProfile = ({
       !ceoName ||
       !validateEmail(ceoEmail) ||
       !validateProfileLink(website)
+      ||(!search && !payload?.market.length)
       ? true
       : false;
   };
 
-  const emptyFieldsMessage = () => {
+/*   const emptyFieldsMessage = () => {
     return !name ||
       !companyName ||
       !legalName ||
@@ -77,7 +78,7 @@ const FundRaiserProfile = ({
       !website
       ? true
       : false;
-  };
+  }; */
 
   const updateInfo = async (payload: any) => {
     try {
@@ -160,9 +161,6 @@ const FundRaiserProfile = ({
               onChange={setName}
             />
           }
-          {<InputProfile disabled={true} label={"Email"} value={data?.email} />}
-        </span>
-        <span className="inline-flex justify-start w-[76%] gap-12 items-center">
           {
             <InputProfile
               disabled={true}
@@ -171,57 +169,14 @@ const FundRaiserProfile = ({
             />
           }
         </span>
-        <span className="inline-flex justify-start text-xl mt-5 font-medium items-center">
-          Company Details
+        <span className="inline-flex justify-start w-[76%] gap-12 items-center">
+          {<InputProfile disabled={true} label={"Email"} value={data?.email} />}
         </span>
-        <label className="font-medium">Logo</label>
-        <span className="flex-col flex items-start justify-center">
-          <img
-            className="h-56 w-48 border-[0.5px] rounded-md"
-            style={{
-              objectFit: "contain",
-              aspectRatio: "1",
-            }}
-            src={data?.profile?.logo}
-            alt=""
-          />
-        </span>
-        <span className="inline-flex justify-center gap-12 items-center">
-          {
-            <InputProfile
-              disabled={false}
-              label={"Company Name"}
-              value={companyName}
-              onChange={setCompanyName}
-            />
-          }
-          {
-            <InputProfile
-              disabled={false}
-              label={"Legal Name"}
-              value={legalName}
-              onChange={setLegalname}
-            />
-          }
-        </span>
-        <span className="inline-flex justify-center gap-12 items-center">
-          {
-            <InputProfile
-              placeholder="example.com"
-              disabled={false}
-              label={"Website"}
-              value={website}
-              onChange={setWebsite}
-              validationName={"website"}
-              valid={!validateProfileLink(website)}
-            />
-            
-          }
-          {
-            <div className="w-[60%] relative" ref={refInd}>
+        <div className="w-[90%] relative" ref={refInd}>
               <p className="mb-1 font-medium whitespace-nowrap">{"Markets"}</p>
               <span className="relative">
                 <input
+                  readOnly
                   id="market"
                   autoComplete="off"
                   value={search}
@@ -229,7 +184,7 @@ const FundRaiserProfile = ({
                     setSearch(e.target.value);
                   }}
                   onClick={() => setShowData(!showData)}
-                  className=" text-[10px] px-2 py-1.5 w-full border-[1px] focus:border-[#155E75] rounded-md bg-white"
+                  className=" px-2 py-1.5 w-full border-[1px] focus:border-[#155E75] rounded-md bg-white"
                   type="text"
                 />
                 <span
@@ -285,6 +240,50 @@ const FundRaiserProfile = ({
                 )}
               </div>
             </div>
+        <span className="inline-flex justify-start text-xl mt-5 font-medium items-center">
+          Company Details
+        </span>
+        <label className="font-medium">Logo</label>
+        <span className="flex-col flex items-start justify-center">
+          <img
+            className="h-56 w-48 border-[0.5px] rounded-md"
+            style={{
+              objectFit: "contain",
+              aspectRatio: "1",
+            }}
+            src={data?.profile?.logo}
+            alt=""
+          />
+        </span>
+        <span className="inline-flex justify-center gap-12 items-center">
+          {
+            <InputProfile
+              disabled={false}
+              label={"Company Name"}
+              value={companyName}
+              onChange={setCompanyName}
+            />
+          }
+          {
+            <InputProfile
+              disabled={false}
+              label={"Legal Name"}
+              value={legalName}
+              onChange={setLegalname}
+            />
+          }
+        </span>
+        <span className="inline-flex justify-start gap-12 items-center">
+          {
+            <InputProfile
+              placeholder="example.com"
+              disabled={false}
+              label={"Website"}
+              value={website}
+              onChange={setWebsite}
+              validationName={"website"}
+              valid={!validateProfileLink(website)}
+            />
           }
         </span>
         <span className="inline-flex justify-start gap-12 items-center">
@@ -299,14 +298,16 @@ const FundRaiserProfile = ({
         </span>
         <span className="inline-flex justify-start gap-12 items-center">
           {
-            <span className={` w-[60%] flex-col flex`}>
+            <span className={` w-[90%] flex-col flex`}>
               <p className="mb-1 font-medium whitespace-nowrap">
                 {"Description"}
               </p>
               <textarea
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
-                className={`${description ? "border-gray-400" : "border-red-500"} px-2 py-1.5 w-full border-[1px] rounded-md  min-h-40 custom-scroll `}
+                className={`${
+                  description ? "border-gray-400" : "border-red-500"
+                } px-2 py-1.5 w-full border-[1px] rounded-md  min-h-40 custom-scroll `}
               />
             </span>
           }
@@ -331,7 +332,7 @@ const FundRaiserProfile = ({
             />
           }
         </span>
-        {emptyFieldsMessage() && (<span className="text-red-500 font-medium text-xs px-1">Please fill all fields to update....</span>)}
+        {/*  {emptyFieldsMessage() && (<span className="text-red-500 font-medium text-xs px-1">Please fill all fields to update....</span>)} */}
         <span className="flex mt-1 items-center justify-start">
           <Button
             disabled={updateButtonDisable()}

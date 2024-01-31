@@ -187,18 +187,18 @@ const SyndicateInfoDrawer = ({
                     });
                   }}
                 >
-                  {syndicateInfo?.logo ? (
+                  {syndicateInfo?.profile_picture_url ? (
                       <img
                         className="h-12 w-12 rounded-full"
-                        src={syndicateInfo.logo}
+                        src={syndicateInfo?.profile_picture_url}
                         alt="Profile Pic"
                       />
                     ) : (
-                      <div className="h-12 w-14 rounded-full bg-gray-300 flex items-center justify-center">
+                      <div className="h-12 w-16 rounded-full bg-gray-300 flex items-center justify-center">
                         {syndicateInfo?.name?.substring(0, 2)}
                       </div>
                     )}
-                  <span className="w-full flex-col items-center justify-center flex h-full">
+                  <span className="w-full flex-col items-start justify-center flex h-full">
                     <span>{syndicateInfo?.name}</span>
                     <span className="flex justify-start w-full text-xs text-[#737373]">
                       {syndicateInfo?.tagline}
@@ -390,6 +390,12 @@ const SyndicateInfoDrawer = ({
                       <span className="flex items-center justify-center">
                       {syndicateInfo?.lead?.profile_pic ? (
                           <img
+                          style={{
+                            objectFit: "cover",
+                            borderRadius: "50%",
+                            height: "88px",
+                            width: "88px",
+                          }}
                             className="w-full h-full shadow-md rounded-full flex items-center justify-center"
                             src={syndicateInfo?.lead?.profile_pic}
                           />
@@ -423,7 +429,7 @@ const SyndicateInfoDrawer = ({
                       {`${
                         syndicateInfo?.portfolio_stats
                           ?.total_deals_closed_in_12_months
-                      }${language?.v3?.investor?.last_12_months}`}
+                      }${" " +language?.v3?.investor?.last_12_months}`}
                     </div>
                     <div className=" mt-0.5 font-medium text-sm text-[#737373]">
                       {language?.v3?.fundraiser?.syndicate_deals}

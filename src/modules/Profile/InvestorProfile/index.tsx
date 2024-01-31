@@ -91,6 +91,7 @@ const InvestorProfile = ({
         {data?.profile_states?.investor_type === "Individual Investor" && (
           <span className="inline-flex justify-start w-[73%] items-center">
             <InputProfile
+            width={true}
               disabled={true}
               label={"Residence"}
               value={data?.profile?.en?.residence}
@@ -100,7 +101,6 @@ const InvestorProfile = ({
             />
           </span>
         )}
-        { !name && (<span className="text-red-500 text-xs px-1">Please fill all fields to update....</span>)}
         <span className="flex mt-1 items-center justify-start">
           <Button
             disabled={!name}
