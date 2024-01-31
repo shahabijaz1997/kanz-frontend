@@ -62,7 +62,7 @@ const FundRaiserProfile = ({
       !ceoName ||
       !validateEmail(ceoEmail) ||
       !validateProfileLink(website)
-      || !payload?.market
+      ||(!search && !payload?.market.length)
       ? true
       : false;
   };

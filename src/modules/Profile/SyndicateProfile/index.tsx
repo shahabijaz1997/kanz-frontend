@@ -45,7 +45,11 @@ const SyndciateProfile = ({
   const urlRegex =
     /^(https?:\/\/)?(www\.)?(?:[a-zA-Z0-9-]+\.)+[a-zA-Z]{2,}(\.[a-zA-Z]{2,})?$/;
   const updateButtonDisable = () => {
-    return !name || !website || !tagline || !validateProfileLink(website) || !payload?.market
+    return !name ||
+      !website ||
+      !tagline ||
+      !validateProfileLink(website) ||
+      (!search && !payload?.market.length)
       ? true
       : false;
   };
@@ -134,9 +138,9 @@ const SyndciateProfile = ({
           />
         </span>
         <span className="inline-flex justify-start gap-12 items-center">
-        {<InputProfile disabled={true} label={"Email"} value={data?.email} />}
-          </span>
-          <span className="inline-flex justify-start gap-12 items-center">
+          {<InputProfile disabled={true} label={"Email"} value={data?.email} />}
+        </span>
+        <span className="inline-flex justify-start gap-12 items-center">
           <div className="w-[90%] relative" ref={refInd}>
             <p className=" mb-1 font-medium whitespace-nowrap">{"Markets"}</p>
             <span className="relative">
