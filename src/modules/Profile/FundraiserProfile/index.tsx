@@ -160,9 +160,6 @@ const FundRaiserProfile = ({
               onChange={setName}
             />
           }
-          {<InputProfile disabled={true} label={"Email"} value={data?.email} />}
-        </span>
-        <span className="inline-flex justify-start w-[76%] gap-12 items-center">
           {
             <InputProfile
               disabled={true}
@@ -170,6 +167,9 @@ const FundRaiserProfile = ({
               value={data?.profile?.en?.nationality}
             />
           }
+        </span>
+        <span className="inline-flex justify-start w-[76%] gap-12 items-center">
+          {<InputProfile disabled={true} label={"Email"} value={data?.email} />}
         </span>
         <span className="inline-flex justify-start text-xl mt-5 font-medium items-center">
           Company Details
@@ -215,7 +215,6 @@ const FundRaiserProfile = ({
               validationName={"website"}
               valid={!validateProfileLink(website)}
             />
-            
           }
           {
             <div className="w-[60%] relative" ref={refInd}>
@@ -299,14 +298,16 @@ const FundRaiserProfile = ({
         </span>
         <span className="inline-flex justify-start gap-12 items-center">
           {
-            <span className={` w-[60%] flex-col flex`}>
+            <span className={` w-[90%] flex-col flex`}>
               <p className="mb-1 font-medium whitespace-nowrap">
                 {"Description"}
               </p>
               <textarea
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
-                className={`${description ? "border-gray-400" : "border-red-500"} px-2 py-1.5 w-full border-[1px] rounded-md  min-h-40 custom-scroll `}
+                className={`${
+                  description ? "border-gray-400" : "border-red-500"
+                } px-2 py-1.5 w-full border-[1px] rounded-md  min-h-40 custom-scroll `}
               />
             </span>
           }
@@ -331,7 +332,7 @@ const FundRaiserProfile = ({
             />
           }
         </span>
-        {emptyFieldsMessage() && (<span className="text-red-500 font-medium text-xs px-1">Please fill all fields to update....</span>)}
+        {/*  {emptyFieldsMessage() && (<span className="text-red-500 font-medium text-xs px-1">Please fill all fields to update....</span>)} */}
         <span className="flex mt-1 items-center justify-start">
           <Button
             disabled={updateButtonDisable()}
