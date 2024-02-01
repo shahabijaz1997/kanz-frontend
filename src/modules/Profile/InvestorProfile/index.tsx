@@ -30,7 +30,6 @@ const InvestorProfile = ({
         toast.success('Profile Updated', toastUtil);
       }
     } catch (error) {
-      console.log(error);
     } finally {
       setLoading(false);
       getDetail();

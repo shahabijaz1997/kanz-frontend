@@ -33,6 +33,10 @@ const UpdateModal = ({ setOpen, id }: any) => {
         'image/jpg',
         'image/png',
         'application/pdf',
+        'application/msword',
+        'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+        'application/vnd.ms-excel',
+        'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
       ];
       if (!allowedFileTypes.includes(file.type)) {
         toast.error(language?.v3?.fundraiser?.file_type_err, toastUtil);
