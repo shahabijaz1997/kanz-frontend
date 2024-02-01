@@ -82,7 +82,7 @@ const Profile = () => {
             <div>
               <section className="inline-flex justify-between items-start w-full">
                 <div className="w-full">
-                  <h1 className="text-black font-medium text-xl mb-2">
+                  <h1 className="text-black font-medium text-2xl mb-5">
                     {"Profile"}
                   </h1>
                 </div>

@@ -53,18 +53,12 @@ const Invites = ({}: any): any => {
     return filter[value] || 0
   }
   useEffect(() => {
-    dispatch(saveDataHolder(""));
     getAllInvitees(searchQuery);
-  }, [currentPage, selectedTab]);
+  }, [currentPage]);
   useEffect(() => {
-    dispatch(saveDataHolder(""));
     setCurrentPage(1)
     getAllInvitees(searchQuery);
   }, [selectedTab]);
-  useEffect(() => {
-    dispatch(saveDataHolder(""));
-    getAllInvitees(searchQuery);
-  }, [currentPage]);
 
   const getAllInvitees = async (queryString:string) => {
     try {

@@ -39,7 +39,7 @@ const InvestorProfile = ({
 
   return (
     <section className='inline-flex justify-start gap-36 w-full'>
-      <div className='flex flex-col gap-8 w-[40%]'>
+      <div className='flex flex-col gap-8 w-[50%]'>
         <span className='inline-flex justify-center gap-16 items-center'>
           {
             <InputProfile
@@ -60,7 +60,7 @@ const InvestorProfile = ({
           }
         </span>
         <span className='inline-flex justify-center gap-16 items-center'>
-          {
+          {data?.profile_states?.investor_type === 'Individual Investor' ? (
             <InputProfile
               disabled={true}
               label={'Nationality'}
@@ -69,7 +69,16 @@ const InvestorProfile = ({
                 'p-2 w-full border-[1px] text-gray-400 cursor-not-allowed text-[10px]'
               }
             />
-          }
+          ) : (
+            <InputProfile
+              disabled={true}
+              label={'Loaction'}
+              value={data?.profile?.en?.location}
+              inputClass={
+                'p-2 w-full border-[1px] text-gray-400 cursor-not-allowed text-[10px]'
+              }
+            />
+          )}
           {
             <InputProfile
               disabled={true}
@@ -79,9 +88,10 @@ const InvestorProfile = ({
             />
           }
         </span>
-        <span className='inline-flex justify-start w-[73%] items-center'>
-          {
+        {data?.profile_states?.investor_type === 'Individual Investor' && (
+          <span className='inline-flex justify-start w-[73%] items-center'>
             <InputProfile
+              width={true}
               disabled={true}
               label={'Residence'}
               value={data?.profile?.en?.residence}
@@ -89,16 +99,15 @@ const InvestorProfile = ({
                 'p-2 w-full border-[1px] text-gray-400 cursor-not-allowed text-[10px]'
               }
             />
-          }
-        </span>
-
+          </span>
+        )}
         <span className='flex mt-1 items-center justify-start'>
           <Button
             disabled={!name}
             onClick={() => {
               updateInfo();
             }}
-            className='!p-2 !text-xs !font-medium'
+            className='!py-2'
             type='primary'
           >
             Update

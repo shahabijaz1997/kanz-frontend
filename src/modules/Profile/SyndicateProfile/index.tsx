@@ -38,11 +38,24 @@ const SyndciateProfile = ({
       return { ...prev, [type]: data };
     });
   };
+  const validateProfileLink = (link: any) => {
+    return urlRegex.test(link) ? true : false;
+  };
   const refInd: any = useRef(null);
-  const urlRegex = /^(https:\/\/|www\.)[a-zA-Z0-9-]+\.[a-zA-Z]{2,}(\.[a-zA-Z]{2,})?$/;
+  const urlRegex =
+    /^(https?:\/\/)?(www\.)?(?:[a-zA-Z0-9-]+\.)+[a-zA-Z]{2,}(\.[a-zA-Z]{2,})?$/;
   const updateButtonDisable = () => {
-    return !name || !website  || !tagline || !urlRegex.test(website) ? true : false;
-  }
+    return !name ||
+      !website ||
+      !tagline ||
+      !validateProfileLink(website) ||
+      (!search && !payload?.market.length)
+      ? true
+      : false;
+  };
+  const emptyFieldsMessage = () => {
+    return !name || !website || !tagline || !website ? true : false;
+  };
 
   const updateInfo = async (payload: any) => {
     try {
@@ -72,6 +85,20 @@ const SyndciateProfile = ({
   useEffect(() => {
     bootstrapData();
   }, []);
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (refInd.current && !refInd.current.contains(event.target as Node)) {
+        setShowData(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [refInd, showData]);
 
   const bootstrapData = async () => {
     try {
@@ -104,20 +131,21 @@ const SyndciateProfile = ({
             value={name}
             onChange={setName}
           />
-          {<InputProfile disabled={true} label={"Email"} value={data?.email} />}
-        </span>
-        <span className="inline-flex justify-center gap-12 items-center">
           <InputProfile
             disabled={true}
             label={"Reigon"}
             value={data?.profile?.regions?.join(", ")}
           />
-                   <div className="w-[60%] relative" ref={refInd}>
-            <p className="text-xs mb-1 font-medium whitespace-nowrap">
-              {"Markets"}
-            </p>
+        </span>
+        <span className="inline-flex justify-start gap-12 items-center">
+          {<InputProfile disabled={true} label={"Email"} value={data?.email} />}
+        </span>
+        <span className="inline-flex justify-start gap-12 items-center">
+          <div className="w-[90%] relative" ref={refInd}>
+            <p className=" mb-1 font-medium whitespace-nowrap">{"Markets"}</p>
             <span className="relative">
               <input
+              readOnly
                 id="market"
                 autoComplete="off"
                 value={search}
@@ -125,11 +153,11 @@ const SyndciateProfile = ({
                   setSearch(e.target.value);
                 }}
                 onClick={() => setShowData(!showData)}
-                className=" text-[10px] px-2 py-1.5 w-full border-[1px] focus:border-[#155E75] rounded-md bg-white"
+                className=" text-sm px-2 py-1.5 w-full border-[1px] focus:border-[#155E75] rounded-md bg-white"
                 type="text"
               />
               <span
-                className={`absolute top-[6px] flex items-center pr-2 pointer-events-none ${
+                className={`absolute top-[7px] flex items-center pr-2 pointer-events-none ${
                   orientation === "rtl" ? "left-1" : "right-0"
                 }`}
                 style={{ zIndex: 99 }}
@@ -137,12 +165,12 @@ const SyndciateProfile = ({
                 <Chevrond className="w-3 h-3" stroke="#737373" />
               </span>
             </span>
-            <div className="absolute top-[53px] left-0 ">
+            <div className="absolute top-[61px] left-0 z-[1]">
               {payload?.market && payload?.market?.length > 0 && (
                 <aside className="inline-flex gap-2 flex-wrap  shadow-sm appearance-none border bg-white border-neutral-300 rounded-md w-full py-1 px-2 text-gray-500 leading-tight focus:outline-none focus:shadow-outline">
                   {React.Children.toArray(
                     filteredData.map((ind: any) => (
-                      <div className="check-background rounded-[4px] p-1 text-[7px] inline-flex items-center">
+                      <div className="check-background rounded-[4px] p-1 text-[11px] whitespace-nowrap inline-flex items-center">
                         <span>{ind[event]?.name}</span>
                         <CrossIcon
                           onClick={() => {
@@ -172,7 +200,7 @@ const SyndciateProfile = ({
                     onSetPayload(Array.from(new Set(payloadItems)), "market");
                   }}
                   className={
-                    "cursor-pointer rounded-md py-1 px-1 bg-cbc-check text-neutral-700 font-normal text-[7px] hover:bg-cbc-check-hover transition-all"
+                    "cursor-pointer relative rounded-md py-1 px-1 bg-cbc-check text-neutral-700 font-normal text-[11px] hover:bg-cbc-check-hover transition-all"
                   }
                   parentClass={
                     "flex rounded-md border-[1px] flex-wrap gap-2 bg-white p-2 max-h-[200px] overflow-y-auto"
@@ -182,14 +210,15 @@ const SyndciateProfile = ({
             </div>
           </div>
         </span>
-        <span className="inline-flex justify-start  font-medium items-center">
+        <span className="inline-flex mt-5 justify-start text-xl font-medium items-center">
           Syndicate Details
         </span>
+        <label className="font-medium">Logo</label>
         <span className="flex-col flex">
           <img
-            className="h-36 w-28"
+            className="h-56 w-48 border-[1px]"
             style={{
-              objectFit: "cover",
+              objectFit: "contain",
               aspectRatio: "1",
             }}
             src={data?.profile?.logo}
@@ -198,10 +227,13 @@ const SyndciateProfile = ({
         </span>
         <span className="inline-flex justify-center gap-12 items-center">
           <InputProfile
+            placeholder="example.com"
             disabled={false}
             label={"Profile Link"}
             value={website}
             onChange={setWebsite}
+            validationName={"URL"}
+            valid={!validateProfileLink(website)}
           />
           <InputProfile
             disabled={false}
@@ -210,14 +242,15 @@ const SyndciateProfile = ({
             onChange={setTagline}
           />
         </span>
+        {/*    {emptyFieldsMessage() && (<span className="text-red-500 font-medium text-xs px-1">Please fill all fields to update....</span>)} */}
         <span className="flex mt-1 items-center justify-start">
           <Button
-          disabled={updateButtonDisable()}
+            disabled={updateButtonDisable()}
             onClick={() => {
               setLoading(true);
               updateInfo(payload);
             }}
-            className="!p-2 !text-xs !font-medium"
+            className="!py-2"
             type="primary"
           >
             Update

@@ -138,7 +138,7 @@ const SyndicateFullView = ({}: any) => {
                   <span className="flex items-center justify-center">
                     <img
                       className=" h-[88px] w-[88px] mr-2.5 shadow-md rounded-full"
-                      src={state?.logo}
+                      src={state?.profile_picture_url}
                     ></img>
                   </span>
                   <span className="items-center justify-center flex mt-2 text-2xl font-medium">
@@ -427,6 +427,7 @@ const SyndicateFullView = ({}: any) => {
                   <span className="flex items-center justify-center">
                   {state.lead?.profile_pic ? (
                           <img
+                          style={{ width: 88, height: 88, objectFit: "cover" }} 
                             className="w-full h-full shadow-md rounded-full flex items-center justify-center"
                             src={state?.lead.profile_pic}
                           />

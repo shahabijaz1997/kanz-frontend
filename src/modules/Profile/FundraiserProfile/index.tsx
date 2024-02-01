@@ -38,25 +38,47 @@ const FundRaiserProfile = ({
   const [payload, setPayload]: any = useState({
     market: [],
   });
+  const validateEmail = (email: any) => {
+    return emailRegex.test(email) ? true : false;
+  };
+  const validateProfileLink = (link: any) => {
+    return urlRegex.test(link) ? true : false;
+  };
   const onSetPayload = (data: any, type: string) => {
     setPayload((prev: any) => {
       return { ...prev, [type]: data };
     });
   };
   const refInd: any = useRef(null);
-
+  const emailRegex = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i;
+  const urlRegex =
+    /^(https?:\/\/)?(www\.)?(?:[a-zA-Z0-9-]+\.)+[a-zA-Z]{2,}(\.[a-zA-Z]{2,})?$/;
   const updateButtonDisable = () => {
     return !name ||
       !companyName ||
       !legalName ||
-      !website ||
       !description ||
       !address ||
       !ceoName ||
-      !ceoEmail
+      !validateEmail(ceoEmail) ||
+      !validateProfileLink(website)
+      ||(!search && !payload?.market.length)
       ? true
       : false;
   };
+
+/*   const emptyFieldsMessage = () => {
+    return !name ||
+      !companyName ||
+      !legalName ||
+      !description ||
+      !address ||
+      !ceoName ||
+      !ceoEmail ||
+      !website
+      ? true
+      : false;
+  }; */
 
   const updateInfo = async (payload: any) => {
     try {
@@ -92,6 +114,20 @@ const FundRaiserProfile = ({
     bootstrapData();
   }, []);
 
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (refInd.current && !refInd.current.contains(event.target as Node)) {
+        setShowData(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [refInd, showData]);
+
   const bootstrapData = async () => {
     try {
       let { status, data } = await getAllIndustries(authToken);
@@ -125,9 +161,6 @@ const FundRaiserProfile = ({
               onChange={setName}
             />
           }
-          {<InputProfile disabled={true} label={"Email"} value={data?.email} />}
-        </span>
-        <span className="inline-flex justify-start w-[76%] gap-12 items-center">
           {
             <InputProfile
               disabled={true}
@@ -136,54 +169,14 @@ const FundRaiserProfile = ({
             />
           }
         </span>
-        <span className="inline-flex justify-start  font-medium items-center">
-          Company Details
+        <span className="inline-flex justify-start w-[76%] gap-12 items-center">
+          {<InputProfile disabled={true} label={"Email"} value={data?.email} />}
         </span>
-        <span className="flex-col flex items-center justify-center">
-          <img
-            className="h-36 w-28 border-[0.5px] rounded-md"
-            style={{
-              objectFit: "contain",
-              aspectRatio: "1",
-            }}
-            src={data?.profile?.logo}
-            alt=""
-          />
-        </span>
-        <span className="inline-flex justify-center gap-12 items-center">
-          {
-            <InputProfile
-              disabled={false}
-              label={"Company Name"}
-              value={companyName}
-              onChange={setCompanyName}
-            />
-          }
-          {
-            <InputProfile
-              disabled={false}
-              label={"Legal Name"}
-              value={legalName}
-              onChange={setLegalname}
-            />
-          }
-        </span>
-        <span className="inline-flex justify-center gap-12 items-center">
-          {
-            <InputProfile
-              disabled={false}
-              label={"Website"}
-              value={website}
-              onChange={setWebsite}
-            />
-          }
-          {
-            <div className="w-[60%] relative" ref={refInd}>
-              <p className="text-xs mb-1 font-medium whitespace-nowrap">
-                {"Markets"}
-              </p>
+        <div className="w-[90%] relative" ref={refInd}>
+              <p className="mb-1 font-medium whitespace-nowrap">{"Markets"}</p>
               <span className="relative">
                 <input
+                  readOnly
                   id="market"
                   autoComplete="off"
                   value={search}
@@ -191,7 +184,7 @@ const FundRaiserProfile = ({
                     setSearch(e.target.value);
                   }}
                   onClick={() => setShowData(!showData)}
-                  className=" text-[10px] px-2 py-1.5 w-full border-[1px] focus:border-[#155E75] rounded-md bg-white"
+                  className=" px-2 py-1.5 w-full border-[1px] focus:border-[#155E75] rounded-md bg-white"
                   type="text"
                 />
                 <span
@@ -203,12 +196,12 @@ const FundRaiserProfile = ({
                   <Chevrond className="w-3 h-3" stroke="#737373" />
                 </span>
               </span>
-              <div className="absolute top-[53px] left-0 ">
+              <div className="absolute top-[60px] left-0 ">
                 {payload?.market && payload?.market?.length > 0 && (
                   <aside className="inline-flex gap-2 flex-wrap  shadow-sm appearance-none border bg-white border-neutral-300 rounded-md w-full py-1 px-2 text-gray-500 leading-tight focus:outline-none focus:shadow-outline">
                     {React.Children.toArray(
                       filteredData.map((ind: any) => (
-                        <div className="check-background rounded-[4px] p-1 text-[7px] inline-flex items-center">
+                        <div className="check-background rounded-[4px] p-1 text-[11px] inline-flex items-center">
                           <span>{ind[event]?.name}</span>
                           <CrossIcon
                             onClick={() => {
@@ -238,7 +231,7 @@ const FundRaiserProfile = ({
                       onSetPayload(Array.from(new Set(payloadItems)), "market");
                     }}
                     className={
-                      "cursor-pointer rounded-md py-1 px-1 bg-cbc-check text-neutral-700 font-normal text-[7px] hover:bg-cbc-check-hover transition-all"
+                      "cursor-pointer rounded-md py-1 px-1 bg-cbc-check text-neutral-700 font-normal text-[11px] hover:bg-cbc-check-hover transition-all"
                     }
                     parentClass={
                       "flex rounded-md border-[1px] flex-wrap gap-2 bg-white p-2 max-h-[200px] overflow-y-auto"
@@ -247,6 +240,50 @@ const FundRaiserProfile = ({
                 )}
               </div>
             </div>
+        <span className="inline-flex justify-start text-xl mt-5 font-medium items-center">
+          Company Details
+        </span>
+        <label className="font-medium">Logo</label>
+        <span className="flex-col flex items-start justify-center">
+          <img
+            className="h-56 w-48 border-[0.5px] rounded-md"
+            style={{
+              objectFit: "contain",
+              aspectRatio: "1",
+            }}
+            src={data?.profile?.logo}
+            alt=""
+          />
+        </span>
+        <span className="inline-flex justify-center gap-12 items-center">
+          {
+            <InputProfile
+              disabled={false}
+              label={"Company Name"}
+              value={companyName}
+              onChange={setCompanyName}
+            />
+          }
+          {
+            <InputProfile
+              disabled={false}
+              label={"Legal Name"}
+              value={legalName}
+              onChange={setLegalname}
+            />
+          }
+        </span>
+        <span className="inline-flex justify-start gap-12 items-center">
+          {
+            <InputProfile
+              placeholder="example.com"
+              disabled={false}
+              label={"Website"}
+              value={website}
+              onChange={setWebsite}
+              validationName={"website"}
+              valid={!validateProfileLink(website)}
+            />
           }
         </span>
         <span className="inline-flex justify-start gap-12 items-center">
@@ -261,14 +298,16 @@ const FundRaiserProfile = ({
         </span>
         <span className="inline-flex justify-start gap-12 items-center">
           {
-            <span className={` w-[60%] flex-col flex`}>
-              <p className="text-xs mb-1 font-medium whitespace-nowrap">
+            <span className={` w-[90%] flex-col flex`}>
+              <p className="mb-1 font-medium whitespace-nowrap">
                 {"Description"}
               </p>
               <textarea
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
-                className={`text-[10px] px-2 py-1.5 w-full border-[1px] rounded-md focus:border-none min-h-40 custom-scroll `}
+                className={`${
+                  description ? "border-gray-400" : "border-red-500"
+                } px-2 py-1.5 w-full border-[1px] rounded-md  min-h-40 custom-scroll `}
               />
             </span>
           }
@@ -288,10 +327,12 @@ const FundRaiserProfile = ({
               label={"CEO email"}
               value={ceoEmail}
               onChange={setCeoEmail}
+              validationName={"email"}
+              valid={!validateEmail(ceoEmail)}
             />
           }
         </span>
-
+        {/*  {emptyFieldsMessage() && (<span className="text-red-500 font-medium text-xs px-1">Please fill all fields to update....</span>)} */}
         <span className="flex mt-1 items-center justify-start">
           <Button
             disabled={updateButtonDisable()}
@@ -299,7 +340,7 @@ const FundRaiserProfile = ({
               setLoading(true);
               updateInfo(payload);
             }}
-            className="!p-2 !text-xs !font-medium"
+            className="!py-2"
             type="primary"
           >
             Update
