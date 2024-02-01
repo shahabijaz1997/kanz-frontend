@@ -1,5 +1,5 @@
 export enum RoutesEnums {
-  FRONTEND_STATIC_LINK = "https://ambitious-hill-06b43d700.3.azurestaticapps.net",
+  FRONTEND_STATIC_LINK = "https://victorious-bush-0b67ab703.4.azurestaticapps.net",
   OVERVIEW = "/overview",
   INVESTOR_UPDATES = "/investor-updates",
   DATA_ROOMS = "/data-rooms",
