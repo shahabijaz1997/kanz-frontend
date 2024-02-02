@@ -12,6 +12,8 @@ import { jsonToFormData } from "../../utils/files.utils";
 import Modal from "../../shared/components/Modal";
 import CrossIcon from "../../ts-icons/crossIcon.svg";
 import Button from "../../shared/components/Button";
+import { toast } from "react-toastify";
+import { toastUtil } from "../../utils/toast.utils";
 
 const Wallet = () => {
   const authToken: any = useSelector((state: RootState) => state.auth.value);
@@ -59,6 +61,7 @@ const Wallet = () => {
         setVerificationModal(true)
       }
     } catch (error: any) {
+      toast.error(error?.response?.data?.status?.message, toastUtil);
       console.log(error);
     } finally {
       setLoading(false);
