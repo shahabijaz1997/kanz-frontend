@@ -5,9 +5,8 @@ import Modal from "../../../shared/components/Modal";
 import CrossIcon from "../../../ts-icons/crossIcon.svg";
 import { useSelector } from "react-redux";
 import { RootState } from "../../../redux-toolkit/store/store";
-import { comaFormattedNumber, numberFormatter } from "../../../utils/object.utils";
+import { comaFormattedNumber } from "../../../utils/object.utils";
 import { DealCheckType } from "../../../enums/types.enum";
-import Transactions from "./Transactions";
 import { useNavigate } from "react-router-dom";
 import { RoutesEnums } from "../../../enums/routes.enum";
 
@@ -18,16 +17,15 @@ const Overview = ({
   amount,
   method,
   setMethod,
-  getCurrentBalance
 }: any): any => {
 
   const navigate = useNavigate()
   const handleKeyDown = (e: any) => {
     if (e.keyCode === 8) return;
-    if (['-', 'e', '+'].includes(e.key)) {
+    if (['-', 'e','E', '+'].includes(e.key)) {
       e.preventDefault();
     }
-    if (e.target.value.length >= 10) {
+    if (e.target.value.length >= 7) {
       e.preventDefault();
     }
   };
@@ -69,8 +67,8 @@ const Overview = ({
                 required
                 onChange={(e: any) => {
                   let inputValue = e.target.value.replace(/[^\d.]/g, "");
-                  if (inputValue.length > 10) {
-                    inputValue = inputValue.slice(0, 10);
+                  if (inputValue.length > 7) {
+                    inputValue = inputValue.slice(0, 7);
                   }
                   if (/^\d*\.?\d*$/.test(inputValue) || !inputValue) {
                     setAmount(inputValue);
@@ -81,7 +79,7 @@ const Overview = ({
                 type="number"
                 pattern="[0-9]*"
                 className="rounded-sm h-8 px-12 font-normal w-full text-[#115E75] outline-none"
-                maxLength={10}
+                maxLength={7}
               />
             </span>
           </span>
