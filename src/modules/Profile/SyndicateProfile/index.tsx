@@ -14,6 +14,7 @@ import React from "react";
 import CrossIcon from "../../../ts-icons/crossIcon.svg";
 
 const SyndciateProfile = ({
+  language,
   setLoading,
   getDetail,
   data,
@@ -71,7 +72,7 @@ const SyndciateProfile = ({
       };
       let { status, data } = await updateProfile(authToken, sentPayload);
       if (status === 200) {
-        toast.success("Profile Updated", toastUtil);
+        toast.success(language?.v3?.proflie?.profile_updated, toastUtil);
       }
     } catch (error) {
       console.log(error);
@@ -127,22 +128,22 @@ const SyndciateProfile = ({
         <span className="inline-flex justify-center gap-12 items-center">
           <InputProfile
             disabled={false}
-            label={"Name"}
+            label={language?.v3?.profile?.name}
             value={name}
             onChange={setName}
           />
           <InputProfile
             disabled={true}
-            label={"Reigon"}
+            label={language?.v3?.profile?.region}
             value={data?.profile?.regions?.join(", ")}
           />
         </span>
         <span className="inline-flex justify-start gap-12 items-center">
-          {<InputProfile disabled={true} label={"Email"} value={data?.email} />}
+          {<InputProfile disabled={true} label={language?.v3?.profile?.email} value={data?.email} />}
         </span>
         <span className="inline-flex justify-start gap-12 items-center">
           <div className="w-[90%] relative" ref={refInd}>
-            <p className=" mb-1 font-medium whitespace-nowrap">{"Markets"}</p>
+            <p className=" mb-1 font-medium whitespace-nowrap">{language?.v3?.profile?.markets}</p>
             <span className="relative">
               <input
               readOnly
@@ -211,9 +212,8 @@ const SyndciateProfile = ({
           </div>
         </span>
         <span className="inline-flex mt-5 justify-start text-xl font-medium items-center">
-          Syndicate Details
-        </span>
-        <label className="font-medium">Logo</label>
+        {language?.v3?.profile?.syndicate_details}        </span>
+        <label className="font-medium">{language?.v3?.profile?.logo}</label>
         <span className="flex-col flex">
           <img
             className="h-56 w-48 border-[1px]"
@@ -227,17 +227,18 @@ const SyndciateProfile = ({
         </span>
         <span className="inline-flex justify-center gap-12 items-center">
           <InputProfile
+            language={language}
             placeholder="example.com"
             disabled={false}
-            label={"Profile Link"}
+            label={language?.v3?.profile?.profile_link}
             value={website}
             onChange={setWebsite}
-            validationName={"URL"}
+            validationName={language?.v3?.profile?.url}
             valid={!validateProfileLink(website)}
           />
           <InputProfile
             disabled={false}
-            label={"Tagline"}
+            label={language?.v3?.profile?.tagline}
             value={tagline}
             onChange={setTagline}
           />
@@ -253,8 +254,7 @@ const SyndciateProfile = ({
             className="!py-2"
             type="primary"
           >
-            Update
-          </Button>
+          {language?.v3?.profile?.update}          </Button>
         </span>
       </div>
       <span>

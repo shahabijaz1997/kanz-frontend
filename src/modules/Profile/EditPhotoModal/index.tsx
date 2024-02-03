@@ -11,6 +11,7 @@ import { toast } from "react-toastify";
 import { KanzRoles } from "../../../enums/roles.enum";
 
 const EditPhotoModal = ({
+  language,
   setPhotoUploadModal,
   authToken,
   imageUrl,
@@ -72,7 +73,7 @@ const EditPhotoModal = ({
         jsonToFormData(sentPayload)
       );
       if (status === 200) {
-        toast.success("Profile Updated", toastUtil);
+        toast.success(language?.v3?.profile?.profile_updated, toastUtil);
       }
     } catch (error) {
       console.log(error);
@@ -83,7 +84,6 @@ const EditPhotoModal = ({
     }
   };
 
-  const language: any = useSelector((state: RootState) => state.language.value);
   const [disableUpload, setdisableUpload]: any = useState(false);
   return (
     <div
@@ -93,7 +93,7 @@ const EditPhotoModal = ({
       <aside className="bg-white w-[400px] rounded-md h-full">
         <header className="bg-cbc-grey-sec h-16 py-2 px-3 inline-flex w-full justify-between items-center">
           <h3 className="text-xl font-medium text-neutral-700">
-            {"Upload Photo"}
+            {language?.v3?.profile?.upload_photo}
           </h3>
           <div
             className="bg-white h-8 w-8 border-[1px] border-black rounded-md shadow  p-1 cursor-pointer"
@@ -118,7 +118,7 @@ const EditPhotoModal = ({
               >
                 <UploadIcon />
                 <small className="text-cyan-800 text-sm font-medium">
-                  {"Upload JPG/JPEG/PNG upto 10MB"}
+                  {language?.v3?.profile?.file_formats}
                 </small>
               </button>
               <input
@@ -152,7 +152,7 @@ const EditPhotoModal = ({
               updateInfo();
             }}
           >
-            {"Set as new profile picture"}
+            {language?.v3?.profile?.set_as_profile_picture}
           </Button>
         </footer>
       </aside>

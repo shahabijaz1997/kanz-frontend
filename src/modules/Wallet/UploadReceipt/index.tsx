@@ -1,16 +1,13 @@
-import React, { useState } from "react"; // Added useState import
+import  { useState } from "react"; // Added useState import
 import AddImage from "../../../ts-icons/addImageIcon.svg";
 import { useSelector } from "react-redux";
 import { RootState } from "../../../redux-toolkit/store/store";
 import Button from "../../../shared/components/Button";
-import CrossIcon from "../../../ts-icons/crossIcon.svg";
-import Modal from "../../../shared/components/Modal";
 import { fileSize } from "../../../utils/files.utils";
 import { toast } from "react-toastify";
 import { toastUtil } from "../../../utils/toast.utils";
 
-const UploadReceipt = ({ setStep, setImage, submitForm }: any) => {
-  const language: any = useSelector((state: RootState) => state.language.value);
+const UploadReceipt = ({ setStep, setImage, submitForm, language }: any) => {
   const [open, setOpen] = useState(false);
   const [imagePreview, setImagePreview]: any = useState();
   const handleFileUpload = (event: any) => {
@@ -39,7 +36,7 @@ const UploadReceipt = ({ setStep, setImage, submitForm }: any) => {
   return (
     <aside className="px-2 py-10 flex items-center justify-center w-full">
       <section className="w-[50%] p-1 mt-10">
-        <span className="text-lg font-semibold">Add Receipt</span>
+        <span className="text-lg font-semibold">{language?.v3?.wallet?.upload_receipt}</span>
         <div
           className={`border-2 border-dashed rounded-md  h-[150px] select-none border-neutral-300 mt-5`}
         >
@@ -83,7 +80,7 @@ const UploadReceipt = ({ setStep, setImage, submitForm }: any) => {
               className="w-full"
               type="outlined"
             >
-              Back
+              {language?.v3?.wallet?.back}
             </Button>
           </span>
           <span className="w-full">
@@ -94,7 +91,7 @@ const UploadReceipt = ({ setStep, setImage, submitForm }: any) => {
               }}
               className="w-full"
             >
-              Continue
+              {language?.v3?.wallet?.continue}
             </Button>
           </span>
         </span>

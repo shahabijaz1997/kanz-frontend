@@ -12,30 +12,31 @@ const ProfileDropDown = ({
   onLogout,
 }: any) => {
     const navigate = useNavigate();
+  const language: any = useSelector((state: RootState) => state.language.value);
     const orientation = useSelector((state: RootState) => state.orientation.value);
   return (
     isProfileOpen && (
       <section
-        className={`absolute z-[1] top-[3.25rem] ${orientation === "rtl" ? `left-8` : `right-8`} bg-white border-[1px] border-neutral-200 rounded-md w-[100px]`}
+        className={`absolute z-[1] top-[3.25rem] ${orientation === "rtl" ? `left-8` : `right-8`} bg-white border-[1px] border-neutral-200 rounded-md ${orientation === "rtl" ? `w-[150px]` : `w-[100px]`}`}
       >
         <div className="items-center justify-center flex flex-col py-1 cursor-pointer">
           <span onClick={()=> navigate(RoutesEnums.PROFILE)} className="w-full flex items-center gap-2 px-3 py-1 hover:bg-slate-100">
             <ProfileDropDownIcon />
-            <span className="text-sm">Profile</span>
+            <span className="text-sm">{language?.v3?.wallet?.profile}</span>
           </span>
           <span
             onClick={()=>{navigate(RoutesEnums.WALLET)}}
             className="w-full flex items-center px-3 py-1 gap-2 cursor-pointer hover:bg-slate-100"
           >
             <WalletDropDownIcon />
-            <span className="text-sm">Wallet</span>
+            <span className="text-sm">{language?.v3?.wallet?.wallet}</span>
           </span>
           <span
             onClick={onLogout}
             className="w-full flex items-center px-3 py-1 gap-2 cursor-pointer hover:bg-slate-100"
           >
             <LogoutDropDownIcon />
-            <span className="text-sm">Logout</span>
+            <span className="text-sm">{language?.v3?.wallet?.logout}</span>
           </span>
         </div>
       </section>

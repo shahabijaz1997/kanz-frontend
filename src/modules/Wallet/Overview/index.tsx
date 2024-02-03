@@ -3,14 +3,15 @@ import Button from "../../../shared/components/Button";
 import WalletSpanIcon from "../../../ts-icons/WalletSpanIcon.svg";
 import Modal from "../../../shared/components/Modal";
 import CrossIcon from "../../../ts-icons/crossIcon.svg";
-import { useSelector } from "react-redux";
-import { RootState } from "../../../redux-toolkit/store/store";
-import { comaFormattedNumber } from "../../../utils/object.utils";
+import { comaFormattedNumber, eng_arb_commaFormattedNumber } from "../../../utils/object.utils";
 import { DealCheckType } from "../../../enums/types.enum";
 import { useNavigate } from "react-router-dom";
 import { RoutesEnums } from "../../../enums/routes.enum";
 
 const Overview = ({
+  event,
+  orientation,
+  language,
   setStep,
   currentBalance,
   setAmount,
@@ -37,7 +38,6 @@ const Overview = ({
 
   let newValue :number =  Number(amount) + Number(currentBalance) 
   const [selectedBorder, setSelectedBorder] = useState(false);
-  const language: any = useSelector((state: RootState) => state.language.value);
   const [open, setOpen] = useState(false);
   const [buttonEnable, setButtonEnable] = useState(false);
   return (
@@ -45,23 +45,23 @@ const Overview = ({
       <section className="flex flex-col items-start justify-start w-1/2">
         <div className="flex items-center justify-center w-full border-[1px] border-[#E5E5E5] rounded-lg shadow-md p-6 mt-5">
        <span className="w-full">
-       <h1 className="text-[#667085] text-base">Current Balance</h1>
-          <p className="text-black font-semibold text-2xl mt-3">{comaFormattedNumber(currentBalance, DealCheckType.PROPERTY)}</p>
+       <h1 className="text-[#667085] text-base">{language?.v3?.wallet?.current_balance}</h1>
+          <p className="text-black font-semibold text-2xl mt-3">{eng_arb_commaFormattedNumber(currentBalance, DealCheckType.PROPERTY, event)}</p>
        </span>
        <span className="w-full flex items-center justify-center">
           <Button className="!text-xs" onClick={()=>{
             navigate(RoutesEnums.TRANSACTIONS)
-          }}>View All Transactions</Button>
+          }}>{language?.v3?.wallet?.view_all_transactions}</Button>
        </span>
         </div>
         <span className="flex flex-col items-start justify-start w-full mt-10">
           <label className="text-xs font-medium" htmlFor="amount">
-            Deposit Amount
+            {language?.v3?.wallet?.deposit_amount}
           </label>
           <span className=" border-[1px] border-[#E5E5E5] rounded-md overflow-hidden mt-2 w-full">
             <span className="flex items-center relative">
               <WalletSpanIcon />
-              <span className="text-[#737373] absolute left-11">AED</span>
+              <span className={`text-[#737373] absolute ${orientation === "rtl" ? "right-11" :  "left-11"}`}>{language?.v3?.wallet?.aed}</span>
               <input
                 min={0}
                 required
@@ -75,7 +75,7 @@ const Overview = ({
                   }
                 }}
                 onKeyDown={handleKeyDown}
-                placeholder="Enter your amount"
+                placeholder={language?.v3?.wallet?.enter_amount}
                 type="number"
                 pattern="[0-9]*"
                 className="rounded-sm h-8 px-12 font-normal w-full text-[#115E75] outline-none"
@@ -86,7 +86,7 @@ const Overview = ({
         </span>
         <span className="flex  flex-col items-start justify-start w-full mt-10 ">
           <label className="font-medium text-xs" htmlFor="payment">
-            How would you like to make payment?
+            {language?.v3?.wallet?.payment_methods}
           </label>
           <span
             className={` ${
@@ -110,7 +110,7 @@ const Overview = ({
                   selectedBorder ? "text-[#155E75]" : "text-black"
                 } font-medium whitespace-nowrap`}
               >
-                Offline bank transfer (several days)
+                {language?.v3?.wallet?.offline_bank_transfer}
               </span>
             </span>
           </span>
@@ -128,12 +128,12 @@ const Overview = ({
                 className="border-[1px] border-[#E5E5E5]  font-normal w-full "
               />
               <span className={`text-xs font-medium whitespace-nowrap`}>
-                Using your debit card (subject to 2.55% payment gateway fees)
+                {language?.v3?.wallet?.debit_card_fee_notice}
               </span>
             </span>
           </span>
           <span className="text-xs mt-2 font-medium">
-            To learn more, please visit help center.
+          {language?.v3?.wallet?.help_center_link}
           </span>
         </span>
 
@@ -144,22 +144,22 @@ const Overview = ({
             className="!w-full"
             type="primary"
           >
-            Fund Wallet
+           {language?.v3?.wallet?.fund_wallet}
           </Button>
         </span>
       </section>
       <section className="w-1/2 mb-10">
       <section className="w-full border-[1px] p-2   rounded-md bg-white border-[#E5E5E5]">
         <div className="p-2 gap-10 justify-start flex flex-col ">
-          <h1 className="text-black font-medium">Transaction Details</h1>
+          <h1 className="text-black font-medium">{language?.v3?.wallet?.transaction_details}</h1>
           <span className="border-b-[1px] border-[#E5E5E5] w-full flex font-medium text-sm justify-between">
-            Current Balance <span className="font-normal">{comaFormattedNumber(currentBalance, DealCheckType.PROPERTY)}</span>
+            {language?.v3?.wallet?.current_balance} <span className="font-normal">{eng_arb_commaFormattedNumber(currentBalance, DealCheckType.PROPERTY, event)}</span>
           </span>
           <span className="border-b-[1px] border-[#E5E5E5] w-full flex font-medium text-sm justify-between">
-            Deposit Amount <span className="font-normal">{comaFormattedNumber(amount, DealCheckType.PROPERTY)}</span>
+            {language?.v3?.wallet?.deposit_amount} <span className="font-normal">{eng_arb_commaFormattedNumber(amount, DealCheckType.PROPERTY, event)}</span>
           </span>
           <span className=" w-full flex font-medium text-sm  justify-between">
-            New Balance <span className="font-normal">{comaFormattedNumber(newValue, DealCheckType.PROPERTY)}</span>
+            {language?.v3?.wallet?.new_balance} <span className="font-normal">{eng_arb_commaFormattedNumber(newValue, DealCheckType.PROPERTY, event)}</span>
           </span>
         </div>
         </section>
@@ -172,7 +172,9 @@ const Overview = ({
           <aside className="bg-white w-[500px] rounded-md h-full">
             <header className=" h-16 py-2 px-3 inline-flex w-full justify-end items-center">
               <div
-                onClick={() => setOpen(false)}
+                onClick={() => {
+                  setButtonEnable(false);
+                  setOpen(false)}}
                 className="bg-white h-8 w-8 p-1 cursor-pointer"
               >
                 <CrossIcon stroke="#000" />
@@ -180,10 +182,10 @@ const Overview = ({
             </header>
             <section className="flex flex-col items-center justify-center">
               <h3 className="flex items-center w-full justify-center font-bold text-lg">
-                Disclaimer
+                {language?.v3?.wallet?.disclaimer}
               </h3>
               <p className="text-[#737373] text-sm mt-3">
-                Description about disclaimer
+                {language?.v3?.wallet?.disclaimer_description}
               </p>
               <div className="border-t-[#E5E5E5] border-t-[1px] w-[50%] pt-4">
                 <span className="flex items-start justify-start gap-2">
@@ -197,9 +199,9 @@ const Overview = ({
                     }}
                   />
                   <span>
-                    <span className="font-semibold text-start">Disclaimer</span>
+                    <span className="font-semibold text-start">{language?.v3?.wallet?.disclaimer_1}</span>
                     <p className="text-[#737373]  text-sm">
-                      Description about disclaimer 1
+                     {language?.v3?.wallet?.disclaimer_1_description}
                     </p>
                   </span>
                 </span>
@@ -207,13 +209,14 @@ const Overview = ({
               <footer className="w-[50%] inline-flex justify-center gap-10 py-6 px-3">
                 <Button
                 onClick={()=>{
+                  setButtonEnable(false);
                   setOpen(false)
                 }}
                   type="outlined"
                   className="w-full !py-1"
                   divStyle="flex items-center justify-center w-full"
                 >
-                  {"Cancel"}
+                  {language?.v3?.wallet?.cancel}
                 </Button>
                 <Button
                   onClick={() => {
@@ -223,7 +226,7 @@ const Overview = ({
                   className="w-full !py-1"
                   divStyle="flex items-center justify-center w-full"
                 >
-                  {"Continue"}
+                  {language?.v3?.wallet?.continue}
                 </Button>
               </footer>
             </section>

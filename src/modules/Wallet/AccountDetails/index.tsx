@@ -3,18 +3,18 @@ import Button from "../../../shared/components/Button";
 import { toastUtil } from "../../../utils/toast.utils";
 import CrossIcon from "../../../ts-icons/crossIcon.svg";
 import React from "react";
-import { comaFormattedNumber } from "../../../utils/object.utils";
+import {  eng_arb_commaFormattedNumber } from "../../../utils/object.utils";
 import { DealCheckType } from "../../../enums/types.enum";
 
-const AccountDetails = ({ setStep ,amount }: any): any => {
+const AccountDetails = ({ setStep ,amount, event, language }: any): any => {
   const accDetails = {
-    "Amount": comaFormattedNumber(amount, DealCheckType.PROPERTY),
-    "Currency":"AED",
-    "Account Name": process.env.REACT_APP_ACC_NAME,
-    "Account No": process.env.REACT_APP_ACC_NUM,
-    "IBAN No": process.env.REACT_APP_IBAN,
-    "Bank Name": process.env.REACT_APP_BANK_NAME,
-    "Branch Code": process.env.REACT_APP_BRANCH_CODE,
+    [language?.v3?.wallet?.amount]: eng_arb_commaFormattedNumber(amount, DealCheckType.PROPERTY, event),
+    [language?.v3?.wallet?.currency]:language?.v3?.wallet?.aed,
+    [language?.v3?.wallet?.account_name]: process.env.REACT_APP_ACC_NAME,
+    [language?.v3?.wallet?.account_no]: process.env.REACT_APP_ACC_NUM,
+    [language?.v3?.wallet?.iban_no]: process.env.REACT_APP_IBAN,
+    [language?.v3?.wallet?.bank_name]: process.env.REACT_APP_BANK_NAME,
+    [language?.v3?.wallet?.branch_code]: process.env.REACT_APP_BRANCH_CODE,
   };
 
   return (
@@ -29,14 +29,13 @@ const AccountDetails = ({ setStep ,amount }: any): any => {
           </span>
           <section className="flex justify-center items-center w-full flex-col">
             <span className="text-lg font-semibold">
-              Wallet Deposit Intiated
+              {language?.v3?.wallet?.wallet_deposit_initiated}
             </span>
             <span className="text-[#737373] text-xs mt-3">
-              Description related to discalaimer
+              {language?.v3?.wallet?.disclaimer_description}
             </span>
             <span className="text-[#737373] border-b-[1px]  border-[#E5E5E5] text-xs mt-3 w-full pb-2 text-center whitespace-break-spaces">
-              Kindly send a proof of transfer to Kanz@gmail.com to speed up your
-              investment process
+              {language?.v3?.wallet?.send_proof_of_transfer_email}
             </span>
           </section>
           {React.Children.toArray(
@@ -53,27 +52,27 @@ const AccountDetails = ({ setStep ,amount }: any): any => {
               <Button
                 onClick={() => {
                   navigator.clipboard.writeText(
-                    "Account Name: " +
-                    accDetails["Account Name"] +
+                    language?.v3?.wallet?.account_name + " " +
+                    accDetails[language?.v3?.wallet?.account_name] +      //CHANGE COPY DETIALS TO THE CORRECT KEYS
                       "\n" +
-                      "Account No: " +
-                      accDetails["Account No"] +
+                      language?.v3?.wallet?.account_no  + " " +
+                      accDetails[language?.v3?.wallet?.account_no] +
                       "\n" +
-                      "IBAN No: " +
-                      accDetails["IBAN No"] +
+                      language?.v3?.wallet?.iban_no + " " +
+                      accDetails[language?.v3?.wallet?.iban_no] +
                       "\n" +
-                      "Bank Name: " +
-                      accDetails["Bank Name"] +
+                      language?.v3?.wallet?.bank_name + " " +
+                      accDetails[language?.v3?.wallet?.bank_name] +
                       "\n" +
-                      "Branch Code: " +
-                      accDetails["Branch Code"]
+                      language?.v3?.wallet?.branch_code + " " +
+                      accDetails[language?.v3?.wallet?.branch_code]
                   ); 
-                  toast.success("Copied", toastUtil);
+                  toast.success(language?.v3?.wallet?.copied, toastUtil);
                 }}
                 className="w-full"
                 type="outlined"
               >
-                Copy Details
+                {language?.v3?.wallet?.copy_details}
               </Button>
             </span>
             <span className="w-full">
@@ -84,7 +83,7 @@ const AccountDetails = ({ setStep ,amount }: any): any => {
                 className="w-full"
                 type="primary"
               >
-                Upload Receipt
+                {language?.v3?.wallet?.upload_receipt}
               </Button>
             </span>
           </span>
