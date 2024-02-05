@@ -27,7 +27,6 @@ export default function Blogs() {
       setLoading(false)
     }
   };
-console.log("Check push")
   const navigate = useNavigate();
   return (
     <main className="h-full max-h-full">
