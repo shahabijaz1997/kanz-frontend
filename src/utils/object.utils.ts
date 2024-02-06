@@ -61,17 +61,29 @@ export const numberFormatter = (
   if ((dealType !== null || dealType !== undefined) && isArabic) {
     if (dealType === DealCheckType.PROPERTY) {
       formattedNumber = `د.إ ${formattedNumber}`;
-    }
-    else{
-      formattedNumber = `$ ${formattedNumber}`
+    } else {
+      formattedNumber = `$ ${formattedNumber}`;
     }
   }
   return formattedNumber;
 };
+
+export const eng_arb_commaFormattedNumber = (
+  value: any,
+  dealType: string | null = null,
+  event: any
+) => {
+  if (!value || isNaN(Number(value))) return value;
+  if (event === 'ar') {
+    return comaFormattedNumber(value, dealType, true);
+  }
+  else return comaFormattedNumber(value, dealType, false);
+};
+
 export const comaFormattedNumber = (
   value: any,
   dealType: string | null = null,
-  isArabic : boolean | null = null
+  isArabic: boolean | null = null
 ) => {
   if (!value || isNaN(Number(value))) return value;
   const formattedValue = String(value).replace(/\B(?=(\d{3})+(?!\d))/g, ",");

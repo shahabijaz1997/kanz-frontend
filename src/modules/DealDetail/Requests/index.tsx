@@ -67,7 +67,6 @@ const Requests = ({ id }: any) => {
         viewDealSyndicate(currentDealId, dealDetail?.id);
       }
     } catch (error) {
-      console.log(error);
     } finally {
       toast.success(language?.v3?.common?.suces_msg, toastUtil);
       setLoading(false);
@@ -89,7 +88,6 @@ const Requests = ({ id }: any) => {
         setModalOpen(false);
       }
     } catch (error) {
-      console.log(error);
     } finally {
       viewDealSyndicate(currentDealId, dealDetail?.id);
       

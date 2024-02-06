@@ -131,7 +131,6 @@ const UserListingPopup = ({
         setSyndicates(syndicates);
       }
     } catch (error: any) {
-      console.log(error);
 
       if (
         error.response &&

@@ -4,8 +4,6 @@ import Table from "../../../../shared/components/Table";
 import { useSelector } from "react-redux";
 import { RootState } from "../../../../redux-toolkit/store/store";
 import CustomStatus from "../../../../shared/components/CustomStatus";
-import { numberFormatter } from "../../../../utils/object.utils";
-import { DealCheckType } from "../../../../enums/types.enum";
 import { getTransactions } from "../../../../apis/wallet.api";
 import React from "react";
 import Header from "../../../../shared/components/Header";
@@ -13,7 +11,6 @@ import Sidebar from "../../../../shared/components/Sidebar";
 import DepositWithdrawalColor from "./DepositWithdrawalColor";
 
 const Transactions = ({}: any) => {
-  const columns: any = ["Date", "Status", "Method", "Type", "Amount"];
   const [currentPage, setCurrentPage] = useState(1);
   const metadata: any = useSelector((state: RootState) => state.metadata.value);
   const [paginationData, setpaginationData] = useState(null);
@@ -21,6 +18,7 @@ const Transactions = ({}: any) => {
   const [loading, setLoading] = useState(false);
   const [transactions, setTransactions] = useState<string>("");
   const authToken: any = useSelector((state: RootState) => state.auth.value);
+  const columns: any = [language?.v3?.wallet?.date, language?.v3?.wallet?.status, language?.v3?.wallet?.method, language?.v3?.wallet?.type, language?.v3?.wallet?.amount];
   useEffect(() => {
     getTransactionData();
   }, [currentPage]);
@@ -36,21 +34,21 @@ const Transactions = ({}: any) => {
         let transactionsData = data?.transactions?.map((transaction: any) => {
           return {
             id: transaction?.id,
-            ["Date"]: (
+            [language?.v3?.wallet?.date]: (
               <span>{transaction?.timestamp}</span>
             ),
-            ["Method"]: (
+            [language?.v3?.wallet?.method]: (
               <span className="capitalize">{transaction?.method}</span>
             ),
-            ["Type"]: (
+            [language?.v3?.wallet?.type]: (
               <span className="capitalize">{transaction?.transaction_type}</span>
             ),
-            ["Status"]: (
+            [language?.v3?.wallet?.status]: (
               <span className=" capitalize">
                 <CustomStatus options={transaction?.status} />
               </span>
             ),
-            ["Amount"]: (
+            [language?.v3?.wallet?.amount]: (
               <span className=" capitalize">
                <DepositWithdrawalColor status={transaction?.status} amount={transaction?.amount} type={transaction?.transaction_type} />
               </span>
@@ -60,7 +58,6 @@ const Transactions = ({}: any) => {
         setTransactions(transactionsData);
       }
     } catch (error: any) {
-      console.log(error);
     } finally {
       setLoading(false);
     }
@@ -86,7 +83,7 @@ const Transactions = ({}: any) => {
               <section className="inline-flex justify-between items-center w-full">
                 <div className="w-full">
                   <h1 className="text-black font-medium text-2xl mb-2">
-                    {"Transactions"}
+                    {language?.v3?.wallet?.transactions}
                   </h1>
                 </div>
               </section>
@@ -101,9 +98,9 @@ const Transactions = ({}: any) => {
                   paginationData={paginationData}
                   noDataNode={
                     <span className="absolute left-1/2 top-1/2 translate-x-[-50%] translate-y-[-50%]">
-                      No transactions found at the moment
+                      {language?.v3?.wallet?.no_transactions}
                       <br />
-                      Deposit amount to get started
+                      {language?.v3?.wallet?.deposit_amount_to_start}
                     </span>
                   }
                 />
