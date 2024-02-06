@@ -128,7 +128,6 @@ const AllInvestors = ({ openModal, reloadMembers }: any) => {
         setInvestors(investors);
       }
     } catch (error: any) {
-      console.log(error);
 
       if (
         error.response &&

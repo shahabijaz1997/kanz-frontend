@@ -191,7 +191,6 @@ const StartupCase = ({
         setModalOpen(false);
       }
     } catch (error) {
-      console.log(error);
     } finally {
       onGetdeal();
       setLoading(false);
@@ -217,7 +216,6 @@ const StartupCase = ({
         setModalOpen(false);
       }
     } catch (error) {
-      console.log(error);
     } finally {
       onGetdeal();
       setLoading(false);
@@ -670,7 +668,6 @@ const StartupCase = ({
         setModalOpen3(false);
       }
     } catch (error) {
-      console.log(error);
     } finally {
       onGetdeal();
       setLoading(false);
@@ -705,7 +702,6 @@ const StartupCase = ({
         toast.success(language?.v3?.syndicate?.congrats_requested, toastUtil);
       }
     } catch (error) {
-      console.log(error);
     } finally {
       onGetdeal();
       setLoading(false);

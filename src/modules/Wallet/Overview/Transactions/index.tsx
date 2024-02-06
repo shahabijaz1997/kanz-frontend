@@ -58,7 +58,6 @@ const Transactions = ({}: any) => {
         setTransactions(transactionsData);
       }
     } catch (error: any) {
-      console.log(error);
     } finally {
       setLoading(false);
     }

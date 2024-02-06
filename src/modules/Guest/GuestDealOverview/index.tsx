@@ -29,7 +29,6 @@ const GuestInvestorOverview = ({}: any) => {
         setSelectedDocs(data?.status?.data?.docs[0])
       }
     } catch (error) {
-      console.log(error)
     }
   }
   return deal && (

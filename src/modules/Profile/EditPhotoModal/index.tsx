@@ -76,7 +76,6 @@ const EditPhotoModal = ({
         toast.success(language?.v3?.profile?.profile_updated, toastUtil);
       }
     } catch (error) {
-      console.log(error);
     } finally {
       setLoading(false);
       getDetail();

@@ -116,7 +116,6 @@ const InvestorUpdates = ({}: any) => {
         setModalOpen(false);
       }
     } catch (error) {
-      console.log(error);
     } finally {
       viewDealSyndicate(syndicateInfo?.deal?.id, syndicateInfo?.invitee?.id);
       setLoading(false);
@@ -144,7 +143,6 @@ const InvestorUpdates = ({}: any) => {
         setModalOpen(false);
       }
     } catch (error) {
-      console.log(error);
     } finally {
       viewDealSyndicate(syndicateInfo?.deal?.id, syndicateInfo?.invitee?.id);
       setLoading(false);
@@ -165,7 +163,6 @@ const InvestorUpdates = ({}: any) => {
         viewDealSyndicate(syndicateInfo?.deal?.id, syndicateInfo?.invitee?.id);
       }
     } catch (error) {
-      console.log(error);
     } finally {
       toast.success(language?.v3?.common?.suces_msg, toastUtil);
       setLoading(false);

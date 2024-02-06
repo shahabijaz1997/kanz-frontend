@@ -41,7 +41,6 @@ const Wallet = () => {
         setCurrentBalance(data?.wallet?.balance)
       }
     } catch (error: any) {
-      console.log(error);
     } finally {
       setLoading(false);
     }
@@ -65,7 +64,6 @@ const Wallet = () => {
       }
     } catch (error: any) {
       toast.error(error?.response?.data?.status?.message, toastUtil);
-      console.log(error);
     } finally {
       setLoading(false);
     }

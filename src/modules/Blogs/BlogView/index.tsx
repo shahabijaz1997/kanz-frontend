@@ -22,7 +22,6 @@ const BlogView = () => {
       }
     } catch (error) {
       toast.error("Something went wrong", toastUtil);
-      console.log(error);
     } finally {
       setLoading(false);
     }

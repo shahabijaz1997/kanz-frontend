@@ -106,7 +106,6 @@ const SyndciateProfile = ({
         toast.success(language?.v3?.proflie?.profile_updated, toastUtil);
       }
     } catch (error) {
-      console.log(error);
     } finally {
       setLoading(false);
       getDetail();
@@ -179,7 +178,6 @@ const SyndciateProfile = ({
     });
   }
 
-  console.log(data);
 
   return (
     <section className='inline-flex justify-start gap-36 w-full max-h-full'>

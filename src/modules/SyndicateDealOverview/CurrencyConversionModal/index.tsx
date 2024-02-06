@@ -23,7 +23,6 @@ const CurrencyConversionModal = ({ setOpen, amount }: any) => {
         setRate(data?.exchange_rate);
       }
     } catch (error: any) {
-      console.log(error);
     } finally {
       setLoading(false);
     }

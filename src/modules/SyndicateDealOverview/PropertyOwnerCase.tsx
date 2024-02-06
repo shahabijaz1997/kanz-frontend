@@ -219,7 +219,6 @@ const PropertyOwnerCase = ({
         setModalOpen3(false);
       }
     } catch (error) {
-      console.log(error);
     } finally {
       onGetdeal();
       setLoading(false);
@@ -258,7 +257,6 @@ const PropertyOwnerCase = ({
         setModalOpen3(false);
       }
     } catch (error) {
-      console.log(error);
     } finally {
       onGetdeal();
       setLoading(false);
@@ -302,7 +300,6 @@ const PropertyOwnerCase = ({
         setModalOpen(false);
       }
     } catch (error) {
-      console.log(error);
     } finally {
       onGetdeal();
       setLoading(false);
@@ -327,7 +324,6 @@ const PropertyOwnerCase = ({
         setModalOpen(false);
       }
     } catch (error) {
-      console.log(error);
     } finally {
       onGetdeal();
       setLoading(false);
