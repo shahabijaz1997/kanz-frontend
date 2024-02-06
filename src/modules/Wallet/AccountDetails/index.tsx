@@ -10,11 +10,11 @@ const AccountDetails = ({ setStep ,amount, event, language }: any): any => {
   const accDetails = {
     [language?.v3?.wallet?.amount]: eng_arb_commaFormattedNumber(amount, DealCheckType.PROPERTY, event),
     [language?.v3?.wallet?.currency]:language?.v3?.wallet?.aed,
-    [language?.v3?.wallet?.account_name]: process.env.REACT_APP_ACC_NAME,
-    [language?.v3?.wallet?.account_no]: process.env.REACT_APP_ACC_NUM,
-    [language?.v3?.wallet?.iban_no]: process.env.REACT_APP_IBAN,
-    [language?.v3?.wallet?.bank_name]: process.env.REACT_APP_BANK_NAME,
-    [language?.v3?.wallet?.branch_code]: process.env.REACT_APP_BRANCH_CODE,
+    [language?.v3?.wallet?.account_name]: process.env.REACT_APP_ACC_NAME || "KANZ Bank Account",
+    [language?.v3?.wallet?.account_no]: process.env.REACT_APP_ACC_NUM || "123456789",
+    [language?.v3?.wallet?.iban_no]: process.env.REACT_APP_IBAN || "090078601",
+    [language?.v3?.wallet?.bank_name]: process.env.REACT_APP_BANK_NAME || "Telefun",
+    [language?.v3?.wallet?.branch_code]: process.env.REACT_APP_BRANCH_CODE || "65H",
   };
 
   return (
@@ -52,19 +52,19 @@ const AccountDetails = ({ setStep ,amount, event, language }: any): any => {
               <Button
                 onClick={() => {
                   navigator.clipboard.writeText(
-                    language?.v3?.wallet?.account_name + " " +
+                    language?.v3?.wallet?.account_name + ": " +
                     accDetails[language?.v3?.wallet?.account_name] +      //CHANGE COPY DETIALS TO THE CORRECT KEYS
                       "\n" +
-                      language?.v3?.wallet?.account_no  + " " +
+                      language?.v3?.wallet?.account_no  + ": " +
                       accDetails[language?.v3?.wallet?.account_no] +
                       "\n" +
-                      language?.v3?.wallet?.iban_no + " " +
+                      language?.v3?.wallet?.iban_no + ": " +
                       accDetails[language?.v3?.wallet?.iban_no] +
                       "\n" +
-                      language?.v3?.wallet?.bank_name + " " +
+                      language?.v3?.wallet?.bank_name + ": " +
                       accDetails[language?.v3?.wallet?.bank_name] +
                       "\n" +
-                      language?.v3?.wallet?.branch_code + " " +
+                      language?.v3?.wallet?.branch_code + ": " +
                       accDetails[language?.v3?.wallet?.branch_code]
                   ); 
                   toast.success(language?.v3?.wallet?.copied, toastUtil);

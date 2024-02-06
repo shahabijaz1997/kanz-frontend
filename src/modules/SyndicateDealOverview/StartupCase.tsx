@@ -498,7 +498,7 @@ const StartupCase = ({
               {event === 'ar'
                 ? comaFormattedNumber(
                     deal?.raised,
-                    DealCheckType.PROPERTY,
+                    DealCheckType.STARTUP,
                     true
                   )
                 : comaFormattedNumber(deal?.raised, DealCheckType.PROPERTY)}
