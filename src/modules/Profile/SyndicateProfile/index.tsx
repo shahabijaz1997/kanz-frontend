@@ -212,7 +212,7 @@ const SyndciateProfile = ({
                 }}
                 onClick={() => {
                   setShowData(!showData);
-                  setShowFlex(true);
+                  setShowFlex(!showFlex);
                 }}
                 className=' text-sm px-2 py-1.5 w-full border-[1px] focus:border-[#155E75] rounded-md bg-white'
                 type='text'
@@ -402,7 +402,7 @@ const SyndciateProfile = ({
               onChange={setYouRaised}
             />
             <InputProfile
-              disabled={true}
+              disabled={false}
               label={'How many times you have raised?'}
               value={timesRaised}
               onChange={setTimesRaised}
