@@ -17,7 +17,7 @@ const FundRaiserProfile = ({
   language,
   setLoading,
   getDetail,
-  data, 
+  data,
   setPhotoUploadModal,
 }: any) => {
   const authToken: any = useSelector((state: RootState) => state.auth.value);
@@ -44,8 +44,10 @@ const FundRaiserProfile = ({
     (state: RootState) => state.orientation.value
   );
   const [payload, setPayload]: any = useState({
-    market: [],
+    market: data?.profile?.industry_ids,
   });
+  const [showFlex, setShowFlex] = useState(false);
+
   const validateEmail = (email: any) => {
     return emailRegex.test(email) ? true : false;
   };
@@ -89,6 +91,11 @@ const FundRaiserProfile = ({
   }; */
 
   const updateInfo = async (payload: any) => {
+    if (payload?.market?.length < 1) {
+      setLoading(false);
+      toast.error('Industries should not be empty', toastUtil);
+      return;
+    }
     try {
       let sentPayload = {
         profile: {
@@ -178,82 +185,21 @@ const FundRaiserProfile = ({
             />
           }
         </span>
-        <span className="inline-flex justify-start w-[76%] gap-12 items-center">
-          {<InputProfile disabled={true} label={language?.v3?.profile?.email} value={data?.email} />}
+        <span className='inline-flex justify-start w-[76%] gap-12 items-center'>
+          {
+            <InputProfile
+              disabled={true}
+              label={language?.v3?.profile?.email}
+              value={data?.email}
+            />
+          }
         </span>
-        <div className="w-[90%] relative" ref={refInd}>
-              <p className="mb-1 font-medium whitespace-nowrap">{language?.v3?.profile?.markets}</p>
-              <span className="relative">
-                <input
-                  readOnly
-                  id="market"
-                  autoComplete="off"
-                  value={search}
-                  onChange={(e) => {
-                    setSearch(e.target.value);
-                  }}
-                  onClick={() => setShowData(!showData)}
-                  className=" px-2 py-1.5 w-full border-[1px] focus:border-[#155E75] rounded-md bg-white"
-                  type="text"
-                />
-                <span
-                  className={`absolute top-[6px] flex items-center pr-2 pointer-events-none ${
-                    orientation === "rtl" ? "left-1" : "right-0"
-                  }`}
-                  style={{ zIndex: 99 }}
-                >
-                  <Chevrond className="w-3 h-3" stroke="#737373" />
-                </span>
-              </span>
-              <div className="absolute top-[60px] left-0 ">
-                {payload?.market && payload?.market?.length > 0 && (
-                  <aside className="inline-flex gap-2 flex-wrap  shadow-sm appearance-none border bg-white border-neutral-300 rounded-md w-full py-1 px-2 text-gray-500 leading-tight focus:outline-none focus:shadow-outline">
-                    {React.Children.toArray(
-                      filteredData.map((ind: any) => (
-                        <div className="check-background rounded-[4px] p-1 text-[11px] inline-flex items-center">
-                          <span>{ind[event]?.name}</span>
-                          <CrossIcon
-                            onClick={() => {
-                              let payloadItems = filteredData.filter(
-                                (x: any) => x.id !== ind.id
-                              );
-                              onSetPayload(
-                                payloadItems.map((item: any) => item.id),
-                                "market"
-                              );
-                            }}
-                            className="cursor-pointer h-2 w-2 ml-1"
-                            stroke={"#828282"}
-                          />
-                        </div>
-                      ))
-                    )}
-                  </aside>
-                )}
-                {showData && (
-                  <SearchedItems
-                    items={searchResults}
-                    searchString={search}
-                    passItemSelected={(it: any) => {
-                      let payloadItems = [...payload.market];
-                      payloadItems.push(it.id);
-                      onSetPayload(Array.from(new Set(payloadItems)), "market");
-                    }}
-                    className={
-                      "cursor-pointer rounded-md py-1 px-1 bg-cbc-check text-neutral-700 font-normal text-[11px] hover:bg-cbc-check-hover transition-all"
-                    }
-                    parentClass={
-                      "flex rounded-md border-[1px] flex-wrap gap-2 bg-white p-2 max-h-[200px] overflow-y-auto"
-                    }
-                  />
-                )}
-              </div>
-            </div>
-        <span className="inline-flex justify-start text-xl mt-5 font-medium items-center">
+
+        <span className='inline-flex justify-start text-xl mt-5 font-medium items-center'>
           {language?.v3?.profile?.company_details}
         </span>
-        <label className="font-medium">{language?.v3?.profile?.logo}</label>
-        <span className="flex-col flex items-start justify-center">
+        <label className='font-medium'>{language?.v3?.profile?.logo}</label>
+        <span className='flex-col flex items-start justify-center'>
           <img
             className='h-56 w-48 border-[0.5px] rounded-md'
             style={{
@@ -264,7 +210,7 @@ const FundRaiserProfile = ({
             alt=''
           />
         </span>
-        <div className='w-[90%] relative' ref={refInd}>
+        <div className='w-[90%] relative' ref={refInd} style={{ zIndex: 99 }}>
           <p className='mb-1 font-medium whitespace-nowrap'>{'Industries'}</p>
           <span className='relative'>
             <input
@@ -275,7 +221,10 @@ const FundRaiserProfile = ({
               onChange={(e) => {
                 setSearch(e.target.value);
               }}
-              onClick={() => setShowData(!showData)}
+              onClick={() => {
+                setShowData(!showData);
+                setShowFlex(!showFlex);
+              }}
               className=' px-2 py-1.5 w-full border-[1px] focus:border-[#155E75] rounded-md bg-white'
               type='text'
             />
@@ -289,7 +238,7 @@ const FundRaiserProfile = ({
             </span>
           </span>
           <div className='absolute top-[60px] left-0 '>
-            {payload?.market && payload?.market?.length > 0 && (
+            {payload?.market && payload?.market?.length > 0 && showFlex && (
               <aside className='inline-flex gap-2 flex-wrap  shadow-sm appearance-none border bg-white border-neutral-300 rounded-md w-full py-1 px-2 text-gray-500 leading-tight focus:outline-none focus:shadow-outline'>
                 {React.Children.toArray(
                   filteredData.map((ind: any) => (
@@ -355,7 +304,7 @@ const FundRaiserProfile = ({
             <InputProfile
               placeholder={language?.v3?.profile?.example_dot_com}
               disabled={false}
-              label={language?.v3?.profile?.website}
+              label={language?.v3?.investor?.company_website}
               value={website}
               onChange={setWebsite}
               validationName={language?.v3?.profile?.website}
@@ -376,8 +325,8 @@ const FundRaiserProfile = ({
         <span className='inline-flex justify-start gap-12 items-center'>
           {
             <span className={` w-[90%] flex-col flex`}>
-              <p className="mb-1 font-medium whitespace-nowrap">
-                {language?.v3?.profile?.description}
+              <p className='mb-1 font-medium whitespace-nowrap'>
+                {language?.v3?.investor?.company_desc}
               </p>
               <textarea
                 value={description}
@@ -438,7 +387,7 @@ const FundRaiserProfile = ({
             className='!py-2'
             type='primary'
           >
-           {language?.v3?.profile?.update}
+            {language?.v3?.profile?.update}
           </Button>
         </span>
       </div>

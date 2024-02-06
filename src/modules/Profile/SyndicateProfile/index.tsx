@@ -84,6 +84,16 @@ const SyndciateProfile = ({
   };
 
   const updateInfo = async (payload: any) => {
+    if (payload?.market?.length < 1) {
+      setLoading(false);
+      toast.error('Industries should not be empty', toastUtil);
+      return;
+    }
+    if (payload2?.regions?.length < 1) {
+      setLoading(false);
+      toast.error('Regions should not be empty', toastUtil);
+      return;
+    }
     try {
       let sentPayload = {
         profile: {
@@ -178,7 +188,6 @@ const SyndciateProfile = ({
     });
   }
 
-
   return (
     <section className='inline-flex justify-start gap-36 w-full max-h-full'>
       <div className='flex flex-col gap-6 w-[40%]'>
@@ -192,16 +201,40 @@ const SyndciateProfile = ({
           <InputProfile
             disabled={true}
             label={language?.v3?.profile?.region}
-            value={data?.profile?.regions?.join(", ")}
+            value={data?.profile?.regions?.join(', ')}
           />
         </span>
-        <span className="inline-flex justify-start gap-12 items-center">
-          {<InputProfile disabled={true} label={language?.v3?.profile?.email} value={data?.email} />}
+        <span className='inline-flex justify-start gap-12 items-center'>
+          {
+            <InputProfile
+              disabled={true}
+              label={language?.v3?.profile?.email}
+              value={data?.email}
+            />
+          }
         </span>
-        <span className="inline-flex justify-start gap-12 items-center">
-          <div className="w-[90%] relative" ref={refInd}>
-            <p className=" mb-1 font-medium whitespace-nowrap">{language?.v3?.profile?.markets}</p>
-            <span className="relative">
+
+        <span className='inline-flex mt-5 justify-start text-xl font-medium items-center'>
+          {language?.v3?.profile?.syndicate_details}{' '}
+        </span>
+        <label className='font-medium'>{language?.v3?.profile?.logo}</label>
+        <span className='flex-col flex'>
+          <img
+            className='h-56 w-48 border-[1px]'
+            style={{
+              objectFit: 'contain',
+              aspectRatio: '1',
+            }}
+            src={data?.profile?.logo}
+            alt=''
+          />
+        </span>
+        <span className='inline-flex justify-start gap-12 items-center'>
+          <div className='w-[90%] relative' ref={refInd}>
+            <p className=' mb-1 font-medium whitespace-nowrap'>
+              {language?.v3?.investor?.industries}
+            </p>
+            <span className='relative'>
               <input
                 readOnly
                 id='market'
@@ -271,21 +304,21 @@ const SyndciateProfile = ({
             </div>
           </div>
         </span>
-        <span className="inline-flex mt-5 justify-start text-xl font-medium items-center">
-        {language?.v3?.profile?.syndicate_details}        </span>
-        <label className="font-medium">{language?.v3?.profile?.logo}</label>
-        <span className="flex-col flex">
-          <img
-            className="h-56 w-48 border-[1px]"
-            style={{
-              objectFit: "contain",
-              aspectRatio: "1",
-            }}
-            src={data?.profile?.logo}
-            alt=""
+
+        <span className='inline-flex justify-center gap-12 items-center'>
+          <InputProfile
+            disabled={false}
+            label={'Name'}
+            value={profName}
+            onChange={setProfName}
+          />
+          <InputProfile
+            disabled={false}
+            label={'Deal Flow'}
+            value={dealFlow}
+            onChange={setDealFlow}
           />
         </span>
-
         {/* Regions Start */}
         <span className='inline-flex justify-start gap-12 items-center'>
           <div className='w-[90%] relative' ref={refInd2}>
@@ -363,7 +396,6 @@ const SyndciateProfile = ({
           </div>
         </span>
         {/* Regions End */}
-
         <label className='font-medium whitespace-nowrap' htmlFor='biz'>
           {'About'}
         </label>
@@ -377,7 +409,7 @@ const SyndciateProfile = ({
         <span className='inline-flex justify-center gap-12 items-center'>
           <InputProfile
             language={language}
-            placeholder="example.com"
+            placeholder='example.com'
             disabled={false}
             label={language?.v3?.profile?.profile_link}
             value={website}
@@ -420,7 +452,8 @@ const SyndciateProfile = ({
             className='!py-2'
             type='primary'
           >
-          {language?.v3?.profile?.update}</Button>
+            {language?.v3?.profile?.update}
+          </Button>
         </span>
       </div>
       <span>
