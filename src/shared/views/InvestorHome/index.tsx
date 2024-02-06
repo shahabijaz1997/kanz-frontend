@@ -105,6 +105,17 @@ const InvestorHome = ({ loading, language }: any) => {
                     {user.status === ApplicationStatus.APPROVED && <Button className="mt-[30px] h-[38px] min-w-[160px]" disabled={loading} htmlType="submit" loading={loading} onClick={() => navigate(RoutesEnums.INVESTOR_DASHBOARD)} >
                         {language?.buttons?.continue}
                     </Button>}
+                    {user.status === ApplicationStatus.REOPENED && (<Button
+                    className="mt-[30px] h-[38px] w-[143px]"
+                    disabled={loading}
+                    htmlType="submit"
+                    loading={loading}
+                    onClick={onPress}
+                  >
+                    {language?.buttons?.continue}
+                  </Button>
+                    )}
+                    
                 </React.Fragment>
             );
         }

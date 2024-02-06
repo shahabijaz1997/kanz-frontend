@@ -18,7 +18,6 @@ const BlogView = () => {
       setLoading(true);
       let { status, data }: any = await showBlog(params?.slug);
       if (status === 200) {
-        console.log(data?.transactions);
         setBlogContent(data?.transactions);
       }
     } catch (error) {
