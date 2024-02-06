@@ -18,6 +18,7 @@
   },
   "onboarding": {
     "welcome": "مرحبًا بك في كنز",
+    "session_timeOut": "لقد انتهت المهلة المحددة لجلستك، يرجى تسجيل الدخول مرة أخرى...",
     "submitted": "تم تقديم طلبك!",
     "appStatus": "حالة الطلب",
     "propertyOwnerWelcomeText": "إضافة معلومات المالك",
@@ -186,7 +187,8 @@
     "proceed": "المتابعة",
     "notRegistered": "غير مسجل؟",
     "alreadyAccount": "هل لديك حساب بالفعل؟",
-    "signup": "الاشتراك"
+    "signup": "الاشتراك",
+    "drag_n_drop": "أو السحب والإفلات"
   },
   "modal": {
     "thankyou": "\"شكرًا لتقديم المعلومات الخاصة بك!",
@@ -284,7 +286,8 @@
       "imageSpecs": "صورة بتنسيق PNG، JPG بحجم",
       "sure": "هل أنت متأكد؟",
       "investorSelection": "سيؤدي تغيير نوع المستثمر إلى إزالة البيانات والمرفقات الموجودة لديك.",
-      "proceed": "هل تريد المتابعة على أي حال؟"
+      "proceed": "هل تريد المتابعة على أي حال؟",
+      "imageSpecs2": "PNG، JPG، PDF حتى"
     },
     "risk": {
       "heading": "تنويه المخاطر",
@@ -758,7 +761,8 @@
       "documents": "الوثائق",
       "view_all_photos": "عرض كل الصور",
       "about_prop": "حول العقار",
-      "prop_links": "روابط العقار"
+      "prop_links": "روابط العقار",
+      "placeholderDesc": "وصف موجز لتحديث التقييم"
     },
     "table": {
       "title": "العنوان",
@@ -816,7 +820,8 @@
       "app": "الموافقة",
       "req_change": "طلب تغييرات",
       "interested": "الموافقة",
-      "view": "عرض المستند"
+      "view": "عرض المستند",
+      "update": "تحديث"
     },
     "syndicate": {
       "table": {
@@ -904,10 +909,14 @@
       "total_return_on_inv": "إجمالي عائد الاستثمار",
       "avg_annualised_return": "متوسط العائد السنوي المعدل",
       "exp_cap_app": "التقدير الرأسمالي المتوقع",
-      "net_div_inc": "صافي دخل التوزيع"
+      "net_div_inc": "صافي دخل التوزيع",
+      "update_deals": "تحديث العروض",
+      "document": "وثيقة",
+      "upload_y_document": "قم بتحميل المستند الخاص بك",
+      "sent_date": "تاريخ الإرسال"
     },
     "fundraiser": {
-      "typeError":"الملف يجب أن يكون PNG، JPG، JPEG",
+      "typeError": "الملف يجب أن يكون PNG، JPG، JPEG",
       "upload_photo": "تحميل الصورة",
       "startup": "بدء",
       "property": "ملكية",
@@ -918,8 +927,8 @@
       "approved": "موافقة",
       "live": "يعيش",
       "verified": "تم التحقق",
-      "file_type_err":"يجب أن يكون الملف PNG، JPG، JPEG",
-      "file_size_err":"يجب أن يكون حجم الملف اقل من 10MB",
+      "file_type_err": "يجب أن يكون الملف PNG، JPG، JPEG",
+      "file_size_err": "يجب أن يكون حجم الملف اقل من 10MB",
       "rejected": "مرفوض",
       "create_startup_deal": "إنشاء صفقة بدء التشغيل",
       "create_property_deal": "إنشاء صفقة عقارية",

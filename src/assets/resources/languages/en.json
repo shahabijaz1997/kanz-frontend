@@ -17,7 +17,7 @@
     "propertyOwner": "Propert Owners"
   },
   "onboarding": {
-    "session_timeOut":"Your session has timed out, please log in again...",
+    "session_timeOut": "Your session has timed out, please log in again...",
     "welcome": "Welcome to Kanz",
     "submitted": "Your application has been submitted!",
     "appStatus": "Application status",
@@ -187,7 +187,8 @@
     "proceed": "Proceed",
     "notRegistered": "Not registered?",
     "alreadyAccount": "Already have an account?",
-    "signup": "Sign up"
+    "signup": "Sign up",
+    "drag_n_drop": " or drag and drop"
   },
   "modal": {
     "thankyou": "Success! Thank you for joining the Kanz community.",
@@ -285,7 +286,8 @@
       "imageSpecs": "PNG, JPG up to",
       "sure": "Are you sure?",
       "investorSelection": "Changing the investor type will remove your existing data and attachments.",
-      "proceed": "Do you want to proceed anyway?"
+      "proceed": "Do you want to proceed anyway?",
+      "imageSpecs2": "PNG, JPG, PDF up to "
     },
     "risk": {
       "heading": "Risk Disclaimer",
@@ -763,7 +765,8 @@
       "documents": "Documents",
       "view_all_photos": "View All Photos",
       "about_prop": "About the Property",
-      "prop_links": "Property Links"
+      "prop_links": "Property Links",
+      "placeholderDesc": "Brief description of the valuation update"
     },
     "table": {
       "title": "Title",
@@ -821,7 +824,8 @@
       "app": "Approve",
       "req_change": "Request Changes",
       "interested": "Approve",
-      "view": "View Doc"
+      "view": "View Doc",
+      "update": "Update"
     },
     "syndicate": {
       "table": {
@@ -911,10 +915,13 @@
       "exp_cap_app": "Expected Capital Appreciation",
       "net_div_inc": "Net Dividend Income",
       "notes": "Notes",
-      "sent_date": "Sent Date"
+      "sent_date": "Sent Date",
+      "update_deals": "Update Deals",
+      "document": "Document",
+      "upload_y_document": "Upload your Document"
     },
     "fundraiser": {
-      "typeError":"File should be of type JPG/PNG/JPEG",
+      "typeError": "File should be of type JPG/PNG/JPEG",
       "startup": "Startup",
       "property": "Property",
       "investors": "Investors",
@@ -924,7 +931,7 @@
       "approved": "Approved",
       "live": "Live",
       "verified": "Verified",
-      "file_type_err":"File type should be only image/jpeg/jpg/pdf",
+      "file_type_err": "File type should be only image/jpeg/jpg/pdf",
       "rejected": "Rejected",
       "create_startup_deal": "Create Startup Deal",
       "create_property_deal": "Create Property Deal",
@@ -1153,10 +1160,10 @@
       "personal_note_from": "Personal note from",
       "individual": "Individual",
       "firm": "Firm",
-      "no_member_for_now":"No member for now",
-      "social_media":"Social Media",
-      "webiste":"Website",
-      "interested":"Interested",
+      "no_member_for_now": "No member for now",
+      "social_media": "Social Media",
+      "webiste": "Website",
+      "interested": "Interested",
       "performance": "Performance",
       "activity": "Activity",
       "insights": "Insights",

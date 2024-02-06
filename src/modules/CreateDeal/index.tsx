@@ -1,44 +1,44 @@
-import React, { useEffect, useState } from "react";
-import { useSelector, useDispatch } from "react-redux";
-import { useLocation, useNavigate } from "react-router-dom";
-import { RootState } from "../../redux-toolkit/store/store";
-import { getDealQuestion, postDealStep, submitDeal } from "../../apis/deal.api";
-import { DealCheckType, DealType, FileType } from "../../enums/types.enum";
+import React, { useEffect, useState } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
+import { useLocation, useNavigate } from 'react-router-dom';
+import { RootState } from '../../redux-toolkit/store/store';
+import { getDealQuestion, postDealStep, submitDeal } from '../../apis/deal.api';
+import { DealCheckType, DealType, FileType } from '../../enums/types.enum';
 import {
   onResetFields,
   onResetOptions,
   saveDealSelection,
   saveQuestionnaire,
-} from "../../redux-toolkit/slicer/philosophy.slicer";
-import Header from "../../shared/components/Header";
-import CrossIcon from "../../ts-icons/crossIcon.svg";
-import { KanzRoles } from "../../enums/roles.enum";
-import Stepper from "../../shared/components/Stepper";
-import Spinner from "../../shared/components/Spinner";
-import Button from "../../shared/components/Button";
-import { saveToken } from "../../redux-toolkit/slicer/auth.slicer";
-import { RoutesEnums } from "../../enums/routes.enum";
-import { Constants, InputType } from "../../enums/constants.enum";
-import { saveDataHolder } from "../../redux-toolkit/slicer/dataHolder.slicer";
-import { toastUtil } from "../../utils/toast.utils";
-import { toast } from "react-toastify";
-import Selector from "../../shared/components/Selector";
+} from '../../redux-toolkit/slicer/philosophy.slicer';
+import Header from '../../shared/components/Header';
+import CrossIcon from '../../ts-icons/crossIcon.svg';
+import { KanzRoles } from '../../enums/roles.enum';
+import Stepper from '../../shared/components/Stepper';
+import Spinner from '../../shared/components/Spinner';
+import Button from '../../shared/components/Button';
+import { saveToken } from '../../redux-toolkit/slicer/auth.slicer';
+import { RoutesEnums } from '../../enums/routes.enum';
+import { Constants, InputType } from '../../enums/constants.enum';
+import { saveDataHolder } from '../../redux-toolkit/slicer/dataHolder.slicer';
+import { toastUtil } from '../../utils/toast.utils';
+import { toast } from 'react-toastify';
+import Selector from '../../shared/components/Selector';
 import {
   comaFormattedNumber,
   numberFormatter,
   uniqueArray,
-} from "../../utils/object.utils";
-import FileUpload from "../../shared/components/FileUpload";
-import HoverModal from "../../shared/components/HoverModal";
-import ExamplePropertyOwner from "../../assets/example_property_owner.png";
-import BinIcon from "../../ts-icons/binIcon.svg";
-import Modal from "../../shared/components/Modal";
-import { removeAttachment } from "../../apis/attachment.api";
-import EditIcon from "../../ts-icons/editIcon.svg";
-import ReviewDeal from "./ReviewDeal";
-import Drawer from "../../shared/components/Drawer";
-import CalendarIcon from "../../ts-icons/calendarIcon.svg";
-import { isValidUrl } from "../../utils/regex.utils";
+} from '../../utils/object.utils';
+import FileUpload from '../../shared/components/FileUpload';
+import HoverModal from '../../shared/components/HoverModal';
+import ExamplePropertyOwner from '../../assets/example_property_owner.png';
+import BinIcon from '../../ts-icons/binIcon.svg';
+import Modal from '../../shared/components/Modal';
+import { removeAttachment } from '../../apis/attachment.api';
+import EditIcon from '../../ts-icons/editIcon.svg';
+import ReviewDeal from './ReviewDeal';
+import Drawer from '../../shared/components/Drawer';
+import CalendarIcon from '../../ts-icons/calendarIcon.svg';
+import { isValidUrl } from '../../utils/regex.utils';
 
 const CreateDeal = () => {
   const navigate = useNavigate();
@@ -75,7 +75,7 @@ const CreateDeal = () => {
   const [modalOpen, setModalOpen]: any = useState(null);
 
   useEffect(() => {
-    getDealStepDetails()
+    getDealStepDetails();
   }, [step]);
 
   const getDealStepDetails = async () => {
@@ -163,7 +163,7 @@ const CreateDeal = () => {
               ]?.sections?.find((s: any) => s.index === sec?.index);
 
               let thatObj = { ...sect.fields[0] };
-              thatObj.value = "";
+              thatObj.value = '';
               sect.fields = [{ ...thatObj }];
             } else {
               setShowCustomBox(true);
@@ -174,7 +174,7 @@ const CreateDeal = () => {
               _dependencies?.find((dep: any) => {
                 if (
                   dep?.value === String(opt.id) &&
-                  dep?.dependent_type !== "Stepper"
+                  dep?.dependent_type !== 'Stepper'
                 )
                   options.push(dep);
               });
@@ -200,7 +200,7 @@ const CreateDeal = () => {
       }
     } catch (error: any) {
       if (error.response && error.response.status === 401) {
-        dispatch(saveToken(""));
+        dispatch(saveToken(''));
         navigate(RoutesEnums.LOGIN);
       }
     } finally {
@@ -274,12 +274,12 @@ const CreateDeal = () => {
       let payload: any = {
         deal: {
           deal_type:
-            metadata.dealType === KanzRoles.STARTUP ? "startup" : "property",
-          
+            metadata.dealType === KanzRoles.STARTUP ? 'startup' : 'property',
+
           step: questions[step - 1]?.id,
           fields,
         },
-      };  
+      };
       if (dataHolder) payload.deal.id = dataHolder;
       let submission;
       if (step >= totalSteps?.all.length)
@@ -292,7 +292,7 @@ const CreateDeal = () => {
         dispatch(saveDataHolder(data?.status?.data?.id));
         if (step < totalSteps?.all.length) setStep(step + 1);
         else {
-          dispatch(saveDataHolder(""));
+          dispatch(saveDataHolder(''));
           setModalOpen(true);
         }
       }
@@ -308,8 +308,8 @@ const CreateDeal = () => {
   };
 
   const onSetPrev = () => {
-    if (step > 1) setStep(step - 1)
-    else navigate(`${RoutesEnums.FUNDRAISER_DASHBOARD}`)
+    if (step > 1) setStep(step - 1);
+    else navigate(`${RoutesEnums.FUNDRAISER_DASHBOARD}`);
   };
 
   const tieUpRestrictions = (as: any) => {
@@ -329,8 +329,8 @@ const CreateDeal = () => {
       setLoading(false);
       dispatch(saveDealSelection(data));
       if (error.response && error.response.status === 401) {
-        dispatch(saveToken(""));
-        navigate(RoutesEnums.LOGIN, { state: "add-attachments" });
+        dispatch(saveToken(''));
+        navigate(RoutesEnums.LOGIN, { state: 'add-attachments' });
       }
       const message =
         error?.response?.data?.status?.message ||
@@ -347,8 +347,8 @@ const CreateDeal = () => {
     let dependant = dependencies?.find(
       (dep: any) =>
         dep?.dependent_id === ques?.id &&
-        dep?.operation === "hide" &&
-        dep.dependent_type !== "Stepper"
+        dep?.operation === 'hide' &&
+        dep.dependent_type !== 'Stepper'
     );
 
     if (dependant) {
@@ -360,20 +360,20 @@ const CreateDeal = () => {
     }
     if (flag) return <React.Fragment></React.Fragment>;
     return (
-      <section className="flex items-start justify-center flex-col mt-3 w-full">
-        <h3 className="text-neutral-700 font-medium text-base w-[450px]">
+      <section className='flex items-start justify-center flex-col mt-3 w-full'>
+        <h3 className='text-neutral-700 font-medium text-base w-[450px]'>
           {ques?.title}
         </h3>
-        <p className="text-neutral-500 font-normal text-sm">
+        <p className='text-neutral-500 font-normal text-sm'>
           <span>{ques?.statement}</span>&nbsp;
           <span
-            className="text-cc-blue font-medium cursor-pointer"
+            className='text-cc-blue font-medium cursor-pointer'
             onClick={() => setOpen(true)}
           >
             {language.common.learn}
           </span>
         </p>
-        <section className="mb-8 w-full relative mt-2">
+        <section className='mb-8 w-full relative mt-2'>
           <ul>
             {ques?.options &&
               React.Children.toArray(
@@ -381,7 +381,7 @@ const CreateDeal = () => {
                   return (
                     <li
                       className={`h-[70px] w-[450px] px-4 grey-neutral-200 text-sm font-medium cursor-pointer border border-grey inline-flex items-center justify-start first:rounded-t-md last:rounded-b-md screen500:w-full ${
-                        as.selected ? "check-background" : "bg-white"
+                        as.selected ? 'check-background' : 'bg-white'
                       }`}
                       onClick={() => {
                         dispatch(
@@ -426,14 +426,14 @@ const CreateDeal = () => {
                       <input
                         onChange={(e) => {}}
                         className="accent-cyan-800 relative float-left mx-2 h-3 w-3 rounded-full border-2 border-solid border-cyan-300 before:pointer-events-none before:absolute before:h-4 before:w-4 before:scale-0 before:rounded-full before:bg-transparent before:opacity-0 before:content-[''] after:absolute after:z-[1] after:block after:h-4 after:w-4 after:rounded-full after:content-[''] checked:border-primary checked:before:opacity-[0.16] checked:after:absolute checked:after:left-1/2 checked:after:top-1/2 checked:after:h-[0.625rem] checked:after:w-[0.625rem] checked:after:rounded-full checked:after:border-primary checked:after:bg-primary checked:after:content-[''] checked:after:[transform:translate(-50%,-50%)] hover:cursor-pointer hover:before:opacity-[0.04]"
-                        type="radio"
+                        type='radio'
                         checked={as.selected ? true : false}
                       />
-                      <div className="flex flex-col">
-                        <div className="text-sm font-medium text-neutral-900">
+                      <div className='flex flex-col'>
+                        <div className='text-sm font-medium text-neutral-900'>
                           {as?.statement}
                         </div>
-                        <div className="text-sm font-normal text-neutral-500">
+                        <div className='text-sm font-normal text-neutral-500'>
                           {as?.label}
                         </div>
                       </div>
@@ -450,10 +450,15 @@ const CreateDeal = () => {
     let dependantQuesion = section?.fields?.find(
       (field: any) => field.id === ques?.dependent_id
     );
-    let placeholder = "",
-      symbol = "";
+    let placeholder = '',
+      symbol = '';
     if (ques?.input_type === InputType.CURRENCY)
-      placeholder = metadata.dealType === KanzRoles.STARTUP ? "$ 0.00" : event === "ar" ?  "د.إ00.0": "AED 0.00" ;  
+      placeholder =
+        metadata.dealType === KanzRoles.STARTUP
+          ? '$ 0.00'
+          : event === 'ar'
+          ? 'د.إ00.0'
+          : 'AED 0.00';
     else if (ques?.input_type === InputType.SQFT)
       placeholder = language?.v3?.common?.sqft;
     else if (ques?.input_type === InputType.PERCENT)
@@ -461,28 +466,34 @@ const CreateDeal = () => {
     else placeholder = ques?.placeholder || ques?.statement;
 
     if (ques?.input_type === InputType.CURRENCY)
-      symbol = metadata.dealType === KanzRoles.STARTUP ? "$" : event === "ar" ?  "د.إ": "AED";
-    else if (ques?.input_type === InputType.SQFT) symbol = event === "ar" ?  "قدم مربع": "SQFT";
-    else if (ques?.input_type === InputType.PERCENT) symbol = "%";
+      symbol =
+        metadata.dealType === KanzRoles.STARTUP
+          ? '$'
+          : event === 'ar'
+          ? 'د.إ'
+          : 'AED';
+    else if (ques?.input_type === InputType.SQFT)
+      symbol = event === 'ar' ? 'قدم مربع' : 'SQFT';
+    else if (ques?.input_type === InputType.PERCENT) symbol = '%';
     if (!dependantQuesion || (dependantQuesion && dependantQuesion?.value))
       return (
-        <section className="flex items-start justify-center flex-col mt-3 w-full">
+        <section className='flex items-start justify-center flex-col mt-3 w-full'>
           {!dependantQuesion && (
-            <h3 className="text-neutral-700 font-medium text-base w-[450px]">
+            <h3 className='text-neutral-700 font-medium text-base w-[450px]'>
               {ques?.statement}
             </h3>
           )}
 
-          <section className="mb-8 w-full relative">
-            <div className="relative rounded-md w-full h-10 border-[1px] border-neutral-300 bg-white overflow-hidden inline-flex items-center px-3">
+          <section className='mb-8 w-full relative'>
+            <div className='relative rounded-md w-full h-10 border-[1px] border-neutral-300 bg-white overflow-hidden inline-flex items-center px-3'>
               <input
                 value={comaFormattedNumber(ques?.value)}
                 onInput={(e: any) => {
                   const enteredValue = e.target.value;
                   let numericValue =
                     ques?.id == 49 || ques?.id == 5
-                      ? enteredValue.replace(/[^0-9]|(\.(?=.*\.))/g, "")
-                      : enteredValue.replace(/[^0-9.]|(\.(?=.*\.))/g, "");
+                      ? enteredValue.replace(/[^0-9]|(\.(?=.*\.))/g, '')
+                      : enteredValue.replace(/[^0-9.]|(\.(?=.*\.))/g, '');
 
                   if (
                     (ques?.id == 49 || ques?.id == 5) &&
@@ -514,16 +525,16 @@ const CreateDeal = () => {
                 }}
                 id={`num-${ques.id}`}
                 placeholder={placeholder}
-                type="text"
-                className="outline-none w-full h-full placeholder-neutral-500"
+                type='text'
+                className='outline-none w-full h-full placeholder-neutral-500'
               />
             </div>
             {showZeroWarning && (
-              <span className="text-xs text-red-600">
+              <span className='text-xs text-red-600'>
                 {language?.v3?.fundraiser?.amount_cannot_be_zero}
               </span>
             )}
-            <ul className="inline-flex justify-between w-full items-center gap-6 mt-3">
+            <ul className='inline-flex justify-between w-full items-center gap-6 mt-3'>
               {React.Children.toArray(
                 ques?.suggestions.map((suggestion: any) => {
                   let formattedNumber;
@@ -531,39 +542,30 @@ const CreateDeal = () => {
                     ques.input_type === InputType.CURRENCY &&
                     metadata.dealType === KanzRoles.PROPERTY_OWNER
                   ) {
-                    if(event === "ar") {
-                      formattedNumber =   "د.إ"  +
-                      numberFormatter(
-                        suggestion,
-                        null,
-                        true
-                      )}
-                    else {
+                    if (event === 'ar') {
+                      formattedNumber =
+                        'د.إ' + numberFormatter(suggestion, null, true);
+                    } else {
                       formattedNumber = numberFormatter(
                         suggestion,
                         DealCheckType.PROPERTY
                       );
                     }
-                  
                   } else if (
                     ques.input_type === InputType.CURRENCY &&
                     metadata.dealType === KanzRoles.STARTUP
                   ) {
-                    if(event === "ar") {
-                      formattedNumber =   "$" +
-                      numberFormatter(
-                        suggestion,
-                        null,
-                        true
-                      )}
-                    else {
+                    if (event === 'ar') {
+                      formattedNumber =
+                        '$' + numberFormatter(suggestion, null, true);
+                    } else {
                       formattedNumber = numberFormatter(
                         suggestion,
                         DealCheckType.STARTUP
                       );
                     }
                   } else {
-                    formattedNumber = suggestion + "%";
+                    formattedNumber = suggestion + '%';
                   }
 
                   return (
@@ -583,7 +585,7 @@ const CreateDeal = () => {
                           })
                         );
                       }}
-                      className="cursor-pointer py-2 px-3 h-9 w-30 bg-cbc-grey-sec rounded-md text-center text-sm font-normal text-neutral-900"
+                      className='cursor-pointer py-2 px-3 h-9 w-30 bg-cbc-grey-sec rounded-md text-center text-sm font-normal text-neutral-900'
                     >
                       {formattedNumber}
                     </li>
@@ -600,39 +602,39 @@ const CreateDeal = () => {
   const attachmentsUI = (ques: any, secIndex: number, section: any) => {
     let onlyPDF =
       ques?.permitted_types?.length === 1 &&
-      ques?.permitted_types?.includes("pdf") &&
+      ques?.permitted_types?.includes('pdf') &&
       true;
     let onlvideo: any =
       ques?.permitted_types?.length === 1 &&
-      ques?.permitted_types?.includes("video") &&
+      ques?.permitted_types?.includes('video') &&
       true;
 
     return ques?.value?.id && !ques?.value?.type ? (
-      <section className="mb-6 w-full">
+      <section className='mb-6 w-full'>
         {ques?.index < 1 && (
-          <h3 className="text-neutral-700 font-medium text-base">
+          <h3 className='text-neutral-700 font-medium text-base'>
             <span>{section?.description}</span>&nbsp;
             <span
-              className="text-cc-blue font-medium cursor-pointer"
+              className='text-cc-blue font-medium cursor-pointer'
               onClick={() => setOpen(true)}
             >
               {language.philosophyGoals.whyToDo}
             </span>
           </h3>
         )}
-        <div className="content-center bg-cbc-grey-sec p-4 rounded-md">
-          <div className="block text-neutral-700 text-base font-medium">
-            <span className="inline-flex w-full items-center justify-between">
-              <span className="inline-flex flex-col">
+        <div className='content-center bg-cbc-grey-sec p-4 rounded-md'>
+          <div className='block text-neutral-700 text-base font-medium'>
+            <span className='inline-flex w-full items-center justify-between'>
+              <span className='inline-flex flex-col'>
                 <div>{ques?.statement}</div>
-                <p className="text-neutral-500 font-normal text-sm mb-2">
-                  <span className="text-neutral-500">{ques?.label}</span>&nbsp;
+                <p className='text-neutral-500 font-normal text-sm mb-2'>
+                  <span className='text-neutral-500'>{ques?.label}</span>&nbsp;
                 </p>
               </span>
               <EditIcon
-                stroke="#fff"
-                className="w-7 h-7 float-right cursor-pointer rounded-md p-1"
-                style={{ backgroundColor: "rgba(0, 0, 0, 0.078)" }}
+                stroke='#fff'
+                className='w-7 h-7 float-right cursor-pointer rounded-md p-1'
+                style={{ backgroundColor: 'rgba(0, 0, 0, 0.078)' }}
                 onClick={() => {
                   removeFile(ques?.value?.id, {
                     option: null,
@@ -645,21 +647,21 @@ const CreateDeal = () => {
                 }}
               />
             </span>
-            <div className="content-center text-center mt-2  main-embed  h-[200px] overflow-hidden relative">
+            <div className='content-center text-center mt-2  main-embed  h-[200px] overflow-hidden relative'>
               {onlvideo ? (
-                <video className="w-[100%] h-[90%]" controls>
-                  <source src={ques?.value?.url} type="video/webm" />
+                <video className='w-[100%] h-[90%]' controls>
+                  <source src={ques?.value?.url} type='video/webm' />
                 </video>
               ) : ques?.value?.kind !== FileType.PDF ? (
                 <img
-                  alt={"Attachment url missing"}
+                  alt={'Attachment url missing'}
                   src={ques?.value?.url}
-                  className="block w-[110%] h-[110%] overflow-hidden object-contain"
+                  className='block w-[110%] h-[110%] overflow-hidden object-contain'
                 />
               ) : (
                 <embed
                   src={ques?.value?.url}
-                  className="block w-[100%] h-[100%] overflow-hidden"
+                  className='block w-[100%] h-[100%] overflow-hidden'
                 />
               )}
             </div>
@@ -667,37 +669,37 @@ const CreateDeal = () => {
         </div>
       </section>
     ) : (
-      <section className="flex items-start justify-center flex-col mt-3 mb-6 w-full">
+      <section className='flex items-start justify-center flex-col mt-3 mb-6 w-full'>
         {ques?.index < 1 && (
-          <h3 className="text-neutral-700 font-medium text-base w-[450px]">
+          <h3 className='text-neutral-700 font-medium text-base w-[450px]'>
             <span>{section?.description}</span>&nbsp;
             <span
-              className="text-cc-blue font-medium cursor-pointer"
+              className='text-cc-blue font-medium cursor-pointer'
               onClick={() => setOpen(true)}
             >
               {language.philosophyGoals.whyToDo}
             </span>
           </h3>
         )}
-        <h3 className="text-neutral-700 font-medium text-base w-[450px] mt-3">
+        <h3 className='text-neutral-700 font-medium text-base w-[450px] mt-3'>
           {ques?.is_required && <span>*&nbsp;</span>}
           {ques?.statement}
         </h3>
-        <p className="text-neutral-500 font-normal text-sm mb-2">
-          <span className="text-neutral-500">{ques?.label}</span>&nbsp;
+        <p className='text-neutral-500 font-normal text-sm mb-2'>
+          <span className='text-neutral-500'>{ques?.label}</span>&nbsp;
           <span
-            className="relative text-cc-blue font-medium cursor-pointer"
+            className='relative text-cc-blue font-medium cursor-pointer'
             onMouseEnter={() => setShowHoverModal(ques.id)}
             onMouseLeave={() => setShowHoverModal(null)}
           >
             {language.common.example}
             {showHoverModal === ques.id && (
-              <HoverModal width="w-[170px]" height="h-[170px]">
-                <section className="inline-flex flex-row items-center justify-evenly h-full">
+              <HoverModal width='w-[170px]' height='h-[170px]'>
+                <section className='inline-flex flex-row items-center justify-evenly h-full'>
                   <img
                     src={ExamplePropertyOwner}
                     alt={language.syndicate.logo}
-                    className="h-[100px]"
+                    className='h-[100px]'
                   />
                 </section>
               </HoverModal>
@@ -766,7 +768,7 @@ const CreateDeal = () => {
               step: dealData[step - 1],
             })
           }
-          className="w-full"
+          className='w-full'
         />
       </section>
     );
@@ -784,16 +786,16 @@ const CreateDeal = () => {
       let currentValue =
         ques?.options?.find((op: any) => op.selected)?.statement ||
         options[0]?.statement ||
-        "";
+        '';
       return (
-        <section className="flex items-start justify-center flex-col mt-2 w-full">
+        <section className='flex items-start justify-center flex-col mt-2 w-full'>
           {!dependantQuesion && (
-            <h3 className="text-neutral-700 font-medium text-base w-full capitalize">
+            <h3 className='text-neutral-700 font-medium text-base w-full capitalize'>
               {ques?.statement}
             </h3>
           )}
-          <section className="mb-5 w-full relative mt-1">
-            <div className="relative w-full" style={{ zIndex: 101 }}>
+          <section className='mb-5 w-full relative mt-1'>
+            <div className='relative w-full' style={{ zIndex: 101 }}>
               <Selector
                 disabled={false}
                 defaultValue={{ label: currentValue, value: currentValue }}
@@ -823,54 +825,54 @@ const CreateDeal = () => {
 
   const termUI = (ques: any, secIndex: number) => {
     return (
-      <section className="flex items-start justify-center flex-col mt-2 w-full">
-        <section className="mb-5 w-full relative mt-1">
+      <section className='flex items-start justify-center flex-col mt-2 w-full'>
+        <section className='mb-5 w-full relative mt-1'>
           <div>
-            <span className="font-bold text-lg">
+            <span className='font-bold text-lg'>
               {language?.v3?.fundraiser?.terms_and_conditions}
-            </span>{" "}
+            </span>{' '}
             <br />
-            <span className="font-bold">
-              {" "}
+            <span className='font-bold'>
+              {' '}
               {language?.v3?.fundraiser?.acceptance_of_terms}
-            </span>{" "}
+            </span>{' '}
             <br />
             {language?.v3?.fundraiser?.welcome_message} <br />
             {language?.v3?.fundraiser?.access_or_use_agreement} <br />
             {language?.v3?.fundraiser?.disagreement_message} <br />
-            <span className="font-bold">
-              {" "}
+            <span className='font-bold'>
+              {' '}
               {language?.v3?.fundraiser?.use_of_the_app}
-            </span>{" "}
+            </span>{' '}
             <br />
             {language?.v3?.fundraiser?.minimum_age_requirement} <br />
             {language?.v3?.fundraiser?.account_confidentiality} <br />
             {language?.v3?.fundraiser?.illegal_or_unauthorized_use} <br />
             {language?.v3?.fundraiser?.no_harassment_abuse_harm} <br />
             {language?.v3?.fundraiser?.no_transmission_of_worms_viruses} <br />
-            <span className="font-bold">
-              {" "}
+            <span className='font-bold'>
+              {' '}
               {language?.v3?.fundraiser?.fundraising_guidelines}
-            </span>{" "}
+            </span>{' '}
             <br />
             {language?.v3?.fundraiser?.fundraising_app_platform} <br />
             {language?.v3?.fundraiser?.user_responsibility} <br />
             {language?.v3?.fundraiser?.no_fraudulent_or_misleading_use} <br />
             {language?.v3?.fundraiser?.right_to_remove_or_suspend} <br />
-            <span className="font-bold">
-              {" "}
+            <span className='font-bold'>
+              {' '}
               {language?.v3?.fundraiser?.financial_transactions}
-            </span>{" "}
+            </span>{' '}
             <br />
             {language?.v3?.fundraiser?.non_refundable_donations} <br />
             {language?.v3?.fundraiser?.processing_fee} <br />
-            {language?.v3?.fundraiser?.no_credit_card_information_storage}{" "}
+            {language?.v3?.fundraiser?.no_credit_card_information_storage}{' '}
             <br />
           </div>
         </section>
 
         <section
-          className="w-full inline-flex items-center gap-2 rounded-md border border-grey w-[450px] p-4 check-background cursor-pointer"
+          className='w-full inline-flex items-center gap-2 rounded-md border border-grey w-[450px] p-4 check-background cursor-pointer'
           onClick={() =>
             dispatch(
               saveDealSelection({
@@ -885,11 +887,11 @@ const CreateDeal = () => {
           }
         >
           <input
-            type="checkbox"
-            className="accent-cyan-800 h-3 w-3 cursor-pointer"
+            type='checkbox'
+            className='accent-cyan-800 h-3 w-3 cursor-pointer'
             checked={ques?.value}
           />
-          <small className="text-neutral-700 text-lg font-medium">
+          <small className='text-neutral-700 text-lg font-medium'>
             {ques?.statement}
           </small>
         </section>
@@ -899,13 +901,13 @@ const CreateDeal = () => {
 
   const switchInputUI = (ques: any, secIndex: number, section: any) => {
     return (
-      <section className="flex items-start justify-center flex-col mt-3 w-full">
-        <div className="mb-3 inline-flex w-full items-center justify-between">
-          <small className="text-neutral-700 text-lg font-medium mb-1">
+      <section className='flex items-start justify-center flex-col mt-3 w-full'>
+        <div className='mb-3 inline-flex w-full items-center justify-between'>
+          <small className='text-neutral-700 text-lg font-medium mb-1'>
             {ques?.statement}
           </small>
           <label
-            className="relative inline-flex items-center cursor-pointer"
+            className='relative inline-flex items-center cursor-pointer'
             onChange={(e) => {
               dispatch(
                 saveDealSelection({
@@ -924,7 +926,7 @@ const CreateDeal = () => {
                 dependantQuesions.forEach((dep) => {
                   dispatch(
                     saveDealSelection({
-                      option: "",
+                      option: '',
                       question: dep,
                       fields: dealData,
                       lang: event,
@@ -937,9 +939,9 @@ const CreateDeal = () => {
             }}
           >
             <input
-              type="checkbox"
-              value=""
-              className="sr-only peer"
+              type='checkbox'
+              value=''
+              className='sr-only peer'
               checked={ques?.value}
             />
             <div className="w-11 h-6 bg-gray-200 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-cyan-800"></div>
@@ -961,14 +963,14 @@ const CreateDeal = () => {
           dependantQuesion?.value))
     ) {
       return (
-        <section className="flex items-start justify-center flex-col mt-3 w-full">
-          <div className="mb-6 inline-flex flex-col w-full items-start justify-between">
+        <section className='flex items-start justify-center flex-col mt-3 w-full'>
+          <div className='mb-6 inline-flex flex-col w-full items-start justify-between'>
             {(!dependantQuesion ||
               (dependantQuesion &&
                 dependantQuesion?.field_type === Constants.TEXT_FIELD)) && (
               <label
                 htmlFor={ques?.id}
-                className="text-neutral-700 text-lg font-medium mb-1"
+                className='text-neutral-700 text-lg font-medium mb-1'
               >
                 {ques?.statement}
               </label>
@@ -976,7 +978,7 @@ const CreateDeal = () => {
             <textarea
               value={ques?.value}
               placeholder={ques?.statement}
-              className="h-[100px] mt-2 resize-none shadow-sm appearance-none border border-neutral-300 rounded-md w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+              className='h-[100px] mt-2 resize-none shadow-sm appearance-none border border-neutral-300 rounded-md w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline'
               id={ques?.id}
               onInput={(e: any) =>
                 dispatch(
@@ -1006,18 +1008,18 @@ const CreateDeal = () => {
 
     if (!dependantQuesion || (dependantQuesion && dependantQuesion?.value)) {
       return (
-        <section className="flex items-start justify-center flex-col mb-8 mt-3 w-full">
+        <section className='flex items-start justify-center flex-col mb-8 mt-3 w-full'>
           {!dependantQuesion && (
             <label
               htmlFor={ques?.id}
-              className="text-neutral-700 text-lg font-medium mb-1"
+              className='text-neutral-700 text-lg font-medium mb-1'
             >
               {ques?.statement}
             </label>
           )}
           <input
             title={ques?.statement}
-            className="h-[42px] pr-10 shadow-sm appearance-none border rounded-md w-full py-2 px-3 text-gray-700 leading-tight transition-all bg-white w-full focus:outline-none"
+            className='h-[42px] pr-10 shadow-sm appearance-none border rounded-md w-full py-2 px-3 text-gray-700 leading-tight transition-all bg-white w-full focus:outline-none'
             placeholder={ques?.statement}
             id={ques?.id}
             onChange={(e: any) =>
@@ -1046,7 +1048,7 @@ const CreateDeal = () => {
     if (!dependantQuesion || (dependantQuesion && dependantQuesion?.value)) {
       let min = new Date();
       let dte = ques?.value;
-      const parts = ques?.value?.split("/");
+      const parts = ques?.value?.split('/');
       if (parts && parts?.length === 3) {
         const day = parts[0];
         const month = parts[1];
@@ -1055,20 +1057,20 @@ const CreateDeal = () => {
       }
 
       return (
-        <section className="flex items-start justify-center flex-col mb-8 mt-3 w-full">
+        <section className='flex items-start justify-center flex-col mb-8 mt-3 w-full'>
           {!dependantQuesion && (
             <label
               htmlFor={ques?.id}
-              className="capitalize text-neutral-700 text-lg font-medium mb-1"
+              className='capitalize text-neutral-700 text-lg font-medium mb-1'
             >
               {ques?.statement}
             </label>
           )}
-          <span className="relative w-full">
+          <span className='relative w-full'>
             <input
-              type="date"
+              type='date'
               title={ques?.statement}
-              className="appearance-none h-[42px] pl-2 shadow-sm appearance-none border rounded-md w-full py-2 px-3 text-gray-700 leading-tight transition-all bg-white w-full focus:outline-none"
+              className='appearance-none h-[42px] pl-2 shadow-sm appearance-none border rounded-md w-full py-2 px-3 text-gray-700 leading-tight transition-all bg-white w-full focus:outline-none'
               placeholder={ques?.statement}
               id={`date-${ques?.id}`}
               onChange={(e: any) =>
@@ -1084,10 +1086,10 @@ const CreateDeal = () => {
                 )
               }
               value={dte}
-              min={min.toISOString().split("T")[0]}
+              min={min.toISOString().split('T')[0]}
             />
             <div
-              className="absolute top-1/2 translate-y-[-50%] bg-white h-10 w-10 inline-flex items-center justify-center right-2 cursor-pointer"
+              className='absolute top-1/2 translate-y-[-50%] bg-white h-10 w-10 inline-flex items-center justify-center right-2 cursor-pointer'
               onClick={() => {
                 let elem: any = document.getElementById(`date-${ques?.id}`);
                 elem?.showPicker();
@@ -1103,26 +1105,26 @@ const CreateDeal = () => {
 
   const URLInput = (ques: any, secIndex: number, section: any) => {
     return (
-      <section className="flex items-start justify-center flex-col mb-1 mt-3 w-full">
-        <div className="relative inline-flex w-full mb-3">
+      <section className='flex items-start justify-center flex-col mb-1 mt-3 w-full'>
+        <div className='relative inline-flex w-full mb-3'>
           <input
-            type="disabled"
-            value={"https://"}
+            type='disabled'
+            value={'https://'}
             className={`text-neutral-500 text-base font-normal border-t border-b border-neutral-300 h-[42px] w-[70px] ${
-              orientation === "rtl"
-                ? "border-r rounded-br-md rounded-tr-md pr-2"
-                : "border-l rounded-bl-md rounded-tl-md pl-2"
+              orientation === 'rtl'
+                ? 'border-r rounded-br-md rounded-tr-md pr-2'
+                : 'border-l rounded-bl-md rounded-tl-md pl-2'
             }`}
           />
           <input
-            placeholder="www.example.com"
+            placeholder='www.example.com'
             value={ques?.value}
             className={`h-[42px] shadow-sm appearance-none border border-neutral-300 w-full py-2 px-3 text-gray-500 leading-tight focus:outline-none focus:shadow-outline ${
-              orientation === "rtl"
-                ? " rounded-bl-md rounded-tl-md"
-                : " rounded-br-md rounded-tr-md"
+              orientation === 'rtl'
+                ? ' rounded-bl-md rounded-tl-md'
+                : ' rounded-br-md rounded-tr-md'
             }`}
-            type="text"
+            type='text'
             id={ques?.id}
             onChange={(e: any) =>
               dispatch(
@@ -1145,11 +1147,11 @@ const CreateDeal = () => {
   const renderQuestionType = (ques: any, secIndex: number, section: any) => {
     if (
       restrictions?.some(
-        (res: any) => res.dependent_id === ques?.id && res?.operation !== "show"
+        (res: any) => res.dependent_id === ques?.id && res?.operation !== 'show'
       ) &&
       restrictions.length > 0
     )
-      return "";
+      return '';
     else {
       if (ques?.field_type === Constants.MULTIPLE_CHOICE)
         return multipleChoice(ques, secIndex, section);
@@ -1174,7 +1176,7 @@ const CreateDeal = () => {
       else
         return (
           <ReviewDeal
-            setStep= {setStep}
+            setStep={setStep}
             language={language}
             dealId={dataHolder}
             metadata={metadata}
@@ -1308,7 +1310,7 @@ const CreateDeal = () => {
   };
 
   return (
-    <main className="h-full max-h-full overflow-y-auto overflow-x-hidden bg-cbc-auth">
+    <main className='h-full max-h-full overflow-y-auto overflow-x-hidden bg-cbc-auth'>
       <section>
         <Header
           custom={true}
@@ -1318,29 +1320,29 @@ const CreateDeal = () => {
               <button
                 onClick={() => navigate(RoutesEnums.FUNDRAISER_DASHBOARD)}
               >
-                {" "}
-                <CrossIcon stroke="#171717" className="w-6 h-6" />
+                {' '}
+                <CrossIcon stroke='#171717' className='w-6 h-6' />
               </button>
             ),
           }}
         />
       </section>
 
-      <aside className="w-full pt-14 px-12">
-        <section className="w-10 inline-block align-top">
+      <aside className='w-full pt-14 px-12'>
+        <section className='w-10 inline-block align-top'>
           <Stepper
             totalSteps={totalSteps?.all}
             currentStep={step - 1}
-            direction="col"
+            direction='col'
           />
         </section>
-        <section className="w-[calc(100%-3rem)] inline-block align-top">
-          <div className="w-full inline-flex items-center justify-cneter flex-col">
+        <section className='w-[calc(100%-3rem)] inline-block align-top'>
+          <div className='w-full inline-flex items-center justify-cneter flex-col'>
             {loading ? (
               <div
-                className="absolute left-0 top-0 w-full h-full grid place-items-center"
+                className='absolute left-0 top-0 w-full h-full grid place-items-center'
                 style={{
-                  backgroundColor: "rgba(255, 255, 255, 1)",
+                  backgroundColor: 'rgba(255, 255, 255, 1)',
                   zIndex: 50,
                 }}
               >
@@ -1352,7 +1354,7 @@ const CreateDeal = () => {
                 !dealData[step - 1] ||
                 !dealData[step - 1][event]?.sections.length ? (
                   <ReviewDeal
-                    setStep= {setStep}
+                    setStep={setStep}
                     language={language}
                     navigate={navigate}
                     dealId={dataHolder}
@@ -1366,7 +1368,7 @@ const CreateDeal = () => {
                       (section: any, index: number) => {
                         return section.is_multiple || section?.display_card ? (
                           <React.Fragment>
-                            <h3 className="w-[450px] screen500:w-[350px] text-neutral-700 font-bold text-2xl mb-10">
+                            <h3 className='w-[450px] screen500:w-[350px] text-neutral-700 font-bold text-2xl mb-10'>
                               {section?.title}
                             </h3>
                             {/* For Custom Cards */}
@@ -1376,9 +1378,9 @@ const CreateDeal = () => {
                               React.Children.toArray(
                                 multipleFieldsPayload?.map((sec: any) => {
                                   return (
-                                    <section className="bg-white border-[1px] border-neutral-300 rounded-md px-5 py-3 w-[450px] mb-6">
+                                    <section className='bg-white border-[1px] border-neutral-300 rounded-md px-5 py-3 w-[450px] mb-6'>
                                       <div
-                                        className="w-full inline-flex justify-end cursor-pointer"
+                                        className='w-full inline-flex justify-end cursor-pointer'
                                         onClick={() => {
                                           /* setUspAdded(false)
                                            */ dispatch(
@@ -1404,14 +1406,14 @@ const CreateDeal = () => {
                                           });
                                         }}
                                       >
-                                        <BinIcon stroke="#171717" />
+                                        <BinIcon stroke='#171717' />
                                       </div>
                                       {sec?.fields && (
                                         <React.Fragment>
-                                          <div className="font-bold text-neutral-900 text-sm text-center mb-2">
+                                          <div className='font-bold text-neutral-900 text-sm text-center mb-2'>
                                             {sec?.fields[0]?.value}
                                           </div>
-                                          <small className="text-neutral-700 font-normal text-sm text-center block w-full">
+                                          <small className='text-neutral-700 font-normal text-sm text-center block w-full'>
                                             {sec.fields[1]?.value}
                                           </small>
                                         </React.Fragment>
@@ -1426,7 +1428,7 @@ const CreateDeal = () => {
                               <section
                                 className={`flex items-start flex-col mb-8 w-[450px] screen500:w-[350px] ${
                                   (index % 2 != 0 || section?.is_multiple) &&
-                                  "bg-cbc-check p-4 rounded-md"
+                                  'bg-cbc-check p-4 rounded-md'
                                 }`}
                               >
                                 {section?.fields?.length > 0 &&
@@ -1437,9 +1439,9 @@ const CreateDeal = () => {
                                   )}
 
                                 {section?.display_card && (
-                                  <div className="w-full inline-flex justify-center items-center gap-2">
+                                  <div className='w-full inline-flex justify-center items-center gap-2'>
                                     <Button
-                                      className="w-[100px] border-2 border-cyan-800"
+                                      className='w-[100px] border-2 border-cyan-800'
                                       onClick={() => {
                                         dispatch(
                                           onResetFields({
@@ -1457,7 +1459,7 @@ const CreateDeal = () => {
                                       disabled={checkCurrentBoxStatus(
                                         section?.fields
                                       )}
-                                      className="w-[100px] bg-transparent border-2 border-cyan-800 !text-cyan-800 hover:!text-white"
+                                      className='w-[100px] bg-transparent border-2 border-cyan-800 !text-cyan-800 hover:!text-white'
                                       onClick={() => {
                                         /* setUspAdded(true) */
                                         setShowCustomBox(false);
@@ -1535,17 +1537,17 @@ const CreateDeal = () => {
                                   {React.Children.toArray(
                                     multipleFieldsPayload?.map((mp: any) => {
                                       return (
-                                        <section className="flex items-start justify-center flex-col mb-1 mt-3 w-[415px]">
-                                          <div className="relative inline-flex w-full mb-3">
+                                        <section className='flex items-start justify-center flex-col mb-1 mt-3 w-[415px]'>
+                                          <div className='relative inline-flex w-full mb-3'>
                                             <p
                                               className={`h-[42px] rounded-md shadow-sm appearance-none border border-neutral-300 w-full py-2 px-3 bg-white text-blue-500 leading-tight focus:outline-none focus:shadow-outline inline-flex justify-between items-center`}
                                             >
-                                              <small className="text-sm;">
+                                              <small className='text-sm;'>
                                                 {mp?.value}
                                               </small>
                                               <BinIcon
-                                                stroke="#171717"
-                                                className="cursor-pointer w-6 h-6"
+                                                stroke='#171717'
+                                                className='cursor-pointer w-6 h-6'
                                                 onClick={() => {
                                                   setMultipleFieldsPayload(
                                                     (prev: any) => {
@@ -1573,7 +1575,7 @@ const CreateDeal = () => {
                                 </section>
                               )}
                             {section?.add_more_label && (
-                              <section className="w-[450px]">
+                              <section className='w-[450px]'>
                                 <Button
                                   disabled={checkMultipleButtonDisabled(
                                     section
@@ -1603,7 +1605,7 @@ const CreateDeal = () => {
                                         );
                                       dispatch(
                                         saveDealSelection({
-                                          option: "",
+                                          option: '',
                                           question: section?.fields[0],
                                           fields: dealData,
                                           lang: event,
@@ -1622,7 +1624,7 @@ const CreateDeal = () => {
                                     section?.display_card &&
                                       setShowCustomBox(true);
                                   }}
-                                  className="w-full bg-white border-2 border-cyan-800 !text-cyan-800 hover:!text-white"
+                                  className='w-full bg-white border-2 border-cyan-800 !text-cyan-800 hover:!text-white'
                                 >
                                   {section?.add_more_label}
                                 </Button>
@@ -1633,10 +1635,10 @@ const CreateDeal = () => {
                           <section
                             className={`flex items-start flex-col mb-8 w-[450px] screen500:w-[350px] ${
                               (index % 2 != 0 || section?.is_multiple) &&
-                              "bg-cbc-check p-4 rounded-md"
+                              'bg-cbc-check p-4 rounded-md'
                             }`}
                           >
-                            <h3 className="text-neutral-700 font-bold text-2xl w-full mb-6">
+                            <h3 className='text-neutral-700 font-bold text-2xl w-full mb-6'>
                               {section?.title}
                             </h3>
                             {section?.fields?.length > 0 ? (
@@ -1647,7 +1649,7 @@ const CreateDeal = () => {
                               )
                             ) : (
                               <ReviewDeal
-                                setStep= {setStep}
+                                setStep={setStep}
                                 language={language}
                                 dealId={dataHolder}
                                 metadata={metadata}
@@ -1662,23 +1664,23 @@ const CreateDeal = () => {
                     )
                   )
                 )}
-                <section className="flex items-start justify-center w-full flex-col mt-6 pb-10 max-w-[450px] screen500:w-[350px]">
-                  <div className="w-full inline-flex items-center justify-between mt-16">
+                <section className='flex items-start justify-center w-full flex-col mt-6 pb-10 max-w-[450px] screen500:w-[350px]'>
+                  <div className='w-full inline-flex items-center justify-between mt-16'>
                     <Button
-                      className="h-[38px] w-[140px]"
-                      htmlType="button"
-                      type="outlined"
+                      className='h-[38px] w-[140px]'
+                      htmlType='button'
+                      type='outlined'
                       onClick={onSetPrev}
                     >
                       {language?.buttons?.back}
                     </Button>
                     <Button
-                      className="h-[38px] w-[140px]"
+                      className='h-[38px] w-[140px]'
                       disabled={
                         !checkValidation() ||
                         showZeroWarning /*  || !uspAdded */
                       }
-                      htmlType="submit"
+                      htmlType='submit'
                       loading={loading}
                       onClick={onSetNext}
                     >
@@ -1693,35 +1695,35 @@ const CreateDeal = () => {
           </div>
         </section>
 
-        <Modal show={modalOpen} className={"w-[500px] screen1024:w-[300px]"}>
+        <Modal show={modalOpen} className={'w-[500px] screen1024:w-[300px]'}>
           {modalOpen?.type ? (
             <React.Fragment>
               <div
-                className="rounded-md h-8 w-8 inline-grid place-items-center cursor-pointer absolute right-2 top-2"
-                style={{ backgroundColor: "rgba(0, 0, 0, 0.078" }}
+                className='rounded-md h-8 w-8 inline-grid place-items-center cursor-pointer absolute right-2 top-2'
+                style={{ backgroundColor: 'rgba(0, 0, 0, 0.078' }}
               >
                 <CrossIcon
-                  stroke="#fff"
-                  className="w-6 h-6"
+                  stroke='#fff'
+                  className='w-6 h-6'
                   onClick={() => setModalOpen(null)}
                 />
               </div>
               {modalOpen?.type === FileType.IMAGE ? (
-                <img src={modalOpen?.url} alt="Img" className="max-h-[100%]" />
+                <img src={modalOpen?.url} alt='Img' className='max-h-[100%]' />
               ) : (
                 <embed
                   src={modalOpen?.url}
-                  type="application/pdf"
-                  className="w-[100%] h-[90%]"
+                  type='application/pdf'
+                  className='w-[100%] h-[90%]'
                 />
               )}
             </React.Fragment>
           ) : (
-            <div className="relative p-12 rounded-md shadow-cs-1 flex flex-col items-center w-full bg-white outline-none focus:outline-none screen800:px-3">
-              <div className="rounded-md h-8 w-8 inline-grid place-items-center cursor-pointer absolute right-2 top-2">
+            <div className='relative p-12 rounded-md shadow-cs-1 flex flex-col items-center w-full bg-white outline-none focus:outline-none screen800:px-3'>
+              <div className='rounded-md h-8 w-8 inline-grid place-items-center cursor-pointer absolute right-2 top-2'>
                 <CrossIcon
-                  stroke="#171717"
-                  className="w-6 h-6"
+                  stroke='#171717'
+                  className='w-6 h-6'
                   onClick={() => {
                     setModalOpen(false);
                     navigate(`${RoutesEnums.FUNDRAISER_DASHBOARD}`);
@@ -1730,11 +1732,11 @@ const CreateDeal = () => {
               </div>
 
               <aside>
-                <h2 className="font-bold text-xl text-center text-neutral-900">
+                <h2 className='font-bold text-xl text-center text-neutral-900'>
                   {language?.v3?.deal?.submitted_deal}
                 </h2>
-                <p className="text-sm font-normal text-center text-neutral-500 mt-4 mb-4">
-                  {language?.v3?.deal?.deal_status}:{" "}
+                <p className='text-sm font-normal text-center text-neutral-500 mt-4 mb-4'>
+                  {language?.v3?.deal?.deal_status}:{' '}
                   <strong>{language?.common?.submitted}</strong>
                 </p>
               </aside>
@@ -1743,11 +1745,11 @@ const CreateDeal = () => {
         </Modal>
 
         <Drawer isOpen={open} setIsOpen={(val: boolean) => setOpen(val)}>
-          <header className="font-bold text-xl">
+          <header className='font-bold text-xl'>
             <h2>{language?.v2?.risk?.sub_head_1}</h2>
-            <h4 className="text-sm my-3">{language?.v2?.risk?.sub_head_2}</h4>
+            <h4 className='text-sm my-3'>{language?.v2?.risk?.sub_head_2}</h4>
           </header>
-          <p className="text-neutral-700 font-normal text-sm text-justify">
+          <p className='text-neutral-700 font-normal text-sm text-justify'>
             Lorem, ipsum dolor sit amet consectetur adipisicing elit. Molestias
             tempore libero odio eius, eum blanditiis quod nulla voluptate
             inventore reiciendis dolores aperiam? Esse sed blanditiis qui a
