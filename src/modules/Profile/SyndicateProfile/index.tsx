@@ -254,7 +254,7 @@ const SyndciateProfile = ({
             className="!py-2"
             type="primary"
           >
-          {language?.v3?.profile?.update}          </Button>
+          {language?.v3?.profile?.update}</Button>
         </span>
       </div>
       <span>

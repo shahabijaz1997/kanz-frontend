@@ -74,7 +74,7 @@ const BlogView = () => {
               </div>
             </div>
             <div
-              className="px-20 lg:px-0 mt-12 text-gray-700 max-w-screen-md mx-auto text-lg leading-relaxed"
+              className="mx-20 lg:px-0 mt-12 text-gray-700 max-w-screen-md p-5 text-lg leading-relaxed border-[1px] shadow-2xl rounded-md border-neutral-200"
               dangerouslySetInnerHTML={{ __html: blogContent?.content }}
             />
           </div>
