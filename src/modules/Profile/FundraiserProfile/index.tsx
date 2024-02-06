@@ -14,10 +14,10 @@ import React from "react";
 import CrossIcon from "../../../ts-icons/crossIcon.svg";
 
 const FundRaiserProfile = ({
+  language,
   setLoading,
   getDetail,
-  file,
-  data,
+  data, 
   setPhotoUploadModal,
 }: any) => {
   const authToken: any = useSelector((state: RootState) => state.auth.value);
@@ -99,10 +99,9 @@ const FundRaiserProfile = ({
       };
       let { status, data } = await updateProfile(authToken, sentPayload);
       if (status === 200) {
-        toast.success("Profile Updated", toastUtil);
+        toast.success(language?.v3?.profile?.profile_updated, toastUtil);
       }
     } catch (error) {
-      console.log(error);
     } finally {
       setLoading(false);
       getDetail();
@@ -156,7 +155,7 @@ const FundRaiserProfile = ({
           {
             <InputProfile
               disabled={false}
-              label={"Name"}
+              label={language?.v3?.profile?.name}
               value={name}
               onChange={setName}
             />
@@ -164,16 +163,16 @@ const FundRaiserProfile = ({
           {
             <InputProfile
               disabled={true}
-              label={"Nationality"}
+              label={language?.v3?.profile?.nationality}
               value={data?.profile?.en?.nationality}
             />
           }
         </span>
         <span className="inline-flex justify-start w-[76%] gap-12 items-center">
-          {<InputProfile disabled={true} label={"Email"} value={data?.email} />}
+          {<InputProfile disabled={true} label={language?.v3?.profile?.email} value={data?.email} />}
         </span>
         <div className="w-[90%] relative" ref={refInd}>
-              <p className="mb-1 font-medium whitespace-nowrap">{"Markets"}</p>
+              <p className="mb-1 font-medium whitespace-nowrap">{language?.v3?.profile?.markets}</p>
               <span className="relative">
                 <input
                   readOnly
@@ -241,9 +240,9 @@ const FundRaiserProfile = ({
               </div>
             </div>
         <span className="inline-flex justify-start text-xl mt-5 font-medium items-center">
-          Company Details
+          {language?.v3?.profile?.company_details}
         </span>
-        <label className="font-medium">Logo</label>
+        <label className="font-medium">{language?.v3?.profile?.logo}</label>
         <span className="flex-col flex items-start justify-center">
           <img
             className="h-56 w-48 border-[0.5px] rounded-md"
@@ -259,7 +258,7 @@ const FundRaiserProfile = ({
           {
             <InputProfile
               disabled={false}
-              label={"Company Name"}
+              label={language?.v3?.profile?.company_name}
               value={companyName}
               onChange={setCompanyName}
             />
@@ -267,7 +266,7 @@ const FundRaiserProfile = ({
           {
             <InputProfile
               disabled={false}
-              label={"Legal Name"}
+              label={language?.v3?.profile?.legal_name}
               value={legalName}
               onChange={setLegalname}
             />
@@ -276,12 +275,12 @@ const FundRaiserProfile = ({
         <span className="inline-flex justify-start gap-12 items-center">
           {
             <InputProfile
-              placeholder="example.com"
+              placeholder={language?.v3?.profile?.example_dot_com}
               disabled={false}
-              label={"Website"}
+              label={language?.v3?.profile?.website}
               value={website}
               onChange={setWebsite}
-              validationName={"website"}
+              validationName={language?.v3?.profile?.website}
               valid={!validateProfileLink(website)}
             />
           }
@@ -290,7 +289,7 @@ const FundRaiserProfile = ({
           {
             <InputProfile
               disabled={false}
-              label={"Address"}
+              label={language?.v3?.profile?.address}
               value={address}
               onChange={setAddress}
             />
@@ -300,7 +299,7 @@ const FundRaiserProfile = ({
           {
             <span className={` w-[90%] flex-col flex`}>
               <p className="mb-1 font-medium whitespace-nowrap">
-                {"Description"}
+                {language?.v3?.profile?.description}
               </p>
               <textarea
                 value={description}
@@ -316,7 +315,7 @@ const FundRaiserProfile = ({
           {
             <InputProfile
               disabled={false}
-              label={"CEO name"}
+              label={language?.v3?.profile?.ceo_name}
               value={ceoName}
               onChange={setCeoName}
             />
@@ -324,10 +323,10 @@ const FundRaiserProfile = ({
           {
             <InputProfile
               disabled={false}
-              label={"CEO email"}
+              label={language?.v3?.profile?.ceo_email}
               value={ceoEmail}
               onChange={setCeoEmail}
-              validationName={"email"}
+              validationName={language?.v3?.profile?.ceo_email}
               valid={!validateEmail(ceoEmail)}
             />
           }
@@ -343,7 +342,7 @@ const FundRaiserProfile = ({
             className="!py-2"
             type="primary"
           >
-            Update
+           {language?.v3?.profile?.update}
           </Button>
         </span>
       </div>

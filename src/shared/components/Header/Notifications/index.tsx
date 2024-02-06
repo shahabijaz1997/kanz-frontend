@@ -1,6 +1,7 @@
-import React from "react";
+import React, { useEffect, useRef } from "react";
 
-const Notifcations = ({ open, setOpen }: any) => {
+const Notifcations = ({ open, setOpen  }: any) => {
+  const refInd: any = useRef();
   const notificationMockData = [
     {
       name: "Alice",
@@ -53,10 +54,23 @@ const Notifcations = ({ open, setOpen }: any) => {
       timeAgo: "20 hours ago",
     },
   ];
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (refInd.current && !refInd.current.contains(event.target as Node)) {
+        setOpen(false);
+      }
+    };
+  
+    document.addEventListener('mousedown', handleClickOutside);
+  
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [refInd, open]);
 
   return (
     open && (
-      <section
+      <section ref={refInd}
         className={`absolute right-24 top-14 z-[1] flex align-middle w-[400px] h-[400px] bg-white border-[1px] border-neutral-200 rounded-md  flex-col overflow-auto custom-scroll  max-h-[400px] shadow-lg`}
       >
         <span className="w-full flex items-center justify-between py-2 px-3 border-b-[1px]">

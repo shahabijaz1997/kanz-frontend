@@ -39,6 +39,7 @@ const Profile = () => {
   const showProfileDetails = () => {
     return metadata?.type === KanzRoles.INVESTOR ? (
       <InvestorProfile
+        language={language}
         getDetail={getDetail}
         setLoading={setLoading}
         data={profile}
@@ -46,6 +47,7 @@ const Profile = () => {
       />
     ) : metadata?.type === KanzRoles.SYNDICATE ? (
       <SyndicateProfile
+        language={language}
         getDetail={getDetail}
         setLoading={setLoading}
         data={profile}
@@ -53,6 +55,7 @@ const Profile = () => {
       />
     ) : metadata?.type === KanzRoles.FUNDRAISER ? (
       <FundraiserProfile
+        language={language}
         getDetail={getDetail}
         setLoading={setLoading}
         data={profile}
@@ -83,7 +86,7 @@ const Profile = () => {
               <section className="inline-flex justify-between items-start w-full">
                 <div className="w-full">
                   <h1 className="text-black font-medium text-2xl mb-5">
-                    {"Profile"}
+                    {language?.v3?.profile?.profile}
                   </h1>
                 </div>
               </section>
@@ -99,6 +102,7 @@ const Profile = () => {
       </aside>
       <Modal show={photoUploadModal ? true : false} className="w-full">
         <EditPhotoModal
+          language={language}
           authToken={authToken}
           getDetail={getDetail}
           imageUrl={profile?.profile_picture_url}

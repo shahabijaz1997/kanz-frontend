@@ -14,6 +14,7 @@ import React from 'react';
 import CrossIcon from '../../../ts-icons/crossIcon.svg';
 
 const SyndciateProfile = ({
+  language,
   setLoading,
   getDetail,
   data,
@@ -102,10 +103,9 @@ const SyndciateProfile = ({
       };
       let { status, data } = await updateProfile(authToken, sentPayload);
       if (status === 200) {
-        toast.success('Profile Updated', toastUtil);
+        toast.success(language?.v3?.proflie?.profile_updated, toastUtil);
       }
     } catch (error) {
-      console.log(error);
     } finally {
       setLoading(false);
       getDetail();
@@ -178,7 +178,6 @@ const SyndciateProfile = ({
     });
   }
 
-  console.log(data);
 
   return (
     <section className='inline-flex justify-start gap-36 w-full max-h-full'>
@@ -186,42 +185,23 @@ const SyndciateProfile = ({
         <span className='inline-flex justify-center gap-12 items-center'>
           <InputProfile
             disabled={false}
-            label={'Name'}
+            label={language?.v3?.profile?.name}
             value={name}
             onChange={setName}
           />
           <InputProfile
             disabled={true}
-            label={'Reigon'}
-            value={data?.profile?.regions?.join(', ')}
+            label={language?.v3?.profile?.region}
+            value={data?.profile?.regions?.join(", ")}
           />
         </span>
-        <span className='inline-flex justify-start gap-12 items-center'>
-          {<InputProfile disabled={true} label={'Email'} value={data?.email} />}
+        <span className="inline-flex justify-start gap-12 items-center">
+          {<InputProfile disabled={true} label={language?.v3?.profile?.email} value={data?.email} />}
         </span>
-
-        <span className='inline-flex mt-5 justify-start text-xl font-medium items-center'>
-          Syndicate Details
-        </span>
-        <label className='font-medium'>Logo</label>
-        <span className='flex-col flex'>
-          <img
-            className='h-56 w-48 border-[1px]'
-            style={{
-              objectFit: 'contain',
-              aspectRatio: '1',
-            }}
-            src={data?.profile?.logo}
-            alt=''
-          />
-        </span>
-        {/* Industries Start */}
-        <span className='inline-flex justify-start gap-12 items-center'>
-          <div className='w-[90%] relative' ref={refInd}>
-            <p className=' mb-1 font-medium whitespace-nowrap'>
-              {'Industries'}
-            </p>
-            <span className='relative'>
+        <span className="inline-flex justify-start gap-12 items-center">
+          <div className="w-[90%] relative" ref={refInd}>
+            <p className=" mb-1 font-medium whitespace-nowrap">{language?.v3?.profile?.markets}</p>
+            <span className="relative">
               <input
                 readOnly
                 id='market'
@@ -291,20 +271,18 @@ const SyndciateProfile = ({
             </div>
           </div>
         </span>
-        {/* Industries End */}
-
-        <span className='inline-flex justify-center gap-12 items-center'>
-          <InputProfile
-            disabled={false}
-            label={'Name'}
-            value={profName}
-            onChange={setProfName}
-          />
-          <InputProfile
-            disabled={false}
-            label={'Deal Flow'}
-            value={dealFlow}
-            onChange={setDealFlow}
+        <span className="inline-flex mt-5 justify-start text-xl font-medium items-center">
+        {language?.v3?.profile?.syndicate_details}        </span>
+        <label className="font-medium">{language?.v3?.profile?.logo}</label>
+        <span className="flex-col flex">
+          <img
+            className="h-56 w-48 border-[1px]"
+            style={{
+              objectFit: "contain",
+              aspectRatio: "1",
+            }}
+            src={data?.profile?.logo}
+            alt=""
           />
         </span>
 
@@ -398,17 +376,18 @@ const SyndciateProfile = ({
 
         <span className='inline-flex justify-center gap-12 items-center'>
           <InputProfile
-            placeholder='example.com'
+            language={language}
+            placeholder="example.com"
             disabled={false}
-            label={'Profile Link'}
+            label={language?.v3?.profile?.profile_link}
             value={website}
             onChange={setWebsite}
-            validationName={'URL'}
+            validationName={language?.v3?.profile?.url}
             valid={!validateProfileLink(website)}
           />
           <InputProfile
             disabled={false}
-            label={'Tagline'}
+            label={language?.v3?.profile?.tagline}
             value={tagline}
             onChange={setTagline}
           />
@@ -441,8 +420,7 @@ const SyndciateProfile = ({
             className='!py-2'
             type='primary'
           >
-            Update
-          </Button>
+          {language?.v3?.profile?.update}</Button>
         </span>
       </div>
       <span>

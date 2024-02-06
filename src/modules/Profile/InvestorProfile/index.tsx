@@ -9,6 +9,7 @@ import { toast } from 'react-toastify';
 import { toastUtil } from '../../../utils/toast.utils';
 
 const InvestorProfile = ({
+  language,
   getDetail,
   setLoading,
   data,
@@ -27,7 +28,7 @@ const InvestorProfile = ({
       };
       let { status, data } = await updateProfile(authToken, payload);
       if (status === 200) {
-        toast.success('Profile Updated', toastUtil);
+        toast.success(language?.v3?.profile_updated, toastUtil);
       }
     } catch (error) {
     } finally {
@@ -43,7 +44,7 @@ const InvestorProfile = ({
           {
             <InputProfile
               disabled={false}
-              label={'Name'}
+              label={language?.v3?.profile?.name}
               value={name}
               inputClass={'p-2 w-full border-[1px] bg-white text-[10px]'}
               onChange={setName}
@@ -52,7 +53,7 @@ const InvestorProfile = ({
           {
             <InputProfile
               disabled={true}
-              label={'Email'}
+              label={language?.v3?.profile?.email}
               value={data?.email}
               inputClass={'p-2 w-full border-[1px] text-gray-400 text-[10px]'}
             />
@@ -62,7 +63,7 @@ const InvestorProfile = ({
           {data?.profile_states?.investor_type === 'Individual Investor' ? (
             <InputProfile
               disabled={true}
-              label={'Nationality'}
+              label={language?.v3?.profile?.nationality}
               value={data?.profile?.en?.nationality}
               inputClass={
                 'p-2 w-full border-[1px] text-gray-400 cursor-not-allowed text-[10px]'
@@ -71,7 +72,7 @@ const InvestorProfile = ({
           ) : (
             <InputProfile
               disabled={true}
-              label={'Loaction'}
+              label={language?.v3?.profile?.location}
               value={data?.profile?.en?.location}
               inputClass={
                 'p-2 w-full border-[1px] text-gray-400 cursor-not-allowed text-[10px]'
@@ -81,7 +82,7 @@ const InvestorProfile = ({
           {
             <InputProfile
               disabled={true}
-              label={'Type'}
+              label={language?.v3?.profile?.type}
               value={data?.profile_states?.investor_type}
               inputClass={'p-2 w-full border-[1px]  text-[10px]'}
             />
@@ -92,7 +93,7 @@ const InvestorProfile = ({
             <InputProfile
               width={true}
               disabled={true}
-              label={'Residence'}
+              label={language?.v3?.profile?.residence}
               value={data?.profile?.en?.residence}
               inputClass={
                 'p-2 w-full border-[1px] text-gray-400 cursor-not-allowed text-[10px]'
@@ -109,7 +110,7 @@ const InvestorProfile = ({
             className='!py-2'
             type='primary'
           >
-            Update
+            {language?.v3?.profile?.update}
           </Button>
         </span>
       </div>

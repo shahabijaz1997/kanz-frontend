@@ -127,7 +127,7 @@ const Sidebar = ({ type }: any) => {
             {
               id: 5,
               icon: <InvestorSyndicateIcon />,
-              title: language?.v3?.startup?.sidebar?.manage_group,
+              title: language?.v3?.startup?.sidebar?.manage_syndicate,
               route: RoutesEnums.SYNDICATE_MANAGE_GROUP,
             },
           ],

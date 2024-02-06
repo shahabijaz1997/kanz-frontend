@@ -25,7 +25,6 @@ const InvestedInProperty = ({routeInsights}: any): any => {
       }
     } catch (error: any) {
       if (error.response && error.response.status === 401) {
-        console.log(error);
       }
     } finally {
       setLoading(false);

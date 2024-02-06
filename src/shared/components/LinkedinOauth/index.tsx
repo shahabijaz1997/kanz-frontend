@@ -49,7 +49,7 @@ const LinkedInOauth = ({ event, language, setLoading, state }: any) => {
     };
 
     return (
-        <LinkedIn clientId={ENV.LINKEDIN_API_KEY} onSuccess={handleLinkedInLoginSuccess} onError={(err) => console.log(err)} redirectUri={`${window.location.origin}/linkedin`} scope={'r_emailaddress r_liteprofile'}>
+        <LinkedIn clientId={ENV.LINKEDIN_API_KEY} onSuccess={handleLinkedInLoginSuccess} onError={(err) => {}} redirectUri={`${window.location.origin}/linkedin`} scope={'r_emailaddress r_liteprofile'}>
             {({ linkedInLogin }) => (
                 <button className="transition-all hover:border-cyan-800 border border-neutral-300 rounded-md py-2.5 px-4 w-2/4 h-[38px] inline-grid place-items-center bg-white" type="button" onClick={linkedInLogin}>
                     <img src={LinkedinIcon} alt={language?.onboarding?.linkedinLogin} />

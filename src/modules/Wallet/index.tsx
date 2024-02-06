@@ -12,10 +12,15 @@ import { jsonToFormData } from "../../utils/files.utils";
 import Modal from "../../shared/components/Modal";
 import CrossIcon from "../../ts-icons/crossIcon.svg";
 import Button from "../../shared/components/Button";
+import { toast } from "react-toastify";
+import { toastUtil } from "../../utils/toast.utils";
 
 const Wallet = () => {
   const authToken: any = useSelector((state: RootState) => state.auth.value);
   const metadata: any = useSelector((state: RootState) => state.metadata.value);
+  const orientation: any = useSelector((state: RootState) => state.orientation.value);
+  const event: any = useSelector((state: RootState) => state.event.value);
+  const language: any = useSelector((state: RootState) => state.language.value);
   const [loading, setLoading] = useState(false);
   const [step, setCurrentStep] = useState(1);
   const [amount, setAmount] = useState<number>(0);
@@ -36,7 +41,6 @@ const Wallet = () => {
         setCurrentBalance(data?.wallet?.balance)
       }
     } catch (error: any) {
-      console.log(error);
     } finally {
       setLoading(false);
     }
@@ -59,7 +63,7 @@ const Wallet = () => {
         setVerificationModal(true)
       }
     } catch (error: any) {
-      console.log(error);
+      toast.error(error?.response?.data?.status?.message, toastUtil);
     } finally {
       setLoading(false);
     }
@@ -83,11 +87,14 @@ const Wallet = () => {
           ) : (
             <aside>
               <h1 className="text-black font-medium text-xl mb-2">
-                {"Wallet"}
+                {language?.v3?.wallet?.wallet}
               </h1>
 
               {step === 1 && (
                 <Overview
+                  event={event}
+                  orientation={orientation}
+                  language={language}
                   getCurrentBalance={getCurrentBalance}
                   currentBalance={currentBalance}
                   method={method}
@@ -97,8 +104,8 @@ const Wallet = () => {
                   setMethod={setMethod}
                 />
               )}
-              {step === 2 && <AccountDetails amount={amount} setStep={setCurrentStep} />}
-              {step === 3 && <UploadReceipt setImage={setImage} setStep={setCurrentStep} submitForm={postTransaction} />}
+              {step === 2 && <AccountDetails language={language} event= {event} amount={amount} setStep={setCurrentStep} />}
+              {step === 3 && <UploadReceipt setImage={setImage} setStep={setCurrentStep} submitForm={postTransaction} language={language} />}
             </aside>
           )}
         </section>
@@ -118,10 +125,10 @@ const Wallet = () => {
             </header>
             <section className="flex flex-col items-center justify-center">
               <h3 className="flex items-center w-full justify-center font-bold text-lg">
-                Verficiation Notice
+                {language?.v3?.wallet?.verification_notice}
               </h3>
               <p className="text-[#737373] text-sm mt-3 w-full text-center px-10">
-              Your receipt has been uploaded and is pending for verification from the back office. Once verified, the amount will be credited into your wallet.
+              {language?.v3?.wallet?.receipt_pending_verification}
               </p>
               <footer className="w-[80%] inline-flex justify-center gap-10 py-6 px-3">
                 <Button
@@ -132,7 +139,7 @@ const Wallet = () => {
                   className="w-full !py-1"
                   divStyle="flex items-center justify-center w-full"
                 >
-                  {"Cancel"}
+                  {language?.v3?.wallet?.cancel}
                 </Button>
                 <Button
                   onClick={() => {
@@ -141,7 +148,7 @@ const Wallet = () => {
                   className="w-full !py-1"
                   divStyle="flex items-center justify-center w-full"
                 >
-                  {"Continue"}
+                  {language?.v3?.wallet?.continue}
                 </Button>
               </footer>
             </section>
