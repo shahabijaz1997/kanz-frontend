@@ -132,16 +132,6 @@ const Wallet = () => {
               </p>
               <footer className="w-[80%] inline-flex justify-center gap-10 py-6 px-3">
                 <Button
-                onClick={()=>{
-                  setVerificationModal(false)
-                }}
-                  type="outlined"
-                  className="w-full !py-1"
-                  divStyle="flex items-center justify-center w-full"
-                >
-                  {language?.v3?.wallet?.cancel}
-                </Button>
-                <Button
                   onClick={() => {
                     setVerificationModal(false)
                   }}

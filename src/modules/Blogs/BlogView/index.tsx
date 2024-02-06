@@ -40,27 +40,16 @@ const BlogView = () => {
         <div className=" mx-auto overflow-y-scroll max-h-screen custom-scroll pb-20">
           <div className=" w-[100wv]  items-center justify-center pb-20">
             <div
-              className="mb-4 md:mb-0 w-full max-w-screen-md mx-auto relative"
-              style={{ height: "35em" }}
+              className="mb-4 md:mb-0 w-full max-w-screen-md flex items-center justify-center mx-auto"
+              style={{ height: "10em" }}
             >
-              <div
-                className="absolute left-0 bottom-0 w-full h-full z-10"
-                style={{
-                  backgroundImage:
-                    "linear-gradient(180deg, transparent, rgba(0.4, 0.6, 0.8, 1))",
-                }}
-              ></div>
-              <img
-                src="https://images.unsplash.com/photo-1493770348161-369560ae357d?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=2100&q=80"
-                className="absolute left-0 top-0 w-full h-full z-0 object-cover"
-              />
-              <div className="p-4 absolute bottom-0 left-0 z-20">
-                <h2 className="text-4xl font-semibold text-gray-100 leading-tight">
+              <div className="p-4  bottom-0 left-0 z-20 items-center flex-col flex justify-center">
+                <h2 className="text-3xl font-semibold text-black leading-tight">
                   {blogContent?.title}
                 </h2>
-                <div className="flex mt-3">
+                <div className="flex mt-3 items-center text-center justify-center">
                   <div>
-                    <p className="font-semibold text-gray-200 text-sm">
+                    <p className="font-semibold text-black text-sm">
                       {" "}
                       {blogContent?.author?.name}{" "}
                     </p>
@@ -73,7 +62,7 @@ const BlogView = () => {
               </div>
             </div>
             <div
-              className="mx-20 lg:px-0 mt-12 text-gray-700 max-w-screen-md p-5 text-lg leading-relaxed border-[1px] shadow-2xl rounded-md border-neutral-200"
+              className="mx-20 lg:px-0 text-gray-700 max-w-screen-md p-5 text-lg leading-relaxed border-[0.25px] shadow-md rounded-md border-neutral-200"
               dangerouslySetInnerHTML={{ __html: blogContent?.content }}
             />
           </div>

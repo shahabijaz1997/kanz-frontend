@@ -710,8 +710,8 @@
         "startup_investment": "Startups Investment",
         "syndicate_requests": "Syndicate Requests",
         "dashboard": "Dashboard",
-        "manage_group": "Manage Syndicate",
         "investments": "Investments",
+        "manage_syndicate": "Manage Syndicate",
         "investors": "Investors"
       }
     },

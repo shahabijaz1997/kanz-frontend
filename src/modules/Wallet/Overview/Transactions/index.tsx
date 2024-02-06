@@ -9,39 +9,48 @@ import React from "react";
 import Header from "../../../../shared/components/Header";
 import Sidebar from "../../../../shared/components/Sidebar";
 import DepositWithdrawalColor from "./DepositWithdrawalColor";
+import Chevrond from "../../../../ts-icons/chevrond.svg";
+import { useNavigate } from "react-router-dom";
 
 const Transactions = ({}: any) => {
   const [currentPage, setCurrentPage] = useState(1);
   const metadata: any = useSelector((state: RootState) => state.metadata.value);
+  const orientation: any = useSelector(
+    (state: RootState) => state.orientation.value
+  );
+  const navigate = useNavigate();
   const [paginationData, setpaginationData] = useState(null);
   const language: any = useSelector((state: RootState) => state.language.value);
   const [loading, setLoading] = useState(false);
   const [transactions, setTransactions] = useState<string>("");
   const authToken: any = useSelector((state: RootState) => state.auth.value);
-  const columns: any = [language?.v3?.wallet?.date, language?.v3?.wallet?.status, language?.v3?.wallet?.method, language?.v3?.wallet?.type, language?.v3?.wallet?.amount];
+  const columns: any = [
+    language?.v3?.wallet?.date,
+    language?.v3?.wallet?.status,
+    language?.v3?.wallet?.method,
+    language?.v3?.wallet?.type,
+    language?.v3?.wallet?.amount,
+  ];
   useEffect(() => {
     getTransactionData();
   }, [currentPage]);
   const getTransactionData = async () => {
     try {
       setLoading(true);
-      let { status, data } = await getTransactions(
-        authToken,
-        currentPage
-      );
+      let { status, data } = await getTransactions(authToken, currentPage);
       if (status === 200) {
         setpaginationData(data?.pagination);
         let transactionsData = data?.transactions?.map((transaction: any) => {
           return {
             id: transaction?.id,
-            [language?.v3?.wallet?.date]: (
-              <span>{transaction?.timestamp}</span>
-            ),
+            [language?.v3?.wallet?.date]: <span>{transaction?.timestamp}</span>,
             [language?.v3?.wallet?.method]: (
               <span className="capitalize">{transaction?.method}</span>
             ),
             [language?.v3?.wallet?.type]: (
-              <span className="capitalize">{transaction?.transaction_type}</span>
+              <span className="capitalize">
+                {transaction?.transaction_type}
+              </span>
             ),
             [language?.v3?.wallet?.status]: (
               <span className=" capitalize">
@@ -50,7 +59,11 @@ const Transactions = ({}: any) => {
             ),
             [language?.v3?.wallet?.amount]: (
               <span className=" capitalize">
-               <DepositWithdrawalColor status={transaction?.status} amount={transaction?.amount} type={transaction?.transaction_type} />
+                <DepositWithdrawalColor
+                  status={transaction?.status}
+                  amount={transaction?.amount}
+                  type={transaction?.transaction_type}
+                />
               </span>
             ),
           };
@@ -80,8 +93,24 @@ const Transactions = ({}: any) => {
             </div>
           ) : (
             <React.Fragment>
-              <section className="inline-flex justify-between items-center w-full">
-                <div className="w-full">
+              <section className="flex-col flex justify-between items-center w-full">
+                <div onClick={() => {
+                  navigate(-1)
+                }} className="w-full cursor-pointer inline-flex items-center gap-2">
+                  <Chevrond
+                    className={`${
+                      orientation === "rtl"
+                        ? "rotate-[-90deg]"
+                        : "rotate-[90deg]"
+                    } w-4 h-4`}
+                    strokeWidth={2}
+                    stroke={"#000"}
+                  />
+                  <h1 className="text-black font-medium ">
+                    {language?.v3?.wallet?.wallet}
+                  </h1>
+                </div>
+                <div className="w-full mt-3">
                   <h1 className="text-black font-medium text-2xl mb-2">
                     {language?.v3?.wallet?.transactions}
                   </h1>
