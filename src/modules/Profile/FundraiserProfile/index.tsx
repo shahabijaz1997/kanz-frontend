@@ -40,7 +40,6 @@ const FundRaiserProfile = ({
     data?.profile?.current_round_capital_target
   );
 
-  console.log(data, '++++');
   const orientation: any = useSelector(
     (state: RootState) => state.orientation.value
   );
