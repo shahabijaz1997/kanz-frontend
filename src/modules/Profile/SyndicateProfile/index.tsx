@@ -7,7 +7,7 @@ import { toastUtil } from '../../../utils/toast.utils';
 import { updateProfile } from '../../../apis/investor.api';
 import { RootState } from '../../../redux-toolkit/store/store';
 import { useSelector } from 'react-redux';
-import { getAllIndustries } from '../../../apis/bootstrap.api';
+import { getAllIndustries, getAllRegions } from '../../../apis/bootstrap.api';
 import SearchedItems from '../../../shared/components/SearchedItems';
 import Chevrond from '../../../ts-icons/chevrond.svg';
 import React from 'react';
@@ -84,6 +84,21 @@ const SyndciateProfile = ({
   };
 
   const updateInfo = async (payload: any) => {
+    if (payload?.market?.length < 1) {
+      setLoading(false);
+      toast.error('Industries should not be empty', toastUtil);
+      return;
+    }
+    if (payload2?.regions?.length < 1) {
+      setLoading(false);
+      toast.error('Regions should not be empty', toastUtil);
+      return;
+    }
+    if (about === '') {
+      setLoading(false);
+      toast.error('About should not be empty', toastUtil);
+      return;
+    }
     try {
       let sentPayload = {
         profile: {
@@ -119,9 +134,14 @@ const SyndciateProfile = ({
   }, []);
 
   useEffect(() => {
+    bootstrapData2();
+  }, []);
+
+  useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (refInd.current && !refInd.current.contains(event.target as Node)) {
         setShowData(false);
+        setShowFlex(false);
       }
     };
 
@@ -136,6 +156,7 @@ const SyndciateProfile = ({
     const handleClickOutside = (event: MouseEvent) => {
       if (refInd2.current && !refInd2.current.contains(event.target as Node)) {
         setShowData2(false);
+        setShowFlex2(false);
       }
     };
 
@@ -156,6 +177,7 @@ const SyndciateProfile = ({
       console.error('Error in industries: ', error);
     }
   };
+
   const filteredData: any = [];
   if (searchResults.length > 0 && payload?.market) {
     searchResults?.filter((item: any) => {
@@ -167,6 +189,16 @@ const SyndciateProfile = ({
     });
   }
 
+  const bootstrapData2 = async () => {
+    try {
+      let { status, data } = await getAllRegions(authToken);
+      if (status === 200) {
+        setSearchResults2(data.status.data);
+      }
+    } catch (error) {
+      console.error('Error in industries: ', error);
+    }
+  };
   const filteredData2: any = [];
   if (searchResults2.length > 0 && payload2?.regions) {
     searchResults2?.filter((item: any) => {
@@ -177,7 +209,6 @@ const SyndciateProfile = ({
       });
     });
   }
-
 
   return (
     <section className='inline-flex justify-start gap-36 w-full max-h-full'>
@@ -192,16 +223,40 @@ const SyndciateProfile = ({
           <InputProfile
             disabled={true}
             label={language?.v3?.profile?.region}
-            value={data?.profile?.regions?.join(", ")}
+            value={data?.profile?.regions?.join(', ')}
           />
         </span>
-        <span className="inline-flex justify-start gap-12 items-center">
-          {<InputProfile disabled={true} label={language?.v3?.profile?.email} value={data?.email} />}
+        <span className='inline-flex justify-start gap-12 w-[111%] items-center'>
+          {
+            <InputProfile
+              disabled={true}
+              label={language?.v3?.profile?.email}
+              value={data?.email}
+            />
+          }
         </span>
-        <span className="inline-flex justify-start gap-12 items-center">
-          <div className="w-[90%] relative" ref={refInd}>
-            <p className=" mb-1 font-medium whitespace-nowrap">{language?.v3?.profile?.markets}</p>
-            <span className="relative">
+
+        <span className='inline-flex mt-5 justify-start text-xl font-medium items-center'>
+          {language?.v3?.profile?.syndicate_details}{' '}
+        </span>
+        <label className='font-medium'>{language?.v3?.profile?.logo}</label>
+        <span className='flex-col flex'>
+          <img
+            className='h-56 w-48 border-[1px]'
+            style={{
+              objectFit: 'contain',
+              aspectRatio: '1',
+            }}
+            src={data?.profile?.logo}
+            alt=''
+          />
+        </span>
+        <span className='inline-flex justify-start gap-12 items-center w-[111%]'>
+          <div className='w-[90%] relative' ref={refInd}>
+            <p className=' mb-1 font-medium whitespace-nowrap'>
+              {language?.v3?.investor?.industries}
+            </p>
+            <span className='relative'>
               <input
                 readOnly
                 id='market'
@@ -212,7 +267,7 @@ const SyndciateProfile = ({
                 }}
                 onClick={() => {
                   setShowData(!showData);
-                  setShowFlex(true);
+                  setShowFlex(!showFlex);
                 }}
                 className=' text-sm px-2 py-1.5 w-full border-[1px] focus:border-[#155E75] rounded-md bg-white'
                 type='text'
@@ -271,29 +326,29 @@ const SyndciateProfile = ({
             </div>
           </div>
         </span>
-        <span className="inline-flex mt-5 justify-start text-xl font-medium items-center">
-        {language?.v3?.profile?.syndicate_details}        </span>
-        <label className="font-medium">{language?.v3?.profile?.logo}</label>
-        <span className="flex-col flex">
-          <img
-            className="h-56 w-48 border-[1px]"
-            style={{
-              objectFit: "contain",
-              aspectRatio: "1",
-            }}
-            src={data?.profile?.logo}
-            alt=""
+
+        <span className='inline-flex justify-center gap-12 items-center'>
+          <InputProfile
+            disabled={false}
+            label={'Name'}
+            value={profName}
+            onChange={setProfName}
+          />
+          <InputProfile
+            disabled={false}
+            label={'Deal Flow'}
+            value={dealFlow}
+            onChange={setDealFlow}
           />
         </span>
-
         {/* Regions Start */}
         <span className='inline-flex justify-start gap-12 items-center'>
-          <div className='w-[90%] relative' ref={refInd2}>
+          <div className='w-[111%] relative' ref={refInd2}>
             <p className=' mb-1 font-medium whitespace-nowrap'>{'Regions'}</p>
             <span className='relative'>
               <input
                 readOnly
-                id='market'
+                // id='market'
                 autoComplete='off'
                 value={search2}
                 onChange={(e) => {
@@ -342,10 +397,10 @@ const SyndciateProfile = ({
                     )}
                   </aside>
                 )}
-              {showData && (
+              {showData2 && (
                 <SearchedItems
-                  items={searchResults}
-                  searchString={search}
+                  items={searchResults2}
+                  searchString={search2}
                   passItemSelected={(it: any) => {
                     let payloadItems = [...payload2.regions];
                     payloadItems.push(it.id);
@@ -363,7 +418,6 @@ const SyndciateProfile = ({
           </div>
         </span>
         {/* Regions End */}
-
         <label className='font-medium whitespace-nowrap' htmlFor='biz'>
           {'About'}
         </label>
@@ -377,7 +431,7 @@ const SyndciateProfile = ({
         <span className='inline-flex justify-center gap-12 items-center'>
           <InputProfile
             language={language}
-            placeholder="example.com"
+            placeholder='example.com'
             disabled={false}
             label={language?.v3?.profile?.profile_link}
             value={website}
@@ -392,22 +446,29 @@ const SyndciateProfile = ({
             onChange={setTagline}
           />
         </span>
-        {/*    {emptyFieldsMessage() && (<span className="text-red-500 font-medium text-xs px-1">Please fill all fields to update....</span>)} */}
         {data?.profile?.have_you_ever_raised && (
-          <span className='inline-flex justify-center gap-12 items-center'>
-            <InputProfile
-              disabled={false}
-              label={'How much have you raised?'}
-              value={youRaised}
-              onChange={setYouRaised}
-            />
-            <InputProfile
-              disabled={true}
-              label={'How many times you have raised?'}
-              value={timesRaised}
-              onChange={setTimesRaised}
-            />
-          </span>
+          <>
+            <span className='inline-flex w-[111%] justify-start gap-12 items-center'>
+              {
+                <InputProfile
+                  disabled={false}
+                  label={'How much have you raised?'}
+                  value={youRaised}
+                  onChange={setYouRaised}
+                />
+              }
+            </span>
+            <span className='inline-flex w-[111%] justify-start gap-12 items-center'>
+              {
+                <InputProfile
+                  disabled={false}
+                  label={'How many times you have raised?'}
+                  value={timesRaised}
+                  onChange={setTimesRaised}
+                />
+              }
+            </span>
+          </>
         )}
 
         <span className='flex mt-1 items-center justify-start'>
@@ -420,7 +481,8 @@ const SyndciateProfile = ({
             className='!py-2'
             type='primary'
           >
-          {language?.v3?.profile?.update}</Button>
+            {language?.v3?.profile?.update}
+          </Button>
         </span>
       </div>
       <span>

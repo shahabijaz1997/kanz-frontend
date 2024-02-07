@@ -1,23 +1,23 @@
-import { useEffect, useRef, useState } from "react";
-import EditIcon from "../../../ts-icons/editIcon.svg";
-import InputProfile from "../InputProfile";
-import Button from "../../../shared/components/Button";
-import { toast } from "react-toastify";
-import { toastUtil } from "../../../utils/toast.utils";
-import { updateProfile } from "../../../apis/investor.api";
-import { RootState } from "../../../redux-toolkit/store/store";
-import { useSelector } from "react-redux";
-import { getAllIndustries } from "../../../apis/bootstrap.api";
-import SearchedItems from "../../../shared/components/SearchedItems";
-import Chevrond from "../../../ts-icons/chevrond.svg";
-import React from "react";
-import CrossIcon from "../../../ts-icons/crossIcon.svg";
+import { useEffect, useRef, useState } from 'react';
+import EditIcon from '../../../ts-icons/editIcon.svg';
+import InputProfile from '../InputProfile';
+import Button from '../../../shared/components/Button';
+import { toast } from 'react-toastify';
+import { toastUtil } from '../../../utils/toast.utils';
+import { updateProfile } from '../../../apis/investor.api';
+import { RootState } from '../../../redux-toolkit/store/store';
+import { useSelector } from 'react-redux';
+import { getAllIndustries } from '../../../apis/bootstrap.api';
+import SearchedItems from '../../../shared/components/SearchedItems';
+import Chevrond from '../../../ts-icons/chevrond.svg';
+import React from 'react';
+import CrossIcon from '../../../ts-icons/crossIcon.svg';
 
 const FundRaiserProfile = ({
   language,
   setLoading,
   getDetail,
-  data, 
+  data,
   setPhotoUploadModal,
 }: any) => {
   const authToken: any = useSelector((state: RootState) => state.auth.value);
@@ -30,14 +30,24 @@ const FundRaiserProfile = ({
   const [address, setAddress] = useState(data?.profile?.address);
   const [ceoName, setCeoName] = useState(data?.profile?.ceo_name);
   const [ceoEmail, setCeoEmail] = useState(data?.profile?.ceo_email);
-  const [search, setSearch] = useState(data?.profile?.industries?.join(", "));
+  const [search, setSearch] = useState(data?.profile?.industries?.join(', '));
   const event: any = useSelector((state: RootState) => state.event.value);
+  const [capBefore, setCapBefore] = useState(
+    data?.profile?.total_capital_raised
+  );
+
+  const [capCurrent, setCapCurrent] = useState(
+    data?.profile?.current_round_capital_target
+  );
+
   const orientation: any = useSelector(
     (state: RootState) => state.orientation.value
   );
   const [payload, setPayload]: any = useState({
-    market: [],
+    market: data?.profile?.industry_ids,
   });
+  const [showFlex, setShowFlex] = useState(false);
+
   const validateEmail = (email: any) => {
     return emailRegex.test(email) ? true : false;
   };
@@ -61,13 +71,13 @@ const FundRaiserProfile = ({
       !address ||
       !ceoName ||
       !validateEmail(ceoEmail) ||
-      !validateProfileLink(website)
-      ||(!search && !payload?.market.length)
+      !validateProfileLink(website) ||
+      (!search && !payload?.market.length)
       ? true
       : false;
   };
 
-/*   const emptyFieldsMessage = () => {
+  /*   const emptyFieldsMessage = () => {
     return !name ||
       !companyName ||
       !legalName ||
@@ -81,6 +91,11 @@ const FundRaiserProfile = ({
   }; */
 
   const updateInfo = async (payload: any) => {
+    if (payload?.market?.length < 1) {
+      setLoading(false);
+      toast.error('Industries should not be empty', toastUtil);
+      return;
+    }
     try {
       let sentPayload = {
         profile: {
@@ -95,6 +110,8 @@ const FundRaiserProfile = ({
           fund_raiser_attributes: {
             name: name,
           },
+          current_round_capital_target: capCurrent,
+          total_capital_raised: capBefore,
         },
       };
       let { status, data } = await updateProfile(authToken, sentPayload);
@@ -120,10 +137,10 @@ const FundRaiserProfile = ({
       }
     };
 
-    document.addEventListener("mousedown", handleClickOutside);
+    document.addEventListener('mousedown', handleClickOutside);
 
     return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
+      document.removeEventListener('mousedown', handleClickOutside);
     };
   }, [refInd, showData]);
 
@@ -134,7 +151,7 @@ const FundRaiserProfile = ({
         setSearchResults(data.status.data);
       }
     } catch (error) {
-      console.error("Error in industries: ", error);
+      console.error('Error in industries: ', error);
     }
   };
   const filteredData: any = [];
@@ -149,9 +166,9 @@ const FundRaiserProfile = ({
   }
 
   return (
-    <section className="inline-flex justify-start gap-36 w-full max-h-full">
-      <div className="flex flex-col gap-6 w-[40%]">
-        <span className="inline-flex justify-center gap-12 items-center">
+    <section className='inline-flex justify-start gap-36 w-full max-h-full'>
+      <div className='flex flex-col gap-6 w-[40%]'>
+        <span className='inline-flex justify-center gap-12 items-center'>
           {
             <InputProfile
               disabled={false}
@@ -168,93 +185,103 @@ const FundRaiserProfile = ({
             />
           }
         </span>
-        <span className="inline-flex justify-start w-[76%] gap-12 items-center">
-          {<InputProfile disabled={true} label={language?.v3?.profile?.email} value={data?.email} />}
+        <span className='inline-flex justify-start w-[111%] gap-12 items-center'>
+          {
+            <InputProfile
+              disabled={true}
+              label={language?.v3?.profile?.email}
+              value={data?.email}
+            />
+          }
         </span>
-        <div className="w-[90%] relative" ref={refInd}>
-              <p className="mb-1 font-medium whitespace-nowrap">{language?.v3?.profile?.markets}</p>
-              <span className="relative">
-                <input
-                  readOnly
-                  id="market"
-                  autoComplete="off"
-                  value={search}
-                  onChange={(e) => {
-                    setSearch(e.target.value);
-                  }}
-                  onClick={() => setShowData(!showData)}
-                  className=" px-2 py-1.5 w-full border-[1px] focus:border-[#155E75] rounded-md bg-white"
-                  type="text"
-                />
-                <span
-                  className={`absolute top-[6px] flex items-center pr-2 pointer-events-none ${
-                    orientation === "rtl" ? "left-1" : "right-0"
-                  }`}
-                  style={{ zIndex: 99 }}
-                >
-                  <Chevrond className="w-3 h-3" stroke="#737373" />
-                </span>
-              </span>
-              <div className="absolute top-[60px] left-0 ">
-                {payload?.market && payload?.market?.length > 0 && (
-                  <aside className="inline-flex gap-2 flex-wrap  shadow-sm appearance-none border bg-white border-neutral-300 rounded-md w-full py-1 px-2 text-gray-500 leading-tight focus:outline-none focus:shadow-outline">
-                    {React.Children.toArray(
-                      filteredData.map((ind: any) => (
-                        <div className="check-background rounded-[4px] p-1 text-[11px] inline-flex items-center">
-                          <span>{ind[event]?.name}</span>
-                          <CrossIcon
-                            onClick={() => {
-                              let payloadItems = filteredData.filter(
-                                (x: any) => x.id !== ind.id
-                              );
-                              onSetPayload(
-                                payloadItems.map((item: any) => item.id),
-                                "market"
-                              );
-                            }}
-                            className="cursor-pointer h-2 w-2 ml-1"
-                            stroke={"#828282"}
-                          />
-                        </div>
-                      ))
-                    )}
-                  </aside>
-                )}
-                {showData && (
-                  <SearchedItems
-                    items={searchResults}
-                    searchString={search}
-                    passItemSelected={(it: any) => {
-                      let payloadItems = [...payload.market];
-                      payloadItems.push(it.id);
-                      onSetPayload(Array.from(new Set(payloadItems)), "market");
-                    }}
-                    className={
-                      "cursor-pointer rounded-md py-1 px-1 bg-cbc-check text-neutral-700 font-normal text-[11px] hover:bg-cbc-check-hover transition-all"
-                    }
-                    parentClass={
-                      "flex rounded-md border-[1px] flex-wrap gap-2 bg-white p-2 max-h-[200px] overflow-y-auto"
-                    }
-                  />
-                )}
-              </div>
-            </div>
-        <span className="inline-flex justify-start text-xl mt-5 font-medium items-center">
+
+        <span className='inline-flex justify-start text-xl mt-5 font-medium items-center'>
           {language?.v3?.profile?.company_details}
         </span>
-        <label className="font-medium">{language?.v3?.profile?.logo}</label>
-        <span className="flex-col flex items-start justify-center">
+        <label className='font-medium'>{language?.v3?.profile?.logo}</label>
+        <span className='flex-col flex items-start justify-center'>
           <img
-            className="h-56 w-48 border-[0.5px] rounded-md"
+            className='h-56 w-48 border-[0.5px] rounded-md'
             style={{
-              objectFit: "contain",
-              aspectRatio: "1",
+              objectFit: 'contain',
+              aspectRatio: '1',
             }}
             src={data?.profile?.logo}
-            alt=""
+            alt=''
           />
         </span>
-        <span className="inline-flex justify-center gap-12 items-center">
+        <div className='w-[100%] relative' ref={refInd} style={{ zIndex: 99 }}>
+          <p className='mb-1 font-medium whitespace-nowrap'>{'Industries'}</p>
+          <span className='relative'>
+            <input
+              readOnly
+              id='market'
+              autoComplete='off'
+              value={search}
+              onChange={(e) => {
+                setSearch(e.target.value);
+              }}
+              onClick={() => {
+                setShowData(!showData);
+                setShowFlex(!showFlex);
+              }}
+              className=' px-2 py-1.5 w-full border-[1px] focus:border-[#155E75] rounded-md bg-white'
+              type='text'
+            />
+            <span
+              className={`absolute top-[6px] flex items-center pr-2 pointer-events-none ${
+                orientation === 'rtl' ? 'left-1' : 'right-0'
+              }`}
+              style={{ zIndex: 99 }}
+            >
+              <Chevrond className='w-3 h-3' stroke='#737373' />
+            </span>
+          </span>
+          <div className='absolute top-[60px] left-0 '>
+            {payload?.market && payload?.market?.length > 0 && showFlex && (
+              <aside className='inline-flex gap-2 flex-wrap  shadow-sm appearance-none border bg-white border-neutral-300 rounded-md w-full py-1 px-2 text-gray-500 leading-tight focus:outline-none focus:shadow-outline'>
+                {React.Children.toArray(
+                  filteredData.map((ind: any) => (
+                    <div className='check-background rounded-[4px] p-1 text-[11px] inline-flex items-center'>
+                      <span>{ind[event]?.name}</span>
+                      <CrossIcon
+                        onClick={() => {
+                          let payloadItems = filteredData.filter(
+                            (x: any) => x.id !== ind.id
+                          );
+                          onSetPayload(
+                            payloadItems.map((item: any) => item.id),
+                            'market'
+                          );
+                        }}
+                        className='cursor-pointer h-2 w-2 ml-1'
+                        stroke={'#828282'}
+                      />
+                    </div>
+                  ))
+                )}
+              </aside>
+            )}
+            {showData && (
+              <SearchedItems
+                items={searchResults}
+                searchString={search}
+                passItemSelected={(it: any) => {
+                  let payloadItems = [...payload.market];
+                  payloadItems.push(it.id);
+                  onSetPayload(Array.from(new Set(payloadItems)), 'market');
+                }}
+                className={
+                  'cursor-pointer rounded-md py-1 px-1 bg-cbc-check text-neutral-700 font-normal text-[11px] hover:bg-cbc-check-hover transition-all'
+                }
+                parentClass={
+                  'flex rounded-md border-[1px] flex-wrap gap-2 bg-white p-2 max-h-[200px] overflow-y-auto'
+                }
+              />
+            )}
+          </div>
+        </div>
+        <span className='inline-flex justify-center gap-12 items-center'>
           {
             <InputProfile
               disabled={false}
@@ -272,13 +299,13 @@ const FundRaiserProfile = ({
             />
           }
         </span>
-        <span className="inline-flex justify-start gap-12 items-center">
+        <span className='inline-flex w-[111%] justify-start gap-12 items-center'>
           {
             <InputProfile
               language={language}
               placeholder={language?.v3?.profile?.example_dot_com}
               disabled={false}
-              label={language?.v3?.profile?.website}
+              label={language?.v3?.investor?.company_website}
               value={website}
               onChange={setWebsite}
               validationName={language?.v3?.profile?.website}
@@ -286,7 +313,7 @@ const FundRaiserProfile = ({
             />
           }
         </span>
-        <span className="inline-flex justify-start gap-12 items-center">
+        <span className='inline-flex w-[111%] justify-start gap-12 items-center'>
           {
             <InputProfile
               disabled={false}
@@ -296,23 +323,44 @@ const FundRaiserProfile = ({
             />
           }
         </span>
-        <span className="inline-flex justify-start gap-12 items-center">
+        <span className='inline-flex w-[111%] justify-start gap-12 items-center'>
           {
             <span className={` w-[90%] flex-col flex`}>
-              <p className="mb-1 font-medium whitespace-nowrap">
-                {language?.v3?.profile?.description}
+              <p className='mb-1 font-medium whitespace-nowrap'>
+                {language?.v3?.investor?.company_desc}
               </p>
               <textarea
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
                 className={`${
-                  description ? "border-gray-400" : "border-red-500"
+                  description ? 'border-gray-400' : 'border-red-500'
                 } px-2 py-1.5 w-full border-[1px] rounded-md  min-h-40 custom-scroll `}
               />
             </span>
           }
         </span>
-        <span className="inline-flex justify-center gap-12 items-center">
+        <span className='inline-flex w-[111%] justify-start gap-12 items-center'>
+          {
+            <InputProfile
+              disabled={false}
+              label={'Total capital raised (before this round)'}
+              value={capBefore}
+              onChange={setCapBefore}
+            />
+          }
+        </span>
+        <span className='inline-flex w-[111%] justify-start gap-12 items-center'>
+          {
+            <InputProfile
+              disabled={false}
+              label={'Target capital to raise (for this round)'}
+              value={capCurrent}
+              onChange={setCapCurrent}
+            />
+          }
+        </span>
+
+        <span className='inline-flex justify-center gap-12 items-center'>
           {
             <InputProfile
               disabled={false}
@@ -334,42 +382,42 @@ const FundRaiserProfile = ({
           }
         </span>
         {/*  {emptyFieldsMessage() && (<span className="text-red-500 font-medium text-xs px-1">Please fill all fields to update....</span>)} */}
-        <span className="flex mt-1 items-center justify-start">
+        <span className='flex mt-1 items-center justify-start'>
           <Button
             disabled={updateButtonDisable()}
             onClick={() => {
               setLoading(true);
               updateInfo(payload);
             }}
-            className="!py-2"
-            type="primary"
+            className='!py-2'
+            type='primary'
           >
-           {language?.v3?.profile?.update}
+            {language?.v3?.profile?.update}
           </Button>
         </span>
       </div>
       <span>
         <div>
-          <div className="relative ">
+          <div className='relative '>
             <img
-              className="w-48 h-48 rounded-full bg-slate-100 border-[1px] shadow-lg"
+              className='w-48 h-48 rounded-full bg-slate-100 border-[1px] shadow-lg'
               style={{
-                objectFit: "cover",
-                aspectRatio: "1",
+                objectFit: 'cover',
+                aspectRatio: '1',
               }}
               src={
                 data?.profile_picture_url ||
-                "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"
+                'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png'
               }
-              alt=""
+              alt=''
             />
             <span
               onClick={() => {
                 setPhotoUploadModal(true);
               }}
-              className="bottom-0 left-9 absolute cursor-pointer w-6 h-6 hover:bg-slate-100 bg-white rounded-full flex items-center justify-center"
+              className='bottom-0 left-9 absolute cursor-pointer w-6 h-6 hover:bg-slate-100 bg-white rounded-full flex items-center justify-center'
             >
-              <EditIcon className="w-4 h-4" stroke="#000" />
+              <EditIcon className='w-4 h-4' stroke='#000' />
             </span>
           </div>
         </div>
