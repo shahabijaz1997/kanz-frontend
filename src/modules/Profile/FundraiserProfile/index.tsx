@@ -302,6 +302,7 @@ const FundRaiserProfile = ({
         <span className='inline-flex w-[111%] justify-start gap-12 items-center'>
           {
             <InputProfile
+              language={language}
               placeholder={language?.v3?.profile?.example_dot_com}
               disabled={false}
               label={language?.v3?.investor?.company_website}
@@ -370,6 +371,7 @@ const FundRaiserProfile = ({
           }
           {
             <InputProfile
+              language={language}
               disabled={false}
               label={language?.v3?.profile?.ceo_email}
               value={ceoEmail}

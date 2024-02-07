@@ -18,7 +18,7 @@ const InputProfile = (props: any) => {
       />
       {props?.valid && (
         <span className="text-xs  text-red-500 absolute bottom-[-20px] font-medium">
-          {props?.language?.v3?.profile?.please_enter_valid + props?.validationName}
+          {props?.language?.v3?.profile?.please + props?.validationName}
         </span>
       )}
     </span>
