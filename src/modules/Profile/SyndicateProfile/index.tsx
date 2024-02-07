@@ -213,17 +213,12 @@ const SyndciateProfile = ({
   return (
     <section className='inline-flex justify-start gap-36 w-full max-h-full'>
       <div className='flex flex-col gap-6 w-[40%]'>
-        <span className='inline-flex justify-center gap-12 items-center'>
+        <span className='inline-flex gap-12 w-[111%]'>
           <InputProfile
             disabled={false}
             label={language?.v3?.profile?.name}
             value={name}
             onChange={setName}
-          />
-          <InputProfile
-            disabled={true}
-            label={language?.v3?.profile?.region}
-            value={data?.profile?.regions?.join(', ')}
           />
         </span>
         <span className='inline-flex justify-start gap-12 w-[111%] items-center'>
@@ -450,22 +445,32 @@ const SyndciateProfile = ({
           <>
             <span className='inline-flex w-[111%] justify-start gap-12 items-center'>
               {
-                <InputProfile
-                  disabled={false}
-                  label={'How much have you raised?'}
-                  value={youRaised}
-                  onChange={setYouRaised}
-                />
+                <div>
+                  <label className='mb-2 font-medium whitespace-nowrap'>
+                    {'How much have you raised?'}
+                  </label>
+                  <input
+                    type='number'
+                    value={youRaised}
+                    onChange={(e) => setYouRaised(e.target.value)}
+                    className='text-sm px-2 py-1.5 focus:border-[2px] rounded-md bg-white w-[166%] border-gray-400 border-[1px]'
+                  />
+                </div>
               }
             </span>
             <span className='inline-flex w-[111%] justify-start gap-12 items-center'>
               {
-                <InputProfile
-                  disabled={false}
-                  label={'How many times you have raised?'}
-                  value={timesRaised}
-                  onChange={setTimesRaised}
-                />
+                <div>
+                  <label className='mb-2 font-medium whitespace-nowrap'>
+                    {'How many times you have raised?'}
+                  </label>
+                  <input
+                    type='number'
+                    value={timesRaised}
+                    onChange={(e) => setTimesRaised(e.target.value)}
+                    className='text-sm px-2 py-1.5 focus:border-[2px] rounded-md bg-white w-[148%] border-gray-400 border-[1px]'
+                  />
+                </div>
               }
             </span>
           </>
