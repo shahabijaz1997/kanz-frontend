@@ -185,7 +185,7 @@ const FundRaiserProfile = ({
             />
           }
         </span>
-        <span className='inline-flex justify-start w-[76%] gap-12 items-center'>
+        <span className='inline-flex justify-start w-[111%] gap-12 items-center'>
           {
             <InputProfile
               disabled={true}
@@ -210,7 +210,7 @@ const FundRaiserProfile = ({
             alt=''
           />
         </span>
-        <div className='w-[90%] relative' ref={refInd} style={{ zIndex: 99 }}>
+        <div className='w-[100%] relative' ref={refInd} style={{ zIndex: 99 }}>
           <p className='mb-1 font-medium whitespace-nowrap'>{'Industries'}</p>
           <span className='relative'>
             <input
@@ -299,7 +299,7 @@ const FundRaiserProfile = ({
             />
           }
         </span>
-        <span className='inline-flex justify-start gap-12 items-center'>
+        <span className='inline-flex w-[111%] justify-start gap-12 items-center'>
           {
             <InputProfile
               placeholder={language?.v3?.profile?.example_dot_com}
@@ -312,7 +312,7 @@ const FundRaiserProfile = ({
             />
           }
         </span>
-        <span className='inline-flex justify-start gap-12 items-center'>
+        <span className='inline-flex w-[111%] justify-start gap-12 items-center'>
           {
             <InputProfile
               disabled={false}
@@ -322,7 +322,7 @@ const FundRaiserProfile = ({
             />
           }
         </span>
-        <span className='inline-flex justify-start gap-12 items-center'>
+        <span className='inline-flex w-[111%] justify-start gap-12 items-center'>
           {
             <span className={` w-[90%] flex-col flex`}>
               <p className='mb-1 font-medium whitespace-nowrap'>
@@ -338,7 +338,7 @@ const FundRaiserProfile = ({
             </span>
           }
         </span>
-        <span className='inline-flex justify-center gap-12 items-center'>
+        <span className='inline-flex w-[111%] justify-start gap-12 items-center'>
           {
             <InputProfile
               disabled={false}
@@ -347,6 +347,8 @@ const FundRaiserProfile = ({
               onChange={setCapBefore}
             />
           }
+        </span>
+        <span className='inline-flex w-[111%] justify-start gap-12 items-center'>
           {
             <InputProfile
               disabled={false}
@@ -356,6 +358,7 @@ const FundRaiserProfile = ({
             />
           }
         </span>
+
         <span className='inline-flex justify-center gap-12 items-center'>
           {
             <InputProfile
