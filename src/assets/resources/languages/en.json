@@ -1257,7 +1257,7 @@
      "url": "URL",
      "tagline": "Tagline",
      "logo":"Logo",
-     "please_enter_valid": "Please enter valid ",
+     "please": "Please enter valid ",
      "company_details": "Company Details",
      "company_name": "Company Name",
      "legal_name": "Legal Name",
