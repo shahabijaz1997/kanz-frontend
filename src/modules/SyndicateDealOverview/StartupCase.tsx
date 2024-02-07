@@ -1181,16 +1181,16 @@ const StartupCase = ({
                   )}
                 </aside>
               )}
-              {/* {deal?.status === 'live' && ( */}
-              <Button
-                onClick={() => {
-                  setUpdateModal(true);
-                }}
-                className='w-full mt-2'
-              >
-                {language?.v3?.button?.update}
-              </Button>
-              {/* )} */}
+              {deal?.status === CLOSED && (
+                <Button
+                  onClick={() => {
+                    setUpdateModal(true);
+                  }}
+                  className='w-full mt-2'
+                >
+                  {language?.v3?.button?.update}
+                </Button>
+              )}
 
               <aside>
                 {deal?.comments?.length && (
