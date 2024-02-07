@@ -70,7 +70,7 @@ const UpdateModal = ({ setOpen, id }: any) => {
       {loader ? (
         <Loader />
       ) : (
-        <div className='h-2/3 w-full bg-white rounded-lg ml-64 mr-64 p-6 text-center'>
+        <div className='h-4/5 w-full bg-white rounded-lg ml-64 mr-64 p-6 text-center'>
           <CrossIcon
             stroke='#171717'
             className='w-6 h-6 absolute right-8 cursor-pointer'
