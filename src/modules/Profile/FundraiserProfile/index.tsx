@@ -196,7 +196,7 @@ const FundRaiserProfile = ({
         </span>
 
         <span className='inline-flex justify-start text-xl mt-5 font-medium items-center'>
-          {language?.v3?.profile?.company_details}
+          {language?.v3?.profile?.details}
         </span>
         <label className='font-medium'>{language?.v3?.profile?.logo}</label>
         <span className='flex-col flex items-start justify-center'>
@@ -281,7 +281,7 @@ const FundRaiserProfile = ({
             )}
           </div>
         </div>
-        <span className='inline-flex justify-center gap-12 items-center'>
+{/*         <span className='inline-flex justify-center gap-12 items-center'>
           {
             <InputProfile
               disabled={false}
@@ -298,8 +298,8 @@ const FundRaiserProfile = ({
               onChange={setLegalname}
             />
           }
-        </span>
-        <span className='inline-flex w-[111%] justify-start gap-12 items-center'>
+        </span> */}
+{/*         <span className='inline-flex w-[111%] justify-start gap-12 items-center'>
           {
             <InputProfile
               language={language}
@@ -312,7 +312,7 @@ const FundRaiserProfile = ({
               valid={!validateProfileLink(website)}
             />
           }
-        </span>
+        </span> */}
         <span className='inline-flex w-[111%] justify-start gap-12 items-center'>
           {
             <InputProfile
@@ -327,7 +327,7 @@ const FundRaiserProfile = ({
           {
             <span className={` w-[90%] flex-col flex`}>
               <p className='mb-1 font-medium whitespace-nowrap'>
-                {language?.v3?.investor?.company_desc}
+                {language?.v3?.profile?.description}
               </p>
               <textarea
                 value={description}
@@ -343,7 +343,7 @@ const FundRaiserProfile = ({
           {
             <InputProfile
               disabled={false}
-              label={'Total capital raised (before this round)'}
+              label={'Amount Raised'}
               value={capBefore}
               onChange={setCapBefore}
             />
@@ -353,14 +353,14 @@ const FundRaiserProfile = ({
           {
             <InputProfile
               disabled={false}
-              label={'Target capital to raise (for this round)'}
+              label={'Target Amount'}
               value={capCurrent}
               onChange={setCapCurrent}
             />
           }
         </span>
 
-        <span className='inline-flex justify-center gap-12 items-center'>
+{/*         <span className='inline-flex justify-center gap-12 items-center'>
           {
             <InputProfile
               disabled={false}
@@ -380,7 +380,7 @@ const FundRaiserProfile = ({
               valid={!validateEmail(ceoEmail)}
             />
           }
-        </span>
+        </span> */}
         {/*  {emptyFieldsMessage() && (<span className="text-red-500 font-medium text-xs px-1">Please fill all fields to update....</span>)} */}
         <span className='flex mt-1 items-center justify-start'>
           <Button
