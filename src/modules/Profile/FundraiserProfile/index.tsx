@@ -225,7 +225,7 @@ const FundRaiserProfile = ({
                 setShowData(!showData);
                 setShowFlex(!showFlex);
               }}
-              className=' px-2 py-1.5 w-full border-[1px] focus:border-[#155E75] rounded-md bg-white'
+              className=' px-2 py-1.5 w-full border-[1px] focus:border-gray-400 focus:border-[2px] rounded-md bg-white'
               type='text'
             />
             <span
@@ -334,7 +334,7 @@ const FundRaiserProfile = ({
                 onChange={(e) => setDescription(e.target.value)}
                 className={`${
                   description ? 'border-gray-400' : 'border-red-500'
-                } px-2 py-1.5 w-full border-[1px] rounded-md  min-h-40 custom-scroll `}
+                } px-2 py-1.5 w-full border-[1px] outline-none focus:border-[2px]   rounded-md  min-h-40 custom-scroll `}
               />
             </span>
           }
