@@ -342,6 +342,7 @@ const FundRaiserProfile = ({
         <span className='inline-flex w-[111%] justify-start gap-12 items-center'>
           {
             <InputProfile
+              not_mandatory={true}
               disabled={false}
               label={'Amount Raised'}
               value={capBefore}
@@ -352,6 +353,7 @@ const FundRaiserProfile = ({
         <span className='inline-flex w-[111%] justify-start gap-12 items-center'>
           {
             <InputProfile
+              not_mandatory={true}
               disabled={false}
               label={'Target Amount'}
               value={capCurrent}
