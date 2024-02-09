@@ -13,6 +13,7 @@ import Chevrond from "../../../../ts-icons/chevrond.svg";
 import { getCommitedDeals } from "../../../../apis/investor.api";
 import { convertStatusLanguage } from "../../../../utils/string.utils";
 import Search from "../../../../shared/components/Search";
+import CustomStatus from "../../../../shared/components/CustomStatus";
 
 const Commitments = ({}: any): any => {
   const navigate = useNavigate();
@@ -100,6 +101,7 @@ const Commitments = ({}: any): any => {
                 Number(invitee?.target),
                 convertStatusLanguage(invitee?.deal_type)
               ,false)}`,
+             [language?.v3?.investor?.status]: <CustomStatus options={invitee?.status} />,
 
             Steps: invitee?.current_state?.steps,
             [""]: (
