@@ -71,17 +71,20 @@ const SyndciateProfile = ({
   const refInd2: any = useRef(null);
   const urlRegex =
     /^(https?:\/\/)?(www\.)?(?:[a-zA-Z0-9-]+\.)+[a-zA-Z]{2,}(\.[a-zA-Z]{2,})?$/;
-  const updateButtonDisable = () => {
-    return !name ||
-      !website ||
-      !tagline ||
-      !youRaised ||
-      !timesRaised ||
-      !validateProfileLink(website) ||
-      (!search && !payload?.market.length)
-      ? true
-      : false;
-  };
+    const updateButtonDisable = () => {
+      return !name ||
+        !website ||
+        !tagline ||
+        (
+          data?.profile?.have_you_ever_raised ? 
+            (!youRaised || !timesRaised) 
+            : false
+        ) ||
+        !validateProfileLink(website) ||
+        (!search && !payload?.market.length)
+        ? true
+        : false;
+    };
   const emptyFieldsMessage = () => {
     return !name || !website || !tagline || !website ? true : false;
   };
