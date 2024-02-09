@@ -79,7 +79,7 @@ const Overview = ({
             </span>
           </span>
         </span>
-        <span className="flex  flex-col items-start justify-start w-full mt-5 ">
+     {/*    <span className="flex  flex-col items-start justify-start w-full mt-5 ">
           <label className="font-medium text-xs" htmlFor="payment">
             {language?.v3?.wallet?.payment_methods}
           </label>
@@ -130,11 +130,11 @@ const Overview = ({
           <span className="text-xs mt-3 font-medium">
           {language?.v3?.wallet?.help_center_link}
           </span>
-        </span>
+        </span> */}
 
         <span className="w-full mt-4">
           <Button
-            disabled={!method || !amount || /^0+$/.test(amount)}
+            disabled={/* !method || */ !amount || /^0+$/.test(amount)}
             onClick={() => setOpen(true)}
             className="!w-full"
             type="primary"
