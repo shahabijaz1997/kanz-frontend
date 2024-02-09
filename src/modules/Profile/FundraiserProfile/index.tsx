@@ -12,6 +12,7 @@ import SearchedItems from '../../../shared/components/SearchedItems';
 import Chevrond from '../../../ts-icons/chevrond.svg';
 import React from 'react';
 import CrossIcon from '../../../ts-icons/crossIcon.svg';
+import NumericInput from '../NumericInput';
 
 const FundRaiserProfile = ({
   language,
@@ -225,7 +226,7 @@ const FundRaiserProfile = ({
                 setShowData(!showData);
                 setShowFlex(!showFlex);
               }}
-              className=' px-2 py-1.5 w-full border-[1px] focus:border-gray-400 focus:border-[2px] rounded-md bg-white'
+              className=' px-2 py-1.5 w-full border-[1px] border-gray-400 focus:border-[2px] rounded-md bg-white'
               type='text'
             />
             <span
@@ -341,9 +342,7 @@ const FundRaiserProfile = ({
         </span>
         <span className='inline-flex w-[111%] justify-start gap-12 items-center'>
           {
-            <InputProfile
-              not_mandatory={true}
-              disabled={false}
+            <NumericInput
               label={'Amount Raised'}
               value={capBefore}
               onChange={setCapBefore}
@@ -352,9 +351,7 @@ const FundRaiserProfile = ({
         </span>
         <span className='inline-flex w-[111%] justify-start gap-12 items-center'>
           {
-            <InputProfile
-              not_mandatory={true}
-              disabled={false}
+            <NumericInput
               label={'Target Amount'}
               value={capCurrent}
               onChange={setCapCurrent}

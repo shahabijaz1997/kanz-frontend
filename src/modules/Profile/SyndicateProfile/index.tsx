@@ -12,6 +12,7 @@ import SearchedItems from '../../../shared/components/SearchedItems';
 import Chevrond from '../../../ts-icons/chevrond.svg';
 import React from 'react';
 import CrossIcon from '../../../ts-icons/crossIcon.svg';
+import NumericInput from '../NumericInput';
 
 const SyndciateProfile = ({
   language,
@@ -120,7 +121,7 @@ const SyndciateProfile = ({
       };
       let { status, data } = await updateProfile(authToken, sentPayload);
       if (status === 200) {
-        toast.success(language?.v3?.proflie?.profile_updated, toastUtil);
+        toast.success(language?.v3?.profile?.profile_updated, toastUtil);
       }
     } catch (error) {
     } finally {
@@ -261,7 +262,7 @@ const SyndciateProfile = ({
                   setShowData(!showData);
                   setShowFlex(!showFlex);
                 }}
-                className=' text-sm px-2 py-1.5 w-full border-[1px] focus:border-gray-400 focus:border-[2px] rounded-md bg-white'
+                className=' text-sm px-2 py-1.5 w-full border-[1px] border-gray-400 focus:border-[2px] rounded-md bg-white'
                 type='text'
               />
               <span
@@ -350,7 +351,7 @@ const SyndciateProfile = ({
                   setShowData2(!showData2);
                   setShowFlex2(!showFlex2);
                 }}
-                className=' text-sm px-2 py-1.5 w-full border-[1px] focus:border-gray-400 focus:border-[2px] rounded-md bg-white'
+                className=' text-sm px-2 py-1.5 w-full border-[1px] border-gray-400 focus:border-[2px] rounded-md bg-white'
                 type='text'
               />
               <span
@@ -442,8 +443,7 @@ const SyndciateProfile = ({
           <>
             <span className='inline-flex w-[111%] justify-start gap-12 items-center'>
               {
-                <InputProfile
-                  disabled={false}
+                <NumericInput
                   label={'How much have you raised?'}
                   value={youRaised}
                   onChange={setYouRaised}
@@ -452,8 +452,7 @@ const SyndciateProfile = ({
             </span>
             <span className='inline-flex w-[111%] justify-start gap-12 items-center'>
               {
-                <InputProfile
-                  disabled={false}
+                <NumericInput
                   label={'How many times you have raised?'}
                   value={timesRaised}
                   onChange={setTimesRaised}
