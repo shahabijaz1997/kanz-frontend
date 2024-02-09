@@ -220,22 +220,12 @@ const SyndciateProfile = ({
             value={name}
             onChange={setName}
           />
-          <InputProfile
-            disabled={true}
-            label={language?.v3?.profile?.region}
-            value={data?.profile?.regions?.join(', ')}
-          />
-        </span>
-        <span className='inline-flex justify-start gap-12 w-[111%] items-center'>
-          {
             <InputProfile
               disabled={true}
               label={language?.v3?.profile?.email}
               value={data?.email}
             />
-          }
         </span>
-
         <span className='inline-flex mt-5 justify-start text-xl font-medium items-center'>
           {language?.v3?.profile?.syndicate_details}{' '}
         </span>

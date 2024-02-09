@@ -169,7 +169,7 @@ const DealDescription: any = ({ data }: any) => {
             <label className="font-medium">Dividend Yield</label>
             <p>
               {data?.details?.dividend_yield
-                ? data?.details?.dividend_yield + "%"
+                ? data?.details?.dividend_yield 
                 : "N/A"}{" "}
               %
             </p>
@@ -178,7 +178,7 @@ const DealDescription: any = ({ data }: any) => {
             <label className="font-medium">Yearly Appreciation</label>
             <p>
               {data?.details?.yearly_appreciation
-                ? data?.details?.yearly_appreciation + "%"
+                ? data?.details?.yearly_appreciation
                 : "N/A"}{" "}
               %
             </p>
