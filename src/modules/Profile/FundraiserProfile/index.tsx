@@ -281,7 +281,7 @@ const FundRaiserProfile = ({
             )}
           </div>
         </div>
-{/*         <span className='inline-flex justify-center gap-12 items-center'>
+        {/*         <span className='inline-flex justify-center gap-12 items-center'>
           {
             <InputProfile
               disabled={false}
@@ -299,7 +299,7 @@ const FundRaiserProfile = ({
             />
           }
         </span> */}
-{/*         <span className='inline-flex w-[111%] justify-start gap-12 items-center'>
+        {/*         <span className='inline-flex w-[111%] justify-start gap-12 items-center'>
           {
             <InputProfile
               language={language}
@@ -341,28 +341,36 @@ const FundRaiserProfile = ({
         </span>
         <span className='inline-flex w-[111%] justify-start gap-12 items-center'>
           {
-            <InputProfile
-              not_mandatory={true}
-              disabled={false}
-              label={'Amount Raised'}
-              value={capBefore}
-              onChange={setCapBefore}
-            />
+            <div>
+              <label className='mb-2 font-medium whitespace-nowrap'>
+                {'Total capital raised (before this round)'}
+              </label>
+              <input
+                type='number'
+                value={capBefore}
+                onChange={(e) => setCapBefore(e.target.value)}
+                className='text-sm px-2 py-1.5 focus:border-[2px] rounded-md bg-white w-[137%] border-gray-400 border-[1px]'
+              />
+            </div>
           }
         </span>
         <span className='inline-flex w-[111%] justify-start gap-12 items-center'>
           {
-            <InputProfile
-              not_mandatory={true}
-              disabled={false}
-              label={'Target Amount'}
-              value={capCurrent}
-              onChange={setCapCurrent}
-            />
+            <div>
+              <label className='mb-2 font-medium whitespace-nowrap'>
+                {'Target capital to raise (for this round)'}
+              </label>
+              <input
+                type='number'
+                value={capCurrent}
+                onChange={(e) => setCapCurrent(e.target.value)}
+                className='text-sm px-2 py-1.5 focus:border-[2px] rounded-md bg-white w-[139%] border-gray-400 border-[1px]'
+              />
+            </div>
           }
         </span>
 
-{/*         <span className='inline-flex justify-center gap-12 items-center'>
+        {/*         <span className='inline-flex justify-center gap-12 items-center'>
           {
             <InputProfile
               disabled={false}
