@@ -9,7 +9,7 @@ const InputProfile = (props: any) => {
         className={`text-sm px-2 py-1.5 w-full  focus:border-[2px] rounded-md ${
           props?.disabled ? "text-gray-400 cursor-not-allowed " : "bg-white"
         } ${
-          props?.value
+          props?.value || props?.not_mandatory
             ? "border-gray-400 border-[1px]"
             : "border-red-500 border-[1px]"
         }`}
@@ -18,7 +18,7 @@ const InputProfile = (props: any) => {
       />
       {props?.valid && (
         <span className="text-xs  text-red-500 absolute bottom-[-20px] font-medium">
-          {props?.language?.v3?.profile?.please_enter_valid + props?.validationName}
+          {props?.language?.v3?.profile?.please + props?.validationName}
         </span>
       )}
     </span>

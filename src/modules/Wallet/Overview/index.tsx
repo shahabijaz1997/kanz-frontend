@@ -43,18 +43,13 @@ const Overview = ({
   return (
     <section className="flex justify-between items-start gap-56">
       <section className="flex flex-col items-start justify-start w-1/2">
-        <div className="flex items-center justify-center w-full border-[1px] border-[#E5E5E5] rounded-lg shadow-md p-6 mt-5">
+        <div className="flex items-center justify-center w-full border-[1px] border-[#E5E5E5] rounded-lg shadow-md p-6">
        <span className="w-full">
        <h1 className="text-[#667085] text-base">{language?.v3?.wallet?.current_balance}</h1>
-          <p className="text-black font-semibold text-2xl mt-3">{eng_arb_commaFormattedNumber(currentBalance, DealCheckType.PROPERTY, event)}</p>
-       </span>
-       <span className="w-full flex items-center justify-center">
-          <Button className="!text-xs" onClick={()=>{
-            navigate(RoutesEnums.TRANSACTIONS)
-          }}>{language?.v3?.wallet?.view_all_transactions}</Button>
+          <p className="text-black font-semibold text-2xl ">{eng_arb_commaFormattedNumber(currentBalance, DealCheckType.PROPERTY, event)}</p>
        </span>
         </div>
-        <span className="flex flex-col items-start justify-start w-full mt-10">
+        <span className="flex flex-col items-start justify-start w-full mt-5">
           <label className="text-xs font-medium" htmlFor="amount">
             {language?.v3?.wallet?.deposit_amount}
           </label>
@@ -84,7 +79,7 @@ const Overview = ({
             </span>
           </span>
         </span>
-        <span className="flex  flex-col items-start justify-start w-full mt-10 ">
+     {/*    <span className="flex  flex-col items-start justify-start w-full mt-5 ">
           <label className="font-medium text-xs" htmlFor="payment">
             {language?.v3?.wallet?.payment_methods}
           </label>
@@ -132,14 +127,14 @@ const Overview = ({
               </span>
             </span>
           </span>
-          <span className="text-xs mt-2 font-medium">
+          <span className="text-xs mt-3 font-medium">
           {language?.v3?.wallet?.help_center_link}
           </span>
-        </span>
+        </span> */}
 
-        <span className="w-full mt-10">
+        <span className="w-full mt-4">
           <Button
-            disabled={!method || !amount || /^0+$/.test(amount)}
+            disabled={/* !method || */ !amount || /^0+$/.test(amount)}
             onClick={() => setOpen(true)}
             className="!w-full"
             type="primary"
@@ -163,6 +158,11 @@ const Overview = ({
           </span>
         </div>
         </section>
+        <span className="w-full flex items-center justify-center">
+          <Button divStyle="w-full mt-4" className="!w-full" onClick={()=>{
+            navigate(RoutesEnums.TRANSACTIONS)
+          }}>{language?.v3?.wallet?.view_all_transactions}</Button>
+       </span>
       </section>
       <Modal show={open ? true : false} className="w-full">
         <div

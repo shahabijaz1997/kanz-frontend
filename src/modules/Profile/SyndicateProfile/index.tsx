@@ -74,6 +74,8 @@ const SyndciateProfile = ({
     return !name ||
       !website ||
       !tagline ||
+      !youRaised ||
+      !timesRaised ||
       !validateProfileLink(website) ||
       (!search && !payload?.market.length)
       ? true
@@ -230,7 +232,6 @@ const SyndciateProfile = ({
             />
           }
         </span>
-
         <span className='inline-flex mt-5 justify-start text-xl font-medium items-center'>
           {language?.v3?.profile?.syndicate_details}{' '}
         </span>
@@ -264,7 +265,7 @@ const SyndciateProfile = ({
                   setShowData(!showData);
                   setShowFlex(!showFlex);
                 }}
-                className=' text-sm px-2 py-1.5 w-full border-[1px] focus:border-[#155E75] rounded-md bg-white'
+                className=' text-sm px-2 py-1.5 w-full border-[1px] focus:border-gray-400 focus:border-[2px] rounded-md bg-white'
                 type='text'
               />
               <span
@@ -353,7 +354,7 @@ const SyndciateProfile = ({
                   setShowData2(!showData2);
                   setShowFlex2(!showFlex2);
                 }}
-                className=' text-sm px-2 py-1.5 w-full border-[1px] focus:border-[#155E75] rounded-md bg-white'
+                className=' text-sm px-2 py-1.5 w-full border-[1px] focus:border-gray-400 focus:border-[2px] rounded-md bg-white'
                 type='text'
               />
               <span
@@ -420,7 +421,7 @@ const SyndciateProfile = ({
           id='biz'
           value={about}
           onChange={(e) => setAbout(e.target.value)}
-          className=' h-[100px] shadow-sm appearance-none border border-neutral-300 rounded-md w-full py-2 px-3 text-gray-500 leading-tight focus:outline-none focus:shadow-outline'
+          className=' h-[100px] shadow-sm appearance-none border border-gray-400 rounded-md w-full py-2 px-3 focus:border-[2px] text-gray-500 leading-tight focus:outline-none focus:shadow-outline'
         ></textarea>
 
         <span className='inline-flex justify-center gap-12 items-center'>

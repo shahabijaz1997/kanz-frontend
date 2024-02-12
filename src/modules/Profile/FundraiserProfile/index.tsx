@@ -196,7 +196,7 @@ const FundRaiserProfile = ({
         </span>
 
         <span className='inline-flex justify-start text-xl mt-5 font-medium items-center'>
-          {language?.v3?.profile?.company_details}
+          {language?.v3?.profile?.details}
         </span>
         <label className='font-medium'>{language?.v3?.profile?.logo}</label>
         <span className='flex-col flex items-start justify-center'>
@@ -225,7 +225,7 @@ const FundRaiserProfile = ({
                 setShowData(!showData);
                 setShowFlex(!showFlex);
               }}
-              className=' px-2 py-1.5 w-full border-[1px] focus:border-[#155E75] rounded-md bg-white'
+              className=' px-2 py-1.5 w-full border-[1px] focus:border-gray-400 focus:border-[2px] rounded-md bg-white'
               type='text'
             />
             <span
@@ -281,7 +281,7 @@ const FundRaiserProfile = ({
             )}
           </div>
         </div>
-        <span className='inline-flex justify-center gap-12 items-center'>
+        {/*         <span className='inline-flex justify-center gap-12 items-center'>
           {
             <InputProfile
               disabled={false}
@@ -298,10 +298,11 @@ const FundRaiserProfile = ({
               onChange={setLegalname}
             />
           }
-        </span>
-        <span className='inline-flex w-[111%] justify-start gap-12 items-center'>
+        </span> */}
+        {/*         <span className='inline-flex w-[111%] justify-start gap-12 items-center'>
           {
             <InputProfile
+              language={language}
               placeholder={language?.v3?.profile?.example_dot_com}
               disabled={false}
               label={language?.v3?.investor?.company_website}
@@ -311,7 +312,7 @@ const FundRaiserProfile = ({
               valid={!validateProfileLink(website)}
             />
           }
-        </span>
+        </span> */}
         <span className='inline-flex w-[111%] justify-start gap-12 items-center'>
           {
             <InputProfile
@@ -326,14 +327,14 @@ const FundRaiserProfile = ({
           {
             <span className={` w-[90%] flex-col flex`}>
               <p className='mb-1 font-medium whitespace-nowrap'>
-                {language?.v3?.investor?.company_desc}
+                {language?.v3?.profile?.description}
               </p>
               <textarea
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
                 className={`${
                   description ? 'border-gray-400' : 'border-red-500'
-                } px-2 py-1.5 w-full border-[1px] rounded-md  min-h-40 custom-scroll `}
+                } px-2 py-1.5 w-full border-[1px] outline-none focus:border-[2px]   rounded-md  min-h-40 custom-scroll `}
               />
             </span>
           }
@@ -369,7 +370,7 @@ const FundRaiserProfile = ({
           }
         </span>
 
-        <span className='inline-flex justify-center gap-12 items-center'>
+        {/*         <span className='inline-flex justify-center gap-12 items-center'>
           {
             <InputProfile
               disabled={false}
@@ -380,6 +381,7 @@ const FundRaiserProfile = ({
           }
           {
             <InputProfile
+              language={language}
               disabled={false}
               label={language?.v3?.profile?.ceo_email}
               value={ceoEmail}
@@ -388,7 +390,7 @@ const FundRaiserProfile = ({
               valid={!validateEmail(ceoEmail)}
             />
           }
-        </span>
+        </span> */}
         {/*  {emptyFieldsMessage() && (<span className="text-red-500 font-medium text-xs px-1">Please fill all fields to update....</span>)} */}
         <span className='flex mt-1 items-center justify-start'>
           <Button

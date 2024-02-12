@@ -55,20 +55,9 @@ export default function Blogs() {
                     navigate(`${RoutesEnums.BLOG}/${blog?.slug}`);
                   }}
                     key={blog?.slug}
-                    className="flex max-w-sm flex-col items-start justify-between border-[2px] p-3 rounded-xl hover:shadow-2xl cursor-pointer"
+                    className="flex w-1/4 flex-col max-h-[300px] min-h-[200px] items-start justify-between border-[0.1px] p-3 rounded-xl hover:shadow-2xl cursor-pointer"
                   >
-                    <div className="w-full mb-5  bg-[#FBFBFB]">
-                      <img
-                        className="h-64 w-96 bg-[#FBFBFB]"
-                        style={{
-                          objectFit: "cover",
-                          aspectRatio: "3/2",
-                        }}
-                        src={"https://images.unsplash.com/photo-1541176447985-6bb45fb77a14?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTJ8fGh0bWx8ZW58MHwxfDB8fHww"}
-                        alt=""
-                      />
-                    </div>
-                    <div className="flex items-center gap-x-4 text-xs">
+                    <div className="flex mt-2 items-center gap-x-4 text-xs">
                       <time
                         dateTime={blog?.updated_at}
                         className="text-gray-500 border-[0.5px] py-1 px-2 rounded-full border-[#155E75]"
@@ -81,15 +70,15 @@ export default function Blogs() {
                     </div>
                     <div className="group relative">
                       <h3
-                        className="mt-3 text-lg font-semibold leading-6 text-black group-hover:text-gray-600"
+                        className="mt-3 text-lg font-semibold leading-6  text-black group-hover:text-gray-600"
                       >
                         <a>
-                          <span className="absolute inset-0" />
+                          <span className=" line-clamp-3 absolute inset-0 leading-6 text-ellipsis whitespace-pre-wrap" />
                           {blog?.title}
                         </a>
                       </h3>
                       <p className="mt-5 line-clamp-3 text-sm leading-6 text-gray-600">
-                        {blog?.description}
+                        {blog?.introduction}
                       </p>
                     </div>
                     <div className="relative mt-8 flex items-center gap-x-4">
