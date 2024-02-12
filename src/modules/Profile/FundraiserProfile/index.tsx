@@ -282,7 +282,7 @@ const FundRaiserProfile = ({
             )}
           </div>
         </div>
-{/*         <span className='inline-flex justify-center gap-12 items-center'>
+        {/*         <span className='inline-flex justify-center gap-12 items-center'>
           {
             <InputProfile
               disabled={false}
@@ -300,7 +300,7 @@ const FundRaiserProfile = ({
             />
           }
         </span> */}
-{/*         <span className='inline-flex w-[111%] justify-start gap-12 items-center'>
+        {/*         <span className='inline-flex w-[111%] justify-start gap-12 items-center'>
           {
             <InputProfile
               language={language}
@@ -359,7 +359,7 @@ const FundRaiserProfile = ({
           }
         </span>
 
-{/*         <span className='inline-flex justify-center gap-12 items-center'>
+        {/*         <span className='inline-flex justify-center gap-12 items-center'>
           {
             <InputProfile
               disabled={false}

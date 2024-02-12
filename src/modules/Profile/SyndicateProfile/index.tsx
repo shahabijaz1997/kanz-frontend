@@ -219,18 +219,22 @@ const SyndciateProfile = ({
   return (
     <section className='inline-flex justify-start gap-36 w-full max-h-full'>
       <div className='flex flex-col gap-6 w-[40%]'>
-        <span className='inline-flex justify-center gap-12 items-center'>
+        <span className='inline-flex gap-12 w-[111%]'>
           <InputProfile
             disabled={false}
             label={language?.v3?.profile?.name}
             value={name}
             onChange={setName}
           />
+        </span>
+        <span className='inline-flex justify-start gap-12 w-[111%] items-center'>
+          {
             <InputProfile
               disabled={true}
               label={language?.v3?.profile?.email}
               value={data?.email}
             />
+          }
         </span>
         <span className='inline-flex mt-5 justify-start text-xl font-medium items-center'>
           {language?.v3?.profile?.syndicate_details}{' '}
