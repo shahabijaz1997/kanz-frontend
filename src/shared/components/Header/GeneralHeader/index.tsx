@@ -213,7 +213,7 @@ const GeneralHeader = ({
 
           <nav className="">
             <ul className="inline-flex items-center gap-6">
-              {!authToken && (
+              {window.location.pathname === "/" && (
                 <li>
                   <button
                     className="text-neutral-500 font-medium cursor-pointer text-sm tracking-[0.03em]"

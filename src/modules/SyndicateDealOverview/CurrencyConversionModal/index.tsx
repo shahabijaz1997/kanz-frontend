@@ -54,7 +54,7 @@ const CurrencyConversionModal = ({ setOpen, amount }: any) => {
           className="rounded-md overflow-hidden inline-grid place-items-center absolute top-1/2 left-1/2 translate-x-[-50%] translate-y-[-50%]"
           style={{ backgroundColor: "rgba(0, 0, 0, 0.078)" }}
         >
-          <aside className="bg-white w-[500px] rounded-md h-full pb-5">
+          <aside className="bg-white rounded-md h-full p-5">
             <section className="py-3 px-10">
               <div className="mb-6 pt-5 text-center">
                 <label
@@ -75,7 +75,7 @@ const CurrencyConversionModal = ({ setOpen, amount }: any) => {
                     <>
                       <span className="min-w-30 text-2xl font-semibold">
                         {comaFormattedNumber(
-                          amount * rate,
+                          (amount * rate).toFixed(3),
                           DealCheckType.PROPERTY
                         )}
                       </span>
@@ -100,7 +100,7 @@ const CurrencyConversionModal = ({ setOpen, amount }: any) => {
                       </span>
                       <span className="min-w-30 text-2xl font-semibold">
                         {comaFormattedNumber(
-                          amount * rate,
+                          (amount * rate).toFixed(3),
                           DealCheckType.PROPERTY
                         )}
                       </span>
