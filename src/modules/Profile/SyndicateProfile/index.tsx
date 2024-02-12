@@ -12,6 +12,7 @@ import SearchedItems from '../../../shared/components/SearchedItems';
 import Chevrond from '../../../ts-icons/chevrond.svg';
 import React from 'react';
 import CrossIcon from '../../../ts-icons/crossIcon.svg';
+import NumericInput from '../NumericInput';
 
 const SyndciateProfile = ({
   language,
@@ -70,17 +71,20 @@ const SyndciateProfile = ({
   const refInd2: any = useRef(null);
   const urlRegex =
     /^(https?:\/\/)?(www\.)?(?:[a-zA-Z0-9-]+\.)+[a-zA-Z]{2,}(\.[a-zA-Z]{2,})?$/;
-  const updateButtonDisable = () => {
-    return !name ||
-      !website ||
-      !tagline ||
-      !youRaised ||
-      !timesRaised ||
-      !validateProfileLink(website) ||
-      (!search && !payload?.market.length)
-      ? true
-      : false;
-  };
+    const updateButtonDisable = () => {
+      return !name ||
+        !website ||
+        !tagline ||
+        (
+          data?.profile?.have_you_ever_raised ? 
+            (!youRaised || !timesRaised) 
+            : false
+        ) ||
+        !validateProfileLink(website) ||
+        (!search && !payload?.market.length)
+        ? true
+        : false;
+    };
   const emptyFieldsMessage = () => {
     return !name || !website || !tagline || !website ? true : false;
   };
@@ -120,7 +124,7 @@ const SyndciateProfile = ({
       };
       let { status, data } = await updateProfile(authToken, sentPayload);
       if (status === 200) {
-        toast.success(language?.v3?.proflie?.profile_updated, toastUtil);
+        toast.success(language?.v3?.profile?.profile_updated, toastUtil);
       }
     } catch (error) {
     } finally {
@@ -265,7 +269,7 @@ const SyndciateProfile = ({
                   setShowData(!showData);
                   setShowFlex(!showFlex);
                 }}
-                className=' text-sm px-2 py-1.5 w-full border-[1px] focus:border-gray-400 focus:border-[2px] rounded-md bg-white'
+                className=' text-sm px-2 py-1.5 w-full border-[1px] border-gray-400 focus:border-[2px] rounded-md bg-white'
                 type='text'
               />
               <span
@@ -354,7 +358,7 @@ const SyndciateProfile = ({
                   setShowData2(!showData2);
                   setShowFlex2(!showFlex2);
                 }}
-                className=' text-sm px-2 py-1.5 w-full border-[1px] focus:border-gray-400 focus:border-[2px] rounded-md bg-white'
+                className=' text-sm px-2 py-1.5 w-full border-[1px] border-gray-400 focus:border-[2px] rounded-md bg-white'
                 type='text'
               />
               <span
@@ -446,32 +450,20 @@ const SyndciateProfile = ({
           <>
             <span className='inline-flex w-[111%] justify-start gap-12 items-center'>
               {
-                <div>
-                  <label className='mb-2 font-medium whitespace-nowrap'>
-                    {'How much have you raised?'}
-                  </label>
-                  <input
-                    type='number'
-                    value={youRaised}
-                    onChange={(e) => setYouRaised(e.target.value)}
-                    className='text-sm px-2 py-1.5 focus:border-[2px] rounded-md bg-white w-[166%] border-gray-400 border-[1px]'
-                  />
-                </div>
+                <NumericInput
+                  label={'How much have you raised?'}
+                  value={youRaised}
+                  onChange={setYouRaised}
+                />
               }
             </span>
             <span className='inline-flex w-[111%] justify-start gap-12 items-center'>
               {
-                <div>
-                  <label className='mb-2 font-medium whitespace-nowrap'>
-                    {'How many times you have raised?'}
-                  </label>
-                  <input
-                    type='number'
-                    value={timesRaised}
-                    onChange={(e) => setTimesRaised(e.target.value)}
-                    className='text-sm px-2 py-1.5 focus:border-[2px] rounded-md bg-white w-[148%] border-gray-400 border-[1px]'
-                  />
-                </div>
+                <NumericInput
+                  label={'How many times you have raised?'}
+                  value={timesRaised}
+                  onChange={setTimesRaised}
+                />
               }
             </span>
           </>

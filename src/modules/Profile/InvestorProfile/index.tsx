@@ -28,7 +28,7 @@ const InvestorProfile = ({
       };
       let { status, data } = await updateProfile(authToken, payload);
       if (status === 200) {
-        toast.success(language?.v3?.profile_updated, toastUtil);
+        toast.success(language?.v3?.profile?.profile_updated, toastUtil);
       }
     } catch (error) {
     } finally {

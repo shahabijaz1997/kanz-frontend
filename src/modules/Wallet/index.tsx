@@ -25,7 +25,7 @@ const Wallet = () => {
   const [step, setCurrentStep] = useState(1);
   const [amount, setAmount] = useState<number>(0);
   const [currentBalance, setCurrentBalance] = useState<string>();
-  const [method, setMethod] = useState("");
+  const [method, setMethod] = useState("offline");
   const [image, setImage]: any = useState();
   const [verificationModal, setVerificationModal] = useState(false);
 
@@ -51,7 +51,7 @@ const Wallet = () => {
       let payload : any = {
         transaction : {
           amount: amount,
-          method: method,
+          method: "offline",
           receipt: image,
           timestamp: String(new Date())
         }

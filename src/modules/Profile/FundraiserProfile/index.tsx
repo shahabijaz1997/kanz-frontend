@@ -12,6 +12,7 @@ import SearchedItems from '../../../shared/components/SearchedItems';
 import Chevrond from '../../../ts-icons/chevrond.svg';
 import React from 'react';
 import CrossIcon from '../../../ts-icons/crossIcon.svg';
+import NumericInput from '../NumericInput';
 
 const FundRaiserProfile = ({
   language,
@@ -225,7 +226,7 @@ const FundRaiserProfile = ({
                 setShowData(!showData);
                 setShowFlex(!showFlex);
               }}
-              className=' px-2 py-1.5 w-full border-[1px] focus:border-gray-400 focus:border-[2px] rounded-md bg-white'
+              className=' px-2 py-1.5 w-full border-[1px] border-gray-400 focus:border-[2px] rounded-md bg-white'
               type='text'
             />
             <span
@@ -341,32 +342,20 @@ const FundRaiserProfile = ({
         </span>
         <span className='inline-flex w-[111%] justify-start gap-12 items-center'>
           {
-            <div>
-              <label className='mb-2 font-medium whitespace-nowrap'>
-                {'Total capital raised (before this round)'}
-              </label>
-              <input
-                type='number'
-                value={capBefore}
-                onChange={(e) => setCapBefore(e.target.value)}
-                className='text-sm px-2 py-1.5 focus:border-[2px] rounded-md bg-white w-[137%] border-gray-400 border-[1px]'
-              />
-            </div>
+            <NumericInput
+              label={'Amount Raised'}
+              value={capBefore}
+              onChange={setCapBefore}
+            />
           }
         </span>
         <span className='inline-flex w-[111%] justify-start gap-12 items-center'>
           {
-            <div>
-              <label className='mb-2 font-medium whitespace-nowrap'>
-                {'Target capital to raise (for this round)'}
-              </label>
-              <input
-                type='number'
-                value={capCurrent}
-                onChange={(e) => setCapCurrent(e.target.value)}
-                className='text-sm px-2 py-1.5 focus:border-[2px] rounded-md bg-white w-[139%] border-gray-400 border-[1px]'
-              />
-            </div>
+            <NumericInput
+              label={'Target Amount'}
+              value={capCurrent}
+              onChange={setCapCurrent}
+            />
           }
         </span>
 

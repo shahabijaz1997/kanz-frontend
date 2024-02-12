@@ -8,7 +8,6 @@ import { toast } from "react-toastify";
 import { toastUtil } from "../../../utils/toast.utils";
 
 const UploadReceipt = ({ setStep, setImage, submitForm, language }: any) => {
-  const [open, setOpen] = useState(false);
   const [imagePreview, setImagePreview]: any = useState();
   const handleFileUpload = (event: any) => {
     const file = event.target.files[0];
